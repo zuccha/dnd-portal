@@ -1,3 +1,5 @@
+import AppHeader from "./app-header";
+
 export default function App() {
-  return null;
+  return <AppHeader />;
 }
