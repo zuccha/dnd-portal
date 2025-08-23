@@ -1,7 +1,7 @@
 import AppHeader from "./app-header";
 import { useSession } from "./supabase/supabase";
 import { VStack } from "@chakra-ui/react";
-import AppSignIn from "./app-sign-up";
+import AppSignIn from "./app-sign-in";
 import AppSignOut from "./app-sign-out";
 
 export default function App() {
