@@ -26,11 +26,11 @@ export type Auth = {
 
 export async function signInWithDiscord() {
   const { error } = await supabase.auth.signInWithOAuth({
-    provider: "discord",
     options: {
       redirectTo: window.location.origin,
       scopes: "identify email",
     },
+    provider: "discord",
   });
   if (error) console.error(error);
 }
@@ -51,6 +51,7 @@ export async function signOut() {
 const firstDefined = <T>(...vals: Array<T | undefined>) =>
   vals.find((v) => v !== undefined) as T | undefined;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fromIdentities = <T>(user: User, pick: (data: any) => T | undefined) =>
   user.identities
     ?.map((i) => pick(i.identity_data))
@@ -86,9 +87,9 @@ export function mapSessionToAuthUser(
   );
 
   return {
-    id: user.id,
-    email: email ?? undefined,
-    name: name ?? undefined,
     avatarUrl: avatarUrl ?? undefined,
+    email: email ?? undefined,
+    id: user.id,
+    name: name ?? undefined,
   };
 }

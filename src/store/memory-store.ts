@@ -1,11 +1,15 @@
 import { useLayoutEffect, useState } from "react";
 import { createObservable } from "../utils/observable";
 import {
-  isStoreAction,
   type Store,
   type StoreAction,
   type StoreUpdater,
+  isStoreAction,
 } from "./store";
+
+//------------------------------------------------------------------------------
+// Create Memory Store
+//------------------------------------------------------------------------------
 
 export function createMemoryStore<T>(defaultValue: T): Store<T> {
   const { notify, subscribe, unsubscribe } = createObservable<T>();

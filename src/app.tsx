@@ -1,5 +1,5 @@
-import AppHeader from "./app-header";
 import { VStack } from "@chakra-ui/react";
+import AppHeader from "./app-header";
 import AppSignIn from "./app-sign-in";
 import AppSignOut from "./app-sign-out";
 import useAuth from "./supabase/use-auth";

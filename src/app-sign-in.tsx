@@ -1,7 +1,7 @@
-import { Center, chakra, Heading, VStack } from "@chakra-ui/react";
+import { Center, Heading, VStack, chakra } from "@chakra-ui/react";
 import RawDiscordIcon from "./assets/images/icons/discord.svg?react";
-import Button from "./ui/button";
 import { signInWithDiscord } from "./supabase/auth";
+import Button from "./ui/button";
 
 //------------------------------------------------------------------------------
 // App Sign In
@@ -10,7 +10,7 @@ import { signInWithDiscord } from "./supabase/auth";
 export default function AppSignIn() {
   return (
     <Center>
-      <VStack flex={1} mt={20} gap={10}>
+      <VStack flex={1} gap={10} mt={20}>
         <VStack align="flex-start" gap={0}>
           <Heading size="2xl">Welcome.</Heading>
           <Heading color="fg.subtle" size="2xl">

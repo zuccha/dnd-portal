@@ -1,11 +1,15 @@
 import { useLayoutEffect, useState } from "react";
+import { createObservable } from "../utils/observable";
 import {
-  isStoreAction,
   type Store,
   type StoreAction,
   type StoreUpdater,
+  isStoreAction,
 } from "./store";
-import { createObservable } from "../utils/observable";
+
+//------------------------------------------------------------------------------
+// Create Local Store
+//------------------------------------------------------------------------------
 
 const fullId = (id: string) => `dnd/${id}`;
 

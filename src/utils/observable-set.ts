@@ -1,10 +1,18 @@
 import type { Callback1 } from "./callback";
 
+//------------------------------------------------------------------------------
+// Observable Set
+//------------------------------------------------------------------------------
+
 export type ObservableSet<T> = {
   notify: (id: string, value: T) => void;
   subscribe: (id: string, callback: Callback1<T>) => () => void;
   unsubscribe: (id: string, callback: Callback1<T>) => void;
 };
+
+//------------------------------------------------------------------------------
+// Create Observable Set
+//------------------------------------------------------------------------------
 
 export function createObservableSet<T>(): ObservableSet<T> {
   const listeners = new Map<string, Set<Callback1<T>>>();

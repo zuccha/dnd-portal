@@ -1,12 +1,13 @@
 import { Heading, HStack } from "@chakra-ui/react";
+import type { Auth } from "./supabase/auth";
+import useAuth from "./supabase/use-auth";
 import ThemeButton from "./theme/theme-button";
 import Button from "./ui/button";
-import useAuth from "./supabase/use-auth";
-import type { Auth } from "./supabase/auth";
 
 //------------------------------------------------------------------------------
 // App Header
 //------------------------------------------------------------------------------
+
 export default function AppHeader() {
   const auth = useAuth();
 

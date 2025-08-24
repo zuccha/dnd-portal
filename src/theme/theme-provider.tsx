@@ -5,6 +5,10 @@ import { ThemeProvider as NextThemesThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 import useTheme from "./use-theme";
 
+//------------------------------------------------------------------------------
+// Theme Provider
+//------------------------------------------------------------------------------
+
 export type ThemeProviderProps = {
   children: ReactNode;
 };
