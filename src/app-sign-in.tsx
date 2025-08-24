@@ -1,5 +1,6 @@
 import { Center, Heading, VStack, chakra } from "@chakra-ui/react";
 import RawDiscordIcon from "./assets/images/icons/discord.svg?react";
+import { useI18n } from "./i18n/i18n";
 import { signInWithDiscord } from "./supabase/auth";
 import Button from "./ui/button";
 
@@ -8,13 +9,15 @@ import Button from "./ui/button";
 //------------------------------------------------------------------------------
 
 export default function AppSignIn() {
+  const i18n = useI18n(i18nContext);
+
   return (
-    <Center>
-      <VStack flex={1} gap={10} mt={20}>
+    <Center w="full">
+      <VStack align="flex-start" gap={10} maxW="20em" mt={20} w="full">
         <VStack align="flex-start" gap={0}>
-          <Heading size="2xl">Welcome.</Heading>
+          <Heading size="2xl">{i18n.t("title")}</Heading>
           <Heading color="fg.subtle" size="2xl">
-            Please, sign in to use the app.
+            {i18n.t("subtitle")}
           </Heading>
         </VStack>
         <Button
@@ -24,7 +27,7 @@ export default function AppSignIn() {
           w="full"
         >
           <DiscordIcon />
-          Continue with Discord
+          {i18n.t("button.discord")}
         </Button>
       </VStack>
     </Center>
@@ -36,3 +39,24 @@ export default function AppSignIn() {
 //------------------------------------------------------------------------------
 
 const DiscordIcon = chakra(RawDiscordIcon);
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  "title": {
+    en: "Welcome.",
+    it: "Benvenutə.",
+  },
+
+  "subtitle": {
+    en: "Please, sign in to use the app.",
+    it: "Loggati per usare l'app.",
+  },
+
+  "button.discord": {
+    en: "Continue with Discord",
+    it: "Continua con Discord",
+  },
+};

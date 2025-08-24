@@ -7,6 +7,7 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
+import { useI18n } from "./i18n/i18n";
 import { i18nLangStore } from "./i18n/i18n-lang";
 import { type AuthUser, signOut } from "./supabase/auth";
 import { useLanguages } from "./supabase/language";
@@ -75,10 +76,17 @@ function LanguageSelect() {
 //------------------------------------------------------------------------------
 
 function UserButton({ user }: { user: AuthUser }) {
+  const i18n = useI18n(i18nContext);
+
   return (
     <Menu.Root>
-      <Menu.Trigger focusRing="outside" rounded="full">
-        <Avatar.Root mr={2} size="xs">
+      <Menu.Trigger focusRing="outside" mr={2} rounded="full">
+        <Avatar.Root
+          borderColor="border.inverted"
+          borderWidth={2}
+          cursor="pointer"
+          size="xs"
+        >
           <Avatar.Fallback name={user.name} />
           <Avatar.Image src={user.avatarUrl} />
         </Avatar.Root>
@@ -89,7 +97,7 @@ function UserButton({ user }: { user: AuthUser }) {
             <Menu.ItemGroup>
               <Menu.ItemGroupLabel>{user.name ?? "User"}</Menu.ItemGroupLabel>
               <Menu.Item onClick={signOut} value="logout">
-                Sign out
+                {i18n.t("button.signout")}
               </Menu.Item>
             </Menu.ItemGroup>
           </Menu.Content>
@@ -98,3 +106,14 @@ function UserButton({ user }: { user: AuthUser }) {
     </Menu.Root>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  "button.signout": {
+    en: "Sign out",
+    it: "Logout",
+  },
+};
