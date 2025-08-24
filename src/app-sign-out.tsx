@@ -1,5 +1,9 @@
 import { Button, Center } from "@chakra-ui/react";
-import { signOut } from "./supabase/supabase";
+import { signOut } from "./supabase/auth";
+
+//------------------------------------------------------------------------------
+// App Sign Out
+//------------------------------------------------------------------------------
 
 export default function AppSignOut() {
   return (

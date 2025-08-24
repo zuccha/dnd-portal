@@ -1,17 +1,21 @@
 import AppHeader from "./app-header";
-import { useSession } from "./supabase/supabase";
 import { VStack } from "@chakra-ui/react";
 import AppSignIn from "./app-sign-in";
 import AppSignOut from "./app-sign-out";
+import useAuth from "./supabase/use-auth";
+
+//------------------------------------------------------------------------------
+// App
+//------------------------------------------------------------------------------
 
 export default function App() {
-  const session = useSession();
+  const auth = useAuth();
 
   return (
     <VStack minH="100vh" w="full">
       <AppHeader />
 
-      {session ? <AppSignOut /> : <AppSignIn />}
+      {auth.user ? <AppSignOut /> : <AppSignIn />}
     </VStack>
   );
 }

@@ -1,7 +1,11 @@
 import { Center, chakra, Heading, VStack } from "@chakra-ui/react";
-import { signInWithDiscord } from "./supabase/supabase";
 import RawDiscordIcon from "./assets/images/icons/discord.svg?react";
 import Button from "./ui/button";
+import { signInWithDiscord } from "./supabase/auth";
+
+//------------------------------------------------------------------------------
+// App Sign In
+//------------------------------------------------------------------------------
 
 export default function AppSignIn() {
   return (
@@ -13,7 +17,12 @@ export default function AppSignIn() {
             Please, sign in to use the app.
           </Heading>
         </VStack>
-        <Button onClick={signInWithDiscord} variant="outline" w="full">
+        <Button
+          borderColor="bg.inverted"
+          onClick={signInWithDiscord}
+          variant="outline"
+          w="full"
+        >
           <DiscordIcon />
           Continue with Discord
         </Button>
@@ -21,5 +30,9 @@ export default function AppSignIn() {
     </Center>
   );
 }
+
+//------------------------------------------------------------------------------
+// Discord Icon
+//------------------------------------------------------------------------------
 
 const DiscordIcon = chakra(RawDiscordIcon);
