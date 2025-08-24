@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { QueryClient } from "@tanstack/react-query";
 
 //------------------------------------------------------------------------------
 // Supabase
@@ -10,3 +11,9 @@ const supabase = createClient(
 );
 
 export default supabase;
+
+//------------------------------------------------------------------------------
+// Query Client
+//------------------------------------------------------------------------------
+
+export const supabaseQueryClient = new QueryClient();
