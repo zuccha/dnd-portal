@@ -14,7 +14,7 @@ export default function App() {
     <VStack minH="100vh" w="full">
       <AppHeader />
 
-      {auth.user ? null : <AppSignIn />}
+      {auth.user || auth.loading ? null : <AppSignIn />}
     </VStack>
   );
 }

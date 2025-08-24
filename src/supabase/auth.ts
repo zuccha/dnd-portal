@@ -17,6 +17,7 @@ export type AuthUser = {
 //------------------------------------------------------------------------------
 
 export type Auth = {
+  loading: boolean;
   user: AuthUser | undefined;
 };
 

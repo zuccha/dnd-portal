@@ -13,14 +13,21 @@ export type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | undefined>(undefined);
 
   useEffect(() => {
     let mounted = true;
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (mounted) setSession(data.session ?? undefined);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (mounted) {
+          setLoading(false);
+          setSession(data.session ?? undefined);
+        }
+      })
+      .catch(() => setLoading(false));
 
     const {
       data: { subscription },
@@ -35,10 +42,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const auth = useMemo(
-    () => ({
-      user: mapSessionToAuthUser(session),
-    }),
-    [session]
+    () => ({ loading, user: mapSessionToAuthUser(session) }),
+    [loading, session]
   );
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
