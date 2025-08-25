@@ -16,6 +16,29 @@ export const campaignSchema = z.object({
 export type Campaign = z.infer<typeof campaignSchema>;
 
 //------------------------------------------------------------------------------
+// Fetch Core Campaigns
+//------------------------------------------------------------------------------
+
+export async function fetchCoreCampaigns(): Promise<Campaign[]> {
+  const { data } = await supabase.from("campaigns").select().eq("core", true);
+  return z.array(campaignSchema).parse(data);
+}
+
+//------------------------------------------------------------------------------
+// Use Core Campaigns
+//------------------------------------------------------------------------------
+
+export function useCoreCampaigns() {
+  return useQuery<Campaign[]>({
+    queryFn: fetchCoreCampaigns,
+    queryKey: ["campaigns/core"],
+
+    gcTime: 30 * 24 * 60 * 60 * 1000,
+    staleTime: Infinity,
+  });
+}
+
+//------------------------------------------------------------------------------
 // Fetch User Campaigns
 //------------------------------------------------------------------------------
 
@@ -31,7 +54,7 @@ export async function fetchUserCampaigns(): Promise<Campaign[]> {
 export function useUserCampaigns() {
   return useQuery<Campaign[]>({
     queryFn: fetchUserCampaigns,
-    queryKey: ["campaigns"],
+    queryKey: ["campaigns/user"],
 
     gcTime: 30 * 24 * 60 * 60 * 1000,
     staleTime: Infinity,
