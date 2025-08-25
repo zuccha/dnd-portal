@@ -18,10 +18,14 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
   if (!spells) return null;
 
   return (
-    <Flex fontSize="sm" h="full" w="full">
+    <Flex fontSize="sm" h="full" position="relative" w="full">
       <Table.Root>
-        <Table.Header>
-          <Table.Row>
+        <Table.Header position="sticky" top={0}>
+          <Table.Row
+            bgColor="bg.subtle"
+            boxShadow="0px 0.5px 0px var(--shadow-color)"
+            boxShadowColor="border"
+          >
             <Table.ColumnHeader>
               {i18n.t("table.header.name")}
             </Table.ColumnHeader>
