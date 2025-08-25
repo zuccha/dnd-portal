@@ -1,6 +1,7 @@
 import { Flex, Table } from "@chakra-ui/react";
 import { useI18n } from "../../i18n/i18n";
 import { t } from "../../i18n/i18n-string";
+import { useTranslateSpellSchool } from "../../supabase/resources/spell-school-translations";
 import { useCampaignSpells } from "../../supabase/resources/spells";
 
 //------------------------------------------------------------------------------
@@ -14,6 +15,7 @@ export type PageSpellsProps = {
 export default function PageSpells({ campaignId }: PageSpellsProps) {
   const i18n = useI18n(i18nContext);
   const { data: spells } = useCampaignSpells(campaignId, {}, [i18n.lang]);
+  const translateSpellSchool = useTranslateSpellSchool();
 
   if (!spells) return null;
 
@@ -52,7 +54,9 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
             <Table.Row key={spell.id}>
               <Table.Cell>{t(spell.name, i18n.lang)}</Table.Cell>
               <Table.Cell>{spell.level}</Table.Cell>
-              <Table.Cell>{spell.school}</Table.Cell>
+              <Table.Cell>
+                {translateSpellSchool(spell.school, i18n.lang)}
+              </Table.Cell>
               <Table.Cell>{spell.casting_time}</Table.Cell>
               <Table.Cell>{spell.range_met}</Table.Cell>
               <Table.Cell>{spell.duration}</Table.Cell>
