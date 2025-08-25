@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useI18n } from "../../i18n/i18n";
 import Button from "../../ui/button";
 import { compareObjects } from "../../utils/object";
+import { resourcePageIds, useSelectedPageId } from "../page/pages";
 
 //------------------------------------------------------------------------------
 // Sidebar Campaign
@@ -14,14 +15,19 @@ export type SidebarCampaignProps = {
 
 export default function SidebarCampaign(_props: SidebarCampaignProps) {
   const i18n = useI18n(i18nContext);
+  const [selectedPageId, setSelectedPageId] = useSelectedPageId();
 
   const resourceItems = useMemo(
     () =>
-      [
-        { label: i18n.t("section.resources[spells]") },
-        { label: i18n.t("section.resources[weapons]") },
-      ].sort(compareObjects("label")),
-    [i18n]
+      resourcePageIds
+        .map((value) => ({
+          label: i18n.t(`section.resources[${value}]`),
+          onClick: () => setSelectedPageId(value),
+          selected: selectedPageId === value,
+          value,
+        }))
+        .sort(compareObjects("label")),
+    [i18n, selectedPageId, setSelectedPageId]
   );
 
   return (
@@ -42,7 +48,12 @@ function SidebarCampaignSection({
   items,
   title,
 }: {
-  items: { label: string }[];
+  items: {
+    label: string;
+    onClick: () => void;
+    selected: boolean;
+    value: string;
+  }[];
   title: string;
 }) {
   return (
@@ -54,11 +65,12 @@ function SidebarCampaignSection({
       {items.map((item) => (
         <Button
           _hover={{ color: "fg" }}
-          color="fg.muted"
+          color={item.selected ? "fg" : "fg.muted"}
           justifyContent="flex-start"
-          key={item.label}
+          key={item.value}
+          onClick={item.onClick}
           size="sm"
-          variant="ghost"
+          variant={item.selected ? "subtle" : "ghost"}
           w="full"
         >
           {item.label}
