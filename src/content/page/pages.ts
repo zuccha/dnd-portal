@@ -5,18 +5,16 @@ import { createLocalStore } from "../../store/local-store";
 // Page Ids
 //------------------------------------------------------------------------------
 
-export const resourcePageIds = ["spells", "weapons"] as const;
+export const resourcePageIds = ["resource/spells", "resource/weapons"] as const;
 
-export const pageIds = resourcePageIds;
-
-export type PageId = (typeof resourcePageIds)[number];
+export type ResourcePageId = (typeof resourcePageIds)[number];
 
 //------------------------------------------------------------------------------
 // Use Selected Page Id
 //------------------------------------------------------------------------------
 
-export const useSelectedPageId = createLocalStore<PageId | "">(
+export const useSelectedPageId = createLocalStore<string>(
   "navigation.selected-page-id",
   "",
-  z.union([z.literal(""), z.enum(pageIds)]).parse
+  z.string().parse
 ).use;

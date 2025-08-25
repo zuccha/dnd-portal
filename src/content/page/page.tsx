@@ -1,26 +1,30 @@
 import type { FC } from "react";
+import { useSelectedUserCampaignId } from "../../supabase/resources/campaigns";
 import PageSpells from "./page-spells";
 import PageWeapons from "./page-weapons";
-import { type PageId, useSelectedPageId } from "./pages";
+import { type ResourcePageId, useSelectedPageId } from "./pages";
 
 //------------------------------------------------------------------------------
 // Page
 //------------------------------------------------------------------------------
 
 export default function Page() {
-  const [selectedContentId] = useSelectedPageId();
+  const [selectedPageId] = useSelectedPageId();
+  const [selectedCampaignId] = useSelectedUserCampaignId();
 
-  if (!selectedContentId) return null;
+  if (!selectedCampaignId) return null;
 
-  const Page = pages[selectedContentId];
-  return <Page />;
+  const ResourcePage = resourcePages[selectedPageId as ResourcePageId];
+  if (ResourcePage) return <ResourcePage campaignId={selectedCampaignId} />;
+
+  return null;
 }
 
 //------------------------------------------------------------------------------
 // Pages
 //------------------------------------------------------------------------------
 
-const pages: Record<PageId, FC> = {
-  spells: PageSpells,
-  weapons: PageWeapons,
+const resourcePages: Record<ResourcePageId, FC<{ campaignId: string }>> = {
+  "resource/spells": PageSpells,
+  "resource/weapons": PageWeapons,
 };

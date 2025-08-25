@@ -21,7 +21,7 @@ export default function SidebarCampaign(_props: SidebarCampaignProps) {
     () =>
       resourcePageIds
         .map((value) => ({
-          label: i18n.t(`section.resources[${value}]`),
+          label: i18n.t(`section.${value}`),
           onClick: () => setSelectedPageId(value),
           selected: selectedPageId === value,
           value,
@@ -85,16 +85,16 @@ function SidebarCampaignSection({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "section.resources.title": {
-    en: "Resources",
-    it: "Risorse",
-  },
-  "section.resources[spells]": {
+  "section.resource/spells": {
     en: "Spells",
     it: "Incantesimi",
   },
-  "section.resources[weapons]": {
+  "section.resource/weapons": {
     en: "Weapons",
     it: "Armi",
+  },
+  "section.resources.title": {
+    en: "Resources",
+    it: "Risorse",
   },
 };

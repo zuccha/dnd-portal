@@ -1,6 +1,10 @@
 import { Center } from "@chakra-ui/react";
 
-export default function PageWeapons() {
+export type PageWeaponProps = {
+  campaignId: string;
+};
+
+export default function PageWeapons(_props: PageWeaponProps) {
   return (
     <Center h="full" w="full">
       Weapons
