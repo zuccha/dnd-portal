@@ -11,7 +11,7 @@ export default function Content() {
     <HStack align="flex-start" gap={0} h="full" w="full">
       <Sidebar />
 
-      <Flex flex={1} h="full">
+      <Flex flex={1} h="full" overflow="auto">
         <Page />
       </Flex>
     </HStack>

@@ -25,6 +25,7 @@ export default function AppHeader() {
   return (
     <HStack
       borderBottomWidth={auth.user ? 1 : undefined}
+      h={appHeaderHeight}
       justify="space-between"
       px={4}
       py={2}
@@ -40,6 +41,8 @@ export default function AppHeader() {
     </HStack>
   );
 }
+
+export const appHeaderHeight = "3.5rem";
 
 //------------------------------------------------------------------------------
 // Language Select
