@@ -43,9 +43,6 @@ export function useTranslateSpellSchool() {
   const { data: translationMap } = useQuery<Record<string, I18nString>>({
     queryFn: fetchSpellSchoolTranslationsMap,
     queryKey: ["spell_school_translations_map"],
-
-    gcTime: 30 * 24 * 60 * 60 * 1000,
-    staleTime: Infinity,
   });
 
   const translate = useCallback(

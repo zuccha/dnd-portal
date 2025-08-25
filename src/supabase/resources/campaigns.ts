@@ -32,9 +32,6 @@ export function useCoreCampaigns() {
   return useQuery<Campaign[]>({
     queryFn: fetchCoreCampaigns,
     queryKey: ["campaigns/core"],
-
-    gcTime: 30 * 24 * 60 * 60 * 1000,
-    staleTime: Infinity,
   });
 }
 
@@ -55,9 +52,6 @@ export function useUserCampaigns() {
   return useQuery<Campaign[]>({
     queryFn: fetchUserCampaigns,
     queryKey: ["campaigns/user"],
-
-    gcTime: 30 * 24 * 60 * 60 * 1000,
-    staleTime: Infinity,
   });
 }
 

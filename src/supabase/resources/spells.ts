@@ -96,11 +96,6 @@ export function useCampaignSpells(
   return useQuery<Spell[]>({
     queryFn: fetchCampaignsSpells,
     queryKey: ["spells", campaignId, filters, langs],
-
-    refetchOnWindowFocus: false,
-
-    gcTime: 30 * 24 * 60 * 60 * 1000,
-    staleTime: Infinity,
   });
 }
 

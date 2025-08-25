@@ -45,9 +45,6 @@ export function useTranslateCharacterClass() {
   const { data: translationMap } = useQuery<Record<string, I18nString>>({
     queryFn: fetchCharacterClassTranslationsMap,
     queryKey: ["character_class_translations_map"],
-
-    gcTime: 30 * 24 * 60 * 60 * 1000,
-    staleTime: Infinity,
   });
 
   const translate = useCallback(

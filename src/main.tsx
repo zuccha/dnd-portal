@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./app.tsx";
 import { AuthProvider } from "./supabase/auth-provider";
-import { supabaseQueryClient } from "./supabase/supabase";
+import { queryClient } from "./supabase/supabase";
 import { ThemeProvider } from "./theme/theme-provider";
 
 //------------------------------------------------------------------------------
@@ -12,7 +12,7 @@ import { ThemeProvider } from "./theme/theme-provider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <QueryClientProvider client={supabaseQueryClient}>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
           <App />

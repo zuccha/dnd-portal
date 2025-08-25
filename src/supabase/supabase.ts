@@ -16,4 +16,15 @@ export default supabase;
 // Query Client
 //------------------------------------------------------------------------------
 
-export const supabaseQueryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: Infinity,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: Infinity,
+    },
+  },
+});

@@ -30,8 +30,5 @@ export function useLanguages() {
   return useQuery<Language[]>({
     queryFn: fetchLanguages,
     queryKey: ["languages"],
-
-    gcTime: 30 * 24 * 60 * 60 * 1000,
-    staleTime: Infinity,
   });
 }
