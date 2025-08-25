@@ -24,10 +24,10 @@ export default function AppHeader() {
 
   return (
     <HStack
+      borderBottomWidth={auth.user ? 1 : undefined}
       justify="space-between"
       px={4}
       py={2}
-      shadow={auth.user ? "sm" : undefined}
       w="full"
     >
       <Heading size="lg">D&D</Heading>
