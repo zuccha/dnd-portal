@@ -1,6 +1,7 @@
 import { Flex, Table } from "@chakra-ui/react";
 import { useI18n } from "../../i18n/i18n";
 import { t } from "../../i18n/i18n-string";
+import { useTranslateCharacterClass } from "../../supabase/resources/character_class_translations";
 import { useTranslateSpellSchool } from "../../supabase/resources/spell-school-translations";
 import { useCampaignSpells } from "../../supabase/resources/spells";
 
@@ -15,6 +16,7 @@ export type PageSpellsProps = {
 export default function PageSpells({ campaignId }: PageSpellsProps) {
   const i18n = useI18n(i18nContext);
   const { data: spells } = useCampaignSpells(campaignId, {}, [i18n.lang]);
+  const translateCharacterClass = useTranslateCharacterClass();
   const translateSpellSchool = useTranslateSpellSchool();
 
   if (!spells) return null;
@@ -33,6 +35,9 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
             </Table.ColumnHeader>
             <Table.ColumnHeader>
               {i18n.t("table.header.level")}
+            </Table.ColumnHeader>
+            <Table.ColumnHeader>
+              {i18n.t("table.header.character_classes")}
             </Table.ColumnHeader>
             <Table.ColumnHeader>
               {i18n.t("table.header.school")}
@@ -54,6 +59,15 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
             <Table.Row key={spell.id}>
               <Table.Cell>{t(spell.name, i18n.lang)}</Table.Cell>
               <Table.Cell>{spell.level}</Table.Cell>
+              <Table.Cell>
+                {spell.character_classes
+                  .map(
+                    (character_class) =>
+                      `${translateCharacterClass(character_class, i18n.lang)}.`
+                  )
+                  .sort()
+                  .join(" ")}
+              </Table.Cell>
               <Table.Cell>
                 {translateSpellSchool(spell.school, i18n.lang)}
               </Table.Cell>
@@ -81,6 +95,11 @@ const i18nContext = {
   "table.header.level": {
     en: "Level",
     it: "Livello",
+  },
+
+  "table.header.character_classes": {
+    en: "Classes",
+    it: "Classi",
   },
 
   "table.header.school": {
