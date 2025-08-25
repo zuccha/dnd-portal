@@ -57,7 +57,7 @@ function SidebarCampaignSection({
   title: string;
 }) {
   return (
-    <VStack align="flex-start" gap={0} w="full">
+    <VStack align="flex-start" gap={0.5} w="full">
       <Text fontSize="sm" fontWeight="semibold" mb={2} pl={4}>
         {title}
       </Text>
