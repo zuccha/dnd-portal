@@ -85,11 +85,17 @@ function TableRow<T extends { id: string }>({
   expandedKey?: keyof T;
   row: T;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(expandedTableRows.has(row.id));
 
   const toggleExpanded = useCallback(() => {
-    if (expandedKey) setExpanded((prev) => !prev);
-  }, [expandedKey]);
+    if (expandedKey)
+      setExpanded((prevExpanded) => {
+        const nextExpanded = !prevExpanded;
+        if (nextExpanded) expandedTableRows.add(row.id);
+        else expandedTableRows.delete(row.id);
+        return nextExpanded;
+      });
+  }, [expandedKey, row.id]);
 
   return (
     <>
@@ -150,7 +156,7 @@ function TableCellString({
 }
 
 //------------------------------------------------------------------------------
-//  Table Cell Boolean
+// Table Cell Boolean
 //------------------------------------------------------------------------------
 
 function TableCellBoolean({
@@ -163,3 +169,9 @@ function TableCellBoolean({
     </Table.Cell>
   );
 }
+
+//------------------------------------------------------------------------------
+// Expanded Table Rows
+//------------------------------------------------------------------------------
+
+const expandedTableRows = new Set<string>();
