@@ -3,6 +3,7 @@ import { useTranslateDistance } from "../i18n/i18n-distance";
 import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
+import { useTranslateTime } from "../i18n/i18n-time";
 import { useTranslateCharacterClass } from "../resources/character-class-translations";
 import { useTranslateSpellSchool } from "../resources/spell-school-translations";
 import type { Spell } from "../resources/spells";
@@ -18,6 +19,7 @@ export function useTranslateSpell() {
   const translateCharacterClass = useTranslateCharacterClass(lang);
   const translateSpellSchool = useTranslateSpellSchool(lang);
   const translateDistance = useTranslateDistance();
+  const translateTime = useTranslateTime();
 
   return useCallback(
     (spell: Spell) => {
@@ -29,7 +31,7 @@ export function useTranslateSpell() {
             "action": t("casting_time.action"),
             "bonus action": t("casting_time.bonus_action"),
             "reaction": t("casting_time.reaction"),
-          }[spell.casting_time] ?? spell.casting_time, // TODO: Localize time.
+          }[spell.casting_time] ?? translateTime(spell.casting_time),
         character_classes: spell.character_classes
           .map(translateCharacterClass)
           .sort()
@@ -51,7 +53,7 @@ export function useTranslateSpell() {
             "until dispelled or triggered": t(
               "duration.until_dispelled_or_triggered"
             ),
-          }[spell.duration] ?? spell.duration, // TODO: Localize duration.
+          }[spell.duration] ?? translateTime(spell.duration),
         id: spell.id,
         level: `${spell.level}`,
         materials: spell.materials ? translate(spell.materials, lang) : "",
@@ -76,6 +78,7 @@ export function useTranslateSpell() {
       translateCharacterClass,
       translateDistance,
       translateSpellSchool,
+      translateTime,
     ]
   );
 }

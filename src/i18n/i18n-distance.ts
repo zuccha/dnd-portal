@@ -1,5 +1,4 @@
-import { useCallback } from "react";
-import { useI18nLangContext } from "./i18n-lang-context";
+import { useTranslateMeasure } from "./i18n-measure";
 
 //------------------------------------------------------------------------------
 // Use Translate Distance
@@ -8,22 +7,10 @@ import { useI18nLangContext } from "./i18n-lang-context";
 export function useTranslateDistance(
   format: "long" | "short" = "short"
 ): (raw: string) => string {
-  const { tpi } = useI18nLangContext(i18Context);
-
-  return useCallback(
-    (raw: string) => {
-      const match = raw.match(distanceRegex);
-      if (!match || !match.groups) return raw;
-
-      const unit = match.groups.unit;
-      const value = parseFloat(match.groups.value);
-      return tpi(`${unit}.${format}`, value, `${value}`);
-    },
-    [format, tpi]
-  );
+  return useTranslateMeasure(i18Context, distanceUnits, format);
 }
 
-const distanceRegex = /^(?<value>\d+(?:\.\d+)?) (?<unit>cm|ft|km|m|mi)$/;
+const distanceUnits = ["cm", "ft", "km", "m", "mi"];
 
 //------------------------------------------------------------------------------
 // I18n Context
