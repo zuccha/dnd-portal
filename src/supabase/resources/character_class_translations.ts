@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { z } from "zod/v4";
+import type { I18nLang } from "../../i18n/i18n-lang";
 import type { I18nString } from "../../i18n/i18n-string";
 import supabase from "../supabase";
 
@@ -41,19 +42,19 @@ export async function fetchCharacterClassTranslationsMap(): Promise<
 // Use Translate Character Class
 //------------------------------------------------------------------------------
 
-export function useTranslateCharacterClass() {
+export function useTranslateCharacterClass(lang: I18nLang) {
   const { data: translationMap } = useQuery<Record<string, I18nString>>({
     queryFn: fetchCharacterClassTranslationsMap,
     queryKey: ["character_class_translations_map"],
   });
 
   const translate = useCallback(
-    (characterClass: string, lang: string) => {
+    (characterClass: string) => {
       if (!translationMap) return characterClass;
       const base = translationMap[characterClass];
       return base[lang] ?? base.en ?? characterClass;
     },
-    [translationMap]
+    [lang, translationMap]
   );
 
   return translate;

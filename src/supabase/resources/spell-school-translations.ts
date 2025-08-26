@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { z } from "zod/v4";
+import type { I18nLang } from "../../i18n/i18n-lang";
 import type { I18nString } from "../../i18n/i18n-string";
 import supabase from "../supabase";
 
@@ -39,19 +40,19 @@ export async function fetchSpellSchoolTranslationsMap(): Promise<
 // Use Translate Spell School
 //------------------------------------------------------------------------------
 
-export function useTranslateSpellSchool() {
+export function useTranslateSpellSchool(lang: I18nLang) {
   const { data: translationMap } = useQuery<Record<string, I18nString>>({
     queryFn: fetchSpellSchoolTranslationsMap,
     queryKey: ["spell_school_translations_map"],
   });
 
   const translate = useCallback(
-    (spellSchool: string, lang: string) => {
+    (spellSchool: string) => {
       if (!translationMap) return spellSchool;
       const base = translationMap[spellSchool];
       return base[lang] ?? base.en ?? spellSchool;
     },
-    [translationMap]
+    [lang, translationMap]
   );
 
   return translate;

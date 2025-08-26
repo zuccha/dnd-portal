@@ -1,8 +1,6 @@
 import { Flex, Table } from "@chakra-ui/react";
 import { useI18n } from "../../i18n/i18n";
-import { t } from "../../i18n/i18n-string";
-import { useTranslateCharacterClass } from "../../supabase/resources/character_class_translations";
-import { useTranslateSpellSchool } from "../../supabase/resources/spell-school-translations";
+import { useTranslateSpell } from "../../resources-i18n/translate-spell";
 import { useCampaignSpells } from "../../supabase/resources/spells";
 
 //------------------------------------------------------------------------------
@@ -16,8 +14,7 @@ export type PageSpellsProps = {
 export default function PageSpells({ campaignId }: PageSpellsProps) {
   const i18n = useI18n(i18nContext);
   const { data: spells } = useCampaignSpells(campaignId, {}, [i18n.lang]);
-  const translateCharacterClass = useTranslateCharacterClass();
-  const translateSpellSchool = useTranslateSpellSchool();
+  const translateSpell = useTranslateSpell();
 
   if (!spells) return null;
 
@@ -51,31 +48,28 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
             <Table.ColumnHeader>
               {i18n.t("table.header.duration")}
             </Table.ColumnHeader>
+            <Table.ColumnHeader>
+              {i18n.t("table.header.components")}
+            </Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {spells.map((spell) => (
-            <Table.Row key={spell.id}>
-              <Table.Cell>{t(spell.name, i18n.lang)}</Table.Cell>
-              <Table.Cell>{spell.level}</Table.Cell>
-              <Table.Cell>
-                {spell.character_classes
-                  .map(
-                    (character_class) =>
-                      `${translateCharacterClass(character_class, i18n.lang)}.`
-                  )
-                  .sort()
-                  .join(" ")}
-              </Table.Cell>
-              <Table.Cell>
-                {translateSpellSchool(spell.school, i18n.lang)}
-              </Table.Cell>
-              <Table.Cell>{spell.casting_time}</Table.Cell>
-              <Table.Cell>{spell.range_met}</Table.Cell>
-              <Table.Cell>{spell.duration}</Table.Cell>
-            </Table.Row>
-          ))}
+          {spells.map((spell) => {
+            const translatedSpell = translateSpell(spell);
+            return (
+              <Table.Row key={spell.id}>
+                <Table.Cell>{translatedSpell.name}</Table.Cell>
+                <Table.Cell>{translatedSpell.level}</Table.Cell>
+                <Table.Cell>{translatedSpell.character_classes}</Table.Cell>
+                <Table.Cell>{translatedSpell.school}</Table.Cell>
+                <Table.Cell>{translatedSpell.casting_time}</Table.Cell>
+                <Table.Cell>{translatedSpell.range}</Table.Cell>
+                <Table.Cell>{translatedSpell.duration}</Table.Cell>
+                <Table.Cell>{translatedSpell.components}</Table.Cell>
+              </Table.Row>
+            );
+          })}
         </Table.Body>
       </Table.Root>
     </Flex>
@@ -120,5 +114,10 @@ const i18nContext = {
   "table.header.duration": {
     en: "Duration",
     it: "Durata",
+  },
+
+  "table.header.components": {
+    en: "V,S,M",
+    it: "V,S,M",
   },
 };
