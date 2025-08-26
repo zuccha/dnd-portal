@@ -35,7 +35,7 @@ export const spellSchema = z.object({
   materials: i18nStringSchema.optional(),
   name: i18nStringSchema,
   page: i18nStringSchema.optional(),
-  update: i18nStringSchema.optional(),
+  upgrade: i18nStringSchema.optional(),
 });
 
 export type Spell = z.infer<typeof spellSchema>;

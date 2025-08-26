@@ -13,7 +13,7 @@ import type { Spell } from "../resources/spells";
 //------------------------------------------------------------------------------
 
 export function useTranslateSpell() {
-  const { lang, t } = useI18nLangContext(i18nContext);
+  const { lang, t, tp } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateCharacterClass = useTranslateCharacterClass(lang);
@@ -24,6 +24,8 @@ export function useTranslateSpell() {
   return useCallback(
     (spell: Spell) => {
       const range = system === "metric" ? spell.range_met : spell.range_imp;
+      const description = translate(spell.description, lang);
+      const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
 
       return {
         casting_time:
@@ -44,7 +46,11 @@ export function useTranslateSpell() {
           .filter((component) => component)
           .join(", "),
         concentration: spell.concentration,
-        description: translate(spell.description, lang),
+        description: description
+          ? upgrade
+            ? `${description}\n\n**${tp("upgrade", spell.level)}**${upgrade}`
+            : description
+          : "",
         duration:
           {
             "instantaneous": t("duration.instantaneous"),
@@ -68,13 +74,13 @@ export function useTranslateSpell() {
           }[range] ?? translateDistance(range),
         ritual: spell.ritual,
         school: translateSpellSchool(spell.school),
-        update: spell.update ? translate(spell.update, lang) : "",
       };
     },
     [
       lang,
       system,
       t,
+      tp,
       translateCharacterClass,
       translateDistance,
       translateSpellSchool,
@@ -154,5 +160,14 @@ const i18nContext = {
   "range.unlimited": {
     en: "Unlimited",
     it: "Illimitato",
+  },
+
+  "upgrade/*": {
+    en: "At Higher Levels",
+    it: "A Livelli Superiori",
+  },
+  "upgrade/0": {
+    en: "Cantrip Upgrade",
+    it: "Potenziamento del Trucchetto",
   },
 };

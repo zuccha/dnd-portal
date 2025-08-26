@@ -1,5 +1,5 @@
 import { Span, Table, type TableRootProps } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Checkbox from "./checkbox";
 
 //------------------------------------------------------------------------------
@@ -18,17 +18,20 @@ export type DataTableProps<T extends { id: string }> = Omit<
   "children"
 > & {
   columns: DataTableColumn<T>[];
+  expandedKey?: keyof T;
   rows: T[];
   stickyHeader?: boolean;
 };
 
 export default function DataTable<T extends { id: string }>({
   columns,
+  expandedKey,
   rows,
   stickyHeader,
+  ...rest
 }: DataTableProps<T>) {
   return (
-    <Table.Root>
+    <Table.Root {...rest}>
       <Table.Header position={stickyHeader ? "sticky" : undefined} top={0}>
         <Table.Row
           bgColor="bg.subtle"
@@ -56,28 +59,64 @@ export default function DataTable<T extends { id: string }>({
       </Table.Header>
 
       <Table.Body>
-        {rows.map((row) => {
-          return (
-            <Table.Row key={row.id}>
-              {columns.map(({ key, ...rest }) => {
-                const value = row[key];
-                if (typeof value === "string")
-                  return <TableCellString key={key} value={value} {...rest} />;
-
-                if (typeof value === "boolean")
-                  return <TableCellBoolean key={key} value={value} {...rest} />;
-
-                return (
-                  <Table.Cell key={String(key)} {...rest}>
-                    {String(value)}
-                  </Table.Cell>
-                );
-              })}
-            </Table.Row>
-          );
-        })}
+        {rows.map((row) => (
+          <TableRow
+            columns={columns}
+            expandedKey={expandedKey}
+            key={row.id}
+            row={row}
+          />
+        ))}
       </Table.Body>
     </Table.Root>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Table Row
+//------------------------------------------------------------------------------
+
+function TableRow<T extends { id: string }>({
+  columns,
+  expandedKey,
+  row,
+}: {
+  columns: DataTableColumn<T>[];
+  expandedKey?: keyof T;
+  row: T;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpanded = useCallback(() => {
+    if (expandedKey) setExpanded((prev) => !prev);
+  }, [expandedKey]);
+
+  return (
+    <>
+      <Table.Row key={row.id} onClick={toggleExpanded}>
+        {columns.map(({ key, ...rest }) => {
+          const value = row[key];
+          if (typeof value === "string")
+            return <TableCellString key={key} value={value} {...rest} />;
+
+          if (typeof value === "boolean")
+            return <TableCellBoolean key={key} value={value} {...rest} />;
+
+          return (
+            <Table.Cell key={String(key)} {...rest}>
+              {String(value)}
+            </Table.Cell>
+          );
+        })}
+      </Table.Row>
+      {expandedKey && expanded && (
+        <Table.Row bgColor="bg.muted" w="full">
+          <Table.Cell colSpan={columns.length}>
+            {String(row[expandedKey])}
+          </Table.Cell>
+        </Table.Row>
+      )}
+    </>
   );
 }
 

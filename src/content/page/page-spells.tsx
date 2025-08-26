@@ -36,7 +36,12 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
 
   return (
     <Flex fontSize="sm" h="full" position="relative" w="full">
-      <DataTable columns={columns} rows={rows} stickyHeader />
+      <DataTable
+        columns={columns}
+        expandedKey="description"
+        rows={rows}
+        stickyHeader
+      />
     </Flex>
   );
 }
