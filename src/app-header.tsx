@@ -7,11 +7,11 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
+import { type AuthUser, signOut } from "./auth/auth";
+import useAuth from "./auth/use-auth";
 import { useI18n } from "./i18n/i18n";
 import { i18nLangStore } from "./i18n/i18n-lang";
-import { type AuthUser, signOut } from "./auth/auth";
-import { useLanguages } from "./supabase/language";
-import useAuth from "./auth/use-auth";
+import { useLanguages } from "./resources/language";
 import ThemeButton from "./theme/theme-button";
 import Select from "./ui/select";
 

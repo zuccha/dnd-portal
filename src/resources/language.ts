@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import z from "zod/v4";
-import supabase from "./supabase";
+import supabase from "../supabase/supabase";
 
 //------------------------------------------------------------------------------
 // Language
