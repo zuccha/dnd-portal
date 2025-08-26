@@ -11,9 +11,11 @@ import { type AuthUser, signOut } from "./auth/auth";
 import useAuth from "./auth/use-auth";
 import { useI18n } from "./i18n/i18n";
 import { i18nLangStore } from "./i18n/i18n-lang";
+import { i18nSystems, useI18nSystem } from "./i18n/i18n-system";
 import { useLanguages } from "./resources/language";
 import ThemeButton from "./theme/theme-button";
 import Select from "./ui/select";
+import { compareObjects } from "./utils/object";
 
 //------------------------------------------------------------------------------
 // App Header
@@ -36,6 +38,7 @@ export default function AppHeader() {
       <HStack>
         {auth.user && <UserButton user={auth.user} />}
         <LanguageSelect />
+        <SystemSelect />
         <ThemeButton />
       </HStack>
     </HStack>
@@ -70,6 +73,38 @@ function LanguageSelect() {
       size="sm"
       value={language}
       w="4em"
+    />
+  );
+}
+
+//------------------------------------------------------------------------------
+// System Select
+//------------------------------------------------------------------------------
+
+function SystemSelect() {
+  const i18n = useI18n(i18nContext);
+  const [system, setSystem] = useI18nSystem();
+
+  const systemOptions = useMemo(
+    () =>
+      createListCollection({
+        items: i18nSystems
+          .map((system) => ({
+            label: i18n.t(`system.${system}`),
+            value: system,
+          }))
+          .sort(compareObjects("label")),
+      }),
+    [i18n]
+  );
+
+  return (
+    <Select
+      onValueChange={setSystem}
+      options={systemOptions}
+      size="sm"
+      value={system}
+      w="6.5em"
     />
   );
 }
@@ -118,5 +153,14 @@ const i18nContext = {
   "button.signout": {
     en: "Sign out",
     it: "Logout",
+  },
+
+  "system.imperial": {
+    en: "Imperial",
+    it: "Imperiale",
+  },
+  "system.metric": {
+    en: "Metric",
+    it: "Metrico",
   },
 };

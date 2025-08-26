@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useI18n } from "../i18n/i18n";
 import { t } from "../i18n/i18n-string";
+import { useI18nSystem } from "../i18n/i18n-system";
 import { useTranslateCharacterClass } from "../resources/character-class-translations";
 import { useTranslateSpellSchool } from "../resources/spell-school-translations";
 import type { Spell } from "../resources/spells";
@@ -11,12 +12,15 @@ import type { Spell } from "../resources/spells";
 
 export function useTranslateSpell() {
   const i18n = useI18n(i18nContext);
+  const [system] = useI18nSystem();
 
   const translateCharacterClass = useTranslateCharacterClass(i18n.lang);
   const translateSpellSchool = useTranslateSpellSchool(i18n.lang);
 
   return useCallback(
     (spell: Spell) => {
+      const range = system === "metric" ? spell.range_met : spell.range_imp;
+
       return {
         casting_time:
           {
@@ -56,13 +60,13 @@ export function useTranslateSpell() {
             special: i18n.t("range.special"),
             touch: i18n.t("range.touch"),
             unlimited: i18n.t("range.unlimited"),
-          }[spell.range_met] ?? spell.range_met, // TODO: Localize range.
+          }[range] ?? range, // TODO: Localize range.
         ritual: spell.ritual,
         school: translateSpellSchool(spell.school),
         update: spell.update ? t(spell.update, i18n.lang) : "",
       };
     },
-    [i18n, translateCharacterClass, translateSpellSchool]
+    [i18n, system, translateCharacterClass, translateSpellSchool]
   );
 }
 
