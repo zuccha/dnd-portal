@@ -1,0 +1,54 @@
+import { useCallback } from "react";
+import { useI18nLangContext } from "./i18n-lang-context";
+
+//------------------------------------------------------------------------------
+// Use Translate Distance
+//------------------------------------------------------------------------------
+
+export function useTranslateDistance(
+  format: "long" | "short" = "short"
+): (raw: string) => string {
+  const { tpi } = useI18nLangContext(i18Context);
+
+  return useCallback(
+    (raw: string) => {
+      const match = raw.match(distanceRegex);
+      if (!match || !match.groups) return raw;
+
+      const unit = match.groups.unit;
+      const value = parseFloat(match.groups.value);
+      return tpi(`${unit}.${format}`, value, `${value}`);
+    },
+    [format, tpi]
+  );
+}
+
+const distanceRegex = /^(?<value>\d+(?:\.\d+)?) (?<unit>cm|ft|km|m|mi)$/;
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18Context = {
+  "cm.long/*": { en: "<1> centimeters", it: "<1> centimetri" },
+  "cm.long/1": { en: "<1> centimeters", it: "<1> centimetro" },
+  "ft.long/*": { en: "<1> feet", it: "<1> piedi" },
+  "ft.long/1": { en: "<1> foot", it: "<1> piede" },
+  "km.long/*": { en: "<1> kilometers", it: "<1> chiilometri" },
+  "km.long/1": { en: "<1> kilometer", it: "<1> chiilometro" },
+  "m.long/*": { en: "<1> meters", it: "<1> metri" },
+  "m.long/1": { en: "<1> meter", it: "<1> metro" },
+  "mi.long/*": { en: "<1> miles", it: "<1> miglia" },
+  "mi.long/1": { en: "<1> mile", it: "<1> miglio" },
+
+  "cm.short/*": { en: "<1> cm", it: "<1> cm" },
+  "cm.short/1": { en: "<1> cm", it: "<1> cm" },
+  "ft.short/*": { en: "<1> ft", it: "<1> ft" },
+  "ft.short/1": { en: "<1> ft", it: "<1> ft" },
+  "km.short/*": { en: "<1> km", it: "<1> km" },
+  "km.short/1": { en: "<1> km", it: "<1> km" },
+  "m.short/*": { en: "<1> m", it: "<1> m" },
+  "m.short/1": { en: "<1> m", it: "<1> m" },
+  "mi.short/*": { en: "<1> mi", it: "<1> mi" },
+  "mi.short/1": { en: "<1> mi", it: "<1> mi" },
+};

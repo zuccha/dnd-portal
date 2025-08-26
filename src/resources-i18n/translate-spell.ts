@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { useTranslateDistance } from "../i18n/i18n-distance";
 import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
@@ -16,6 +17,7 @@ export function useTranslateSpell() {
 
   const translateCharacterClass = useTranslateCharacterClass(lang);
   const translateSpellSchool = useTranslateSpellSchool(lang);
+  const translateDistance = useTranslateDistance();
 
   return useCallback(
     (spell: Spell) => {
@@ -38,15 +40,15 @@ export function useTranslateSpell() {
           spell.material ? "M" : "",
         ]
           .filter((component) => component)
-          .join(","),
+          .join(", "),
         concentration: spell.concentration,
         description: translate(spell.description, lang),
         duration:
           {
-            instantaneous: t("duration.instantaneous"),
-            special: t("duration.special"),
-            until_dispelled: t("duration.until_dispelled"),
-            until_dispelled_or_triggered: t(
+            "instantaneous": t("duration.instantaneous"),
+            "special": t("duration.special"),
+            "until dispelled": t("duration.until_dispelled"),
+            "until dispelled or triggered": t(
               "duration.until_dispelled_or_triggered"
             ),
           }[spell.duration] ?? spell.duration, // TODO: Localize duration.
@@ -61,13 +63,20 @@ export function useTranslateSpell() {
             special: t("range.special"),
             touch: t("range.touch"),
             unlimited: t("range.unlimited"),
-          }[range] ?? range, // TODO: Localize range.
+          }[range] ?? translateDistance(range),
         ritual: spell.ritual,
         school: translateSpellSchool(spell.school),
         update: spell.update ? translate(spell.update, lang) : "",
       };
     },
-    [lang, system, t, translateCharacterClass, translateSpellSchool]
+    [
+      lang,
+      system,
+      t,
+      translateCharacterClass,
+      translateDistance,
+      translateSpellSchool,
+    ]
   );
 }
 
@@ -116,7 +125,7 @@ const i18nContext = {
   },
   "duration.until_dispelled_or_triggered": {
     en: "Until dispelled or triggered",
-    it: "Finché non disperso", // TODO
+    it: "Finché non disperso o innescato",
   },
 
   "range.distance": {
