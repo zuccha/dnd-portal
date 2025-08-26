@@ -49,6 +49,8 @@ const columnKeys = [
   "casting_time",
   "range",
   "duration",
+  "ritual",
+  "concentration",
   "components",
 ] as const;
 
@@ -90,6 +92,16 @@ const i18nContext = {
   "table.header.duration": {
     en: "Duration",
     it: "Durata",
+  },
+
+  "table.header.ritual": {
+    en: "R",
+    it: "R",
+  },
+
+  "table.header.concentration": {
+    en: "C",
+    it: "C",
   },
 
   "table.header.components": {

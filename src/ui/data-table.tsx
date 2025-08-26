@@ -1,4 +1,9 @@
 import { Table, type TableRootProps } from "@chakra-ui/react";
+import Checkbox from "./checkbox";
+
+//------------------------------------------------------------------------------
+// Data Table
+//------------------------------------------------------------------------------
 
 export type DataTableProps<T extends { id: string }> = Omit<
   TableRootProps,
@@ -34,11 +39,18 @@ export default function DataTable<T extends { id: string }>({
         {rows.map((row) => {
           return (
             <Table.Row key={row.id}>
-              {columns.map((column) => (
-                <Table.Cell key={String(column.key)}>
-                  {String(row[column.key])}
-                </Table.Cell>
-              ))}
+              {columns.map((column) => {
+                const value = row[column.key];
+                return (
+                  <Table.Cell key={String(column.key)}>
+                    {typeof value === "boolean" ? (
+                      <Checkbox checked={value} disabled size="sm" />
+                    ) : (
+                      String(value)
+                    )}
+                  </Table.Cell>
+                );
+              })}
             </Table.Row>
           );
         })}
