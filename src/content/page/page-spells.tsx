@@ -105,7 +105,7 @@ const i18nContext = {
   },
 
   "table.header.components": {
-    en: "V,S,M",
-    it: "V,S,M",
+    en: "V, S, M",
+    it: "V, S, M",
   },
 };
