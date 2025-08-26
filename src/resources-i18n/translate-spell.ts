@@ -48,9 +48,9 @@ export function useTranslateSpell() {
         concentration: spell.concentration,
         description: description
           ? upgrade
-            ? `${description}\n\n**${tp("upgrade", spell.level)}**${upgrade}`
+            ? `${description}\n\n${tp("upgrade", spell.level)}\n${upgrade}`
             : description
-          : "",
+          : t("description.missing"),
         duration:
           {
             "instantaneous": t("duration.instantaneous"),
@@ -162,12 +162,17 @@ const i18nContext = {
     it: "Illimitato",
   },
 
+  "description.missing": {
+    en: "_Missing description._",
+    it: "_Descrizione mancante._",
+  },
+
   "upgrade/*": {
-    en: "At Higher Levels",
-    it: "A Livelli Superiori",
+    en: "**At Higher Levels**",
+    it: "**A Livelli Superiori**",
   },
   "upgrade/0": {
-    en: "Cantrip Upgrade",
-    it: "Potenziamento del Trucchetto",
+    en: "**Cantrip Upgrade**",
+    it: "**Potenziamento del Trucchetto**",
   },
 };
