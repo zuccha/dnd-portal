@@ -1,6 +1,6 @@
 import { Text, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { useI18n } from "../../i18n/i18n";
+import { useI18nLangContext } from "../../i18n/i18n-lang-context";
 import Button from "../../ui/button";
 import { compareObjects } from "../../utils/object";
 import { resourcePageIds, useSelectedPageId } from "../page/pages";
@@ -14,27 +14,27 @@ export type SidebarCampaignProps = {
 };
 
 export default function SidebarCampaign(_props: SidebarCampaignProps) {
-  const i18n = useI18n(i18nContext);
+  const { t } = useI18nLangContext(i18nContext);
   const [selectedPageId, setSelectedPageId] = useSelectedPageId();
 
   const resourceItems = useMemo(
     () =>
       resourcePageIds
         .map((value) => ({
-          label: i18n.t(`section.${value}`),
+          label: t(`section.${value}`),
           onClick: () => setSelectedPageId(value),
           selected: selectedPageId === value,
           value,
         }))
         .sort(compareObjects("label")),
-    [i18n, selectedPageId, setSelectedPageId]
+    [selectedPageId, setSelectedPageId, t]
   );
 
   return (
     <VStack gap={10} w="full">
       <SidebarCampaignSection
         items={resourceItems}
-        title={i18n.t("section.resources.title")}
+        title={t("section.resources.title")}
       />
     </VStack>
   );

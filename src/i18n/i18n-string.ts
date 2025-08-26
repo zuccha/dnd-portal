@@ -10,9 +10,9 @@ export const i18nStringSchema = z.record(z.string(), z.string());
 export type I18nString = z.infer<typeof i18nStringSchema>;
 
 //------------------------------------------------------------------------------
-// T
+// Translate
 //------------------------------------------------------------------------------
 
-export function t(i18nString: I18nString, lang: I18nLang): string {
+export function translate(i18nString: I18nString, lang: I18nLang): string {
   return i18nString[lang] ?? i18nString["en"] ?? "";
 }

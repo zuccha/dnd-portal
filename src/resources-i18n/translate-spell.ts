@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useI18n } from "../i18n/i18n";
-import { t } from "../i18n/i18n-string";
+import { useI18nLangContext } from "../i18n/i18n-lang-context";
+import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
 import { useTranslateCharacterClass } from "../resources/character-class-translations";
 import { useTranslateSpellSchool } from "../resources/spell-school-translations";
@@ -11,11 +11,11 @@ import type { Spell } from "../resources/spells";
 //------------------------------------------------------------------------------
 
 export function useTranslateSpell() {
-  const i18n = useI18n(i18nContext);
+  const { lang, t } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
-  const translateCharacterClass = useTranslateCharacterClass(i18n.lang);
-  const translateSpellSchool = useTranslateSpellSchool(i18n.lang);
+  const translateCharacterClass = useTranslateCharacterClass(lang);
+  const translateSpellSchool = useTranslateSpellSchool(lang);
 
   return useCallback(
     (spell: Spell) => {
@@ -24,9 +24,9 @@ export function useTranslateSpell() {
       return {
         casting_time:
           {
-            "action": i18n.t("casting_time.action"),
-            "bonus action": i18n.t("casting_time.bonus_action"),
-            "reaction": i18n.t("casting_time.reaction"),
+            "action": t("casting_time.action"),
+            "bonus action": t("casting_time.bonus_action"),
+            "reaction": t("casting_time.reaction"),
           }[spell.casting_time] ?? spell.casting_time, // TODO: Localize time.
         character_classes: spell.character_classes
           .map(translateCharacterClass)
@@ -40,33 +40,33 @@ export function useTranslateSpell() {
           .filter((component) => component)
           .join(","),
         concentration: spell.concentration,
-        description: t(spell.description, i18n.lang),
+        description: translate(spell.description, lang),
         duration:
           {
-            instantaneous: i18n.t("duration.instantaneous"),
-            special: i18n.t("duration.special"),
-            until_dispelled: i18n.t("duration.until_dispelled"),
-            until_dispelled_or_triggered: i18n.t(
+            instantaneous: t("duration.instantaneous"),
+            special: t("duration.special"),
+            until_dispelled: t("duration.until_dispelled"),
+            until_dispelled_or_triggered: t(
               "duration.until_dispelled_or_triggered"
             ),
           }[spell.duration] ?? spell.duration, // TODO: Localize duration.
         level: `${spell.level}`,
-        materials: spell.materials ? t(spell.materials, i18n.lang) : "",
-        name: t(spell.name, i18n.lang),
+        materials: spell.materials ? translate(spell.materials, lang) : "",
+        name: translate(spell.name, lang),
         range:
           {
-            self: i18n.t("range.self"),
-            sight: i18n.t("range.sight"),
-            special: i18n.t("range.special"),
-            touch: i18n.t("range.touch"),
-            unlimited: i18n.t("range.unlimited"),
+            self: t("range.self"),
+            sight: t("range.sight"),
+            special: t("range.special"),
+            touch: t("range.touch"),
+            unlimited: t("range.unlimited"),
           }[range] ?? range, // TODO: Localize range.
         ritual: spell.ritual,
         school: translateSpellSchool(spell.school),
-        update: spell.update ? t(spell.update, i18n.lang) : "",
+        update: spell.update ? translate(spell.update, lang) : "",
       };
     },
-    [i18n, system, translateCharacterClass, translateSpellSchool]
+    [lang, system, t, translateCharacterClass, translateSpellSchool]
   );
 }
 

@@ -9,8 +9,8 @@ import {
 import { useMemo } from "react";
 import { type AuthUser, signOut } from "./auth/auth";
 import useAuth from "./auth/use-auth";
-import { useI18n } from "./i18n/i18n";
-import { i18nLangStore } from "./i18n/i18n-lang";
+import { useI18nLang } from "./i18n/i18n-lang";
+import { useI18nLangContext } from "./i18n/i18n-lang-context";
 import { i18nSystems, useI18nSystem } from "./i18n/i18n-system";
 import { useLanguages } from "./resources/language";
 import ThemeButton from "./theme/theme-button";
@@ -52,7 +52,7 @@ export const appHeaderHeight = "3.5rem";
 //------------------------------------------------------------------------------
 
 function LanguageSelect() {
-  const [language, setLanguage] = i18nLangStore.use();
+  const [language, setLanguage] = useI18nLang();
 
   const languages = useLanguages();
   const languageOptions = useMemo(
@@ -82,7 +82,7 @@ function LanguageSelect() {
 //------------------------------------------------------------------------------
 
 function SystemSelect() {
-  const i18n = useI18n(i18nContext);
+  const { t } = useI18nLangContext(i18nContext);
   const [system, setSystem] = useI18nSystem();
 
   const systemOptions = useMemo(
@@ -90,12 +90,12 @@ function SystemSelect() {
       createListCollection({
         items: i18nSystems
           .map((system) => ({
-            label: i18n.t(`system.${system}`),
+            label: t(`system.${system}`),
             value: system,
           }))
           .sort(compareObjects("label")),
       }),
-    [i18n]
+    [t]
   );
 
   return (
@@ -114,7 +114,7 @@ function SystemSelect() {
 //------------------------------------------------------------------------------
 
 function UserButton({ user }: { user: AuthUser }) {
-  const i18n = useI18n(i18nContext);
+  const { t } = useI18nLangContext(i18nContext);
 
   return (
     <Menu.Root>
@@ -135,7 +135,7 @@ function UserButton({ user }: { user: AuthUser }) {
             <Menu.ItemGroup>
               <Menu.ItemGroupLabel>{user.name ?? "User"}</Menu.ItemGroupLabel>
               <Menu.Item onClick={signOut} value="logout">
-                {i18n.t("button.signout")}
+                {t("button.signout")}
               </Menu.Item>
             </Menu.ItemGroup>
           </Menu.Content>

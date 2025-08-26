@@ -1,6 +1,6 @@
 import { Text, VStack, createListCollection } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
-import { useI18n } from "../../i18n/i18n";
+import { useI18nLangContext } from "../../i18n/i18n-lang-context";
 import {
   useSelectedUserCampaignId,
   useUserCampaigns,
@@ -16,7 +16,7 @@ export default function SidebarCampaignSelector() {
     useSelectedUserCampaignId();
   const { isPending, data: campaigns } = useUserCampaigns();
 
-  const i18n = useI18n(i18nContext);
+  const { t } = useI18nLangContext(i18nContext);
 
   const campaignOptions = useMemo(() => {
     if (isPending)
@@ -25,7 +25,7 @@ export default function SidebarCampaignSelector() {
       });
     if (!campaigns || !campaigns.length)
       return createListCollection({
-        items: [{ label: i18n.t("select.empty"), value: "" }],
+        items: [{ label: t("select.empty"), value: "" }],
       });
     return createListCollection({
       items: campaigns.map((campaign) => ({
@@ -33,7 +33,7 @@ export default function SidebarCampaignSelector() {
         value: campaign.id,
       })),
     });
-  }, [campaigns, i18n, isPending]);
+  }, [campaigns, isPending, t]);
 
   useLayoutEffect(() => {
     setSelectedCampaignId(
@@ -44,7 +44,7 @@ export default function SidebarCampaignSelector() {
   return (
     <VStack align="flex-start" px={4} w="full">
       <Text fontSize="sm" fontWeight="semibold">
-        {i18n.t("title")}
+        {t("title")}
       </Text>
 
       <Select

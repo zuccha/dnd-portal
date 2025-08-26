@@ -1,5 +1,5 @@
 import { Flex, Table } from "@chakra-ui/react";
-import { useI18n } from "../../i18n/i18n";
+import { useI18nLangContext } from "../../i18n/i18n-lang-context";
 import { useCampaignSpells } from "../../resources/spells";
 import { useTranslateSpell } from "../../resources-i18n/translate-spell";
 
@@ -12,8 +12,8 @@ export type PageSpellsProps = {
 };
 
 export default function PageSpells({ campaignId }: PageSpellsProps) {
-  const i18n = useI18n(i18nContext);
-  const { data: spells } = useCampaignSpells(campaignId, {}, [i18n.lang]);
+  const { lang, t } = useI18nLangContext(i18nContext);
+  const { data: spells } = useCampaignSpells(campaignId, {}, [lang]);
   const translateSpell = useTranslateSpell();
 
   if (!spells) return null;
@@ -27,29 +27,21 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
             boxShadow="0px 0.5px 0px var(--shadow-color)"
             boxShadowColor="border"
           >
+            <Table.ColumnHeader>{t("table.header.name")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("table.header.level")}</Table.ColumnHeader>
             <Table.ColumnHeader>
-              {i18n.t("table.header.name")}
+              {t("table.header.character_classes")}
+            </Table.ColumnHeader>
+            <Table.ColumnHeader>{t("table.header.school")}</Table.ColumnHeader>
+            <Table.ColumnHeader>
+              {t("table.header.casting_time")}
+            </Table.ColumnHeader>
+            <Table.ColumnHeader>{t("table.header.range")}</Table.ColumnHeader>
+            <Table.ColumnHeader>
+              {t("table.header.duration")}
             </Table.ColumnHeader>
             <Table.ColumnHeader>
-              {i18n.t("table.header.level")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {i18n.t("table.header.character_classes")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {i18n.t("table.header.school")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {i18n.t("table.header.casting_time")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {i18n.t("table.header.range")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {i18n.t("table.header.duration")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {i18n.t("table.header.components")}
+              {t("table.header.components")}
             </Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
