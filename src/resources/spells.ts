@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { z } from "zod/v4";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { createMemoryStore } from "../store/memory-store";
-import supabase from "../supabase/supabase";
+import supabase from "../supabase";
 
 //------------------------------------------------------------------------------
 // Spell

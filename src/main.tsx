@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./app.tsx";
 import { AuthProvider } from "./auth/auth-provider.tsx";
-import { queryClient } from "./supabase/supabase";
+import { queryClient } from "./supabase.ts";
 import { ThemeProvider } from "./theme/theme-provider";
 
 //------------------------------------------------------------------------------
