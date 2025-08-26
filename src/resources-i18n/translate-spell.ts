@@ -50,6 +50,7 @@ export function useTranslateSpell() {
               "duration.until_dispelled_or_triggered"
             ),
           }[spell.duration] ?? spell.duration, // TODO: Localize duration.
+        id: spell.id,
         level: `${spell.level}`,
         materials: spell.materials ? translate(spell.materials, lang) : "",
         name: translate(spell.name, lang),

@@ -1,7 +1,9 @@
-import { Flex, Table } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+import { useMemo } from "react";
 import { useI18nLangContext } from "../../i18n/i18n-lang-context";
 import { useCampaignSpells } from "../../resources/spells";
 import { useTranslateSpell } from "../../resources-i18n/translate-spell";
+import DataTable from "../../ui/data-table";
 
 //------------------------------------------------------------------------------
 // Page Spells
@@ -16,57 +18,39 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
   const { data: spells } = useCampaignSpells(campaignId, {}, [lang]);
   const translateSpell = useTranslateSpell();
 
-  if (!spells) return null;
+  const columns = useMemo(
+    () => columnKeys.map((key) => ({ key, label: t(`table.header.${key}`) })),
+    [t]
+  );
+
+  const rows = useMemo(
+    () => (spells ? spells.map(translateSpell) : undefined),
+    [spells, translateSpell]
+  );
+
+  if (!rows) return null;
 
   return (
     <Flex fontSize="sm" h="full" position="relative" w="full">
-      <Table.Root>
-        <Table.Header position="sticky" top={0}>
-          <Table.Row
-            bgColor="bg.subtle"
-            boxShadow="0px 0.5px 0px var(--shadow-color)"
-            boxShadowColor="border"
-          >
-            <Table.ColumnHeader>{t("table.header.name")}</Table.ColumnHeader>
-            <Table.ColumnHeader>{t("table.header.level")}</Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {t("table.header.character_classes")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>{t("table.header.school")}</Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {t("table.header.casting_time")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>{t("table.header.range")}</Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {t("table.header.duration")}
-            </Table.ColumnHeader>
-            <Table.ColumnHeader>
-              {t("table.header.components")}
-            </Table.ColumnHeader>
-          </Table.Row>
-        </Table.Header>
-
-        <Table.Body>
-          {spells.map((spell) => {
-            const translatedSpell = translateSpell(spell);
-            return (
-              <Table.Row key={spell.id}>
-                <Table.Cell>{translatedSpell.name}</Table.Cell>
-                <Table.Cell>{translatedSpell.level}</Table.Cell>
-                <Table.Cell>{translatedSpell.character_classes}</Table.Cell>
-                <Table.Cell>{translatedSpell.school}</Table.Cell>
-                <Table.Cell>{translatedSpell.casting_time}</Table.Cell>
-                <Table.Cell>{translatedSpell.range}</Table.Cell>
-                <Table.Cell>{translatedSpell.duration}</Table.Cell>
-                <Table.Cell>{translatedSpell.components}</Table.Cell>
-              </Table.Row>
-            );
-          })}
-        </Table.Body>
-      </Table.Root>
+      <DataTable columns={columns} rows={rows} stickyHeader />
     </Flex>
   );
 }
+
+//------------------------------------------------------------------------------
+// Column Keys
+//------------------------------------------------------------------------------
+
+const columnKeys = [
+  "name",
+  "level",
+  "character_classes",
+  "school",
+  "casting_time",
+  "range",
+  "duration",
+  "components",
+] as const;
 
 //------------------------------------------------------------------------------
 // I18n Context
