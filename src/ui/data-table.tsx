@@ -1,15 +1,22 @@
-import { Table, type TableRootProps } from "@chakra-ui/react";
+import { Span, Table, type TableRootProps } from "@chakra-ui/react";
 import Checkbox from "./checkbox";
 
 //------------------------------------------------------------------------------
 // Data Table
 //------------------------------------------------------------------------------
 
+export type DataTableColumn<T extends { id: string }> =
+  Table.ColumnHeaderProps & {
+    filter?: boolean;
+    key: keyof T;
+    label: string;
+  };
+
 export type DataTableProps<T extends { id: string }> = Omit<
   TableRootProps,
   "children"
 > & {
-  columns: { key: keyof T; label: string }[];
+  columns: DataTableColumn<T>[];
   rows: T[];
   stickyHeader?: boolean;
 };
@@ -27,11 +34,23 @@ export default function DataTable<T extends { id: string }>({
           boxShadow="0px 0.5px 0px var(--shadow-color)"
           boxShadowColor="border"
         >
-          {columns.map((column) => (
-            <Table.ColumnHeader key={String(column.key)}>
-              {column.label}
-            </Table.ColumnHeader>
-          ))}
+          {columns.map(({ filter, key, label, ...rest }) => {
+            return (
+              <Table.ColumnHeader
+                key={String(key)}
+                whiteSpace="nowrap"
+                {...rest}
+              >
+                {filter ? (
+                  <Span cursor="pointer" textDecoration="underline dotted">
+                    {label}
+                  </Span>
+                ) : (
+                  label
+                )}
+              </Table.ColumnHeader>
+            );
+          })}
         </Table.Row>
       </Table.Header>
 
@@ -39,10 +58,16 @@ export default function DataTable<T extends { id: string }>({
         {rows.map((row) => {
           return (
             <Table.Row key={row.id}>
-              {columns.map((column) => {
-                const value = row[column.key];
+              {columns.map(({ key, ...rest }) => {
+                const value = row[key];
                 return (
-                  <Table.Cell key={String(column.key)}>
+                  <Table.Cell
+                    key={String(key)}
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    whiteSpace="nowrap"
+                    {...rest}
+                  >
                     {typeof value === "boolean" ? (
                       <Checkbox checked={value} disabled size="sm" />
                     ) : (

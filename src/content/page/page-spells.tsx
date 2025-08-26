@@ -19,7 +19,11 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
   const translateSpell = useTranslateSpell();
 
   const columns = useMemo(
-    () => columnKeys.map((key) => ({ key, label: t(`table.header.${key}`) })),
+    () =>
+      rawColumns.map((raw) => ({
+        ...raw,
+        label: t(`table.header.${raw.key}`),
+      })),
     [t]
   );
 
@@ -41,17 +45,17 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
 // Column Keys
 //------------------------------------------------------------------------------
 
-const columnKeys = [
-  "name",
-  "level",
-  "character_classes",
-  "school",
-  "casting_time",
-  "range",
-  "duration",
-  "ritual",
-  "concentration",
-  "components",
+const rawColumns = [
+  { key: "name" },
+  { filter: true, key: "level", maxW: "4em" },
+  { filter: true, key: "character_classes", maxW: "8em" },
+  { filter: true, key: "school", maxW: "8em" },
+  { key: "casting_time", maxW: "8em" },
+  { filter: true, key: "ritual" },
+  { key: "range", maxW: "8em" },
+  { key: "duration", maxW: "9em" },
+  { filter: true, key: "concentration" },
+  { filter: true, key: "components" },
 ] as const;
 
 //------------------------------------------------------------------------------
