@@ -1,5 +1,5 @@
 import type { Session, User } from "@supabase/supabase-js";
-import supabase from "./supabase";
+import supabase from "../supabase/supabase";
 
 //------------------------------------------------------------------------------
 // Auth User

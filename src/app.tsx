@@ -1,8 +1,8 @@
 import { Box, VStack } from "@chakra-ui/react";
 import AppHeader, { appHeaderHeight } from "./app-header";
 import AppSignIn from "./app-sign-in";
+import useAuth from "./auth/use-auth";
 import Content from "./content/content";
-import useAuth from "./supabase/use-auth";
 
 //------------------------------------------------------------------------------
 // App

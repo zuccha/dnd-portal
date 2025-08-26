@@ -1,8 +1,8 @@
 import type { Session } from "@supabase/supabase-js";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
+import supabase from "../supabase/supabase";
 import { mapSessionToAuthUser } from "./auth";
 import AuthContext from "./auth-context";
-import supabase from "./supabase";
 
 //------------------------------------------------------------------------------
 // Auth Provider

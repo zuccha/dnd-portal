@@ -9,9 +9,9 @@ import {
 import { useMemo } from "react";
 import { useI18n } from "./i18n/i18n";
 import { i18nLangStore } from "./i18n/i18n-lang";
-import { type AuthUser, signOut } from "./supabase/auth";
+import { type AuthUser, signOut } from "./auth/auth";
 import { useLanguages } from "./supabase/language";
-import useAuth from "./supabase/use-auth";
+import useAuth from "./auth/use-auth";
 import ThemeButton from "./theme/theme-button";
 import Select from "./ui/select";
 

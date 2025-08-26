@@ -1,7 +1,7 @@
 import { Center, Heading, VStack, chakra } from "@chakra-ui/react";
 import RawDiscordIcon from "./assets/images/icons/discord.svg?react";
+import { signInWithDiscord } from "./auth/auth";
 import { useI18n } from "./i18n/i18n";
-import { signInWithDiscord } from "./supabase/auth";
 import Button from "./ui/button";
 
 //------------------------------------------------------------------------------
