@@ -1,7 +1,7 @@
 import { Flex, Table } from "@chakra-ui/react";
 import { useI18n } from "../../i18n/i18n";
+import { useCampaignSpells } from "../../resources/spells";
 import { useTranslateSpell } from "../../resources-i18n/translate-spell";
-import { useCampaignSpells } from "../../supabase/resources/spells";
 
 //------------------------------------------------------------------------------
 // Page Spells

@@ -4,7 +4,7 @@ import { useI18n } from "../../i18n/i18n";
 import {
   useSelectedUserCampaignId,
   useUserCampaigns,
-} from "../../supabase/resources/campaigns";
+} from "../../resources/campaigns";
 import Select from "../../ui/select";
 
 //------------------------------------------------------------------------------

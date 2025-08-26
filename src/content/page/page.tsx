@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { useSelectedUserCampaignId } from "../../supabase/resources/campaigns";
+import { useSelectedUserCampaignId } from "../../resources/campaigns";
 import PageSpells from "./page-spells";
 import PageWeapons from "./page-weapons";
 import { type ResourcePageId, useSelectedPageId } from "./pages";

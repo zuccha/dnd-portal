@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod/v4";
-import { createMemoryStore } from "../../store/memory-store";
-import supabase from "../supabase";
+import { createMemoryStore } from "../store/memory-store";
+import supabase from "../supabase/supabase";
 
 //------------------------------------------------------------------------------
 // Campaign

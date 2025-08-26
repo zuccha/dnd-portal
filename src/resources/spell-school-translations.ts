@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { z } from "zod/v4";
-import type { I18nLang } from "../../i18n/i18n-lang";
-import type { I18nString } from "../../i18n/i18n-string";
-import supabase from "../supabase";
+import type { I18nLang } from "../i18n/i18n-lang";
+import type { I18nString } from "../i18n/i18n-string";
+import supabase from "../supabase/supabase";
 
 //------------------------------------------------------------------------------
 // Spell School Translation

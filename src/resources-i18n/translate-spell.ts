@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { useI18n } from "../i18n/i18n";
 import { t } from "../i18n/i18n-string";
-import { useTranslateCharacterClass } from "../supabase/resources/character_class_translations";
-import { useTranslateSpellSchool } from "../supabase/resources/spell-school-translations";
-import type { Spell } from "../supabase/resources/spells";
+import { useTranslateCharacterClass } from "../resources/character_class_translations";
+import { useTranslateSpellSchool } from "../resources/spell-school-translations";
+import type { Spell } from "../resources/spells";
 
 //------------------------------------------------------------------------------
 // Use Translate Spell
