@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useI18n } from "../i18n/i18n";
 import { t } from "../i18n/i18n-string";
-import { useTranslateCharacterClass } from "../resources/character_class_translations";
+import { useTranslateCharacterClass } from "../resources/character-class-translations";
 import { useTranslateSpellSchool } from "../resources/spell-school-translations";
 import type { Spell } from "../resources/spells";
 
