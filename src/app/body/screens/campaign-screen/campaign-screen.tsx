@@ -1,16 +1,16 @@
 import { HStack } from "@chakra-ui/react";
-import Page from "./page/page";
+import Content from "./panels/content";
 import Sidebar from "./sidebar/sidebar";
 
 //------------------------------------------------------------------------------
-// Content
+// Campaign Screen
 //------------------------------------------------------------------------------
 
-export default function Content() {
+export default function CampaignScreen() {
   return (
     <HStack align="flex-start" gap={0} h="full" w="full">
       <Sidebar />
-      <Page />
+      <Content />
     </HStack>
   );
 }

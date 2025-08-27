@@ -1,9 +1,9 @@
 import { Text, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { useI18nLangContext } from "../../i18n/i18n-lang-context";
-import Button from "../../ui/button";
-import { compareObjects } from "../../utils/object";
-import { resourcePageIds, useSelectedPageId } from "../page/pages";
+import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
+import Button from "../../../../../ui/button";
+import { compareObjects } from "../../../../../utils/object";
+import { resourcePanelIds, useSelectedPanelId } from "../panels/panels";
 
 //------------------------------------------------------------------------------
 // Sidebar Campaign
@@ -15,11 +15,11 @@ export type SidebarCampaignProps = {
 
 export default function SidebarCampaign(_props: SidebarCampaignProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [selectedPageId, setSelectedPageId] = useSelectedPageId();
+  const [selectedPageId, setSelectedPageId] = useSelectedPanelId();
 
   const resourceItems = useMemo(
     () =>
-      resourcePageIds
+      resourcePanelIds
         .map((value) => ({
           label: t(`section.${value}`),
           onClick: () => setSelectedPageId(value),

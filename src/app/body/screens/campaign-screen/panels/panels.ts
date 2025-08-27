@@ -1,20 +1,23 @@
 import z from "zod/v4";
-import { createLocalStore } from "../../store/local-store";
+import { createLocalStore } from "../../../../../store/local-store";
 
 //------------------------------------------------------------------------------
-// Page Ids
+// Panel Ids
 //------------------------------------------------------------------------------
 
-export const resourcePageIds = ["resource/spells", "resource/weapons"] as const;
+export const resourcePanelIds = [
+  "resource/spells",
+  "resource/weapons",
+] as const;
 
-export type ResourcePageId = (typeof resourcePageIds)[number];
+export type ResourcePanelId = (typeof resourcePanelIds)[number];
 
 //------------------------------------------------------------------------------
-// Use Selected Page Id
+// Use Selected Panel Id
 //------------------------------------------------------------------------------
 
-export const useSelectedPageId = createLocalStore<string>(
-  "navigation.selected-page-id",
+export const useSelectedPanelId = createLocalStore<string>(
+  "navigation.selected-panel-id",
   "",
   z.string().parse
 ).use;

@@ -1,19 +1,19 @@
 import { Flex, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { useI18nLangContext } from "../../i18n/i18n-lang-context";
-import { useCampaignSpells } from "../../resources/spells";
-import { useTranslateSpell } from "../../resources-i18n/translate-spell";
-import DataTable from "../../ui/data-table";
+import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import { useCampaignSpells } from "../../../../../../resources/spells";
+import { useTranslateSpell } from "../../../../../../resources-i18n/translate-spell";
+import DataTable from "../../../../../../ui/data-table";
 
 //------------------------------------------------------------------------------
-// Page Spells
+// Spells Panel
 //------------------------------------------------------------------------------
 
-export type PageSpellsProps = {
+export type SpellsPanelProps = {
   campaignId: string;
 };
 
-export default function PageSpells({ campaignId }: PageSpellsProps) {
+export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const { data: spells } = useCampaignSpells(campaignId, {}, [lang]);
   const translateSpell = useTranslateSpell();

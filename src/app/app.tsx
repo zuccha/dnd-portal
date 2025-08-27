@@ -1,7 +1,7 @@
 import { Box, VStack } from "@chakra-ui/react";
 import useAuth from "../auth/use-auth";
-import Content from "../content/content";
-import PageSignIn from "./body/pages/page-sign-in/page-sign-in";
+import CampaignScreen from "./body/screens/campaign-screen/campaign-screen";
+import PageSignIn from "./body/screens/sign-in-screen/page-sign-in";
 import Header, { headerHeight } from "./header/header";
 
 //------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ export default function App() {
       <Header />
 
       <Box h={`calc(100vh - ${headerHeight})`} w="full">
-        {auth.user ? <Content /> : !auth.loading ? <PageSignIn /> : null}
+        {auth.user ? <CampaignScreen /> : !auth.loading ? <PageSignIn /> : null}
       </Box>
     </VStack>
   );
