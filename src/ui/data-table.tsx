@@ -1,6 +1,13 @@
-import { Span, Table, type TableRootProps } from "@chakra-ui/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Span, Table, type TableRootProps, VStack } from "@chakra-ui/react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Checkbox from "./checkbox";
+import RichText from "./rich-text";
 
 //------------------------------------------------------------------------------
 // Data Table
@@ -118,7 +125,17 @@ function TableRow<T extends { id: string }>({
       {expandedKey && expanded && (
         <Table.Row bgColor="bg.muted" w="full">
           <Table.Cell colSpan={columns.length}>
-            {String(row[expandedKey])}
+            <VStack align="flex-start" gap={1} w="full">
+              {String(row[expandedKey])
+                .split("\n")
+                .map((paragraph, i) => (
+                  <RichText
+                    key={i}
+                    patterns={expansionPatterns}
+                    text={paragraph}
+                  />
+                ))}
+            </VStack>
           </Table.Cell>
         </Table.Row>
       )}
@@ -175,3 +192,18 @@ function TableCellBoolean({
 //------------------------------------------------------------------------------
 
 const expandedTableRows = new Set<string>();
+
+//------------------------------------------------------------------------------
+// Expansion Patterns
+//------------------------------------------------------------------------------
+
+const expansionPatterns = [
+  {
+    regex: /\*\*(.+?)\*\*/,
+    render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
+  },
+  {
+    regex: /_(.+?)_/,
+    render: (val: ReactNode) => <Span fontStyle="italic">{val}</Span>,
+  },
+];
