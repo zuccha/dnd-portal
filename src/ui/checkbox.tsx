@@ -1,11 +1,11 @@
-import { Icon, type IconProps } from "@chakra-ui/react";
-import { CheckIcon, MinusIcon } from "lucide-react";
+import { Checkmark, type CheckmarkProps } from "@chakra-ui/react";
+import { useCallback } from "react";
 
 //------------------------------------------------------------------------------
 // Checkbox
 //------------------------------------------------------------------------------
 
-export type CheckboxProps = IconProps & {
+export type CheckboxProps = Omit<CheckmarkProps, "checked"> & {
   checked: boolean | "-";
   disabled?: boolean;
   onValueChange?: (checked: boolean) => void;
@@ -17,67 +17,21 @@ export default function Checkbox({
   onValueChange,
   ...rest
 }: CheckboxProps) {
-  const { background, border, icon } = checked
-    ? disabled
-      ? colors.checked.disabled
-      : colors.checked.enabled
-    : disabled
-    ? colors.unchecked.disabled
-    : colors.unchecked.enabled;
+  const toggle = useCallback(
+    (e: React.MouseEvent<SVGSVGElement>) => {
+      e.preventDefault();
+      onValueChange?.(!checked);
+    },
+    [checked, onValueChange]
+  );
 
   return (
-    <Icon
-      bgColor={background}
-      borderColor={border}
-      borderRadius={2}
-      borderWidth={1}
-      color={icon}
-      cursor={disabled ? undefined : "pointer"}
-      onClick={(e) => {
-        if (disabled) return;
-        e.stopPropagation();
-        onValueChange?.(!checked);
-      }}
+    <Checkmark
+      checked={!!checked}
+      disabled={disabled}
+      indeterminate={checked === "-"}
+      onClick={toggle}
       {...rest}
-    >
-      {checked === "-" ? (
-        <MinusIcon />
-      ) : checked ? (
-        <CheckIcon />
-      ) : (
-        <CheckIcon color="transparent" />
-      )}
-    </Icon>
+    />
   );
 }
-
-//------------------------------------------------------------------------------
-// Colors
-//------------------------------------------------------------------------------
-
-const colors = {
-  checked: {
-    disabled: {
-      background: "fg.subtle",
-      border: "fg.subtle",
-      icon: "fg.inverted",
-    },
-    enabled: {
-      background: "fg",
-      border: "fg",
-      icon: "fg.inverted",
-    },
-  },
-  unchecked: {
-    disabled: {
-      background: "transparent",
-      border: "border",
-      icon: "fg",
-    },
-    enabled: {
-      background: "transparent",
-      border: "border.inverted",
-      icon: "fg",
-    },
-  },
-} as const;
