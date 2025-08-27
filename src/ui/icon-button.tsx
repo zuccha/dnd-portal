@@ -5,6 +5,10 @@ import {
 import type { LucideProps } from "lucide-react";
 import type { ForwardRefExoticComponent, RefAttributes } from "react";
 
+//------------------------------------------------------------------------------
+// Icon Button
+//------------------------------------------------------------------------------
+
 export type IconButtonProps = Omit<ChakraIconButtonProps, "children"> & {
   Icon: ForwardRefExoticComponent<
     Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
