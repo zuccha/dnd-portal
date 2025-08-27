@@ -11,15 +11,7 @@ export default function Sidebar() {
   const [selectedUserCampaignId] = useSelectedUserCampaignId();
 
   return (
-    <VStack
-      borderRightWidth={1}
-      flex={1}
-      gap={10}
-      h="full"
-      maxW="20em"
-      px={2}
-      py={4}
-    >
+    <VStack borderRightWidth={1} gap={10} h="full" px={2} py={4} w="15em">
       <SidebarCampaignSelector />
       {selectedUserCampaignId && (
         <SidebarCampaign id={selectedUserCampaignId} />
