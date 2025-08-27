@@ -1,8 +1,8 @@
 import { Box, VStack } from "@chakra-ui/react";
-import AppHeader, { appHeaderHeight } from "./app-header";
-import AppSignIn from "./app-sign-in";
-import useAuth from "./auth/use-auth";
-import Content from "./content/content";
+import useAuth from "../auth/use-auth";
+import Content from "../content/content";
+import PageSignIn from "./body/pages/page-sign-in/page-sign-in";
+import Header, { headerHeight } from "./header/header";
 
 //------------------------------------------------------------------------------
 // App
@@ -13,10 +13,10 @@ export default function App() {
 
   return (
     <VStack gap={0} h="100vh" w="full">
-      <AppHeader />
+      <Header />
 
-      <Box h={`calc(100vh - ${appHeaderHeight})`} w="full">
-        {auth.user ? <Content /> : !auth.loading ? <AppSignIn /> : null}
+      <Box h={`calc(100vh - ${headerHeight})`} w="full">
+        {auth.user ? <Content /> : !auth.loading ? <PageSignIn /> : null}
       </Box>
     </VStack>
   );

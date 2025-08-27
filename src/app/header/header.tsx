@@ -7,27 +7,27 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { type AuthUser, signOut } from "./auth/auth";
-import useAuth from "./auth/use-auth";
-import { useI18nLang } from "./i18n/i18n-lang";
-import { useI18nLangContext } from "./i18n/i18n-lang-context";
-import { i18nSystems, useI18nSystem } from "./i18n/i18n-system";
-import { useLanguages } from "./resources/language";
-import ThemeButton from "./theme/theme-button";
-import Select from "./ui/select";
-import { compareObjects } from "./utils/object";
+import { type AuthUser, signOut } from "../../auth/auth";
+import useAuth from "../../auth/use-auth";
+import { useI18nLang } from "../../i18n/i18n-lang";
+import { useI18nLangContext } from "../../i18n/i18n-lang-context";
+import { i18nSystems, useI18nSystem } from "../../i18n/i18n-system";
+import { useLanguages } from "../../resources/language";
+import ThemeButton from "../../theme/theme-button";
+import Select from "../../ui/select";
+import { compareObjects } from "../../utils/object";
 
 //------------------------------------------------------------------------------
-// App Header
+// Header
 //------------------------------------------------------------------------------
 
-export default function AppHeader() {
+export default function Header() {
   const auth = useAuth();
 
   return (
     <HStack
       borderBottomWidth={auth.user ? 1 : undefined}
-      h={appHeaderHeight}
+      h={headerHeight}
       justify="space-between"
       px={4}
       py={2}
@@ -45,7 +45,7 @@ export default function AppHeader() {
   );
 }
 
-export const appHeaderHeight = "3.5rem";
+export const headerHeight = "3.5rem";
 
 //------------------------------------------------------------------------------
 // Language Select
