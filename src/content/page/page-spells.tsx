@@ -1,4 +1,4 @@
-import { VStack } from "@chakra-ui/react";
+import { Box, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../i18n/i18n-lang-context";
 import { useCampaignSpells } from "../../resources/spells";
@@ -36,7 +36,9 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
 
   return (
     <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
-      <DataTable columns={columns} expandedKey="description" rows={rows} />
+      <Box h="full" overflow="auto" w="full">
+        <DataTable columns={columns} expandedKey="description" rows={rows} />
+      </Box>
     </VStack>
   );
 }

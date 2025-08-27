@@ -38,59 +38,55 @@ export default function DataTable<T extends { id: string }>({
   ...rest
 }: DataTableProps<T>) {
   return (
-    <Table.ScrollArea w="full">
-      <Table.Root
-        interactive
-        showColumnBorder
-        stickyHeader
-        variant="line"
-        {...rest}
-      >
-        <Table.Header>
-          <Table.Row
-            boxShadow="0px 0.5px 0px var(--shadow-color)"
-            boxShadowColor="border"
-          >
-            {columns.map(({ filter, key, label, ...rest }) => {
-              return (
-                <Table.ColumnHeader
-                  {...tableCellProps}
-                  key={String(key)}
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  {...rest}
-                >
-                  {filter ? (
-                    <HStack justify="space-between" w="full">
-                      {label}
-                      <IconButton
-                        Icon={ChevronDownIcon}
-                        size="xs"
-                        variant="ghost"
-                      />
-                    </HStack>
-                  ) : (
-                    label
-                  )}
-                </Table.ColumnHeader>
-              );
-            })}
-          </Table.Row>
-        </Table.Header>
+    <Table.Root
+      borderCollapse="separate"
+      borderSpacing={0}
+      showColumnBorder
+      stickyHeader
+      variant="line"
+      {...rest}
+    >
+      <Table.Header>
+        <Table.Row>
+          {columns.map(({ filter, key, label, ...rest }) => {
+            return (
+              <Table.ColumnHeader
+                {...tableCellProps}
+                key={String(key)}
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                {...rest}
+              >
+                {filter ? (
+                  <HStack justify="space-between" w="full">
+                    {label}
+                    <IconButton
+                      Icon={ChevronDownIcon}
+                      size="xs"
+                      variant="ghost"
+                    />
+                  </HStack>
+                ) : (
+                  label
+                )}
+              </Table.ColumnHeader>
+            );
+          })}
+        </Table.Row>
+      </Table.Header>
 
-        <Table.Body>
-          {rows.map((row) => (
-            <TableRow
-              columns={columns}
-              expandedKey={expandedKey}
-              key={row.id}
-              row={row}
-            />
-          ))}
-        </Table.Body>
-      </Table.Root>
-    </Table.ScrollArea>
+      <Table.Body>
+        {rows.map((row) => (
+          <TableRow
+            columns={columns}
+            expandedKey={expandedKey}
+            key={row.id}
+            row={row}
+          />
+        ))}
+      </Table.Body>
+    </Table.Root>
   );
 }
 
@@ -125,11 +121,17 @@ function TableRow<T extends { id: string }>({
         {columns.map(({ key, ...rest }) => {
           const value = row[key];
           return typeof value === "boolean" ? (
-            <Table.Cell {...tableCellProps} textAlign="center" {...rest}>
+            <Table.Cell
+              key={key}
+              {...tableCellProps}
+              textAlign="center"
+              {...rest}
+            >
               <Checkbox checked={value} disabled size="sm" />
             </Table.Cell>
           ) : (
             <Table.Cell
+              key={key}
               {...tableCellProps}
               overflow="hidden"
               textOverflow="ellipsis"
@@ -169,6 +171,7 @@ function TableRow<T extends { id: string }>({
 
 const tableCellProps = {
   h: "3em",
+  m: 0,
   py: 0,
 };
 
