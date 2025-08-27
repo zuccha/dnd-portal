@@ -1,12 +1,14 @@
-import { Span, Table, type TableRootProps, VStack } from "@chakra-ui/react";
 import {
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+  HStack,
+  Span,
+  Table,
+  type TableRootProps,
+  VStack,
+} from "@chakra-ui/react";
+import { ChevronDownIcon } from "lucide-react";
+import { type ReactNode, useCallback, useState } from "react";
 import Checkbox from "./checkbox";
+import IconButton from "./icon-button";
 import RichText from "./rich-text";
 
 //------------------------------------------------------------------------------
@@ -27,35 +29,46 @@ export type DataTableProps<T extends { id: string }> = Omit<
   columns: DataTableColumn<T>[];
   expandedKey?: keyof T;
   rows: T[];
-  stickyHeader?: boolean;
 };
 
 export default function DataTable<T extends { id: string }>({
   columns,
   expandedKey,
   rows,
-  stickyHeader,
   ...rest
 }: DataTableProps<T>) {
   return (
-    <Table.Root {...rest}>
-      <Table.Header position={stickyHeader ? "sticky" : undefined} top={0}>
+    <Table.Root
+      interactive
+      showColumnBorder
+      stickyHeader
+      variant="line"
+      {...rest}
+    >
+      <Table.Header>
         <Table.Row
-          bgColor="bg.subtle"
           boxShadow="0px 0.5px 0px var(--shadow-color)"
           boxShadowColor="border"
         >
           {columns.map(({ filter, key, label, ...rest }) => {
             return (
               <Table.ColumnHeader
+                {...tableCellProps}
                 key={String(key)}
+                overflow="hidden"
+                textOverflow="ellipsis"
                 whiteSpace="nowrap"
                 {...rest}
               >
                 {filter ? (
-                  <Span cursor="pointer" textDecoration="underline dotted">
+                  <HStack justify="space-between" w="full">
                     {label}
-                  </Span>
+                    <IconButton
+                      Icon={ChevronDownIcon}
+                      size="xs"
+                      variant="ghost"
+                    />
+                  </HStack>
                 ) : (
                   label
                 )}
@@ -109,14 +122,19 @@ function TableRow<T extends { id: string }>({
       <Table.Row key={row.id} onClick={toggleExpanded}>
         {columns.map(({ key, ...rest }) => {
           const value = row[key];
-          if (typeof value === "string")
-            return <TableCellString key={key} value={value} {...rest} />;
-
-          if (typeof value === "boolean")
-            return <TableCellBoolean key={key} value={value} {...rest} />;
-
-          return (
-            <Table.Cell key={String(key)} {...rest}>
+          return typeof value === "boolean" ? (
+            <Table.Cell {...tableCellProps} textAlign="center" {...rest}>
+              <Checkbox checked={value} disabled size="sm" />
+            </Table.Cell>
+          ) : (
+            <Table.Cell
+              {...tableCellProps}
+              overflow="hidden"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              {...rest}
+            >
+              {/* <abbr title={String(value)}>{String(value)}</abbr> */}
               {String(value)}
             </Table.Cell>
           );
@@ -144,48 +162,13 @@ function TableRow<T extends { id: string }>({
 }
 
 //------------------------------------------------------------------------------
-// Table Cell String
+// Table Cell Props
 //------------------------------------------------------------------------------
 
-function TableCellString({
-  value,
-  ...rest
-}: Omit<Table.CellProps, "children"> & { value: string }) {
-  const ref = useRef<HTMLTableCellElement>(null);
-  const [overflow, setOverflow] = useState(false);
-
-  useEffect(() => {
-    const tableCell = ref.current;
-    if (tableCell) setOverflow(tableCell.scrollWidth > tableCell.clientWidth);
-  }, [value]);
-
-  return (
-    <Table.Cell
-      overflow="hidden"
-      ref={ref}
-      textOverflow="ellipsis"
-      whiteSpace="nowrap"
-      {...rest}
-    >
-      {overflow ? <abbr title={value}>{value}</abbr> : value}
-    </Table.Cell>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Table Cell Boolean
-//------------------------------------------------------------------------------
-
-function TableCellBoolean({
-  value,
-  ...rest
-}: Omit<Table.CellProps, "children"> & { value: boolean }) {
-  return (
-    <Table.Cell {...rest}>
-      <Checkbox checked={value} disabled size="sm" />
-    </Table.Cell>
-  );
-}
+const tableCellProps = {
+  h: "3em",
+  py: 0,
+};
 
 //------------------------------------------------------------------------------
 // Expanded Table Rows

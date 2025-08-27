@@ -36,12 +36,7 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
 
   return (
     <Flex fontSize="sm" h="full" position="relative" w="full">
-      <DataTable
-        columns={columns}
-        expandedKey="description"
-        rows={rows}
-        stickyHeader
-      />
+      <DataTable columns={columns} expandedKey="description" rows={rows} />
     </Flex>
   );
 }
@@ -52,10 +47,10 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
 
 const rawColumns = [
   { key: "name" },
-  { filter: true, key: "level", maxW: "4em" },
+  { filter: true, key: "level", maxW: "5em" },
   { filter: true, key: "character_classes", maxW: "8em" },
   { filter: true, key: "school", maxW: "8em" },
-  { key: "casting_time", maxW: "8em" },
+  { key: "casting_time", maxW: "9em" },
   { filter: true, key: "ritual" },
   { key: "range", maxW: "8em" },
   { key: "duration", maxW: "9em" },
@@ -74,8 +69,8 @@ const i18nContext = {
   },
 
   "table.header.level": {
-    en: "Level",
-    it: "Livello",
+    en: "Lvl",
+    it: "Lvl",
   },
 
   "table.header.character_classes": {
@@ -89,8 +84,8 @@ const i18nContext = {
   },
 
   "table.header.casting_time": {
-    en: "Casting Time",
-    it: "Tempo di lancio",
+    en: "Cast",
+    it: "Lancio",
   },
 
   "table.header.range": {
