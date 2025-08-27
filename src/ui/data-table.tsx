@@ -1,14 +1,6 @@
-import {
-  HStack,
-  Span,
-  Table,
-  type TableRootProps,
-  VStack,
-} from "@chakra-ui/react";
-import { ChevronDownIcon } from "lucide-react";
+import { Span, Table, type TableRootProps, VStack } from "@chakra-ui/react";
 import { type ReactNode, useCallback, useState } from "react";
 import Checkbox from "./checkbox";
-import IconButton from "./icon-button";
 import RichText from "./rich-text";
 
 //------------------------------------------------------------------------------
@@ -17,7 +9,6 @@ import RichText from "./rich-text";
 
 export type DataTableColumn<T extends { id: string }> =
   Table.ColumnHeaderProps & {
-    filter?: boolean;
     key: keyof T;
     label: string;
   };
@@ -48,28 +39,16 @@ export default function DataTable<T extends { id: string }>({
     >
       <Table.Header>
         <Table.Row>
-          {columns.map(({ filter, key, label, ...rest }) => {
+          {columns.map(({ key, label, ...rest }) => {
             return (
               <Table.ColumnHeader
-                {...tableCellProps}
                 key={String(key)}
                 overflow="hidden"
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"
                 {...rest}
               >
-                {filter ? (
-                  <HStack justify="space-between" w="full">
-                    {label}
-                    <IconButton
-                      Icon={ChevronDownIcon}
-                      size="xs"
-                      variant="ghost"
-                    />
-                  </HStack>
-                ) : (
-                  label
-                )}
+                {label}
               </Table.ColumnHeader>
             );
           })}
@@ -120,26 +99,19 @@ function TableRow<T extends { id: string }>({
       <Table.Row key={row.id} onClick={toggleExpanded}>
         {columns.map(({ key, ...rest }) => {
           const value = row[key];
-          return typeof value === "boolean" ? (
+          return (
             <Table.Cell
               key={key}
-              {...tableCellProps}
-              textAlign="center"
-              {...rest}
-            >
-              <Checkbox checked={value} disabled size="sm" />
-            </Table.Cell>
-          ) : (
-            <Table.Cell
-              key={key}
-              {...tableCellProps}
               overflow="hidden"
               textOverflow="ellipsis"
               whiteSpace="nowrap"
               {...rest}
             >
-              {/* <abbr title={String(value)}>{String(value)}</abbr> */}
-              {String(value)}
+              {typeof value === "boolean" ? (
+                <Checkbox checked={value} disabled size="sm" />
+              ) : (
+                String(value)
+              )}
             </Table.Cell>
           );
         })}
@@ -164,16 +136,6 @@ function TableRow<T extends { id: string }>({
     </>
   );
 }
-
-//------------------------------------------------------------------------------
-// Table Cell Props
-//------------------------------------------------------------------------------
-
-const tableCellProps = {
-  h: "3em",
-  m: 0,
-  py: 0,
-};
 
 //------------------------------------------------------------------------------
 // Expanded Table Rows

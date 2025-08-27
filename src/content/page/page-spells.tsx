@@ -1,4 +1,4 @@
-import { Box, VStack } from "@chakra-ui/react";
+import { Flex, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../i18n/i18n-lang-context";
 import { useCampaignSpells } from "../../resources/spells";
@@ -36,9 +36,9 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
 
   return (
     <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
-      <Box h="full" overflow="auto" w="full">
+      <Flex h="full" overflow="auto" w="full">
         <DataTable columns={columns} expandedKey="description" rows={rows} />
-      </Box>
+      </Flex>
     </VStack>
   );
 }
@@ -49,15 +49,15 @@ export default function PageSpells({ campaignId }: PageSpellsProps) {
 
 const rawColumns = [
   { key: "name" },
-  { filter: true, key: "level", maxW: "5em" },
-  { filter: true, key: "character_classes", maxW: "8em" },
-  { filter: true, key: "school", maxW: "8em" },
+  { key: "level", maxW: "5em", textAlign: "center" },
+  { key: "character_classes", maxW: "8em" },
+  { key: "school", maxW: "8em" },
   { key: "casting_time", maxW: "9em" },
-  { filter: true, key: "ritual", maxW: "4.5em" },
+  { key: "ritual", maxW: "4.5em", textAlign: "center" },
   { key: "range", maxW: "8em" },
   { key: "duration", maxW: "9em" },
-  { filter: true, key: "concentration", maxW: "4.5em" },
-  { filter: true, key: "components" },
+  { key: "concentration", maxW: "4.5em", textAlign: "center" },
+  { key: "components" },
 ] as const;
 
 //------------------------------------------------------------------------------
@@ -101,13 +101,13 @@ const i18nContext = {
   },
 
   "table.header.ritual": {
-    en: "R.",
-    it: "R.",
+    en: "R",
+    it: "R",
   },
 
   "table.header.concentration": {
-    en: "C.",
-    it: "C.",
+    en: "C",
+    it: "C",
   },
 
   "table.header.components": {
