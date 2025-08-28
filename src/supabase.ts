@@ -20,6 +20,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: Infinity,
+      placeholderData: (previousData: unknown) => previousData,
       refetchOnMount: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
