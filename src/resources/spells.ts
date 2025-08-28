@@ -7,6 +7,7 @@ import { createLocalStore } from "../store/local-store";
 import { createMemoryStore } from "../store/memory-store";
 import supabase from "../supabase";
 import { characterClassSchema } from "./character-class";
+import { spellSchoolSchema } from "./spell-school";
 
 //------------------------------------------------------------------------------
 // Spell
@@ -20,7 +21,7 @@ export const spellSchema = z.object({
   level: z.number(),
 
   character_classes: z.array(characterClassSchema),
-  school: z.string(),
+  school: spellSchoolSchema,
 
   casting_time: z.string(),
   duration: z.string(),
