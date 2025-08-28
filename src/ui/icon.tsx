@@ -2,17 +2,14 @@ import {
   Icon as ChakraIcon,
   type IconProps as ChakraIconProps,
 } from "@chakra-ui/react";
-import type { LucideProps } from "lucide-react";
-import type { ForwardRefExoticComponent, RefAttributes } from "react";
+import type { LucideIcon } from "lucide-react";
 
 //------------------------------------------------------------------------------
 // Icon
 //------------------------------------------------------------------------------
 
 export type IconProps = Omit<ChakraIconProps, "children"> & {
-  Icon: ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-  >;
+  Icon: LucideIcon;
 };
 
 export default function Icon({ Icon, ...rest }: IconProps) {

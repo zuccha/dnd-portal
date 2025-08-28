@@ -3,17 +3,14 @@ import {
   type EmptyStateRootProps as ChakraEmptyStateRootProps,
   VStack,
 } from "@chakra-ui/react";
-import { type LucideProps } from "lucide-react";
-import type { ForwardRefExoticComponent, RefAttributes } from "react";
+import { type LucideIcon } from "lucide-react";
 
 //------------------------------------------------------------------------------
 // Empty State
 //------------------------------------------------------------------------------
 
 export type EmptyStateProps = ChakraEmptyStateRootProps & {
-  Icon: ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-  >;
+  Icon: LucideIcon;
   subtitle: string;
   title: string;
 };
