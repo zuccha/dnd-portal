@@ -1,11 +1,7 @@
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import {
-  useCampaignSpells,
-  useSpellNameFilter,
-} from "../../../../../../resources/spell";
-import { useTranslateSpell } from "../../../../../../resources/spell-translation";
 import DataTable from "../../../../../../ui/data-table";
+import useFilteredSpells from "./use-filtered-spells";
 
 //------------------------------------------------------------------------------
 // Spells List Table
@@ -17,17 +13,7 @@ export type SpellsListTableProps = {
 
 export default function SpellsListTable({ campaignId }: SpellsListTableProps) {
   const { t } = useI18nLangContext(i18nContext);
-
-  const { data: spells } = useCampaignSpells(campaignId);
-
-  const translateSpell = useTranslateSpell();
-
-  const [nameFilter] = useSpellNameFilter();
-
-  const spellTranslations = useMemo(
-    () => (spells ? spells.map(translateSpell) : undefined),
-    [spells, translateSpell]
-  );
+  const spells = useFilteredSpells(campaignId);
 
   const columns = useMemo(
     () =>
@@ -38,21 +24,11 @@ export default function SpellsListTable({ campaignId }: SpellsListTableProps) {
     [t]
   );
 
-  const rows = useMemo(() => {
-    const trimmedNameFilter = nameFilter.trim().toLowerCase();
-    return spellTranslations
-      ? spellTranslations.filter((spell) => {
-          const names = Object.values(spell._raw.name);
-          return names.some((name) =>
-            name?.trim().toLowerCase().includes(trimmedNameFilter)
-          );
-        })
-      : undefined;
-  }, [nameFilter, spellTranslations]);
+  if (!spells) return null;
 
-  if (!rows) return null;
-
-  return <DataTable columns={columns} expandedKey="description" rows={rows} />;
+  return (
+    <DataTable columns={columns} expandedKey="description" rows={spells} />
+  );
 }
 
 //------------------------------------------------------------------------------
