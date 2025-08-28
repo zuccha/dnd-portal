@@ -37,24 +37,30 @@ export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
     [t]
   );
 
-  const rows = useMemo(
-    () =>
-      spellTranslations
-        ? spellTranslations.filter((spell) =>
-            spell.name
-              .trim()
-              .toLowerCase()
-              .includes(nameFilter.trim().toLowerCase())
-          )
-        : undefined,
-    [nameFilter, spellTranslations]
-  );
+  const rows = useMemo(() => {
+    const trimmedNameFilter = nameFilter.trim().toLowerCase();
+    return spellTranslations
+      ? spellTranslations.filter((spell) => {
+          const names = Object.values(spell._raw.name);
+          return names.some((name) =>
+            name?.trim().toLowerCase().includes(trimmedNameFilter)
+          );
+        })
+      : undefined;
+  }, [nameFilter, spellTranslations]);
 
   if (!rows) return null;
 
   return (
     <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
-      <HStack borderBottomWidth={1} h="15em" overflow="auto" p={2} w="full">
+      <HStack
+        borderBottomWidth={1}
+        h="full"
+        maxH="4em"
+        overflow="auto"
+        p={2}
+        w="full"
+      >
         <SpellsFilters />
       </HStack>
 

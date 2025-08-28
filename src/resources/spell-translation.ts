@@ -28,6 +28,7 @@ export function useTranslateSpell() {
       const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
 
       return {
+        _raw: spell,
         casting_time:
           {
             "action": t("casting_time.action"),
