@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { z } from "zod/v4";
-import type { I18nLang } from "../i18n/i18n-lang";
+import { type I18nLang, useI18nLang } from "../i18n/i18n-lang";
 import supabase from "../supabase";
 import {
   type SpellSchool,
@@ -55,16 +55,24 @@ export async function fetchSpellSchoolTranslationsMap(): Promise<SpellSchoolTran
 }
 
 //------------------------------------------------------------------------------
+// Use Character Class Translation Map
+//------------------------------------------------------------------------------
+
+export function useCharacterClassTranslationMap() {
+  return useQuery<SpellSchoolTranslationMap>({
+    queryFn: fetchSpellSchoolTranslationsMap,
+    queryKey: ["spell_school_translations_map"],
+  });
+}
+
+//------------------------------------------------------------------------------
 // Use Translate Spell School
 //------------------------------------------------------------------------------
 
 export function useTranslateSpellSchool(
   lang: I18nLang
 ): (characterClass: SpellSchool) => SpellSchoolTranslation {
-  const { data: translationMap } = useQuery<SpellSchoolTranslationMap>({
-    queryFn: fetchSpellSchoolTranslationsMap,
-    queryKey: ["spell_school_translations_map"],
-  });
+  const { data: translationMap } = useCharacterClassTranslationMap();
 
   const translate = useCallback(
     (spellSchool: SpellSchool): SpellSchoolTranslation => {
@@ -78,4 +86,18 @@ export function useTranslateSpellSchool(
   );
 
   return translate;
+}
+
+//------------------------------------------------------------------------------
+// Use Spell School Translations
+//------------------------------------------------------------------------------
+
+export function useSpellSchoolTranslations() {
+  const [lang] = useI18nLang();
+  const translate = useTranslateSpellSchool(lang);
+
+  return useMemo(
+    () => spellSchools.map((spellSchool) => translate(spellSchool)),
+    [translate]
+  );
 }
