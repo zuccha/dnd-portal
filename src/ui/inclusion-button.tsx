@@ -21,17 +21,19 @@ export default function InclusionButton({
   onValueChange,
   ...rest
 }: InclusionButtonProps) {
+  const includeKey = String(include) as IncludeKey;
+
   const toggleState = useCallback(
-    () => onValueChange?.(nextIncludes[String(include) as IncludeKey]),
-    [onValueChange, include]
+    () => onValueChange?.(nextIncludes[includeKey]),
+    [onValueChange, includeKey]
   );
 
   return (
     <ChakraButton
       {...rest}
-      colorPalette={colorSchemes[String(include) as IncludeKey]}
+      colorPalette={colorPalettes[includeKey]}
       onClick={toggleState}
-      variant="surface"
+      variant={variants[includeKey]}
     />
   );
 }
@@ -42,7 +44,7 @@ export default function InclusionButton({
 
 type IncludeKey = "false" | "true" | "undefined";
 
-const colorSchemes = {
+const colorPalettes = {
   false: "red",
   true: "green",
   undefined: "gray",
@@ -52,4 +54,10 @@ const nextIncludes = {
   false: undefined,
   true: false,
   undefined: true,
+} as const;
+
+const variants = {
+  false: "solid",
+  true: "solid",
+  undefined: "outline",
 } as const;
