@@ -1,5 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import { useMemo } from "react";
+import useDebouncedState from "../../../../../../hooks/use-debounced-value";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { useCharacterClassesTranslations } from "../../../../../../resources/character-class-translation";
 import {
@@ -20,7 +21,13 @@ import { compareObjects } from "../../../../../../utils/object";
 export default function SpellsFilters() {
   const { t } = useI18nLangContext(i18nContext);
   const [filters, setFilters] = useSpellFilters();
+
   const [nameFilter, setNameFilter] = useSpellNameFilter();
+  const [tempNameFilter, setTempNameFilter] = useDebouncedState(
+    nameFilter,
+    setNameFilter,
+    200
+  );
 
   const characterClassTranslations = useCharacterClassesTranslations();
   const spellSchoolTranslations = useSpellSchoolTranslations();
@@ -53,10 +60,10 @@ export default function SpellsFilters() {
   return (
     <HStack>
       <Input
-        onValueChange={setNameFilter}
+        onValueChange={setTempNameFilter}
         placeholder={t("name")}
         size="sm"
-        value={nameFilter}
+        value={tempNameFilter}
         w="15em"
       />
 
