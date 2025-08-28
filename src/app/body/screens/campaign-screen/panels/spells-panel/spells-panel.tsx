@@ -1,9 +1,10 @@
-import { Flex, VStack } from "@chakra-ui/react";
+import { Flex, HStack, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { useCampaignSpells } from "../../../../../../resources/spells";
 import { useTranslateSpell } from "../../../../../../resources-i18n/translate-spell";
 import DataTable from "../../../../../../ui/data-table";
+import SpellsFilters from "./spells-filters";
 
 //------------------------------------------------------------------------------
 // Spells Panel
@@ -14,8 +15,8 @@ export type SpellsPanelProps = {
 };
 
 export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
-  const { lang, t } = useI18nLangContext(i18nContext);
-  const { data: spells } = useCampaignSpells(campaignId, {}, [lang]);
+  const { t } = useI18nLangContext(i18nContext);
+  const { data: spells } = useCampaignSpells(campaignId);
   const translateSpell = useTranslateSpell();
 
   const columns = useMemo(
@@ -36,6 +37,10 @@ export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
 
   return (
     <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
+      <HStack borderBottomWidth={1} p={2} w="full">
+        <SpellsFilters />
+      </HStack>
+
       <Flex h="full" overflow="auto" w="full">
         <DataTable columns={columns} expandedKey="description" rows={rows} />
       </Flex>
