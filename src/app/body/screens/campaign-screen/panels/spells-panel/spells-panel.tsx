@@ -1,7 +1,10 @@
 import { Flex, HStack, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useCampaignSpells } from "../../../../../../resources/spell";
+import {
+  useCampaignSpells,
+  useSpellNameFilter,
+} from "../../../../../../resources/spell";
 import { useTranslateSpell } from "../../../../../../resources/spell-translation";
 import DataTable from "../../../../../../ui/data-table";
 import SpellsFilters from "./spells-filters";
@@ -18,6 +21,12 @@ export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
   const { t } = useI18nLangContext(i18nContext);
   const { data: spells } = useCampaignSpells(campaignId);
   const translateSpell = useTranslateSpell();
+  const [nameFilter] = useSpellNameFilter();
+
+  const spellTranslations = useMemo(
+    () => (spells ? spells.map(translateSpell) : undefined),
+    [spells, translateSpell]
+  );
 
   const columns = useMemo(
     () =>
@@ -29,8 +38,16 @@ export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
   );
 
   const rows = useMemo(
-    () => (spells ? spells.map(translateSpell) : undefined),
-    [spells, translateSpell]
+    () =>
+      spellTranslations
+        ? spellTranslations.filter((spell) =>
+            spell.name
+              .trim()
+              .toLowerCase()
+              .includes(nameFilter.trim().toLowerCase())
+          )
+        : undefined,
+    [nameFilter, spellTranslations]
   );
 
   if (!rows) return null;

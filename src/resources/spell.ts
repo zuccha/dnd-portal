@@ -92,6 +92,18 @@ export function useSpellFilters(): [
 }
 
 //------------------------------------------------------------------------------
+// Use Spell Name Filter
+//------------------------------------------------------------------------------
+
+const spellNameFilterStore = createLocalStore(
+  "resources.spells.filters.name",
+  "",
+  z.string().parse
+);
+
+export const useSpellNameFilter = spellNameFilterStore.use;
+
+//------------------------------------------------------------------------------
 // Fetch Campaign Spells
 //------------------------------------------------------------------------------
 
