@@ -6,6 +6,7 @@ import { i18nStringSchema } from "../i18n/i18n-string";
 import { createLocalStore } from "../store/local-store";
 import { createMemoryStore } from "../store/memory-store";
 import supabase from "../supabase";
+import { characterClassSchema } from "./character-class";
 
 //------------------------------------------------------------------------------
 // Spell
@@ -18,7 +19,7 @@ export const spellSchema = z.object({
 
   level: z.number(),
 
-  character_classes: z.array(z.string()),
+  character_classes: z.array(characterClassSchema),
   school: z.string(),
 
   casting_time: z.string(),
@@ -47,7 +48,7 @@ export type Spell = z.infer<typeof spellSchema>;
 //------------------------------------------------------------------------------
 
 export const spellFiltersSchema = z.object({
-  character_classes: z.record(z.string(), z.boolean()).optional(),
+  character_classes: z.record(characterClassSchema, z.boolean()).optional(),
   levels: z.record(z.number(), z.boolean()).optional(),
   schools: z.record(z.string(), z.boolean()).optional(),
 
