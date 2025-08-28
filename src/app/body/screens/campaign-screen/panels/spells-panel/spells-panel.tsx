@@ -1,8 +1,8 @@
 import { Flex, HStack, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useCampaignSpells } from "../../../../../../resources/spells";
-import { useTranslateSpell } from "../../../../../../resources-i18n/translate-spell";
+import { useCampaignSpells } from "../../../../../../resources/spell";
+import { useTranslateSpell } from "../../../../../../resources/spell-translation";
 import DataTable from "../../../../../../ui/data-table";
 import SpellsFilters from "./spells-filters";
 

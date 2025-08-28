@@ -1,6 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useSpellFilters } from "../../../../../../resources/spells";
+import { useSpellFilters } from "../../../../../../resources/spell";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 
 //------------------------------------------------------------------------------
