@@ -7,6 +7,7 @@ import { spellLevels } from "../../../../../../resources/spell-level";
 import { useSpellSchoolTranslations } from "../../../../../../resources/spell-school-translation";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
+import { compareObjects } from "../../../../../../utils/object";
 
 //------------------------------------------------------------------------------
 // Spells Filters
@@ -27,19 +28,20 @@ export default function SpellsFilters() {
 
   const characterClassOptions = useMemo(
     () =>
-      characterClassTranslations.map(({ character_class, label }) => ({
-        label,
-        value: character_class,
-      })),
+      characterClassTranslations
+        .map(({ character_class, label }) => ({
+          label,
+          value: character_class,
+        }))
+        .sort(compareObjects("label")),
     [characterClassTranslations]
   );
 
   const spellSchoolOptions = useMemo(
     () =>
-      spellSchoolTranslations.map(({ spell_school, label }) => ({
-        label,
-        value: spell_school,
-      })),
+      spellSchoolTranslations
+        .map(({ spell_school, label }) => ({ label, value: spell_school }))
+        .sort(compareObjects("label")),
     [spellSchoolTranslations]
   );
 
