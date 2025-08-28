@@ -49,9 +49,11 @@ export type Spell = z.infer<typeof spellSchema>;
 //------------------------------------------------------------------------------
 
 export const spellFiltersSchema = z.object({
-  character_classes: z.record(characterClassSchema, z.boolean()).optional(),
-  levels: z.record(z.number(), z.boolean()).optional(),
-  schools: z.record(z.string(), z.boolean()).optional(),
+  character_classes: z
+    .partialRecord(characterClassSchema, z.boolean().optional())
+    .optional(),
+  levels: z.partialRecord(z.number(), z.boolean().optional()).optional(),
+  schools: z.partialRecord(z.string(), z.boolean().optional()).optional(),
 
   concentration: z.boolean().optional(),
   ritual: z.boolean().optional(),
