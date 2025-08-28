@@ -74,7 +74,7 @@ export function useTranslateSpell() {
             unlimited: t("range.unlimited"),
           }[range] ?? translateDistance(range),
         ritual: spell.ritual,
-        school: translateSpellSchool(spell.school),
+        school: translateSpellSchool(spell.school).label,
       };
     },
     [

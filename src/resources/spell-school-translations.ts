@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { z } from "zod/v4";
 import type { I18nLang } from "../i18n/i18n-lang";
-import type { I18nString } from "../i18n/i18n-string";
 import supabase from "../supabase";
 import {
   type SpellSchool,
@@ -14,31 +13,43 @@ import {
 // Spell School Translation
 //------------------------------------------------------------------------------
 
-export const spellSchoolTranslationsSchema = z.object({
+export const spellSchoolTranslationSchema = z.object({
   label: z.string(),
   lang: z.string(),
   spell_school: spellSchoolSchema,
 });
 
-export type SpellSchoolTranslations = z.infer<
-  typeof spellSchoolTranslationsSchema
+export type SpellSchoolTranslation = z.infer<
+  typeof spellSchoolTranslationSchema
+>;
+
+const defaultSpellSchoolTranslation = (spell_school: SpellSchool) => ({
+  label: "",
+  lang: "en",
+  spell_school,
+});
+
+//------------------------------------------------------------------------------
+// Spell School Translation Map
+//------------------------------------------------------------------------------
+
+type SpellSchoolTranslationMap = Record<
+  SpellSchool,
+  Record<string, SpellSchoolTranslation>
 >;
 
 //------------------------------------------------------------------------------
 // Fetch Spell School Translations Map
 //------------------------------------------------------------------------------
 
-export async function fetchSpellSchoolTranslationsMap(): Promise<
-  Record<SpellSchool, I18nString>
-> {
+export async function fetchSpellSchoolTranslationsMap(): Promise<SpellSchoolTranslationMap> {
   const { data } = await supabase.from("spell_school_translations").select();
-  const translations = z.array(spellSchoolTranslationsSchema).parse(data);
+  const translations = z.array(spellSchoolTranslationSchema).parse(data);
   const translationsMap = Object.fromEntries(
     spellSchools.map((spellSchool) => [spellSchool, {}])
-  ) as Record<SpellSchool, I18nString>;
-  translations.forEach(({ lang, label, spell_school }) => {
-    if (!translationsMap[spell_school]) translationsMap[spell_school] = {};
-    translationsMap[spell_school][lang] = label;
+  ) as SpellSchoolTranslationMap;
+  translations.forEach((translation) => {
+    translationsMap[translation.spell_school][translation.lang] = translation;
   });
   return translationsMap;
 }
@@ -47,17 +58,21 @@ export async function fetchSpellSchoolTranslationsMap(): Promise<
 // Use Translate Spell School
 //------------------------------------------------------------------------------
 
-export function useTranslateSpellSchool(lang: I18nLang) {
-  const { data: translationMap } = useQuery<Record<SpellSchool, I18nString>>({
+export function useTranslateSpellSchool(
+  lang: I18nLang
+): (characterClass: SpellSchool) => SpellSchoolTranslation {
+  const { data: translationMap } = useQuery<SpellSchoolTranslationMap>({
     queryFn: fetchSpellSchoolTranslationsMap,
     queryKey: ["spell_school_translations_map"],
   });
 
   const translate = useCallback(
-    (spellSchool: SpellSchool) => {
-      if (!translationMap) return spellSchool;
+    (spellSchool: SpellSchool): SpellSchoolTranslation => {
+      if (!translationMap) return defaultSpellSchoolTranslation(spellSchool);
       const base = translationMap[spellSchool];
-      return base[lang] ?? base.en ?? spellSchool;
+      return (
+        base[lang] ?? base.en ?? defaultSpellSchoolTranslation(spellSchool)
+      );
     },
     [lang, translationMap]
   );
