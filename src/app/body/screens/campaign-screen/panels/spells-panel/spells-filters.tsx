@@ -1,9 +1,10 @@
-import { HStack } from "@chakra-ui/react";
+import { HStack, Separator, createListCollection } from "@chakra-ui/react";
 import { useMemo } from "react";
 import useDebouncedState from "../../../../../../hooks/use-debounced-value";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { useCharacterClassesTranslations } from "../../../../../../resources/character-class-translation";
 import {
+  type SpellFilters,
   useSpellFilters,
   useSpellNameFilter,
 } from "../../../../../../resources/spell";
@@ -12,6 +13,7 @@ import { useSpellSchoolTranslations } from "../../../../../../resources/spell-sc
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
 import Input from "../../../../../../ui/input";
+import Select from "../../../../../../ui/select";
 import { compareObjects } from "../../../../../../utils/object";
 
 //------------------------------------------------------------------------------
@@ -31,6 +33,14 @@ export default function SpellsFilters() {
 
   const characterClassTranslations = useCharacterClassesTranslations();
   const spellSchoolTranslations = useSpellSchoolTranslations();
+
+  const orderOptions = useMemo(
+    () =>
+      createListCollection({
+        items: orders.map((value) => ({ label: t(`order.${value}`), value })),
+      }),
+    [t]
+  );
 
   const levelOptions = useMemo(
     () =>
@@ -59,6 +69,22 @@ export default function SpellsFilters() {
 
   return (
     <HStack>
+      <Select
+        minW="13.5em"
+        onValueChange={(value) => {
+          const [order_by, order_dir] = value.split(".") as [
+            SpellFilters["order_by"],
+            SpellFilters["order_dir"]
+          ];
+          setFilters({ order_by, order_dir });
+        }}
+        options={orderOptions}
+        size="sm"
+        value={`${filters.order_by}.${filters.order_dir}`}
+      />
+
+      <Separator h="1.5em" orientation="vertical" />
+
       <Input
         onValueChange={setTempNameFilter}
         placeholder={t("name")}
@@ -125,36 +151,62 @@ export default function SpellsFilters() {
 }
 
 //------------------------------------------------------------------------------
+// Orders
+//------------------------------------------------------------------------------
+
+const orders = ["name.asc", "name.desc", "level.asc", "level.desc"];
+
+//------------------------------------------------------------------------------
 // I18n Context
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  name: {
+  "order.name.asc": {
+    en: "Sort by Name (A-Z)",
+    it: "Ordina per Nome (A-Z)",
+  },
+
+  "order.name.desc": {
+    en: "Sort by Name (Z-A)",
+    it: "Ordina per Nome (Z-A)",
+  },
+
+  "order.level.asc": {
+    en: "Sort by Level (0-9)",
+    it: "Ordina per Livello (0-9)",
+  },
+
+  "order.level.desc": {
+    en: "Sort by Level (9-0)",
+    it: "Ordina per Livello (9-0)",
+  },
+
+  "name": {
     en: "Name",
     it: "Nome",
   },
 
-  levels: {
+  "levels": {
     en: "Levels",
     it: "Livelli",
   },
 
-  character_classes: {
+  "character_classes": {
     en: "Classes",
     it: "Classi",
   },
 
-  schools: {
+  "schools": {
     en: "Schools",
     it: "Scuole",
   },
 
-  concentration: {
+  "concentration": {
     en: "C",
     it: "C",
   },
 
-  ritual: {
+  "ritual": {
     en: "R",
     it: "R",
   },

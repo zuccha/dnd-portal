@@ -50,6 +50,9 @@ export type Spell = z.infer<typeof spellSchema>;
 //------------------------------------------------------------------------------
 
 export const spellFiltersSchema = z.object({
+  order_by: z.enum(["level", "name"]).default("name"),
+  order_dir: z.enum(["asc", "desc"]).default("asc"),
+
   character_classes: z
     .partialRecord(characterClassSchema, z.boolean().optional())
     .optional(),
@@ -72,7 +75,7 @@ export type SpellFilters = z.infer<typeof spellFiltersSchema>;
 
 const spellFiltersStore = createLocalStore(
   "resources.spells.filters",
-  {},
+  spellFiltersSchema.parse({}),
   spellFiltersSchema.parse
 );
 
@@ -109,13 +112,15 @@ export const useSpellNameFilter = spellNameFilterStore.use;
 
 export async function fetchCampaignSpells(
   campaignId: string,
-  filters: SpellFilters,
+  { order_by, order_dir, ...filters }: SpellFilters,
   lang: string
 ): Promise<Spell[]> {
   const { data } = await supabase.rpc("fetch_spells", {
     p_campaign_id: campaignId,
     p_filters: filters,
     p_langs: [lang],
+    p_order_by: order_by,
+    p_order_dir: order_dir,
   });
   try {
     return z.array(spellSchema).parse(data);
