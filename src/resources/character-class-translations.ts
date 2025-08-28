@@ -14,31 +14,46 @@ import {
 // Character Class Translation
 //------------------------------------------------------------------------------
 
-export const characterClassTranslationsSchema = z.object({
+export const characterClassTranslationSchema = z.object({
   character_class: characterClassSchema,
   label: z.string(),
   label_short: z.string(),
   lang: z.string(),
 });
 
-export type CharacterClassTranslations = z.infer<
-  typeof characterClassTranslationsSchema
+export type CharacterClassTranslation = z.infer<
+  typeof characterClassTranslationSchema
+>;
+
+const defaultCharacterClassTranslation = (character_class: CharacterClass) => ({
+  character_class,
+  label: "",
+  label_short: "",
+  lang: "en",
+});
+
+//------------------------------------------------------------------------------
+// Character Class Translation Map
+//------------------------------------------------------------------------------
+
+type CharacterClassTranslationMap = Record<
+  CharacterClass,
+  Record<string, CharacterClassTranslation>
 >;
 
 //------------------------------------------------------------------------------
 // Fetch Character Class Translations Map
 //------------------------------------------------------------------------------
 
-export async function fetchCharacterClassTranslationsMap(): Promise<
-  Record<CharacterClass, I18nString>
-> {
+export async function fetchCharacterClassTranslationsMap(): Promise<CharacterClassTranslationMap> {
   const { data } = await supabase.from("character_class_translations").select();
-  const translations = z.array(characterClassTranslationsSchema).parse(data);
+  const translations = z.array(characterClassTranslationSchema).parse(data);
   const translationsMap = Object.fromEntries(
-    characterClasses.map((characterClass) => [characterClass, {}])
-  ) as Record<CharacterClass, I18nString>;
-  translations.forEach(({ lang, label_short, character_class }) => {
-    translationsMap[character_class][lang] = label_short;
+    characterClasses.map((character_class) => [character_class, {}])
+  ) as CharacterClassTranslationMap;
+  translations.forEach((translation) => {
+    translationsMap[translation.character_class][translation.lang] =
+      translation;
   });
   return translationsMap;
 }
@@ -48,7 +63,7 @@ export async function fetchCharacterClassTranslationsMap(): Promise<
 //------------------------------------------------------------------------------
 
 export function useCharacterClassTranslationMap() {
-  return useQuery<Record<CharacterClass, I18nString>>({
+  return useQuery<CharacterClassTranslationMap>({
     queryFn: fetchCharacterClassTranslationsMap,
     queryKey: ["character_class_translations_map"],
   });
@@ -58,14 +73,22 @@ export function useCharacterClassTranslationMap() {
 // Use Translate Character Class
 //------------------------------------------------------------------------------
 
-export function useTranslateCharacterClass(lang: I18nLang) {
+export function useTranslateCharacterClass(
+  lang: I18nLang
+): (characterClass: CharacterClass) => CharacterClassTranslation {
   const { data: translationMap } = useCharacterClassTranslationMap();
 
   const translate = useCallback(
-    (characterClass: CharacterClass) => {
-      if (!translationMap) return characterClass;
+    (characterClass: CharacterClass): CharacterClassTranslation => {
+      if (!translationMap)
+        return defaultCharacterClassTranslation(characterClass);
+
       const base = translationMap[characterClass];
-      return base[lang] ?? base.en ?? characterClass;
+      return (
+        base[lang] ??
+        base.en ??
+        defaultCharacterClassTranslation(characterClass)
+      );
     },
     [lang, translationMap]
   );

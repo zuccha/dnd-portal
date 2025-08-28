@@ -36,6 +36,7 @@ export function useTranslateSpell() {
           }[spell.casting_time] ?? translateTime(spell.casting_time),
         character_classes: spell.character_classes
           .map(translateCharacterClass)
+          .map(({ label_short }) => label_short)
           .sort()
           .join(" "),
         components: [
