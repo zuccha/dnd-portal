@@ -54,7 +54,7 @@ export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
 
   return (
     <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
-      <HStack borderBottomWidth={1} p={2} w="full">
+      <HStack borderBottomWidth={1} h="15em" overflow="auto" p={2} w="full">
         <SpellsFilters />
       </HStack>
 
