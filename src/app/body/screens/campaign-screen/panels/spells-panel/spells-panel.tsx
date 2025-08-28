@@ -41,7 +41,7 @@ export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
         <SpellsFilters />
       </HStack>
 
-      <Flex h="full" overflow="auto" w="full">
+      <Flex maxH="full" overflow="auto" w="full">
         <DataTable columns={columns} expandedKey="description" rows={rows} />
       </Flex>
     </VStack>
