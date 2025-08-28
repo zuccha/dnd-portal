@@ -7,6 +7,7 @@ import { createLocalStore } from "../store/local-store";
 import { createMemoryStore } from "../store/memory-store";
 import supabase from "../supabase";
 import { characterClassSchema } from "./character-class";
+import { spellLevelSchema } from "./spell-level";
 import { spellSchoolSchema } from "./spell-school";
 
 //------------------------------------------------------------------------------
@@ -18,7 +19,7 @@ export const spellSchema = z.object({
 
   campaign_id: z.string(),
 
-  level: z.number(),
+  level: spellLevelSchema,
 
   character_classes: z.array(characterClassSchema),
   school: spellSchoolSchema,
