@@ -1,7 +1,7 @@
 import { HStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useCharacterClassesTranslations } from "../../../../../../resources/character-class-translations";
+import { useCharacterClassesTranslations } from "../../../../../../resources/character-class-translation";
 import { useSpellFilters } from "../../../../../../resources/spell";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
