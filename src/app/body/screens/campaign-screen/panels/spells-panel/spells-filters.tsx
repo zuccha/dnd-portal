@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { useCharacterClassesTranslations } from "../../../../../../resources/character-class-translation";
 import { useSpellFilters } from "../../../../../../resources/spell";
+import { spellLevels } from "../../../../../../resources/spell-level";
 import { useSpellSchoolTranslations } from "../../../../../../resources/spell-school-translation";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
@@ -17,6 +18,12 @@ export default function SpellsFilters() {
 
   const characterClassTranslations = useCharacterClassesTranslations();
   const spellSchoolTranslations = useSpellSchoolTranslations();
+
+  const levelOptions = useMemo(
+    () =>
+      spellLevels.map((level) => ({ label: `${level}`, value: `${level}` })),
+    []
+  );
 
   const characterClassOptions = useMemo(
     () =>
@@ -38,6 +45,18 @@ export default function SpellsFilters() {
 
   return (
     <HStack>
+      <InclusionSelect
+        includes={filters.levels ?? {}}
+        minW="10em"
+        onValueChange={(partial) =>
+          setFilters({ levels: { ...filters.levels, ...partial } })
+        }
+        options={levelOptions}
+        size="sm"
+      >
+        {t("levels")}
+      </InclusionSelect>
+
       <InclusionSelect
         includes={filters.character_classes ?? {}}
         minW="10em"
@@ -88,6 +107,11 @@ export default function SpellsFilters() {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  levels: {
+    en: "Levels",
+    it: "Livelli",
+  },
+
   character_classes: {
     en: "Classes",
     it: "Classi",
