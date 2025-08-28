@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { z } from "zod/v4";
-import type { I18nLang } from "../i18n/i18n-lang";
-import type { I18nString } from "../i18n/i18n-string";
+import { type I18nLang, useI18nLang } from "../i18n/i18n-lang";
 import supabase from "../supabase";
 import {
   type CharacterClass,
@@ -94,4 +93,18 @@ export function useTranslateCharacterClass(
   );
 
   return translate;
+}
+
+//------------------------------------------------------------------------------
+// Use Character Class Translations
+//------------------------------------------------------------------------------
+
+export function useCharacterClassesTranslations() {
+  const [lang] = useI18nLang();
+  const translate = useTranslateCharacterClass(lang);
+
+  return useMemo(
+    () => characterClasses.map((characterClass) => translate(characterClass)),
+    [translate]
+  );
 }
