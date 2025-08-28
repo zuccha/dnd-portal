@@ -6,7 +6,7 @@ import { useI18nSystem } from "../i18n/i18n-system";
 import { useTranslateTime } from "../i18n/i18n-time";
 import { useTranslateCharacterClass } from "./character-class-translations";
 import type { Spell } from "./spell";
-import { useTranslateSpellSchool } from "./spell-school-translations";
+import { useTranslateSpellSchool } from "./spell-school-translation";
 
 //------------------------------------------------------------------------------
 // Use Translate Spell
