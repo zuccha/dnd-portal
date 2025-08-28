@@ -4,7 +4,7 @@ import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
 import {
   useSelectedUserCampaignId,
   useUserCampaigns,
-} from "../../../../../resources/campaigns";
+} from "../../../../../resources/campaign";
 import Select from "../../../../../ui/select";
 
 //------------------------------------------------------------------------------

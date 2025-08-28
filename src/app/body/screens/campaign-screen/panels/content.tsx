@@ -1,7 +1,7 @@
 import { MapIcon } from "lucide-react";
 import type { FC } from "react";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
-import { useSelectedUserCampaignId } from "../../../../../resources/campaigns";
+import { useSelectedUserCampaignId } from "../../../../../resources/campaign";
 import EmptyState from "../../../../../ui/empty-state";
 import { type ResourcePanelId, useSelectedPanelId } from "./panels";
 import SpellsPanel from "./spells-panel/spells-panel";
