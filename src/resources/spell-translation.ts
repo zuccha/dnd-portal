@@ -15,6 +15,8 @@ import { useTranslateSpellSchool } from "./spell-school-translation";
 
 export const spellTranslationSchema = z.object({
   _raw: spellSchema,
+  campaign: z.string(),
+  campaign_with_page: z.string(),
   casting_time: z.string(),
   casting_time_with_ritual: z.string(),
   character_classes: z.string(),
@@ -27,6 +29,7 @@ export const spellTranslationSchema = z.object({
   level: z.string(),
   materials: z.string(),
   name: z.string(),
+  page: z.string(),
   range: z.string(),
   ritual: z.boolean(),
   school: z.string(),
@@ -71,8 +74,14 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
       const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
       const materials = spell.materials ? translate(spell.materials, lang) : "";
 
+      const page = spell.page ? translate(spell.page, lang) : "";
+
       return {
         _raw: spell,
+        campaign: spell.campaign_name,
+        campaign_with_page: page
+          ? ti("campaign_with_page", spell.campaign_name, page)
+          : spell.campaign_name,
         casting_time,
         casting_time_with_ritual: spell.ritual
           ? ti("casting_time_with_ritual", casting_time)
@@ -103,6 +112,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
         level: `${spell.level}`,
         materials: materials ? materials : t("materials.none"),
         name: translate(spell.name, lang),
+        page: page ? ti("page", page) : "",
         range:
           {
             self: t("range.self"),
@@ -134,6 +144,11 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "campaign_with_page": {
+    en: "<1> (p. <2>)", // 1 = campaign, 2 = page
+    it: "<1> (p. <2>)", // 1 = campaign, 2 = page
+  },
+
   "casting_time.action": {
     en: "Action",
     it: "Azione",
@@ -215,5 +230,10 @@ const i18nContext = {
   "materials.none": {
     en: "No materials.",
     it: "Nessun materiale.",
+  },
+
+  "page": {
+    en: "p. <1>", // 1 = page
+    it: "p. <1>", // 1 = page
   },
 };

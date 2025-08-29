@@ -18,6 +18,7 @@ export const spellSchema = z.object({
   id: z.uuid(),
 
   campaign_id: z.string(),
+  campaign_name: z.string(),
 
   level: spellLevelSchema,
 

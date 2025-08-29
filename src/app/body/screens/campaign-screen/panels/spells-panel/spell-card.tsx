@@ -13,6 +13,7 @@ export type SpellCardProps = {
 
 export default function SpellCard({ spellTranslation }: SpellCardProps) {
   const {
+    campaign,
     casting_time_with_ritual,
     character_classes,
     components,
@@ -21,6 +22,7 @@ export default function SpellCard({ spellTranslation }: SpellCardProps) {
     level,
     materials,
     name,
+    page,
     range,
     school,
   } = spellTranslation;
@@ -80,7 +82,8 @@ export default function SpellCard({ spellTranslation }: SpellCardProps) {
       <ResourceCard.Description description={description} />
 
       <ResourceCard.Caption>
-        <Span>PHB24</Span>
+        <Span>{campaign}</Span>
+        <Span>{page}</Span>
       </ResourceCard.Caption>
     </ResourceCard>
   );
