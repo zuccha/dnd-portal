@@ -24,9 +24,8 @@ export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
     <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
       <HStack
         borderBottomWidth={1}
-        h="full"
+        h="4em"
         justify="space-between"
-        maxH="4em"
         overflow="auto"
         p={2}
         w="full"
@@ -40,7 +39,7 @@ export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
         />
       </HStack>
 
-      <Flex maxH="full" overflow="auto" w="full">
+      <Flex flex={1} overflow="auto" w="full">
         {view === "table" && <SpellsListTable campaignId={campaignId} />}
         {view === "cards" && <SpellsListCards campaignId={campaignId} />}
       </Flex>

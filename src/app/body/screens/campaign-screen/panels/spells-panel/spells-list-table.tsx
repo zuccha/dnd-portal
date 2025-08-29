@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import DataTable from "../../../../../../ui/data-table";
@@ -27,7 +28,9 @@ export default function SpellsListTable({ campaignId }: SpellsListTableProps) {
   if (!spells) return null;
 
   return (
-    <DataTable columns={columns} expandedKey="description" rows={spells} />
+    <Box w="full">
+      <DataTable columns={columns} expandedKey="description" rows={spells} />
+    </Box>
   );
 }
 
