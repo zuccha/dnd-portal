@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { useTranslateDistance } from "../i18n/i18n-distance";
 import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";

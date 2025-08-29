@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { type I18nLang, useI18nLang } from "../i18n/i18n-lang";
 import supabase from "../supabase";
 import {

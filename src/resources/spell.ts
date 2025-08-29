@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { useI18nLang } from "../i18n/i18n-lang";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { createLocalStore } from "../store/local-store";
