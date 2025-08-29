@@ -42,5 +42,11 @@ const fonts = [
   "bold 16px Bookinsanity",
   "italic 16px Bookinsanity",
   "italic bold 16px Bookinsanity",
+
+  "16px Lato",
+  "bold 16px Lato",
+  "italic 16px Lato",
+  "italic bold 16px Lato",
+
   "16px Mr Eaves",
 ];

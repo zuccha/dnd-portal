@@ -1,3 +1,7 @@
+/******************************************************************************/
+/* Bookinsanity
+/******************************************************************************/
+
 @font-face {
   font-family: "Bookinsanity";
   src: url("../assets/fonts/Bookinsanity.otf") format("opentype");
@@ -25,6 +29,42 @@
   font-weight: normal;
   font-style: italic;
 }
+
+/******************************************************************************/
+/* Lato
+/******************************************************************************/
+
+@font-face {
+  font-family: "Lato";
+  src: url("../assets/fonts/Lato.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url("../assets/fonts/Lato Bold Italic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url("../assets/fonts/Lato Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url("../assets/fonts/Lato Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+/******************************************************************************/
+/* Mr Eaves
+/******************************************************************************/
 
 @font-face {
   font-family: "Mr Eaves";
