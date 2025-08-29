@@ -23,7 +23,7 @@ export const spellTranslationSchema = z.object({
   description: z.string(),
   duration: z.string(),
   duration_with_concentration: z.string(),
-  id: z.string(),
+  id: z.uuid(),
   level: z.string(),
   materials: z.string(),
   name: z.string(),

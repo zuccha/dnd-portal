@@ -9,7 +9,7 @@ import supabase from "../supabase";
 
 export const campaignSchema = z.object({
   core: z.boolean(),
-  id: z.string(),
+  id: z.uuid(),
   name: z.string(),
 });
 

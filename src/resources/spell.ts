@@ -15,7 +15,7 @@ import { spellSchoolSchema } from "./spell-school";
 //------------------------------------------------------------------------------
 
 export const spellSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
 
   campaign_id: z.string(),
 
