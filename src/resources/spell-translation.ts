@@ -1,19 +1,45 @@
 import { useCallback } from "react";
+import { z } from "zod/v4";
 import { useTranslateDistance } from "../i18n/i18n-distance";
 import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
 import { useTranslateTime } from "../i18n/i18n-time";
 import { useTranslateCharacterClass } from "./character-class-translation";
-import type { Spell } from "./spell";
+import { type Spell, spellSchema } from "./spell";
 import { useTranslateSpellSchool } from "./spell-school-translation";
+
+//------------------------------------------------------------------------------
+// Spell Translation
+//------------------------------------------------------------------------------
+
+export const spellTranslationSchema = z.object({
+  _raw: spellSchema,
+  casting_time: z.string(),
+  casting_time_with_ritual: z.string(),
+  character_classes: z.string(),
+  components: z.string(),
+  concentration: z.boolean(),
+  description: z.string(),
+  duration: z.string(),
+  duration_with_concentration: z.string(),
+  id: z.string(),
+  level: z.string(),
+  materials: z.string(),
+  name: z.string(),
+  range: z.string(),
+  ritual: z.boolean(),
+  school: z.string(),
+});
+
+export type SpellTranslation = z.infer<typeof spellTranslationSchema>;
 
 //------------------------------------------------------------------------------
 // Use Translate Spell
 //------------------------------------------------------------------------------
 
-export function useTranslateSpell() {
-  const { lang, t, tp } = useI18nLangContext(i18nContext);
+export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
+  const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateCharacterClass = useTranslateCharacterClass(lang);
@@ -22,19 +48,35 @@ export function useTranslateSpell() {
   const translateTime = useTranslateTime();
 
   return useCallback(
-    (spell: Spell) => {
+    (spell: Spell): SpellTranslation => {
+      const casting_time =
+        {
+          "action": t("casting_time.action"),
+          "bonus action": t("casting_time.bonus_action"),
+          "reaction": t("casting_time.reaction"),
+        }[spell.casting_time] ?? translateTime(spell.casting_time);
+
+      const duration =
+        {
+          "instantaneous": t("duration.instantaneous"),
+          "special": t("duration.special"),
+          "until dispelled": t("duration.until_dispelled"),
+          "until dispelled or triggered": t(
+            "duration.until_dispelled_or_triggered"
+          ),
+        }[spell.duration] ?? translateTime(spell.duration);
+
       const range = system === "metric" ? spell.range_met : spell.range_imp;
       const description = translate(spell.description, lang);
       const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
+      const materials = spell.materials ? translate(spell.materials, lang) : "";
 
       return {
         _raw: spell,
-        casting_time:
-          {
-            "action": t("casting_time.action"),
-            "bonus action": t("casting_time.bonus_action"),
-            "reaction": t("casting_time.reaction"),
-          }[spell.casting_time] ?? translateTime(spell.casting_time),
+        casting_time,
+        casting_time_with_ritual: spell.ritual
+          ? ti("casting_time_with_ritual", casting_time)
+          : casting_time,
         character_classes: spell.character_classes
           .map(translateCharacterClass)
           .map(({ label_short }) => label_short)
@@ -53,18 +95,13 @@ export function useTranslateSpell() {
             ? `${description}\n\n${tp("upgrade", spell.level)}\n${upgrade}`
             : description
           : t("description.missing"),
-        duration:
-          {
-            "instantaneous": t("duration.instantaneous"),
-            "special": t("duration.special"),
-            "until dispelled": t("duration.until_dispelled"),
-            "until dispelled or triggered": t(
-              "duration.until_dispelled_or_triggered"
-            ),
-          }[spell.duration] ?? translateTime(spell.duration),
+        duration,
+        duration_with_concentration: spell.concentration
+          ? ti("duration_with_concentration", duration)
+          : duration,
         id: spell.id,
         level: `${spell.level}`,
-        materials: spell.materials ? translate(spell.materials, lang) : "",
+        materials: materials ? materials : t("materials.none"),
         name: translate(spell.name, lang),
         range:
           {
@@ -82,6 +119,7 @@ export function useTranslateSpell() {
       lang,
       system,
       t,
+      ti,
       tp,
       translateCharacterClass,
       translateDistance,
@@ -108,9 +146,9 @@ const i18nContext = {
     en: "Reaction",
     it: "Reazione",
   },
-  "casting_time.time": {
-    en: "<1> <2>", // 1 = quantity, 2 = unit
-    it: "<1> <2>", // 1 = quantity, 2 = unit
+  "casting_time_with_ritual": {
+    en: "<1> or ritual", // 1 = casting time
+    it: "<1> o rituale", // 1 = casting time
   },
 
   "duration.instantaneous": {
@@ -122,14 +160,6 @@ const i18nContext = {
     it: "Speciale",
   },
 
-  "duration.time": {
-    en: "<1><2> <3>", // 1 = up to, 2 = quantity, 3 = unit
-    it: "<1><2> <3>", // 1 = up to, 2 = quantity, 3 = unit
-  },
-  "duration.time.up_to": {
-    en: "Up to ",
-    it: "Fino a ",
-  },
   "duration.until_dispelled": {
     en: "Until dispelled",
     it: "Finché non disperso",
@@ -137,6 +167,10 @@ const i18nContext = {
   "duration.until_dispelled_or_triggered": {
     en: "Until dispelled or triggered",
     it: "Finché non disperso o innescato",
+  },
+  "duration_with_concentration": {
+    en: "Up to <1> (C)", // <1> = duration
+    it: "Fino a <1> (C)", // <1> = duration
   },
 
   "range.distance": {
@@ -176,5 +210,10 @@ const i18nContext = {
   "upgrade/0": {
     en: "**Cantrip Upgrade**",
     it: "**Potenziamento del Trucchetto**",
+  },
+
+  "materials.none": {
+    en: "No materials",
+    it: "Nessun materiale",
   },
 };
