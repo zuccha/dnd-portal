@@ -213,7 +213,7 @@ const i18nContext = {
   },
 
   "materials.none": {
-    en: "No materials",
-    it: "Nessun materiale",
+    en: "No materials.",
+    it: "Nessun materiale.",
   },
 };
