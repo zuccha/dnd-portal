@@ -3,13 +3,18 @@ import {
   useCampaignSpells,
   useSpellNameFilter,
 } from "../../../../../../resources/spell";
-import { useTranslateSpell } from "../../../../../../resources/spell-translation";
+import {
+  type SpellTranslation,
+  useTranslateSpell,
+} from "../../../../../../resources/spell-translation";
 
 //------------------------------------------------------------------------------
 // Use Filtered Spells
 //------------------------------------------------------------------------------
 
-export default function useFilteredSpells(campaignId: string) {
+export default function useFilteredSpellTranslations(
+  campaignId: string
+): SpellTranslation[] | undefined {
   const { data: spells } = useCampaignSpells(campaignId);
   const translateSpell = useTranslateSpell();
   const [nameFilter] = useSpellNameFilter();

@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import DataTable from "../../../../../../ui/data-table";
-import useFilteredSpells from "./use-filtered-spells";
+import useFilteredSpellTranslations from "./use-filtered-spell-translations";
 
 //------------------------------------------------------------------------------
 // Spells List Table
@@ -14,7 +14,7 @@ export type SpellsListTableProps = {
 
 export default function SpellsListTable({ campaignId }: SpellsListTableProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const spells = useFilteredSpells(campaignId);
+  const spellTranslations = useFilteredSpellTranslations(campaignId);
 
   const columns = useMemo(
     () =>
@@ -25,11 +25,15 @@ export default function SpellsListTable({ campaignId }: SpellsListTableProps) {
     [t]
   );
 
-  if (!spells) return null;
+  if (!spellTranslations) return null;
 
   return (
     <Box w="full">
-      <DataTable columns={columns} expandedKey="description" rows={spells} />
+      <DataTable
+        columns={columns}
+        expandedKey="description"
+        rows={spellTranslations}
+      />
     </Box>
   );
 }
