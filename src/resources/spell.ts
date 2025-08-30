@@ -1,11 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
 import { z } from "zod";
-import { useI18nLang } from "../i18n/i18n-lang";
 import { i18nStringSchema } from "../i18n/i18n-string";
-import { createLocalStore } from "../store/local-store";
-import supabase from "../supabase";
 import { characterClassSchema } from "./character-class";
+import { createResource } from "./resource";
 import { spellLevelSchema } from "./spell-level";
 import { spellSchoolSchema } from "./spell-school";
 
@@ -72,81 +68,11 @@ export const spellFiltersSchema = z.object({
 export type SpellFilters = z.infer<typeof spellFiltersSchema>;
 
 //------------------------------------------------------------------------------
-// Use Spell Filters
+// Hooks
 //------------------------------------------------------------------------------
 
-const spellFiltersStore = createLocalStore(
-  "resources.spells.filters",
-  spellFiltersSchema.parse({}),
-  spellFiltersSchema.parse
-);
-
-export function useSpellFilters(): [
-  SpellFilters,
-  (partial: Partial<SpellFilters>) => void
-] {
-  const [filters, setFilters] = spellFiltersStore.use();
-
-  const updateFilter = useCallback(
-    (partial: Partial<SpellFilters>) =>
-      setFilters((prev) => ({ ...prev, ...partial })),
-    [setFilters]
-  );
-
-  return [filters, updateFilter];
-}
-
-//------------------------------------------------------------------------------
-// Use Spell Name Filter
-//------------------------------------------------------------------------------
-
-const spellNameFilterStore = createLocalStore(
-  "resources.spells.filters.name",
-  "",
-  z.string().parse
-);
-
-export const useSpellNameFilter = spellNameFilterStore.use;
-
-//------------------------------------------------------------------------------
-// Fetch Campaign Spells
-//------------------------------------------------------------------------------
-
-export async function fetchCampaignSpells(
-  campaignId: string,
-  { order_by, order_dir, ...filters }: SpellFilters,
-  lang: string
-): Promise<Spell[]> {
-  const { data } = await supabase.rpc("fetch_spells", {
-    p_campaign_id: campaignId,
-    p_filters: filters,
-    p_langs: [lang],
-    p_order_by: order_by,
-    p_order_dir: order_dir,
-  });
-  try {
-    return z.array(spellSchema).parse(data);
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
-}
-
-//------------------------------------------------------------------------------
-// Use Campaign Spells
-//------------------------------------------------------------------------------
-
-export function useCampaignSpells(campaignId: string) {
-  const [lang] = useI18nLang();
-  const [filters] = useSpellFilters();
-
-  const fetchCampaignsSpells = useCallback(
-    () => fetchCampaignSpells(campaignId, filters, lang),
-    [campaignId, filters, lang]
-  );
-
-  return useQuery<Spell[]>({
-    queryFn: fetchCampaignsSpells,
-    queryKey: ["spells", campaignId, filters, lang],
-  });
-}
+export const {
+  useCampaignResources: useCampaignSpells,
+  useFilters: useSpellFilters,
+  useNameFilter: useSpellNameFilter,
+} = createResource("spells", spellSchema, spellFiltersSchema);
