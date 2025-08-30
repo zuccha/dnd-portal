@@ -2,7 +2,7 @@ import { Text, VStack, createListCollection } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
 import {
-  useSelectedUserCampaignId,
+  useSelectedCampaignId,
   useUserCampaigns,
 } from "../../../../../resources/campaign";
 import Select from "../../../../../ui/select";
@@ -12,34 +12,25 @@ import Select from "../../../../../ui/select";
 //------------------------------------------------------------------------------
 
 export default function SidebarCampaignSelector() {
-  const [selectedCampaignId, setSelectedCampaignId] =
-    useSelectedUserCampaignId();
-  const { isPending, data: campaigns } = useUserCampaigns();
+  const [selectedCampaignId, setSelectedCampaignId] = useSelectedCampaignId();
+
+  const { data: userCampaigns } = useUserCampaigns();
 
   const { t } = useI18nLangContext(i18nContext);
 
   const campaignOptions = useMemo(() => {
-    if (isPending)
-      return createListCollection({
-        items: [{ label: "", value: "" }],
-      });
-    if (!campaigns || !campaigns.length)
-      return createListCollection({
-        items: [{ label: t("select.empty"), value: "" }],
-      });
-    return createListCollection({
-      items: campaigns.map((campaign) => ({
-        label: campaign.name,
-        value: campaign.id,
-      })),
-    });
-  }, [campaigns, isPending, t]);
+    const useCampaignItems = userCampaigns?.length
+      ? userCampaigns.map(({ id, name }) => ({ label: name, value: id }))
+      : [];
+
+    return createListCollection({ items: useCampaignItems });
+  }, [userCampaigns]);
 
   useLayoutEffect(() => {
     setSelectedCampaignId(
-      campaigns && campaigns.length ? campaigns[0].id : undefined
+      userCampaigns && userCampaigns.length ? userCampaigns[0].id : undefined
     );
-  }, [campaigns, setSelectedCampaignId]);
+  }, [userCampaigns, setSelectedCampaignId]);
 
   return (
     <VStack align="flex-start" px={4} w="full">
@@ -48,7 +39,7 @@ export default function SidebarCampaignSelector() {
       </Text>
 
       <Select
-        disabled={isPending || !campaigns || !campaigns.length}
+        disabled={!userCampaigns?.length}
         onValueChange={setSelectedCampaignId}
         options={campaignOptions}
         value={selectedCampaignId ?? ""}

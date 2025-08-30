@@ -56,9 +56,9 @@ export function useUserCampaigns() {
 }
 
 //------------------------------------------------------------------------------
-// Use Selected User Campaign
+// Use Selected Campaign
 //------------------------------------------------------------------------------
 
-export const { use: useSelectedUserCampaignId } = createMemoryStore<
-  string | undefined
->(undefined);
+export const useSelectedCampaignId = createMemoryStore<string | undefined>(
+  undefined
+).use;

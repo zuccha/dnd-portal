@@ -1,7 +1,7 @@
 import { MapIcon } from "lucide-react";
 import type { FC } from "react";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
-import { useSelectedUserCampaignId } from "../../../../../resources/campaign";
+import { useSelectedCampaignId } from "../../../../../resources/campaign";
 import EmptyState from "../../../../../ui/empty-state";
 import { type ResourcePanelId, useSelectedPanelId } from "./panels";
 import SpellsPanel from "./spells-panel/spells-panel";
@@ -15,7 +15,7 @@ export default function Content() {
   const { t } = useI18nLangContext(i18nContext);
 
   const [selectedPanelId] = useSelectedPanelId();
-  const [selectedCampaignId] = useSelectedUserCampaignId();
+  const [selectedCampaignId] = useSelectedCampaignId();
 
   if (!selectedCampaignId) return null;
 

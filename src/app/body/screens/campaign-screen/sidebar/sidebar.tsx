@@ -1,5 +1,5 @@
 import { VStack } from "@chakra-ui/react";
-import { useSelectedUserCampaignId } from "../../../../../resources/campaign";
+import { useSelectedCampaignId } from "../../../../../resources/campaign";
 import SidebarCampaign from "./sidebar-campaign";
 import SidebarCampaignSelector from "./sidebar-campaign-selector";
 
@@ -8,7 +8,7 @@ import SidebarCampaignSelector from "./sidebar-campaign-selector";
 //------------------------------------------------------------------------------
 
 export default function Sidebar() {
-  const [selectedUserCampaignId] = useSelectedUserCampaignId();
+  const [selectedUserCampaignId] = useSelectedCampaignId();
 
   return (
     <VStack borderRightWidth={1} gap={10} h="full" px={2} py={4} w="15em">
