@@ -4,7 +4,6 @@ import { z } from "zod";
 import { useI18nLang } from "../i18n/i18n-lang";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { createLocalStore } from "../store/local-store";
-import { createMemoryStore } from "../store/memory-store";
 import supabase from "../supabase";
 import { characterClassSchema } from "./character-class";
 import { spellLevelSchema } from "./spell-level";
@@ -57,8 +56,10 @@ export const spellFiltersSchema = z.object({
   character_classes: z
     .partialRecord(characterClassSchema, z.boolean().optional())
     .optional(),
-  levels: z.partialRecord(z.number(), z.boolean().optional()).optional(),
-  schools: z.partialRecord(z.string(), z.boolean().optional()).optional(),
+  levels: z.partialRecord(spellLevelSchema, z.boolean().optional()).optional(),
+  schools: z
+    .partialRecord(spellSchoolSchema, z.boolean().optional())
+    .optional(),
 
   concentration: z.boolean().optional(),
   ritual: z.boolean().optional(),
@@ -149,11 +150,3 @@ export function useCampaignSpells(campaignId: string) {
     queryKey: ["spells", campaignId, filters, lang],
   });
 }
-
-//------------------------------------------------------------------------------
-// Use Selected Campaign Spell
-//------------------------------------------------------------------------------
-
-export const { use: useSelectedCampaignSpellId } = createMemoryStore<
-  string | undefined
->(undefined);
