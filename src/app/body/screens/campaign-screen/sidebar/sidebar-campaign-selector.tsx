@@ -40,10 +40,14 @@ export default function SidebarCampaignSelector() {
   }, [coreCampaigns, t, userCampaigns]);
 
   useLayoutEffect(() => {
-    setSelectedCampaignId(
-      userCampaigns && userCampaigns.length ? userCampaigns[0].id : undefined
-    );
-  }, [userCampaigns, setSelectedCampaignId]);
+    if (coreCampaigns && userCampaigns)
+      setSelectedCampaignId((prev) =>
+        coreCampaigns.every(({ id }) => id !== prev) &&
+        userCampaigns.every(({ id }) => id !== prev)
+          ? coreCampaigns[0]?.id
+          : prev
+      );
+  }, [userCampaigns, setSelectedCampaignId, coreCampaigns]);
 
   return (
     <VStack align="flex-start" px={4} w="full">

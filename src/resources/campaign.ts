@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { createMemoryStore } from "../store/memory-store";
+import { createLocalStore } from "../store/local-store";
 import supabase from "../supabase";
 
 //------------------------------------------------------------------------------
@@ -59,6 +59,8 @@ export function useUserCampaigns() {
 // Use Selected Campaign
 //------------------------------------------------------------------------------
 
-export const useSelectedCampaignId = createMemoryStore<string | undefined>(
-  undefined
+export const useSelectedCampaignId = createLocalStore<string | undefined>(
+  "campaigns.selected_id",
+  undefined,
+  z.string().parse
 ).use;
