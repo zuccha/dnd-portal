@@ -98,8 +98,8 @@ function ResourceCardDescription({ description }: { description: string }) {
       py={2}
       w="full"
     >
-      {description.split("\n").map((paragraph) => (
-        <RichText patterns={patterns} text={paragraph} />
+      {description.split("\n").map((paragraph, i) => (
+        <RichText key={i} patterns={patterns} text={paragraph} />
       ))}
     </VStack>
   );
