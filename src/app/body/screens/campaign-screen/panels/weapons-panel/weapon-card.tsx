@@ -11,18 +11,17 @@ export type WeaponCardProps = {
 };
 
 export default function WeaponCard({ resource }: WeaponCardProps) {
-  const { campaign, name, page, properties, mastery, notes } = resource;
+  const { campaign, description, name, page, type } = resource;
 
   return (
     <ResourceCard>
       <ResourceCard.Title title={name} />
 
       <ResourceCard.Caption>
-        <Span>{properties}</Span>
-        <Span>{mastery}</Span>
+        <Span>{type}</Span>
       </ResourceCard.Caption>
 
-      <ResourceCard.Description description={notes} />
+      <ResourceCard.Description description={description} />
 
       <ResourceCard.Caption>
         <Span>{campaign}</Span>

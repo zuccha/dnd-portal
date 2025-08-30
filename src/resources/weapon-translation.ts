@@ -25,11 +25,13 @@ export const weaponTranslationSchema = z.object({
   type: z.string(),
 
   damage: z.string(),
+  damage_extended: z.string(),
   damage_type: z.string(),
   damage_versatile: z.string().nullish(),
 
   mastery: z.string(),
   properties: z.string(),
+  properties_extended: z.string(),
 
   magic: z.boolean(),
   melee: z.boolean(),
@@ -39,6 +41,7 @@ export const weaponTranslationSchema = z.object({
 
   weight: z.string(),
 
+  description: z.string(),
   notes: z.string(),
 });
 
@@ -61,6 +64,37 @@ export function useTranslateWeapon(): (weapon: Weapon) => WeaponTranslation {
     (weapon: Weapon): WeaponTranslation => {
       const page = weapon.page ? translate(weapon.page, lang) : "";
 
+      const damage_type = translateDamageType(weapon.damage_type).label;
+      const damage_versatile = weapon.damage_versatile ?? "0";
+      const damage_extended = ti("damage_extended", weapon.damage, damage_type);
+
+      const range =
+        system === "metric"
+          ? ti(
+              "range.m",
+              `${weapon.range_m_short ?? 0}/${weapon.range_m_long ?? 0}`
+            )
+          : ti(
+              "range.ft",
+              `${weapon.range_ft_short ?? 0}/${weapon.range_ft_long ?? 0}`
+            );
+
+      const properties_extended = weapon.properties
+        .map((property) => {
+          const label = translateWeaponProperty(property).label;
+          if (property === "range" || property === "throw")
+            return ti("properties_extended", label, range);
+          if (property === "versatile")
+            return ti("properties_extended", label, damage_versatile);
+          return label;
+        })
+        .sort()
+        .join(", ");
+
+      const mastery = translateWeaponMastery(weapon.mastery).label;
+
+      const notes = translate(weapon.notes, lang);
+
       return {
         _raw: weapon,
         id: weapon.id,
@@ -75,37 +109,33 @@ export function useTranslateWeapon(): (weapon: Weapon) => WeaponTranslation {
         type: translateWeaponType(weapon.type).label,
 
         damage: weapon.damage,
-        damage_type: translateDamageType(weapon.damage_type).label,
+        damage_extended,
+        damage_type,
         damage_versatile: weapon.damage_versatile,
 
-        mastery: translateWeaponMastery(weapon.mastery).label,
+        mastery,
         properties: weapon.properties
           .map(translateWeaponProperty)
           .map(({ label }) => label)
           .sort()
           .join(", "),
+        properties_extended,
 
         magic: weapon.magic,
         melee: weapon.melee,
         ranged: weapon.ranged,
 
-        range:
-          system === "metric"
-            ? ti(
-                "range.m",
-                `${weapon.range_m_short ?? 0}/${weapon.range_m_long ?? 0}`
-              )
-            : ti(
-                "range.ft",
-                `${weapon.range_ft_short ?? 0}/${weapon.range_ft_long ?? 0}`
-              ),
-
+        range,
         weight:
           system === "metric"
             ? ti("weight.kg", `${weapon.weight_kg ?? 0}`)
             : ti("weight.lb", `${weapon.weight_lb ?? 0}`),
 
-        notes: translate(weapon.notes, lang),
+        notes: notes || ti("notes.none"),
+
+        description: [damage_extended, properties_extended, mastery, notes]
+          .filter((paragraph) => paragraph)
+          .join("\n"),
       };
     },
     [
@@ -135,6 +165,16 @@ const i18nContext = {
     it: "p. <1>", // 1 = page
   },
 
+  "damage_extended": {
+    en: "<1> <2>", // 1 = damage value, 2 = damage type
+    it: "<1> <2>", // 1 = damage value, 2 = damage type
+  },
+
+  "properties_extended": {
+    en: "<1> (<2>)", // 1 = property label, 2 = value
+    it: "<1> (<2>)", // 1 = property label, 2 = value
+  },
+
   "range.ft": {
     en: "<1> ft", // 1 = range
     it: "<1> ft", // 1 = range
@@ -151,5 +191,10 @@ const i18nContext = {
   "weight.lb": {
     en: "<1> lb", // 1 = weight
     it: "<1> lb", // 1 = weight
+  },
+
+  "notes.none": {
+    en: "_No notes._",
+    it: "_Nessuna nota._",
   },
 };

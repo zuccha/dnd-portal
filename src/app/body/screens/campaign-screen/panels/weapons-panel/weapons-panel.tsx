@@ -12,12 +12,12 @@ import WeaponsFilters from "./weapon-filters";
 const columns: Omit<DataTableColumn<WeaponTranslation>, "label">[] = [
   { key: "name" },
   { key: "type", maxW: "5em" },
-  { key: "properties", maxW: "12em" },
+  { key: "damage_extended", maxW: "5em" },
+  { key: "properties_extended", maxW: "14em" },
   { key: "mastery", maxW: "6em" },
   { key: "magic", textAlign: "center", w: "4em" },
   { key: "melee", textAlign: "center", w: "4em" },
   { key: "ranged", textAlign: "center", w: "4em" },
-  { key: "range", maxW: "4em", textAlign: "right" },
   { key: "weight", maxW: "3em", textAlign: "right" },
 ] as const;
 
@@ -36,7 +36,12 @@ const i18nContext = {
     it: "Tipo",
   },
 
-  properties: {
+  damage_extended: {
+    en: "Damage",
+    it: "Danni",
+  },
+
+  properties_extended: {
     en: "Properties",
     it: "Proprietà",
   },
