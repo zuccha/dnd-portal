@@ -33,7 +33,7 @@ export default function Header() {
       py={2}
       w="full"
     >
-      <Heading size="lg">D&D</Heading>
+      <Heading size="lg">D&D Portal</Heading>
 
       <HStack>
         {auth.user && <UserButton user={auth.user} />}
