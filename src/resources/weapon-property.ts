@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
 // Weapon Property
@@ -20,3 +21,30 @@ export const weaponPropertySchema = z.enum([
 export const weaponProperties = weaponPropertySchema.options;
 
 export type WeaponProperty = z.infer<typeof weaponPropertySchema>;
+
+//------------------------------------------------------------------------------
+// Weapon Property Translation
+//------------------------------------------------------------------------------
+
+export const weaponPropertyTranslationSchema = z.object({
+  label: z.string().default(""),
+  lang: z.string().default("en"),
+  weapon_property: weaponPropertySchema,
+});
+
+export type WeaponPropertyTranslation = z.infer<
+  typeof weaponPropertyTranslationSchema
+>;
+
+//------------------------------------------------------------------------------
+// Weapon Property Hooks
+//------------------------------------------------------------------------------
+
+export const {
+  useTranslate: useTranslateWeaponProperty,
+  useTranslations: useWeaponPropertyTranslations,
+} = createTypeTranslationHooks(
+  "weapon_property",
+  weaponProperties,
+  weaponPropertyTranslationSchema
+);

@@ -2,14 +2,14 @@ import { HStack, Separator, createListCollection } from "@chakra-ui/react";
 import { useMemo } from "react";
 import useDebouncedState from "../../../../../../hooks/use-debounced-value";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useCharacterClassTranslations } from "../../../../../../resources/character-class-translation";
+import { useCharacterClassTranslations } from "../../../../../../resources/character-class";
 import {
   type SpellFilters,
   useSpellFilters,
   useSpellNameFilter,
 } from "../../../../../../resources/spell";
 import { spellLevels } from "../../../../../../resources/spell-level";
-import { useSpellSchoolTranslations } from "../../../../../../resources/spell-school-translation";
+import { useSpellSchoolTranslations } from "../../../../../../resources/spell-school";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
 import Input from "../../../../../../ui/input";

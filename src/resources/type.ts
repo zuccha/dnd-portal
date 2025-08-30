@@ -5,10 +5,10 @@ import { type I18nLang, useI18nLang } from "../i18n/i18n-lang";
 import supabase from "../supabase";
 
 //------------------------------------------------------------------------------
-// Create Type Translation
+// Create Type Translation Hooks
 //------------------------------------------------------------------------------
 
-export function createTypeTranslation<
+export function createTypeTranslationHooks<
   Id extends string,
   Type extends string,
   TypeTranslation extends { lang: string } & Record<Id, Type>

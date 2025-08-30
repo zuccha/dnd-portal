@@ -5,9 +5,9 @@ import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
 import { useTranslateTime } from "../i18n/i18n-time";
-import { useTranslateCharacterClass } from "./character-class-translation";
+import { useTranslateCharacterClass } from "./character-class";
 import { type Spell, spellSchema } from "./spell";
-import { useTranslateSpellSchool } from "./spell-school-translation";
+import { useTranslateSpellSchool } from "./spell-school";
 
 //------------------------------------------------------------------------------
 // Spell Translation

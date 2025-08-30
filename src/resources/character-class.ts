@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
 // Character Class
@@ -23,3 +24,31 @@ export const characterClassSchema = z.enum([
 export const characterClasses = characterClassSchema.options;
 
 export type CharacterClass = z.infer<typeof characterClassSchema>;
+
+//------------------------------------------------------------------------------
+// Character Class Translation
+//------------------------------------------------------------------------------
+
+export const characterClassTranslationSchema = z.object({
+  character_class: characterClassSchema,
+  label: z.string().default(""),
+  label_short: z.string().default(""),
+  lang: z.string().default("en"),
+});
+
+export type CharacterClassTranslation = z.infer<
+  typeof characterClassTranslationSchema
+>;
+
+//------------------------------------------------------------------------------
+// Character Class Hooks
+//------------------------------------------------------------------------------
+
+export const {
+  useTranslate: useTranslateCharacterClass,
+  useTranslations: useCharacterClassTranslations,
+} = createTypeTranslationHooks(
+  "character_class",
+  characterClasses,
+  characterClassTranslationSchema
+);
