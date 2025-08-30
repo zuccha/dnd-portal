@@ -1,63 +1,94 @@
-import { Flex, HStack, VStack } from "@chakra-ui/react";
-import { Grid2X2Icon, ListIcon } from "lucide-react";
-import z from "zod/v4";
-import { createLocalStore } from "../../../../../../store/local-store";
-import BinaryButton, {
-  type BinaryButtonProps,
-} from "../../../../../../ui/binary-button";
+import type { SpellTranslation } from "../../../../../../resources/spell-translation";
+import type { DataTableColumn } from "../../../../../../ui/data-table";
+import { createResourcesPanel } from "../resources-panel";
+import SpellCard from "./spell-card";
 import SpellsFilters from "./spells-filters";
-import SpellsListCards from "./spells-list-cards";
-import SpellsListTable from "./spells-list-table";
+import useFilteredSpellTranslations from "./use-filtered-spell-translations";
+
+//------------------------------------------------------------------------------
+// Columns
+//------------------------------------------------------------------------------
+
+const columns: Omit<DataTableColumn<SpellTranslation>, "label">[] = [
+  { key: "name" },
+  { key: "level", maxW: "5em", textAlign: "center" },
+  { key: "character_classes", maxW: "8em" },
+  { key: "school", maxW: "8em" },
+  { key: "casting_time", maxW: "9em" },
+  { key: "ritual", maxW: "4.5em", textAlign: "center" },
+  { key: "range", maxW: "8em" },
+  { key: "duration", maxW: "9em" },
+  { key: "concentration", maxW: "4.5em", textAlign: "center" },
+  { key: "components" },
+] as const;
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  name: {
+    en: "Name",
+    it: "Nome",
+  },
+
+  level: {
+    en: "Lvl",
+    it: "Lvl",
+  },
+
+  character_classes: {
+    en: "Classes",
+    it: "Classi",
+  },
+
+  school: {
+    en: "School",
+    it: "Scuola",
+  },
+
+  casting_time: {
+    en: "Cast",
+    it: "Lancio",
+  },
+
+  range: {
+    en: "Range",
+    it: "Gittata",
+  },
+
+  duration: {
+    en: "Duration",
+    it: "Durata",
+  },
+
+  ritual: {
+    en: "R",
+    it: "R",
+  },
+
+  concentration: {
+    en: "C",
+    it: "C",
+  },
+
+  components: {
+    en: "V, S, M",
+    it: "V, S, M",
+  },
+};
 
 //------------------------------------------------------------------------------
 // Spells Panel
 //------------------------------------------------------------------------------
 
-export type SpellsPanelProps = {
-  campaignId: string;
-};
+const SpellsPanel = createResourcesPanel(
+  useFilteredSpellTranslations,
+  columns,
+  i18nContext,
+  "description",
+  SpellsFilters,
+  SpellCard
+);
 
-export default function SpellsPanel({ campaignId }: SpellsPanelProps) {
-  const [view, setView] = useView();
-
-  return (
-    <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
-      <HStack
-        borderBottomWidth={1}
-        h="4em"
-        justify="space-between"
-        overflow="auto"
-        p={2}
-        w="full"
-      >
-        <SpellsFilters />
-
-        <BinaryButton
-          onValueChange={setView}
-          options={viewOptions}
-          value={view}
-        />
-      </HStack>
-
-      <Flex flex={1} overflow="auto" w="full">
-        {view === "table" && <SpellsListTable campaignId={campaignId} />}
-        {view === "cards" && <SpellsListCards campaignId={campaignId} />}
-      </Flex>
-    </VStack>
-  );
-}
-
-//------------------------------------------------------------------------------
-// View
-//------------------------------------------------------------------------------
-
-const useView = createLocalStore(
-  "resources.spells.view",
-  "table",
-  z.enum(["cards", "table"]).parse
-).use;
-
-const viewOptions: BinaryButtonProps<"table", "cards">["options"] = [
-  { Icon: ListIcon, value: "table" },
-  { Icon: Grid2X2Icon, value: "cards" },
-];
+export default SpellsPanel;

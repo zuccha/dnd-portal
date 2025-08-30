@@ -8,10 +8,10 @@ import ResourceCard from "../../../../../../ui/resource-card";
 //------------------------------------------------------------------------------
 
 export type SpellCardProps = {
-  spellTranslation: SpellTranslation;
+  resource: SpellTranslation;
 };
 
-export default function SpellCard({ spellTranslation }: SpellCardProps) {
+export default function SpellCard({ resource }: SpellCardProps) {
   const {
     campaign,
     casting_time_with_ritual,
@@ -25,7 +25,7 @@ export default function SpellCard({ spellTranslation }: SpellCardProps) {
     page,
     range,
     school,
-  } = spellTranslation;
+  } = resource;
 
   const { t } = useI18nLangContext(i18nContext);
 
