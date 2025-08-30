@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, VStack, Wrap } from "@chakra-ui/react";
+import { Box, Flex, HStack, Separator, VStack, Wrap } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
 import { useMemo } from "react";
 import z from "zod/v4";
@@ -88,6 +88,33 @@ export function createResourcesPanel<Resource extends { id: string }>(
   }
 
   //----------------------------------------------------------------------------
+  // Resources Counter
+  //----------------------------------------------------------------------------
+
+  const resourceCounterI18nContext = {
+    "count/*": {
+      en: "<1> results",
+      it: "<1> risultati",
+    },
+    "count/1": {
+      en: "<1> result",
+      it: "<1> risultato",
+    },
+  };
+
+  function ResourcesCounter({ campaignId }: ResourcesPanelProps) {
+    const { tpi } = useI18nLangContext(resourceCounterI18nContext);
+    const resources = useResources(campaignId);
+    const count = resources?.length ?? 0;
+
+    return (
+      <Flex fontSize="sm" whiteSpace="nowrap">
+        {tpi("count", count, `${count}`)}
+      </Flex>
+    );
+  }
+
+  //----------------------------------------------------------------------------
   // Resources Panel
   //----------------------------------------------------------------------------
 
@@ -98,13 +125,18 @@ export function createResourcesPanel<Resource extends { id: string }>(
       <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
         <HStack
           borderBottomWidth={1}
+          gap={4}
           h="4em"
           justify="space-between"
           overflow="auto"
           p={2}
           w="full"
         >
-          <Filters />
+          <HStack>
+            <Filters />
+            <Separator h="1.5em" orientation="vertical" />
+            <ResourcesCounter campaignId={campaignId} />
+          </HStack>
 
           <BinaryButton
             onValueChange={setView}
