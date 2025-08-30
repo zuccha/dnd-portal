@@ -17,6 +17,6 @@ export const weaponPropertySchema = z.enum([
   "versatile",
 ]);
 
-export const weaponPropertys = weaponPropertySchema.options;
+export const weaponProperties = weaponPropertySchema.options;
 
 export type WeaponProperty = z.infer<typeof weaponPropertySchema>;
