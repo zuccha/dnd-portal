@@ -15,10 +15,10 @@ const columns: Omit<DataTableColumn<SpellTranslation>, "label">[] = [
   { key: "character_classes", maxW: "8em" },
   { key: "school", maxW: "8em" },
   { key: "casting_time", maxW: "9em" },
-  { key: "ritual", maxW: "4.5em", textAlign: "center" },
+  { key: "ritual", textAlign: "center", w: "4em" },
   { key: "range", maxW: "8em" },
   { key: "duration", maxW: "9em" },
-  { key: "concentration", maxW: "4.5em", textAlign: "center" },
+  { key: "concentration", textAlign: "center", w: "4em" },
   { key: "components" },
 ] as const;
 

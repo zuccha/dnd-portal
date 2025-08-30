@@ -14,9 +14,9 @@ const columns: Omit<DataTableColumn<WeaponTranslation>, "label">[] = [
   { key: "type", maxW: "5em" },
   { key: "properties", maxW: "12em" },
   { key: "mastery", maxW: "6em" },
-  { key: "magic", maxW: "2em", textAlign: "center" },
-  { key: "melee", maxW: "2em", textAlign: "center" },
-  { key: "ranged", maxW: "2em", textAlign: "center" },
+  { key: "magic", textAlign: "center", w: "4em" },
+  { key: "melee", textAlign: "center", w: "4em" },
+  { key: "ranged", textAlign: "center", w: "4em" },
   { key: "range", maxW: "4em", textAlign: "right" },
   { key: "weight", maxW: "3em", textAlign: "right" },
 ] as const;
