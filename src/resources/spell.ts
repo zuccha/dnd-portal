@@ -2,7 +2,7 @@ import { z } from "zod";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { characterClassSchema } from "./character-class";
 import { createResource } from "./resource";
-import { spellLevelSchema } from "./spell-level";
+import { spellLevelSchema, spellLevelStringSchema } from "./spell-level";
 import { spellSchoolSchema } from "./spell-school";
 
 //------------------------------------------------------------------------------
@@ -52,7 +52,9 @@ export const spellFiltersSchema = z.object({
   character_classes: z
     .partialRecord(characterClassSchema, z.boolean().optional())
     .optional(),
-  levels: z.partialRecord(spellLevelSchema, z.boolean().optional()).optional(),
+  levels: z
+    .partialRecord(spellLevelStringSchema, z.boolean().optional())
+    .optional(),
   schools: z
     .partialRecord(spellSchoolSchema, z.boolean().optional())
     .optional(),

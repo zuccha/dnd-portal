@@ -10,4 +10,10 @@ export const spellLevelSchema = z.union(
   spellLevels.map((level) => z.literal(level))
 );
 
+export const spellLevelStringSchema = z.union(
+  spellLevels.map((level) => z.literal(`${level}`))
+);
+
 export type SpellLevel = z.infer<typeof spellLevelSchema>;
+
+export type SpellLevelString = z.infer<typeof spellLevelStringSchema>;
