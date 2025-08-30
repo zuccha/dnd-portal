@@ -2,6 +2,7 @@ import { Text, VStack, createListCollection } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
 import {
+  useCoreCampaigns,
   useSelectedCampaignId,
   useUserCampaigns,
 } from "../../../../../resources/campaign";
@@ -14,17 +15,29 @@ import Select from "../../../../../ui/select";
 export default function SidebarCampaignSelector() {
   const [selectedCampaignId, setSelectedCampaignId] = useSelectedCampaignId();
 
+  const { data: coreCampaigns } = useCoreCampaigns();
   const { data: userCampaigns } = useUserCampaigns();
 
   const { t } = useI18nLangContext(i18nContext);
 
-  const campaignOptions = useMemo(() => {
-    const useCampaignItems = userCampaigns?.length
+  const [campaignOptions, campaignCategories] = useMemo(() => {
+    const coreCampaignItems = coreCampaigns?.length
+      ? coreCampaigns.map(({ id, name }) => ({ label: name, value: id }))
+      : [];
+
+    const userCampaignItems = userCampaigns?.length
       ? userCampaigns.map(({ id, name }) => ({ label: name, value: id }))
       : [];
 
-    return createListCollection({ items: useCampaignItems });
-  }, [userCampaigns]);
+    const items = [...coreCampaignItems, ...userCampaignItems];
+
+    const categories = [
+      { id: "core", items: coreCampaignItems, title: t("select.core") },
+      { id: "user", items: userCampaignItems, title: t("select.user") },
+    ];
+
+    return [createListCollection({ items }), categories];
+  }, [coreCampaigns, t, userCampaigns]);
 
   useLayoutEffect(() => {
     setSelectedCampaignId(
@@ -39,7 +52,8 @@ export default function SidebarCampaignSelector() {
       </Text>
 
       <Select
-        disabled={!userCampaigns?.length}
+        categories={campaignCategories}
+        disabled={!campaignOptions.items.length}
         onValueChange={setSelectedCampaignId}
         options={campaignOptions}
         value={selectedCampaignId ?? ""}
@@ -53,9 +67,13 @@ export default function SidebarCampaignSelector() {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "select.empty": {
-    en: "There are no campaigns",
-    it: "Non ci sono campagne",
+  "select.core": {
+    en: "Core",
+    it: "Core",
+  },
+  "select.user": {
+    en: "Yours",
+    it: "Personali",
   },
   "title": {
     en: "Campaign",
