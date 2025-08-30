@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, Separator, VStack, Wrap } from "@chakra-ui/react";
-import { Grid2X2Icon, ListIcon } from "lucide-react";
+import { Grid2X2Icon, ListIcon, RatIcon } from "lucide-react";
 import { useMemo } from "react";
 import z from "zod/v4";
 import type { I18nLangContext } from "../../../../../i18n/i18n-lang";
@@ -9,6 +9,7 @@ import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../ui/binary-button";
 import DataTable, { type DataTableColumn } from "../../../../../ui/data-table";
+import EmptyState from "../../../../../ui/empty-state";
 
 //------------------------------------------------------------------------------
 // Create Resources Panel
@@ -26,6 +27,18 @@ export function createResourcesPanel<Resource extends { id: string }>(
   Filters: React.FC,
   ResourceCard: React.FC<{ resource: Resource }>
 ) {
+  const emptyListI18nContext = {
+    title: {
+      en: "No items found",
+      it: "Nessun elemento trovato",
+    },
+
+    subtitle: {
+      en: "Clear your filters and try again",
+      it: "Resetta i filtri e riprova",
+    },
+  };
+
   //----------------------------------------------------------------------------
   // View
   //----------------------------------------------------------------------------
@@ -46,6 +59,7 @@ export function createResourcesPanel<Resource extends { id: string }>(
   //----------------------------------------------------------------------------
 
   function ListCards({ campaignId }: ResourcesPanelProps) {
+    const { t } = useI18nLangContext(emptyListI18nContext);
     const resources = useResources(campaignId);
 
     if (!resources) return null;
@@ -53,9 +67,18 @@ export function createResourcesPanel<Resource extends { id: string }>(
     return (
       <Box bgColor="bg.subtle" w="full">
         <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
-          {resources.map((resource) => (
-            <ResourceCard key={resource.id} resource={resource} />
-          ))}
+          {resources.length ? (
+            resources.map((resource) => (
+              <ResourceCard key={resource.id} resource={resource} />
+            ))
+          ) : (
+            <EmptyState
+              Icon={RatIcon}
+              mt="10%"
+              subtitle={t("subtitle")}
+              title={t("title")}
+            />
+          )}
         </Wrap>
       </Box>
     );
@@ -67,6 +90,7 @@ export function createResourcesPanel<Resource extends { id: string }>(
 
   function ListTable({ campaignId }: ResourcesPanelProps) {
     const { t } = useI18nLangContext(columnsI18nContext);
+    const { t: tEmpty } = useI18nLangContext(emptyListI18nContext);
     const resources = useResources(campaignId);
 
     const columnTranslations = useMemo(
@@ -77,12 +101,21 @@ export function createResourcesPanel<Resource extends { id: string }>(
     if (!resources) return null;
 
     return (
-      <Box w="full">
-        <DataTable
-          columns={columnTranslations}
-          expandedKey={descriptionKey}
-          rows={resources}
-        />
+      <Box bgColor="bg.subtle" w="full">
+        {resources.length ? (
+          <DataTable
+            columns={columnTranslations}
+            expandedKey={descriptionKey}
+            rows={resources}
+          />
+        ) : (
+          <EmptyState
+            Icon={RatIcon}
+            mt="10%"
+            subtitle={tEmpty("subtitle")}
+            title={tEmpty("title")}
+          />
+        )}
       </Box>
     );
   }
