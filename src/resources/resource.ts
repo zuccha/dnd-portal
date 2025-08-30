@@ -6,10 +6,10 @@ import { createLocalStore } from "../store/local-store";
 import supabase from "../supabase";
 
 //------------------------------------------------------------------------------
-// Create Resource
+// Create Resource Hooks
 //------------------------------------------------------------------------------
 
-export function createResource<
+export function createResourceHooks<
   Resource,
   Filters extends { order_by: string; order_dir: "asc" | "desc" }
 >(

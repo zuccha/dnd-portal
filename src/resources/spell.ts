@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { characterClassSchema } from "./character-class";
-import { createResource } from "./resource";
+import { createResourceHooks } from "./resource";
 import { spellLevelSchema, spellLevelStringSchema } from "./spell-level";
 import { spellSchoolSchema } from "./spell-school";
 
@@ -70,11 +70,11 @@ export const spellFiltersSchema = z.object({
 export type SpellFilters = z.infer<typeof spellFiltersSchema>;
 
 //------------------------------------------------------------------------------
-// Hooks
+// Spell Hooks
 //------------------------------------------------------------------------------
 
 export const {
   useCampaignResources: useCampaignSpells,
   useFilters: useSpellFilters,
   useNameFilter: useSpellNameFilter,
-} = createResource("spells", spellSchema, spellFiltersSchema);
+} = createResourceHooks("spells", spellSchema, spellFiltersSchema);
