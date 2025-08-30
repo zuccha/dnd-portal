@@ -25,7 +25,7 @@ export default function Content() {
   return (
     <EmptyState
       Icon={MapIcon}
-      mt="20%"
+      mt="10%"
       subtitle={t("welcome.subtitle")}
       title={t("welcome.title")}
     />

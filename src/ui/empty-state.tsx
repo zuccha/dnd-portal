@@ -15,9 +15,14 @@ export type EmptyStateProps = ChakraEmptyStateRootProps & {
   title: string;
 };
 
-export default function EmptyState({ Icon, subtitle, title }: EmptyStateProps) {
+export default function EmptyState({
+  Icon,
+  subtitle,
+  title,
+  ...rest
+}: EmptyStateProps) {
   return (
-    <ChakraEmptyState.Root>
+    <ChakraEmptyState.Root {...rest}>
       <ChakraEmptyState.Content>
         <ChakraEmptyState.Indicator>
           <Icon />
