@@ -19,7 +19,7 @@ export default function SpellsListCards({ campaignId }: SpellsListCardsProps) {
     <Box bgColor="bg.subtle" w="full">
       <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
         {spellTranslations.map((spell) => (
-          <SpellCard spellTranslation={spell} />
+          <SpellCard key={spell.id} spellTranslation={spell} />
         ))}
       </Wrap>
     </Box>
