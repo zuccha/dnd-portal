@@ -5,14 +5,18 @@ import {
   type SelectRootProps as ChakraSelectRootProps,
 } from "@chakra-ui/react";
 
+//------------------------------------------------------------------------------
+// Select
+//------------------------------------------------------------------------------
+
+export type SelectOption<T> = { label: string; value: T };
+
 export type SelectProps<T extends string> = Omit<
   ChakraSelectRootProps,
   "collection" | "multiple" | "onValueChange" | "value"
 > & {
-  options: ListCollection<{
-    label: string;
-    value: T;
-  }>;
+  categories?: { id: string; items: SelectOption<T>[]; title: string }[];
+  options: ListCollection<SelectOption<T>>;
   placeholder?: string;
 } & (
     | {
@@ -28,6 +32,7 @@ export type SelectProps<T extends string> = Omit<
   );
 
 export default function Select<T extends string>({
+  categories,
   multiple,
   onValueChange,
   options,
@@ -58,12 +63,26 @@ export default function Select<T extends string>({
       <Portal>
         <ChakraSelect.Positioner>
           <ChakraSelect.Content>
-            {options.items.map((option) => (
-              <ChakraSelect.Item item={option} key={option.value}>
-                {option.label}
-                <ChakraSelect.ItemIndicator />
-              </ChakraSelect.Item>
-            ))}
+            {categories
+              ? categories.map(({ id, items, title }) => (
+                  <ChakraSelect.ItemGroup key={id}>
+                    <ChakraSelect.ItemGroupLabel>
+                      {title}
+                    </ChakraSelect.ItemGroupLabel>
+                    {items.map((item) => (
+                      <ChakraSelect.Item item={item} key={item.value}>
+                        {item.label}
+                        <ChakraSelect.ItemIndicator />
+                      </ChakraSelect.Item>
+                    ))}
+                  </ChakraSelect.ItemGroup>
+                ))
+              : options.items.map((option) => (
+                  <ChakraSelect.Item item={option} key={option.value}>
+                    {option.label}
+                    <ChakraSelect.ItemIndicator />
+                  </ChakraSelect.Item>
+                ))}
           </ChakraSelect.Content>
         </ChakraSelect.Positioner>
       </Portal>
