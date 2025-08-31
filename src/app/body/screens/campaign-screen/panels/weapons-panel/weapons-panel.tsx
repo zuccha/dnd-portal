@@ -1,10 +1,10 @@
-import { weaponsStore } from "../../../../../../resources/weapon";
+import { type Weapon, weaponsStore } from "../../../../../../resources/weapon";
 import {
   type WeaponTranslation,
   useTranslateWeapon,
 } from "../../../../../../resources/weapon-translation";
+import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";
-import type { ResourcesTableColumn } from "../resources/resources-table";
 import WeaponCard from "./weapon-card";
 import WeaponsFilters from "./weapon-filters";
 
@@ -12,7 +12,10 @@ import WeaponsFilters from "./weapon-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: Omit<ResourcesTableColumn<WeaponTranslation>, "label">[] = [
+const columns: Omit<
+  ResourcesListTableColumn<Weapon, WeaponTranslation>,
+  "label"
+>[] = [
   { key: "name" },
   { key: "type", maxW: "5em" },
   { key: "damage_extended", maxW: "5em" },

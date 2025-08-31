@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   HStack,
   Menu,
@@ -8,7 +7,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { EllipsisVerticalIcon, Grid2X2Icon, ListIcon } from "lucide-react";
-import { type ReactNode, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod/v4";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
@@ -25,8 +24,10 @@ import BinaryButton, {
 import IconButton from "../../../../../../ui/icon-button";
 import { downloadJson } from "../../../../../../utils/download";
 import { createResourceListCards } from "./resources-list-cards";
-import ResourcesListEmpty from "./resources-list-empty";
-import ResourcesTable, { type ResourcesTableColumn } from "./resources-table";
+import {
+  type ResourcesListTableColumn,
+  createResourcesListTable,
+} from "./resources-list-table";
 import { createFilteredResourceTranslations } from "./use-filtered-resource-translations";
 
 //------------------------------------------------------------------------------
@@ -46,13 +47,12 @@ export function createResourcesPanel<
   ResourceCard,
   listTableColumns,
   listTableColumnsI18nContext,
-  listTableDescriptionKey,
   store,
   useTranslateResource,
 }: {
   Filters: React.FC;
   ResourceCard: React.FC<{ resource: T }>;
-  listTableColumns: Omit<ResourcesTableColumn<T>, "label">[];
+  listTableColumns: Omit<ResourcesListTableColumn<R, T>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
   listTableDescriptionKey: keyof T | undefined;
   store: ResourceStore<R, F>;
@@ -62,7 +62,7 @@ export function createResourcesPanel<
   // Hooks
   //----------------------------------------------------------------------------
 
-  const { useSelectionCount, useIsSelected } = store;
+  const { useSelectionCount } = store;
 
   //----------------------------------------------------------------------------
   // View
@@ -89,7 +89,7 @@ export function createResourcesPanel<
   );
 
   //----------------------------------------------------------------------------
-  // List Cards
+  // Resources List Cards
   //----------------------------------------------------------------------------
 
   const ResourcesListCards = createResourceListCards(
@@ -98,85 +98,15 @@ export function createResourcesPanel<
   );
 
   //----------------------------------------------------------------------------
-  // List Table Header Wrapper
+  // Resources List Table
   //----------------------------------------------------------------------------
 
-  function ListTableHeaderWrapper({
-    children,
-    resources,
-  }: {
-    children: (
-      selected: boolean | "-",
-      toggleSelected: () => void
-    ) => ReactNode;
-    resources: T[];
-  }) {
-    const totalCount = useSelectionCount();
-
-    const selected = useMemo(() => {
-      if (!resources) return false;
-      const count = resources.filter(({ id }) => store.isSelected(id)).length;
-      return count === resources.length ? true : count > 0 ? "-" : false;
-    }, [resources, totalCount]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    const toggleSelected = useCallback(() => {
-      if (selected === true) resources?.forEach(({ id }) => store.deselect(id));
-      else resources?.forEach(({ id }) => store.select(id));
-    }, [resources, selected, totalCount]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    return children(selected, toggleSelected);
-  }
-
-  //----------------------------------------------------------------------------
-  // List Table Row Wrapper
-  //----------------------------------------------------------------------------
-
-  function ListTableRowWrapper({
-    children,
-    id,
-  }: {
-    children: (selected: boolean, toggleSelected: () => void) => ReactNode;
-    id: string;
-  }) {
-    const [selected, { toggle }] = useIsSelected(id);
-    return children(selected, toggle);
-  }
-
-  //----------------------------------------------------------------------------
-  // List Table
-  //----------------------------------------------------------------------------
-
-  function ListTable({ campaignId }: ResourcesPanelProps) {
-    const { t } = useI18nLangContext(listTableColumnsI18nContext);
-    const translations = useFilteredResourceTranslations(campaignId);
-
-    const columnTranslations = useMemo(
-      () =>
-        listTableColumns.map((column) => ({
-          ...column,
-          label: t(`${column.key}`),
-        })),
-      [t]
-    );
-
-    if (!translations) return null;
-
-    return (
-      <Box bgColor="bg.subtle" w="full">
-        {translations.length ? (
-          <ResourcesTable
-            HeaderWrapper={ListTableHeaderWrapper}
-            RowWrapper={ListTableRowWrapper}
-            columns={columnTranslations}
-            expandedKey={listTableDescriptionKey}
-            rows={translations}
-          />
-        ) : (
-          <ResourcesListEmpty />
-        )}
-      </Box>
-    );
-  }
+  const ResourcesListTable = createResourcesListTable(
+    store,
+    useFilteredResourceTranslations,
+    listTableColumns,
+    listTableColumnsI18nContext
+  );
 
   //----------------------------------------------------------------------------
   // Resources Counter
@@ -315,7 +245,7 @@ export function createResourcesPanel<
         </HStack>
 
         <Flex flex={1} overflow="auto" w="full">
-          {view === "table" && <ListTable campaignId={campaignId} />}
+          {view === "table" && <ResourcesListTable campaignId={campaignId} />}
           {view === "cards" && <ResourcesListCards campaignId={campaignId} />}
         </Flex>
       </VStack>
