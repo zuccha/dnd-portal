@@ -19,8 +19,12 @@ import z from "zod/v4";
 import { createUseShared } from "../../../../../../hooks/use-shared";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import type { I18nString } from "../../../../../../i18n/i18n-string";
-import type { ResourceStore } from "../../../../../../resources/resource";
+import type {
+  Resource,
+  ResourceFilters,
+  ResourceStore,
+  ResourceTranslation,
+} from "../../../../../../resources/resource";
 import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
   type BinaryButtonProps,
@@ -39,11 +43,11 @@ export type ResourcesPanelProps = {
 };
 
 export function createResourcesPanel<
-  Resource extends { id: string; name: I18nString },
-  ResourceTranslation extends { _raw: Resource; id: string },
-  Filters extends { order_by: string; order_dir: "asc" | "desc" }
+  R extends Resource,
+  T extends ResourceTranslation<R>,
+  F extends ResourceFilters
 >({
-  Filters,
+  Filters: F,
   ResourceCard,
   listTableColumns,
   listTableColumnsI18nContext,
@@ -52,12 +56,12 @@ export function createResourcesPanel<
   useTranslateResource,
 }: {
   Filters: React.FC;
-  ResourceCard: React.FC<{ resource: ResourceTranslation }>;
-  listTableColumns: Omit<ResourcesTableColumn<ResourceTranslation>, "label">[];
+  ResourceCard: React.FC<{ resource: T }>;
+  listTableColumns: Omit<ResourcesTableColumn<T>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
-  listTableDescriptionKey: keyof ResourceTranslation | undefined;
-  store: ResourceStore<Resource, Filters>;
-  useTranslateResource: () => (resource: Resource) => ResourceTranslation;
+  listTableDescriptionKey: keyof T | undefined;
+  store: ResourceStore<R, F>;
+  useTranslateResource: () => (resource: R) => T;
 }) {
   //----------------------------------------------------------------------------
   // Hooks
@@ -101,13 +105,15 @@ export function createResourcesPanel<
   // Use Filtered Resource Translations
   //----------------------------------------------------------------------------
 
-  const useSharedTranslations = createUseShared<
-    ResourceTranslation[] | undefined
-  >(undefined, [undefined, undefined]);
+  const useSharedTranslations = createUseShared<T[] | undefined>(undefined, [
+    undefined,
+    undefined,
+  ]);
 
-  const useSharedFilteredTranslations = createUseShared<
-    ResourceTranslation[] | undefined
-  >(undefined, [undefined, undefined]);
+  const useSharedFilteredTranslations = createUseShared<T[] | undefined>(
+    undefined,
+    [undefined, undefined]
+  );
 
   function useFilteredResourceTranslations(campaignId: string) {
     const { data } = useFromCampaign(campaignId);
@@ -138,16 +144,16 @@ export function createResourcesPanel<
 
   function ListCards({ campaignId }: ResourcesPanelProps) {
     const { t } = useI18nLangContext(emptyListI18nContext);
-    const resources = useFilteredResourceTranslations(campaignId);
+    const translations = useFilteredResourceTranslations(campaignId);
 
-    if (!resources) return null;
+    if (!translations) return null;
 
     return (
       <Box bgColor="bg.subtle" w="full">
         <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
-          {resources.length ? (
-            resources.map((resource) => (
-              <ResourceCard key={resource.id} resource={resource} />
+          {translations.length ? (
+            translations.map((translation) => (
+              <ResourceCard key={translation.id} resource={translation} />
             ))
           ) : (
             <EmptyState
@@ -174,7 +180,7 @@ export function createResourcesPanel<
       selected: boolean | "-",
       toggleSelected: () => void
     ) => ReactNode;
-    resources: ResourceTranslation[];
+    resources: T[];
   }) {
     const totalCount = useSelectionCount();
 
@@ -214,7 +220,7 @@ export function createResourcesPanel<
   function ListTable({ campaignId }: ResourcesPanelProps) {
     const { t } = useI18nLangContext(listTableColumnsI18nContext);
     const { t: tEmpty } = useI18nLangContext(emptyListI18nContext);
-    const resources = useFilteredResourceTranslations(campaignId);
+    const translations = useFilteredResourceTranslations(campaignId);
 
     const columnTranslations = useMemo(
       () =>
@@ -225,17 +231,17 @@ export function createResourcesPanel<
       [t]
     );
 
-    if (!resources) return null;
+    if (!translations) return null;
 
     return (
       <Box bgColor="bg.subtle" w="full">
-        {resources.length ? (
+        {translations.length ? (
           <ResourcesTable
             HeaderWrapper={ListTableHeaderWrapper}
             RowWrapper={ListTableRowWrapper}
             columns={columnTranslations}
             expandedKey={listTableDescriptionKey}
-            rows={resources}
+            rows={translations}
           />
         ) : (
           <EmptyState
@@ -266,8 +272,8 @@ export function createResourcesPanel<
 
   function ResourcesCounter({ campaignId }: ResourcesPanelProps) {
     const { tpi } = useI18nLangContext(resourceCounterI18nContext);
-    const resources = useFilteredResourceTranslations(campaignId);
-    const count = resources?.length ?? 0;
+    const translations = useFilteredResourceTranslations(campaignId);
+    const count = translations?.length ?? 0;
 
     return (
       <Flex fontSize="sm" whiteSpace="nowrap">
@@ -295,19 +301,19 @@ export function createResourcesPanel<
     const { t } = useI18nLangContext(actionsButtonI18nContext);
 
     const totalSelectionCount = useSelectionCount();
-    const resources = useFilteredResourceTranslations(campaignId);
+    const translations = useFilteredResourceTranslations(campaignId);
 
     const selectionCount = useMemo(() => {
-      if (!resources) return 0;
-      return resources.filter(({ id }) => store.isSelected(id)).length;
-    }, [resources, totalSelectionCount]); // eslint-disable-line react-hooks/exhaustive-deps
+      if (!translations) return 0;
+      return translations.filter(({ id }) => store.isSelected(id)).length;
+    }, [translations, totalSelectionCount]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const computeSelectedAsJson = useCallback(() => {
-      const selected = resources!
+      const selected = translations!
         .filter(({ id }) => store.isSelected(id))
         .map(({ _raw, ...rest }) => rest);
       return JSON.stringify(selected, null, 2);
-    }, [resources]);
+    }, [translations]);
 
     const copySelected = useCallback(async () => {
       if (!selectionCount) return;
@@ -371,7 +377,7 @@ export function createResourcesPanel<
         >
           <HStack>
             <ActionsButton campaignId={campaignId} />
-            <Filters />
+            <F />
             <Separator h="1.5em" orientation="vertical" />
             <ResourcesCounter campaignId={campaignId} />
           </HStack>
