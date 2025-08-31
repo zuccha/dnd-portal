@@ -8,12 +8,7 @@ import {
   VStack,
   Wrap,
 } from "@chakra-ui/react";
-import {
-  EllipsisVerticalIcon,
-  Grid2X2Icon,
-  ListIcon,
-  RatIcon,
-} from "lucide-react";
+import { EllipsisVerticalIcon, Grid2X2Icon, ListIcon } from "lucide-react";
 import { type ReactNode, useCallback, useMemo } from "react";
 import z from "zod/v4";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
@@ -28,9 +23,9 @@ import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../../ui/binary-button";
-import EmptyState from "../../../../../../ui/empty-state";
 import IconButton from "../../../../../../ui/icon-button";
 import { downloadJson } from "../../../../../../utils/download";
+import ResourcesListEmpty from "./resources-list-empty";
 import ResourcesTable, { type ResourcesTableColumn } from "./resources-table";
 import { createFilteredResourceTranslations } from "./use-filtered-resource-translations";
 
@@ -70,22 +65,6 @@ export function createResourcesPanel<
   const { useSelectionCount, useIsSelected } = store;
 
   //----------------------------------------------------------------------------
-  // Empty List I18n Context
-  //----------------------------------------------------------------------------
-
-  const emptyListI18nContext = {
-    title: {
-      en: "No items found",
-      it: "Nessun elemento trovato",
-    },
-
-    subtitle: {
-      en: "Clear your filters and try again",
-      it: "Resetta i filtri e riprova",
-    },
-  };
-
-  //----------------------------------------------------------------------------
   // View
   //----------------------------------------------------------------------------
 
@@ -114,7 +93,6 @@ export function createResourcesPanel<
   //----------------------------------------------------------------------------
 
   function ListCards({ campaignId }: ResourcesPanelProps) {
-    const { t } = useI18nLangContext(emptyListI18nContext);
     const translations = useFilteredResourceTranslations(campaignId);
 
     if (!translations) return null;
@@ -127,12 +105,7 @@ export function createResourcesPanel<
               <ResourceCard key={translation.id} resource={translation} />
             ))
           ) : (
-            <EmptyState
-              Icon={RatIcon}
-              mt="10%"
-              subtitle={t("subtitle")}
-              title={t("title")}
-            />
+            <ResourcesListEmpty />
           )}
         </Wrap>
       </Box>
@@ -190,7 +163,6 @@ export function createResourcesPanel<
 
   function ListTable({ campaignId }: ResourcesPanelProps) {
     const { t } = useI18nLangContext(listTableColumnsI18nContext);
-    const { t: tEmpty } = useI18nLangContext(emptyListI18nContext);
     const translations = useFilteredResourceTranslations(campaignId);
 
     const columnTranslations = useMemo(
@@ -215,12 +187,7 @@ export function createResourcesPanel<
             rows={translations}
           />
         ) : (
-          <EmptyState
-            Icon={RatIcon}
-            mt="10%"
-            subtitle={tEmpty("subtitle")}
-            title={tEmpty("title")}
-          />
+          <ResourcesListEmpty />
         )}
       </Box>
     );
