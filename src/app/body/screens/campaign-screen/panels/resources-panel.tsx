@@ -324,7 +324,7 @@ export function createResourcesPanel<
 
     return (
       <Menu.Root>
-        <Menu.Trigger focusRing="outside" mr={2} rounded="full">
+        <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
           <IconButton Icon={EllipsisVerticalIcon} size="sm" variant="ghost" />
         </Menu.Trigger>
         <Portal>
