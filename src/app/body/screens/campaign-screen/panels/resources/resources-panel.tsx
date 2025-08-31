@@ -6,7 +6,6 @@ import {
   Portal,
   Separator,
   VStack,
-  Wrap,
 } from "@chakra-ui/react";
 import { EllipsisVerticalIcon, Grid2X2Icon, ListIcon } from "lucide-react";
 import { type ReactNode, useCallback, useMemo } from "react";
@@ -25,6 +24,7 @@ import BinaryButton, {
 } from "../../../../../../ui/binary-button";
 import IconButton from "../../../../../../ui/icon-button";
 import { downloadJson } from "../../../../../../utils/download";
+import { createResourceListCards } from "./resources-list-cards";
 import ResourcesListEmpty from "./resources-list-empty";
 import ResourcesTable, { type ResourcesTableColumn } from "./resources-table";
 import { createFilteredResourceTranslations } from "./use-filtered-resource-translations";
@@ -92,25 +92,10 @@ export function createResourcesPanel<
   // List Cards
   //----------------------------------------------------------------------------
 
-  function ListCards({ campaignId }: ResourcesPanelProps) {
-    const translations = useFilteredResourceTranslations(campaignId);
-
-    if (!translations) return null;
-
-    return (
-      <Box bgColor="bg.subtle" w="full">
-        <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
-          {translations.length ? (
-            translations.map((translation) => (
-              <ResourceCard key={translation.id} resource={translation} />
-            ))
-          ) : (
-            <ResourcesListEmpty />
-          )}
-        </Wrap>
-      </Box>
-    );
-  }
+  const ResourcesListCards = createResourceListCards(
+    useFilteredResourceTranslations,
+    ResourceCard
+  );
 
   //----------------------------------------------------------------------------
   // List Table Header Wrapper
@@ -331,7 +316,7 @@ export function createResourcesPanel<
 
         <Flex flex={1} overflow="auto" w="full">
           {view === "table" && <ListTable campaignId={campaignId} />}
-          {view === "cards" && <ListCards campaignId={campaignId} />}
+          {view === "cards" && <ResourcesListCards campaignId={campaignId} />}
         </Flex>
       </VStack>
     );
