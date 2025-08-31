@@ -75,4 +75,5 @@ export const {
   useCampaignResources: useCampaignWeapons,
   useFilters: useWeaponFilters,
   useNameFilter: useWeaponNameFilter,
+  useIsSelected: useIsWeaponSelected,
 } = createResourceHooks("weapons", weaponSchema, weaponFiltersSchema);

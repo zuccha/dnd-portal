@@ -1,3 +1,4 @@
+import { useIsWeaponSelected } from "../../../../../../resources/weapon";
 import type { WeaponTranslation } from "../../../../../../resources/weapon-translation";
 import type { DataTableColumn } from "../../../../../../ui/data-table";
 import { createResourcesPanel } from "../resources-panel";
@@ -83,6 +84,7 @@ const i18nContext = {
 
 const WeaponsPanel = createResourcesPanel(
   useFilteredWeaponTranslations,
+  useIsWeaponSelected,
   columns,
   i18nContext,
   "notes",

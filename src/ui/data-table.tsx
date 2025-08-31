@@ -17,12 +17,17 @@ export type DataTableProps<T extends { id: string }> = Omit<
   TableRootProps,
   "children"
 > & {
+  RowWrapper?: React.FC<{
+    children: (selected: boolean, toggleSelected: () => void) => ReactNode;
+    id: string;
+  }>;
   columns: DataTableColumn<T>[];
   expandedKey?: keyof T;
   rows: T[];
 };
 
 export default function DataTable<T extends { id: string }>({
+  RowWrapper = ({ children }) => children(false, () => {}),
   columns,
   expandedKey,
   rows,
@@ -39,6 +44,10 @@ export default function DataTable<T extends { id: string }>({
     >
       <Table.Header>
         <Table.Row>
+          <Table.ColumnHeader textAlign="center" w="4em">
+            <Checkbox checked={false} size="sm" />
+          </Table.ColumnHeader>
+
           {columns.map(({ key, label, ...rest }) => {
             return (
               <Table.ColumnHeader
@@ -57,12 +66,17 @@ export default function DataTable<T extends { id: string }>({
 
       <Table.Body>
         {rows.map((row) => (
-          <TableRow
-            columns={columns}
-            expandedKey={expandedKey}
-            key={row.id}
-            row={row}
-          />
+          <RowWrapper id={row.id} key={row.id}>
+            {(selected, toggleSelected) => (
+              <TableRow
+                columns={columns}
+                expandedKey={expandedKey}
+                onToggleSelected={toggleSelected}
+                row={row}
+                selected={selected}
+              />
+            )}
+          </RowWrapper>
         ))}
       </Table.Body>
     </Table.Root>
@@ -76,11 +90,15 @@ export default function DataTable<T extends { id: string }>({
 function TableRow<T extends { id: string }>({
   columns,
   expandedKey,
+  onToggleSelected,
   row,
+  selected,
 }: {
   columns: DataTableColumn<T>[];
   expandedKey?: keyof T;
+  onToggleSelected: () => void;
   row: T;
+  selected: boolean;
 }) {
   const [expanded, setExpanded] = useState(expandedTableRows.has(row.id));
 
@@ -97,6 +115,17 @@ function TableRow<T extends { id: string }>({
   return (
     <>
       <Table.Row key={row.id} onClick={toggleExpanded}>
+        <Table.Cell textAlign="center" w="4em">
+          <Checkbox
+            checked={selected}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelected();
+            }}
+            size="sm"
+          />
+        </Table.Cell>
+
         {columns.map(({ key, ...rest }) => {
           const value = row[key];
           return (
@@ -118,7 +147,7 @@ function TableRow<T extends { id: string }>({
       </Table.Row>
       {expandedKey && expanded && (
         <Table.Row bgColor="bg.muted" w="full">
-          <Table.Cell colSpan={columns.length}>
+          <Table.Cell colSpan={columns.length + 1}>
             <VStack align="flex-start" gap={1} w="full">
               {String(row[expandedKey])
                 .split("\n")

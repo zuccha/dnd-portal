@@ -1,5 +1,6 @@
 import { HStack, Separator, Span, VStack } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
+import Checkbox from "./checkbox";
 import RichText from "./rich-text";
 
 //------------------------------------------------------------------------------
@@ -33,20 +34,23 @@ export default function ResourceCard({ children }: ResourceCardProps) {
   );
 }
 
-ResourceCard.Title = ResourceCardTitle;
 ResourceCard.Caption = ResourceCardCaption;
 ResourceCard.Description = ResourceCardDescription;
+ResourceCard.Header = ResourceCardHeader;
+ResourceCard.Title = ResourceCardTitle;
 
 //------------------------------------------------------------------------------
-// Resource Card Title
+// Resource Card Header
 //------------------------------------------------------------------------------
 
-function ResourceCardTitle({
+function ResourceCardHeader({
   children,
-  title,
+  onToggleSelection,
+  selected,
 }: {
   children?: ReactNode;
-  title: string;
+  onToggleSelection: () => void;
+  selected: boolean;
 }) {
   return (
     <HStack
@@ -54,13 +58,26 @@ function ResourceCardTitle({
       justify="space-between"
       position="relative"
       px={3}
-      py={2}
+      py={1}
       w="full"
     >
-      <Span>{title}</Span>
-      {children}
+      <HStack>{children}</HStack>
+
+      <Checkbox
+        checked={selected}
+        onValueChange={onToggleSelection}
+        size="sm"
+      />
     </HStack>
   );
+}
+
+//------------------------------------------------------------------------------
+// Resource Card Title
+//------------------------------------------------------------------------------
+
+function ResourceCardTitle({ children }: { children: ReactNode }) {
+  return <Span py={1}>{children}</Span>;
 }
 
 //------------------------------------------------------------------------------

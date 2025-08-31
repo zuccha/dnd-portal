@@ -1,5 +1,6 @@
-import { Center, SimpleGrid, Span, VStack } from "@chakra-ui/react";
+import { SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import { useIsSpellSelected } from "../../../../../../resources/spell";
 import type { SpellTranslation } from "../../../../../../resources/spell-translation";
 import ResourceCard from "../../../../../../ui/resource-card";
 
@@ -19,38 +20,27 @@ export default function SpellCard({ resource }: SpellCardProps) {
     components,
     description,
     duration_with_concentration,
-    level,
+    id,
+    level_long,
     materials,
     name,
-    page,
     range,
     school,
   } = resource;
 
   const { t } = useI18nLangContext(i18nContext);
 
+  const [selected, toggle] = useIsSpellSelected(id);
+
   return (
     <ResourceCard>
-      <ResourceCard.Title title={name}>
-        <Span w="1.6em" />
-
-        <Center
-          aspectRatio={1}
-          bgColor="bg.inverted"
-          color="fg.inverted"
-          h="1.6em"
-          p={1}
-          position="absolute"
-          right={2}
-          rounded="full"
-        >
-          {level}
-        </Center>
-      </ResourceCard.Title>
+      <ResourceCard.Header onToggleSelection={toggle} selected={selected}>
+        <ResourceCard.Title>{name}</ResourceCard.Title>
+      </ResourceCard.Header>
 
       <ResourceCard.Caption>
-        <Span>{character_classes}</Span>
         <Span>{school}</Span>
+        <Span>{level_long}</Span>
       </ResourceCard.Caption>
 
       <SimpleGrid columns={2} fontSize="xs" gap={1} p={2} w="full">
@@ -82,8 +72,8 @@ export default function SpellCard({ resource }: SpellCardProps) {
       <ResourceCard.Description description={description} />
 
       <ResourceCard.Caption>
+        <Span>{character_classes}</Span>
         <Span>{campaign}</Span>
-        <Span>{page}</Span>
       </ResourceCard.Caption>
     </ResourceCard>
   );

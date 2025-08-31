@@ -27,6 +27,7 @@ export const spellTranslationSchema = z.object({
   duration_with_concentration: z.string(),
   id: z.uuid(),
   level: z.string(),
+  level_long: z.string(),
   materials: z.string(),
   name: z.string(),
   page: z.string(),
@@ -110,6 +111,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
           : duration,
         id: spell.id,
         level: `${spell.level}`,
+        level_long: ti("level_long", `${spell.level}`),
         materials: materials ? materials : t("materials.none"),
         name: translate(spell.name, lang),
         page: page ? ti("page", page) : "",
@@ -147,6 +149,11 @@ const i18nContext = {
   "campaign_with_page": {
     en: "<1> (p. <2>)", // 1 = campaign, 2 = page
     it: "<1> (p. <2>)", // 1 = campaign, 2 = page
+  },
+
+  "level_long": {
+    en: "Level <1>", // 1 = level
+    it: "Livello <1>", // 1 = level
   },
 
   "casting_time.action": {

@@ -1,6 +1,6 @@
 import { Box, Flex, HStack, Separator, VStack, Wrap } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon, RatIcon } from "lucide-react";
-import { useMemo } from "react";
+import { type ReactNode, useMemo } from "react";
 import z from "zod/v4";
 import type { I18nLangContext } from "../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
@@ -21,6 +21,9 @@ export type ResourcesPanelProps = {
 
 export function createResourcesPanel<Resource extends { id: string }>(
   useResources: (campaignId: string) => Resource[] | undefined,
+  useIsSelected: (
+    resourceId: string
+  ) => [boolean, () => void, () => void, () => void],
   columns: Omit<DataTableColumn<Resource>, "label">[],
   columnsI18nContext: I18nLangContext,
   descriptionKey: keyof Resource | undefined,
@@ -88,6 +91,17 @@ export function createResourcesPanel<Resource extends { id: string }>(
   // List Table
   //----------------------------------------------------------------------------
 
+  function ListTableRowWrapper({
+    children,
+    id,
+  }: {
+    children: (selected: boolean, toggleSelected: () => void) => ReactNode;
+    id: string;
+  }) {
+    const [selected, toggleSelected] = useIsSelected(id);
+    return children(selected, toggleSelected);
+  }
+
   function ListTable({ campaignId }: ResourcesPanelProps) {
     const { t } = useI18nLangContext(columnsI18nContext);
     const { t: tEmpty } = useI18nLangContext(emptyListI18nContext);
@@ -104,6 +118,7 @@ export function createResourcesPanel<Resource extends { id: string }>(
       <Box bgColor="bg.subtle" w="full">
         {resources.length ? (
           <DataTable
+            RowWrapper={ListTableRowWrapper}
             columns={columnTranslations}
             expandedKey={descriptionKey}
             rows={resources}

@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 import { type ZodType, z } from "zod";
 import { useI18nLang } from "../i18n/i18n-lang";
 import { createLocalStore } from "../store/local-store";
 import supabase from "../supabase";
+import { createObservableSet } from "../utils/observable-set";
 
 //------------------------------------------------------------------------------
 // Create Resource Hooks
@@ -95,12 +96,51 @@ export function createResourceHooks<
   }
 
   //----------------------------------------------------------------------------
+  // Use Selection
+  //----------------------------------------------------------------------------
+
+  const selection = new Set<string>();
+  const { notify: notifySelected, subscribe: subscribeSelected } =
+    createObservableSet<boolean>();
+
+  function useIsSelected(
+    resourceId: string
+  ): [boolean, () => void, () => void, () => void] {
+    const [selected, setSelected] = useState(selection.has(resourceId));
+
+    useLayoutEffect(
+      () => subscribeSelected(resourceId, setSelected),
+      [resourceId]
+    );
+
+    const select = useCallback(() => {
+      selection.add(resourceId);
+      notifySelected(resourceId, true);
+    }, [resourceId]);
+
+    const deselect = useCallback(() => {
+      selection.delete(resourceId);
+      notifySelected(resourceId, false);
+    }, [resourceId]);
+
+    const toggle = useCallback(() => {
+      if (selection.has(resourceId)) deselect();
+      else select();
+    }, [deselect, resourceId, select]);
+
+    return [selected, toggle, select, deselect];
+  }
+
+  //----------------------------------------------------------------------------
   // Return
   //----------------------------------------------------------------------------
 
   return {
     useCampaignResources,
+
     useFilters,
     useNameFilter,
+
+    useIsSelected,
   };
 }

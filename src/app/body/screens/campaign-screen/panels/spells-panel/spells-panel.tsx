@@ -1,3 +1,4 @@
+import { useIsSpellSelected } from "../../../../../../resources/spell";
 import type { SpellTranslation } from "../../../../../../resources/spell-translation";
 import type { DataTableColumn } from "../../../../../../ui/data-table";
 import { createResourcesPanel } from "../resources-panel";
@@ -84,6 +85,7 @@ const i18nContext = {
 
 const SpellsPanel = createResourcesPanel(
   useFilteredSpellTranslations,
+  useIsSpellSelected,
   columns,
   i18nContext,
   "description",

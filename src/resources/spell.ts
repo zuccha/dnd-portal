@@ -77,4 +77,5 @@ export const {
   useCampaignResources: useCampaignSpells,
   useFilters: useSpellFilters,
   useNameFilter: useSpellNameFilter,
+  useIsSelected: useIsSpellSelected,
 } = createResourceHooks("spells", spellSchema, spellFiltersSchema);
