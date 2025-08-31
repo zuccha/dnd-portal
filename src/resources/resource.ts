@@ -5,6 +5,7 @@ import { useI18nLang } from "../i18n/i18n-lang";
 import { createLocalStore } from "../store/local-store";
 import supabase from "../supabase";
 import { createObservableSet } from "../utils/observable-set";
+import { createObservable } from "../utils/observable";
 
 //------------------------------------------------------------------------------
 // Create Resource Hooks
@@ -96,12 +97,43 @@ export function createResourceHooks<
   }
 
   //----------------------------------------------------------------------------
-  // Use Selection
+  // Selection
   //----------------------------------------------------------------------------
 
   const selection = new Set<string>();
+
+  const { notify: notifySelectionCount, subscribe: subscribeSelectionCount } =
+    createObservable<number>();
+
   const { notify: notifySelected, subscribe: subscribeSelected } =
     createObservableSet<boolean>();
+
+  function isSelected(resourceId: string) {
+    return selection.has(resourceId);
+  }
+
+  function selectResource(resourceId: string) {
+    selection.add(resourceId);
+    notifySelected(resourceId, true);
+    notifySelectionCount(selection.size);
+  }
+
+  function deselectResource(resourceId: string) {
+    selection.delete(resourceId);
+    notifySelected(resourceId, false);
+    notifySelectionCount(selection.size);
+  }
+
+  function toggleResourceSelected(resourceId: string) {
+    if (selection.has(resourceId)) deselectResource(resourceId);
+    else selectResource(resourceId);
+  }
+
+  function useSelectionCount() {
+    const [count, setCount] = useState(selection.size);
+    useLayoutEffect(() => subscribeSelectionCount(setCount), []);
+    return count;
+  }
 
   function useIsSelected(
     resourceId: string
@@ -113,22 +145,12 @@ export function createResourceHooks<
       [resourceId]
     );
 
-    const select = useCallback(() => {
-      selection.add(resourceId);
-      notifySelected(resourceId, true);
-    }, [resourceId]);
-
-    const deselect = useCallback(() => {
-      selection.delete(resourceId);
-      notifySelected(resourceId, false);
-    }, [resourceId]);
-
-    const toggle = useCallback(() => {
-      if (selection.has(resourceId)) deselect();
-      else select();
-    }, [deselect, resourceId, select]);
-
-    return [selected, toggle, select, deselect];
+    return [
+      selected,
+      useCallback(() => toggleResourceSelected(resourceId), [resourceId]),
+      useCallback(() => selectResource(resourceId), [resourceId]),
+      useCallback(() => deselectResource(resourceId), [resourceId]),
+    ];
   }
 
   //----------------------------------------------------------------------------
@@ -141,6 +163,10 @@ export function createResourceHooks<
     useFilters,
     useNameFilter,
 
+    deselectResource,
+    isSelected,
+    selectResource,
     useIsSelected,
+    useSelectionCount,
   };
 }

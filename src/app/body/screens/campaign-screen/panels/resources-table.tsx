@@ -17,6 +17,13 @@ export type ResourcesTableProps<T extends { id: string }> = Omit<
   TableRootProps,
   "children"
 > & {
+  HeaderWrapper?: React.FC<{
+    children: (
+      selected: boolean | "-",
+      toggleSelected: () => void
+    ) => ReactNode;
+    resources: T[];
+  }>;
   RowWrapper?: React.FC<{
     children: (selected: boolean, toggleSelected: () => void) => ReactNode;
     id: string;
@@ -27,6 +34,7 @@ export type ResourcesTableProps<T extends { id: string }> = Omit<
 };
 
 export default function ResourcesTable<T extends { id: string }>({
+  HeaderWrapper = ({ children }) => children(false, () => {}),
   RowWrapper = ({ children }) => children(false, () => {}),
   columns,
   expandedKey,
@@ -43,25 +51,33 @@ export default function ResourcesTable<T extends { id: string }>({
       {...rest}
     >
       <Table.Header>
-        <Table.Row>
-          <Table.ColumnHeader textAlign="center" w="4em">
-            <Checkbox checked={false} size="sm" />
-          </Table.ColumnHeader>
-
-          {columns.map(({ key, label, ...rest }) => {
-            return (
-              <Table.ColumnHeader
-                key={String(key)}
-                overflow="hidden"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-                {...rest}
-              >
-                {label}
+        <HeaderWrapper resources={rows}>
+          {(selected, toggleSelected) => (
+            <Table.Row>
+              <Table.ColumnHeader textAlign="center" w="4em">
+                <Checkbox
+                  checked={selected}
+                  onClick={toggleSelected}
+                  size="sm"
+                />
               </Table.ColumnHeader>
-            );
-          })}
-        </Table.Row>
+
+              {columns.map(({ key, label, ...rest }) => {
+                return (
+                  <Table.ColumnHeader
+                    key={String(key)}
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    whiteSpace="nowrap"
+                    {...rest}
+                  >
+                    {label}
+                  </Table.ColumnHeader>
+                );
+              })}
+            </Table.Row>
+          )}
+        </HeaderWrapper>
       </Table.Header>
 
       <Table.Body>

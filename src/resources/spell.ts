@@ -75,7 +75,13 @@ export type SpellFilters = z.infer<typeof spellFiltersSchema>;
 
 export const {
   useCampaignResources: useCampaignSpells,
+
   useFilters: useSpellFilters,
   useNameFilter: useSpellNameFilter,
+
+  deselectResource: deselectSpell,
+  isSelected: isSpellSelected,
+  selectResource: selectSpell,
   useIsSelected: useIsSpellSelected,
+  useSelectionCount: useSpellsSelectionCount,
 } = createResourceHooks("spells", spellSchema, spellFiltersSchema);

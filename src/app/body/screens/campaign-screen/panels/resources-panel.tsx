@@ -1,6 +1,6 @@
 import { Box, Flex, HStack, Separator, VStack, Wrap } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon, RatIcon } from "lucide-react";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode, useCallback, useMemo } from "react";
 import z from "zod/v4";
 import type { I18nLangContext } from "../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
@@ -22,21 +22,29 @@ export type ResourcesPanelProps = {
 export function createResourcesPanel<Resource extends { id: string }>({
   Filters,
   ResourceCard,
+  deselectResource,
+  isResourceSelected,
   listTableColumns,
   listTableColumnsI18nContext,
   listTableDescriptionKey,
-  useIsSelected,
+  selectResource,
+  useIsResourceSelected,
   useResources,
+  useResourcesSelectionCount,
 }: {
-  useResources: (campaignId: string) => Resource[] | undefined;
-  useIsSelected: (
-    resourceId: string
-  ) => [boolean, () => void, () => void, () => void];
+  Filters: React.FC;
+  ResourceCard: React.FC<{ resource: Resource }>;
+  deselectResource: (resourceId: string) => void;
+  isResourceSelected: (resourceId: string) => boolean;
   listTableColumns: Omit<ResourcesTableColumn<Resource>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
   listTableDescriptionKey: keyof Resource | undefined;
-  Filters: React.FC;
-  ResourceCard: React.FC<{ resource: Resource }>;
+  selectResource: (resourceId: string) => void;
+  useIsResourceSelected: (
+    resourceId: string
+  ) => [boolean, () => void, () => void, () => void];
+  useResources: (campaignId: string) => Resource[] | undefined;
+  useResourcesSelectionCount: () => number;
 }) {
   //----------------------------------------------------------------------------
   // Empty List I18n Context
@@ -100,7 +108,38 @@ export function createResourcesPanel<Resource extends { id: string }>({
   }
 
   //----------------------------------------------------------------------------
-  // List Table
+  // List Table Header Wrapper
+  //----------------------------------------------------------------------------
+
+  function ListTableHeaderWrapper({
+    children,
+    resources,
+  }: {
+    children: (
+      selected: boolean | "-",
+      toggleSelected: () => void
+    ) => ReactNode;
+    resources: Resource[];
+  }) {
+    const totalCount = useResourcesSelectionCount();
+
+    const selected = useMemo(() => {
+      if (!resources) return false;
+      const count = resources.filter(({ id }) => isResourceSelected(id)).length;
+      return count === resources.length ? true : count > 0 ? "-" : false;
+    }, [resources, totalCount]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const toggleSelected = useCallback(() => {
+      if (selected === true)
+        resources?.forEach(({ id }) => deselectResource(id));
+      else resources?.forEach(({ id }) => selectResource(id));
+    }, [resources, selected, totalCount]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    return children(selected, toggleSelected);
+  }
+
+  //----------------------------------------------------------------------------
+  // List Table Row Wrapper
   //----------------------------------------------------------------------------
 
   function ListTableRowWrapper({
@@ -110,9 +149,13 @@ export function createResourcesPanel<Resource extends { id: string }>({
     children: (selected: boolean, toggleSelected: () => void) => ReactNode;
     id: string;
   }) {
-    const [selected, toggleSelected] = useIsSelected(id);
+    const [selected, toggleSelected] = useIsResourceSelected(id);
     return children(selected, toggleSelected);
   }
+
+  //----------------------------------------------------------------------------
+  // List Table
+  //----------------------------------------------------------------------------
 
   function ListTable({ campaignId }: ResourcesPanelProps) {
     const { t } = useI18nLangContext(listTableColumnsI18nContext);
@@ -134,6 +177,7 @@ export function createResourcesPanel<Resource extends { id: string }>({
       <Box bgColor="bg.subtle" w="full">
         {resources.length ? (
           <ResourcesTable
+            HeaderWrapper={ListTableHeaderWrapper}
             RowWrapper={ListTableRowWrapper}
             columns={columnTranslations}
             expandedKey={listTableDescriptionKey}

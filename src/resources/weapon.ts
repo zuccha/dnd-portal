@@ -73,7 +73,13 @@ export type WeaponFilters = z.infer<typeof weaponFiltersSchema>;
 
 export const {
   useCampaignResources: useCampaignWeapons,
+
   useFilters: useWeaponFilters,
   useNameFilter: useWeaponNameFilter,
+
+  deselectResource: deselectWeapon,
+  isSelected: isWeaponSelected,
+  selectResource: selectWeapon,
   useIsSelected: useIsWeaponSelected,
+  useSelectionCount: useWeaponsSelectionCount,
 } = createResourceHooks("weapons", weaponSchema, weaponFiltersSchema);

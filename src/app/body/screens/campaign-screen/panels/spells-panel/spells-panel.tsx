@@ -1,4 +1,10 @@
-import { useIsSpellSelected } from "../../../../../../resources/spell";
+import {
+  deselectSpell,
+  isSpellSelected,
+  selectSpell,
+  useIsSpellSelected,
+  useSpellsSelectionCount,
+} from "../../../../../../resources/spell";
 import type { SpellTranslation } from "../../../../../../resources/spell-translation";
 import { createResourcesPanel } from "../resources-panel";
 import type { ResourcesTableColumn } from "../resources-table";
@@ -86,11 +92,15 @@ const i18nContext = {
 const SpellsPanel = createResourcesPanel({
   Filters: SpellsFilters,
   ResourceCard: SpellCard,
+  deselectResource: deselectSpell,
+  isResourceSelected: isSpellSelected,
   listTableColumns: columns,
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "description",
-  useIsSelected: useIsSpellSelected,
+  selectResource: selectSpell,
+  useIsResourceSelected: useIsSpellSelected,
   useResources: useFilteredSpellTranslations,
+  useResourcesSelectionCount: useSpellsSelectionCount,
 });
 
 export default SpellsPanel;
