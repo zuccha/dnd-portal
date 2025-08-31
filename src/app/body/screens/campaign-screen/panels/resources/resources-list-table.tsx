@@ -1,4 +1,5 @@
 import { Span, Table, type TableRootProps, VStack } from "@chakra-ui/react";
+import type { LucideIcon } from "lucide-react";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
@@ -9,6 +10,7 @@ import type {
   ResourceTranslation,
 } from "../../../../../../resources/resource";
 import Checkbox from "../../../../../../ui/checkbox";
+import Icon from "../../../../../../ui/icon";
 import RichText from "../../../../../../ui/rich-text";
 
 //------------------------------------------------------------------------------
@@ -19,6 +21,7 @@ export type ResourcesListTableColumn<
   R extends Resource,
   T extends ResourceTranslation<R>
 > = Table.ColumnHeaderProps & {
+  icon?: LucideIcon;
   key: keyof T;
   label: string;
 };
@@ -75,7 +78,7 @@ export function createResourcesListTable<
           <Checkbox checked={selected} onClick={toggleSelected} size="sm" />
         </Table.ColumnHeader>
 
-        {columns.map(({ key, label, ...rest }) => {
+        {columns.map(({ icon, key, label, ...rest }) => {
           return (
             <Table.ColumnHeader
               key={String(key)}
@@ -84,7 +87,7 @@ export function createResourcesListTable<
               whiteSpace="nowrap"
               {...rest}
             >
-              {label}
+              {icon ? <Icon Icon={icon} size="sm" /> : label}
             </Table.ColumnHeader>
           );
         })}

@@ -1,4 +1,5 @@
 import { HStack, Separator, createListCollection } from "@chakra-ui/react";
+import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
 import { useMemo } from "react";
 import useDebouncedState from "../../../../../../hooks/use-debounced-value";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
@@ -10,6 +11,7 @@ import {
 import { useWeaponMasteryTranslations } from "../../../../../../resources/weapon-mastery";
 import { useWeaponPropertyTranslations } from "../../../../../../resources/weapon-property";
 import { useWeaponTypeTranslations } from "../../../../../../resources/weapon-type";
+import Icon from "../../../../../../ui/icon";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
 import Input from "../../../../../../ui/input";
@@ -138,7 +140,7 @@ export default function WeaponsFilters() {
         onValueChange={(magic) => setFilters({ magic })}
         size="sm"
       >
-        {t("magic")}
+        <Icon Icon={WandIcon} size="sm" />
       </InclusionButton>
 
       <InclusionButton
@@ -146,7 +148,7 @@ export default function WeaponsFilters() {
         onValueChange={(melee) => setFilters({ melee })}
         size="sm"
       >
-        {t("melee")}
+        <Icon Icon={SwordsIcon} size="sm" />
       </InclusionButton>
 
       <InclusionButton
@@ -154,7 +156,7 @@ export default function WeaponsFilters() {
         onValueChange={(ranged) => setFilters({ ranged })}
         size="sm"
       >
-        {t("ranged")}
+        <Icon Icon={BowArrowIcon} size="sm" />
       </InclusionButton>
     </HStack>
   );

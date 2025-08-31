@@ -1,3 +1,4 @@
+import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
 import { type Weapon, weaponsStore } from "../../../../../../resources/weapon";
 import {
   type WeaponTranslation,
@@ -21,9 +22,9 @@ const columns: Omit<
   { key: "damage_extended", maxW: "5em" },
   { key: "properties_extended", maxW: "14em" },
   { key: "mastery", maxW: "6em" },
-  { key: "magic", textAlign: "center", w: "4em" },
-  { key: "melee", textAlign: "center", w: "4em" },
-  { key: "ranged", textAlign: "center", w: "4em" },
+  { icon: WandIcon, key: "magic", textAlign: "center", w: "4em" },
+  { icon: SwordsIcon, key: "melee", textAlign: "center", w: "4em" },
+  { icon: BowArrowIcon, key: "ranged", textAlign: "center", w: "4em" },
   { key: "weight", maxW: "3em", textAlign: "right" },
 ] as const;
 
