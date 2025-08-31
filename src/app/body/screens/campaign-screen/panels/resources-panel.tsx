@@ -19,17 +19,29 @@ export type ResourcesPanelProps = {
   campaignId: string;
 };
 
-export function createResourcesPanel<Resource extends { id: string }>(
-  useResources: (campaignId: string) => Resource[] | undefined,
+export function createResourcesPanel<Resource extends { id: string }>({
+  Filters,
+  ResourceCard,
+  listTableColumns,
+  listTableColumnsI18nContext,
+  listTableDescriptionKey,
+  useIsSelected,
+  useResources,
+}: {
+  useResources: (campaignId: string) => Resource[] | undefined;
   useIsSelected: (
     resourceId: string
-  ) => [boolean, () => void, () => void, () => void],
-  columns: Omit<ResourcesTableColumn<Resource>, "label">[],
-  columnsI18nContext: I18nLangContext,
-  descriptionKey: keyof Resource | undefined,
-  Filters: React.FC,
-  ResourceCard: React.FC<{ resource: Resource }>
-) {
+  ) => [boolean, () => void, () => void, () => void];
+  listTableColumns: Omit<ResourcesTableColumn<Resource>, "label">[];
+  listTableColumnsI18nContext: I18nLangContext;
+  listTableDescriptionKey: keyof Resource | undefined;
+  Filters: React.FC;
+  ResourceCard: React.FC<{ resource: Resource }>;
+}) {
+  //----------------------------------------------------------------------------
+  // Empty List I18n Context
+  //----------------------------------------------------------------------------
+
   const emptyListI18nContext = {
     title: {
       en: "No items found",
@@ -103,12 +115,16 @@ export function createResourcesPanel<Resource extends { id: string }>(
   }
 
   function ListTable({ campaignId }: ResourcesPanelProps) {
-    const { t } = useI18nLangContext(columnsI18nContext);
+    const { t } = useI18nLangContext(listTableColumnsI18nContext);
     const { t: tEmpty } = useI18nLangContext(emptyListI18nContext);
     const resources = useResources(campaignId);
 
     const columnTranslations = useMemo(
-      () => columns.map((column) => ({ ...column, label: t(`${column.key}`) })),
+      () =>
+        listTableColumns.map((column) => ({
+          ...column,
+          label: t(`${column.key}`),
+        })),
       [t]
     );
 
@@ -120,7 +136,7 @@ export function createResourcesPanel<Resource extends { id: string }>(
           <ResourcesTable
             RowWrapper={ListTableRowWrapper}
             columns={columnTranslations}
-            expandedKey={descriptionKey}
+            expandedKey={listTableDescriptionKey}
             rows={resources}
           />
         ) : (

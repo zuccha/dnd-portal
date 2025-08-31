@@ -82,14 +82,14 @@ const i18nContext = {
 // Weapons Panel
 //------------------------------------------------------------------------------
 
-const WeaponsPanel = createResourcesPanel(
-  useFilteredWeaponTranslations,
-  useIsWeaponSelected,
-  columns,
-  i18nContext,
-  "notes",
-  WeaponsFilters,
-  WeaponCard
-);
+const WeaponsPanel = createResourcesPanel({
+  Filters: WeaponsFilters,
+  ResourceCard: WeaponCard,
+  listTableColumns: columns,
+  listTableColumnsI18nContext: i18nContext,
+  listTableDescriptionKey: "notes",
+  useIsSelected: useIsWeaponSelected,
+  useResources: useFilteredWeaponTranslations,
+});
 
 export default WeaponsPanel;

@@ -83,14 +83,14 @@ const i18nContext = {
 // Spells Panel
 //------------------------------------------------------------------------------
 
-const SpellsPanel = createResourcesPanel(
-  useFilteredSpellTranslations,
-  useIsSpellSelected,
-  columns,
-  i18nContext,
-  "description",
-  SpellsFilters,
-  SpellCard
-);
+const SpellsPanel = createResourcesPanel({
+  Filters: SpellsFilters,
+  ResourceCard: SpellCard,
+  listTableColumns: columns,
+  listTableColumnsI18nContext: i18nContext,
+  listTableDescriptionKey: "description",
+  useIsSelected: useIsSpellSelected,
+  useResources: useFilteredSpellTranslations,
+});
 
 export default SpellsPanel;
