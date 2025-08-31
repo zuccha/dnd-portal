@@ -28,6 +28,7 @@ export default function Checkbox({
   return (
     <Checkmark
       checked={!!checked}
+      cursor={disabled ? "disabled" : "pointer"}
       disabled={disabled}
       indeterminate={checked === "-"}
       onClick={toggle}
