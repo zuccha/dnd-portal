@@ -1,5 +1,19 @@
-import { Box, Flex, HStack, Separator, VStack, Wrap } from "@chakra-ui/react";
-import { Grid2X2Icon, ListIcon, RatIcon } from "lucide-react";
+import {
+  Box,
+  Flex,
+  HStack,
+  Menu,
+  Portal,
+  Separator,
+  VStack,
+  Wrap,
+} from "@chakra-ui/react";
+import {
+  EllipsisVerticalIcon,
+  Grid2X2Icon,
+  ListIcon,
+  RatIcon,
+} from "lucide-react";
 import { type ReactNode, useCallback, useMemo } from "react";
 import z from "zod/v4";
 import { createUseShared } from "../../../../../hooks/use-shared";
@@ -12,6 +26,8 @@ import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../ui/binary-button";
 import EmptyState from "../../../../../ui/empty-state";
+import IconButton from "../../../../../ui/icon-button";
+import { downloadJson } from "../../../../../utils/download";
 import ResourcesTable, { type ResourcesTableColumn } from "./resources-table";
 
 //------------------------------------------------------------------------------
@@ -81,9 +97,9 @@ export function createResourcesPanel<
     { Icon: Grid2X2Icon, value: "cards" },
   ];
 
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // Use Filtered Resource Translations
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
 
   const useSharedTranslations = createUseShared<
     ResourceTranslation[] | undefined
@@ -261,6 +277,81 @@ export function createResourcesPanel<
   }
 
   //----------------------------------------------------------------------------
+  // Actions Button
+  //----------------------------------------------------------------------------
+
+  const actionsButtonI18nContext = {
+    copy: {
+      en: "Copy selected",
+      it: "Copia selezionati",
+    },
+    download: {
+      en: "Download selected",
+      it: "Scarica selezionati",
+    },
+  };
+
+  function ActionsButton({ campaignId }: ResourcesPanelProps) {
+    const { t } = useI18nLangContext(actionsButtonI18nContext);
+
+    const totalSelectionCount = useSelectionCount();
+    const resources = useFilteredResourceTranslations(campaignId);
+
+    const selectionCount = useMemo(() => {
+      if (!resources) return 0;
+      return resources.filter(({ id }) => store.isSelected(id)).length;
+    }, [resources, totalSelectionCount]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const computeSelectedAsJson = useCallback(() => {
+      const selected = resources!
+        .filter(({ id }) => store.isSelected(id))
+        .map(({ _raw, ...rest }) => rest);
+      return JSON.stringify(selected, null, 2);
+    }, [resources]);
+
+    const copySelected = useCallback(async () => {
+      if (!selectionCount) return;
+      const json = computeSelectedAsJson();
+      await navigator.clipboard.writeText(json);
+      // TODO: Show toast.
+    }, [computeSelectedAsJson, selectionCount]);
+
+    const downloadSelected = useCallback(async () => {
+      if (!selectionCount) return;
+      const json = computeSelectedAsJson();
+      downloadJson(json, `${store.id}.json`);
+    }, [computeSelectedAsJson, selectionCount]);
+
+    return (
+      <Menu.Root>
+        <Menu.Trigger focusRing="outside" mr={2} rounded="full">
+          <IconButton Icon={EllipsisVerticalIcon} size="sm" variant="ghost" />
+        </Menu.Trigger>
+        <Portal>
+          <Menu.Positioner>
+            <Menu.Content>
+              <Menu.Item
+                disabled={!selectionCount}
+                onClick={copySelected}
+                value="copy"
+              >
+                {t("copy")}
+              </Menu.Item>
+              <Menu.Item
+                disabled={!selectionCount}
+                onClick={downloadSelected}
+                value="download"
+              >
+                {t("download")}
+              </Menu.Item>
+            </Menu.Content>
+          </Menu.Positioner>
+        </Portal>
+      </Menu.Root>
+    );
+  }
+
+  //----------------------------------------------------------------------------
   // Resources Panel
   //----------------------------------------------------------------------------
 
@@ -279,16 +370,19 @@ export function createResourcesPanel<
           w="full"
         >
           <HStack>
+            <ActionsButton campaignId={campaignId} />
             <Filters />
             <Separator h="1.5em" orientation="vertical" />
             <ResourcesCounter campaignId={campaignId} />
           </HStack>
 
-          <BinaryButton
-            onValueChange={setView}
-            options={viewOptions}
-            value={view}
-          />
+          <HStack>
+            <BinaryButton
+              onValueChange={setView}
+              options={viewOptions}
+              value={view}
+            />
+          </HStack>
         </HStack>
 
         <Flex flex={1} overflow="auto" w="full">
