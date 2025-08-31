@@ -23,6 +23,7 @@ import BinaryButton, {
 } from "../../../../../../ui/binary-button";
 import IconButton from "../../../../../../ui/icon-button";
 import { downloadJson } from "../../../../../../utils/download";
+import { createResourcesCounter } from "./resources-counter";
 import { createResourceListCards } from "./resources-list-cards";
 import {
   type ResourcesListTableColumn,
@@ -112,28 +113,9 @@ export function createResourcesPanel<
   // Resources Counter
   //----------------------------------------------------------------------------
 
-  const resourceCounterI18nContext = {
-    "count/*": {
-      en: "<1> results",
-      it: "<1> risultati",
-    },
-    "count/1": {
-      en: "<1> result",
-      it: "<1> risultato",
-    },
-  };
-
-  function ResourcesCounter({ campaignId }: ResourcesPanelProps) {
-    const { tpi } = useI18nLangContext(resourceCounterI18nContext);
-    const translations = useFilteredResourceTranslations(campaignId);
-    const count = translations?.length ?? 0;
-
-    return (
-      <Flex fontSize="sm" whiteSpace="nowrap">
-        {tpi("count", count, `${count}`)}
-      </Flex>
-    );
-  }
+  const ResourcesCounter = createResourcesCounter(
+    useFilteredResourceTranslations
+  );
 
   //----------------------------------------------------------------------------
   // Actions Button
