@@ -23,15 +23,15 @@ export function createResourcesListCards<
 
     return (
       <Box bgColor="bg.subtle" w="full">
-        <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
-          {translations.length ? (
-            translations.map((translation) => (
+        {translations.length ? (
+          <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
+            {translations.map((translation) => (
               <ResourceCard key={translation.id} resource={translation} />
-            ))
-          ) : (
-            <ResourcesListEmpty />
-          )}
-        </Wrap>
+            ))}
+          </Wrap>
+        ) : (
+          <ResourcesListEmpty />
+        )}
       </Box>
     );
   };

@@ -1,4 +1,10 @@
-import { Span, Table, type TableRootProps, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Span,
+  Table,
+  type TableRootProps,
+  VStack,
+} from "@chakra-ui/react";
 import type { LucideIcon } from "lucide-react";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
@@ -12,6 +18,7 @@ import type {
 import Checkbox from "../../../../../../ui/checkbox";
 import Icon from "../../../../../../ui/icon";
 import RichText from "../../../../../../ui/rich-text";
+import ResourcesListEmpty from "./resources-list-empty";
 
 //------------------------------------------------------------------------------
 // Create Resources List Table
@@ -199,29 +206,38 @@ export function createResourcesListTable<
     if (!translations) return null;
 
     return (
-      <Table.Root
-        borderCollapse="separate"
-        borderSpacing={0}
-        showColumnBorder
-        stickyHeader
-        variant="line"
-        {...rest}
-      >
-        <Table.Header>
-          <ResourcesListTableHeader campaignId={campaignId} columns={columns} />
-        </Table.Header>
+      <Box bgColor="bg.subtle" w="full">
+        {translations.length ? (
+          <Table.Root
+            borderCollapse="separate"
+            borderSpacing={0}
+            showColumnBorder
+            stickyHeader
+            variant="line"
+            {...rest}
+          >
+            <Table.Header>
+              <ResourcesListTableHeader
+                campaignId={campaignId}
+                columns={columns}
+              />
+            </Table.Header>
 
-        <Table.Body>
-          {translations.map((translation) => (
-            <ResourcesListTableRow
-              columns={columns}
-              expandedKey={expandedKey}
-              key={translation.id}
-              translation={translation}
-            />
-          ))}
-        </Table.Body>
-      </Table.Root>
+            <Table.Body>
+              {translations.map((translation) => (
+                <ResourcesListTableRow
+                  columns={columns}
+                  expandedKey={expandedKey}
+                  key={translation.id}
+                  translation={translation}
+                />
+              ))}
+            </Table.Body>
+          </Table.Root>
+        ) : (
+          <ResourcesListEmpty />
+        )}
+      </Box>
     );
   };
 }
