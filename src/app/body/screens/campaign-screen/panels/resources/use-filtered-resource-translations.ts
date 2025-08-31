@@ -10,7 +10,7 @@ import type {
 // Create Use Filtered Resource Translations
 //----------------------------------------------------------------------------
 
-export function createFilteredResourceTranslations<
+export function createUseFilteredResourceTranslations<
   R extends Resource,
   T extends ResourceTranslation<R>,
   F extends ResourceFilters

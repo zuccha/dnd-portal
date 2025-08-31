@@ -14,12 +14,12 @@ import BinaryButton, {
 } from "../../../../../../ui/binary-button";
 import { createResourcesActions } from "./resources-actions";
 import { createResourcesCounter } from "./resources-counter";
-import { createResourceListCards } from "./resources-list-cards";
+import { createResourcesListCards } from "./resources-list-cards";
 import {
   type ResourcesListTableColumn,
   createResourcesListTable,
 } from "./resources-list-table";
-import { createFilteredResourceTranslations } from "./use-filtered-resource-translations";
+import { createUseFilteredResourceTranslations } from "./use-filtered-resource-translations";
 
 //------------------------------------------------------------------------------
 // Create Resources Panel
@@ -68,7 +68,7 @@ export function createResourcesPanel<
   // Use Filtered Resource Translations
   //----------------------------------------------------------------------------
 
-  const useFilteredResourceTranslations = createFilteredResourceTranslations(
+  const useFilteredResourceTranslations = createUseFilteredResourceTranslations(
     store,
     useTranslateResource
   );
@@ -77,7 +77,7 @@ export function createResourcesPanel<
   // Resources List Cards
   //----------------------------------------------------------------------------
 
-  const ResourcesListCards = createResourceListCards(
+  const ResourcesListCards = createResourcesListCards(
     useFilteredResourceTranslations,
     ResourceCard
   );

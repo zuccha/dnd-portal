@@ -6,10 +6,10 @@ import type {
 import ResourcesListEmpty from "./resources-list-empty";
 
 //----------------------------------------------------------------------------
-// Create Resource List Cards
+// Create Resources List Cards
 //----------------------------------------------------------------------------
 
-export function createResourceListCards<
+export function createResourcesListCards<
   R extends Resource,
   T extends ResourceTranslation<R>
 >(
