@@ -2,24 +2,30 @@ import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { type ZodType, z } from "zod";
 import { useI18nLang } from "../i18n/i18n-lang";
+import type { I18nString } from "../i18n/i18n-string";
 import { createLocalStore } from "../store/local-store";
 import supabase from "../supabase";
 import { createObservable } from "../utils/observable";
 import { createObservableSet } from "../utils/observable-set";
 
 //------------------------------------------------------------------------------
+// Resource
+//------------------------------------------------------------------------------
+
+export type Resource = { id: string; name: I18nString };
+export type ResourceTranslation<R extends Resource> = { _raw: R; id: string };
+export type ResourceFilters = { order_by: string; order_dir: "asc" | "desc" };
+
+//------------------------------------------------------------------------------
 // Resource Store
 //------------------------------------------------------------------------------
 
-export type ResourceStore<
-  Resource,
-  Filters extends { order_by: string; order_dir: "asc" | "desc" }
-> = {
+export type ResourceStore<R extends Resource, F extends ResourceFilters> = {
   id: string;
 
-  useFromCampaign: (campaignId: string) => UseQueryResult<Resource[], Error>;
+  useFromCampaign: (campaignId: string) => UseQueryResult<R[], Error>;
 
-  useFilters: () => [Filters, (partial: Partial<Filters>) => void];
+  useFilters: () => [F, (partial: Partial<F>) => void];
   useNameFilter: () => [string, (name: string) => void];
 
   deselect: (resourceId: string) => void;
@@ -41,13 +47,13 @@ export type ResourceStore<
 //------------------------------------------------------------------------------
 
 export function createResourceStore<
-  Resource,
-  Filters extends { order_by: string; order_dir: "asc" | "desc" }
+  R extends Resource,
+  F extends ResourceFilters
 >(
   storeId: string,
-  resourceSchema: ZodType<Resource>,
-  filtersSchema: ZodType<Filters>
-): ResourceStore<Resource, Filters> {
+  resourceSchema: ZodType<R>,
+  filtersSchema: ZodType<F>
+): ResourceStore<R, F> {
   //----------------------------------------------------------------------------
   // Use Filters
   //----------------------------------------------------------------------------
@@ -58,12 +64,11 @@ export function createResourceStore<
     filtersSchema.parse
   );
 
-  function useFilters(): [Filters, (partial: Partial<Filters>) => void] {
+  function useFilters(): [F, (partial: Partial<F>) => void] {
     const [filters, setFilters] = filtersStore.use();
 
     const updateFilter = useCallback(
-      (partial: Partial<Filters>) =>
-        setFilters((prev) => ({ ...prev, ...partial })),
+      (partial: Partial<F>) => setFilters((prev) => ({ ...prev, ...partial })),
       [setFilters]
     );
 
@@ -88,9 +93,9 @@ export function createResourceStore<
 
   async function fetchFromCampaign(
     campaignId: string,
-    { order_by, order_dir, ...filters }: Filters,
+    { order_by, order_dir, ...filters }: F,
     lang: string
-  ): Promise<Resource[]> {
+  ): Promise<R[]> {
     const { data } = await supabase.rpc(`fetch_${storeId}`, {
       p_campaign_id: campaignId,
       p_filters: filters,
@@ -119,7 +124,7 @@ export function createResourceStore<
       [campaignId, filters, lang]
     );
 
-    return useQuery<Resource[]>({
+    return useQuery<R[]>({
       queryFn: fetchCampaignsResources,
       queryKey: [`resources[${storeId}]`, campaignId, filters, lang],
     });
