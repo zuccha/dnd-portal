@@ -1,7 +1,7 @@
 import { useIsWeaponSelected } from "../../../../../../resources/weapon";
 import type { WeaponTranslation } from "../../../../../../resources/weapon-translation";
-import type { DataTableColumn } from "../../../../../../ui/data-table";
 import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableColumn } from "../resources-table";
 import useFilteredWeaponTranslations from "./use-filtered-weapon-translations";
 import WeaponCard from "./weapon-card";
 import WeaponsFilters from "./weapon-filters";
@@ -10,7 +10,7 @@ import WeaponsFilters from "./weapon-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: Omit<DataTableColumn<WeaponTranslation>, "label">[] = [
+const columns: Omit<ResourcesTableColumn<WeaponTranslation>, "label">[] = [
   { key: "name" },
   { key: "type", maxW: "5em" },
   { key: "damage_extended", maxW: "5em" },

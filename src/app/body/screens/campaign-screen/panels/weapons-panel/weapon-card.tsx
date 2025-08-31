@@ -1,7 +1,7 @@
 import { Span } from "@chakra-ui/react";
 import { useIsWeaponSelected } from "../../../../../../resources/weapon";
 import type { WeaponTranslation } from "../../../../../../resources/weapon-translation";
-import ResourceCard from "../../../../../../ui/resource-card";
+import ResourceCard from "../resource-card";
 
 //------------------------------------------------------------------------------
 // Weapon Card

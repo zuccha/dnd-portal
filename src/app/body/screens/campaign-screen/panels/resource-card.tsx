@@ -1,7 +1,7 @@
 import { HStack, Separator, Span, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
-import Checkbox from "./checkbox";
-import RichText from "./rich-text";
+import Checkbox from "../../../../../ui/checkbox";
+import RichText from "../../../../../ui/rich-text";
 
 //------------------------------------------------------------------------------
 // Resource Card

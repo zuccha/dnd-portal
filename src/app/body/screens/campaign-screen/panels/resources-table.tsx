@@ -1,19 +1,19 @@
 import { Span, Table, type TableRootProps, VStack } from "@chakra-ui/react";
 import { type ReactNode, useCallback, useState } from "react";
-import Checkbox from "./checkbox";
-import RichText from "./rich-text";
+import Checkbox from "../../../../../ui/checkbox";
+import RichText from "../../../../../ui/rich-text";
 
 //------------------------------------------------------------------------------
-// Data Table
+// Resources Table
 //------------------------------------------------------------------------------
 
-export type DataTableColumn<T extends { id: string }> =
+export type ResourcesTableColumn<T extends { id: string }> =
   Table.ColumnHeaderProps & {
     key: keyof T;
     label: string;
   };
 
-export type DataTableProps<T extends { id: string }> = Omit<
+export type ResourcesTableProps<T extends { id: string }> = Omit<
   TableRootProps,
   "children"
 > & {
@@ -21,18 +21,18 @@ export type DataTableProps<T extends { id: string }> = Omit<
     children: (selected: boolean, toggleSelected: () => void) => ReactNode;
     id: string;
   }>;
-  columns: DataTableColumn<T>[];
+  columns: ResourcesTableColumn<T>[];
   expandedKey?: keyof T;
   rows: T[];
 };
 
-export default function DataTable<T extends { id: string }>({
+export default function ResourcesTable<T extends { id: string }>({
   RowWrapper = ({ children }) => children(false, () => {}),
   columns,
   expandedKey,
   rows,
   ...rest
-}: DataTableProps<T>) {
+}: ResourcesTableProps<T>) {
   return (
     <Table.Root
       borderCollapse="separate"
@@ -94,7 +94,7 @@ function TableRow<T extends { id: string }>({
   row,
   selected,
 }: {
-  columns: DataTableColumn<T>[];
+  columns: ResourcesTableColumn<T>[];
   expandedKey?: keyof T;
   onToggleSelected: () => void;
   row: T;

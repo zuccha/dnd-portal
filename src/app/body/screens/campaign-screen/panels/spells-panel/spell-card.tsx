@@ -2,7 +2,7 @@ import { SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { useIsSpellSelected } from "../../../../../../resources/spell";
 import type { SpellTranslation } from "../../../../../../resources/spell-translation";
-import ResourceCard from "../../../../../../ui/resource-card";
+import ResourceCard from "../resource-card";
 
 //------------------------------------------------------------------------------
 // Spell Card

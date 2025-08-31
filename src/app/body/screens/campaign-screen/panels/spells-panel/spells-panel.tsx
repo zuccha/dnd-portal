@@ -1,7 +1,7 @@
 import { useIsSpellSelected } from "../../../../../../resources/spell";
 import type { SpellTranslation } from "../../../../../../resources/spell-translation";
-import type { DataTableColumn } from "../../../../../../ui/data-table";
 import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableColumn } from "../resources-table";
 import SpellCard from "./spell-card";
 import SpellsFilters from "./spells-filters";
 import useFilteredSpellTranslations from "./use-filtered-spell-translations";
@@ -10,7 +10,7 @@ import useFilteredSpellTranslations from "./use-filtered-spell-translations";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: Omit<DataTableColumn<SpellTranslation>, "label">[] = [
+const columns: Omit<ResourcesTableColumn<SpellTranslation>, "label">[] = [
   { key: "name" },
   { key: "level", maxW: "5em", textAlign: "center" },
   { key: "character_classes", maxW: "8em" },

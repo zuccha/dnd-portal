@@ -8,8 +8,8 @@ import { createLocalStore } from "../../../../../store/local-store";
 import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../ui/binary-button";
-import DataTable, { type DataTableColumn } from "../../../../../ui/data-table";
 import EmptyState from "../../../../../ui/empty-state";
+import ResourcesTable, { type ResourcesTableColumn } from "./resources-table";
 
 //------------------------------------------------------------------------------
 // Create Resources Panel
@@ -24,7 +24,7 @@ export function createResourcesPanel<Resource extends { id: string }>(
   useIsSelected: (
     resourceId: string
   ) => [boolean, () => void, () => void, () => void],
-  columns: Omit<DataTableColumn<Resource>, "label">[],
+  columns: Omit<ResourcesTableColumn<Resource>, "label">[],
   columnsI18nContext: I18nLangContext,
   descriptionKey: keyof Resource | undefined,
   Filters: React.FC,
@@ -117,7 +117,7 @@ export function createResourcesPanel<Resource extends { id: string }>(
     return (
       <Box bgColor="bg.subtle" w="full">
         {resources.length ? (
-          <DataTable
+          <ResourcesTable
             RowWrapper={ListTableRowWrapper}
             columns={columnTranslations}
             expandedKey={descriptionKey}
