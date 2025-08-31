@@ -34,6 +34,8 @@ export const weaponSchema = z.object({
   range_m_long: z.number().nullish(),
   range_m_short: z.number().nullish(),
 
+  ammunition: i18nStringSchema,
+
   weight_kg: z.number(),
   weight_lb: z.number(),
 

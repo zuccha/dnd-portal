@@ -81,13 +81,16 @@ export function useTranslateWeapon(): (weapon: Weapon) => WeaponTranslation {
               `${weapon.range_ft_short ?? 0}/${weapon.range_ft_long ?? 0}`
             );
 
+      const ammunition = translate(weapon.ammunition, lang);
+
       const properties_extended = weapon.properties
         .map((property) => {
           const label = translateWeaponProperty(property).label;
-          if (property === "range" || property === "throw")
-            return ti("properties_extended", label, range);
+          if (property === "ammunition")
+            return ti("properties.ammunition", label, range, ammunition);
+          if (property === "throw") return ti("properties.throw", label, range);
           if (property === "versatile")
-            return ti("properties_extended", label, damage_versatile);
+            return ti("properties.versatile", label, damage_versatile);
           return label;
         })
         .sort()
@@ -180,7 +183,15 @@ const i18nContext = {
     it: "<1> <2>", // 1 = damage value, 2 = damage type
   },
 
-  "properties_extended": {
+  "properties.ammunition": {
+    en: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
+    it: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
+  },
+  "properties.throw": {
+    en: "<1> (<2>)", // 1 = property label, 2 = value
+    it: "<1> (<2>)", // 1 = property label, 2 = value
+  },
+  "properties.versatile": {
     en: "<1> (<2>)", // 1 = property label, 2 = value
     it: "<1> (<2>)", // 1 = property label, 2 = value
   },
