@@ -30,6 +30,7 @@ export function createResourcesListTable<
 >(
   store: ResourceStore<R, F>,
   useTranslations: (campaignId: string) => T[] | undefined,
+  useSelectedTranslationsCount: (campaignId: string) => number,
   partialColumns: Omit<ResourcesListTableColumn<R, T>, "label">[],
   columnsI18nContext: I18nLangContext
 ) {
@@ -37,7 +38,7 @@ export function createResourcesListTable<
   // Hooks
   //----------------------------------------------------------------------------
 
-  const { useIsSelected, useSelectionCount } = store;
+  const { useIsSelected } = store;
 
   //----------------------------------------------------------------------------
   // Expanded Table Rows
@@ -56,22 +57,17 @@ export function createResourcesListTable<
     campaignId: string;
     columns: ResourcesListTableColumn<R, T>[];
   }) {
-    const totalCount = useSelectionCount();
     const translations = useTranslations(campaignId);
+    const count = useSelectedTranslationsCount(campaignId);
 
-    const selected = useMemo(() => {
-      if (!translations) return false;
-      const count = translations.filter(({ id }) =>
-        store.isSelected(id)
-      ).length;
-      return count === translations.length ? true : count > 0 ? "-" : false;
-    }, [translations, totalCount]); // eslint-disable-line react-hooks/exhaustive-deps
+    const selected =
+      count === translations?.length ? true : count > 0 ? "-" : false;
 
     const toggleSelected = useCallback(() => {
       if (selected === true)
         translations?.forEach(({ id }) => store.deselect(id));
       else translations?.forEach(({ id }) => store.select(id));
-    }, [translations, selected, totalCount]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [translations, selected]);
 
     return (
       <Table.Row>

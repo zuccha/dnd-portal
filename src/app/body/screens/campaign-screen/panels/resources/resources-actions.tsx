@@ -1,6 +1,6 @@
 import { Menu, Portal } from "@chakra-ui/react";
 import { EllipsisVerticalIcon } from "lucide-react";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type {
   Resource,
@@ -21,20 +21,14 @@ export function createResourcesActions<
   F extends ResourceFilters
 >(
   store: ResourceStore<R, F>,
-  useTranslations: (campaignId: string) => T[] | undefined
+  useTranslations: (campaignId: string) => T[] | undefined,
+  useSelectedTranslationsCount: (campaignId: string) => number
 ) {
-  const { useSelectionCount } = store;
-
   return function ResourcesActions({ campaignId }: { campaignId: string }) {
     const { t } = useI18nLangContext(i18nContext);
 
-    const totalSelectionCount = useSelectionCount();
     const translations = useTranslations(campaignId);
-
-    const selectionCount = useMemo(() => {
-      if (!translations) return 0;
-      return translations.filter(({ id }) => store.isSelected(id)).length;
-    }, [translations, totalSelectionCount]); // eslint-disable-line react-hooks/exhaustive-deps
+    const count = useSelectedTranslationsCount(campaignId);
 
     const computeSelectedAsJson = useCallback(() => {
       const selected = translations!
@@ -44,17 +38,17 @@ export function createResourcesActions<
     }, [translations]);
 
     const copySelected = useCallback(async () => {
-      if (!selectionCount) return;
+      if (!count) return;
       const json = computeSelectedAsJson();
       await navigator.clipboard.writeText(json);
       // TODO: Show toast.
-    }, [computeSelectedAsJson, selectionCount]);
+    }, [computeSelectedAsJson, count]);
 
     const downloadSelected = useCallback(async () => {
-      if (!selectionCount) return;
+      if (!count) return;
       const json = computeSelectedAsJson();
       downloadJson(json, `${store.id}.json`);
-    }, [computeSelectedAsJson, selectionCount]);
+    }, [computeSelectedAsJson, count]);
 
     return (
       <Menu.Root>
@@ -64,15 +58,11 @@ export function createResourcesActions<
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
-              <Menu.Item
-                disabled={!selectionCount}
-                onClick={copySelected}
-                value="copy"
-              >
+              <Menu.Item disabled={!count} onClick={copySelected} value="copy">
                 {t("copy")}
               </Menu.Item>
               <Menu.Item
-                disabled={!selectionCount}
+                disabled={!count}
                 onClick={downloadSelected}
                 value="download"
               >

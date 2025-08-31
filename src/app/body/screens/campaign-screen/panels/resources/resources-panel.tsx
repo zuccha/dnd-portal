@@ -20,6 +20,7 @@ import {
   createResourcesListTable,
 } from "./resources-list-table";
 import { createUseFilteredResourceTranslations } from "./use-filtered-resource-translations";
+import { createSelectedFilteredResourceTranslationsCount } from "./use-selected-filtered-resource-translations-count";
 
 //------------------------------------------------------------------------------
 // Create Resources Panel
@@ -74,6 +75,16 @@ export function createResourcesPanel<
   );
 
   //----------------------------------------------------------------------------
+  // Use Filtered Resource Translations
+  //----------------------------------------------------------------------------
+
+  const useSelectedFilteredResourceTranslationsCount =
+    createSelectedFilteredResourceTranslationsCount(
+      store,
+      useFilteredResourceTranslations
+    );
+
+  //----------------------------------------------------------------------------
   // Resources List Cards
   //----------------------------------------------------------------------------
 
@@ -89,6 +100,7 @@ export function createResourcesPanel<
   const ResourcesListTable = createResourcesListTable(
     store,
     useFilteredResourceTranslations,
+    useSelectedFilteredResourceTranslationsCount,
     listTableColumns,
     listTableColumnsI18nContext
   );
@@ -107,7 +119,8 @@ export function createResourcesPanel<
 
   const ResourcesActions = createResourcesActions(
     store,
-    useFilteredResourceTranslations
+    useFilteredResourceTranslations,
+    useSelectedFilteredResourceTranslationsCount
   );
 
   //----------------------------------------------------------------------------
