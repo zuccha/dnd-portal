@@ -1,16 +1,16 @@
 import {
-  deselectSpell,
-  isSpellSelected,
-  selectSpell,
-  useIsSpellSelected,
-  useSpellsSelectionCount,
+  type Spell,
+  type SpellFilters,
+  spellsStore,
 } from "../../../../../../resources/spell";
-import type { SpellTranslation } from "../../../../../../resources/spell-translation";
+import {
+  type SpellTranslation,
+  useTranslateSpell,
+} from "../../../../../../resources/spell-translation";
 import { createResourcesPanel } from "../resources-panel";
 import type { ResourcesTableColumn } from "../resources-table";
 import SpellCard from "./spell-card";
 import SpellsFilters from "./spells-filters";
-import useFilteredSpellTranslations from "./use-filtered-spell-translations";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -89,18 +89,16 @@ const i18nContext = {
 // Spells Panel
 //------------------------------------------------------------------------------
 
-const SpellsPanel = createResourcesPanel({
-  Filters: SpellsFilters,
-  ResourceCard: SpellCard,
-  deselectResource: deselectSpell,
-  isResourceSelected: isSpellSelected,
-  listTableColumns: columns,
-  listTableColumnsI18nContext: i18nContext,
-  listTableDescriptionKey: "description",
-  selectResource: selectSpell,
-  useIsResourceSelected: useIsSpellSelected,
-  useResources: useFilteredSpellTranslations,
-  useResourcesSelectionCount: useSpellsSelectionCount,
-});
+const SpellsPanel = createResourcesPanel<Spell, SpellTranslation, SpellFilters>(
+  {
+    Filters: SpellsFilters,
+    ResourceCard: SpellCard,
+    listTableColumns: columns,
+    listTableColumnsI18nContext: i18nContext,
+    listTableDescriptionKey: "description",
+    store: spellsStore,
+    useTranslateResource: useTranslateSpell,
+  }
+);
 
 export default SpellsPanel;

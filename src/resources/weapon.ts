@@ -1,7 +1,7 @@
 import z from "zod";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { damageTypeSchema } from "./damage-type";
-import { createResourceHooks } from "./resource";
+import { createResourceStore } from "./resource";
 import { weaponMasterySchema } from "./weapon-mastery";
 import { weaponPropertySchema } from "./weapon-property";
 import { weaponTypeSchema } from "./weapon-type";
@@ -68,18 +68,19 @@ export const weaponFiltersSchema = z.object({
 export type WeaponFilters = z.infer<typeof weaponFiltersSchema>;
 
 //------------------------------------------------------------------------------
-// Weapon Hooks
+// Weapons Store
 //------------------------------------------------------------------------------
 
-export const {
-  useCampaignResources: useCampaignWeapons,
+export const weaponsStore = createResourceStore(
+  "weapons",
+  weaponSchema,
+  weaponFiltersSchema
+);
 
+export const {
+  useFromCampaign: useWeaponsFromCampaign,
   useFilters: useWeaponFilters,
   useNameFilter: useWeaponNameFilter,
-
-  deselectResource: deselectWeapon,
-  isSelected: isWeaponSelected,
-  selectResource: selectWeapon,
   useIsSelected: useIsWeaponSelected,
   useSelectionCount: useWeaponsSelectionCount,
-} = createResourceHooks("weapons", weaponSchema, weaponFiltersSchema);
+} = weaponsStore;

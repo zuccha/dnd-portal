@@ -2,8 +2,11 @@ import { Box, Flex, HStack, Separator, VStack, Wrap } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon, RatIcon } from "lucide-react";
 import { type ReactNode, useCallback, useMemo } from "react";
 import z from "zod/v4";
+import { createUseShared } from "../../../../../hooks/use-shared";
 import type { I18nLangContext } from "../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
+import type { I18nString } from "../../../../../i18n/i18n-string";
+import type { ResourceStore } from "../../../../../resources/resource";
 import { createLocalStore } from "../../../../../store/local-store";
 import BinaryButton, {
   type BinaryButtonProps,
@@ -19,33 +22,34 @@ export type ResourcesPanelProps = {
   campaignId: string;
 };
 
-export function createResourcesPanel<Resource extends { id: string }>({
+export function createResourcesPanel<
+  Resource extends { id: string; name: I18nString },
+  ResourceTranslation extends { _raw: Resource; id: string },
+  Filters extends { order_by: string; order_dir: "asc" | "desc" }
+>({
   Filters,
   ResourceCard,
-  deselectResource,
-  isResourceSelected,
   listTableColumns,
   listTableColumnsI18nContext,
   listTableDescriptionKey,
-  selectResource,
-  useIsResourceSelected,
-  useResources,
-  useResourcesSelectionCount,
+  store,
+  useTranslateResource,
 }: {
   Filters: React.FC;
-  ResourceCard: React.FC<{ resource: Resource }>;
-  deselectResource: (resourceId: string) => void;
-  isResourceSelected: (resourceId: string) => boolean;
-  listTableColumns: Omit<ResourcesTableColumn<Resource>, "label">[];
+  ResourceCard: React.FC<{ resource: ResourceTranslation }>;
+  listTableColumns: Omit<ResourcesTableColumn<ResourceTranslation>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
-  listTableDescriptionKey: keyof Resource | undefined;
-  selectResource: (resourceId: string) => void;
-  useIsResourceSelected: (
-    resourceId: string
-  ) => [boolean, () => void, () => void, () => void];
-  useResources: (campaignId: string) => Resource[] | undefined;
-  useResourcesSelectionCount: () => number;
+  listTableDescriptionKey: keyof ResourceTranslation | undefined;
+  store: ResourceStore<Resource, Filters>;
+  useTranslateResource: () => (resource: Resource) => ResourceTranslation;
 }) {
+  //----------------------------------------------------------------------------
+  // Hooks
+  //----------------------------------------------------------------------------
+
+  const { useFromCampaign, useNameFilter, useSelectionCount, useIsSelected } =
+    store;
+
   //----------------------------------------------------------------------------
   // Empty List I18n Context
   //----------------------------------------------------------------------------
@@ -77,13 +81,48 @@ export function createResourcesPanel<Resource extends { id: string }>({
     { Icon: Grid2X2Icon, value: "cards" },
   ];
 
+  //------------------------------------------------------------------------------
+  // Use Filtered Resource Translations
+  //------------------------------------------------------------------------------
+
+  const useSharedTranslations = createUseShared<
+    ResourceTranslation[] | undefined
+  >(undefined, [undefined, undefined]);
+
+  const useSharedFilteredTranslations = createUseShared<
+    ResourceTranslation[] | undefined
+  >(undefined, [undefined, undefined]);
+
+  function useFilteredResourceTranslations(campaignId: string) {
+    const { data } = useFromCampaign(campaignId);
+    const translate = useTranslateResource();
+    const [nameFilter] = useNameFilter();
+
+    const translations = useSharedTranslations(
+      () => (data ? data.map(translate) : undefined),
+      [data, translate]
+    );
+
+    return useSharedFilteredTranslations(() => {
+      const trimmedNameFilter = nameFilter.trim().toLowerCase();
+      return translations
+        ? translations.filter((translation) => {
+            const names = Object.values(translation._raw.name);
+            return names.some((name) =>
+              name?.trim().toLowerCase().includes(trimmedNameFilter)
+            );
+          })
+        : undefined;
+    }, [nameFilter, translations]);
+  }
+
   //----------------------------------------------------------------------------
   // List Cards
   //----------------------------------------------------------------------------
 
   function ListCards({ campaignId }: ResourcesPanelProps) {
     const { t } = useI18nLangContext(emptyListI18nContext);
-    const resources = useResources(campaignId);
+    const resources = useFilteredResourceTranslations(campaignId);
 
     if (!resources) return null;
 
@@ -119,20 +158,19 @@ export function createResourcesPanel<Resource extends { id: string }>({
       selected: boolean | "-",
       toggleSelected: () => void
     ) => ReactNode;
-    resources: Resource[];
+    resources: ResourceTranslation[];
   }) {
-    const totalCount = useResourcesSelectionCount();
+    const totalCount = useSelectionCount();
 
     const selected = useMemo(() => {
       if (!resources) return false;
-      const count = resources.filter(({ id }) => isResourceSelected(id)).length;
+      const count = resources.filter(({ id }) => store.isSelected(id)).length;
       return count === resources.length ? true : count > 0 ? "-" : false;
     }, [resources, totalCount]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const toggleSelected = useCallback(() => {
-      if (selected === true)
-        resources?.forEach(({ id }) => deselectResource(id));
-      else resources?.forEach(({ id }) => selectResource(id));
+      if (selected === true) resources?.forEach(({ id }) => store.deselect(id));
+      else resources?.forEach(({ id }) => store.select(id));
     }, [resources, selected, totalCount]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return children(selected, toggleSelected);
@@ -149,8 +187,8 @@ export function createResourcesPanel<Resource extends { id: string }>({
     children: (selected: boolean, toggleSelected: () => void) => ReactNode;
     id: string;
   }) {
-    const [selected, toggleSelected] = useIsResourceSelected(id);
-    return children(selected, toggleSelected);
+    const [selected, { toggle }] = useIsSelected(id);
+    return children(selected, toggle);
   }
 
   //----------------------------------------------------------------------------
@@ -160,7 +198,7 @@ export function createResourcesPanel<Resource extends { id: string }>({
   function ListTable({ campaignId }: ResourcesPanelProps) {
     const { t } = useI18nLangContext(listTableColumnsI18nContext);
     const { t: tEmpty } = useI18nLangContext(emptyListI18nContext);
-    const resources = useResources(campaignId);
+    const resources = useFilteredResourceTranslations(campaignId);
 
     const columnTranslations = useMemo(
       () =>
@@ -212,7 +250,7 @@ export function createResourcesPanel<Resource extends { id: string }>({
 
   function ResourcesCounter({ campaignId }: ResourcesPanelProps) {
     const { tpi } = useI18nLangContext(resourceCounterI18nContext);
-    const resources = useResources(campaignId);
+    const resources = useFilteredResourceTranslations(campaignId);
     const count = resources?.length ?? 0;
 
     return (

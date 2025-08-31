@@ -14,7 +14,7 @@ export type WeaponCardProps = {
 export default function WeaponCard({ resource }: WeaponCardProps) {
   const { campaign_with_page, description, id, name, type } = resource;
 
-  const [selected, toggle] = useIsWeaponSelected(id);
+  const [selected, { toggle }] = useIsWeaponSelected(id);
 
   return (
     <ResourceCard>

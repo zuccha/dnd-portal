@@ -1,14 +1,10 @@
+import { weaponsStore } from "../../../../../../resources/weapon";
 import {
-  deselectWeapon,
-  isWeaponSelected,
-  selectWeapon,
-  useIsWeaponSelected,
-  useWeaponsSelectionCount,
-} from "../../../../../../resources/weapon";
-import type { WeaponTranslation } from "../../../../../../resources/weapon-translation";
+  type WeaponTranslation,
+  useTranslateWeapon,
+} from "../../../../../../resources/weapon-translation";
 import { createResourcesPanel } from "../resources-panel";
 import type { ResourcesTableColumn } from "../resources-table";
-import useFilteredWeaponTranslations from "./use-filtered-weapon-translations";
 import WeaponCard from "./weapon-card";
 import WeaponsFilters from "./weapon-filters";
 
@@ -91,15 +87,11 @@ const i18nContext = {
 const WeaponsPanel = createResourcesPanel({
   Filters: WeaponsFilters,
   ResourceCard: WeaponCard,
-  deselectResource: deselectWeapon,
-  isResourceSelected: isWeaponSelected,
   listTableColumns: columns,
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "notes",
-  selectResource: selectWeapon,
-  useIsResourceSelected: useIsWeaponSelected,
-  useResources: useFilteredWeaponTranslations,
-  useResourcesSelectionCount: useWeaponsSelectionCount,
+  store: weaponsStore,
+  useTranslateResource: useTranslateWeapon,
 });
 
 export default WeaponsPanel;

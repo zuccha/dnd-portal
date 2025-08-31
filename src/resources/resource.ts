@@ -1,30 +1,57 @@
-import { useQuery } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { type ZodType, z } from "zod";
 import { useI18nLang } from "../i18n/i18n-lang";
 import { createLocalStore } from "../store/local-store";
 import supabase from "../supabase";
-import { createObservableSet } from "../utils/observable-set";
 import { createObservable } from "../utils/observable";
+import { createObservableSet } from "../utils/observable-set";
 
 //------------------------------------------------------------------------------
-// Create Resource Hooks
+// Resource Store
 //------------------------------------------------------------------------------
 
-export function createResourceHooks<
+export type ResourceStore<
+  Resource,
+  Filters extends { order_by: string; order_dir: "asc" | "desc" }
+> = {
+  useFromCampaign: (campaignId: string) => UseQueryResult<Resource[], Error>;
+
+  useFilters: () => [Filters, (partial: Partial<Filters>) => void];
+  useNameFilter: () => [string, (name: string) => void];
+
+  deselect: (resourceId: string) => void;
+  select: (resourceId: string) => void;
+  toggleSelected: (resourceId: string) => void;
+
+  isSelected: (resourceId: string) => void;
+  useIsSelected: (
+    resourceId: string
+  ) => [
+    boolean,
+    { deselect: () => void; select: () => void; toggle: () => void }
+  ];
+  useSelectionCount: () => number;
+};
+
+//------------------------------------------------------------------------------
+// Create Resource Store
+//------------------------------------------------------------------------------
+
+export function createResourceStore<
   Resource,
   Filters extends { order_by: string; order_dir: "asc" | "desc" }
 >(
-  id: string,
+  storeId: string,
   resourceSchema: ZodType<Resource>,
   filtersSchema: ZodType<Filters>
-) {
+): ResourceStore<Resource, Filters> {
   //----------------------------------------------------------------------------
   // Use Filters
   //----------------------------------------------------------------------------
 
   const filtersStore = createLocalStore(
-    `resources[${id}].filters`,
+    `resources[${storeId}].filters`,
     filtersSchema.parse({}),
     filtersSchema.parse
   );
@@ -46,7 +73,7 @@ export function createResourceHooks<
   //----------------------------------------------------------------------------
 
   const nameFilterStore = createLocalStore(
-    `resources[${id}].filters.name`,
+    `resources[${storeId}].filters.name`,
     "",
     z.string().parse
   );
@@ -54,15 +81,15 @@ export function createResourceHooks<
   const useNameFilter = nameFilterStore.use;
 
   //----------------------------------------------------------------------------
-  // Fetch Campaign Resources
+  // Fetch From Campaign
   //----------------------------------------------------------------------------
 
-  async function fetchCampaignResources(
+  async function fetchFromCampaign(
     campaignId: string,
     { order_by, order_dir, ...filters }: Filters,
     lang: string
   ): Promise<Resource[]> {
-    const { data } = await supabase.rpc(`fetch_${id}`, {
+    const { data } = await supabase.rpc(`fetch_${storeId}`, {
       p_campaign_id: campaignId,
       p_filters: filters,
       p_langs: [lang],
@@ -78,21 +105,21 @@ export function createResourceHooks<
   }
 
   //----------------------------------------------------------------------------
-  // Use Campaign Resources
+  // Use From Campaign
   //----------------------------------------------------------------------------
 
-  function useCampaignResources(campaignId: string) {
+  function useFromCampaign(campaignId: string) {
     const [lang] = useI18nLang();
     const [filters] = useFilters();
 
     const fetchCampaignsResources = useCallback(
-      () => fetchCampaignResources(campaignId, filters, lang),
+      () => fetchFromCampaign(campaignId, filters, lang),
       [campaignId, filters, lang]
     );
 
     return useQuery<Resource[]>({
       queryFn: fetchCampaignsResources,
-      queryKey: [`resources[${id}]`, campaignId, filters, lang],
+      queryKey: [`resources[${storeId}]`, campaignId, filters, lang],
     });
   }
 
@@ -112,21 +139,21 @@ export function createResourceHooks<
     return selection.has(resourceId);
   }
 
-  function selectResource(resourceId: string) {
+  function select(resourceId: string) {
     selection.add(resourceId);
     notifySelected(resourceId, true);
     notifySelectionCount(selection.size);
   }
 
-  function deselectResource(resourceId: string) {
+  function deselect(resourceId: string) {
     selection.delete(resourceId);
     notifySelected(resourceId, false);
     notifySelectionCount(selection.size);
   }
 
-  function toggleResourceSelected(resourceId: string) {
-    if (selection.has(resourceId)) deselectResource(resourceId);
-    else selectResource(resourceId);
+  function toggleSelected(resourceId: string) {
+    if (selection.has(resourceId)) deselect(resourceId);
+    else select(resourceId);
   }
 
   function useSelectionCount() {
@@ -137,7 +164,10 @@ export function createResourceHooks<
 
   function useIsSelected(
     resourceId: string
-  ): [boolean, () => void, () => void, () => void] {
+  ): [
+    boolean,
+    { deselect: () => void; select: () => void; toggle: () => void }
+  ] {
     const [selected, setSelected] = useState(selection.has(resourceId));
 
     useLayoutEffect(
@@ -147,9 +177,11 @@ export function createResourceHooks<
 
     return [
       selected,
-      useCallback(() => toggleResourceSelected(resourceId), [resourceId]),
-      useCallback(() => selectResource(resourceId), [resourceId]),
-      useCallback(() => deselectResource(resourceId), [resourceId]),
+      {
+        deselect: useCallback(() => deselect(resourceId), [resourceId]),
+        select: useCallback(() => select(resourceId), [resourceId]),
+        toggle: useCallback(() => toggleSelected(resourceId), [resourceId]),
+      },
     ];
   }
 
@@ -158,14 +190,16 @@ export function createResourceHooks<
   //----------------------------------------------------------------------------
 
   return {
-    useCampaignResources,
+    useFromCampaign,
 
     useFilters,
     useNameFilter,
 
-    deselectResource,
+    deselect,
+    select,
+    toggleSelected,
+
     isSelected,
-    selectResource,
     useIsSelected,
     useSelectionCount,
   };

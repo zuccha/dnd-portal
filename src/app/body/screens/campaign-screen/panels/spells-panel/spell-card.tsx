@@ -30,7 +30,7 @@ export default function SpellCard({ resource }: SpellCardProps) {
 
   const { t } = useI18nLangContext(i18nContext);
 
-  const [selected, toggle] = useIsSpellSelected(id);
+  const [selected, { toggle }] = useIsSpellSelected(id);
 
   return (
     <ResourceCard>
