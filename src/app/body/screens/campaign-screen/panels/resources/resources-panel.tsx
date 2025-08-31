@@ -16,18 +16,18 @@ import {
 } from "lucide-react";
 import { type ReactNode, useCallback, useMemo } from "react";
 import z from "zod/v4";
-import { createUseShared } from "../../../../../hooks/use-shared";
-import type { I18nLangContext } from "../../../../../i18n/i18n-lang";
-import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
-import type { I18nString } from "../../../../../i18n/i18n-string";
-import type { ResourceStore } from "../../../../../resources/resource";
-import { createLocalStore } from "../../../../../store/local-store";
+import { createUseShared } from "../../../../../../hooks/use-shared";
+import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
+import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import type { I18nString } from "../../../../../../i18n/i18n-string";
+import type { ResourceStore } from "../../../../../../resources/resource";
+import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
   type BinaryButtonProps,
-} from "../../../../../ui/binary-button";
-import EmptyState from "../../../../../ui/empty-state";
-import IconButton from "../../../../../ui/icon-button";
-import { downloadJson } from "../../../../../utils/download";
+} from "../../../../../../ui/binary-button";
+import EmptyState from "../../../../../../ui/empty-state";
+import IconButton from "../../../../../../ui/icon-button";
+import { downloadJson } from "../../../../../../utils/download";
 import ResourcesTable, { type ResourcesTableColumn } from "./resources-table";
 
 //------------------------------------------------------------------------------

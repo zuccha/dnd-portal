@@ -1,7 +1,7 @@
 import { Span, Table, type TableRootProps, VStack } from "@chakra-ui/react";
 import { type ReactNode, useCallback, useState } from "react";
-import Checkbox from "../../../../../ui/checkbox";
-import RichText from "../../../../../ui/rich-text";
+import Checkbox from "../../../../../../ui/checkbox";
+import RichText from "../../../../../../ui/rich-text";
 
 //------------------------------------------------------------------------------
 // Resources Table

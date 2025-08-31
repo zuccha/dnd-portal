@@ -3,8 +3,8 @@ import {
   type WeaponTranslation,
   useTranslateWeapon,
 } from "../../../../../../resources/weapon-translation";
-import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableColumn } from "../resources-table";
+import { createResourcesPanel } from "../resources/resources-panel";
+import type { ResourcesTableColumn } from "../resources/resources-table";
 import WeaponCard from "./weapon-card";
 import WeaponsFilters from "./weapon-filters";
 

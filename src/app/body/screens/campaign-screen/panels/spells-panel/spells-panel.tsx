@@ -7,8 +7,8 @@ import {
   type SpellTranslation,
   useTranslateSpell,
 } from "../../../../../../resources/spell-translation";
-import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableColumn } from "../resources-table";
+import { createResourcesPanel } from "../resources/resources-panel";
+import type { ResourcesTableColumn } from "../resources/resources-table";
 import SpellCard from "./spell-card";
 import SpellsFilters from "./spells-filters";
 
