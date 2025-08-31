@@ -15,6 +15,8 @@ export type ResourceStore<
   Resource,
   Filters extends { order_by: string; order_dir: "asc" | "desc" }
 > = {
+  id: string;
+
   useFromCampaign: (campaignId: string) => UseQueryResult<Resource[], Error>;
 
   useFilters: () => [Filters, (partial: Partial<Filters>) => void];
@@ -190,6 +192,8 @@ export function createResourceStore<
   //----------------------------------------------------------------------------
 
   return {
+    id: storeId,
+
     useFromCampaign,
 
     useFilters,
