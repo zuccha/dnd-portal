@@ -12,7 +12,7 @@ export type WeaponCardProps = {
 };
 
 export default function WeaponCard({ resource }: WeaponCardProps) {
-  const { campaign_with_page, description, id, name, type } = resource;
+  const { campaign, cost, description, id, name, type, weight } = resource;
 
   const [selected, { toggle }] = useIsWeaponSelected(id);
 
@@ -24,13 +24,14 @@ export default function WeaponCard({ resource }: WeaponCardProps) {
 
       <ResourceCard.Caption>
         <Span>{type}</Span>
+        <Span>{weight}</Span>
       </ResourceCard.Caption>
 
       <ResourceCard.Description description={description} />
 
       <ResourceCard.Caption>
-        <Span></Span>
-        <Span>{campaign_with_page}</Span>
+        <Span>{cost}</Span>
+        <Span>{campaign}</Span>
       </ResourceCard.Caption>
     </ResourceCard>
   );

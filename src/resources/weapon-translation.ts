@@ -41,6 +41,8 @@ export const weaponTranslationSchema = z.object({
 
   weight: z.string(),
 
+  cost: z.string(),
+
   description: z.string(),
   notes: z.string(),
 });
@@ -126,10 +128,18 @@ export function useTranslateWeapon(): (weapon: Weapon) => WeaponTranslation {
         ranged: weapon.ranged,
 
         range,
+
         weight:
           system === "metric"
             ? ti("weight.kg", `${weapon.weight_kg ?? 0}`)
             : ti("weight.lb", `${weapon.weight_lb ?? 0}`),
+
+        cost:
+          weapon.cost < 0.1
+            ? ti("cost.cp", `${weapon.cost * 100}`)
+            : weapon.cost < 1
+            ? ti("cost.sp", `${weapon.cost * 10}`)
+            : ti("cost.gp", `${weapon.cost}`),
 
         notes: notes || ti("notes.none"),
 
@@ -191,6 +201,23 @@ const i18nContext = {
   "weight.lb": {
     en: "<1> lb", // 1 = weight
     it: "<1> lb", // 1 = weight
+  },
+
+  "cost.cp": {
+    en: "<1> CP",
+    it: "<1> MR",
+  },
+  "cost.gp": {
+    en: "<1> GP",
+    it: "<1> MO",
+  },
+  "cost.pp": {
+    en: "<1> PP",
+    it: "<1> MP",
+  },
+  "cost.sp": {
+    en: "<1> SP",
+    it: "<1> MA",
   },
 
   "notes.none": {

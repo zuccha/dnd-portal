@@ -37,6 +37,8 @@ export const weaponSchema = z.object({
   weight_kg: z.number(),
   weight_lb: z.number(),
 
+  cost: z.number(),
+
   name: i18nStringSchema,
   notes: i18nStringSchema,
   page: i18nStringSchema,
