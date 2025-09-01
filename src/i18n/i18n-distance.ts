@@ -38,6 +38,42 @@ export function parseDistanceMet(distance: string) {
 }
 
 //------------------------------------------------------------------------------
+// Convert Distance Imp To Met
+//------------------------------------------------------------------------------
+
+const ftToMRatio = 3 / 10;
+
+export function convertDistanceImpToMet(
+  value: number,
+  unit: string
+): [number, "m" | "km"] {
+  const m =
+    {
+      ft: value * ftToMRatio,
+      mi: value * 5000 * ftToMRatio,
+    }[unit] ?? 0;
+  return m < 1000 ? [m, "m"] : [m / 1000, "km"];
+}
+
+//------------------------------------------------------------------------------
+// Convert Distance Met To Imp
+//------------------------------------------------------------------------------
+
+const mToFtRatio = 10 / 3;
+
+export function convertDistanceMetToImp(
+  value: number,
+  unit: string
+): [number, "ft" | "mi"] {
+  const ft =
+    {
+      km: value * 1000 * mToFtRatio,
+      m: value * mToFtRatio,
+    }[unit] ?? 0;
+  return ft < 5000 ? [ft, "ft"] : [ft / 5000, "mi"];
+}
+
+//------------------------------------------------------------------------------
 // Use Translate Distance
 //------------------------------------------------------------------------------
 
