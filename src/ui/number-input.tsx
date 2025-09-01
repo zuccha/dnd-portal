@@ -39,7 +39,7 @@ export default function NumberInput({
       value={localValue}
     >
       <ChakraNumberInput.Control />
-      <ChakraNumberInput.Input placeholder="0" />
+      <ChakraNumberInput.Input placeholder="0" pr={6} />
     </ChakraNumberInput.Root>
   );
 }
