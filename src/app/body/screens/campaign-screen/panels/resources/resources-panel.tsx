@@ -42,6 +42,7 @@ export function createResourcesPanel<
   ResourceEditorContent,
   listTableColumns,
   listTableColumnsI18nContext,
+  listTableDescriptionKey,
   store,
   useTranslateResource,
 }: {
@@ -123,7 +124,8 @@ export function createResourcesPanel<
     useSelectedFilteredResourceTranslationsCount,
     useEditedResource,
     listTableColumns,
-    listTableColumnsI18nContext
+    listTableColumnsI18nContext,
+    listTableDescriptionKey
   );
 
   //----------------------------------------------------------------------------

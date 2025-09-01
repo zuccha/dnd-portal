@@ -45,7 +45,8 @@ export function createResourcesListTable<
   useSelectedTranslationsCount: (campaignId: string) => number,
   useEditedResource: (campaignId: string) => EditedResource<R>,
   partialColumns: Omit<ResourcesListTableColumn<R, T>, "label">[],
-  columnsI18nContext: I18nLangContext
+  columnsI18nContext: I18nLangContext,
+  expansionKey: keyof T | undefined
 ) {
   //----------------------------------------------------------------------------
   // Hooks
@@ -112,12 +113,10 @@ export function createResourcesListTable<
   function ResourcesListTableRow({
     campaignId,
     columns,
-    expandedKey,
     translation,
   }: {
     campaignId: string;
     columns: ResourcesListTableColumn<R, T>[];
-    expandedKey?: keyof T;
     translation: T;
   }) {
     const [expanded, setExpanded] = useState(expandedRows.has(translation.id));
@@ -125,14 +124,14 @@ export function createResourcesListTable<
     const [, setEditedResource, canEdit] = useEditedResource(campaignId);
 
     const toggleExpanded = useCallback(() => {
-      if (expandedKey)
+      if (expansionKey)
         setExpanded((prevExpanded) => {
           const nextExpanded = !prevExpanded;
           if (nextExpanded) expandedRows.add(translation.id);
           else expandedRows.delete(translation.id);
           return nextExpanded;
         });
-    }, [expandedKey, translation.id]);
+    }, [translation.id]);
 
     return (
       <>
@@ -172,11 +171,11 @@ export function createResourcesListTable<
           })}
         </Table.Row>
 
-        {expandedKey && expanded && (
+        {expansionKey && expanded && (
           <Table.Row bgColor="bg.muted" w="full">
             <Table.Cell colSpan={columns.length + 1}>
               <VStack align="flex-start" gap={1} w="full">
-                {String(translation[expandedKey])
+                {String(translation[expansionKey])
                   .split("\n")
                   .map((paragraph, i) => (
                     <RichText
@@ -199,12 +198,8 @@ export function createResourcesListTable<
 
   return function ResourcesListTable({
     campaignId,
-    expandedKey,
     ...rest
-  }: Omit<TableRootProps, "children"> & {
-    campaignId: string;
-    expandedKey?: keyof T;
-  }) {
+  }: Omit<TableRootProps, "children"> & { campaignId: string }) {
     const { t } = useI18nLangContext(columnsI18nContext);
     const translations = useTranslations(campaignId);
 
@@ -238,7 +233,6 @@ export function createResourcesListTable<
                 <ResourcesListTableRow
                   campaignId={campaignId}
                   columns={columns}
-                  expandedKey={expandedKey}
                   key={translation.id}
                   translation={translation}
                 />
