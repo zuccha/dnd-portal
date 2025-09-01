@@ -18,6 +18,7 @@ export type SelectProps<T extends string> = Omit<
   categories?: { id: string; items: SelectOption<T>[]; title: string }[];
   options: ListCollection<SelectOption<T>>;
   placeholder?: string;
+  withinDialog?: boolean;
 } & (
     | {
         multiple?: false;
@@ -38,8 +39,36 @@ export default function Select<T extends string>({
   options,
   placeholder,
   value,
+  withinDialog,
   ...rest
 }: SelectProps<T>) {
+  const Content = () => (
+    <ChakraSelect.Positioner>
+      <ChakraSelect.Content>
+        {categories
+          ? categories.map(({ id, items, title }) => (
+              <ChakraSelect.ItemGroup key={id}>
+                <ChakraSelect.ItemGroupLabel>
+                  {title}
+                </ChakraSelect.ItemGroupLabel>
+                {items.map((item) => (
+                  <ChakraSelect.Item item={item} key={item.value}>
+                    {item.label}
+                    <ChakraSelect.ItemIndicator />
+                  </ChakraSelect.Item>
+                ))}
+              </ChakraSelect.ItemGroup>
+            ))
+          : options.items.map((option) => (
+              <ChakraSelect.Item item={option} key={option.value}>
+                {option.label}
+                <ChakraSelect.ItemIndicator />
+              </ChakraSelect.Item>
+            ))}
+      </ChakraSelect.Content>
+    </ChakraSelect.Positioner>
+  );
+
   return (
     <ChakraSelect.Root
       collection={options}
@@ -51,7 +80,7 @@ export default function Select<T extends string>({
       value={multiple ? value : [value]}
       {...rest}
     >
-      <ChakraSelect.HiddenSelect />
+      <ChakraSelect.HiddenSelect aria-labelledby="" />
       <ChakraSelect.Control>
         <ChakraSelect.Trigger>
           <ChakraSelect.ValueText placeholder={placeholder} />
@@ -60,32 +89,13 @@ export default function Select<T extends string>({
           <ChakraSelect.Indicator />
         </ChakraSelect.IndicatorGroup>
       </ChakraSelect.Control>
-      <Portal>
-        <ChakraSelect.Positioner>
-          <ChakraSelect.Content>
-            {categories
-              ? categories.map(({ id, items, title }) => (
-                  <ChakraSelect.ItemGroup key={id}>
-                    <ChakraSelect.ItemGroupLabel>
-                      {title}
-                    </ChakraSelect.ItemGroupLabel>
-                    {items.map((item) => (
-                      <ChakraSelect.Item item={item} key={item.value}>
-                        {item.label}
-                        <ChakraSelect.ItemIndicator />
-                      </ChakraSelect.Item>
-                    ))}
-                  </ChakraSelect.ItemGroup>
-                ))
-              : options.items.map((option) => (
-                  <ChakraSelect.Item item={option} key={option.value}>
-                    {option.label}
-                    <ChakraSelect.ItemIndicator />
-                  </ChakraSelect.Item>
-                ))}
-          </ChakraSelect.Content>
-        </ChakraSelect.Positioner>
-      </Portal>
+      {withinDialog ? (
+        <Content />
+      ) : (
+        <Portal>
+          <Content />
+        </Portal>
+      )}
     </ChakraSelect.Root>
   );
 }
