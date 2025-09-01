@@ -24,6 +24,7 @@ export function createResourceEditor<R extends Resource>(
           if (!e.open) setResource(undefined);
         }}
         open={!!resource}
+        size="lg"
       >
         <Portal>
           <Dialog.Backdrop />
@@ -65,8 +66,8 @@ export function createResourceEditor<R extends Resource>(
 
 const i18nContext = {
   "title": {
-    en: "Edit <1>",
-    it: "Modifica <1>",
+    en: 'Edit "<1>"',
+    it: 'Modifica "<1>"',
   },
 
   "title.empty": {
