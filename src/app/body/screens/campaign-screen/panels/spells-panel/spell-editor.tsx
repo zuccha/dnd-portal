@@ -2,13 +2,14 @@ import { HStack, Textarea, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import useListCollection from "../../../../../../hooks/use-list-collection";
 import {
+  convertDistanceImpToMet,
+  convertDistanceMetToImp,
   parseDistanceImp,
   parseDistanceMet,
   useDistanceImpUnitOptions,
   useDistanceMetUnitOptions,
 } from "../../../../../../i18n/i18n-distance";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useI18nSystem } from "../../../../../../i18n/i18n-system";
 import {
   parseTime,
   useTimeUnitOptions,
@@ -133,6 +134,34 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
   const [rangeMetValue, setRangeMetValue] = useState(initialRangeMetValue);
   const [rangeMetUnit, setRangeMetUnit] = useState(initialRangeMetUnit);
 
+  const setRangeImpValueAndUpdateMet = (value: number) => {
+    setRangeImpValue(value);
+    const [metValue, metUnit] = convertDistanceImpToMet(value, rangeImpUnit);
+    setRangeMetValue(metValue);
+    setRangeMetUnit(metUnit);
+  };
+
+  const setRangeImpUnitAndUpdateMet = (unit: string) => {
+    setRangeImpUnit(unit);
+    const [metValue, metUnit] = convertDistanceImpToMet(rangeImpValue, unit);
+    setRangeMetValue(metValue);
+    setRangeMetUnit(metUnit);
+  };
+
+  const setRangeMetValueAndUpdateImp = (value: number) => {
+    setRangeMetValue(value);
+    const [impValue, impUnit] = convertDistanceMetToImp(value, rangeMetUnit);
+    setRangeImpValue(impValue);
+    setRangeImpUnit(impUnit);
+  };
+
+  const setRangeMetUnitAndUpdateImp = (unit: string) => {
+    setRangeMetUnit(unit);
+    const [impValue, impUnit] = convertDistanceMetToImp(rangeMetValue, unit);
+    setRangeImpValue(impValue);
+    setRangeImpUnit(impUnit);
+  };
+
   //----------------------------------------------------------------------------
   // Ritual
   //----------------------------------------------------------------------------
@@ -222,6 +251,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
               <HStack h={10}>:</HStack>
               <Field maxW="6em">
                 <NumberInput
+                  min={0}
                   name="edit-spell-casting-time-value"
                   onValueChange={setCastingTimeValue}
                   value={castingTimeValue}
@@ -255,6 +285,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
               <HStack h={10}>:</HStack>
               <Field maxW="6em">
                 <NumberInput
+                  min={0}
                   name="edit-spell-duration-value"
                   onValueChange={setDurationValue}
                   value={durationValue}
@@ -308,15 +339,16 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
               <HStack h={10}>:</HStack>
               <Field maxW="6em">
                 <NumberInput
+                  min={0}
                   name="edit-spell-range-imp-value"
-                  onValueChange={setRangeImpValue}
+                  onValueChange={setRangeImpValueAndUpdateMet}
                   value={rangeImpValue}
                 />
               </Field>
               <Field maxW="7em">
                 <Select
                   name="edit-spell-range-imp-unit"
-                  onValueChange={setRangeImpUnit}
+                  onValueChange={setRangeImpUnitAndUpdateMet}
                   options={distanceImpOptions}
                   value={rangeImpUnit}
                   withinDialog
@@ -325,15 +357,16 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
               <HStack h={10}>~</HStack>
               <Field maxW="6em">
                 <NumberInput
+                  min={0}
                   name="edit-spell-range-met-value"
-                  onValueChange={setRangeMetValue}
+                  onValueChange={setRangeMetValueAndUpdateImp}
                   value={rangeMetValue}
                 />
               </Field>
               <Field maxW="7em">
                 <Select
                   name="edit-spell-range-met-unit"
-                  onValueChange={setRangeMetUnit}
+                  onValueChange={setRangeMetUnitAndUpdateImp}
                   options={distanceMetOptions}
                   value={rangeMetUnit}
                   withinDialog
