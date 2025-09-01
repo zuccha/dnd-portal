@@ -1,4 +1,6 @@
+import { useMemo } from "react";
 import { z } from "zod";
+import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -52,3 +54,22 @@ export const {
   characterClasses,
   characterClassTranslationSchema
 );
+
+//------------------------------------------------------------------------------
+// Use Character Class Options
+//------------------------------------------------------------------------------
+
+export function useCharacterClassOptions() {
+  const characterClassTranslations = useCharacterClassTranslations();
+
+  return useMemo(
+    () =>
+      characterClassTranslations
+        .map(({ character_class, label }) => ({
+          label,
+          value: character_class,
+        }))
+        .sort(compareObjects("label")),
+    [characterClassTranslations]
+  );
+}

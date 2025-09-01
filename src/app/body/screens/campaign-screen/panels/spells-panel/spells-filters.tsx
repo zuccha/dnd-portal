@@ -2,19 +2,18 @@ import { HStack, Separator, createListCollection } from "@chakra-ui/react";
 import { useMemo } from "react";
 import useDebouncedState from "../../../../../../hooks/use-debounced-value";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useCharacterClassTranslations } from "../../../../../../resources/character-class";
+import { useCharacterClassOptions } from "../../../../../../resources/character-class";
 import {
   type SpellFilters,
   useSpellFilters,
   useSpellNameFilter,
 } from "../../../../../../resources/spell";
-import { spellLevels } from "../../../../../../resources/spell-level";
-import { useSpellSchoolTranslations } from "../../../../../../resources/spell-school";
+import { useSpellLevelOptions } from "../../../../../../resources/spell-level";
+import { useSpellSchoolOptions } from "../../../../../../resources/spell-school";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
 import Input from "../../../../../../ui/input";
 import Select from "../../../../../../ui/select";
-import { compareObjects } from "../../../../../../utils/object";
 
 //------------------------------------------------------------------------------
 // Spells Filters
@@ -31,9 +30,6 @@ export default function SpellsFilters() {
     200
   );
 
-  const characterClassTranslations = useCharacterClassTranslations();
-  const spellSchoolTranslations = useSpellSchoolTranslations();
-
   const orderOptions = useMemo(
     () =>
       createListCollection({
@@ -42,30 +38,9 @@ export default function SpellsFilters() {
     [t]
   );
 
-  const levelOptions = useMemo(
-    () =>
-      spellLevels.map((level) => ({ label: `${level}`, value: `${level}` })),
-    []
-  );
-
-  const characterClassOptions = useMemo(
-    () =>
-      characterClassTranslations
-        .map(({ character_class, label }) => ({
-          label,
-          value: character_class,
-        }))
-        .sort(compareObjects("label")),
-    [characterClassTranslations]
-  );
-
-  const spellSchoolOptions = useMemo(
-    () =>
-      spellSchoolTranslations
-        .map(({ spell_school, label }) => ({ label, value: spell_school }))
-        .sort(compareObjects("label")),
-    [spellSchoolTranslations]
-  );
+  const levelOptions = useSpellLevelOptions();
+  const characterClassOptions = useCharacterClassOptions();
+  const schoolOptions = useSpellSchoolOptions();
 
   return (
     <HStack>
@@ -125,7 +100,7 @@ export default function SpellsFilters() {
         onValueChange={(partial) =>
           setFilters({ schools: { ...filters.schools, ...partial } })
         }
-        options={spellSchoolOptions}
+        options={schoolOptions}
         size="sm"
       >
         {t("schools")}

@@ -17,3 +17,16 @@ export const spellLevelStringSchema = z.union(
 export type SpellLevel = z.infer<typeof spellLevelSchema>;
 
 export type SpellLevelString = z.infer<typeof spellLevelStringSchema>;
+
+//------------------------------------------------------------------------------
+// Use Spell Level Options
+//------------------------------------------------------------------------------
+
+const spellLevelOptions = spellLevels.map((level) => ({
+  label: `${level}`,
+  value: `${level}`,
+}));
+
+export function useSpellLevelOptions() {
+  return spellLevelOptions;
+}

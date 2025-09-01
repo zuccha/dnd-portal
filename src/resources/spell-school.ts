@@ -1,4 +1,6 @@
+import { useMemo } from "react";
 import { z } from "zod";
+import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -46,3 +48,19 @@ export const {
   spellSchools,
   spellSchoolTranslationSchema
 );
+
+//------------------------------------------------------------------------------
+// Use Spell School Options
+//------------------------------------------------------------------------------
+
+export function useSpellSchoolOptions() {
+  const spellSchoolTranslations = useSpellSchoolTranslations();
+
+  return useMemo(
+    () =>
+      spellSchoolTranslations
+        .map(({ spell_school, label }) => ({ label, value: spell_school }))
+        .sort(compareObjects("label")),
+    [spellSchoolTranslations]
+  );
+}
