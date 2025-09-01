@@ -1,4 +1,6 @@
+import { useMemo } from "react";
 import { z } from "zod";
+import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -35,3 +37,19 @@ export const {
   weaponTypes,
   weaponTypeTranslationSchema
 );
+
+//------------------------------------------------------------------------------
+// Use Weapon Type Options
+//------------------------------------------------------------------------------
+
+export function useWeaponTypeOptions() {
+  const weaponTypeTranslations = useWeaponTypeTranslations();
+
+  return useMemo(
+    () =>
+      weaponTypeTranslations
+        .map(({ weapon_type, label }) => ({ label, value: weapon_type }))
+        .sort(compareObjects("label")),
+    [weaponTypeTranslations]
+  );
+}

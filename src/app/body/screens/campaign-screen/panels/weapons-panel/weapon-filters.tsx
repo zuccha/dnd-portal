@@ -8,9 +8,9 @@ import {
   useWeaponFilters,
   useWeaponNameFilter,
 } from "../../../../../../resources/weapon";
-import { useWeaponMasteryTranslations } from "../../../../../../resources/weapon-mastery";
-import { useWeaponPropertyTranslations } from "../../../../../../resources/weapon-property";
-import { useWeaponTypeTranslations } from "../../../../../../resources/weapon-type";
+import { useWeaponMasteryOptions } from "../../../../../../resources/weapon-mastery";
+import { useWeaponPropertyOptions } from "../../../../../../resources/weapon-property";
+import { useWeaponTypeOptions } from "../../../../../../resources/weapon-type";
 import Icon from "../../../../../../ui/icon";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
@@ -32,10 +32,6 @@ export default function WeaponsFilters() {
     200
   );
 
-  const weaponMasteryTranslations = useWeaponMasteryTranslations();
-  const weaponPropertyTranslations = useWeaponPropertyTranslations();
-  const weaponTypeTranslations = useWeaponTypeTranslations();
-
   const orderOptions = useMemo(
     () =>
       createListCollection({
@@ -44,32 +40,9 @@ export default function WeaponsFilters() {
     [t]
   );
 
-  const typeOptions = useMemo(
-    () =>
-      weaponTypeTranslations.map(({ label, weapon_type }) => ({
-        label,
-        value: weapon_type,
-      })),
-    [weaponTypeTranslations]
-  );
-
-  const propertyOptions = useMemo(
-    () =>
-      weaponPropertyTranslations.map(({ label, weapon_property }) => ({
-        label,
-        value: weapon_property,
-      })),
-    [weaponPropertyTranslations]
-  );
-
-  const masteryOptions = useMemo(
-    () =>
-      weaponMasteryTranslations.map(({ label, weapon_mastery }) => ({
-        label,
-        value: weapon_mastery,
-      })),
-    [weaponMasteryTranslations]
-  );
+  const typeOptions = useWeaponTypeOptions();
+  const propertyOptions = useWeaponPropertyOptions();
+  const masteryOptions = useWeaponMasteryOptions();
 
   return (
     <HStack>
