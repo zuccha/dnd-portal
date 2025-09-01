@@ -4,6 +4,7 @@ import type {
   ResourceTranslation,
 } from "../../../../../../resources/resource";
 import ResourcesListEmpty from "./resources-list-empty";
+import type { EditedResource } from "./use-edited-resource";
 
 //----------------------------------------------------------------------------
 // Create Resources List Cards
@@ -14,10 +15,12 @@ export function createResourcesListCards<
   T extends ResourceTranslation<R>
 >(
   useTranslations: (campaignId: string) => T[] | undefined,
-  ResourceCard: React.FC<{ resource: T }>
+  useEditedResource: (campaignId: string) => EditedResource<R>,
+  ResourceCard: React.FC<{ resource: T; onClickTitle?: () => void }>
 ) {
   return function ListCards({ campaignId }: { campaignId: string }) {
     const translations = useTranslations(campaignId);
+    const [, setEditedResource, canEdit] = useEditedResource(campaignId);
 
     if (!translations) return null;
 
@@ -26,7 +29,15 @@ export function createResourcesListCards<
         {translations.length ? (
           <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
             {translations.map((translation) => (
-              <ResourceCard key={translation.id} resource={translation} />
+              <ResourceCard
+                key={translation.id}
+                onClickTitle={
+                  canEdit
+                    ? () => setEditedResource(translation._raw)
+                    : undefined
+                }
+                resource={translation}
+              />
             ))}
           </Wrap>
         ) : (

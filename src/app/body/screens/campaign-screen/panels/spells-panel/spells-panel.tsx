@@ -10,6 +10,7 @@ import {
 import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";
 import SpellCard from "./spell-card";
+import SpellEditor from "./spell-editor";
 import SpellsFilters from "./spells-filters";
 
 //------------------------------------------------------------------------------
@@ -96,6 +97,7 @@ const SpellsPanel = createResourcesPanel<Spell, SpellTranslation, SpellFilters>(
   {
     Filters: SpellsFilters,
     ResourceCard: SpellCard,
+    ResourceEditorContent: SpellEditor,
     listTableColumns: columns,
     listTableColumnsI18nContext: i18nContext,
     listTableDescriptionKey: "description",

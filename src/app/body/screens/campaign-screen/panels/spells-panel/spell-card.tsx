@@ -9,10 +9,11 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type SpellCardProps = {
+  onClickTitle?: () => void;
   resource: SpellTranslation;
 };
 
-export default function SpellCard({ resource }: SpellCardProps) {
+export default function SpellCard({ onClickTitle, resource }: SpellCardProps) {
   const {
     campaign,
     casting_time_with_ritual,
@@ -35,7 +36,7 @@ export default function SpellCard({ resource }: SpellCardProps) {
   return (
     <ResourceCard>
       <ResourceCard.Header onToggleSelection={toggle} selected={selected}>
-        <ResourceCard.Title>{name}</ResourceCard.Title>
+        <ResourceCard.Title onClick={onClickTitle}>{name}</ResourceCard.Title>
       </ResourceCard.Header>
 
       <ResourceCard.Caption>

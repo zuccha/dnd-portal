@@ -7,6 +7,7 @@ import {
 import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";
 import WeaponCard from "./weapon-card";
+import WeaponEditor from "./weapon-editor";
 import WeaponsFilters from "./weapon-filters";
 
 //------------------------------------------------------------------------------
@@ -91,6 +92,7 @@ const i18nContext = {
 const WeaponsPanel = createResourcesPanel({
   Filters: WeaponsFilters,
   ResourceCard: WeaponCard,
+  ResourceEditorContent: WeaponEditor,
   listTableColumns: columns,
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "notes",

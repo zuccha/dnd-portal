@@ -12,6 +12,7 @@ import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../../ui/binary-button";
+import { createResourceEditor } from "./resource-editor";
 import { createResourcesActions } from "./resources-actions";
 import { createResourcesCounter } from "./resources-counter";
 import { createResourcesListCards } from "./resources-list-cards";
@@ -19,6 +20,7 @@ import {
   type ResourcesListTableColumn,
   createResourcesListTable,
 } from "./resources-list-table";
+import { createUseEditedResource } from "./use-edited-resource";
 import { createUseFilteredResourceTranslations } from "./use-filtered-resource-translations";
 import { createSelectedFilteredResourceTranslationsCount } from "./use-selected-filtered-resource-translations-count";
 
@@ -37,6 +39,7 @@ export function createResourcesPanel<
 >({
   Filters,
   ResourceCard,
+  ResourceEditorContent,
   listTableColumns,
   listTableColumnsI18nContext,
   store,
@@ -44,6 +47,7 @@ export function createResourcesPanel<
 }: {
   Filters: React.FC;
   ResourceCard: React.FC<{ resource: T }>;
+  ResourceEditorContent: React.FC<{ resource: R }>;
   listTableColumns: Omit<ResourcesListTableColumn<R, T>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
   listTableDescriptionKey: keyof T | undefined;
@@ -85,11 +89,27 @@ export function createResourcesPanel<
     );
 
   //----------------------------------------------------------------------------
+  // Use Edited Resource
+  //----------------------------------------------------------------------------
+
+  const useEditedResource = createUseEditedResource<R>();
+
+  //----------------------------------------------------------------------------
+  // Resource Editor
+  //----------------------------------------------------------------------------
+
+  const ResourceEditor = createResourceEditor(
+    useEditedResource,
+    ResourceEditorContent
+  );
+
+  //----------------------------------------------------------------------------
   // Resources List Cards
   //----------------------------------------------------------------------------
 
   const ResourcesListCards = createResourcesListCards(
     useFilteredResourceTranslations,
+    useEditedResource,
     ResourceCard
   );
 
@@ -101,6 +121,7 @@ export function createResourcesPanel<
     store,
     useFilteredResourceTranslations,
     useSelectedFilteredResourceTranslationsCount,
+    useEditedResource,
     listTableColumns,
     listTableColumnsI18nContext
   );
@@ -161,6 +182,8 @@ export function createResourcesPanel<
           {view === "table" && <ResourcesListTable campaignId={campaignId} />}
           {view === "cards" && <ResourcesListCards campaignId={campaignId} />}
         </Flex>
+
+        <ResourceEditor campaignId={campaignId} />
       </VStack>
     );
   };

@@ -1,6 +1,7 @@
 import { HStack, Separator, Span, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 import Checkbox from "../../../../../../ui/checkbox";
+import Link from "../../../../../../ui/link";
 import RichText from "../../../../../../ui/rich-text";
 
 //------------------------------------------------------------------------------
@@ -76,8 +77,20 @@ function ResourceCardHeader({
 // Resource Card Title
 //------------------------------------------------------------------------------
 
-function ResourceCardTitle({ children }: { children: ReactNode }) {
-  return <Span py={1}>{children}</Span>;
+function ResourceCardTitle({
+  children,
+  onClick,
+}: {
+  children: ReactNode;
+  onClick?: () => void;
+}) {
+  return onClick ? (
+    <Link onClick={onClick} py={1}>
+      {children}
+    </Link>
+  ) : (
+    <Span py={1}>{children}</Span>
+  );
 }
 
 //------------------------------------------------------------------------------

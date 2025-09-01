@@ -17,8 +17,10 @@ import type {
 } from "../../../../../../resources/resource";
 import Checkbox from "../../../../../../ui/checkbox";
 import Icon from "../../../../../../ui/icon";
+import Link from "../../../../../../ui/link";
 import RichText from "../../../../../../ui/rich-text";
 import ResourcesListEmpty from "./resources-list-empty";
+import type { EditedResource } from "./use-edited-resource";
 
 //------------------------------------------------------------------------------
 // Create Resources List Table
@@ -41,6 +43,7 @@ export function createResourcesListTable<
   store: ResourceStore<R, F>,
   useTranslations: (campaignId: string) => T[] | undefined,
   useSelectedTranslationsCount: (campaignId: string) => number,
+  useEditedResource: (campaignId: string) => EditedResource<R>,
   partialColumns: Omit<ResourcesListTableColumn<R, T>, "label">[],
   columnsI18nContext: I18nLangContext
 ) {
@@ -107,16 +110,19 @@ export function createResourcesListTable<
   //----------------------------------------------------------------------------
 
   function ResourcesListTableRow({
+    campaignId,
     columns,
     expandedKey,
     translation,
   }: {
+    campaignId: string;
     columns: ResourcesListTableColumn<R, T>[];
     expandedKey?: keyof T;
     translation: T;
   }) {
     const [expanded, setExpanded] = useState(expandedRows.has(translation.id));
     const [selected, { toggle }] = useIsSelected(translation.id);
+    const [, setEditedResource, canEdit] = useEditedResource(campaignId);
 
     const toggleExpanded = useCallback(() => {
       if (expandedKey)
@@ -152,7 +158,11 @@ export function createResourcesListTable<
                 whiteSpace="nowrap"
                 {...rest}
               >
-                {typeof value === "boolean" ? (
+                {key === "name" && canEdit ? (
+                  <Link onClick={() => setEditedResource(translation._raw)}>
+                    {String(value)}
+                  </Link>
+                ) : typeof value === "boolean" ? (
                   <Checkbox checked={value} disabled size="sm" />
                 ) : (
                   String(value)
@@ -226,6 +236,7 @@ export function createResourcesListTable<
             <Table.Body>
               {translations.map((translation) => (
                 <ResourcesListTableRow
+                  campaignId={campaignId}
                   columns={columns}
                   expandedKey={expandedKey}
                   key={translation.id}

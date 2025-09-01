@@ -8,10 +8,14 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type WeaponCardProps = {
+  onClickTitle?: () => void;
   resource: WeaponTranslation;
 };
 
-export default function WeaponCard({ resource }: WeaponCardProps) {
+export default function WeaponCard({
+  onClickTitle,
+  resource,
+}: WeaponCardProps) {
   const { campaign, cost, description, id, name, type, weight } = resource;
 
   const [selected, { toggle }] = useIsWeaponSelected(id);
@@ -19,7 +23,7 @@ export default function WeaponCard({ resource }: WeaponCardProps) {
   return (
     <ResourceCard>
       <ResourceCard.Header onToggleSelection={toggle} selected={selected}>
-        <ResourceCard.Title>{name}</ResourceCard.Title>
+        <ResourceCard.Title onClick={onClickTitle}>{name}</ResourceCard.Title>
       </ResourceCard.Header>
 
       <ResourceCard.Caption>
