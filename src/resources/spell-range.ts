@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { z } from "zod";
-import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -54,9 +53,10 @@ export function useSpellRangeOptions() {
 
   return useMemo(
     () =>
-      spellRangeTranslations
-        .map(({ spell_range, label }) => ({ label, value: spell_range }))
-        .sort(compareObjects("label")),
+      spellRangeTranslations.map(({ spell_range, label }) => ({
+        label,
+        value: spell_range,
+      })),
     [spellRangeTranslations]
   );
 }

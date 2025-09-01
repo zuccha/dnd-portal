@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { z } from "zod";
-import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -54,12 +53,10 @@ export function useSpellCastingTimeOptions() {
 
   return useMemo(
     () =>
-      spellCastingTimeTranslations
-        .map(({ spell_casting_time, label }) => ({
-          label,
-          value: spell_casting_time,
-        }))
-        .sort(compareObjects("label")),
+      spellCastingTimeTranslations.map(({ spell_casting_time, label }) => ({
+        label,
+        value: spell_casting_time,
+      })),
     [spellCastingTimeTranslations]
   );
 }
