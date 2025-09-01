@@ -8,7 +8,7 @@ import {
 //------------------------------------------------------------------------------
 
 export type FieldProps = ChakraFieldRootProps & {
-  label: string;
+  label?: string;
   errorText?: string;
   helperText?: string;
   optionalText?: string;
