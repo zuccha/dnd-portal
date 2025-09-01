@@ -61,6 +61,7 @@ export default function SpellsFilters() {
       <Separator h="1.5em" orientation="vertical" />
 
       <Input
+        id="filter-spell-name"
         onValueChange={setTempNameFilter}
         placeholder={t("name")}
         size="sm"

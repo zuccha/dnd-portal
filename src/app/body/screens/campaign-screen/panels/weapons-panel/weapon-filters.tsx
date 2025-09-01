@@ -63,6 +63,7 @@ export default function WeaponsFilters() {
       <Separator h="1.5em" orientation="vertical" />
 
       <Input
+        id="filter-weapon-name"
         onValueChange={setTempNameFilter}
         placeholder={t("name")}
         size="sm"
