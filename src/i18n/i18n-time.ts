@@ -1,4 +1,15 @@
+import z from "zod";
 import { useTranslateMeasure } from "./i18n-measure";
+
+//------------------------------------------------------------------------------
+// Time
+//------------------------------------------------------------------------------
+
+const timeUnits = ["round", "s", "min", "hr", "d"];
+
+export const timeRegex = new RegExp(`^\\d+\\s*(${timeUnits.join("|")})$`);
+
+export const timeSchema = z.string().regex(timeRegex);
 
 //------------------------------------------------------------------------------
 // Use Translate Time
@@ -9,8 +20,6 @@ export function useTranslateTime(
 ): (raw: string) => string {
   return useTranslateMeasure(i18Context, timeUnits, format);
 }
-
-const timeUnits = ["min", "hr", "d", "round"];
 
 //------------------------------------------------------------------------------
 // I18n Context

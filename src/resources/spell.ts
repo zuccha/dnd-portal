@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { i18nStringSchema } from "../i18n/i18n-string";
+import { timeSchema } from "../i18n/i18n-time";
 import { characterClassSchema } from "./character-class";
 import { createResourceStore } from "./resource";
+import { spellCastingTimeSchema } from "./spell-casting-time";
 import { spellLevelSchema, spellLevelStringSchema } from "./spell-level";
 import { spellSchoolSchema } from "./spell-school";
 
@@ -20,7 +22,9 @@ export const spellSchema = z.object({
   character_classes: z.array(characterClassSchema),
   school: spellSchoolSchema,
 
-  casting_time: z.string(),
+  casting_time: spellCastingTimeSchema,
+  casting_time_value: timeSchema.nullish(),
+
   duration: z.string(),
   range_imp: z.string(),
   range_met: z.string(),
@@ -33,10 +37,10 @@ export const spellSchema = z.object({
   verbal: z.boolean(),
 
   description: i18nStringSchema,
-  materials: i18nStringSchema.optional(),
+  materials: i18nStringSchema.nullish(),
   name: i18nStringSchema,
-  page: i18nStringSchema.optional(),
-  upgrade: i18nStringSchema.optional(),
+  page: i18nStringSchema.nullish(),
+  upgrade: i18nStringSchema.nullish(),
 });
 
 export type Spell = z.infer<typeof spellSchema>;

@@ -7,6 +7,7 @@ import { useI18nSystem } from "../i18n/i18n-system";
 import { useTranslateTime } from "../i18n/i18n-time";
 import { useTranslateCharacterClass } from "./character-class";
 import { type Spell, spellSchema } from "./spell";
+import { useTranslateSpellCastingTime } from "./spell-casting-time";
 import { useTranslateSpellSchool } from "./spell-school";
 
 //------------------------------------------------------------------------------
@@ -48,17 +49,15 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
 
   const translateCharacterClass = useTranslateCharacterClass(lang);
   const translateSpellSchool = useTranslateSpellSchool(lang);
+  const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
   const translateDistance = useTranslateDistance();
   const translateTime = useTranslateTime();
 
   return useCallback(
     (spell: Spell): SpellTranslation => {
-      const casting_time =
-        {
-          "action": t("casting_time.action"),
-          "bonus action": t("casting_time.bonus_action"),
-          "reaction": t("casting_time.reaction"),
-        }[spell.casting_time] ?? translateTime(spell.casting_time);
+      const casting_time = spell.casting_time_value
+        ? translateTime(spell.casting_time_value)
+        : translateSpellCastingTime(spell.casting_time).label;
 
       const duration =
         {
@@ -135,6 +134,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
       tp,
       translateCharacterClass,
       translateDistance,
+      translateSpellCastingTime,
       translateSpellSchool,
       translateTime,
     ]
@@ -156,18 +156,6 @@ const i18nContext = {
     it: "Livello <1>", // 1 = level
   },
 
-  "casting_time.action": {
-    en: "Action",
-    it: "Azione",
-  },
-  "casting_time.bonus_action": {
-    en: "Bonus Action",
-    it: "Azione Bonus",
-  },
-  "casting_time.reaction": {
-    en: "Reaction",
-    it: "Reazione",
-  },
   "casting_time_with_ritual": {
     en: "<1> or ritual", // 1 = casting time
     it: "<1> o rituale", // 1 = casting time
