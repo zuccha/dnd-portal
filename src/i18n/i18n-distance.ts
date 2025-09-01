@@ -1,4 +1,19 @@
-import { useTranslateMeasure } from "./i18n-measure";
+import z from "zod";
+import { computeMeasureRegex, useTranslateMeasure } from "./i18n-measure";
+
+//------------------------------------------------------------------------------
+// Distance
+//------------------------------------------------------------------------------
+
+const distanceImpUnits = ["ft", "mi"];
+const distanceMetUnits = ["m", "km"];
+const distanceUnits = [...distanceImpUnits, ...distanceMetUnits];
+
+export const distanceImpRegex = computeMeasureRegex(distanceImpUnits);
+export const distanceMetRegex = computeMeasureRegex(distanceMetUnits);
+
+export const distanceImpSchema = z.string().regex(distanceImpRegex);
+export const distanceMetSchema = z.string().regex(distanceMetRegex);
 
 //------------------------------------------------------------------------------
 // Use Translate Distance
@@ -9,8 +24,6 @@ export function useTranslateDistance(
 ): (raw: string) => string {
   return useTranslateMeasure(i18Context, distanceUnits, format);
 }
-
-const distanceUnits = ["cm", "ft", "km", "m", "mi"];
 
 //------------------------------------------------------------------------------
 // I18n Context

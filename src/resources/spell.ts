@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { distanceImpSchema, distanceMetSchema } from "../i18n/i18n-distance";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { timeSchema } from "../i18n/i18n-time";
 import { characterClassSchema } from "./character-class";
@@ -6,6 +7,7 @@ import { createResourceStore } from "./resource";
 import { spellCastingTimeSchema } from "./spell-casting-time";
 import { spellDurationSchema } from "./spell-duration";
 import { spellLevelSchema, spellLevelStringSchema } from "./spell-level";
+import { spellRangeSchema } from "./spell-range";
 import { spellSchoolSchema } from "./spell-school";
 
 //------------------------------------------------------------------------------
@@ -29,8 +31,9 @@ export const spellSchema = z.object({
   duration: spellDurationSchema,
   duration_value: timeSchema.nullish(),
 
-  range_imp: z.string(),
-  range_met: z.string(),
+  range: spellRangeSchema,
+  range_value_imp: distanceImpSchema.nullish(),
+  range_value_met: distanceMetSchema.nullish(),
 
   concentration: z.boolean(),
   ritual: z.boolean(),

@@ -9,6 +9,7 @@ import { useTranslateCharacterClass } from "./character-class";
 import { type Spell, spellSchema } from "./spell";
 import { useTranslateSpellCastingTime } from "./spell-casting-time";
 import { useTranslateSpellDuration } from "./spell-duration";
+import { useTranslateSpellRange } from "./spell-range";
 import { useTranslateSpellSchool } from "./spell-school";
 
 //------------------------------------------------------------------------------
@@ -52,6 +53,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
   const translateSpellSchool = useTranslateSpellSchool(lang);
   const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
   const translateSpellDuration = useTranslateSpellDuration(lang);
+  const translateSpellRange = useTranslateSpellRange(lang);
   const translateDistance = useTranslateDistance();
   const translateTime = useTranslateTime();
 
@@ -65,7 +67,13 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
         ? translateTime(spell.duration_value)
         : translateSpellDuration(spell.duration).label;
 
-      const range = system === "metric" ? spell.range_met : spell.range_imp;
+      const range =
+        system === "metric" && spell.range_value_met
+          ? translateDistance(spell.range_value_met)
+          : system === "imperial" && spell.range_value_imp
+          ? translateDistance(spell.range_value_imp)
+          : translateSpellRange(spell.range).label;
+
       const description = translate(spell.description, lang);
       const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
       const materials = spell.materials ? translate(spell.materials, lang) : "";
@@ -110,14 +118,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
         materials: materials ? materials : t("materials.none"),
         name: translate(spell.name, lang),
         page: page ? ti("page", page) : "",
-        range:
-          {
-            self: t("range.self"),
-            sight: t("range.sight"),
-            special: t("range.special"),
-            touch: t("range.touch"),
-            unlimited: t("range.unlimited"),
-          }[range] ?? translateDistance(range),
+        range,
         ritual: spell.ritual,
         school: translateSpellSchool(spell.school).label,
       };
@@ -132,6 +133,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
       translateDistance,
       translateSpellCastingTime,
       translateSpellDuration,
+      translateSpellRange,
       translateSpellSchool,
       translateTime,
     ]
@@ -161,31 +163,6 @@ const i18nContext = {
   "duration_with_concentration": {
     en: "Up to <1> (C)", // <1> = duration
     it: "Fino a <1> (C)", // <1> = duration
-  },
-
-  "range.distance": {
-    en: "<1> <2>", // 1 = quantity, 2 = unit
-    it: "<1> <2>", // 1 = quantity, 2 = unit
-  },
-  "range.self": {
-    en: "Self",
-    it: "Incantatore",
-  },
-  "range.sight": {
-    en: "Sight",
-    it: "Vista",
-  },
-  "range.special": {
-    en: "Special",
-    it: "Speciale",
-  },
-  "range.touch": {
-    en: "Touch",
-    it: "Contatto",
-  },
-  "range.unlimited": {
-    en: "Unlimited",
-    it: "Illimitato",
   },
 
   "description.missing": {
