@@ -1,5 +1,5 @@
 import z from "zod";
-import { useTranslateMeasure } from "./i18n-measure";
+import { computeMeasureRegex, useTranslateMeasure } from "./i18n-measure";
 
 //------------------------------------------------------------------------------
 // Time
@@ -7,7 +7,7 @@ import { useTranslateMeasure } from "./i18n-measure";
 
 const timeUnits = ["round", "s", "min", "hr", "d"];
 
-export const timeRegex = new RegExp(`^\\d+\\s*(${timeUnits.join("|")})$`);
+export const timeRegex = computeMeasureRegex(timeUnits);
 
 export const timeSchema = z.string().regex(timeRegex);
 

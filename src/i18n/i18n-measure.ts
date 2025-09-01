@@ -3,6 +3,16 @@ import type { I18nLangContext } from "./i18n-lang";
 import { useI18nLangContext } from "./i18n-lang-context";
 
 //------------------------------------------------------------------------------
+// Compute Measure Regex
+//------------------------------------------------------------------------------
+
+export function computeMeasureRegex(units: string[]) {
+  return new RegExp(
+    `^(?<value>\\d+(?:\\.\\d+)?)\\s*(?<unit>${units.join("|")})$`
+  );
+}
+
+//------------------------------------------------------------------------------
 // Use Translate Measure
 //------------------------------------------------------------------------------
 
@@ -15,9 +25,7 @@ export function useTranslateMeasure(
 
   return useCallback(
     (raw: string) => {
-      const regex = new RegExp(
-        `^(?<value>\\d+(?:\\.\\d+)?) (?<unit>${units.join("|")})$`
-      );
+      const regex = computeMeasureRegex(units);
       const match = raw.match(regex);
       if (!match || !match.groups) return raw;
 
