@@ -20,6 +20,9 @@ export const spellSchema = z.object({
   campaign_id: z.string(),
   campaign_name: z.string(),
 
+  name: i18nStringSchema,
+  page: i18nStringSchema.nullish(),
+
   level: spellLevelSchema,
 
   character_classes: z.array(characterClassSchema),
@@ -42,10 +45,9 @@ export const spellSchema = z.object({
   somatic: z.boolean(),
   verbal: z.boolean(),
 
-  description: i18nStringSchema,
   materials: i18nStringSchema.nullish(),
-  name: i18nStringSchema,
-  page: i18nStringSchema.nullish(),
+
+  description: i18nStringSchema,
   upgrade: i18nStringSchema.nullish(),
 });
 
