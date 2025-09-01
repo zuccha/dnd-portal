@@ -8,6 +8,7 @@ import { useTranslateTime } from "../i18n/i18n-time";
 import { useTranslateCharacterClass } from "./character-class";
 import { type Spell, spellSchema } from "./spell";
 import { useTranslateSpellCastingTime } from "./spell-casting-time";
+import { useTranslateSpellDuration } from "./spell-duration";
 import { useTranslateSpellSchool } from "./spell-school";
 
 //------------------------------------------------------------------------------
@@ -50,6 +51,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
   const translateCharacterClass = useTranslateCharacterClass(lang);
   const translateSpellSchool = useTranslateSpellSchool(lang);
   const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
+  const translateSpellDuration = useTranslateSpellDuration(lang);
   const translateDistance = useTranslateDistance();
   const translateTime = useTranslateTime();
 
@@ -59,15 +61,9 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
         ? translateTime(spell.casting_time_value)
         : translateSpellCastingTime(spell.casting_time).label;
 
-      const duration =
-        {
-          "instantaneous": t("duration.instantaneous"),
-          "special": t("duration.special"),
-          "until dispelled": t("duration.until_dispelled"),
-          "until dispelled or triggered": t(
-            "duration.until_dispelled_or_triggered"
-          ),
-        }[spell.duration] ?? translateTime(spell.duration);
+      const duration = spell.duration_value
+        ? translateTime(spell.duration_value)
+        : translateSpellDuration(spell.duration).label;
 
       const range = system === "metric" ? spell.range_met : spell.range_imp;
       const description = translate(spell.description, lang);
@@ -135,6 +131,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
       translateCharacterClass,
       translateDistance,
       translateSpellCastingTime,
+      translateSpellDuration,
       translateSpellSchool,
       translateTime,
     ]
@@ -161,23 +158,6 @@ const i18nContext = {
     it: "<1> o rituale", // 1 = casting time
   },
 
-  "duration.instantaneous": {
-    en: "Instantaneous",
-    it: "Istantaneo",
-  },
-  "duration.special": {
-    en: "Special",
-    it: "Speciale",
-  },
-
-  "duration.until_dispelled": {
-    en: "Until dispelled",
-    it: "Finché non disperso",
-  },
-  "duration.until_dispelled_or_triggered": {
-    en: "Until dispelled or triggered",
-    it: "Finché non disperso o innescato",
-  },
   "duration_with_concentration": {
     en: "Up to <1> (C)", // <1> = duration
     it: "Fino a <1> (C)", // <1> = duration

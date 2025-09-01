@@ -4,6 +4,7 @@ import { timeSchema } from "../i18n/i18n-time";
 import { characterClassSchema } from "./character-class";
 import { createResourceStore } from "./resource";
 import { spellCastingTimeSchema } from "./spell-casting-time";
+import { spellDurationSchema } from "./spell-duration";
 import { spellLevelSchema, spellLevelStringSchema } from "./spell-level";
 import { spellSchoolSchema } from "./spell-school";
 
@@ -25,7 +26,9 @@ export const spellSchema = z.object({
   casting_time: spellCastingTimeSchema,
   casting_time_value: timeSchema.nullish(),
 
-  duration: z.string(),
+  duration: spellDurationSchema,
+  duration_value: timeSchema.nullish(),
+
   range_imp: z.string(),
   range_met: z.string(),
 
