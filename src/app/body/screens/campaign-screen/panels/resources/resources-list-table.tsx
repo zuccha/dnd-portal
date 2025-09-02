@@ -158,7 +158,12 @@ export function createResourcesListTable<
                 {...rest}
               >
                 {key === "name" && canEdit ? (
-                  <Link onClick={() => setEditedResource(translation._raw)}>
+                  <Link
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditedResource(translation._raw);
+                    }}
+                  >
                     {String(value)}
                   </Link>
                 ) : typeof value === "boolean" ? (
