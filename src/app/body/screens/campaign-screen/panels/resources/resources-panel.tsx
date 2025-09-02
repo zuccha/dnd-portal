@@ -12,7 +12,10 @@ import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../../ui/binary-button";
-import { createResourceEditor } from "./resource-editor";
+import {
+  type ResourceEditorContentProps,
+  createResourceEditor,
+} from "./resource-editor";
 import { createResourcesActions } from "./resources-actions";
 import { createResourcesCounter } from "./resources-counter";
 import { createResourcesListCards } from "./resources-list-cards";
@@ -48,7 +51,7 @@ export function createResourcesPanel<
 }: {
   Filters: React.FC;
   ResourceCard: React.FC<{ resource: T }>;
-  ResourceEditorContent: React.FC<{ resource: R }>;
+  ResourceEditorContent: React.FC<ResourceEditorContentProps<R>>;
   listTableColumns: Omit<ResourcesListTableColumn<R, T>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
   listTableDescriptionKey: keyof T | undefined;

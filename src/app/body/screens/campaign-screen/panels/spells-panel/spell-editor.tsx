@@ -1,5 +1,5 @@
 import { HStack, Textarea, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useImperativeHandle, useState } from "react";
 import useListCollection from "../../../../../../hooks/use-list-collection";
 import {
   convertDistanceImpToMet,
@@ -29,16 +29,17 @@ import Input from "../../../../../../ui/input";
 import NumberInput from "../../../../../../ui/number-input";
 import Select from "../../../../../../ui/select";
 import Switch from "../../../../../../ui/switch";
+import type { ResourceEditorContentProps } from "../resources/resource-editor";
 
 //------------------------------------------------------------------------------
 // Spell Editor
 //------------------------------------------------------------------------------
 
-export type SpellEditorProps = {
-  resource: Spell;
-};
-
-export default function SpellEditor({ resource }: SpellEditorProps) {
+export default function SpellEditor({
+  disabled,
+  ref,
+  resource,
+}: ResourceEditorContentProps<Spell>) {
   const { lang, t, tp } = useI18nLangContext(i18nContext);
 
   const timeUnitOptions = useListCollection(useTimeUnitOptions());
@@ -189,13 +190,24 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
   const [materials, setMaterials] = useState(resource.materials?.[lang] ?? "");
 
   //----------------------------------------------------------------------------
+  // Submit Form
+  //----------------------------------------------------------------------------
+
+  useImperativeHandle(ref, () => ({
+    save: async (formData: FormData) => {
+      console.log(formData.get("edit-spell-name"));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+    },
+  }));
+
+  //----------------------------------------------------------------------------
   // Render
   //----------------------------------------------------------------------------
 
   return (
     <VStack align="stretch" gap={4}>
       <HStack gap={4}>
-        <Field label={t("name.label")}>
+        <Field disabled={disabled} label={t("name.label")}>
           <Input
             name="edit-spell-name"
             onValueChange={setName}
@@ -203,7 +215,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
             value={name}
           />
         </Field>
-        <Field label={t("level.label")} maxW="5em">
+        <Field disabled={disabled} label={t("level.label")} maxW="5em">
           <Select
             onValueChange={(level) => setLevel(parseInt(level) as SpellLevel)}
             options={levelOptions}
@@ -214,7 +226,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
       </HStack>
 
       <HStack gap={4}>
-        <Field label={t("character_classes.label")}>
+        <Field disabled={disabled} label={t("character_classes.label")}>
           <Select
             multiple
             name="edit-spell-character-classes"
@@ -224,7 +236,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
             withinDialog
           />
         </Field>
-        <Field label={t("school.label")} maxW="11em">
+        <Field disabled={disabled} label={t("school.label")} maxW="11em">
           <Select
             name="edit-spell-school"
             onValueChange={setSchool}
@@ -237,7 +249,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
 
       <HStack gap={4}>
         <HStack align="flex-end" w="full">
-          <Field flex={1} label={t("casting_time.label")}>
+          <Field disabled={disabled} flex={1} label={t("casting_time.label")}>
             <Select
               name="edit-spell-casting-time"
               onValueChange={setCastingTime}
@@ -249,7 +261,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
           {castingTime === "value" && (
             <>
               <HStack h={10}>:</HStack>
-              <Field maxW="6em">
+              <Field disabled={disabled} maxW="6em">
                 <NumberInput
                   min={0}
                   name="edit-spell-casting-time-value"
@@ -257,7 +269,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
                   value={castingTimeValue}
                 />
               </Field>
-              <Field maxW="7em">
+              <Field disabled={disabled} maxW="7em">
                 <Select
                   name="edit-spell-casting-time-unit"
                   onValueChange={setCastingTimeUnit}
@@ -271,7 +283,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
         </HStack>
 
         <HStack align="flex-end" w="full">
-          <Field flex={1} label={t("duration.label")}>
+          <Field disabled={disabled} flex={1} label={t("duration.label")}>
             <Select
               name="edit-spell-duration"
               onValueChange={setDuration}
@@ -283,7 +295,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
           {duration === "value" && (
             <>
               <HStack h={10}>:</HStack>
-              <Field maxW="6em">
+              <Field disabled={disabled} maxW="6em">
                 <NumberInput
                   min={0}
                   name="edit-spell-duration-value"
@@ -291,7 +303,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
                   value={durationValue}
                 />
               </Field>
-              <Field maxW="7em">
+              <Field disabled={disabled} maxW="7em">
                 <Select
                   name="edit-spell-duration-unit"
                   onValueChange={setDurationUnit}
@@ -308,6 +320,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
       <HStack gap={4}>
         <Switch
           checked={ritual}
+          disabled={disabled}
           flex={1}
           label={t("ritual.label")}
           onCheckedChange={setRitual}
@@ -316,6 +329,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
 
         <Switch
           checked={concentration}
+          disabled={disabled}
           flex={1}
           label={t("concentration.label")}
           onCheckedChange={setConcentration}
@@ -325,7 +339,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
 
       <HStack gap={4}>
         <HStack align="flex-end" w="full">
-          <Field flex={1} label={t("range.label")}>
+          <Field disabled={disabled} flex={1} label={t("range.label")}>
             <Select
               name="edit-spell-range"
               onValueChange={setRange}
@@ -337,7 +351,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
           {range === "value" && (
             <>
               <HStack h={10}>:</HStack>
-              <Field maxW="6em">
+              <Field disabled={disabled} maxW="6em">
                 <NumberInput
                   min={0}
                   name="edit-spell-range-imp-value"
@@ -345,7 +359,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
                   value={rangeImpValue}
                 />
               </Field>
-              <Field maxW="7em">
+              <Field disabled={disabled} maxW="7em">
                 <Select
                   name="edit-spell-range-imp-unit"
                   onValueChange={setRangeImpUnitAndUpdateMet}
@@ -355,7 +369,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
                 />
               </Field>
               <HStack h={10}>~</HStack>
-              <Field maxW="6em">
+              <Field disabled={disabled} maxW="6em">
                 <NumberInput
                   min={0}
                   name="edit-spell-range-met-value"
@@ -363,7 +377,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
                   value={rangeMetValue}
                 />
               </Field>
-              <Field maxW="7em">
+              <Field disabled={disabled} maxW="7em">
                 <Select
                   name="edit-spell-range-met-unit"
                   onValueChange={setRangeMetUnitAndUpdateImp}
@@ -380,6 +394,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
       <HStack gap={8}>
         <Switch
           checked={verbal}
+          disabled={disabled}
           label={t("verbal.label")}
           onCheckedChange={setVerbal}
           size="lg"
@@ -387,6 +402,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
 
         <Switch
           checked={somatic}
+          disabled={disabled}
           label={t("somatic.label")}
           onCheckedChange={setSomatic}
           size="lg"
@@ -394,6 +410,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
 
         <Switch
           checked={material}
+          disabled={disabled}
           label={t("material.label")}
           onCheckedChange={setMaterial}
           size="lg"
@@ -401,7 +418,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
       </HStack>
 
       {material && (
-        <Field label={t("materials.label")}>
+        <Field disabled={disabled} label={t("materials.label")}>
           <Input
             name="edit-spell-materials"
             onValueChange={setMaterials}
@@ -411,7 +428,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
         </Field>
       )}
 
-      <Field label={t("description.label")}>
+      <Field disabled={disabled} label={t("description.label")}>
         <Textarea
           defaultValue={resource.description[lang] ?? ""}
           h="12em"
@@ -419,7 +436,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
         />
       </Field>
 
-      <Field label={tp("upgrade.label", level)}>
+      <Field disabled={disabled} label={tp("upgrade.label", level)}>
         <Textarea
           defaultValue={resource.upgrade?.[lang] ?? ""}
           placeholder={tp("upgrade.placeholder", level)}
