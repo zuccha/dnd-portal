@@ -134,8 +134,6 @@ export function createResourcesListTable<
         });
     }, [translation.id]);
 
-    console.log(translation.id);
-
     return (
       <>
         <Table.Row key={translation.id} onClick={toggleExpanded}>
