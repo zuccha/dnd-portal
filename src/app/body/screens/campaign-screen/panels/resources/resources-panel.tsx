@@ -93,7 +93,8 @@ export function createResourcesPanel<
   // Use Edited Resource
   //----------------------------------------------------------------------------
 
-  const useEditedResource = createUseEditedResource<R>();
+  const { useEditedResource, useSetEditedResource } =
+    createUseEditedResource<R>();
 
   //----------------------------------------------------------------------------
   // Resource Editor
@@ -101,6 +102,7 @@ export function createResourcesPanel<
 
   const ResourceEditor = createResourceEditor(
     useEditedResource,
+    useSetEditedResource,
     ResourceEditorContent
   );
 
@@ -110,7 +112,7 @@ export function createResourcesPanel<
 
   const ResourcesListCards = createResourcesListCards(
     useFilteredResourceTranslations,
-    useEditedResource,
+    useSetEditedResource,
     ResourceCard
   );
 
@@ -122,7 +124,7 @@ export function createResourcesPanel<
     store,
     useFilteredResourceTranslations,
     useSelectedFilteredResourceTranslationsCount,
-    useEditedResource,
+    useSetEditedResource,
     listTableColumns,
     listTableColumnsI18nContext,
     listTableDescriptionKey

@@ -6,20 +6,20 @@ import { createMemoryStore } from "../../../../../../store/memory-store";
 // Create Use Edited Resource
 //------------------------------------------------------------------------------
 
-export type EditedResource<R extends Resource> = [
-  R | undefined,
-  (editedResource: R | undefined) => void,
-  boolean
-];
-
 export function createUseEditedResource<R extends Resource>() {
   const editedResourceStore = createMemoryStore<R | undefined>(undefined);
 
-  return function useEditedResource(campaignId: string): EditedResource<R> {
-    const [editedResource, setEditedResource] = editedResourceStore.use();
+  function useEditedResource(): R | undefined {
+    return editedResourceStore.useValue();
+  }
+
+  function useSetEditedResource(
+    campaignId: string
+  ): [(resource: R | undefined) => void, boolean] {
+    const setEditedResource = editedResourceStore.useSetValue();
     const { data: campaignRole } = useCampaignRole(campaignId);
-    return campaignRole === "game_master"
-      ? [editedResource, setEditedResource, true]
-      : [undefined, setEditedResource, false];
-  };
+    return [setEditedResource, campaignRole === "game_master"];
+  }
+
+  return { useEditedResource, useSetEditedResource };
 }

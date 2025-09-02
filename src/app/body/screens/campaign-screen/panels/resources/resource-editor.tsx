@@ -3,25 +3,28 @@ import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { translate } from "../../../../../../i18n/i18n-string";
 import type { Resource } from "../../../../../../resources/resource";
 import Button from "../../../../../../ui/button";
-import type { EditedResource } from "./use-edited-resource";
 
 //------------------------------------------------------------------------------
 // Resource Editor
 //------------------------------------------------------------------------------
 
 export function createResourceEditor<R extends Resource>(
-  useEditedResource: (campaignId: string) => EditedResource<R>,
+  useEditedResource: () => R | undefined,
+  useSetEditedResource: (
+    campaignId: string
+  ) => [(resource: R | undefined) => void, boolean],
   Content: React.FC<{ resource: R }>
 ) {
   return function ResourceEditor({ campaignId }: { campaignId: string }) {
-    const [resource, setResource] = useEditedResource(campaignId);
+    const resource = useEditedResource();
+    const [setEditedResource] = useSetEditedResource(campaignId);
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
     return (
       <Dialog.Root
         lazyMount
         onOpenChange={(e) => {
-          if (!e.open) setResource(undefined);
+          if (!e.open) setEditedResource(undefined);
         }}
         open={!!resource}
         size="lg"

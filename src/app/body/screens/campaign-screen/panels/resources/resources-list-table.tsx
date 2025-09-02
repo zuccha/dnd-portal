@@ -20,7 +20,6 @@ import Icon from "../../../../../../ui/icon";
 import Link from "../../../../../../ui/link";
 import RichText from "../../../../../../ui/rich-text";
 import ResourcesListEmpty from "./resources-list-empty";
-import type { EditedResource } from "./use-edited-resource";
 
 //------------------------------------------------------------------------------
 // Create Resources List Table
@@ -43,7 +42,9 @@ export function createResourcesListTable<
   store: ResourceStore<R, F>,
   useTranslations: (campaignId: string) => T[] | undefined,
   useSelectedTranslationsCount: (campaignId: string) => number,
-  useEditedResource: (campaignId: string) => EditedResource<R>,
+  useSetEditedResource: (
+    campaignId: string
+  ) => [(resource: R | undefined) => void, boolean],
   partialColumns: Omit<ResourcesListTableColumn<R, T>, "label">[],
   columnsI18nContext: I18nLangContext,
   expansionKey: keyof T | undefined
@@ -121,7 +122,7 @@ export function createResourcesListTable<
   }) {
     const [expanded, setExpanded] = useState(expandedRows.has(translation.id));
     const [selected, { toggle }] = useIsSelected(translation.id);
-    const [, setEditedResource, canEdit] = useEditedResource(campaignId);
+    const [setEditedResource, canEdit] = useSetEditedResource(campaignId);
 
     const toggleExpanded = useCallback(() => {
       if (expansionKey)
@@ -132,6 +133,8 @@ export function createResourcesListTable<
           return nextExpanded;
         });
     }, [translation.id]);
+
+    console.log(translation.id);
 
     return (
       <>
