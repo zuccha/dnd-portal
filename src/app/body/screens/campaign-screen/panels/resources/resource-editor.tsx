@@ -1,5 +1,5 @@
 import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
-import { type Ref, useActionState, useRef } from "react";
+import { type Ref, useCallback, useRef, useState } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { translate } from "../../../../../../i18n/i18n-string";
 import type { Resource } from "../../../../../../resources/resource";
@@ -10,11 +10,12 @@ import Button from "../../../../../../ui/button";
 //------------------------------------------------------------------------------
 
 export type ResourceEditorRefObject = {
-  save: (formData: FormData) => Promise<void>;
+  save: (formData: FormData) => Promise<Record<string, string>>;
 };
 
 export type ResourceEditorContentProps<R extends Resource> = {
   disabled: boolean;
+  errors: Record<string, string>;
   ref: Ref<ResourceEditorRefObject>;
   resource: R;
 };
@@ -33,13 +34,19 @@ export function createResourceEditor<R extends Resource>(
 
     const contentRef = useRef<ResourceEditorRefObject>(null);
 
-    const [, submitAction, saving] = useActionState<
-      string | undefined,
-      FormData
-    >(async (_state, formData) => {
-      await contentRef.current?.save(formData);
-      return undefined;
-    }, undefined);
+    const [saving, setSaving] = useState(false);
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
+    const save = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!contentRef.current) return;
+
+      setSaving(true);
+      const formData = new FormData(e.currentTarget);
+      const errors = await contentRef.current.save(formData);
+      setErrors(errors);
+      setSaving(false);
+    }, []);
 
     return (
       <Dialog.Root
@@ -66,9 +73,10 @@ export function createResourceEditor<R extends Resource>(
 
               <Dialog.Body>
                 {resource && (
-                  <form action={submitAction} id="edit-resource">
+                  <form id="edit-resource" onSubmit={save}>
                     <Content
                       disabled={saving}
+                      errors={errors}
                       ref={contentRef}
                       resource={resource}
                     />

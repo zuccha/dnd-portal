@@ -9,18 +9,26 @@ import {
   useDistanceImpUnitOptions,
   useDistanceMetUnitOptions,
 } from "../../../../../../i18n/i18n-distance";
-import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import type { I18nLang } from "../../../../../../i18n/i18n-lang";
+import {
+  type I18nLangContextBag,
+  useI18nLangContext,
+} from "../../../../../../i18n/i18n-lang-context";
 import {
   parseTime,
   useTimeUnitOptions,
 } from "../../../../../../i18n/i18n-time";
 import { useCharacterClassOptions } from "../../../../../../resources/character-class";
-import type { Spell } from "../../../../../../resources/spell";
+import { type Spell, updateSpell } from "../../../../../../resources/spell";
 import { useSpellCastingTimeOptions } from "../../../../../../resources/spell-casting-time";
 import { useSpellDurationOptions } from "../../../../../../resources/spell-duration";
 import { useSpellLevelOptions } from "../../../../../../resources/spell-level";
 import { useSpellRangeOptions } from "../../../../../../resources/spell-range";
 import { useSpellSchoolOptions } from "../../../../../../resources/spell-school";
+import {
+  type SpellTranslation,
+  updateSpellTranslation,
+} from "../../../../../../resources/spell-translation";
 import Field from "../../../../../../ui/field";
 import Input from "../../../../../../ui/input";
 import NumberInput from "../../../../../../ui/number-input";
@@ -34,10 +42,12 @@ import type { ResourceEditorContentProps } from "../resources/resource-editor";
 
 export default function SpellEditor({
   disabled,
+  errors,
   ref,
   resource,
 }: ResourceEditorContentProps<Spell>) {
-  const { lang, t, tp } = useI18nLangContext(i18nContext);
+  const langContextBag = useI18nLangContext(i18nContext);
+  const { lang, t, tp } = langContextBag;
 
   const [level, setLevel] = useState(resource.level);
   const [ritual, setRitual] = useState(resource.ritual);
@@ -47,10 +57,7 @@ export default function SpellEditor({
   const [material, setMaterial] = useState(resource.material);
 
   useImperativeHandle(ref, () => ({
-    save: async (formData: FormData) => {
-      for (const entry of formData.entries()) console.log(entry);
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-    },
+    save: (formData) => saveSpell(resource.id, lang, formData, langContextBag),
   }));
 
   return (
@@ -59,11 +66,13 @@ export default function SpellEditor({
         <SpellEditorName
           defaultName={resource.name[lang] ?? ""}
           disabled={disabled}
+          errors={errors}
           label={t("name.label")}
           placeholder={t("name.placeholder")}
         />
         <SpellEditorLevel
           disabled={disabled}
+          errors={errors}
           label={t("level.label")}
           level={level}
           onLevelChange={setLevel}
@@ -74,11 +83,13 @@ export default function SpellEditor({
         <SpellEditorCharacterClasses
           defaultCharacterClasses={resource.character_classes}
           disabled={disabled}
+          errors={errors}
           label={t("character_classes.label")}
         />
         <SpellEditorSchool
           defaultSchool={resource.school}
           disabled={disabled}
+          errors={errors}
           label={t("school.label")}
         />
       </HStack>
@@ -88,6 +99,7 @@ export default function SpellEditor({
           defaultCastingTime={resource.casting_time}
           defaultCastingTimeValue={resource.casting_time_value}
           disabled={disabled}
+          errors={errors}
           label={t("casting_time.label")}
         />
 
@@ -95,6 +107,7 @@ export default function SpellEditor({
           defaultDuration={resource.duration}
           defaultDurationValue={resource.duration_value}
           disabled={disabled}
+          errors={errors}
           label={t("duration.label")}
         />
       </HStack>
@@ -126,6 +139,7 @@ export default function SpellEditor({
         defaultRangeImpValue={resource.range_value_imp}
         defaultRangeMetValue={resource.range_value_met}
         disabled={disabled}
+        errors={errors}
         label={t("range.label")}
       />
 
@@ -162,6 +176,7 @@ export default function SpellEditor({
         <SpellEditorMaterials
           defaultMaterials={resource.materials?.[lang] ?? ""}
           disabled={disabled}
+          errors={errors}
           label={t("materials.label")}
           placeholder={t("materials.placeholder")}
         />
@@ -170,13 +185,15 @@ export default function SpellEditor({
       <SpellEditorDescription
         defaultDescription={resource.description[lang] ?? ""}
         disabled={disabled}
+        errors={errors}
         label={t("description.label")}
         placeholder={t("description.placeholder")}
       />
 
       <SpellEditorUpdate
-        defaultUpdate={resource.upgrade?.[lang] ?? ""}
+        defaultUpgrade={resource.upgrade?.[lang] ?? ""}
         disabled={disabled}
+        errors={errors}
         label={tp("upgrade.label", level)}
         placeholder={tp("upgrade.placeholder", level)}
       />
@@ -191,17 +208,21 @@ export default function SpellEditor({
 function SpellEditorName({
   defaultName,
   disabled,
+  errors,
   label,
   placeholder,
 }: {
   defaultName: string;
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
   placeholder: string;
 }) {
   const [name, setName] = useState(defaultName);
+  const error = errors["name"];
+
   return (
-    <Field disabled={disabled} label={label}>
+    <Field disabled={disabled} invalid={!!error} label={label}>
       <Input
         name="name"
         onValueChange={setName}
@@ -218,19 +239,22 @@ function SpellEditorName({
 
 function SpellEditorLevel({
   disabled,
+  errors,
   label,
   level,
   onLevelChange,
 }: {
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
   level: Spell["level"];
   onLevelChange: (level: Spell["level"]) => void;
 }) {
   const levelOptions = useListCollection(useSpellLevelOptions());
+  const error = errors["level"];
 
   return (
-    <Field disabled={disabled} label={label} maxW="5em">
+    <Field disabled={disabled} invalid={!!error} label={label} maxW="5em">
       <Select
         name="level"
         onValueChange={(level) =>
@@ -251,19 +275,22 @@ function SpellEditorLevel({
 function SpellEditorCharacterClasses({
   defaultCharacterClasses,
   disabled,
+  errors,
   label,
 }: {
   defaultCharacterClasses: Spell["character_classes"];
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
 }) {
   const characterClassOptions = useListCollection(useCharacterClassOptions());
   const [characterClasses, setCharacterClasses] = useState(
     defaultCharacterClasses
   );
+  const error = errors["character_classes"];
 
   return (
-    <Field disabled={disabled} label={label}>
+    <Field disabled={disabled} invalid={!!error} label={label}>
       <Select
         multiple
         name="character-classes"
@@ -283,17 +310,20 @@ function SpellEditorCharacterClasses({
 function SpellEditorSchool({
   defaultSchool,
   disabled,
+  errors,
   label,
 }: {
   defaultSchool: Spell["school"];
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
 }) {
   const schoolOptions = useListCollection(useSpellSchoolOptions());
   const [school, setSchool] = useState(defaultSchool);
+  const error = errors["school"];
 
   return (
-    <Field disabled={disabled} label={label}>
+    <Field disabled={disabled} invalid={!!error} label={label}>
       <Select
         name="school"
         onValueChange={setSchool}
@@ -313,11 +343,13 @@ function SpellEditorCastingTime({
   defaultCastingTime,
   defaultCastingTimeValue,
   disabled,
+  errors,
   label,
 }: {
   defaultCastingTime: Spell["casting_time"];
   defaultCastingTimeValue: string | null | undefined;
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
 }) {
   const timeUnitOptions = useListCollection(useTimeUnitOptions());
@@ -338,9 +370,13 @@ function SpellEditorCastingTime({
     initialCastingTimeUnit
   );
 
+  const error = errors["casting_time"];
+  const errorValue = errors["casting_time_value"];
+  const errorUnit = errors["casting_time_unit"];
+
   return (
     <HStack align="flex-end" w="full">
-      <Field disabled={disabled} flex={1} label={label}>
+      <Field disabled={disabled} flex={1} invalid={!!error} label={label}>
         <Select
           name="casting-time"
           onValueChange={setCastingTime}
@@ -352,7 +388,7 @@ function SpellEditorCastingTime({
       {castingTime === "value" && (
         <>
           <HStack h={10}>:</HStack>
-          <Field disabled={disabled} maxW="6em">
+          <Field disabled={disabled} invalid={!!errorValue} maxW="6em">
             <NumberInput
               min={0}
               name="casting-time-value"
@@ -360,7 +396,7 @@ function SpellEditorCastingTime({
               value={castingTimeValue}
             />
           </Field>
-          <Field disabled={disabled} maxW="7em">
+          <Field disabled={disabled} invalid={!!errorUnit} maxW="7em">
             <Select
               name="casting-time-unit"
               onValueChange={setCastingTimeUnit}
@@ -383,11 +419,13 @@ function SpellEditorDuration({
   defaultDuration,
   defaultDurationValue,
   disabled,
+  errors,
   label,
 }: {
   defaultDuration: Spell["duration"];
   defaultDurationValue: string | null | undefined;
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
 }) {
   const timeUnitOptions = useListCollection(useTimeUnitOptions());
@@ -403,9 +441,13 @@ function SpellEditorDuration({
   const [durationValue, setDurationValue] = useState(initialDurationValue);
   const [durationUnit, setDurationUnit] = useState(initialDurationUnit);
 
+  const error = errors["duration"];
+  const errorValue = errors["duration_value"];
+  const errorUnit = errors["duration_unit"];
+
   return (
     <HStack align="flex-end" w="full">
-      <Field disabled={disabled} flex={1} label={label}>
+      <Field disabled={disabled} flex={1} invalid={!!error} label={label}>
         <Select
           name="duration"
           onValueChange={setDuration}
@@ -417,7 +459,7 @@ function SpellEditorDuration({
       {duration === "value" && (
         <>
           <HStack h={10}>:</HStack>
-          <Field disabled={disabled} maxW="6em">
+          <Field disabled={disabled} invalid={!!errorValue} maxW="6em">
             <NumberInput
               min={0}
               name="duration-value"
@@ -425,7 +467,7 @@ function SpellEditorDuration({
               value={durationValue}
             />
           </Field>
-          <Field disabled={disabled} maxW="7em">
+          <Field disabled={disabled} invalid={!!errorUnit} maxW="7em">
             <Select
               name="duration-unit"
               onValueChange={setDurationUnit}
@@ -441,7 +483,7 @@ function SpellEditorDuration({
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Duration
+// Spell Editor Range
 //------------------------------------------------------------------------------
 
 function SpellEditorRange({
@@ -449,12 +491,14 @@ function SpellEditorRange({
   defaultRangeImpValue,
   defaultRangeMetValue,
   disabled,
+  errors,
   label,
 }: {
   defaultRange: Spell["range"];
   defaultRangeImpValue: string | null | undefined;
   defaultRangeMetValue: string | null | undefined;
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
 }) {
   const rangeOptions = useListCollection(useSpellRangeOptions());
@@ -505,9 +549,15 @@ function SpellEditorRange({
     setRangeImpUnit(impUnit);
   };
 
+  const error = errors["range"];
+  const errorImpValue = errors["range_imp_value"];
+  const errorImpUnit = errors["range_imp_unit"];
+  const errorMetValue = errors["range_met_value"];
+  const errorMetUnit = errors["range_met_unit"];
+
   return (
     <HStack align="flex-end" w="full">
-      <Field disabled={disabled} flex={1} label={label}>
+      <Field disabled={disabled} flex={1} invalid={!!error} label={label}>
         <Select
           name="range"
           onValueChange={setRange}
@@ -519,7 +569,7 @@ function SpellEditorRange({
       {range === "value" && (
         <>
           <HStack h={10}>:</HStack>
-          <Field disabled={disabled} maxW="6em">
+          <Field disabled={disabled} invalid={!!errorImpValue} maxW="6em">
             <NumberInput
               min={0}
               name="range-imp-value"
@@ -527,7 +577,7 @@ function SpellEditorRange({
               value={rangeImpValue}
             />
           </Field>
-          <Field disabled={disabled} maxW="7em">
+          <Field disabled={disabled} invalid={!!errorImpUnit} maxW="7em">
             <Select
               name="range-imp-unit"
               onValueChange={setRangeImpUnitAndUpdateMet}
@@ -537,7 +587,7 @@ function SpellEditorRange({
             />
           </Field>
           <HStack h={10}>~</HStack>
-          <Field disabled={disabled} maxW="6em">
+          <Field disabled={disabled} invalid={!!errorMetValue} maxW="6em">
             <NumberInput
               min={0}
               name="range-met-value"
@@ -545,7 +595,7 @@ function SpellEditorRange({
               value={rangeMetValue}
             />
           </Field>
-          <Field disabled={disabled} maxW="7em">
+          <Field disabled={disabled} invalid={!!errorMetUnit} maxW="7em">
             <Select
               name="range-met-unit"
               onValueChange={setRangeMetUnitAndUpdateImp}
@@ -567,18 +617,21 @@ function SpellEditorRange({
 function SpellEditorMaterials({
   defaultMaterials,
   disabled,
+  errors,
   label,
   placeholder,
 }: {
   defaultMaterials: string;
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
   placeholder: string;
 }) {
   const [materials, setMaterials] = useState(defaultMaterials);
+  const error = errors["materials"];
 
   return (
-    <Field disabled={disabled} label={label}>
+    <Field disabled={disabled} invalid={!!error} label={label}>
       <Input
         name="materials"
         onValueChange={setMaterials}
@@ -596,18 +649,21 @@ function SpellEditorMaterials({
 function SpellEditorDescription({
   defaultDescription,
   disabled,
+  errors,
   label,
   placeholder,
 }: {
   defaultDescription: string;
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
   placeholder: string;
 }) {
   const [description, setDescription] = useState(defaultDescription);
+  const error = errors["description"];
 
   return (
-    <Field disabled={disabled} label={label}>
+    <Field disabled={disabled} invalid={!!error} label={label}>
       <Textarea
         h="12em"
         name="description"
@@ -620,32 +676,178 @@ function SpellEditorDescription({
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Update
+// Spell Editor Upgrade
 //------------------------------------------------------------------------------
 
 function SpellEditorUpdate({
-  defaultUpdate,
+  defaultUpgrade,
   disabled,
+  errors,
   label,
   placeholder,
 }: {
-  defaultUpdate: string;
+  defaultUpgrade: string;
   disabled: boolean;
+  errors: Record<string, string>;
   label: string;
   placeholder: string;
 }) {
-  const [update, setUpdate] = useState(defaultUpdate);
+  const [upgrade, setUpgrade] = useState(defaultUpgrade);
+  const error = errors["upgrade"];
 
   return (
-    <Field disabled={disabled} label={label}>
+    <Field disabled={disabled} invalid={!!error} label={label}>
       <Textarea
-        name="update"
-        onChange={(e) => setUpdate(e.target.value)}
+        name="upgrade"
+        onChange={(e) => setUpgrade(e.target.value)}
         placeholder={placeholder}
-        value={update}
+        value={upgrade}
       />
     </Field>
   );
+}
+
+//------------------------------------------------------------------------------
+// Save Spell
+//------------------------------------------------------------------------------
+
+async function saveSpell(
+  id: string,
+  lang: I18nLang,
+  formData: FormData,
+  { t }: I18nLangContextBag
+): Promise<Record<string, string>> {
+  const errors: Record<string, string> = {};
+
+  const name = formData.get("name")?.toString()?.trim();
+  if (!name) errors["name"] = t("name.error.empty");
+
+  const level = parseInt(formData.get("level")?.toString() ?? "NaN");
+  if (!level) errors["level"] = t("level.error.empty");
+
+  const character_classes = formData
+    .getAll("character-classes")
+    .map((value) => value.toString());
+  if (!character_classes.length)
+    errors["character_classes"] = t("character_classes.error.empty");
+
+  const school = formData.get("school")?.toString();
+  if (!school) errors["school"] = t("school.error.empty");
+
+  const casting_time = formData.get("casting-time")?.toString();
+  if (!casting_time) errors["casting_time"] = t("casting_time.error.empty");
+
+  const ctv = parseInt(formData.get("casting-time-value")?.toString() ?? "NaN");
+  if (casting_time === "value" && ctv === undefined)
+    errors["casting_time_value"] = t("casting_time.error.empty_value");
+
+  const ctu = formData.get("casting-time-unit")?.toString();
+  if (casting_time === "value" && ctu === undefined)
+    errors["casting_time_unit"] = t("casting_time.error.empty_unit");
+
+  const casting_time_value =
+    casting_time === "value" && ctv !== undefined && ctu !== undefined
+      ? `${ctv} ${ctu}`
+      : undefined;
+
+  const duration = formData.get("duration")?.toString();
+  if (!duration) errors["duration"] = t("duration.error.empty");
+
+  const dv = parseInt(formData.get("duration-value")?.toString() ?? "NaN");
+  if (duration === "value" && dv === undefined)
+    errors["duration_value"] = t("duration_value.error.empty_value");
+
+  const du = formData.get("duration-unit")?.toString();
+  if (duration === "value" && du === undefined)
+    errors["duration_unit"] = t("duration_value.error.empty_unit");
+
+  const duration_value =
+    duration === "value" && dv === undefined && du === undefined
+      ? `${dv} ${du}`
+      : undefined;
+
+  const range = formData.get("range")?.toString();
+  if (!range) errors["range"] = t("range.error.empty");
+
+  const riv = parseInt(formData.get("range-imp-value")?.toString() ?? "NaN");
+  if (range === "value" && riv === undefined)
+    errors["range_imp_value"] = t("range.error.empty_value");
+
+  const riu = formData.get("range-imp-unit")?.toString();
+  if (range === "value" && riu === undefined)
+    errors["range_imp_unit"] = t("range.error.empty_unit");
+
+  const range_value_imp =
+    range === "value" && riv === undefined && riu === undefined
+      ? `${riv} ${riu}`
+      : undefined;
+
+  const rmv = parseInt(formData.get("range-met-value")?.toString() ?? "NaN");
+  if (range === "value" && rmv === undefined)
+    errors["range_met_value"] = t("range.error.empty_value");
+
+  const rmu = formData.get("range-met-value")?.toString();
+  if (range === "value" && rmu === undefined)
+    errors["range_met_unit"] = t("range.error.empty_unit");
+
+  const range_value_met =
+    range === "value" && rmv === undefined && rmu === undefined
+      ? `${rmv} ${rmu}`
+      : undefined;
+
+  const ritual = formData.get("ritual")?.toString() === "on";
+  const concentration = formData.get("concentration")?.toString() === "on";
+  const verbal = formData.get("verbal")?.toString() === "on";
+  const somatic = formData.get("somatic")?.toString() === "on";
+  const material = formData.get("material")?.toString() === "on";
+
+  const materials = material
+    ? formData.get("materials")?.toString()?.trim() || undefined
+    : undefined;
+
+  if (material && !materials) errors["materials"] = t("materials.error.empty");
+
+  const description = formData.get("description")?.toString()?.trim();
+  if (!description) errors["description"] = t("description.error.empty");
+
+  const upgrade = formData.get("upgrade")?.toString()?.trim() || undefined;
+
+  if (Object.values(errors).length) {
+    console.log(errors);
+    return errors;
+  }
+
+  const spell = {
+    casting_time,
+    casting_time_value,
+    character_classes,
+    concentration,
+    duration,
+    duration_value,
+    level,
+    material,
+    name: lang === "en" ? name : undefined,
+    range,
+    range_value_imp,
+    range_value_met,
+    ritual,
+    school,
+    somatic,
+    verbal,
+  } as unknown as Omit<Spell, "id">;
+
+  const spellTranslation = {
+    description,
+    materials,
+    name,
+    upgrade,
+  } as unknown as Omit<SpellTranslation, "spell_id" | "lang">;
+
+  const res1 = await updateSpell(id, spell);
+  const res2 = await updateSpellTranslation(id, lang, spellTranslation);
+  console.log(res1);
+  console.log(res2);
+  return {};
 }
 
 //------------------------------------------------------------------------------
@@ -663,9 +865,19 @@ const i18nContext = {
     it: "Es: Palla di Fuoco",
   },
 
+  "name.error.empty": {
+    en: "The name cannot be empty",
+    it: "Il nome non può essere vuoto",
+  },
+
   "level.label": {
     en: "Level",
     it: "Livello",
+  },
+
+  "level.error.empty": {
+    en: "The level cannot be empty",
+    it: "Il livello non può essere vuoto",
   },
 
   "character_classes.label": {
@@ -673,9 +885,19 @@ const i18nContext = {
     it: "Classi",
   },
 
+  "character_classes.error.empty": {
+    en: "Classes cannot be empty",
+    it: "Le classi non possono essere vuoto",
+  },
+
   "school.label": {
     en: "School",
     it: "Scuola",
+  },
+
+  "school.error.empty": {
+    en: "The school cannot be empty",
+    it: "La scuola non può essere vuota",
   },
 
   "casting_time.label": {
@@ -683,14 +905,69 @@ const i18nContext = {
     it: "Tempo di Lancio",
   },
 
+  "casting_time.error.empty": {
+    en: "The casting time cannot be empty",
+    it: "Il tempo di lancio non può essere vuoto",
+  },
+
+  "casting_time.error.empty_value": {
+    en: "The value cannot be empty",
+    it: "Il valore non può essere vuoto",
+  },
+
+  "casting_time.error.empty_unit": {
+    en: "The unit cannot be empty",
+    it: "L'unità non può essere vuota",
+  },
+
   "duration.label": {
     en: "Duration",
     it: "Durata",
   },
 
+  "duration.error.empty": {
+    en: "The duration cannot be empty",
+    it: "La durata non può essere vuota",
+  },
+
+  "duration.error.empty_value": {
+    en: "The value cannot be empty",
+    it: "Il valore non può essere vuoto",
+  },
+
+  "duration.error.empty_unit": {
+    en: "The unit cannot be empty",
+    it: "L'unità non può essere vuota",
+  },
+
   "range.label": {
     en: "Range",
     it: "Gittata",
+  },
+
+  "range.error.empty": {
+    en: "The range cannot be empty",
+    it: "La gittata non può essere vuota",
+  },
+
+  "range.error.empty_imp_value": {
+    en: "The value cannot be empty",
+    it: "Il valore non può essere vuoto",
+  },
+
+  "range.error.empty_imp_unit": {
+    en: "The unit cannot be empty",
+    it: "L'unità non può essere vuota",
+  },
+
+  "range.error.empty_met_value": {
+    en: "The value cannot be empty",
+    it: "Il valore non può essere vuoto",
+  },
+
+  "range.error.empty_met_unit": {
+    en: "The unit cannot be empty",
+    it: "L'unità non può essere vuota",
   },
 
   "ritual.label": {
@@ -728,6 +1005,11 @@ const i18nContext = {
     it: "Es: Una pallina di guano di pipistrello e zolfo.",
   },
 
+  "materials.error.empty": {
+    en: "The materials cannot be empty",
+    it: "I materiali non possono essere vuoti",
+  },
+
   "description.label": {
     en: "Effect",
     it: "Effetto",
@@ -736,6 +1018,11 @@ const i18nContext = {
   "description.placeholder": {
     en: "E.g.: A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 8d6 Fire damage on a failed save or half as much damage on a successful one.\nFlammable objects in the area that aren't being worn or carried start burning.",
     it: "Es: Una scia di luce brillante parte dall'incantatore e sfreccia fino a un punto a sua scelta entro gittat, provocando un'esplosione infuocata con un profondo boato. Ogni creatura presente in una sfera del raggio di 6 metri e centrata su quel punto deve effettuare un tiro salvezza su Destrezza, subendo 8d6 danni da fuoco in caso di fallimento, o la metà di quei danni in caso di successo.\nGli oggetti infiammabili nell'area che non sono indossati o trasportati iniziano a bruciare.",
+  },
+
+  "description.error.empty": {
+    en: "The effect cannot be empty",
+    it: "L'effetto' non può essere vuoto",
   },
 
   "upgrade.label/*": {
