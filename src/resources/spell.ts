@@ -97,4 +97,5 @@ export const {
   useNameFilter: useSpellNameFilter,
   useIsSelected: useIsSpellSelected,
   useSelectionCount: useSpellsSelectionCount,
+  update: updateSpell,
 } = spellsStore;

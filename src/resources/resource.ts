@@ -1,3 +1,4 @@
+import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { type ZodType, z } from "zod";
@@ -40,6 +41,11 @@ export type ResourceStore<R extends Resource, F extends ResourceFilters> = {
     { deselect: () => void; select: () => void; toggle: () => void }
   ];
   useSelectionCount: () => number;
+
+  update: (
+    id: string,
+    resource: Omit<R, "id">
+  ) => Promise<PostgrestSingleResponse<null>>;
 };
 
 //------------------------------------------------------------------------------
@@ -193,6 +199,17 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
+  // Update
+  //----------------------------------------------------------------------------
+
+  async function update(
+    id: string,
+    resource: Omit<R, "id">
+  ): Promise<PostgrestSingleResponse<null>> {
+    return await supabase.from(storeId).update(resource).eq("id", id);
+  }
+
+  //----------------------------------------------------------------------------
   // Return
   //----------------------------------------------------------------------------
 
@@ -211,5 +228,7 @@ export function createResourceStore<
     isSelected,
     useIsSelected,
     useSelectionCount,
+
+    update,
   };
 }
