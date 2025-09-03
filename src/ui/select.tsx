@@ -78,6 +78,7 @@ export default function Select<T extends string>({
       defaultValue={
         defaultValue ? (multiple ? defaultValue : [defaultValue]) : undefined
       }
+      multiple={multiple}
       onValueChange={
         onValueChange
           ? (e) =>
