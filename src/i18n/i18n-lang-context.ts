@@ -51,4 +51,4 @@ export function useI18nLangContext(context: I18nLangContext) {
   return useMemo(() => ({ lang, t, ti, tp, tpi }), [lang, t, tp, ti, tpi]);
 }
 
-export type I18n = ReturnType<typeof useI18nLangContext>;
+export type I18nLangContextBag = ReturnType<typeof useI18nLangContext>;
