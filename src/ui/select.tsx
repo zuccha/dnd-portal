@@ -13,7 +13,7 @@ export type SelectOption<T> = { label: string; value: T };
 
 export type SelectProps<T extends string> = Omit<
   ChakraSelectRootProps,
-  "collection" | "multiple" | "onValueChange" | "value"
+  "collection" | "defaultValue" | "multiple" | "onValueChange" | "value"
 > & {
   categories?: { id: string; items: SelectOption<T>[]; title: string }[];
   options: ListCollection<SelectOption<T>>;
@@ -21,19 +21,22 @@ export type SelectProps<T extends string> = Omit<
   withinDialog?: boolean;
 } & (
     | {
+        defaultValue?: T;
         multiple?: false;
-        onValueChange: (value: T) => void;
-        value: T;
+        onValueChange?: (value: T) => void;
+        value?: T;
       }
     | {
+        defaultValue?: T[];
         multiple: true;
-        onValueChange: (value: T[]) => void;
-        value: T[];
+        onValueChange?: (value: T[]) => void;
+        value?: T[];
       }
   );
 
 export default function Select<T extends string>({
   categories,
+  defaultValue,
   multiple,
   onValueChange,
   options,
@@ -72,12 +75,18 @@ export default function Select<T extends string>({
   return (
     <ChakraSelect.Root
       collection={options}
-      onValueChange={(e) =>
-        multiple
-          ? onValueChange(e.value as T[])
-          : onValueChange(e.value[0] as T)
+      defaultValue={
+        defaultValue ? (multiple ? defaultValue : [defaultValue]) : undefined
       }
-      value={multiple ? value : [value]}
+      onValueChange={
+        onValueChange
+          ? (e) =>
+              multiple
+                ? onValueChange(e.value as T[])
+                : onValueChange(e.value[0] as T)
+          : undefined
+      }
+      value={value ? (multiple ? value : [value]) : undefined}
       {...rest}
     >
       <ChakraSelect.HiddenSelect aria-labelledby="" />

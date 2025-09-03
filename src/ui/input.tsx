@@ -11,19 +11,20 @@ import IconButton from "./icon-button";
 //------------------------------------------------------------------------------
 
 export type InputProps = Omit<ChakraInputProps, "onChange" | "value"> & {
-  onValueChange: (value: string) => void;
-  value: string;
+  onValueChange?: (value: string) => void;
+  value?: string;
 };
 
 export default function Input({ onValueChange, value, ...rest }: InputProps) {
   return (
     <InputGroup
       endElement={
+        value &&
         value.length > 0 && (
           <IconButton
             Icon={XIcon}
             me={-2}
-            onClick={() => onValueChange("")}
+            onClick={() => onValueChange?.("")}
             rounded="full"
             size="xs"
             variant="ghost"
@@ -33,7 +34,7 @@ export default function Input({ onValueChange, value, ...rest }: InputProps) {
     >
       <ChakraInput
         {...rest}
-        onChange={(e) => onValueChange(e.target.value)}
+        onChange={(e) => onValueChange?.(e.target.value)}
         value={value}
       />
     </InputGroup>
