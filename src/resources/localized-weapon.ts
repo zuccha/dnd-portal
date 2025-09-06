@@ -10,10 +10,10 @@ import { useTranslateWeaponProperty } from "./weapon-property";
 import { useTranslateWeaponType } from "./weapon-type";
 
 //------------------------------------------------------------------------------
-// Weapon Translation
+// Localized Weapon
 //------------------------------------------------------------------------------
 
-export const weaponTranslationSchema = z.object({
+export const localizedWeaponSchema = z.object({
   _raw: weaponSchema,
   id: z.uuid(),
 
@@ -47,13 +47,13 @@ export const weaponTranslationSchema = z.object({
   notes: z.string(),
 });
 
-export type WeaponTranslation = z.infer<typeof weaponTranslationSchema>;
+export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 
 //------------------------------------------------------------------------------
-// Use Translate Weapon
+// Use Localized Weapon
 //------------------------------------------------------------------------------
 
-export function useTranslateWeapon(): (weapon: Weapon) => WeaponTranslation {
+export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const { lang, ti } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
@@ -63,7 +63,7 @@ export function useTranslateWeapon(): (weapon: Weapon) => WeaponTranslation {
   const translateWeaponType = useTranslateWeaponType(lang);
 
   return useCallback(
-    (weapon: Weapon): WeaponTranslation => {
+    (weapon: Weapon): LocalizedWeapon => {
       const page = weapon.page ? translate(weapon.page, lang) : "";
 
       const damage_type = translateDamageType(weapon.damage_type).label;

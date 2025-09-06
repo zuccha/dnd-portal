@@ -1,6 +1,6 @@
 import { Span } from "@chakra-ui/react";
+import type { LocalizedWeapon } from "../../../../../../resources/localized-weapon";
 import { useIsWeaponSelected } from "../../../../../../resources/weapon";
-import type { WeaponTranslation } from "../../../../../../resources/weapon-translation";
 import ResourceCard from "../resources/resource-card";
 
 //------------------------------------------------------------------------------
@@ -9,7 +9,7 @@ import ResourceCard from "../resources/resource-card";
 
 export type WeaponCardProps = {
   onClickTitle?: () => void;
-  resource: WeaponTranslation;
+  resource: LocalizedWeapon;
 };
 
 export default function WeaponCard({

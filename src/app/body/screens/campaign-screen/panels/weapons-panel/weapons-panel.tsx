@@ -1,9 +1,9 @@
 import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
-import { type Weapon, weaponsStore } from "../../../../../../resources/weapon";
 import {
-  type WeaponTranslation,
-  useTranslateWeapon,
-} from "../../../../../../resources/weapon-translation";
+  type LocalizedWeapon,
+  useLocalizeWeapon,
+} from "../../../../../../resources/localized-weapon";
+import { type Weapon, weaponsStore } from "../../../../../../resources/weapon";
 import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";
 import WeaponCard from "./weapon-card";
@@ -16,7 +16,7 @@ import WeaponsFilters from "./weapon-filters";
 //------------------------------------------------------------------------------
 
 const columns: Omit<
-  ResourcesListTableColumn<Weapon, WeaponTranslation>,
+  ResourcesListTableColumn<Weapon, LocalizedWeapon>,
   "label"
 >[] = [
   { key: "name" },
@@ -99,7 +99,7 @@ const WeaponsPanel = createResourcesPanel({
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "notes",
   store: weaponsStore,
-  useTranslateResource: useTranslateWeapon,
+  useTranslateResource: useLocalizeWeapon,
 });
 
 export default WeaponsPanel;
