@@ -10,10 +10,10 @@ import { type ReactNode, useCallback, useMemo, useState } from "react";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type {
+  LocalizedResource,
   Resource,
   ResourceFilters,
   ResourceStore,
-  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import Checkbox from "../../../../../../ui/checkbox";
 import Icon from "../../../../../../ui/icon";
@@ -27,27 +27,27 @@ import ResourcesListEmpty from "./resources-list-empty";
 
 export type ResourcesListTableColumn<
   R extends Resource,
-  T extends ResourceTranslation<R>
+  L extends LocalizedResource<R>
 > = Table.ColumnHeaderProps & {
   icon?: LucideIcon;
-  key: keyof T;
+  key: keyof L;
   label: string;
 };
 
 export function createResourcesListTable<
   R extends Resource,
-  T extends ResourceTranslation<R>,
-  F extends ResourceFilters
+  F extends ResourceFilters,
+  L extends LocalizedResource<R>
 >(
   store: ResourceStore<R, F>,
-  useTranslations: (campaignId: string) => T[] | undefined,
-  useSelectedTranslationsCount: (campaignId: string) => number,
+  useLocalizedResources: (campaignId: string) => L[] | undefined,
+  useSelectedLocalizedResourcesCount: (campaignId: string) => number,
   useSetEditedResource: (
     campaignId: string
   ) => [(resource: R | undefined) => void, boolean],
-  partialColumns: Omit<ResourcesListTableColumn<R, T>, "label">[],
+  partialColumns: Omit<ResourcesListTableColumn<R, L>, "label">[],
   columnsI18nContext: I18nLangContext,
-  expansionKey: keyof T | undefined
+  expansionKey: keyof L | undefined
 ) {
   //----------------------------------------------------------------------------
   // Hooks
@@ -70,19 +70,19 @@ export function createResourcesListTable<
     columns,
   }: {
     campaignId: string;
-    columns: ResourcesListTableColumn<R, T>[];
+    columns: ResourcesListTableColumn<R, L>[];
   }) {
-    const translations = useTranslations(campaignId);
-    const count = useSelectedTranslationsCount(campaignId);
+    const localizedResources = useLocalizedResources(campaignId);
+    const count = useSelectedLocalizedResourcesCount(campaignId);
 
     const selected =
-      count === translations?.length ? true : count > 0 ? "-" : false;
+      count === localizedResources?.length ? true : count > 0 ? "-" : false;
 
     const toggleSelected = useCallback(() => {
       if (selected === true)
-        translations?.forEach(({ id }) => store.deselect(id));
-      else translations?.forEach(({ id }) => store.select(id));
-    }, [translations, selected]);
+        localizedResources?.forEach(({ id }) => store.deselect(id));
+      else localizedResources?.forEach(({ id }) => store.select(id));
+    }, [localizedResources, selected]);
 
     return (
       <Table.Row>
@@ -117,8 +117,8 @@ export function createResourcesListTable<
     translation,
   }: {
     campaignId: string;
-    columns: ResourcesListTableColumn<R, T>[];
-    translation: T;
+    columns: ResourcesListTableColumn<R, L>[];
+    translation: L;
   }) {
     const [expanded, setExpanded] = useState(expandedRows.has(translation.id));
     const [selected, { toggle }] = useIsSelected(translation.id);
@@ -207,7 +207,7 @@ export function createResourcesListTable<
     ...rest
   }: Omit<TableRootProps, "children"> & { campaignId: string }) {
     const { t } = useI18nLangContext(columnsI18nContext);
-    const translations = useTranslations(campaignId);
+    const translations = useLocalizedResources(campaignId);
 
     const columns = useMemo(
       () => partialColumns.map((p) => ({ ...p, label: t(`${p.key}`) })),

@@ -99,7 +99,7 @@ const WeaponsPanel = createResourcesPanel({
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "notes",
   store: weaponsStore,
-  useTranslateResource: useLocalizeWeapon,
+  useLocalizeResource: useLocalizeWeapon,
 });
 
 export default WeaponsPanel;

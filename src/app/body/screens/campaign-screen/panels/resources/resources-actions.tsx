@@ -3,10 +3,10 @@ import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type {
+  LocalizedResource,
   Resource,
   ResourceFilters,
   ResourceStore,
-  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import IconButton from "../../../../../../ui/icon-button";
 import { downloadJson } from "../../../../../../utils/download";
@@ -17,25 +17,25 @@ import { downloadJson } from "../../../../../../utils/download";
 
 export function createResourcesActions<
   R extends Resource,
-  T extends ResourceTranslation<R>,
-  F extends ResourceFilters
+  F extends ResourceFilters,
+  L extends LocalizedResource<R>
 >(
   store: ResourceStore<R, F>,
-  useTranslations: (campaignId: string) => T[] | undefined,
+  useLocalizedResources: (campaignId: string) => L[] | undefined,
   useSelectedTranslationsCount: (campaignId: string) => number
 ) {
   return function ResourcesActions({ campaignId }: { campaignId: string }) {
     const { t } = useI18nLangContext(i18nContext);
 
-    const translations = useTranslations(campaignId);
+    const localizedResources = useLocalizedResources(campaignId);
     const count = useSelectedTranslationsCount(campaignId);
 
     const computeSelectedAsJson = useCallback(() => {
-      const selected = translations!
+      const selected = localizedResources!
         .filter(({ id }) => store.isSelected(id))
         .map(({ _raw, ...rest }) => rest);
       return JSON.stringify(selected, null, 2);
-    }, [translations]);
+    }, [localizedResources]);
 
     const copySelected = useCallback(async () => {
       if (!count) return;

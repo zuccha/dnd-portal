@@ -99,7 +99,7 @@ const SpellsPanel = createResourcesPanel({
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "description",
   store: spellsStore,
-  useTranslateResource: useLocalizeSpell,
+  useLocalizeResource: useLocalizeSpell,
 });
 
 export default SpellsPanel;

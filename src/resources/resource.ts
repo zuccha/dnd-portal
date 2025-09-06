@@ -14,8 +14,8 @@ import { createObservableSet } from "../utils/observable-set";
 //------------------------------------------------------------------------------
 
 export type Resource = { id: string; name: I18nString };
-export type ResourceTranslation<R extends Resource> = { _raw: R; id: string };
 export type ResourceFilters = { order_by: string; order_dir: "asc" | "desc" };
+export type LocalizedResource<R extends Resource> = { _raw: R; id: string };
 
 //------------------------------------------------------------------------------
 // Resource Store

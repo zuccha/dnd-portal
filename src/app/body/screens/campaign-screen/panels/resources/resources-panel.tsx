@@ -3,10 +3,10 @@ import { Grid2X2Icon, ListIcon } from "lucide-react";
 import z from "zod/v4";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import type {
+  LocalizedResource,
   Resource,
   ResourceFilters,
   ResourceStore,
-  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
@@ -25,8 +25,8 @@ import {
   createResourcesListTable,
 } from "./resources-list-table";
 import { createUseEditedResource } from "./use-edited-resource";
-import { createUseFilteredResourceTranslations } from "./use-filtered-resource-translations";
-import { createSelectedFilteredResourceTranslationsCount } from "./use-selected-filtered-resource-translations-count";
+import { createUseFilteredLocalizedResources } from "./use-filtered-localized-resources";
+import { createUseSelectedFilteredLocalizedResourcesCount } from "./use-selected-filtered-localized-resources-count";
 
 //------------------------------------------------------------------------------
 // Create Resources Panel
@@ -38,8 +38,8 @@ export type ResourcesPanelProps = {
 
 export function createResourcesPanel<
   R extends Resource,
-  T extends ResourceTranslation<R>,
   F extends ResourceFilters,
+  L extends LocalizedResource<R>,
   FF extends Record<string, unknown>
 >({
   Filters,
@@ -50,17 +50,17 @@ export function createResourcesPanel<
   listTableDescriptionKey,
   store,
   form,
-  useTranslateResource,
+  useLocalizeResource,
 }: {
   Filters: React.FC;
-  ResourceCard: React.FC<{ resource: T }>;
+  ResourceCard: React.FC<{ resource: L }>;
   ResourceEditorContent: React.FC<ResourceEditorContentProps<R>>;
-  listTableColumns: Omit<ResourcesListTableColumn<R, T>, "label">[];
+  listTableColumns: Omit<ResourcesListTableColumn<R, L>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
-  listTableDescriptionKey: keyof T | undefined;
+  listTableDescriptionKey: keyof L | undefined;
   store: ResourceStore<R, F>;
   form: Form<FF, { id: string; lang: string }>;
-  useTranslateResource: () => (resource: R) => T;
+  useLocalizeResource: () => (resource: R) => L;
 }) {
   //----------------------------------------------------------------------------
   // View
@@ -78,22 +78,22 @@ export function createResourcesPanel<
   ];
 
   //----------------------------------------------------------------------------
-  // Use Filtered Resource Translations
+  // Use Filtered Localized Resources
   //----------------------------------------------------------------------------
 
-  const useFilteredResourceTranslations = createUseFilteredResourceTranslations(
+  const useFilteredLocalizedResources = createUseFilteredLocalizedResources(
     store,
-    useTranslateResource
+    useLocalizeResource
   );
 
   //----------------------------------------------------------------------------
-  // Use Filtered Resource Translations
+  // Use Filtered Localized Resources
   //----------------------------------------------------------------------------
 
-  const useSelectedFilteredResourceTranslationsCount =
-    createSelectedFilteredResourceTranslationsCount(
+  const useSelectedFilteredLocalizedResourcesCount =
+    createUseSelectedFilteredLocalizedResourcesCount(
       store,
-      useFilteredResourceTranslations
+      useFilteredLocalizedResources
     );
 
   //----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ export function createResourcesPanel<
   //----------------------------------------------------------------------------
 
   const ResourcesListCards = createResourcesListCards(
-    useFilteredResourceTranslations,
+    useFilteredLocalizedResources,
     useSetEditedResource,
     ResourceCard
   );
@@ -130,8 +130,8 @@ export function createResourcesPanel<
 
   const ResourcesListTable = createResourcesListTable(
     store,
-    useFilteredResourceTranslations,
-    useSelectedFilteredResourceTranslationsCount,
+    useFilteredLocalizedResources,
+    useSelectedFilteredLocalizedResourcesCount,
     useSetEditedResource,
     listTableColumns,
     listTableColumnsI18nContext,
@@ -143,7 +143,7 @@ export function createResourcesPanel<
   //----------------------------------------------------------------------------
 
   const ResourcesCounter = createResourcesCounter(
-    useFilteredResourceTranslations
+    useFilteredLocalizedResources
   );
 
   //----------------------------------------------------------------------------
@@ -152,8 +152,8 @@ export function createResourcesPanel<
 
   const ResourcesActions = createResourcesActions(
     store,
-    useFilteredResourceTranslations,
-    useSelectedFilteredResourceTranslationsCount
+    useFilteredLocalizedResources,
+    useSelectedFilteredLocalizedResourcesCount
   );
 
   //----------------------------------------------------------------------------

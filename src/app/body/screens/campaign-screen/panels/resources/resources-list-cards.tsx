@@ -1,7 +1,7 @@
 import { Box, Wrap } from "@chakra-ui/react";
 import type {
+  LocalizedResource,
   Resource,
-  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import ResourcesListEmpty from "./resources-list-empty";
 
@@ -11,33 +11,33 @@ import ResourcesListEmpty from "./resources-list-empty";
 
 export function createResourcesListCards<
   R extends Resource,
-  T extends ResourceTranslation<R>
+  L extends LocalizedResource<R>
 >(
-  useTranslations: (campaignId: string) => T[] | undefined,
+  useLocalizedResources: (campaignId: string) => L[] | undefined,
   useSetEditedResource: (
     campaignId: string
   ) => [(resource: R | undefined) => void, boolean],
-  ResourceCard: React.FC<{ resource: T; onClickTitle?: () => void }>
+  ResourceCard: React.FC<{ resource: L; onClickTitle?: () => void }>
 ) {
   return function ListCards({ campaignId }: { campaignId: string }) {
-    const translations = useTranslations(campaignId);
+    const localizedResources = useLocalizedResources(campaignId);
     const [setEditedResource, canEdit] = useSetEditedResource(campaignId);
 
-    if (!translations) return null;
+    if (!localizedResources) return null;
 
     return (
       <Box bgColor="bg.subtle" w="full">
-        {translations.length ? (
+        {localizedResources.length ? (
           <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
-            {translations.map((translation) => (
+            {localizedResources.map((localizedResource) => (
               <ResourceCard
-                key={translation.id}
+                key={localizedResource.id}
                 onClickTitle={
                   canEdit
-                    ? () => setEditedResource(translation._raw)
+                    ? () => setEditedResource(localizedResource._raw)
                     : undefined
                 }
-                resource={translation}
+                resource={localizedResource}
               />
             ))}
           </Wrap>
