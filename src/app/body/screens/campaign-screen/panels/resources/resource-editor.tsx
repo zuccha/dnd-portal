@@ -1,9 +1,10 @@
 import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
-import { type Ref, useCallback, useRef, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { translate } from "../../../../../../i18n/i18n-string";
 import type { Resource } from "../../../../../../resources/resource";
 import Button from "../../../../../../ui/button";
+import type { Form } from "../../../../../../utils/form";
 
 //------------------------------------------------------------------------------
 // Resource Editor
@@ -14,39 +15,47 @@ export type ResourceEditorRefObject = {
 };
 
 export type ResourceEditorContentProps<R extends Resource> = {
-  disabled: boolean;
-  errors: Record<string, string>;
-  ref: Ref<ResourceEditorRefObject>;
   resource: R;
 };
 
-export function createResourceEditor<R extends Resource>(
+export function createResourceEditor<
+  R extends Resource,
+  FF extends Record<string, unknown>
+>(
   useEditedResource: () => R | undefined,
   useSetEditedResource: (
     campaignId: string
   ) => [(resource: R | undefined) => void, boolean],
+  form: Form<FF, { id: string; lang: string }>,
   Content: React.FC<ResourceEditorContentProps<R>>
 ) {
+  const { useSubmit, useValid } = form;
+
+  function SaveButton({ label, saving }: { label: string; saving: boolean }) {
+    const valid = useValid();
+    return (
+      <Button disabled={!valid || saving} variant="outline">
+        {label}
+      </Button>
+    );
+  }
+
   return function ResourceEditor({ campaignId }: { campaignId: string }) {
     const resource = useEditedResource();
     const [setEditedResource] = useSetEditedResource(campaignId);
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
-    const contentRef = useRef<ResourceEditorRefObject>(null);
+    const [submit, saving] = useSubmit(
+      useMemo(() => ({ id: resource?.id ?? "", lang }), [lang, resource?.id])
+    );
 
-    const [saving, setSaving] = useState(false);
-    const [errors, setErrors] = useState<Record<string, string>>({});
-
-    const save = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (!contentRef.current) return;
-
-      setSaving(true);
-      const formData = new FormData(e.currentTarget);
-      const errors = await contentRef.current.save(formData);
-      setErrors(errors);
-      setSaving(false);
-    }, []);
+    const save = useCallback(
+      (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        submit();
+      },
+      [submit]
+    );
 
     return (
       <Dialog.Root
@@ -74,21 +83,14 @@ export function createResourceEditor<R extends Resource>(
               <Dialog.Body>
                 {resource && (
                   <form id="edit-resource" onSubmit={save}>
-                    <Content
-                      disabled={saving}
-                      errors={errors}
-                      ref={contentRef}
-                      resource={resource}
-                    />
+                    <Content resource={resource} />
                   </form>
                 )}
               </Dialog.Body>
 
               <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>
-                  <Button disabled={saving} variant="outline">
-                    {t("cancel")}
-                  </Button>
+                  <SaveButton label={t("cancel")} saving={saving} />
                 </Dialog.ActionTrigger>
                 <Button
                   disabled={saving}

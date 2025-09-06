@@ -9,32 +9,31 @@ import {
 
 export type FieldProps = ChakraFieldRootProps & {
   label?: string;
-  errorText?: string;
-  helperText?: string;
-  optionalText?: string;
+  error?: string;
+  help?: string;
+  optional?: string;
 };
 
 export default function Field({
   children,
-  errorText,
-  helperText,
-  optionalText,
+  error,
+  help,
+  invalid,
+  optional,
   label,
   ...rest
 }: FieldProps) {
   return (
-    <ChakraField.Root {...rest}>
+    <ChakraField.Root {...rest} invalid={invalid || !!error}>
       {label && (
         <ChakraField.Label>
           {label}
-          <ChakraField.RequiredIndicator fallback={optionalText} />
+          <ChakraField.RequiredIndicator fallback={optional} />
         </ChakraField.Label>
       )}
       {children}
-      {helperText && (
-        <ChakraField.HelperText>{helperText}</ChakraField.HelperText>
-      )}
-      {errorText && <ChakraField.ErrorText>{errorText}</ChakraField.ErrorText>}
+      {help && <ChakraField.HelperText>{help}</ChakraField.HelperText>}
+      {error && <ChakraField.ErrorText>{error}</ChakraField.ErrorText>}
     </ChakraField.Root>
   );
 }

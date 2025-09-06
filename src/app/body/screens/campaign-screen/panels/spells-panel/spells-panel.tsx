@@ -1,8 +1,4 @@
-import {
-  type Spell,
-  type SpellFilters,
-  spellsStore,
-} from "../../../../../../resources/spell";
+import { type Spell, spellsStore } from "../../../../../../resources/spell";
 import {
   type SpellTranslation,
   useTranslateSpell,
@@ -11,6 +7,7 @@ import type { ResourcesListTableColumn } from "../resources/resources-list-table
 import { createResourcesPanel } from "../resources/resources-panel";
 import SpellCard from "./spell-card";
 import SpellEditor from "./spell-editor";
+import spellEditorForm from "./spell-editor-form";
 import SpellsFilters from "./spells-filters";
 
 //------------------------------------------------------------------------------
@@ -93,17 +90,16 @@ const i18nContext = {
 // Spells Panel
 //------------------------------------------------------------------------------
 
-const SpellsPanel = createResourcesPanel<Spell, SpellTranslation, SpellFilters>(
-  {
-    Filters: SpellsFilters,
-    ResourceCard: SpellCard,
-    ResourceEditorContent: SpellEditor,
-    listTableColumns: columns,
-    listTableColumnsI18nContext: i18nContext,
-    listTableDescriptionKey: "description",
-    store: spellsStore,
-    useTranslateResource: useTranslateSpell,
-  }
-);
+const SpellsPanel = createResourcesPanel({
+  Filters: SpellsFilters,
+  ResourceCard: SpellCard,
+  ResourceEditorContent: SpellEditor,
+  form: spellEditorForm,
+  listTableColumns: columns,
+  listTableColumnsI18nContext: i18nContext,
+  listTableDescriptionKey: "description",
+  store: spellsStore,
+  useTranslateResource: useTranslateSpell,
+});
 
 export default SpellsPanel;

@@ -12,6 +12,7 @@ import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../../ui/binary-button";
+import type { Form } from "../../../../../../utils/form";
 import {
   type ResourceEditorContentProps,
   createResourceEditor,
@@ -38,7 +39,8 @@ export type ResourcesPanelProps = {
 export function createResourcesPanel<
   R extends Resource,
   T extends ResourceTranslation<R>,
-  F extends ResourceFilters
+  F extends ResourceFilters,
+  FF extends Record<string, unknown>
 >({
   Filters,
   ResourceCard,
@@ -47,6 +49,7 @@ export function createResourcesPanel<
   listTableColumnsI18nContext,
   listTableDescriptionKey,
   store,
+  form,
   useTranslateResource,
 }: {
   Filters: React.FC;
@@ -56,6 +59,7 @@ export function createResourcesPanel<
   listTableColumnsI18nContext: I18nLangContext;
   listTableDescriptionKey: keyof T | undefined;
   store: ResourceStore<R, F>;
+  form: Form<FF, { id: string; lang: string }>;
   useTranslateResource: () => (resource: R) => T;
 }) {
   //----------------------------------------------------------------------------
@@ -106,6 +110,7 @@ export function createResourcesPanel<
   const ResourceEditor = createResourceEditor(
     useEditedResource,
     useSetEditedResource,
+    form,
     ResourceEditorContent
   );
 

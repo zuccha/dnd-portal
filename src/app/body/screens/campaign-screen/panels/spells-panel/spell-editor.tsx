@@ -1,136 +1,112 @@
-import { HStack, Textarea, VStack } from "@chakra-ui/react";
-import { useImperativeHandle, useState } from "react";
+import { HStack, Text, VStack } from "@chakra-ui/react";
 import useListCollection from "../../../../../../hooks/use-list-collection";
 import {
   convertDistanceImpToMet,
   convertDistanceMetToImp,
+  distanceImpUnits,
+  distanceMetUnits,
   parseDistanceImp,
   parseDistanceMet,
   useDistanceImpUnitOptions,
   useDistanceMetUnitOptions,
 } from "../../../../../../i18n/i18n-distance";
-import type { I18nLang } from "../../../../../../i18n/i18n-lang";
-import {
-  type I18nLangContextBag,
-  useI18nLangContext,
-} from "../../../../../../i18n/i18n-lang-context";
+import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import {
   parseTime,
+  timeUnits,
   useTimeUnitOptions,
 } from "../../../../../../i18n/i18n-time";
 import { useCharacterClassOptions } from "../../../../../../resources/character-class";
-import { type Spell, updateSpell } from "../../../../../../resources/spell";
+import { type Spell } from "../../../../../../resources/spell";
 import { useSpellCastingTimeOptions } from "../../../../../../resources/spell-casting-time";
 import { useSpellDurationOptions } from "../../../../../../resources/spell-duration";
 import { useSpellLevelOptions } from "../../../../../../resources/spell-level";
 import { useSpellRangeOptions } from "../../../../../../resources/spell-range";
 import { useSpellSchoolOptions } from "../../../../../../resources/spell-school";
-import {
-  type SpellTranslation,
-  updateSpellTranslation,
-} from "../../../../../../resources/spell-translation";
 import Field from "../../../../../../ui/field";
 import Input from "../../../../../../ui/input";
 import NumberInput from "../../../../../../ui/number-input";
 import Select from "../../../../../../ui/select";
 import Switch from "../../../../../../ui/switch";
+import Textarea from "../../../../../../ui/textarea";
 import type { ResourceEditorContentProps } from "../resources/resource-editor";
+import {
+  useSpellEditorFormCastingTime,
+  useSpellEditorFormCastingTimeUnit,
+  useSpellEditorFormCastingTimeValue,
+  useSpellEditorFormCharacterClasses,
+  useSpellEditorFormDescription,
+  useSpellEditorFormDuration,
+  useSpellEditorFormDurationUnit,
+  useSpellEditorFormDurationValue,
+  useSpellEditorFormField,
+  useSpellEditorFormLevel,
+  useSpellEditorFormMaterials,
+  useSpellEditorFormName,
+  useSpellEditorFormRange,
+  useSpellEditorFormRangeImpUnit,
+  useSpellEditorFormRangeImpValue,
+  useSpellEditorFormRangeMetUnit,
+  useSpellEditorFormRangeMetValue,
+  useSpellEditorFormSchool,
+  useSpellEditorFormSubmitError,
+  useSpellEditorFormUpgrade,
+} from "./spell-editor-form";
 
 //------------------------------------------------------------------------------
 // Spell Editor
 //------------------------------------------------------------------------------
 
 export default function SpellEditor({
-  disabled,
-  errors,
-  ref,
   resource,
 }: ResourceEditorContentProps<Spell>) {
   const langContextBag = useI18nLangContext(i18nContext);
-  const { lang, t, tp } = langContextBag;
+  const { lang, t } = langContextBag;
 
-  const [level, setLevel] = useState(resource.level);
-  const [ritual, setRitual] = useState(resource.ritual);
-  const [concentration, setConcentration] = useState(resource.concentration);
-  const [verbal, setVerbal] = useState(resource.verbal);
-  const [somatic, setSomatic] = useState(resource.somatic);
-  const [material, setMaterial] = useState(resource.material);
+  const submitError = useSpellEditorFormSubmitError();
 
-  useImperativeHandle(ref, () => ({
-    save: (formData) => saveSpell(resource.id, lang, formData, langContextBag),
-  }));
+  const ritual = useSpellEditorFormField("ritual", resource.ritual);
+  const concentration = useSpellEditorFormField(
+    "concentration",
+    resource.concentration
+  );
+
+  const verbal = useSpellEditorFormField("verbal", resource.verbal);
+  const somatic = useSpellEditorFormField("somatic", resource.somatic);
+  const material = useSpellEditorFormField("material", resource.material);
 
   return (
     <VStack align="stretch" gap={4}>
-      <HStack gap={4}>
-        <SpellEditorName
-          defaultName={resource.name[lang] ?? ""}
-          disabled={disabled}
-          errors={errors}
-          label={t("name.label")}
-          placeholder={t("name.placeholder")}
-        />
-        <SpellEditorLevel
-          disabled={disabled}
-          errors={errors}
-          label={t("level.label")}
-          level={level}
-          onLevelChange={setLevel}
-        />
+      <HStack align="flex-start" gap={4}>
+        <SpellEditorName defaultName={resource.name[lang] ?? ""} />
+        <SpellEditorLevel defaultLevel={resource.level} />
       </HStack>
 
-      <HStack gap={4}>
+      <HStack align="flex-start" gap={4}>
         <SpellEditorCharacterClasses
           defaultCharacterClasses={resource.character_classes}
-          disabled={disabled}
-          errors={errors}
-          label={t("character_classes.label")}
         />
-        <SpellEditorSchool
-          defaultSchool={resource.school}
-          disabled={disabled}
-          errors={errors}
-          label={t("school.label")}
-        />
+        <SpellEditorSchool defaultSchool={resource.school} />
       </HStack>
 
-      <HStack gap={4}>
+      <HStack align="flex-start" gap={4}>
         <SpellEditorCastingTime
           defaultCastingTime={resource.casting_time}
           defaultCastingTimeValue={resource.casting_time_value}
-          disabled={disabled}
-          errors={errors}
-          label={t("casting_time.label")}
         />
-
         <SpellEditorDuration
           defaultDuration={resource.duration}
           defaultDurationValue={resource.duration_value}
-          disabled={disabled}
-          errors={errors}
-          label={t("duration.label")}
         />
       </HStack>
 
       <HStack gap={4}>
+        <Switch flex={1} label={t("ritual.label")} size="lg" {...ritual} />
         <Switch
-          checked={ritual}
-          disabled={disabled}
-          flex={1}
-          label={t("ritual.label")}
-          name="ritual"
-          onCheckedChange={setRitual}
-          size="lg"
-        />
-
-        <Switch
-          checked={concentration}
-          disabled={disabled}
           flex={1}
           label={t("concentration.label")}
-          name="concentration"
-          onCheckedChange={setConcentration}
           size="lg"
+          {...concentration}
         />
       </HStack>
 
@@ -138,65 +114,34 @@ export default function SpellEditor({
         defaultRange={resource.range}
         defaultRangeImpValue={resource.range_value_imp}
         defaultRangeMetValue={resource.range_value_met}
-        disabled={disabled}
-        errors={errors}
-        label={t("range.label")}
       />
 
       <HStack gap={8}>
-        <Switch
-          checked={verbal}
-          disabled={disabled}
-          label={t("verbal.label")}
-          name="verbal"
-          onCheckedChange={setVerbal}
-          size="lg"
-        />
-
-        <Switch
-          checked={somatic}
-          disabled={disabled}
-          label={t("somatic.label")}
-          name="somatic"
-          onCheckedChange={setSomatic}
-          size="lg"
-        />
-
-        <Switch
-          checked={material}
-          disabled={disabled}
-          label={t("material.label")}
-          name="material"
-          onCheckedChange={setMaterial}
-          size="lg"
-        />
+        <Switch label={t("verbal.label")} size="lg" {...verbal} />
+        <Switch label={t("somatic.label")} size="lg" {...somatic} />
+        <Switch label={t("material.label")} size="lg" {...material} />
       </HStack>
 
-      {material && (
+      {material.value && (
         <SpellEditorMaterials
           defaultMaterials={resource.materials?.[lang] ?? ""}
-          disabled={disabled}
-          errors={errors}
-          label={t("materials.label")}
-          placeholder={t("materials.placeholder")}
         />
       )}
 
       <SpellEditorDescription
         defaultDescription={resource.description[lang] ?? ""}
-        disabled={disabled}
-        errors={errors}
-        label={t("description.label")}
-        placeholder={t("description.placeholder")}
       />
 
-      <SpellEditorUpdate
+      <SpellEditorUpgrade
+        defaultLevel={resource.level}
         defaultUpgrade={resource.upgrade?.[lang] ?? ""}
-        disabled={disabled}
-        errors={errors}
-        label={tp("upgrade.label", level)}
-        placeholder={tp("upgrade.placeholder", level)}
       />
+
+      {submitError && (
+        <Text color="fg.error" fontSize="md">
+          {t(submitError)}
+        </Text>
+      )}
     </VStack>
   );
 }
@@ -205,30 +150,14 @@ export default function SpellEditor({
 // Spell Editor Name
 //------------------------------------------------------------------------------
 
-function SpellEditorName({
-  defaultName,
-  disabled,
-  errors,
-  label,
-  placeholder,
-}: {
-  defaultName: string;
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
-  placeholder: string;
-}) {
-  const [name, setName] = useState(defaultName);
-  const error = errors["name"];
+function SpellEditorName({ defaultName }: { defaultName: string }) {
+  const { disabled, error, ...rest } = useSpellEditorFormName(defaultName);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} invalid={!!error} label={label}>
-      <Input
-        name="name"
-        onValueChange={setName}
-        placeholder={placeholder}
-        value={name}
-      />
+    <Field disabled={disabled} error={message} label={t("name.label")}>
+      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
     </Field>
   );
 }
@@ -237,31 +166,20 @@ function SpellEditorName({
 // Spell Editor Level
 //------------------------------------------------------------------------------
 
-function SpellEditorLevel({
-  disabled,
-  errors,
-  label,
-  level,
-  onLevelChange,
-}: {
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
-  level: Spell["level"];
-  onLevelChange: (level: Spell["level"]) => void;
-}) {
+function SpellEditorLevel({ defaultLevel }: { defaultLevel: Spell["level"] }) {
   const levelOptions = useListCollection(useSpellLevelOptions());
-  const error = errors["level"];
+  const { disabled, error, onValueChange, value, ...rest } =
+    useSpellEditorFormLevel(defaultLevel);
+  const { t } = useI18nLangContext(i18nContext);
+  const label = t("level.label");
 
   return (
     <Field disabled={disabled} invalid={!!error} label={label} maxW="5em">
       <Select
-        name="level"
-        onValueChange={(level) =>
-          onLevelChange(parseInt(level) as Spell["level"])
-        }
+        {...rest}
+        onValueChange={(level) => onValueChange(parseInt(level))}
         options={levelOptions}
-        value={`${level}`}
+        value={`${value}`}
         withinDialog
       />
     </Field>
@@ -274,31 +192,20 @@ function SpellEditorLevel({
 
 function SpellEditorCharacterClasses({
   defaultCharacterClasses,
-  disabled,
-  errors,
-  label,
 }: {
   defaultCharacterClasses: Spell["character_classes"];
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
 }) {
   const characterClassOptions = useListCollection(useCharacterClassOptions());
-  const [characterClasses, setCharacterClasses] = useState(
+  const { disabled, error, ...rest } = useSpellEditorFormCharacterClasses(
     defaultCharacterClasses
   );
-  const error = errors["character_classes"];
+  const { t } = useI18nLangContext(i18nContext);
+  const label = t("character_classes.label");
+  const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} invalid={!!error} label={label}>
-      <Select
-        multiple
-        name="character-classes"
-        onValueChange={setCharacterClasses}
-        options={characterClassOptions}
-        value={characterClasses}
-        withinDialog
-      />
+    <Field disabled={disabled} error={message} label={label}>
+      <Select multiple options={characterClassOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -309,105 +216,93 @@ function SpellEditorCharacterClasses({
 
 function SpellEditorSchool({
   defaultSchool,
-  disabled,
-  errors,
-  label,
 }: {
   defaultSchool: Spell["school"];
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
 }) {
   const schoolOptions = useListCollection(useSpellSchoolOptions());
-  const [school, setSchool] = useState(defaultSchool);
-  const error = errors["school"];
+  const { disabled, error, ...rest } = useSpellEditorFormSchool(defaultSchool);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} invalid={!!error} label={label}>
-      <Select
-        name="school"
-        onValueChange={setSchool}
-        options={schoolOptions}
-        value={school}
-        withinDialog
-      />
+    <Field disabled={disabled} error={message} label={t("school.label")}>
+      <Select options={schoolOptions} withinDialog {...rest} />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor CastingTime
+// Spell Editor Casting Time
 //------------------------------------------------------------------------------
 
 function SpellEditorCastingTime({
   defaultCastingTime,
   defaultCastingTimeValue,
-  disabled,
-  errors,
-  label,
 }: {
   defaultCastingTime: Spell["casting_time"];
   defaultCastingTimeValue: string | null | undefined;
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
+}) {
+  const castingTimeOptions = useListCollection(useSpellCastingTimeOptions());
+  const { disabled, error, ...rest } =
+    useSpellEditorFormCastingTime(defaultCastingTime);
+  const { t } = useI18nLangContext(i18nContext);
+  const label = t("casting_time.label");
+  const message = error ? t(error) : undefined;
+
+  return (
+    <HStack align="flex-end" w="full">
+      <Field disabled={disabled} error={message} flex={1} label={label}>
+        <Select options={castingTimeOptions} withinDialog {...rest} />
+      </Field>
+      {rest.value === "value" && (
+        <SpellEditorCastingTimeValue
+          defaultCastingTimeValue={defaultCastingTimeValue}
+        />
+      )}
+    </HStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Spell Editor Casting Time Value
+//------------------------------------------------------------------------------
+
+function SpellEditorCastingTimeValue({
+  defaultCastingTimeValue,
+}: {
+  defaultCastingTimeValue: string | null | undefined;
 }) {
   const timeUnitOptions = useListCollection(useTimeUnitOptions());
-
-  const castingTimeOptions = useListCollection(useSpellCastingTimeOptions());
-
-  const [castingTime, setCastingTime] = useState(defaultCastingTime);
 
   const [initialCastingTimeValue, initialCastingTimeUnit] = parseTime(
     defaultCastingTimeValue ?? "0 min"
   ) ?? [0, "min"];
 
-  const [castingTimeValue, setCastingTimeValue] = useState(
+  const castingTimeValue = useSpellEditorFormCastingTimeValue(
     initialCastingTimeValue
   );
-
-  const [castingTimeUnit, setCastingTimeUnit] = useState(
+  const castingTimeUnit = useSpellEditorFormCastingTimeUnit(
     initialCastingTimeUnit
   );
 
-  const error = errors["casting_time"];
-  const errorValue = errors["casting_time_value"];
-  const errorUnit = errors["casting_time_unit"];
-
   return (
-    <HStack align="flex-end" w="full">
-      <Field disabled={disabled} flex={1} invalid={!!error} label={label}>
-        <Select
-          name="casting-time"
-          onValueChange={setCastingTime}
-          options={castingTimeOptions}
-          value={castingTime}
-          withinDialog
-        />
+    <>
+      <HStack h={10}>:</HStack>
+      <Field
+        disabled={castingTimeValue.disabled}
+        invalid={!!castingTimeValue.error}
+        maxW="6em"
+      >
+        <NumberInput min={0} {...castingTimeValue} />
       </Field>
-      {castingTime === "value" && (
-        <>
-          <HStack h={10}>:</HStack>
-          <Field disabled={disabled} invalid={!!errorValue} maxW="6em">
-            <NumberInput
-              min={0}
-              name="casting-time-value"
-              onValueChange={setCastingTimeValue}
-              value={castingTimeValue}
-            />
-          </Field>
-          <Field disabled={disabled} invalid={!!errorUnit} maxW="7em">
-            <Select
-              name="casting-time-unit"
-              onValueChange={setCastingTimeUnit}
-              options={timeUnitOptions}
-              value={castingTimeUnit}
-              withinDialog
-            />
-          </Field>
-        </>
-      )}
-    </HStack>
+      <Field
+        disabled={castingTimeUnit.disabled}
+        invalid={!!castingTimeUnit.error}
+        maxW="7em"
+      >
+        <Select options={timeUnitOptions} withinDialog {...castingTimeUnit} />
+      </Field>
+    </>
   );
 }
 
@@ -418,67 +313,65 @@ function SpellEditorCastingTime({
 function SpellEditorDuration({
   defaultDuration,
   defaultDurationValue,
-  disabled,
-  errors,
-  label,
 }: {
   defaultDuration: Spell["duration"];
   defaultDurationValue: string | null | undefined;
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
+}) {
+  const durationOptions = useListCollection(useSpellDurationOptions());
+  const { disabled, error, ...rest } =
+    useSpellEditorFormDuration(defaultDuration);
+  const { t } = useI18nLangContext(i18nContext);
+  const label = t("duration.label");
+  const message = error ? t(error) : undefined;
+
+  return (
+    <HStack align="flex-end" w="full">
+      <Field disabled={disabled} error={message} flex={1} label={label}>
+        <Select options={durationOptions} withinDialog {...rest} />
+      </Field>
+      {rest.value === "value" && (
+        <SpellEditorDurationValue defaultDurationValue={defaultDurationValue} />
+      )}
+    </HStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Spell Editor Duration Value
+//------------------------------------------------------------------------------
+
+function SpellEditorDurationValue({
+  defaultDurationValue,
+}: {
+  defaultDurationValue: string | null | undefined;
 }) {
   const timeUnitOptions = useListCollection(useTimeUnitOptions());
-
-  const durationOptions = useListCollection(useSpellDurationOptions());
-
-  const [duration, setDuration] = useState(defaultDuration);
 
   const [initialDurationValue, initialDurationUnit] = parseTime(
     defaultDurationValue ?? "0 min"
   ) ?? [0, "min"];
 
-  const [durationValue, setDurationValue] = useState(initialDurationValue);
-  const [durationUnit, setDurationUnit] = useState(initialDurationUnit);
-
-  const error = errors["duration"];
-  const errorValue = errors["duration_value"];
-  const errorUnit = errors["duration_unit"];
+  const durationValue = useSpellEditorFormDurationValue(initialDurationValue);
+  const durationUnit = useSpellEditorFormDurationUnit(initialDurationUnit);
 
   return (
-    <HStack align="flex-end" w="full">
-      <Field disabled={disabled} flex={1} invalid={!!error} label={label}>
-        <Select
-          name="duration"
-          onValueChange={setDuration}
-          options={durationOptions}
-          value={duration}
-          withinDialog
-        />
+    <>
+      <HStack h={10}>:</HStack>
+      <Field
+        disabled={durationValue.disabled}
+        invalid={!!durationValue.error}
+        maxW="6em"
+      >
+        <NumberInput min={0} {...durationValue} />
       </Field>
-      {duration === "value" && (
-        <>
-          <HStack h={10}>:</HStack>
-          <Field disabled={disabled} invalid={!!errorValue} maxW="6em">
-            <NumberInput
-              min={0}
-              name="duration-value"
-              onValueChange={setDurationValue}
-              value={durationValue}
-            />
-          </Field>
-          <Field disabled={disabled} invalid={!!errorUnit} maxW="7em">
-            <Select
-              name="duration-unit"
-              onValueChange={setDurationUnit}
-              options={timeUnitOptions}
-              value={durationUnit}
-              withinDialog
-            />
-          </Field>
-        </>
-      )}
-    </HStack>
+      <Field
+        disabled={durationUnit.disabled}
+        invalid={!!durationUnit.error}
+        maxW="7em"
+      >
+        <Select options={timeUnitOptions} withinDialog {...durationUnit} />
+      </Field>
+    </>
   );
 }
 
@@ -490,123 +383,123 @@ function SpellEditorRange({
   defaultRange,
   defaultRangeImpValue,
   defaultRangeMetValue,
-  disabled,
-  errors,
-  label,
 }: {
   defaultRange: Spell["range"];
   defaultRangeImpValue: string | null | undefined;
   defaultRangeMetValue: string | null | undefined;
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
 }) {
   const rangeOptions = useListCollection(useSpellRangeOptions());
-  const distanceImpOptions = useListCollection(useDistanceImpUnitOptions());
-  const distanceMetOptions = useListCollection(useDistanceMetUnitOptions());
-
-  const [range, setRange] = useState(defaultRange);
-
-  const [initialRangeImpValue, initialRangeImpUnit] = parseDistanceImp(
-    defaultRangeImpValue ?? "0 ft"
-  ) ?? [0, "ft"];
-
-  const [rangeImpValue, setRangeImpValue] = useState(initialRangeImpValue);
-  const [rangeImpUnit, setRangeImpUnit] = useState(initialRangeImpUnit);
-
-  const [initialRangeMetValue, initialRangeMetUnit] = parseDistanceMet(
-    defaultRangeMetValue ?? "0 m"
-  ) ?? [0, "m"];
-
-  const [rangeMetValue, setRangeMetValue] = useState(initialRangeMetValue);
-  const [rangeMetUnit, setRangeMetUnit] = useState(initialRangeMetUnit);
-
-  const setRangeImpValueAndUpdateMet = (value: number) => {
-    setRangeImpValue(value);
-    const [metValue, metUnit] = convertDistanceImpToMet(value, rangeImpUnit);
-    setRangeMetValue(metValue);
-    setRangeMetUnit(metUnit);
-  };
-
-  const setRangeImpUnitAndUpdateMet = (unit: string) => {
-    setRangeImpUnit(unit);
-    const [metValue, metUnit] = convertDistanceImpToMet(rangeImpValue, unit);
-    setRangeMetValue(metValue);
-    setRangeMetUnit(metUnit);
-  };
-
-  const setRangeMetValueAndUpdateImp = (value: number) => {
-    setRangeMetValue(value);
-    const [impValue, impUnit] = convertDistanceMetToImp(value, rangeMetUnit);
-    setRangeImpValue(impValue);
-    setRangeImpUnit(impUnit);
-  };
-
-  const setRangeMetUnitAndUpdateImp = (unit: string) => {
-    setRangeMetUnit(unit);
-    const [impValue, impUnit] = convertDistanceMetToImp(rangeMetValue, unit);
-    setRangeImpValue(impValue);
-    setRangeImpUnit(impUnit);
-  };
-
-  const error = errors["range"];
-  const errorImpValue = errors["range_imp_value"];
-  const errorImpUnit = errors["range_imp_unit"];
-  const errorMetValue = errors["range_met_value"];
-  const errorMetUnit = errors["range_met_unit"];
+  const { disabled, error, ...rest } = useSpellEditorFormRange(defaultRange);
+  const { t } = useI18nLangContext(i18nContext);
+  const label = t("range.label");
+  const message = error ? t(error) : undefined;
 
   return (
     <HStack align="flex-end" w="full">
-      <Field disabled={disabled} flex={1} invalid={!!error} label={label}>
-        <Select
-          name="range"
-          onValueChange={setRange}
-          options={rangeOptions}
-          value={range}
-          withinDialog
-        />
+      <Field disabled={disabled} error={message} flex={1} label={label}>
+        <Select options={rangeOptions} withinDialog {...rest} />
       </Field>
-      {range === "value" && (
-        <>
-          <HStack h={10}>:</HStack>
-          <Field disabled={disabled} invalid={!!errorImpValue} maxW="6em">
-            <NumberInput
-              min={0}
-              name="range-imp-value"
-              onValueChange={setRangeImpValueAndUpdateMet}
-              value={rangeImpValue}
-            />
-          </Field>
-          <Field disabled={disabled} invalid={!!errorImpUnit} maxW="7em">
-            <Select
-              name="range-imp-unit"
-              onValueChange={setRangeImpUnitAndUpdateMet}
-              options={distanceImpOptions}
-              value={rangeImpUnit}
-              withinDialog
-            />
-          </Field>
-          <HStack h={10}>~</HStack>
-          <Field disabled={disabled} invalid={!!errorMetValue} maxW="6em">
-            <NumberInput
-              min={0}
-              name="range-met-value"
-              onValueChange={setRangeMetValueAndUpdateImp}
-              value={rangeMetValue}
-            />
-          </Field>
-          <Field disabled={disabled} invalid={!!errorMetUnit} maxW="7em">
-            <Select
-              name="range-met-unit"
-              onValueChange={setRangeMetUnitAndUpdateImp}
-              options={distanceMetOptions}
-              value={rangeMetUnit}
-              withinDialog
-            />
-          </Field>
-        </>
+      {rest.value === "value" && (
+        <SpellEditorRangeValues
+          defaultRangeImpValue={defaultRangeImpValue}
+          defaultRangeMetValue={defaultRangeMetValue}
+        />
       )}
     </HStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Spell Editor Range Values
+//------------------------------------------------------------------------------
+
+function SpellEditorRangeValues({
+  defaultRangeImpValue,
+  defaultRangeMetValue,
+}: {
+  defaultRangeImpValue: string | null | undefined;
+  defaultRangeMetValue: string | null | undefined;
+}) {
+  const distanceImpOptions = useListCollection(useDistanceImpUnitOptions());
+  const distanceMetOptions = useListCollection(useDistanceMetUnitOptions());
+
+  const [defaultImpValue, defaultImpUnit] = parseDistanceImp(
+    defaultRangeImpValue ?? "0 ft"
+  ) ?? [0, "ft"];
+
+  const [defaultMetValue, defaultMetUnit] = parseDistanceMet(
+    defaultRangeMetValue ?? "0 m"
+  ) ?? [0, "m"];
+
+  const impValue = useSpellEditorFormRangeImpValue(defaultImpValue);
+  const impUnit = useSpellEditorFormRangeImpUnit(defaultImpUnit);
+
+  const metValue = useSpellEditorFormRangeMetValue(defaultMetValue);
+  const metUnit = useSpellEditorFormRangeMetUnit(defaultMetUnit);
+
+  const setRangeImpValueAndUpdateMet = (value: number) => {
+    impValue.onValueChange(value);
+    const [mv, mu] = convertDistanceImpToMet(value, impUnit.value);
+    metValue.onValueChange(mv);
+    metUnit.onValueChange(mu);
+  };
+
+  const setRangeImpUnitAndUpdateMet = (unit: string) => {
+    impUnit.onValueChange(unit);
+    const [mv, mu] = convertDistanceImpToMet(impValue.value, unit);
+    metValue.onValueChange(mv);
+    metUnit.onValueChange(mu);
+  };
+
+  const setRangeMetValueAndUpdateImp = (value: number) => {
+    metValue.onValueChange(value);
+    const [iv, iu] = convertDistanceMetToImp(value, metUnit.value);
+    impValue.onValueChange(iv);
+    impUnit.onValueChange(iu);
+  };
+
+  const setRangeMetUnitAndUpdateImp = (unit: string) => {
+    metUnit.onValueChange(unit);
+    const [iv, iu] = convertDistanceMetToImp(metValue.value, unit);
+    impValue.onValueChange(iv);
+    impUnit.onValueChange(iu);
+  };
+
+  return (
+    <>
+      <HStack h={10}>:</HStack>
+      <Field disabled={impValue.disabled} invalid={!!impValue.error} maxW="6em">
+        <NumberInput
+          min={0}
+          {...impValue}
+          onValueChange={setRangeImpValueAndUpdateMet}
+        />
+      </Field>
+      <Field disabled={impUnit.disabled} invalid={!!impUnit.error} maxW="7em">
+        <Select
+          options={distanceImpOptions}
+          withinDialog
+          {...impUnit}
+          onValueChange={setRangeImpUnitAndUpdateMet}
+        />
+      </Field>
+      <HStack h={10}>~</HStack>
+      <Field disabled={metValue.disabled} invalid={!!metValue.error} maxW="6em">
+        <NumberInput
+          min={0}
+          {...metValue}
+          onValueChange={setRangeMetValueAndUpdateImp}
+        />
+      </Field>
+      <Field disabled={metUnit.disabled} invalid={!!metUnit.error} maxW="7em">
+        <Select
+          options={distanceMetOptions}
+          withinDialog
+          {...metUnit}
+          onValueChange={setRangeMetUnitAndUpdateImp}
+        />
+      </Field>
+    </>
   );
 }
 
@@ -616,28 +509,17 @@ function SpellEditorRange({
 
 function SpellEditorMaterials({
   defaultMaterials,
-  disabled,
-  errors,
-  label,
-  placeholder,
 }: {
   defaultMaterials: string;
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
-  placeholder: string;
 }) {
-  const [materials, setMaterials] = useState(defaultMaterials);
-  const error = errors["materials"];
+  const { disabled, error, ...rest } =
+    useSpellEditorFormMaterials(defaultMaterials);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} invalid={!!error} label={label}>
-      <Input
-        name="materials"
-        onValueChange={setMaterials}
-        placeholder={placeholder}
-        value={materials}
-      />
+    <Field disabled={disabled} error={message} label={t("materials.label")}>
+      <Input placeholder={t("materials.placeholder")} {...rest} />
     </Field>
   );
 }
@@ -648,29 +530,17 @@ function SpellEditorMaterials({
 
 function SpellEditorDescription({
   defaultDescription,
-  disabled,
-  errors,
-  label,
-  placeholder,
 }: {
   defaultDescription: string;
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
-  placeholder: string;
 }) {
-  const [description, setDescription] = useState(defaultDescription);
-  const error = errors["description"];
+  const { disabled, error, ...rest } =
+    useSpellEditorFormDescription(defaultDescription);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} invalid={!!error} label={label}>
-      <Textarea
-        h="12em"
-        name="description"
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder={placeholder}
-        value={description}
-      />
+    <Field disabled={disabled} error={message} label={t("description.label")}>
+      <Textarea {...rest} h="12em" placeholder={t("description.placeholder")} />
     </Field>
   );
 }
@@ -679,175 +549,25 @@ function SpellEditorDescription({
 // Spell Editor Upgrade
 //------------------------------------------------------------------------------
 
-function SpellEditorUpdate({
+function SpellEditorUpgrade({
+  defaultLevel,
   defaultUpgrade,
-  disabled,
-  errors,
-  label,
-  placeholder,
 }: {
+  defaultLevel: number;
   defaultUpgrade: string;
-  disabled: boolean;
-  errors: Record<string, string>;
-  label: string;
-  placeholder: string;
 }) {
-  const [upgrade, setUpgrade] = useState(defaultUpgrade);
-  const error = errors["upgrade"];
+  const { disabled, error, ...rest } =
+    useSpellEditorFormUpgrade(defaultUpgrade);
+  const { value: level } = useSpellEditorFormLevel(defaultLevel);
+  const { t, tp } = useI18nLangContext(i18nContext);
+  const label = tp("upgrade.label", level);
+  const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} invalid={!!error} label={label}>
-      <Textarea
-        name="upgrade"
-        onChange={(e) => setUpgrade(e.target.value)}
-        placeholder={placeholder}
-        value={upgrade}
-      />
+    <Field disabled={disabled} error={message} label={label}>
+      <Textarea placeholder={tp("upgrade.placeholder", level)} {...rest} />
     </Field>
   );
-}
-
-//------------------------------------------------------------------------------
-// Save Spell
-//------------------------------------------------------------------------------
-
-async function saveSpell(
-  id: string,
-  lang: I18nLang,
-  formData: FormData,
-  { t }: I18nLangContextBag
-): Promise<Record<string, string>> {
-  const errors: Record<string, string> = {};
-
-  const name = formData.get("name")?.toString()?.trim();
-  if (!name) errors["name"] = t("name.error.empty");
-
-  const level = parseInt(formData.get("level")?.toString() ?? "NaN");
-  if (!level) errors["level"] = t("level.error.empty");
-
-  const character_classes = formData
-    .getAll("character-classes")
-    .map((value) => value.toString());
-  if (!character_classes.length)
-    errors["character_classes"] = t("character_classes.error.empty");
-
-  const school = formData.get("school")?.toString();
-  if (!school) errors["school"] = t("school.error.empty");
-
-  const casting_time = formData.get("casting-time")?.toString();
-  if (!casting_time) errors["casting_time"] = t("casting_time.error.empty");
-
-  const ctv = parseInt(formData.get("casting-time-value")?.toString() ?? "NaN");
-  if (casting_time === "value" && ctv === undefined)
-    errors["casting_time_value"] = t("casting_time.error.empty_value");
-
-  const ctu = formData.get("casting-time-unit")?.toString();
-  if (casting_time === "value" && ctu === undefined)
-    errors["casting_time_unit"] = t("casting_time.error.empty_unit");
-
-  const casting_time_value =
-    casting_time === "value" && ctv !== undefined && ctu !== undefined
-      ? `${ctv} ${ctu}`
-      : undefined;
-
-  const duration = formData.get("duration")?.toString();
-  if (!duration) errors["duration"] = t("duration.error.empty");
-
-  const dv = parseInt(formData.get("duration-value")?.toString() ?? "NaN");
-  if (duration === "value" && dv === undefined)
-    errors["duration_value"] = t("duration_value.error.empty_value");
-
-  const du = formData.get("duration-unit")?.toString();
-  if (duration === "value" && du === undefined)
-    errors["duration_unit"] = t("duration_value.error.empty_unit");
-
-  const duration_value =
-    duration === "value" && dv === undefined && du === undefined
-      ? `${dv} ${du}`
-      : undefined;
-
-  const range = formData.get("range")?.toString();
-  if (!range) errors["range"] = t("range.error.empty");
-
-  const riv = parseInt(formData.get("range-imp-value")?.toString() ?? "NaN");
-  if (range === "value" && riv === undefined)
-    errors["range_imp_value"] = t("range.error.empty_value");
-
-  const riu = formData.get("range-imp-unit")?.toString();
-  if (range === "value" && riu === undefined)
-    errors["range_imp_unit"] = t("range.error.empty_unit");
-
-  const range_value_imp =
-    range === "value" && riv === undefined && riu === undefined
-      ? `${riv} ${riu}`
-      : undefined;
-
-  const rmv = parseInt(formData.get("range-met-value")?.toString() ?? "NaN");
-  if (range === "value" && rmv === undefined)
-    errors["range_met_value"] = t("range.error.empty_value");
-
-  const rmu = formData.get("range-met-value")?.toString();
-  if (range === "value" && rmu === undefined)
-    errors["range_met_unit"] = t("range.error.empty_unit");
-
-  const range_value_met =
-    range === "value" && rmv === undefined && rmu === undefined
-      ? `${rmv} ${rmu}`
-      : undefined;
-
-  const ritual = formData.get("ritual")?.toString() === "on";
-  const concentration = formData.get("concentration")?.toString() === "on";
-  const verbal = formData.get("verbal")?.toString() === "on";
-  const somatic = formData.get("somatic")?.toString() === "on";
-  const material = formData.get("material")?.toString() === "on";
-
-  const materials = material
-    ? formData.get("materials")?.toString()?.trim() || undefined
-    : undefined;
-
-  if (material && !materials) errors["materials"] = t("materials.error.empty");
-
-  const description = formData.get("description")?.toString()?.trim();
-  if (!description) errors["description"] = t("description.error.empty");
-
-  const upgrade = formData.get("upgrade")?.toString()?.trim() || undefined;
-
-  if (Object.values(errors).length) {
-    console.log(errors);
-    return errors;
-  }
-
-  const spell = {
-    casting_time,
-    casting_time_value,
-    character_classes,
-    concentration,
-    duration,
-    duration_value,
-    level,
-    material,
-    name: lang === "en" ? name : undefined,
-    range,
-    range_value_imp,
-    range_value_met,
-    ritual,
-    school,
-    somatic,
-    verbal,
-  } as unknown as Omit<Spell, "id">;
-
-  const spellTranslation = {
-    description,
-    materials,
-    name,
-    upgrade,
-  } as unknown as Omit<SpellTranslation, "spell_id" | "lang">;
-
-  const res1 = await updateSpell(id, spell);
-  const res2 = await updateSpellTranslation(id, lang, spellTranslation);
-  console.log(res1);
-  console.log(res2);
-  return {};
 }
 
 //------------------------------------------------------------------------------
@@ -855,6 +575,26 @@ async function saveSpell(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "form.error.invalid_spell": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+
+  "form.error.invalid_locale": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+
+  "form.error.update_spell_failure": {
+    en: "Failed to update the spell.",
+    it: "Errore durante il salvataggio.",
+  },
+
+  "form.error.update_locale_failure": {
+    en: "Failed to update the spell.",
+    it: "Errore durante il salvataggio.",
+  },
+
   "name.label": {
     en: "Name",
     it: "Nome",
@@ -885,19 +625,9 @@ const i18nContext = {
     it: "Classi",
   },
 
-  "character_classes.error.empty": {
-    en: "Classes cannot be empty",
-    it: "Le classi non possono essere vuoto",
-  },
-
   "school.label": {
     en: "School",
     it: "Scuola",
-  },
-
-  "school.error.empty": {
-    en: "The school cannot be empty",
-    it: "La scuola non può essere vuota",
   },
 
   "casting_time.label": {
@@ -905,19 +635,19 @@ const i18nContext = {
     it: "Tempo di Lancio",
   },
 
-  "casting_time.error.empty": {
-    en: "The casting time cannot be empty",
-    it: "Il tempo di lancio non può essere vuoto",
+  "casting_time_value.error.invalid": {
+    en: "The value cannot be less than zero",
+    it: "Il valore non può essere minore di zero",
   },
 
-  "casting_time.error.empty_value": {
-    en: "The value cannot be empty",
-    it: "Il valore non può essere vuoto",
-  },
-
-  "casting_time.error.empty_unit": {
+  "casting_time_unit.error.empty": {
     en: "The unit cannot be empty",
     it: "L'unità non può essere vuota",
+  },
+
+  "casting_time_unit.error.invalid": {
+    en: `The unit must be one of: ${timeUnits.join(", ")}`,
+    it: `L'unità dev'essere una tra: ${timeUnits.join(", ")}`,
   },
 
   "duration.label": {
@@ -925,19 +655,19 @@ const i18nContext = {
     it: "Durata",
   },
 
-  "duration.error.empty": {
-    en: "The duration cannot be empty",
-    it: "La durata non può essere vuota",
-  },
-
-  "duration.error.empty_value": {
+  "duration_value.error.invalid": {
     en: "The value cannot be empty",
     it: "Il valore non può essere vuoto",
   },
 
-  "duration.error.empty_unit": {
+  "duration_unit.error.empty": {
     en: "The unit cannot be empty",
     it: "L'unità non può essere vuota",
+  },
+
+  "duration_unit.error.invalid": {
+    en: `The unit must be one of: ${timeUnits.join(", ")}`,
+    it: `L'unità dev'essere una tra: ${timeUnits.join(", ")}`,
   },
 
   "range.label": {
@@ -945,29 +675,34 @@ const i18nContext = {
     it: "Gittata",
   },
 
-  "range.error.empty": {
-    en: "The range cannot be empty",
-    it: "La gittata non può essere vuota",
-  },
-
-  "range.error.empty_imp_value": {
+  "range_imp_value.error.invalid": {
     en: "The value cannot be empty",
     it: "Il valore non può essere vuoto",
   },
 
-  "range.error.empty_imp_unit": {
+  "range_imp_unit.error.empty": {
     en: "The unit cannot be empty",
     it: "L'unità non può essere vuota",
   },
 
-  "range.error.empty_met_value": {
+  "range_imp_unit.error.invalid": {
+    en: `The unit must be one of: ${distanceImpUnits.join(", ")}`,
+    it: `L'unità dev'essere una tra: ${distanceImpUnits.join(", ")}`,
+  },
+
+  "range_met_value.error.invalid": {
     en: "The value cannot be empty",
     it: "Il valore non può essere vuoto",
   },
 
-  "range.error.empty_met_unit": {
+  "range_met_unit.error.empty": {
     en: "The unit cannot be empty",
     it: "L'unità non può essere vuota",
+  },
+
+  "range_met_unit.error.invalid": {
+    en: `The unit must be one of: ${distanceMetUnits.join(", ")}`,
+    it: `L'unità dev'essere una tra: ${distanceMetUnits.join(", ")}`,
   },
 
   "ritual.label": {

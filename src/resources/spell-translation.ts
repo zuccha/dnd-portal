@@ -11,8 +11,6 @@ import { useTranslateSpellCastingTime } from "./spell-casting-time";
 import { useTranslateSpellDuration } from "./spell-duration";
 import { useTranslateSpellRange } from "./spell-range";
 import { useTranslateSpellSchool } from "./spell-school";
-import type { I18nLang } from "../i18n/i18n-lang";
-import supabase from "../supabase";
 
 //------------------------------------------------------------------------------
 // Spell Translation
@@ -140,23 +138,6 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
       translateTime,
     ]
   );
-}
-
-//------------------------------------------------------------------------------
-// Update Spell Translation
-//------------------------------------------------------------------------------
-
-export function updateSpellTranslation(
-  spell_id: string,
-  lang: I18nLang,
-  spellTranslation: Omit<SpellTranslation, "spell_id" | "lang">
-) {
-  return supabase
-    .from("spell_translations")
-    .upsert(
-      { ...spellTranslation, lang, spell_id },
-      { onConflict: "spell_id, lang" }
-    );
 }
 
 //------------------------------------------------------------------------------

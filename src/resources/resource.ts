@@ -44,7 +44,7 @@ export type ResourceStore<R extends Resource, F extends ResourceFilters> = {
 
   update: (
     id: string,
-    resource: Omit<R, "id">
+    resource: Partial<R>
   ) => Promise<PostgrestSingleResponse<null>>;
 };
 
@@ -204,7 +204,7 @@ export function createResourceStore<
 
   async function update(
     id: string,
-    resource: Omit<R, "id">
+    resource: Partial<R>
   ): Promise<PostgrestSingleResponse<null>> {
     return await supabase.from(storeId).update(resource).eq("id", id);
   }
