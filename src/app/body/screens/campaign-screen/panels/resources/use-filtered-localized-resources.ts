@@ -4,6 +4,7 @@ import type {
   Resource,
   ResourceFilters,
   ResourceStore,
+  ResourceTranslation,
 } from "../../../../../../resources/resource";
 
 //----------------------------------------------------------------------------
@@ -12,17 +13,21 @@ import type {
 
 export function createUseFilteredLocalizedResources<
   R extends Resource,
-  T extends LocalizedResource<R>,
-  F extends ResourceFilters
->(store: ResourceStore<R, F>, useLocalizeResource: () => (resource: R) => T) {
+  T extends ResourceTranslation,
+  F extends ResourceFilters,
+  L extends LocalizedResource<R>
+>(
+  store: ResourceStore<R, T, F>,
+  useLocalizeResource: () => (resource: R) => L
+) {
   const { useFromCampaign, useNameFilter } = store;
 
-  const useSharedLocalizedResources = createUseShared<T[] | undefined>(
+  const useSharedLocalizedResources = createUseShared<L[] | undefined>(
     undefined,
     [undefined, undefined]
   );
 
-  const useSharedFilteredLocalizedResources = createUseShared<T[] | undefined>(
+  const useSharedFilteredLocalizedResources = createUseShared<L[] | undefined>(
     undefined,
     [undefined, undefined]
   );

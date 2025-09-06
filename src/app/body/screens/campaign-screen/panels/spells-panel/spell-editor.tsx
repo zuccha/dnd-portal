@@ -580,17 +580,12 @@ const i18nContext = {
     it: "I dati inseriti non sono validi.",
   },
 
-  "form.error.invalid_locale": {
+  "form.error.invalid_translation": {
     en: "The inserted data is not valid.",
     it: "I dati inseriti non sono validi.",
   },
 
   "form.error.update_spell_failure": {
-    en: "Failed to update the spell.",
-    it: "Errore durante il salvataggio.",
-  },
-
-  "form.error.update_locale_failure": {
     en: "Failed to update the spell.",
     it: "Errore durante il salvataggio.",
   },

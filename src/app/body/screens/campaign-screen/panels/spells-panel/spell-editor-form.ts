@@ -5,10 +5,9 @@ import {
 import { timeUnits } from "../../../../../../i18n/i18n-time";
 import { type CharacterClass } from "../../../../../../resources/character-class";
 import {
-  spellLocaleSchema,
   spellSchema,
+  spellTranslationSchema,
   updateSpell,
-  updateSpellLocale,
 } from "../../../../../../resources/spell";
 import { type SpellCastingTime } from "../../../../../../resources/spell-casting-time";
 import { type SpellDuration } from "../../../../../../resources/spell-duration";
@@ -97,14 +96,12 @@ export const spellEditorForm = createForm<
   const spell = spellSchema.partial().safeParse(maybeSpell);
   if (!spell.success) return report(spell.error, "form.error.invalid_spell");
 
-  const locale = spellLocaleSchema.safeParse(maybeLocale);
-  if (!locale.success) return report(locale.error, "form.error.invalid_locale");
+  const translation = spellTranslationSchema.safeParse(maybeLocale);
+  if (!translation.success)
+    return report(translation.error, "form.error.invalid_translation");
 
-  const res1 = await updateSpell(id, spell.data);
-  if (res1.error) report(res1.error, "form.error.update_spell_failure");
-
-  const res2 = await updateSpellLocale(locale.data);
-  if (res2.error) report(res2.error, "form.error.update_locale_failure");
+  const response = await updateSpell(id, spell.data, translation.data);
+  if (response.error) report(response.error, "form.error.update_spell_failure");
 
   return undefined;
 });

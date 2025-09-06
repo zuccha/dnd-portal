@@ -14,6 +14,7 @@ import { createObservableSet } from "../utils/observable-set";
 //------------------------------------------------------------------------------
 
 export type Resource = { id: string; name: I18nString };
+export type ResourceTranslation = { lang: string };
 export type ResourceFilters = { order_by: string; order_dir: "asc" | "desc" };
 export type LocalizedResource<R extends Resource> = { _raw: R; id: string };
 
@@ -21,7 +22,11 @@ export type LocalizedResource<R extends Resource> = { _raw: R; id: string };
 // Resource Store
 //------------------------------------------------------------------------------
 
-export type ResourceStore<R extends Resource, F extends ResourceFilters> = {
+export type ResourceStore<
+  R extends Resource,
+  T extends ResourceTranslation,
+  F extends ResourceFilters
+> = {
   id: string;
 
   useFromCampaign: (campaignId: string) => UseQueryResult<R[], Error>;
@@ -44,7 +49,8 @@ export type ResourceStore<R extends Resource, F extends ResourceFilters> = {
 
   update: (
     id: string,
-    resource: Partial<R>
+    resource: Partial<R>,
+    translation: Partial<T>
   ) => Promise<PostgrestSingleResponse<null>>;
 };
 
@@ -54,18 +60,19 @@ export type ResourceStore<R extends Resource, F extends ResourceFilters> = {
 
 export function createResourceStore<
   R extends Resource,
+  T extends ResourceTranslation,
   F extends ResourceFilters
 >(
-  storeId: string,
+  name: { s: string; p: string },
   resourceSchema: ZodType<R>,
   filtersSchema: ZodType<F>
-): ResourceStore<R, F> {
+): ResourceStore<R, T, F> {
   //----------------------------------------------------------------------------
   // Use Filters
   //----------------------------------------------------------------------------
 
   const filtersStore = createLocalStore(
-    `resources[${storeId}].filters`,
+    `resources[${name.p}].filters`,
     filtersSchema.parse({}),
     filtersSchema.parse
   );
@@ -86,7 +93,7 @@ export function createResourceStore<
   //----------------------------------------------------------------------------
 
   const nameFilterStore = createLocalStore(
-    `resources[${storeId}].filters.name`,
+    `resources[${name.p}].filters.name`,
     "",
     z.string().parse
   );
@@ -102,7 +109,7 @@ export function createResourceStore<
     { order_by, order_dir, ...filters }: F,
     lang: string
   ): Promise<R[]> {
-    const { data } = await supabase.rpc(`fetch_${storeId}`, {
+    const { data } = await supabase.rpc(`fetch_${name.p}`, {
       p_campaign_id: campaignId,
       p_filters: filters,
       p_langs: [lang],
@@ -132,7 +139,7 @@ export function createResourceStore<
 
     return useQuery<R[]>({
       queryFn: fetchCampaignsResources,
-      queryKey: [`resources[${storeId}]`, campaignId, filters, lang],
+      queryKey: [`resources[${name.p}]`, campaignId, filters, lang],
     });
   }
 
@@ -204,9 +211,14 @@ export function createResourceStore<
 
   async function update(
     id: string,
-    resource: Partial<R>
+    resource: Partial<R>,
+    translation: Partial<T>
   ): Promise<PostgrestSingleResponse<null>> {
-    return await supabase.from(storeId).update(resource).eq("id", id);
+    return await supabase.rpc(`update_${name.s}`, {
+      p_id: id,
+      [`p_${name.s}`]: resource,
+      p_translation: translation,
+    });
   }
 
   //----------------------------------------------------------------------------
@@ -214,7 +226,7 @@ export function createResourceStore<
   //----------------------------------------------------------------------------
 
   return {
-    id: storeId,
+    id: name.p,
 
     useFromCampaign,
 

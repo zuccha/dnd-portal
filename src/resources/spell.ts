@@ -2,7 +2,6 @@ import { z } from "zod";
 import { distanceImpSchema, distanceMetSchema } from "../i18n/i18n-distance";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { timeSchema } from "../i18n/i18n-time";
-import supabase from "../supabase";
 import { characterClassSchema } from "./character-class";
 import { createResourceStore } from "./resource";
 import { spellCastingTimeSchema } from "./spell-casting-time";
@@ -55,10 +54,10 @@ export const spellSchema = z.object({
 export type Spell = z.infer<typeof spellSchema>;
 
 //------------------------------------------------------------------------------
-// Spell Locale
+// Spell Translation
 //------------------------------------------------------------------------------
 
-export const spellLocaleSchema = z.object({
+export const spellTranslationSchema = z.object({
   lang: z.string(),
   spell_id: z.uuid(),
 
@@ -69,7 +68,7 @@ export const spellLocaleSchema = z.object({
   upgrade: z.string().nullish(),
 });
 
-export type SpellLocale = z.infer<typeof spellLocaleSchema>;
+export type SpellTranslation = z.infer<typeof spellTranslationSchema>;
 
 //------------------------------------------------------------------------------
 // Spell Filters
@@ -104,7 +103,7 @@ export type SpellFilters = z.infer<typeof spellFiltersSchema>;
 //------------------------------------------------------------------------------
 
 export const spellsStore = createResourceStore(
-  "spells",
+  { p: "spells", s: "spell" },
   spellSchema,
   spellFiltersSchema
 );
@@ -117,13 +116,3 @@ export const {
   useSelectionCount: useSpellsSelectionCount,
   update: updateSpell,
 } = spellsStore;
-
-//------------------------------------------------------------------------------
-// Update Spell Locale
-//------------------------------------------------------------------------------
-
-export function updateSpellLocale(locale: SpellLocale) {
-  return supabase
-    .from("spell_translations")
-    .upsert(locale, { onConflict: "spell_id, lang" });
-}

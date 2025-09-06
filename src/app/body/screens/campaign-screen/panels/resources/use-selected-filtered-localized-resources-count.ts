@@ -4,6 +4,7 @@ import type {
   Resource,
   ResourceFilters,
   ResourceStore,
+  ResourceTranslation,
 } from "../../../../../../resources/resource";
 
 //----------------------------------------------------------------------------
@@ -12,10 +13,11 @@ import type {
 
 export function createUseSelectedFilteredLocalizedResourcesCount<
   R extends Resource,
+  T extends ResourceTranslation,
   F extends ResourceFilters,
   L extends LocalizedResource<R>
 >(
-  store: ResourceStore<R, F>,
+  store: ResourceStore<R, T, F>,
   useLocalizedResources: (campaignId: string) => L[] | undefined
 ) {
   const { useSelectionCount } = store;

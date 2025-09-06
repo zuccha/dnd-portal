@@ -14,6 +14,7 @@ import type {
   Resource,
   ResourceFilters,
   ResourceStore,
+  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import Checkbox from "../../../../../../ui/checkbox";
 import Icon from "../../../../../../ui/icon";
@@ -36,10 +37,11 @@ export type ResourcesListTableColumn<
 
 export function createResourcesListTable<
   R extends Resource,
+  T extends ResourceTranslation,
   F extends ResourceFilters,
   L extends LocalizedResource<R>
 >(
-  store: ResourceStore<R, F>,
+  store: ResourceStore<R, T, F>,
   useLocalizedResources: (campaignId: string) => L[] | undefined,
   useSelectedLocalizedResourcesCount: (campaignId: string) => number,
   useSetEditedResource: (

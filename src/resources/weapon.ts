@@ -76,7 +76,7 @@ export type WeaponFilters = z.infer<typeof weaponFiltersSchema>;
 //------------------------------------------------------------------------------
 
 export const weaponsStore = createResourceStore(
-  "weapons",
+  { p: "weapons", s: "weapon" },
   weaponSchema,
   weaponFiltersSchema
 );

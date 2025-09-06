@@ -7,6 +7,7 @@ import type {
   Resource,
   ResourceFilters,
   ResourceStore,
+  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
@@ -38,6 +39,7 @@ export type ResourcesPanelProps = {
 
 export function createResourcesPanel<
   R extends Resource,
+  T extends ResourceTranslation,
   F extends ResourceFilters,
   L extends LocalizedResource<R>,
   FF extends Record<string, unknown>
@@ -58,7 +60,7 @@ export function createResourcesPanel<
   listTableColumns: Omit<ResourcesListTableColumn<R, L>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
   listTableDescriptionKey: keyof L | undefined;
-  store: ResourceStore<R, F>;
+  store: ResourceStore<R, T, F>;
   form: Form<FF, { id: string; lang: string }>;
   useLocalizeResource: () => (resource: R) => L;
 }) {
