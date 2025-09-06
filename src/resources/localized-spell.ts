@@ -13,10 +13,10 @@ import { useTranslateSpellRange } from "./spell-range";
 import { useTranslateSpellSchool } from "./spell-school";
 
 //------------------------------------------------------------------------------
-// Spell Translation
+// Localized Spell
 //------------------------------------------------------------------------------
 
-export const spellTranslationSchema = z.object({
+export const localizedSpellSchema = z.object({
   _raw: spellSchema,
   campaign: z.string(),
   campaign_with_page: z.string(),
@@ -39,13 +39,13 @@ export const spellTranslationSchema = z.object({
   school: z.string(),
 });
 
-export type SpellTranslation = z.infer<typeof spellTranslationSchema>;
+export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 
 //------------------------------------------------------------------------------
-// Use Translate Spell
+// Use Localize Spell
 //------------------------------------------------------------------------------
 
-export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
+export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
@@ -58,7 +58,7 @@ export function useTranslateSpell(): (spell: Spell) => SpellTranslation {
   const translateTime = useTranslateTime();
 
   return useCallback(
-    (spell: Spell): SpellTranslation => {
+    (spell: Spell): LocalizedSpell => {
       const casting_time = spell.casting_time_value
         ? translateTime(spell.casting_time_value)
         : translateSpellCastingTime(spell.casting_time).label;

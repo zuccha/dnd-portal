@@ -1,7 +1,7 @@
 import { SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import type { LocalizedSpell } from "../../../../../../resources/localized-spell";
 import { useIsSpellSelected } from "../../../../../../resources/spell";
-import type { SpellTranslation } from "../../../../../../resources/spell-translation";
 import ResourceCard from "../resources/resource-card";
 
 //------------------------------------------------------------------------------
@@ -10,7 +10,7 @@ import ResourceCard from "../resources/resource-card";
 
 export type SpellCardProps = {
   onClickTitle?: () => void;
-  resource: SpellTranslation;
+  resource: LocalizedSpell;
 };
 
 export default function SpellCard({ onClickTitle, resource }: SpellCardProps) {

@@ -1,8 +1,8 @@
-import { type Spell, spellsStore } from "../../../../../../resources/spell";
 import {
-  type SpellTranslation,
-  useTranslateSpell,
-} from "../../../../../../resources/spell-translation";
+  type LocalizedSpell,
+  useLocalizeSpell,
+} from "../../../../../../resources/localized-spell";
+import { type Spell, spellsStore } from "../../../../../../resources/spell";
 import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";
 import SpellCard from "./spell-card";
@@ -15,7 +15,7 @@ import SpellsFilters from "./spells-filters";
 //------------------------------------------------------------------------------
 
 const columns: Omit<
-  ResourcesListTableColumn<Spell, SpellTranslation>,
+  ResourcesListTableColumn<Spell, LocalizedSpell>,
   "label"
 >[] = [
   { key: "name" },
@@ -99,7 +99,7 @@ const SpellsPanel = createResourcesPanel({
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "description",
   store: spellsStore,
-  useTranslateResource: useTranslateSpell,
+  useTranslateResource: useLocalizeSpell,
 });
 
 export default SpellsPanel;
