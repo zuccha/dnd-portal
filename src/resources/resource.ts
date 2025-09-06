@@ -5,7 +5,7 @@ import { type ZodType, z } from "zod";
 import { useI18nLang } from "../i18n/i18n-lang";
 import type { I18nString } from "../i18n/i18n-string";
 import { createLocalStore } from "../store/local-store";
-import supabase from "../supabase";
+import supabase, { queryClient } from "../supabase";
 import { createObservable } from "../utils/observable";
 import { createObservableSet } from "../utils/observable-set";
 
@@ -214,11 +214,14 @@ export function createResourceStore<
     resource: Partial<R>,
     translation: Partial<T>
   ): Promise<PostgrestSingleResponse<null>> {
-    return await supabase.rpc(`update_${name.s}`, {
+    const response = await supabase.rpc(`update_${name.s}`, {
       p_id: id,
       [`p_${name.s}`]: resource,
       p_translation: translation,
     });
+    if (!response.error)
+      queryClient.invalidateQueries({ queryKey: [`resources[${name.p}]`] });
+    return response;
   }
 
   //----------------------------------------------------------------------------
