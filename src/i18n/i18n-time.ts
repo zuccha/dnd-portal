@@ -11,7 +11,7 @@ import {
 // Time
 //------------------------------------------------------------------------------
 
-const timeUnits = ["round", "s", "min", "hr", "d"];
+export const timeUnits = ["round", "s", "min", "hr", "d"];
 
 export const timeRegex = computeMeasureRegex(timeUnits);
 

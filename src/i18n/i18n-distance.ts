@@ -11,9 +11,9 @@ import {
 // Distance
 //------------------------------------------------------------------------------
 
-const distanceImpUnits = ["ft", "mi"];
-const distanceMetUnits = ["m", "km"];
-const distanceUnits = [...distanceImpUnits, ...distanceMetUnits];
+export const distanceImpUnits = ["ft", "mi"];
+export const distanceMetUnits = ["m", "km"];
+export const distanceUnits = [...distanceImpUnits, ...distanceMetUnits];
 
 export const distanceImpRegex = computeMeasureRegex(distanceImpUnits);
 export const distanceMetRegex = computeMeasureRegex(distanceMetUnits);
