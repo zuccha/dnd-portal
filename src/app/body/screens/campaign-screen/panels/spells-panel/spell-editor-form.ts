@@ -21,8 +21,7 @@ import { createForm } from "../../../../../../utils/form";
 
 export type SpellEditorFormFields = {
   casting_time: SpellCastingTime;
-  casting_time_unit: TimeUnit;
-  casting_time_value: number;
+  casting_time_value: string;
   character_classes: CharacterClass[];
   concentration: boolean;
   description: string;
@@ -51,10 +50,7 @@ export const spellEditorForm = createForm<
 >(async (data, { lang, id }) => {
   const maybeSpell = {
     casting_time: data.casting_time,
-    casting_time_value:
-      data.casting_time_value && data.casting_time_unit
-        ? `${data.casting_time_value} ${data.casting_time_unit}`
-        : undefined,
+    casting_time_value: data.casting_time,
     character_classes: data.character_classes,
     concentration: data.concentration,
     duration: data.duration,
@@ -162,26 +158,9 @@ export const useSpellEditorFormCastingTime = (
 // Casting Time Value
 //------------------------------------------------------------------------------
 
-function validateCastingTimeValue(castingTimeValue: number) {
-  return castingTimeValue >= 0 ? undefined : "casting_time_value.error.invalid";
-}
-
 export const useSpellEditorFormCastingTimeValue = (
-  defaultCastingTimeValue: number
-) =>
-  useSpellEditorFormField(
-    "casting_time_value",
-    defaultCastingTimeValue,
-    validateCastingTimeValue
-  );
-
-//------------------------------------------------------------------------------
-// Casting Time Unit
-//------------------------------------------------------------------------------
-
-export const useSpellEditorFormCastingTimeUnit = (
-  defaultCastingTimeUnit: TimeUnit
-) => useSpellEditorFormField("casting_time_unit", defaultCastingTimeUnit);
+  defaultCastingTimeValue: string
+) => useSpellEditorFormField("casting_time_value", defaultCastingTimeValue);
 
 //------------------------------------------------------------------------------
 // Duration

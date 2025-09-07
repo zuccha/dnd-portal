@@ -1,4 +1,4 @@
-import { HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import useListCollection from "../../../../../../hooks/use-list-collection";
 import {
   type DistanceImpUnit,
@@ -24,6 +24,7 @@ import { useSpellRangeOptions } from "../../../../../../resources/spell-range";
 import { useSpellSchoolOptions } from "../../../../../../resources/spell-school";
 import Field from "../../../../../../ui/field";
 import Input from "../../../../../../ui/input";
+import MeasureInput from "../../../../../../ui/measure-input";
 import NumberInput from "../../../../../../ui/number-input";
 import Select from "../../../../../../ui/select";
 import Switch from "../../../../../../ui/switch";
@@ -31,7 +32,6 @@ import Textarea from "../../../../../../ui/textarea";
 import type { ResourceEditorContentProps } from "../resources/resource-editor";
 import {
   useSpellEditorFormCastingTime,
-  useSpellEditorFormCastingTimeUnit,
   useSpellEditorFormCastingTimeValue,
   useSpellEditorFormCharacterClasses,
   useSpellEditorFormDescription,
@@ -99,13 +99,16 @@ export default function SpellEditor({
       </HStack>
 
       <HStack gap={4}>
-        <Switch flex={1} label={t("ritual.label")} size="lg" {...ritual} />
-        <Switch
-          flex={1}
-          label={t("concentration.label")}
-          size="lg"
-          {...concentration}
-        />
+        <Box flex={1}>
+          <Switch label={t("ritual.label")} size="lg" {...ritual} />
+        </Box>
+        <Box flex={1}>
+          <Switch
+            label={t("concentration.label")}
+            size="lg"
+            {...concentration}
+          />
+        </Box>
       </HStack>
 
       <SpellEditorRange
@@ -270,37 +273,24 @@ function SpellEditorCastingTimeValue({
 }: {
   defaultCastingTimeValue: string;
 }) {
-  const timeUnitOptions = useListCollection(useTimeUnitOptions());
-
-  const [initialCastingTimeValue, initialCastingTimeUnit] = parseTime(
+  const timeUnitOptions = useTimeUnitOptions();
+  const castingTimeValue = useSpellEditorFormCastingTimeValue(
     defaultCastingTimeValue
   );
 
-  const castingTimeValue = useSpellEditorFormCastingTimeValue(
-    initialCastingTimeValue
-  );
-  const castingTimeUnit = useSpellEditorFormCastingTimeUnit(
-    initialCastingTimeUnit
-  );
-
   return (
-    <>
-      <HStack h={10}>:</HStack>
-      <Field
-        disabled={castingTimeValue.disabled}
-        invalid={!!castingTimeValue.error}
-        maxW="6em"
-      >
-        <NumberInput min={0} {...castingTimeValue} />
-      </Field>
-      <Field
-        disabled={castingTimeUnit.disabled}
-        invalid={!!castingTimeUnit.error}
-        maxW="7em"
-      >
-        <Select options={timeUnitOptions} withinDialog {...castingTimeUnit} />
-      </Field>
-    </>
+    <Field
+      disabled={castingTimeValue.disabled}
+      invalid={!!castingTimeValue.error}
+      maxW="9em"
+    >
+      <MeasureInput
+        min={0}
+        onParse={parseTime}
+        unitOptions={timeUnitOptions}
+        {...castingTimeValue}
+      />
+    </Field>
   );
 }
 
@@ -623,11 +613,6 @@ const i18nContext = {
   "casting_time.label": {
     en: "Casting Time",
     it: "Tempo di Lancio",
-  },
-
-  "casting_time_value.error.invalid": {
-    en: "The value cannot be less than zero",
-    it: "Il valore non può essere minore di zero",
   },
 
   "duration.label": {
