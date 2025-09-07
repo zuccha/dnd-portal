@@ -60,8 +60,7 @@ import {
 export default function SpellEditor({
   resource,
 }: ResourceEditorContentProps<Spell>) {
-  const langContextBag = useI18nLangContext(i18nContext);
-  const { lang, t } = langContextBag;
+  const { lang, t } = useI18nLangContext(i18nContext);
 
   const submitError = useSpellEditorFormSubmitError();
 
@@ -475,7 +474,7 @@ function SpellEditorRangeValues({
           onValueChange={setRangeImpValueAndUpdateMet}
         />
       </Field>
-      <Field disabled={impUnit.disabled} invalid={!!impUnit.error} maxW="7em">
+      <Field disabled={impUnit.disabled} invalid={!!impUnit.error} maxW="4.5em">
         <Select
           options={distanceImpOptions}
           withinDialog
@@ -491,7 +490,7 @@ function SpellEditorRangeValues({
           onValueChange={setRangeMetValueAndUpdateImp}
         />
       </Field>
-      <Field disabled={metUnit.disabled} invalid={!!metUnit.error} maxW="7em">
+      <Field disabled={metUnit.disabled} invalid={!!metUnit.error} maxW="4.5em">
         <Select
           options={distanceMetOptions}
           withinDialog
