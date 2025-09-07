@@ -21,6 +21,11 @@ export const distanceMetRegex = computeMeasureRegex(distanceMetUnits);
 export const distanceImpSchema = z.string().regex(distanceImpRegex);
 export const distanceMetSchema = z.string().regex(distanceMetRegex);
 
+const mInKm = 1000;
+const ftInMi = 5000;
+const ftToMRatio = 3 / 10;
+const mToFtRatio = 10 / 3;
+
 //------------------------------------------------------------------------------
 // Parse Distance Imp
 //------------------------------------------------------------------------------
@@ -41,36 +46,38 @@ export function parseDistanceMet(distance: string) {
 // Convert Distance Imp To Met
 //------------------------------------------------------------------------------
 
-const ftToMRatio = 3 / 10;
-
 export function convertDistanceImpToMet(
   value: number,
-  unit: string
+  unit: string,
+  outUnit?: "m" | "km"
 ): [number, "m" | "km"] {
   const m =
     {
       ft: value * ftToMRatio,
-      mi: value * 5000 * ftToMRatio,
+      mi: value * ftInMi * ftToMRatio,
     }[unit] ?? 0;
-  return m < 1000 ? [m, "m"] : [m / 1000, "km"];
+  if (outUnit === "m") return [m, "m"];
+  if (outUnit === "km") return [m / mInKm, "km"];
+  return m < mInKm ? [m, "m"] : [m / mInKm, "km"];
 }
 
 //------------------------------------------------------------------------------
 // Convert Distance Met To Imp
 //------------------------------------------------------------------------------
 
-const mToFtRatio = 10 / 3;
-
 export function convertDistanceMetToImp(
   value: number,
-  unit: string
+  unit: string,
+  outUnit?: "ft" | "mi"
 ): [number, "ft" | "mi"] {
   const ft =
     {
-      km: value * 1000 * mToFtRatio,
+      km: value * mInKm * mToFtRatio,
       m: value * mToFtRatio,
     }[unit] ?? 0;
-  return ft < 5000 ? [ft, "ft"] : [ft / 5000, "mi"];
+  if (outUnit === "ft") return [ft, "ft"];
+  if (outUnit === "mi") return [ft / ftInMi, "mi"];
+  return ft < ftInMi ? [ft, "ft"] : [ft / ftInMi, "mi"];
 }
 
 //------------------------------------------------------------------------------
@@ -128,14 +135,14 @@ const i18Context = {
   "m.unit.long": { en: "Meters", it: "Metri" },
   "mi.unit.long": { en: "Miles", it: "Miglia" },
 
-  "cm.unit.short": { en: "cm", it: "km" },
+  "cm.unit.short": { en: "cm", it: "cm" },
   "ft.unit.short": { en: "ft", it: "ft" },
   "km.unit.short": { en: "km", it: "km" },
   "m.unit.short": { en: "m", it: "m" },
   "mi.unit.short": { en: "mi", it: "mi" },
 
   "cm.long/*": { en: "<1> centimeters", it: "<1> centimetri" },
-  "cm.long/1": { en: "<1> centimeters", it: "<1> centimetro" },
+  "cm.long/1": { en: "<1> centimeter", it: "<1> centimetro" },
   "ft.long/*": { en: "<1> feet", it: "<1> piedi" },
   "ft.long/1": { en: "<1> foot", it: "<1> piede" },
   "km.long/*": { en: "<1> kilometers", it: "<1> chiilometri" },
