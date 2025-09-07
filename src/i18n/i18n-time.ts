@@ -41,12 +41,16 @@ export function useTranslateTime(
 // Use Time Unit Options
 //------------------------------------------------------------------------------
 
-export function useTimeUnitOptions() {
+export function useTimeUnitOptions(format: "long" | "short" = "short") {
   const { t } = useI18nLangContext(i18Context);
 
   return useMemo(
-    () => timeUnits.map((unit) => ({ label: t(`${unit}.unit`), value: unit })),
-    [t]
+    () =>
+      timeUnits.map((unit) => ({
+        label: t(`${unit}.unit.${format}`),
+        value: unit,
+      })),
+    [format, t]
   );
 }
 
@@ -55,11 +59,17 @@ export function useTimeUnitOptions() {
 //------------------------------------------------------------------------------
 
 const i18Context = {
-  "d.unit": { en: "Days", it: "Giorni" },
-  "hr.unit": { en: "Hours", it: "Ore" },
-  "min.unit": { en: "Minutes", it: "Minuti" },
-  "round.unit": { en: "Rounds", it: "Round" },
-  "s.unit": { en: "Seconds", it: "Secondi" },
+  "d.unit.long": { en: "Days", it: "Giorni" },
+  "hr.unit.long": { en: "Hours", it: "Ore" },
+  "min.unit.long": { en: "Minutes", it: "Minuti" },
+  "round.unit.long": { en: "Rounds", it: "Round" },
+  "s.unit.long": { en: "Seconds", it: "Secondi" },
+
+  "d.unit.short": { en: "d", it: "g" },
+  "hr.unit.short": { en: "hr", it: "h" },
+  "min.unit.short": { en: "min", it: "min" },
+  "round.unit.short": { en: "rnd", it: "rnd" },
+  "s.unit.short": { en: "s", it: "s" },
 
   "d.long/*": { en: "<1> days", it: "<1> giorni" },
   "d.long/1": { en: "<1> day", it: "<1> giorno" },
