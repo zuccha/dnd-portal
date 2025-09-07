@@ -87,16 +87,16 @@ export function useTranslateDistance(
 // Use Distance Imp Unit Options
 //------------------------------------------------------------------------------
 
-export function useDistanceImpUnitOptions() {
+export function useDistanceImpUnitOptions(format: "long" | "short" = "short") {
   const { t } = useI18nLangContext(i18Context);
 
   return useMemo(
     () =>
       distanceImpUnits.map((unit) => ({
-        label: t(`${unit}.unit`),
+        label: t(`${unit}.unit.${format}`),
         value: unit,
       })),
-    [t]
+    [format, t]
   );
 }
 
@@ -104,16 +104,16 @@ export function useDistanceImpUnitOptions() {
 // Use Distance Met Unit Options
 //------------------------------------------------------------------------------
 
-export function useDistanceMetUnitOptions() {
+export function useDistanceMetUnitOptions(format: "long" | "short" = "short") {
   const { t } = useI18nLangContext(i18Context);
 
   return useMemo(
     () =>
       distanceMetUnits.map((unit) => ({
-        label: t(`${unit}.unit`),
+        label: t(`${unit}.unit.${format}`),
         value: unit,
       })),
-    [t]
+    [format, t]
   );
 }
 
@@ -122,11 +122,17 @@ export function useDistanceMetUnitOptions() {
 //------------------------------------------------------------------------------
 
 const i18Context = {
-  "cm.unit": { en: "Centimeters", it: "Centimetri" },
-  "ft.unit": { en: "Feet", it: "Piedi" },
-  "km.unit": { en: "Kilometers", it: "Chilometri" },
-  "m.unit": { en: "Meters", it: "Metri" },
-  "mi.unit": { en: "Miles", it: "Miglia" },
+  "cm.unit.long": { en: "Centimeters", it: "Centimetri" },
+  "ft.unit.long": { en: "Feet", it: "Piedi" },
+  "km.unit.long": { en: "Kilometers", it: "Chilometri" },
+  "m.unit.long": { en: "Meters", it: "Metri" },
+  "mi.unit.long": { en: "Miles", it: "Miglia" },
+
+  "cm.unit.short": { en: "cm", it: "km" },
+  "ft.unit.short": { en: "ft", it: "ft" },
+  "km.unit.short": { en: "km", it: "km" },
+  "m.unit.short": { en: "m", it: "m" },
+  "mi.unit.short": { en: "mi", it: "mi" },
 
   "cm.long/*": { en: "<1> centimeters", it: "<1> centimetri" },
   "cm.long/1": { en: "<1> centimeters", it: "<1> centimetro" },
