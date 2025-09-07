@@ -19,7 +19,7 @@ export type SelectNativeProps<T extends string> = Omit<
   value?: T;
 };
 
-export default function Select<T extends string>({
+export default function SelectNative<T extends string>({
   onValueChange,
   options,
   value,
@@ -33,7 +33,6 @@ export default function Select<T extends string>({
             ? (e) => onValueChange(e.currentTarget.value as T)
             : undefined
         }
-        rounded={0}
         value={value}
       >
         {options.map((option) => (
