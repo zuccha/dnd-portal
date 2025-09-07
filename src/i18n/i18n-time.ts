@@ -11,7 +11,9 @@ import {
 // Time
 //------------------------------------------------------------------------------
 
-export const timeUnits = ["round", "s", "min", "hr", "d"];
+export const timeUnitsSchema = z.enum(["round", "s", "min", "hr", "d"]);
+export const timeUnits = timeUnitsSchema.options;
+export type TimeUnit = z.infer<typeof timeUnitsSchema>;
 
 export const timeRegex = computeMeasureRegex(timeUnits);
 
@@ -22,7 +24,7 @@ export const timeSchema = z.string().regex(timeRegex);
 //------------------------------------------------------------------------------
 
 export function parseTime(time: string) {
-  return parseMeasure(time, timeUnits);
+  return parseMeasure<TimeUnit>(time, timeUnits, "min");
 }
 
 //------------------------------------------------------------------------------
@@ -32,7 +34,7 @@ export function parseTime(time: string) {
 export function useTranslateTime(
   format: "long" | "short" = "short"
 ): (raw: string) => string {
-  return useTranslateMeasure(i18Context, timeUnits, format);
+  return useTranslateMeasure<TimeUnit>(i18Context, timeUnits, "min", format);
 }
 
 //------------------------------------------------------------------------------

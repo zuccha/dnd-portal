@@ -11,9 +11,13 @@ import {
 // Weight
 //------------------------------------------------------------------------------
 
-export const weightImpUnits = ["lb"];
-export const weightMetUnits = ["kg"];
-export const weightUnits = [...weightImpUnits, ...weightMetUnits];
+export const weightImpUnitsSchema = z.enum(["lb"]);
+export const weightImpUnits = weightImpUnitsSchema.options;
+export type WeightImpUnit = z.infer<typeof weightImpUnitsSchema>;
+
+export const weightMetUnitsSchema = z.enum(["kg"]);
+export const weightMetUnits = weightMetUnitsSchema.options;
+export type WeightMetUnit = z.infer<typeof weightMetUnitsSchema>;
 
 export const weightImpRegex = computeMeasureRegex(weightImpUnits);
 export const weightMetRegex = computeMeasureRegex(weightMetUnits);
@@ -29,7 +33,7 @@ const lbToKgRatio = 1 / 2;
 //------------------------------------------------------------------------------
 
 export function parseWeightImp(weight: string) {
-  return parseMeasure(weight, weightImpUnits);
+  return parseMeasure<WeightImpUnit>(weight, weightImpUnits, "lb");
 }
 
 //------------------------------------------------------------------------------
@@ -37,7 +41,7 @@ export function parseWeightImp(weight: string) {
 //------------------------------------------------------------------------------
 
 export function parseWeightMet(weight: string) {
-  return parseMeasure(weight, weightMetUnits);
+  return parseMeasure<WeightMetUnit>(weight, weightMetUnits, "kg");
 }
 
 //------------------------------------------------------------------------------
@@ -67,13 +71,33 @@ export function convertWeightMetToImp(
 }
 
 //------------------------------------------------------------------------------
-// Use Translate Weight
+// Use Translate Weight Imp
 //------------------------------------------------------------------------------
 
-export function useTranslateWeight(
+export function useTranslateWeightImp(
   format: "long" | "short" = "short"
 ): (raw: string) => string {
-  return useTranslateMeasure(i18Context, weightUnits, format);
+  return useTranslateMeasure<WeightImpUnit>(
+    i18Context,
+    weightImpUnits,
+    "lb",
+    format
+  );
+}
+
+//------------------------------------------------------------------------------
+// Use Translate Weight Met
+//------------------------------------------------------------------------------
+
+export function useTranslateWeightMet(
+  format: "long" | "short" = "short"
+): (raw: string) => string {
+  return useTranslateMeasure<WeightMetUnit>(
+    i18Context,
+    weightMetUnits,
+    "kg",
+    format
+  );
 }
 
 //------------------------------------------------------------------------------

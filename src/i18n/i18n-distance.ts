@@ -11,9 +11,16 @@ import {
 // Distance
 //------------------------------------------------------------------------------
 
-export const distanceImpUnits = ["ft", "mi"];
-export const distanceMetUnits = ["m", "km"];
+export const distanceImpUnitsSchema = z.enum(["ft", "mi"]);
+export const distanceImpUnits = distanceImpUnitsSchema.options;
+export type DistanceImpUnit = z.infer<typeof distanceImpUnitsSchema>;
+
+export const distanceMetUnitsSchema = z.enum(["m", "km"]);
+export const distanceMetUnits = distanceMetUnitsSchema.options;
+export type DistanceMetUnit = z.infer<typeof distanceMetUnitsSchema>;
+
 export const distanceUnits = [...distanceImpUnits, ...distanceMetUnits];
+export type DistanceUnit = (typeof distanceUnits)[number];
 
 export const distanceImpRegex = computeMeasureRegex(distanceImpUnits);
 export const distanceMetRegex = computeMeasureRegex(distanceMetUnits);
@@ -31,7 +38,7 @@ const mToFtRatio = 10 / 3;
 //------------------------------------------------------------------------------
 
 export function parseDistanceImp(distance: string) {
-  return parseMeasure(distance, distanceImpUnits);
+  return parseMeasure<DistanceImpUnit>(distance, distanceImpUnits, "ft");
 }
 
 //------------------------------------------------------------------------------
@@ -39,7 +46,7 @@ export function parseDistanceImp(distance: string) {
 //------------------------------------------------------------------------------
 
 export function parseDistanceMet(distance: string) {
-  return parseMeasure(distance, distanceMetUnits);
+  return parseMeasure<DistanceMetUnit>(distance, distanceMetUnits, "m");
 }
 
 //------------------------------------------------------------------------------
@@ -81,13 +88,33 @@ export function convertDistanceMetToImp(
 }
 
 //------------------------------------------------------------------------------
-// Use Translate Distance
+// Use Translate Distance Imp
 //------------------------------------------------------------------------------
 
-export function useTranslateDistance(
+export function useTranslateDistanceImp(
   format: "long" | "short" = "short"
 ): (raw: string) => string {
-  return useTranslateMeasure(i18Context, distanceUnits, format);
+  return useTranslateMeasure<DistanceImpUnit>(
+    i18Context,
+    distanceImpUnits,
+    "ft",
+    format
+  );
+}
+
+//------------------------------------------------------------------------------
+// Use Translate Distance Met
+//------------------------------------------------------------------------------
+
+export function useTranslateDistanceMet(
+  format: "long" | "short" = "short"
+): (raw: string) => string {
+  return useTranslateMeasure<DistanceMetUnit>(
+    i18Context,
+    distanceMetUnits,
+    "m",
+    format
+  );
 }
 
 //------------------------------------------------------------------------------

@@ -1,6 +1,9 @@
 import { useCallback } from "react";
 import { z } from "zod";
-import { useTranslateDistance } from "../i18n/i18n-distance";
+import {
+  useTranslateDistanceImp,
+  useTranslateDistanceMet,
+} from "../i18n/i18n-distance";
 import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
@@ -54,7 +57,8 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
   const translateSpellDuration = useTranslateSpellDuration(lang);
   const translateSpellRange = useTranslateSpellRange(lang);
-  const translateDistance = useTranslateDistance();
+  const translateDistanceImp = useTranslateDistanceImp();
+  const translateDistanceMet = useTranslateDistanceMet();
   const translateTime = useTranslateTime();
 
   return useCallback(
@@ -69,9 +73,9 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
 
       const range =
         system === "metric" && spell.range_value_met
-          ? translateDistance(spell.range_value_met)
+          ? translateDistanceMet(spell.range_value_met)
           : system === "imperial" && spell.range_value_imp
-          ? translateDistance(spell.range_value_imp)
+          ? translateDistanceImp(spell.range_value_imp)
           : translateSpellRange(spell.range).label;
 
       const description = translate(spell.description, lang);
@@ -130,7 +134,8 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       ti,
       tp,
       translateCharacterClass,
-      translateDistance,
+      translateDistanceImp,
+      translateDistanceMet,
       translateSpellCastingTime,
       translateSpellDuration,
       translateSpellRange,
