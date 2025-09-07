@@ -1,33 +1,63 @@
-import { Group, InputGroup } from "@chakra-ui/react";
+import { InputGroup, type InputGroupProps } from "@chakra-ui/react";
+import { useCallback } from "react";
 import NumberInput from "./number-input";
-import Select, { type SelectProps } from "./select";
+import SelectNative, { type SelectNativeProps } from "./select-native";
 
 //------------------------------------------------------------------------------
 // Measure Input
 //------------------------------------------------------------------------------
 
-export type MeasureInputProps<T extends string> = {
-  fallback: [number, T];
-  onParse: (value: string) => [number, T] | undefined;
+export type MeasureInputProps<U extends string> = InputGroupProps & {
+  max?: number;
+  min?: number;
+  onParse: (value: string) => [number, U];
   onValueChange: (value: string) => void;
-  unitOptions: SelectProps<T>["options"];
+  unitOptions: SelectNativeProps<U>["options"];
   value: string;
 };
 
-export default function MeasureInput<T extends string>({
+export default function MeasureInput<U extends string>({
+  max,
+  min,
   onParse,
   onValueChange,
   unitOptions,
   value: measure,
-}: MeasureInputProps<T>) {
+  ...rest
+}: MeasureInputProps<U>) {
   const [value, unit] = onParse(measure);
 
-  // const changeValue
+  const changeValue = useCallback(
+    (next: number) => onValueChange(`${next} ${unit}`),
+    [onValueChange, unit]
+  );
+
+  const changeUnit = useCallback(
+    (next: U) => onValueChange(`${value} ${next}`),
+    [onValueChange, value]
+  );
 
   return (
-    <Group attached>
-      <NumberInput />
-      <Select options={unitOptions} />
-    </Group>
+    <InputGroup
+      endElement={
+        <SelectNative
+          onValueChange={changeUnit}
+          options={unitOptions}
+          size="xs"
+          value={unit}
+          variant="plain"
+        />
+      }
+      endElementProps={{ px: 0, right: 6 }}
+      {...rest}
+    >
+      <NumberInput
+        max={max}
+        min={min}
+        onValueChange={changeValue}
+        value={value}
+        w="full"
+      />
+    </InputGroup>
   );
 }
