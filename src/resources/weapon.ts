@@ -87,4 +87,5 @@ export const {
   useNameFilter: useWeaponNameFilter,
   useIsSelected: useIsWeaponSelected,
   useSelectionCount: useWeaponsSelectionCount,
+  update: updateWeapon,
 } = weaponsStore;
