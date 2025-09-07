@@ -1,8 +1,8 @@
 import {
-  distanceImpUnits,
-  distanceMetUnits,
+  type DistanceImpUnit,
+  type DistanceMetUnit,
 } from "../../../../../../i18n/i18n-distance";
-import { timeUnits } from "../../../../../../i18n/i18n-time";
+import { type TimeUnit } from "../../../../../../i18n/i18n-time";
 import { type CharacterClass } from "../../../../../../resources/character-class";
 import {
   spellSchema,
@@ -21,22 +21,22 @@ import { createForm } from "../../../../../../utils/form";
 
 export type SpellEditorFormFields = {
   casting_time: SpellCastingTime;
-  casting_time_unit: string;
+  casting_time_unit: TimeUnit;
   casting_time_value: number;
   character_classes: CharacterClass[];
   concentration: boolean;
   description: string;
   duration: SpellDuration;
-  duration_unit: string;
+  duration_unit: TimeUnit;
   duration_value: number;
   level: number;
   material: boolean;
   materials: string;
   name: string;
   range: SpellRange;
-  range_imp_unit: string;
+  range_imp_unit: DistanceImpUnit;
   range_imp_value: number;
-  range_met_unit: string;
+  range_met_unit: DistanceMetUnit;
   range_met_value: number;
   ritual: boolean;
   school: SpellSchool;
@@ -179,22 +179,9 @@ export const useSpellEditorFormCastingTimeValue = (
 // Casting Time Unit
 //------------------------------------------------------------------------------
 
-function validateCastingTimeUnit(castingTimeUnit: string) {
-  return castingTimeUnit
-    ? timeUnits.includes(castingTimeUnit)
-      ? undefined
-      : "casting_time_unit.error.invalid"
-    : "casting_time_unit.error.empty";
-}
-
 export const useSpellEditorFormCastingTimeUnit = (
-  defaultCastingTimeUnit: string
-) =>
-  useSpellEditorFormField(
-    "casting_time_unit",
-    defaultCastingTimeUnit,
-    validateCastingTimeUnit
-  );
+  defaultCastingTimeUnit: TimeUnit
+) => useSpellEditorFormField("casting_time_unit", defaultCastingTimeUnit);
 
 //------------------------------------------------------------------------------
 // Duration
@@ -222,20 +209,8 @@ export const useSpellEditorFormDurationValue = (defaultDurationValue: number) =>
 // Duration Unit
 //------------------------------------------------------------------------------
 
-function validateDurationUnit(durationUnit: string) {
-  return durationUnit
-    ? timeUnits.includes(durationUnit)
-      ? undefined
-      : "duration_unit.error.invalid"
-    : "duration_unit.error.empty";
-}
-
-export const useSpellEditorFormDurationUnit = (defaultDurationUnit: string) =>
-  useSpellEditorFormField(
-    "duration_unit",
-    defaultDurationUnit,
-    validateDurationUnit
-  );
+export const useSpellEditorFormDurationUnit = (defaultDurationUnit: TimeUnit) =>
+  useSpellEditorFormField("duration_unit", defaultDurationUnit);
 
 //------------------------------------------------------------------------------
 // Range
@@ -263,20 +238,9 @@ export const useSpellEditorFormRangeImpValue = (defaultRangeImpValue: number) =>
 // Range Imp Unit
 //------------------------------------------------------------------------------
 
-function validateRangeImpUnit(rangeImpUnit: string) {
-  return rangeImpUnit
-    ? distanceImpUnits.includes(rangeImpUnit)
-      ? undefined
-      : "range_imp_unit.error.invalid"
-    : "range_imp_unit.error.empty";
-}
-
-export const useSpellEditorFormRangeImpUnit = (defaultRangeImpUnit: string) =>
-  useSpellEditorFormField(
-    "range_imp_unit",
-    defaultRangeImpUnit,
-    validateRangeImpUnit
-  );
+export const useSpellEditorFormRangeImpUnit = (
+  defaultRangeImpUnit: DistanceImpUnit
+) => useSpellEditorFormField("range_imp_unit", defaultRangeImpUnit);
 
 //------------------------------------------------------------------------------
 // Range Met Value
@@ -297,20 +261,9 @@ export const useSpellEditorFormRangeMetValue = (defaultRangeMetValue: number) =>
 // Range Met Unit
 //------------------------------------------------------------------------------
 
-function validateRangeMetUnit(rangeMetUnit: string) {
-  return rangeMetUnit
-    ? distanceMetUnits.includes(rangeMetUnit)
-      ? undefined
-      : "range_met_unit.error.invalid"
-    : "range_met_unit.error.empty";
-}
-
-export const useSpellEditorFormRangeMetUnit = (defaultRangeMetUnit: string) =>
-  useSpellEditorFormField(
-    "range_met_unit",
-    defaultRangeMetUnit,
-    validateRangeMetUnit
-  );
+export const useSpellEditorFormRangeMetUnit = (
+  defaultRangeMetUnit: DistanceMetUnit
+) => useSpellEditorFormField("range_met_unit", defaultRangeMetUnit);
 
 //------------------------------------------------------------------------------
 // Materials

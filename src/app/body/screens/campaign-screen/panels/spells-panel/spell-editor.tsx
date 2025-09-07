@@ -1,10 +1,10 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
 import useListCollection from "../../../../../../hooks/use-list-collection";
 import {
+  type DistanceImpUnit,
+  type DistanceMetUnit,
   convertDistanceImpToMet,
   convertDistanceMetToImp,
-  distanceImpUnits,
-  distanceMetUnits,
   parseDistanceImp,
   parseDistanceMet,
   useDistanceImpUnitOptions,
@@ -13,7 +13,6 @@ import {
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import {
   parseTime,
-  timeUnits,
   useTimeUnitOptions,
 } from "../../../../../../i18n/i18n-time";
 import { useCharacterClassOptions } from "../../../../../../resources/character-class";
@@ -91,11 +90,11 @@ export default function SpellEditor({
       <HStack align="flex-start" gap={4}>
         <SpellEditorCastingTime
           defaultCastingTime={resource.casting_time}
-          defaultCastingTimeValue={resource.casting_time_value}
+          defaultCastingTimeValue={resource.casting_time_value ?? "0 min"}
         />
         <SpellEditorDuration
           defaultDuration={resource.duration}
-          defaultDurationValue={resource.duration_value}
+          defaultDurationValue={resource.duration_value ?? "0 min"}
         />
       </HStack>
 
@@ -111,8 +110,8 @@ export default function SpellEditor({
 
       <SpellEditorRange
         defaultRange={resource.range}
-        defaultRangeImpValue={resource.range_value_imp}
-        defaultRangeMetValue={resource.range_value_met}
+        defaultRangeImpValue={resource.range_value_imp ?? "0 ft"}
+        defaultRangeMetValue={resource.range_value_met ?? "0 m"}
       />
 
       <HStack gap={8}>
@@ -239,7 +238,7 @@ function SpellEditorCastingTime({
   defaultCastingTimeValue,
 }: {
   defaultCastingTime: Spell["casting_time"];
-  defaultCastingTimeValue: string | null | undefined;
+  defaultCastingTimeValue: string;
 }) {
   const castingTimeOptions = useListCollection(useSpellCastingTimeOptions());
   const { disabled, error, ...rest } =
@@ -269,13 +268,13 @@ function SpellEditorCastingTime({
 function SpellEditorCastingTimeValue({
   defaultCastingTimeValue,
 }: {
-  defaultCastingTimeValue: string | null | undefined;
+  defaultCastingTimeValue: string;
 }) {
   const timeUnitOptions = useListCollection(useTimeUnitOptions());
 
   const [initialCastingTimeValue, initialCastingTimeUnit] = parseTime(
-    defaultCastingTimeValue ?? "0 min"
-  ) ?? [0, "min"];
+    defaultCastingTimeValue
+  );
 
   const castingTimeValue = useSpellEditorFormCastingTimeValue(
     initialCastingTimeValue
@@ -314,7 +313,7 @@ function SpellEditorDuration({
   defaultDurationValue,
 }: {
   defaultDuration: Spell["duration"];
-  defaultDurationValue: string | null | undefined;
+  defaultDurationValue: string;
 }) {
   const durationOptions = useListCollection(useSpellDurationOptions());
   const { disabled, error, ...rest } =
@@ -342,13 +341,12 @@ function SpellEditorDuration({
 function SpellEditorDurationValue({
   defaultDurationValue,
 }: {
-  defaultDurationValue: string | null | undefined;
+  defaultDurationValue: string;
 }) {
   const timeUnitOptions = useListCollection(useTimeUnitOptions());
 
-  const [initialDurationValue, initialDurationUnit] = parseTime(
-    defaultDurationValue ?? "0 min"
-  ) ?? [0, "min"];
+  const [initialDurationValue, initialDurationUnit] =
+    parseTime(defaultDurationValue);
 
   const durationValue = useSpellEditorFormDurationValue(initialDurationValue);
   const durationUnit = useSpellEditorFormDurationUnit(initialDurationUnit);
@@ -384,8 +382,8 @@ function SpellEditorRange({
   defaultRangeMetValue,
 }: {
   defaultRange: Spell["range"];
-  defaultRangeImpValue: string | null | undefined;
-  defaultRangeMetValue: string | null | undefined;
+  defaultRangeImpValue: string;
+  defaultRangeMetValue: string;
 }) {
   const rangeOptions = useListCollection(useSpellRangeOptions());
   const { disabled, error, ...rest } = useSpellEditorFormRange(defaultRange);
@@ -416,19 +414,17 @@ function SpellEditorRangeValues({
   defaultRangeImpValue,
   defaultRangeMetValue,
 }: {
-  defaultRangeImpValue: string | null | undefined;
-  defaultRangeMetValue: string | null | undefined;
+  defaultRangeImpValue: string;
+  defaultRangeMetValue: string;
 }) {
   const distanceImpOptions = useListCollection(useDistanceImpUnitOptions());
   const distanceMetOptions = useListCollection(useDistanceMetUnitOptions());
 
-  const [defaultImpValue, defaultImpUnit] = parseDistanceImp(
-    defaultRangeImpValue ?? "0 ft"
-  ) ?? [0, "ft"];
+  const [defaultImpValue, defaultImpUnit] =
+    parseDistanceImp(defaultRangeImpValue);
 
-  const [defaultMetValue, defaultMetUnit] = parseDistanceMet(
-    defaultRangeMetValue ?? "0 m"
-  ) ?? [0, "m"];
+  const [defaultMetValue, defaultMetUnit] =
+    parseDistanceMet(defaultRangeMetValue);
 
   const impValue = useSpellEditorFormRangeImpValue(defaultImpValue);
   const impUnit = useSpellEditorFormRangeImpUnit(defaultImpUnit);
@@ -443,7 +439,7 @@ function SpellEditorRangeValues({
     metUnit.onValueChange(mu);
   };
 
-  const setRangeImpUnitAndUpdateMet = (unit: string) => {
+  const setRangeImpUnitAndUpdateMet = (unit: DistanceImpUnit) => {
     impUnit.onValueChange(unit);
     const [mv, mu] = convertDistanceImpToMet(impValue.value, unit);
     metValue.onValueChange(mv);
@@ -457,7 +453,7 @@ function SpellEditorRangeValues({
     impUnit.onValueChange(iu);
   };
 
-  const setRangeMetUnitAndUpdateImp = (unit: string) => {
+  const setRangeMetUnitAndUpdateImp = (unit: DistanceMetUnit) => {
     metUnit.onValueChange(unit);
     const [iv, iu] = convertDistanceMetToImp(metValue.value, unit);
     impValue.onValueChange(iv);
@@ -634,16 +630,6 @@ const i18nContext = {
     it: "Il valore non può essere minore di zero",
   },
 
-  "casting_time_unit.error.empty": {
-    en: "The unit cannot be empty",
-    it: "L'unità non può essere vuota",
-  },
-
-  "casting_time_unit.error.invalid": {
-    en: `The unit must be one of: ${timeUnits.join(", ")}`,
-    it: `L'unità dev'essere una tra: ${timeUnits.join(", ")}`,
-  },
-
   "duration.label": {
     en: "Duration",
     it: "Durata",
@@ -652,16 +638,6 @@ const i18nContext = {
   "duration_value.error.invalid": {
     en: "The value cannot be empty",
     it: "Il valore non può essere vuoto",
-  },
-
-  "duration_unit.error.empty": {
-    en: "The unit cannot be empty",
-    it: "L'unità non può essere vuota",
-  },
-
-  "duration_unit.error.invalid": {
-    en: `The unit must be one of: ${timeUnits.join(", ")}`,
-    it: `L'unità dev'essere una tra: ${timeUnits.join(", ")}`,
   },
 
   "range.label": {
@@ -674,29 +650,9 @@ const i18nContext = {
     it: "Il valore non può essere vuoto",
   },
 
-  "range_imp_unit.error.empty": {
-    en: "The unit cannot be empty",
-    it: "L'unità non può essere vuota",
-  },
-
-  "range_imp_unit.error.invalid": {
-    en: `The unit must be one of: ${distanceImpUnits.join(", ")}`,
-    it: `L'unità dev'essere una tra: ${distanceImpUnits.join(", ")}`,
-  },
-
   "range_met_value.error.invalid": {
     en: "The value cannot be empty",
     it: "Il valore non può essere vuoto",
-  },
-
-  "range_met_unit.error.empty": {
-    en: "The unit cannot be empty",
-    it: "L'unità non può essere vuota",
-  },
-
-  "range_met_unit.error.invalid": {
-    en: `The unit must be one of: ${distanceMetUnits.join(", ")}`,
-    it: `L'unità dev'essere una tra: ${distanceMetUnits.join(", ")}`,
   },
 
   "ritual.label": {
