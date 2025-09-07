@@ -5,6 +5,7 @@ import {
   convertDistanceMetToImp,
 } from "../../../../../../i18n/i18n-distance";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import { useI18nSystem } from "../../../../../../i18n/i18n-system";
 import {
   convertWeightImpToMet,
   convertWeightMetToImp,
@@ -40,9 +41,9 @@ import {
   useWeaponEditorFormWeightLb,
 } from "./weapon-editor-form";
 
-//----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Weapon Editor
-//----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 export type WeaponEditorProps = {
   resource: Weapon;
@@ -90,21 +91,22 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
         <Switch label={t("ranged.label")} size="lg" {...ranged} />
       </HStack>
 
-      {ranged.value && (
-        <WeaponEditorRange
-          defaultRangeFtLong={resource.range_ft_long ?? 0}
-          defaultRangeFtShort={resource.range_ft_short ?? 0}
-          defaultRangeMLong={resource.range_m_long ?? 0}
-          defaultRangeMShort={resource.range_m_short ?? 0}
-        />
-      )}
-
       <HStack align="flex-start" gap={4}>
         <WeaponEditorWeight
           defaultWeightKg={resource.weight_kg}
           defaultWeightLb={resource.weight_lb}
         />
+
         <WeaponEditorCost defaultCost={resource.cost} />
+
+        {ranged.value && (
+          <WeaponEditorRange
+            defaultRangeFtLong={resource.range_ft_long ?? 0}
+            defaultRangeFtShort={resource.range_ft_short ?? 0}
+            defaultRangeMLong={resource.range_m_long ?? 0}
+            defaultRangeMShort={resource.range_m_short ?? 0}
+          />
+        )}
       </HStack>
 
       <WeaponEditorNotes defaultNotes={resource.notes[lang] ?? ""} />
@@ -289,6 +291,7 @@ function WeaponEditorRange({
   defaultRangeMShort: number;
 }) {
   const { t } = useI18nLangContext(i18nContext);
+  const [system] = useI18nSystem();
 
   const ftShort = useWeaponEditorFormRangeFtShort(defaultRangeFtShort);
   const ftLong = useWeaponEditorFormRangeFtLong(defaultRangeFtLong);
@@ -316,9 +319,10 @@ function WeaponEditorRange({
   };
 
   return (
-    <HStack align="flex-end">
+    <>
       <Field
         disabled={ftShort.disabled}
+        hidden={system === "metric"}
         invalid={!!ftShort.error}
         label={t("range.ft.short.label")}
         maxW="6em"
@@ -327,15 +331,17 @@ function WeaponEditorRange({
       </Field>
       <Field
         disabled={ftLong.disabled}
+        hidden={system === "metric"}
         invalid={!!ftLong.error}
         label={t("range.ft.long.label")}
         maxW="6em"
       >
         <NumberInput min={0} {...ftLong} onValueChange={setRangeFtLong} />
       </Field>
-      <HStack h={10}>~</HStack>
+
       <Field
         disabled={mShort.disabled}
+        hidden={system === "imperial"}
         invalid={!!mShort.error}
         label={t("range.m.short.label")}
         maxW="6em"
@@ -344,13 +350,14 @@ function WeaponEditorRange({
       </Field>
       <Field
         disabled={mLong.disabled}
+        hidden={system === "imperial"}
         invalid={!!mLong.error}
         label={t("range.m.long.label")}
         maxW="6em"
       >
         <NumberInput min={0} {...mLong} onValueChange={setRangeMLong} />
       </Field>
-    </HStack>
+    </>
   );
 }
 
@@ -366,6 +373,7 @@ function WeaponEditorWeight({
   defaultWeightLb: number;
 }) {
   const { t } = useI18nLangContext(i18nContext);
+  const [system] = useI18nSystem();
 
   const weightLb = useWeaponEditorFormWeightLb(defaultWeightLb);
   const weightKg = useWeaponEditorFormWeightKg(defaultWeightKg);
@@ -384,15 +392,17 @@ function WeaponEditorWeight({
     <HStack align="flex-end">
       <Field
         disabled={weightLb.disabled}
+        hidden={system === "metric"}
         invalid={!!weightLb.error}
         label={t("weight.lb.label")}
         maxW="6em"
       >
         <NumberInput min={0} {...weightLb} onValueChange={setWeightLb} />
       </Field>
-      <HStack h={10}>~</HStack>
+
       <Field
         disabled={weightKg.disabled}
+        hidden={system === "imperial"}
         invalid={!!weightKg.error}
         label={t("weight.kg.label")}
         maxW="6em"
