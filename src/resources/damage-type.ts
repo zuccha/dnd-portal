@@ -1,4 +1,6 @@
+import { useMemo } from "react";
 import { z } from "zod";
+import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -49,3 +51,19 @@ export const {
   damageTypes,
   damageTypeTranslationSchema
 );
+
+//------------------------------------------------------------------------------
+// Use Damage Type Options
+//------------------------------------------------------------------------------
+
+export function useDamageTypeOptions() {
+  const weaponMasteryTranslations = useDamageTypeTranslations();
+
+  return useMemo(
+    () =>
+      weaponMasteryTranslations
+        .map(({ damage_type, label }) => ({ label, value: damage_type }))
+        .sort(compareObjects("label")),
+    [weaponMasteryTranslations]
+  );
+}
