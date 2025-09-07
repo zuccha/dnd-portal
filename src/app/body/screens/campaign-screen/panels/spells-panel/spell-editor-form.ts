@@ -2,7 +2,6 @@ import {
   type DistanceImpUnit,
   type DistanceMetUnit,
 } from "../../../../../../i18n/i18n-distance";
-import { type TimeUnit } from "../../../../../../i18n/i18n-time";
 import { type CharacterClass } from "../../../../../../resources/character-class";
 import {
   spellSchema,
@@ -26,8 +25,7 @@ export type SpellEditorFormFields = {
   concentration: boolean;
   description: string;
   duration: SpellDuration;
-  duration_unit: TimeUnit;
-  duration_value: number;
+  duration_value: string;
   level: number;
   material: boolean;
   materials: string;
@@ -54,10 +52,7 @@ export const spellEditorForm = createForm<
     character_classes: data.character_classes,
     concentration: data.concentration,
     duration: data.duration,
-    duration_value:
-      data.duration_value && data.duration_unit
-        ? `${data.duration_value} ${data.duration_unit}`
-        : undefined,
+    duration_value: data.duration_value,
     level: data.level,
     material: data.material,
     range: data.range,
@@ -173,23 +168,8 @@ export const useSpellEditorFormDuration = (defaultDuration: SpellDuration) =>
 // Duration Value
 //------------------------------------------------------------------------------
 
-function validateDurationValue(durationValue: number) {
-  return durationValue >= 0 ? undefined : "duration_value.error.invalid";
-}
-
-export const useSpellEditorFormDurationValue = (defaultDurationValue: number) =>
-  useSpellEditorFormField(
-    "duration_value",
-    defaultDurationValue,
-    validateDurationValue
-  );
-
-//------------------------------------------------------------------------------
-// Duration Unit
-//------------------------------------------------------------------------------
-
-export const useSpellEditorFormDurationUnit = (defaultDurationUnit: TimeUnit) =>
-  useSpellEditorFormField("duration_unit", defaultDurationUnit);
+export const useSpellEditorFormDurationValue = (defaultDurationValue: string) =>
+  useSpellEditorFormField("duration_value", defaultDurationValue);
 
 //------------------------------------------------------------------------------
 // Range

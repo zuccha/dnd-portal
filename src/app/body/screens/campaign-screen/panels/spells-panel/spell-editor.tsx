@@ -36,7 +36,6 @@ import {
   useSpellEditorFormCharacterClasses,
   useSpellEditorFormDescription,
   useSpellEditorFormDuration,
-  useSpellEditorFormDurationUnit,
   useSpellEditorFormDurationValue,
   useSpellEditorFormField,
   useSpellEditorFormLevel,
@@ -333,32 +332,22 @@ function SpellEditorDurationValue({
 }: {
   defaultDurationValue: string;
 }) {
-  const timeUnitOptions = useListCollection(useTimeUnitOptions());
-
-  const [initialDurationValue, initialDurationUnit] =
-    parseTime(defaultDurationValue);
-
-  const durationValue = useSpellEditorFormDurationValue(initialDurationValue);
-  const durationUnit = useSpellEditorFormDurationUnit(initialDurationUnit);
+  const timeUnitOptions = useTimeUnitOptions();
+  const durationValue = useSpellEditorFormDurationValue(defaultDurationValue);
 
   return (
-    <>
-      <HStack h={10}>:</HStack>
-      <Field
-        disabled={durationValue.disabled}
-        invalid={!!durationValue.error}
-        maxW="6em"
-      >
-        <NumberInput min={0} {...durationValue} />
-      </Field>
-      <Field
-        disabled={durationUnit.disabled}
-        invalid={!!durationUnit.error}
-        maxW="7em"
-      >
-        <Select options={timeUnitOptions} withinDialog {...durationUnit} />
-      </Field>
-    </>
+    <Field
+      disabled={durationValue.disabled}
+      invalid={!!durationValue.error}
+      maxW="6em"
+    >
+      <MeasureInput
+        min={0}
+        onParse={parseTime}
+        unitOptions={timeUnitOptions}
+        {...durationValue}
+      />
+    </Field>
   );
 }
 
@@ -618,11 +607,6 @@ const i18nContext = {
   "duration.label": {
     en: "Duration",
     it: "Durata",
-  },
-
-  "duration_value.error.invalid": {
-    en: "The value cannot be empty",
-    it: "Il valore non può essere vuoto",
   },
 
   "range.label": {
