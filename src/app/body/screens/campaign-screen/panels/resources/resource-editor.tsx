@@ -34,7 +34,12 @@ export function createResourceEditor<
   function SaveButton({ label, saving }: { label: string; saving: boolean }) {
     const valid = useValid();
     return (
-      <Button disabled={!valid || saving} variant="outline">
+      <Button
+        disabled={!valid || saving}
+        form="edit-resource"
+        loading={saving}
+        type="submit"
+      >
         {label}
       </Button>
     );
@@ -90,16 +95,9 @@ export function createResourceEditor<
 
               <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>
-                  <SaveButton label={t("cancel")} saving={saving} />
+                  <Button variant="outline">Cancel</Button>
                 </Dialog.ActionTrigger>
-                <Button
-                  disabled={saving}
-                  form="edit-resource"
-                  loading={saving}
-                  type="submit"
-                >
-                  {t("save")}
-                </Button>
+                <SaveButton label={t("save")} saving={saving} />
               </Dialog.Footer>
 
               <Dialog.CloseTrigger asChild>
