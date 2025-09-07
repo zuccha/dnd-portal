@@ -7,7 +7,10 @@ import SelectNative, { type SelectNativeProps } from "./select-native";
 // Measure Input
 //------------------------------------------------------------------------------
 
-export type MeasureInputProps<U extends string> = InputGroupProps & {
+export type MeasureInputProps<U extends string> = Omit<
+  InputGroupProps,
+  "children"
+> & {
   max?: number;
   min?: number;
   onParse: (value: string) => [number, U];
@@ -43,7 +46,6 @@ export default function MeasureInput<U extends string>({
         <SelectNative
           onValueChange={changeUnit}
           options={unitOptions}
-          size="xs"
           value={unit}
           variant="plain"
         />
