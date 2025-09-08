@@ -1,4 +1,9 @@
 import type { DamageType } from "../../../../../../resources/damage-type";
+import {
+  updateWeapon,
+  weaponSchema,
+  weaponTranslationSchema,
+} from "../../../../../../resources/weapon";
 import type { WeaponMastery } from "../../../../../../resources/weapon-mastery";
 import type { WeaponProperty } from "../../../../../../resources/weapon-property";
 import type { WeaponType } from "../../../../../../resources/weapon-type";
@@ -33,8 +38,50 @@ export type WeaponEditorFormFields = {
 export const weaponEditorForm = createForm<
   WeaponEditorFormFields,
   { id: string; lang: string }
->(async (data) => {
-  console.log(data);
+>(async (data, { lang, id }) => {
+  const maybeWeapon = {
+    cost: data.cost,
+    damage: data.damage,
+    damage_type: data.damage_type,
+    damage_versatile: data.damage_versatile,
+    magic: data.magic,
+    mastery: data.mastery,
+    melee: data.melee,
+    properties: data.properties,
+    range_ft_long: data.range_ft_long,
+    range_ft_short: data.range_ft_short,
+    range_m_long: data.range_m_long,
+    range_m_short: data.range_m_short,
+    ranged: data.ranged,
+    type: data.type,
+    weight_kg: data.weight_kg,
+    weight_lb: data.weight_lb,
+  };
+
+  const maybeTranslation = {
+    ammunition: data.ammunition,
+    lang,
+    name: data.name,
+    notes: data.notes,
+    weapon_id: id,
+  };
+
+  const report = (error: Error, message: string) => {
+    console.error(error);
+    return message;
+  };
+
+  const weapon = weaponSchema.partial().safeParse(maybeWeapon);
+  if (!weapon.success) return report(weapon.error, "form.error.invalid_weapon");
+
+  const translation = weaponTranslationSchema.safeParse(maybeTranslation);
+  if (!translation.success)
+    return report(translation.error, "form.error.invalid_translation");
+
+  const response = await updateWeapon(id, weapon.data, translation.data);
+  if (response.error)
+    report(response.error, "form.error.update_weapon_failure");
+
   return undefined;
 });
 
