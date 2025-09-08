@@ -50,7 +50,7 @@ export function createResourcesPanel<
   Filters,
   ResourceCard,
   ResourceEditorContent,
-  createResource,
+  defaultResource,
   form,
   listTableColumns,
   listTableColumnsI18nContext,
@@ -63,7 +63,7 @@ export function createResourcesPanel<
   Filters: React.FC;
   ResourceCard: React.FC<{ resource: L }>;
   ResourceEditorContent: React.FC<ResourceEditorContentProps<R>>;
-  createResource: (campaignId: string, lang: string) => R;
+  defaultResource: R;
   form: Form<FF>;
   listTableColumns: Omit<ResourcesListTableColumn<R, L>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
@@ -190,7 +190,7 @@ export function createResourcesPanel<
     useFilteredLocalizedResources,
     useSelectedFilteredLocalizedResourcesCount,
     useSetNewResource,
-    createResource
+    defaultResource
   );
 
   //----------------------------------------------------------------------------

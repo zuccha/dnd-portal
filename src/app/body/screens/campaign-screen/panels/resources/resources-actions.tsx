@@ -30,10 +30,10 @@ export function createResourcesActions<
   useSetNewResource: (
     campaignId: string
   ) => [(resource: R | undefined) => void, boolean],
-  createResource: (campaignId: string, lang: string) => R
+  defaultResource: R
 ) {
   return function ResourcesActions({ campaignId }: { campaignId: string }) {
-    const { lang, t } = useI18nLangContext(i18nContext);
+    const { t } = useI18nLangContext(i18nContext);
 
     const localizedResources = useLocalizedResources(campaignId);
     const count = useSelectedTranslationsCount(campaignId);
@@ -48,8 +48,8 @@ export function createResourcesActions<
     const [setNewResource, canSetNewResource] = useSetNewResource(campaignId);
 
     const addNew = useCallback(async () => {
-      setNewResource(createResource(campaignId, lang));
-    }, [campaignId, lang, setNewResource]);
+      setNewResource(defaultResource);
+    }, [setNewResource]);
 
     const copySelected = useCallback(async () => {
       if (!count) return;

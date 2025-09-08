@@ -10,7 +10,7 @@ import {
 } from "../../../../../../resources/localized-spell";
 import {
   type Spell,
-  createSpell,
+  defaultSpell,
   spellsStore,
   updateSpell,
 } from "../../../../../../resources/spell";
@@ -192,7 +192,7 @@ const SpellsPanel = createResourcesPanel({
   Filters: SpellsFilters,
   ResourceCard: SpellCard,
   ResourceEditorContent: SpellEditor,
-  createResource: createSpell,
+  defaultResource: defaultSpell,
   form: spellEditorForm,
   listTableColumns: columns,
   listTableColumnsI18nContext: i18nContext,

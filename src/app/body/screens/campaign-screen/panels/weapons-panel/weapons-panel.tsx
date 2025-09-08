@@ -11,7 +11,7 @@ import {
 } from "../../../../../../resources/localized-weapon";
 import {
   type Weapon,
-  createWeapon,
+  defaultWeapon,
   updateWeapon,
   weaponsStore,
 } from "../../../../../../resources/weapon";
@@ -194,7 +194,7 @@ const WeaponsPanel = createResourcesPanel({
   Filters: WeaponsFilters,
   ResourceCard: WeaponCard,
   ResourceEditorContent: WeaponEditor,
-  createResource: createWeapon,
+  defaultResource: defaultWeapon,
   form: weaponEditorForm,
   listTableColumns: columns,
   listTableColumnsI18nContext: i18nContext,
