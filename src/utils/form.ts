@@ -23,7 +23,7 @@ export type Form<Fields extends Record<string, unknown>> = {
   useFieldError: (name: keyof Fields) => string | undefined;
   useSubmit: (
     onSubmit: (data: Partial<Fields>) => Promise<string | undefined>
-  ) => [() => Promise<void>, boolean];
+  ) => [() => Promise<string | undefined>, boolean];
   useSubmitError: () => string | undefined;
   useValid: () => boolean;
 };
@@ -149,7 +149,7 @@ export function createForm<
 
   function useSubmit(
     onSubmit: (data: Partial<Fields>) => Promise<string | undefined>
-  ): [() => Promise<void>, boolean] {
+  ): [() => Promise<string | undefined>, boolean] {
     const [submitting, setSubmitting] = useSubmitting();
     const setSubmitError = submitErrorStore.useSetValue();
 
@@ -167,6 +167,8 @@ export function createForm<
       const error = await onSubmit(data);
       setSubmitError(error);
       setSubmitting(false);
+
+      return error;
     }, [onSubmit, setSubmitError, setSubmitting]);
 
     return [submit, submitting];

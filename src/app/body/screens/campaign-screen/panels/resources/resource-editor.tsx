@@ -52,8 +52,8 @@ export function createResourceEditor<
     }, [submit]);
 
     const saveAndClose = useCallback(async () => {
-      await submit();
-      setEditedResource(undefined);
+      const error = await submit();
+      if (!error) setEditedResource(undefined);
     }, [setEditedResource, submit]);
 
     const valid = useValid();
