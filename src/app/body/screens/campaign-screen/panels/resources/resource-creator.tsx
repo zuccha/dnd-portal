@@ -28,7 +28,7 @@ export function createResourceCreator<
   form: Form<FF>,
   onSubmitForm: (
     data: Partial<FF>,
-    context: { id: string; lang: string }
+    context: { campaignId: string; lang: string }
   ) => Promise<string | undefined>,
   Content: React.FC<ResourceCreatorContentProps<R>>
 ) {
@@ -41,8 +41,8 @@ export function createResourceCreator<
 
     const [submit, saving] = useSubmit(
       useCallback(
-        (data) => onSubmitForm(data, { id: resource?.id ?? "", lang }),
-        [lang, resource?.id]
+        (data) => onSubmitForm(data, { campaignId, lang }),
+        [campaignId, lang]
       )
     );
 

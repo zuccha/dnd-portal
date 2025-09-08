@@ -105,8 +105,7 @@ const i18nContext = {
 //------------------------------------------------------------------------------
 
 function parseFormData(
-  data: Partial<SpellEditorFormFields>,
-  { id, lang }: { id: string; lang: string }
+  data: Partial<SpellEditorFormFields>
 ):
   | { spell: Partial<DBSpell>; translation: Partial<DBSpellTranslation> }
   | string {
@@ -130,10 +129,8 @@ function parseFormData(
 
   const maybeTranslation = {
     description: data.description,
-    lang,
     materials: data.materials,
     name: data.name,
-    spell_id: id,
     upgrade: data.upgrade,
   };
 
@@ -157,7 +154,7 @@ async function submitEditorForm(
   data: Partial<SpellEditorFormFields>,
   { id, lang }: { id: string; lang: string }
 ) {
-  const errorOrData = parseFormData(data, { id, lang });
+  const errorOrData = parseFormData(data);
   if (typeof errorOrData === "string") return errorOrData;
 
   const { spell, translation } = errorOrData;
@@ -174,15 +171,15 @@ async function submitEditorForm(
 
 async function submitCreatorForm(
   data: Partial<SpellEditorFormFields>,
-  { id, lang }: { id: string; lang: string }
+  { campaignId, lang }: { campaignId: string; lang: string }
 ) {
-  const errorOrData = parseFormData(data, { id, lang });
+  const errorOrData = parseFormData(data);
   if (typeof errorOrData === "string") return errorOrData;
 
   const { spell, translation } = errorOrData;
-  // const response = await updateSpell(id, lang, spell, translation);
+  // const response = await createSpell(campaignId, lang, spell, translation);
   // if (response.error) return report(response.error, "form.error.creation_failure");
-  console.log(spell, translation);
+  console.log(campaignId, lang, spell, translation);
 
   return undefined;
 }

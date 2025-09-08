@@ -105,8 +105,7 @@ const i18nContext = {
 //------------------------------------------------------------------------------
 
 function parseFormData(
-  data: Partial<WeaponEditorFormFields>,
-  { id, lang }: { id: string; lang: string }
+  data: Partial<WeaponEditorFormFields>
 ):
   | { weapon: Partial<DBWeapon>; translation: Partial<DBWeaponTranslation> }
   | string {
@@ -131,10 +130,8 @@ function parseFormData(
 
   const maybeTranslation = {
     ammunition: data.ammunition,
-    lang,
     name: data.name,
     notes: data.notes,
-    weapon_id: id,
   };
 
   const weapon = dbWeaponSchema.partial().safeParse(maybeWeapon);
@@ -157,7 +154,7 @@ async function submitEditorForm(
   data: Partial<WeaponEditorFormFields>,
   { id, lang }: { id: string; lang: string }
 ) {
-  const errorOrData = parseFormData(data, { id, lang });
+  const errorOrData = parseFormData(data);
   if (typeof errorOrData === "string") return errorOrData;
 
   const { weapon, translation } = errorOrData;
@@ -175,16 +172,16 @@ async function submitEditorForm(
 
 async function submitCreatorForm(
   data: Partial<WeaponEditorFormFields>,
-  { id, lang }: { id: string; lang: string }
+  { campaignId, lang }: { campaignId: string; lang: string }
 ) {
-  const errorOrData = parseFormData(data, { id, lang });
+  const errorOrData = parseFormData(data);
   if (typeof errorOrData === "string") return errorOrData;
 
   const { weapon, translation } = errorOrData;
 
-  // const response = await updateWeapon(id, lang, weapon, translation);
+  // const response = await createWeapon(campaignId, lang, weapon, translation);
   // if (response.error) report(response.error, "form.error.creation_failure");
-  console.log(weapon, translation);
+  console.log(campaignId, lang, weapon, translation);
 
   return undefined;
 }

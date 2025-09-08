@@ -70,7 +70,7 @@ export function createResourcesPanel<
   listTableDescriptionKey: keyof L | undefined;
   onSubmitCreatorForm: (
     data: Partial<FF>,
-    context: { id: string; lang: string }
+    context: { campaignId: string; lang: string }
   ) => Promise<string | undefined>;
   onSubmitEditorForm: (
     data: Partial<FF>,
