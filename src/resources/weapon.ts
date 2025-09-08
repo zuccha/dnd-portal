@@ -49,6 +49,22 @@ export const weaponSchema = z.object({
 export type Weapon = z.infer<typeof weaponSchema>;
 
 //------------------------------------------------------------------------------
+// Weapon Translation
+//------------------------------------------------------------------------------
+
+export const weaponTranslationSchema = z.object({
+  lang: z.string(),
+  weapon_id: z.uuid(),
+
+  ammunition: z.string().nullish(),
+  name: z.string(),
+  notes: z.string().nullish(),
+  page: z.string().nullish(),
+});
+
+export type WeaponTranslation = z.infer<typeof weaponTranslationSchema>;
+
+//------------------------------------------------------------------------------
 // Weapon Filters
 //------------------------------------------------------------------------------
 
