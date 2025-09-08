@@ -25,8 +25,8 @@ import {
   type ResourcesListTableColumn,
   createResourcesListTable,
 } from "./resources-list-table";
-import { createUseEditedResource } from "./use-edited-resource";
 import { createUseFilteredLocalizedResources } from "./use-filtered-localized-resources";
+import { createUseResource } from "./use-resource";
 import { createUseSelectedFilteredLocalizedResourcesCount } from "./use-selected-filtered-localized-resources-count";
 
 //------------------------------------------------------------------------------
@@ -107,8 +107,7 @@ export function createResourcesPanel<
   // Use Edited Resource
   //----------------------------------------------------------------------------
 
-  const { useEditedResource, useSetEditedResource } =
-    createUseEditedResource<R>();
+  const [useEditedResource, useSetEditedResource] = createUseResource<R>();
 
   //----------------------------------------------------------------------------
   // Resource Editor

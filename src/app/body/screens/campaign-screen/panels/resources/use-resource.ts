@@ -3,23 +3,26 @@ import type { Resource } from "../../../../../../resources/resource";
 import { createMemoryStore } from "../../../../../../store/memory-store";
 
 //------------------------------------------------------------------------------
-// Create Use Edited Resource
+// Create Use Resource
 //------------------------------------------------------------------------------
 
-export function createUseEditedResource<R extends Resource>() {
-  const editedResourceStore = createMemoryStore<R | undefined>(undefined);
+export function createUseResource<R extends Resource>(): [
+  () => R | undefined,
+  (campaignId: string) => [(resource: R | undefined) => void, boolean]
+] {
+  const resourceStore = createMemoryStore<R | undefined>(undefined);
 
-  function useEditedResource(): R | undefined {
-    return editedResourceStore.useValue();
+  function useResource(): R | undefined {
+    return resourceStore.useValue();
   }
 
-  function useSetEditedResource(
+  function useSetResource(
     campaignId: string
   ): [(resource: R | undefined) => void, boolean] {
-    const setEditedResource = editedResourceStore.useSetValue();
+    const setResource = resourceStore.useSetValue();
     const { data: campaignRole } = useCampaignRole(campaignId);
-    return [setEditedResource, campaignRole === "game_master"];
+    return [setResource, campaignRole === "game_master"];
   }
 
-  return { useEditedResource, useSetEditedResource };
+  return [useResource, useSetResource];
 }
