@@ -1,7 +1,3 @@
-import {
-  type DistanceImpUnit,
-  type DistanceMetUnit,
-} from "../../../../../../i18n/i18n-distance";
 import { type CharacterClass } from "../../../../../../resources/character-class";
 import {
   spellSchema,
@@ -31,10 +27,8 @@ export type SpellEditorFormFields = {
   materials: string;
   name: string;
   range: SpellRange;
-  range_imp_unit: DistanceImpUnit;
-  range_imp_value: number;
-  range_met_unit: DistanceMetUnit;
-  range_met_value: number;
+  range_value_imp: string;
+  range_value_met: string;
   ritual: boolean;
   school: SpellSchool;
   somatic: boolean;
@@ -56,14 +50,8 @@ export const spellEditorForm = createForm<
     level: data.level,
     material: data.material,
     range: data.range,
-    range_value_imp:
-      data.range_imp_value && data.range_imp_unit
-        ? `${data.range_imp_value} ${data.range_imp_unit}`
-        : undefined,
-    range_value_met:
-      data.range_met_value && data.range_met_unit
-        ? `${data.range_met_value} ${data.range_met_unit}`
-        : undefined,
+    range_value_imp: data.range_value_imp,
+    range_value_met: data.range_value_met,
     ritual: data.ritual,
     school: data.school,
     somatic: data.somatic,
@@ -179,50 +167,18 @@ export const useSpellEditorFormRange = (defaultRange: SpellRange) =>
   useSpellEditorFormField("range", defaultRange);
 
 //------------------------------------------------------------------------------
-// Range Imp Value
+// Range Value Imp
 //------------------------------------------------------------------------------
 
-function validateRangeImpValue(rangeImpValue: number) {
-  return rangeImpValue >= 0 ? undefined : "range_imp_value.error.invalid";
-}
-
-export const useSpellEditorFormRangeImpValue = (defaultRangeImpValue: number) =>
-  useSpellEditorFormField(
-    "range_imp_value",
-    defaultRangeImpValue,
-    validateRangeImpValue
-  );
+export const useSpellEditorFormRangeValueImp = (defaultRangeValueImp: string) =>
+  useSpellEditorFormField("range_value_imp", defaultRangeValueImp);
 
 //------------------------------------------------------------------------------
-// Range Imp Unit
+// Range Value Met
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormRangeImpUnit = (
-  defaultRangeImpUnit: DistanceImpUnit
-) => useSpellEditorFormField("range_imp_unit", defaultRangeImpUnit);
-
-//------------------------------------------------------------------------------
-// Range Met Value
-//------------------------------------------------------------------------------
-
-function validateRangeMetValue(rangeMetValue: number) {
-  return rangeMetValue >= 0 ? undefined : "range_met_value.error.invalid";
-}
-
-export const useSpellEditorFormRangeMetValue = (defaultRangeMetValue: number) =>
-  useSpellEditorFormField(
-    "range_met_value",
-    defaultRangeMetValue,
-    validateRangeMetValue
-  );
-
-//------------------------------------------------------------------------------
-// Range Met Unit
-//------------------------------------------------------------------------------
-
-export const useSpellEditorFormRangeMetUnit = (
-  defaultRangeMetUnit: DistanceMetUnit
-) => useSpellEditorFormField("range_met_unit", defaultRangeMetUnit);
+export const useSpellEditorFormRangeValueMet = (defaultRangeValueMet: string) =>
+  useSpellEditorFormField("range_value_met", defaultRangeValueMet);
 
 //------------------------------------------------------------------------------
 // Materials

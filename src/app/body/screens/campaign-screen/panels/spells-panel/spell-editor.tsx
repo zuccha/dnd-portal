@@ -1,8 +1,6 @@
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import useListCollection from "../../../../../../hooks/use-list-collection";
 import {
-  type DistanceImpUnit,
-  type DistanceMetUnit,
   convertDistanceImpToMet,
   convertDistanceMetToImp,
   parseDistanceImp,
@@ -11,6 +9,7 @@ import {
   useDistanceMetUnitOptions,
 } from "../../../../../../i18n/i18n-distance";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import { useI18nSystem } from "../../../../../../i18n/i18n-system";
 import {
   parseTime,
   useTimeUnitOptions,
@@ -25,7 +24,6 @@ import { useSpellSchoolOptions } from "../../../../../../resources/spell-school"
 import Field from "../../../../../../ui/field";
 import Input from "../../../../../../ui/input";
 import MeasureInput from "../../../../../../ui/measure-input";
-import NumberInput from "../../../../../../ui/number-input";
 import Select from "../../../../../../ui/select";
 import Switch from "../../../../../../ui/switch";
 import Textarea from "../../../../../../ui/textarea";
@@ -42,10 +40,8 @@ import {
   useSpellEditorFormMaterials,
   useSpellEditorFormName,
   useSpellEditorFormRange,
-  useSpellEditorFormRangeImpUnit,
-  useSpellEditorFormRangeImpValue,
-  useSpellEditorFormRangeMetUnit,
-  useSpellEditorFormRangeMetValue,
+  useSpellEditorFormRangeValueImp,
+  useSpellEditorFormRangeValueMet,
   useSpellEditorFormSchool,
   useSpellEditorFormSubmitError,
   useSpellEditorFormUpgrade,
@@ -112,8 +108,8 @@ export default function SpellEditor({
 
       <SpellEditorRange
         defaultRange={resource.range}
-        defaultRangeImpValue={resource.range_value_imp ?? "0 ft"}
-        defaultRangeMetValue={resource.range_value_met ?? "0 m"}
+        defaultRangeValueImp={resource.range_value_imp ?? "0 ft"}
+        defaultRangeValueMet={resource.range_value_met ?? "0 m"}
       />
 
       <HStack gap={8}>
@@ -339,7 +335,7 @@ function SpellEditorDurationValue({
     <Field
       disabled={durationValue.disabled}
       invalid={!!durationValue.error}
-      maxW="6em"
+      maxW="9em"
     >
       <MeasureInput
         min={0}
@@ -357,12 +353,12 @@ function SpellEditorDurationValue({
 
 function SpellEditorRange({
   defaultRange,
-  defaultRangeImpValue,
-  defaultRangeMetValue,
+  defaultRangeValueImp,
+  defaultRangeValueMet,
 }: {
   defaultRange: Spell["range"];
-  defaultRangeImpValue: string;
-  defaultRangeMetValue: string;
+  defaultRangeValueImp: string;
+  defaultRangeValueMet: string;
 }) {
   const rangeOptions = useListCollection(useSpellRangeOptions());
   const { disabled, error, ...rest } = useSpellEditorFormRange(defaultRange);
@@ -377,8 +373,8 @@ function SpellEditorRange({
       </Field>
       {rest.value === "value" && (
         <SpellEditorRangeValues
-          defaultRangeImpValue={defaultRangeImpValue}
-          defaultRangeMetValue={defaultRangeMetValue}
+          defaultRangeValueImp={defaultRangeValueImp}
+          defaultRangeValueMet={defaultRangeValueMet}
         />
       )}
     </HStack>
@@ -390,87 +386,62 @@ function SpellEditorRange({
 //------------------------------------------------------------------------------
 
 function SpellEditorRangeValues({
-  defaultRangeImpValue,
-  defaultRangeMetValue,
+  defaultRangeValueImp,
+  defaultRangeValueMet,
 }: {
-  defaultRangeImpValue: string;
-  defaultRangeMetValue: string;
+  defaultRangeValueImp: string;
+  defaultRangeValueMet: string;
 }) {
-  const distanceImpOptions = useListCollection(useDistanceImpUnitOptions());
-  const distanceMetOptions = useListCollection(useDistanceMetUnitOptions());
+  const [system] = useI18nSystem();
 
-  const [defaultImpValue, defaultImpUnit] =
-    parseDistanceImp(defaultRangeImpValue);
+  const distanceImpOptions = useDistanceImpUnitOptions();
+  const distanceMetOptions = useDistanceMetUnitOptions();
 
-  const [defaultMetValue, defaultMetUnit] =
-    parseDistanceMet(defaultRangeMetValue);
+  const rangeValueImp = useSpellEditorFormRangeValueImp(defaultRangeValueImp);
+  const rangeValueMet = useSpellEditorFormRangeValueMet(defaultRangeValueMet);
 
-  const impValue = useSpellEditorFormRangeImpValue(defaultImpValue);
-  const impUnit = useSpellEditorFormRangeImpUnit(defaultImpUnit);
-
-  const metValue = useSpellEditorFormRangeMetValue(defaultMetValue);
-  const metUnit = useSpellEditorFormRangeMetUnit(defaultMetUnit);
-
-  const setRangeImpValueAndUpdateMet = (value: number) => {
-    impValue.onValueChange(value);
-    const [mv, mu] = convertDistanceImpToMet(value, impUnit.value);
-    metValue.onValueChange(mv);
-    metUnit.onValueChange(mu);
+  const setRangeImpValue = (value: string) => {
+    rangeValueImp.onValueChange(value);
+    const [iv, iu] = parseDistanceImp(value);
+    const [mv, mu] = convertDistanceImpToMet(iv, iu);
+    rangeValueMet.onValueChange(`${mv} ${mu}`);
   };
 
-  const setRangeImpUnitAndUpdateMet = (unit: DistanceImpUnit) => {
-    impUnit.onValueChange(unit);
-    const [mv, mu] = convertDistanceImpToMet(impValue.value, unit);
-    metValue.onValueChange(mv);
-    metUnit.onValueChange(mu);
-  };
-
-  const setRangeMetValueAndUpdateImp = (value: number) => {
-    metValue.onValueChange(value);
-    const [iv, iu] = convertDistanceMetToImp(value, metUnit.value);
-    impValue.onValueChange(iv);
-    impUnit.onValueChange(iu);
-  };
-
-  const setRangeMetUnitAndUpdateImp = (unit: DistanceMetUnit) => {
-    metUnit.onValueChange(unit);
-    const [iv, iu] = convertDistanceMetToImp(metValue.value, unit);
-    impValue.onValueChange(iv);
-    impUnit.onValueChange(iu);
+  const setRangeMetValue = (value: string) => {
+    rangeValueMet.onValueChange(value);
+    const [mv, mu] = parseDistanceMet(value);
+    const [iv, iu] = convertDistanceMetToImp(mv, mu);
+    rangeValueImp.onValueChange(`${iv} ${iu}`);
   };
 
   return (
     <>
-      <HStack h={10}>:</HStack>
-      <Field disabled={impValue.disabled} invalid={!!impValue.error} maxW="6em">
-        <NumberInput
+      <Field
+        disabled={rangeValueImp.disabled}
+        hidden={system === "metric"}
+        invalid={!!rangeValueImp.error}
+        maxW="9em"
+      >
+        <MeasureInput
           min={0}
-          {...impValue}
-          onValueChange={setRangeImpValueAndUpdateMet}
+          onParse={parseDistanceImp}
+          unitOptions={distanceImpOptions}
+          {...rangeValueImp}
+          onValueChange={setRangeImpValue}
         />
       </Field>
-      <Field disabled={impUnit.disabled} invalid={!!impUnit.error} maxW="4.5em">
-        <Select
-          options={distanceImpOptions}
-          withinDialog
-          {...impUnit}
-          onValueChange={setRangeImpUnitAndUpdateMet}
-        />
-      </Field>
-      <HStack h={10}>~</HStack>
-      <Field disabled={metValue.disabled} invalid={!!metValue.error} maxW="6em">
-        <NumberInput
+      <Field
+        disabled={rangeValueMet.disabled}
+        hidden={system === "imperial"}
+        invalid={!!rangeValueMet.error}
+        maxW="9em"
+      >
+        <MeasureInput
           min={0}
-          {...metValue}
-          onValueChange={setRangeMetValueAndUpdateImp}
-        />
-      </Field>
-      <Field disabled={metUnit.disabled} invalid={!!metUnit.error} maxW="4.5em">
-        <Select
-          options={distanceMetOptions}
-          withinDialog
-          {...metUnit}
-          onValueChange={setRangeMetUnitAndUpdateImp}
+          onParse={parseDistanceMet}
+          unitOptions={distanceMetOptions}
+          {...rangeValueMet}
+          onValueChange={setRangeMetValue}
         />
       </Field>
     </>
@@ -612,16 +583,6 @@ const i18nContext = {
   "range.label": {
     en: "Range",
     it: "Gittata",
-  },
-
-  "range_imp_value.error.invalid": {
-    en: "The value cannot be empty",
-    it: "Il valore non può essere vuoto",
-  },
-
-  "range_met_value.error.invalid": {
-    en: "The value cannot be empty",
-    it: "Il valore non può essere vuoto",
   },
 
   "ritual.label": {
