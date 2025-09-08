@@ -5,7 +5,7 @@ import type { I18nLang } from "./i18n-lang";
 // I18n String
 //------------------------------------------------------------------------------
 
-export const i18nStringSchema = z.record(z.string(), z.string().nullable());
+export const i18nStringSchema = z.record(z.string(), z.string().nullish());
 
 export type I18nString = z.infer<typeof i18nStringSchema>;
 
