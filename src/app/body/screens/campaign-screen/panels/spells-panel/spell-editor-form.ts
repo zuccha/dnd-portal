@@ -58,7 +58,7 @@ export const spellEditorForm = createForm<
     verbal: data.verbal,
   };
 
-  const maybeLocale = {
+  const maybeTranslation = {
     description: data.description,
     lang,
     materials: data.materials,
@@ -75,7 +75,7 @@ export const spellEditorForm = createForm<
   const spell = spellSchema.partial().safeParse(maybeSpell);
   if (!spell.success) return report(spell.error, "form.error.invalid_spell");
 
-  const translation = spellTranslationSchema.safeParse(maybeLocale);
+  const translation = spellTranslationSchema.safeParse(maybeTranslation);
   if (!translation.success)
     return report(translation.error, "form.error.invalid_translation");
 
