@@ -3,11 +3,12 @@ import { Grid2X2Icon, ListIcon } from "lucide-react";
 import z from "zod/v4";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import type {
+  DBResource,
+  DBResourceTranslation,
   LocalizedResource,
   Resource,
   ResourceFilters,
   ResourceStore,
-  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import { createLocalStore } from "../../../../../../store/local-store";
 import BinaryButton, {
@@ -40,7 +41,8 @@ export type ResourcesPanelProps = {
 
 export function createResourcesPanel<
   R extends Resource,
-  T extends ResourceTranslation,
+  DBR extends DBResource,
+  DBT extends DBResourceTranslation,
   F extends ResourceFilters,
   L extends LocalizedResource<R>,
   FF extends Record<string, unknown>
@@ -74,7 +76,7 @@ export function createResourcesPanel<
     data: Partial<FF>,
     context: { id: string; lang: string }
   ) => Promise<string | undefined>;
-  store: ResourceStore<R, T, F>;
+  store: ResourceStore<R, DBR, DBT, F>;
   useLocalizeResource: () => (resource: R) => L;
 }) {
   //----------------------------------------------------------------------------

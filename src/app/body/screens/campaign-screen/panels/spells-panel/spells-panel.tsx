@@ -1,13 +1,16 @@
 import {
+  type DBSpell,
+  type DBSpellTranslation,
+  dbSpellSchema,
+  dbSpellTranslationSchema,
+} from "../../../../../../resources/db-spell";
+import {
   type LocalizedSpell,
   useLocalizeSpell,
 } from "../../../../../../resources/localized-spell";
 import {
   type Spell,
-  type SpellTranslation,
   createSpell,
-  spellSchema,
-  spellTranslationSchema,
   spellsStore,
   updateSpell,
 } from "../../../../../../resources/spell";
@@ -104,7 +107,9 @@ const i18nContext = {
 function parseFormData(
   data: Partial<SpellEditorFormFields>,
   { id, lang }: { id: string; lang: string }
-): { spell: Partial<Spell>; translation: SpellTranslation } | string {
+):
+  | { spell: Partial<DBSpell>; translation: Partial<DBSpellTranslation> }
+  | string {
   const maybeSpell = {
     casting_time: data.casting_time,
     casting_time_value: data.casting_time_value,
@@ -132,10 +137,12 @@ function parseFormData(
     upgrade: data.upgrade,
   };
 
-  const spell = spellSchema.partial().safeParse(maybeSpell);
+  const spell = dbSpellSchema.partial().safeParse(maybeSpell);
   if (!spell.success) return report(spell.error, "form.error.invalid");
 
-  const translation = spellTranslationSchema.safeParse(maybeTranslation);
+  const translation = dbSpellTranslationSchema
+    .partial()
+    .safeParse(maybeTranslation);
   if (!translation.success)
     return report(translation.error, "form.error.invalid_translation");
 
@@ -155,7 +162,8 @@ async function submitEditorForm(
 
   const { spell, translation } = errorOrData;
   const response = await updateSpell(id, lang, spell, translation);
-  if (response.error) report(response.error, "form.error.update_failure");
+  if (response.error)
+    return report(response.error, "form.error.update_failure");
 
   return undefined;
 }
@@ -173,7 +181,7 @@ async function submitCreatorForm(
 
   const { spell, translation } = errorOrData;
   // const response = await updateSpell(id, lang, spell, translation);
-  // if (response.error) report(response.error, "form.error.creation_failure");
+  // if (response.error) return report(response.error, "form.error.creation_failure");
   console.log(spell, translation);
 
   return undefined;

@@ -54,23 +54,6 @@ export const spellSchema = z.object({
 export type Spell = z.infer<typeof spellSchema>;
 
 //------------------------------------------------------------------------------
-// Spell Translation
-//------------------------------------------------------------------------------
-
-export const spellTranslationSchema = z.object({
-  lang: z.string(),
-  spell_id: z.uuid(),
-
-  description: z.string(),
-  materials: z.string().nullish(),
-  name: z.string(),
-  page: z.string().nullish(),
-  upgrade: z.string().nullish(),
-});
-
-export type SpellTranslation = z.infer<typeof spellTranslationSchema>;
-
-//------------------------------------------------------------------------------
 // Spell Filters
 //------------------------------------------------------------------------------
 

@@ -10,11 +10,12 @@ import { type ReactNode, useCallback, useMemo, useState } from "react";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type {
+  DBResource,
+  DBResourceTranslation,
   LocalizedResource,
   Resource,
   ResourceFilters,
   ResourceStore,
-  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import Checkbox from "../../../../../../ui/checkbox";
 import Icon from "../../../../../../ui/icon";
@@ -37,11 +38,12 @@ export type ResourcesListTableColumn<
 
 export function createResourcesListTable<
   R extends Resource,
-  T extends ResourceTranslation,
+  DBR extends DBResource,
+  DBT extends DBResourceTranslation,
   F extends ResourceFilters,
   L extends LocalizedResource<R>
 >(
-  store: ResourceStore<R, T, F>,
+  store: ResourceStore<R, DBR, DBT, F>,
   useLocalizedResources: (campaignId: string) => L[] | undefined,
   useSelectedLocalizedResourcesCount: (campaignId: string) => number,
   useSetEditedResource: (

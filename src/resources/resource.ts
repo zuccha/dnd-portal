@@ -14,7 +14,8 @@ import { createObservableSet } from "../utils/observable-set";
 //------------------------------------------------------------------------------
 
 export type Resource = { id: string; name: I18nString };
-export type ResourceTranslation = { lang: string };
+export type DBResource = { id: string };
+export type DBResourceTranslation = { lang: string };
 export type ResourceFilters = { order_by: string; order_dir: "asc" | "desc" };
 export type LocalizedResource<R extends Resource> = { _raw: R; id: string };
 
@@ -24,7 +25,8 @@ export type LocalizedResource<R extends Resource> = { _raw: R; id: string };
 
 export type ResourceStore<
   R extends Resource,
-  T extends ResourceTranslation,
+  DBR extends DBResource,
+  DBT extends DBResourceTranslation,
   F extends ResourceFilters
 > = {
   id: string;
@@ -50,8 +52,8 @@ export type ResourceStore<
   update: (
     id: string,
     lang: string,
-    resource: Partial<R>,
-    translation: Partial<T>
+    resource: Partial<DBR>,
+    translation: Partial<DBT>
   ) => Promise<PostgrestSingleResponse<null>>;
 };
 
@@ -61,13 +63,14 @@ export type ResourceStore<
 
 export function createResourceStore<
   R extends Resource,
-  T extends ResourceTranslation,
+  DBR extends DBResource,
+  DBT extends DBResourceTranslation,
   F extends ResourceFilters
 >(
   name: { s: string; p: string },
   resourceSchema: ZodType<R>,
   filtersSchema: ZodType<F>
-): ResourceStore<R, T, F> {
+): ResourceStore<R, DBR, DBT, F> {
   //----------------------------------------------------------------------------
   // Use Filters
   //----------------------------------------------------------------------------
@@ -213,13 +216,14 @@ export function createResourceStore<
   async function update(
     id: string,
     lang: string,
-    resource: Partial<R>,
-    translation: Partial<T>
+    resource: Partial<DBR>,
+    translation: Partial<DBT>
   ): Promise<PostgrestSingleResponse<null>> {
     const response = await supabase.rpc(`update_${name.s}`, {
       p_id: id,
+      p_lang: lang,
       [`p_${name.s}`]: resource,
-      p_translation: translation,
+      [`p_${name.s}_translation`]: translation,
     });
     if (!response.error)
       queryClient.invalidateQueries({

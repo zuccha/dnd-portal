@@ -3,11 +3,12 @@ import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type {
+  DBResource,
+  DBResourceTranslation,
   LocalizedResource,
   Resource,
   ResourceFilters,
   ResourceStore,
-  ResourceTranslation,
 } from "../../../../../../resources/resource";
 import IconButton from "../../../../../../ui/icon-button";
 import { downloadJson } from "../../../../../../utils/download";
@@ -18,11 +19,12 @@ import { downloadJson } from "../../../../../../utils/download";
 
 export function createResourcesActions<
   R extends Resource,
-  T extends ResourceTranslation,
+  DBR extends DBResource,
+  DBT extends DBResourceTranslation,
   F extends ResourceFilters,
   L extends LocalizedResource<R>
 >(
-  store: ResourceStore<R, T, F>,
+  store: ResourceStore<R, DBR, DBT, F>,
   useLocalizedResources: (campaignId: string) => L[] | undefined,
   useSelectedTranslationsCount: (campaignId: string) => number,
   useSetNewResource: (

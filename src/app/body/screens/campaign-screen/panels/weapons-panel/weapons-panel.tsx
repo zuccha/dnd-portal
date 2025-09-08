@@ -1,15 +1,18 @@
 import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
 import {
+  type DBWeapon,
+  type DBWeaponTranslation,
+  dbWeaponSchema,
+  dbWeaponTranslationSchema,
+} from "../../../../../../resources/db-weapon";
+import {
   type LocalizedWeapon,
   useLocalizeWeapon,
 } from "../../../../../../resources/localized-weapon";
 import {
   type Weapon,
-  type WeaponTranslation,
   createWeapon,
   updateWeapon,
-  weaponSchema,
-  weaponTranslationSchema,
   weaponsStore,
 } from "../../../../../../resources/weapon";
 import { report } from "../../../../../../utils/error";
@@ -104,7 +107,9 @@ const i18nContext = {
 function parseFormData(
   data: Partial<WeaponEditorFormFields>,
   { id, lang }: { id: string; lang: string }
-): { weapon: Partial<Weapon>; translation: WeaponTranslation } | string {
+):
+  | { weapon: Partial<DBWeapon>; translation: Partial<DBWeaponTranslation> }
+  | string {
   const maybeWeapon = {
     cost: data.cost,
     damage: data.damage,
@@ -132,10 +137,12 @@ function parseFormData(
     weapon_id: id,
   };
 
-  const weapon = weaponSchema.partial().safeParse(maybeWeapon);
+  const weapon = dbWeaponSchema.partial().safeParse(maybeWeapon);
   if (!weapon.success) return report(weapon.error, "form.error.invalid");
 
-  const translation = weaponTranslationSchema.safeParse(maybeTranslation);
+  const translation = dbWeaponTranslationSchema
+    .partial()
+    .safeParse(maybeTranslation);
   if (!translation.success)
     return report(translation.error, "form.error.invalid_translation");
 
@@ -156,7 +163,8 @@ async function submitEditorForm(
   const { weapon, translation } = errorOrData;
 
   const response = await updateWeapon(id, lang, weapon, translation);
-  if (response.error) report(response.error, "form.error.update_failure");
+  if (response.error)
+    return report(response.error, "form.error.update_failure");
 
   return undefined;
 }

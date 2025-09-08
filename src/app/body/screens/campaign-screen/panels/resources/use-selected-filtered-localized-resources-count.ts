@@ -1,10 +1,11 @@
 import { createUseShared } from "../../../../../../hooks/use-shared";
 import type {
+  DBResource,
+  DBResourceTranslation,
   LocalizedResource,
   Resource,
   ResourceFilters,
   ResourceStore,
-  ResourceTranslation,
 } from "../../../../../../resources/resource";
 
 //----------------------------------------------------------------------------
@@ -13,11 +14,12 @@ import type {
 
 export function createUseSelectedFilteredLocalizedResourcesCount<
   R extends Resource,
-  T extends ResourceTranslation,
+  DBR extends DBResource,
+  DBT extends DBResourceTranslation,
   F extends ResourceFilters,
   L extends LocalizedResource<R>
 >(
-  store: ResourceStore<R, T, F>,
+  store: ResourceStore<R, DBR, DBT, F>,
   useLocalizedResources: (campaignId: string) => L[] | undefined
 ) {
   const { useSelectionCount } = store;
