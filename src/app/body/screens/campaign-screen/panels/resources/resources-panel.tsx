@@ -14,6 +14,7 @@ import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../../ui/binary-button";
 import type { Form } from "../../../../../../utils/form";
+import { createResourceCreator } from "./resource-creator";
 import {
   type ResourceEditorContentProps,
   createResourceEditor,
@@ -47,26 +48,33 @@ export function createResourcesPanel<
   Filters,
   ResourceCard,
   ResourceEditorContent,
+  createResource,
+  form,
   listTableColumns,
   listTableColumnsI18nContext,
   listTableDescriptionKey,
-  store,
-  form,
+  onSubmitCreatorForm,
   onSubmitEditorForm,
+  store,
   useLocalizeResource,
 }: {
   Filters: React.FC;
   ResourceCard: React.FC<{ resource: L }>;
   ResourceEditorContent: React.FC<ResourceEditorContentProps<R>>;
+  createResource: (campaignId: string, lang: string) => R;
+  form: Form<FF>;
   listTableColumns: Omit<ResourcesListTableColumn<R, L>, "label">[];
   listTableColumnsI18nContext: I18nLangContext;
   listTableDescriptionKey: keyof L | undefined;
-  store: ResourceStore<R, T, F>;
-  form: Form<FF>;
+  onSubmitCreatorForm: (
+    data: Partial<FF>,
+    context: { id: string; lang: string }
+  ) => Promise<string | undefined>;
   onSubmitEditorForm: (
     data: Partial<FF>,
     context: { id: string; lang: string }
   ) => Promise<string | undefined>;
+  store: ResourceStore<R, T, F>;
   useLocalizeResource: () => (resource: R) => L;
 }) {
   //----------------------------------------------------------------------------
@@ -122,6 +130,24 @@ export function createResourcesPanel<
   );
 
   //----------------------------------------------------------------------------
+  // Use New Resource
+  //----------------------------------------------------------------------------
+
+  const [useNewResource, useSetNewResource] = createUseResource<R>();
+
+  //----------------------------------------------------------------------------
+  // Resource Creator
+  //----------------------------------------------------------------------------
+
+  const ResourceCreator = createResourceCreator(
+    useNewResource,
+    useSetNewResource,
+    form,
+    onSubmitCreatorForm,
+    ResourceEditorContent
+  );
+
+  //----------------------------------------------------------------------------
   // Resources List Cards
   //----------------------------------------------------------------------------
 
@@ -160,7 +186,9 @@ export function createResourcesPanel<
   const ResourcesActions = createResourcesActions(
     store,
     useFilteredLocalizedResources,
-    useSelectedFilteredLocalizedResourcesCount
+    useSelectedFilteredLocalizedResourcesCount,
+    useSetNewResource,
+    createResource
   );
 
   //----------------------------------------------------------------------------
@@ -203,6 +231,7 @@ export function createResourcesPanel<
         </Flex>
 
         <ResourceEditor campaignId={campaignId} />
+        <ResourceCreator campaignId={campaignId} />
       </VStack>
     );
   };

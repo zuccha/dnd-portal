@@ -5,6 +5,7 @@ import {
 import {
   type Spell,
   type SpellTranslation,
+  createSpell,
   spellSchema,
   spellTranslationSchema,
   spellsStore,
@@ -160,6 +161,25 @@ async function submitEditorForm(
 }
 
 //------------------------------------------------------------------------------
+// Submit Creator Form
+//------------------------------------------------------------------------------
+
+async function submitCreatorForm(
+  data: Partial<SpellEditorFormFields>,
+  { id, lang }: { id: string; lang: string }
+) {
+  const errorOrData = parseFormData(data, { id, lang });
+  if (typeof errorOrData === "string") return errorOrData;
+
+  const { spell, translation } = errorOrData;
+  // const response = await updateSpell(id, lang, spell, translation);
+  // if (response.error) report(response.error, "form.error.creation_failure");
+  console.log(spell, translation);
+
+  return undefined;
+}
+
+//------------------------------------------------------------------------------
 // Spells Panel
 //------------------------------------------------------------------------------
 
@@ -167,10 +187,12 @@ const SpellsPanel = createResourcesPanel({
   Filters: SpellsFilters,
   ResourceCard: SpellCard,
   ResourceEditorContent: SpellEditor,
+  createResource: createSpell,
   form: spellEditorForm,
   listTableColumns: columns,
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "description",
+  onSubmitCreatorForm: submitCreatorForm,
   onSubmitEditorForm: submitEditorForm,
   store: spellsStore,
   useLocalizeResource: useLocalizeSpell,

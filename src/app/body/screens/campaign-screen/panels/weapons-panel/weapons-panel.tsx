@@ -6,6 +6,7 @@ import {
 import {
   type Weapon,
   type WeaponTranslation,
+  createWeapon,
   updateWeapon,
   weaponSchema,
   weaponTranslationSchema,
@@ -153,10 +154,29 @@ async function submitEditorForm(
   if (typeof errorOrData === "string") return errorOrData;
 
   const { weapon, translation } = errorOrData;
-  console.log();
 
   const response = await updateWeapon(id, lang, weapon, translation);
   if (response.error) report(response.error, "form.error.update_failure");
+
+  return undefined;
+}
+
+//------------------------------------------------------------------------------
+// Submit Creator Form
+//------------------------------------------------------------------------------
+
+async function submitCreatorForm(
+  data: Partial<WeaponEditorFormFields>,
+  { id, lang }: { id: string; lang: string }
+) {
+  const errorOrData = parseFormData(data, { id, lang });
+  if (typeof errorOrData === "string") return errorOrData;
+
+  const { weapon, translation } = errorOrData;
+
+  // const response = await updateWeapon(id, lang, weapon, translation);
+  // if (response.error) report(response.error, "form.error.creation_failure");
+  console.log(weapon, translation);
 
   return undefined;
 }
@@ -169,10 +189,12 @@ const WeaponsPanel = createResourcesPanel({
   Filters: WeaponsFilters,
   ResourceCard: WeaponCard,
   ResourceEditorContent: WeaponEditor,
+  createResource: createWeapon,
   form: weaponEditorForm,
   listTableColumns: columns,
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "notes",
+  onSubmitCreatorForm: submitCreatorForm,
   onSubmitEditorForm: submitEditorForm,
   store: weaponsStore,
   useLocalizeResource: useLocalizeWeapon,

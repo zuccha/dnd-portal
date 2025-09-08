@@ -24,10 +24,14 @@ export function createResourcesActions<
 >(
   store: ResourceStore<R, T, F>,
   useLocalizedResources: (campaignId: string) => L[] | undefined,
-  useSelectedTranslationsCount: (campaignId: string) => number
+  useSelectedTranslationsCount: (campaignId: string) => number,
+  useSetNewResource: (
+    campaignId: string
+  ) => [(resource: R | undefined) => void, boolean],
+  createResource: (campaignId: string, lang: string) => R
 ) {
   return function ResourcesActions({ campaignId }: { campaignId: string }) {
-    const { t } = useI18nLangContext(i18nContext);
+    const { lang, t } = useI18nLangContext(i18nContext);
 
     const localizedResources = useLocalizedResources(campaignId);
     const count = useSelectedTranslationsCount(campaignId);
@@ -38,6 +42,12 @@ export function createResourcesActions<
         .map(({ _raw, ...rest }) => rest);
       return JSON.stringify(selected, null, 2);
     }, [localizedResources]);
+
+    const [setNewResource, canSetNewResource] = useSetNewResource(campaignId);
+
+    const addNew = useCallback(async () => {
+      setNewResource(createResource(campaignId, lang));
+    }, [campaignId, lang, setNewResource]);
 
     const copySelected = useCallback(async () => {
       if (!count) return;
@@ -60,6 +70,11 @@ export function createResourcesActions<
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
+              {canSetNewResource && (
+                <Menu.Item onClick={addNew} value="add">
+                  {t("add")}
+                </Menu.Item>
+              )}
               <Menu.Item disabled={!count} onClick={copySelected} value="copy">
                 {t("copy")}
               </Menu.Item>
@@ -83,6 +98,10 @@ export function createResourcesActions<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  add: {
+    en: "Add new",
+    it: "Crea nuovo",
+  },
   copy: {
     en: "Copy selected",
     it: "Copia selezionati",
