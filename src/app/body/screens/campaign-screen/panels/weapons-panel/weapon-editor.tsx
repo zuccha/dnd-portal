@@ -163,7 +163,13 @@ function WeaponEditorProperties({
 
   return (
     <Field error={message} label={t("properties.label")}>
-      <Select multiple options={propertyOptions} withinDialog {...rest} />
+      <Select
+        multiple
+        options={propertyOptions}
+        placeholder={t("properties.placeholder")}
+        withinDialog
+        {...rest}
+      />
     </Field>
   );
 }
@@ -451,6 +457,11 @@ const i18nContext = {
   "properties.label": {
     en: "Properties",
     it: "Proprietà",
+  },
+
+  "properties.placeholder": {
+    en: "None",
+    it: "Nessuna",
   },
 
   "mastery.label": {

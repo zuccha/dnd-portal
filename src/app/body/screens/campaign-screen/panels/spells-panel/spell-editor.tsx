@@ -198,7 +198,13 @@ function SpellEditorCharacterClasses({
 
   return (
     <Field error={message} label={t("character_classes.label")}>
-      <Select multiple options={characterClassOptions} withinDialog {...rest} />
+      <Select
+        multiple
+        options={characterClassOptions}
+        placeholder={t("character_classes.placeholder")}
+        withinDialog
+        {...rest}
+      />
     </Field>
   );
 }
@@ -534,6 +540,11 @@ const i18nContext = {
   "character_classes.label": {
     en: "Classes",
     it: "Classi",
+  },
+
+  "character_classes.placeholder": {
+    en: "None",
+    it: "Nessuna",
   },
 
   "school.label": {
