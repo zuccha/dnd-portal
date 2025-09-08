@@ -12,13 +12,13 @@ export type Form<Fields extends Record<string, unknown>, SubmitContext> = {
     defaultValue: Fields[Name],
     validate?: (value: Fields[Name]) => string | undefined
   ) => {
-    disabled: boolean;
-    error: string | undefined;
-    invalid: boolean;
-    name: Name;
-    onBlur: () => void;
-    onValueChange: (value: Fields[Name]) => void;
-    value: Fields[Name];
+    "data-invalid": "" | undefined;
+    "disabled": boolean;
+    "error": string | undefined;
+    "name": Name;
+    "onBlur": () => void;
+    "onValueChange": (value: Fields[Name]) => void;
+    "value": Fields[Name];
   };
   useFieldError: (name: keyof Fields) => string | undefined;
   useSubmit: (context: SubmitContext) => [() => Promise<void>, boolean];
@@ -83,13 +83,13 @@ export function createForm<
     defaultValue: Fields[Name],
     validate: (value: Fields[Name]) => string | undefined = () => undefined
   ): {
-    disabled: boolean;
-    error: string | undefined;
-    invalid: boolean;
-    name: Name;
-    onBlur: () => void;
-    onValueChange: (value: Fields[Name]) => void;
-    value: Fields[Name];
+    "data-invalid": "" | undefined;
+    "disabled": boolean;
+    "error": string | undefined;
+    "name": Name;
+    "onBlur": () => void;
+    "onValueChange": (value: Fields[Name]) => void;
+    "value": Fields[Name];
   } {
     const [value, setValue] = useValue(name, defaultValue);
     const [error, setError] = useError(name, undefined);
@@ -110,13 +110,13 @@ export function createForm<
     );
 
     return {
+      "data-invalid": error ? "" : undefined,
       disabled,
       error,
-      invalid: !!error,
       name,
       onBlur,
       onValueChange,
-      value: value as Fields[Name],
+      "value": value as Fields[Name],
     };
   }
 
