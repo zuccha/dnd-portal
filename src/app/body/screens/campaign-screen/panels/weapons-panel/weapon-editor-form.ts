@@ -78,7 +78,7 @@ export const weaponEditorForm = createForm<
   if (!translation.success)
     return report(translation.error, "form.error.invalid_translation");
 
-  const response = await updateWeapon(id, weapon.data, translation.data);
+  const response = await updateWeapon(id, lang, weapon.data, translation.data);
   if (response.error)
     report(response.error, "form.error.update_weapon_failure");
 

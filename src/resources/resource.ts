@@ -49,6 +49,7 @@ export type ResourceStore<
 
   update: (
     id: string,
+    lang: string,
     resource: Partial<R>,
     translation: Partial<T>
   ) => Promise<PostgrestSingleResponse<null>>;
@@ -139,7 +140,7 @@ export function createResourceStore<
 
     return useQuery<R[]>({
       queryFn: fetchCampaignsResources,
-      queryKey: [`resources[${name.p}]`, campaignId, filters, lang],
+      queryKey: [`resources[${name.p}]`, lang, campaignId, filters],
     });
   }
 
@@ -211,6 +212,7 @@ export function createResourceStore<
 
   async function update(
     id: string,
+    lang: string,
     resource: Partial<R>,
     translation: Partial<T>
   ): Promise<PostgrestSingleResponse<null>> {
@@ -220,7 +222,9 @@ export function createResourceStore<
       p_translation: translation,
     });
     if (!response.error)
-      queryClient.invalidateQueries({ queryKey: [`resources[${name.p}]`] });
+      queryClient.invalidateQueries({
+        queryKey: [`resources[${name.p}]`, lang],
+      });
     return response;
   }
 

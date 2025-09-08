@@ -79,7 +79,7 @@ export const spellEditorForm = createForm<
   if (!translation.success)
     return report(translation.error, "form.error.invalid_translation");
 
-  const response = await updateSpell(id, spell.data, translation.data);
+  const response = await updateSpell(id, lang, spell.data, translation.data);
   if (response.error) report(response.error, "form.error.update_spell_failure");
 
   return undefined;
