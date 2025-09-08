@@ -3,6 +3,7 @@ import z from "zod";
 import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
+import { formatNumber } from "../utils/number";
 import { useTranslateDamageType } from "./damage-type";
 import { type Weapon, weaponSchema } from "./weapon";
 import { useTranslateWeaponMastery } from "./weapon-mastery";
@@ -70,16 +71,15 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       const damage_versatile = weapon.damage_versatile ?? "0";
       const damage_extended = ti("damage_extended", weapon.damage, damage_type);
 
+      const rms = formatNumber(weapon.range_m_short ?? 0);
+      const rml = formatNumber(weapon.range_m_long ?? 0);
+      const ris = formatNumber(weapon.range_ft_short ?? 0);
+      const ril = formatNumber(weapon.range_ft_long ?? 0);
+
       const range =
         system === "metric"
-          ? ti(
-              "range.m",
-              `${weapon.range_m_short ?? 0}/${weapon.range_m_long ?? 0}`
-            )
-          : ti(
-              "range.ft",
-              `${weapon.range_ft_short ?? 0}/${weapon.range_ft_long ?? 0}`
-            );
+          ? ti("range.m", `${rms}/${rml}`)
+          : ti("range.ft", `${ris}/${ril}`);
 
       const ammunition = translate(weapon.ammunition, lang);
 
