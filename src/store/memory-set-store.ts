@@ -45,8 +45,9 @@ export function createMemorySetStore<
     const value = isStoreAction(valueOrAction)
       ? valueOrAction(get(id, defaultValue))
       : valueOrAction;
+    cache[id] = value;
     notify(id, value);
-    return (cache[id] = value);
+    return value;
   }
 
   function use(id: K, defaultValue: T): [T, StoreUpdater<T>] {
