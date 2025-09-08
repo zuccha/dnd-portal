@@ -3,12 +3,22 @@ import {
   type LocalizedWeapon,
   useLocalizeWeapon,
 } from "../../../../../../resources/localized-weapon";
-import { type Weapon, weaponsStore } from "../../../../../../resources/weapon";
+import {
+  type Weapon,
+  type WeaponTranslation,
+  updateWeapon,
+  weaponSchema,
+  weaponTranslationSchema,
+  weaponsStore,
+} from "../../../../../../resources/weapon";
+import { report } from "../../../../../../utils/error";
 import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";
 import WeaponCard from "./weapon-card";
 import WeaponEditor from "./weapon-editor";
-import weaponEditorForm from "./weapon-editor-form";
+import weaponEditorForm, {
+  type WeaponEditorFormFields,
+} from "./weapon-editor-form";
 import WeaponsFilters from "./weapon-filters";
 
 //------------------------------------------------------------------------------
@@ -87,6 +97,71 @@ const i18nContext = {
 };
 
 //------------------------------------------------------------------------------
+// Parse Form Data
+//------------------------------------------------------------------------------
+
+function parseFormData(
+  data: Partial<WeaponEditorFormFields>,
+  { id, lang }: { id: string; lang: string }
+): { weapon: Partial<Weapon>; translation: WeaponTranslation } | string {
+  const maybeWeapon = {
+    cost: data.cost,
+    damage: data.damage,
+    damage_type: data.damage_type,
+    damage_versatile: data.damage_versatile,
+    magic: data.magic,
+    mastery: data.mastery,
+    melee: data.melee,
+    properties: data.properties,
+    range_ft_long: data.range_ft_long,
+    range_ft_short: data.range_ft_short,
+    range_m_long: data.range_m_long,
+    range_m_short: data.range_m_short,
+    ranged: data.ranged,
+    type: data.type,
+    weight_kg: data.weight_kg,
+    weight_lb: data.weight_lb,
+  };
+
+  const maybeTranslation = {
+    ammunition: data.ammunition,
+    lang,
+    name: data.name,
+    notes: data.notes,
+    weapon_id: id,
+  };
+
+  const weapon = weaponSchema.partial().safeParse(maybeWeapon);
+  if (!weapon.success) return report(weapon.error, "form.error.invalid");
+
+  const translation = weaponTranslationSchema.safeParse(maybeTranslation);
+  if (!translation.success)
+    return report(translation.error, "form.error.invalid_translation");
+
+  return { translation: translation.data, weapon: weapon.data };
+}
+
+//------------------------------------------------------------------------------
+// Submit Editor Form
+//------------------------------------------------------------------------------
+
+async function submitEditorForm(
+  data: Partial<WeaponEditorFormFields>,
+  { id, lang }: { id: string; lang: string }
+) {
+  const errorOrData = parseFormData(data, { id, lang });
+  if (typeof errorOrData === "string") return errorOrData;
+
+  const { weapon, translation } = errorOrData;
+  console.log();
+
+  const response = await updateWeapon(id, lang, weapon, translation);
+  if (response.error) report(response.error, "form.error.update_failure");
+
+  return undefined;
+}
+
+//------------------------------------------------------------------------------
 // Weapons Panel
 //------------------------------------------------------------------------------
 
@@ -98,6 +173,7 @@ const WeaponsPanel = createResourcesPanel({
   listTableColumns: columns,
   listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "notes",
+  onSubmitEditorForm: submitEditorForm,
   store: weaponsStore,
   useLocalizeResource: useLocalizeWeapon,
 });

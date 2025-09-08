@@ -1,9 +1,4 @@
 import { type CharacterClass } from "../../../../../../resources/character-class";
-import {
-  spellSchema,
-  spellTranslationSchema,
-  updateSpell,
-} from "../../../../../../resources/spell";
 import { type SpellCastingTime } from "../../../../../../resources/spell-casting-time";
 import { type SpellDuration } from "../../../../../../resources/spell-duration";
 import { type SpellRange } from "../../../../../../resources/spell-range";
@@ -36,54 +31,7 @@ export type SpellEditorFormFields = {
   verbal: boolean;
 };
 
-export const spellEditorForm = createForm<
-  SpellEditorFormFields,
-  { id: string; lang: string }
->(async (data, { lang, id }) => {
-  const maybeSpell = {
-    casting_time: data.casting_time,
-    casting_time_value: data.casting_time_value,
-    character_classes: data.character_classes,
-    concentration: data.concentration,
-    duration: data.duration,
-    duration_value: data.duration_value,
-    level: data.level,
-    material: data.material,
-    range: data.range,
-    range_value_imp: data.range_value_imp,
-    range_value_met: data.range_value_met,
-    ritual: data.ritual,
-    school: data.school,
-    somatic: data.somatic,
-    verbal: data.verbal,
-  };
-
-  const maybeTranslation = {
-    description: data.description,
-    lang,
-    materials: data.materials,
-    name: data.name,
-    spell_id: id,
-    upgrade: data.upgrade,
-  };
-
-  const report = (error: Error, message: string) => {
-    console.error(error);
-    return message;
-  };
-
-  const spell = spellSchema.partial().safeParse(maybeSpell);
-  if (!spell.success) return report(spell.error, "form.error.invalid_spell");
-
-  const translation = spellTranslationSchema.safeParse(maybeTranslation);
-  if (!translation.success)
-    return report(translation.error, "form.error.invalid_translation");
-
-  const response = await updateSpell(id, lang, spell.data, translation.data);
-  if (response.error) report(response.error, "form.error.update_spell_failure");
-
-  return undefined;
-});
+export const spellEditorForm = createForm<SpellEditorFormFields>();
 
 export const {
   useField: useSpellEditorFormField,

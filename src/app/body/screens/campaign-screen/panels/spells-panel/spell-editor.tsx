@@ -491,7 +491,7 @@ function SpellEditorUpgrade({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "form.error.invalid_spell": {
+  "form.error.invalid": {
     en: "The inserted data is not valid.",
     it: "I dati inseriti non sono validi.",
   },
@@ -501,7 +501,7 @@ const i18nContext = {
     it: "I dati inseriti non sono validi.",
   },
 
-  "form.error.update_spell_failure": {
+  "form.error.update_failure": {
     en: "Failed to update the spell.",
     it: "Errore durante il salvataggio.",
   },

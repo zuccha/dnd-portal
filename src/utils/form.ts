@@ -6,7 +6,7 @@ import { createMemoryStore } from "../store/memory-store";
 // Form
 //------------------------------------------------------------------------------
 
-export type Form<Fields extends Record<string, unknown>, SubmitContext> = {
+export type Form<Fields extends Record<string, unknown>> = {
   useField: <Name extends keyof Fields>(
     name: Name,
     defaultValue: Fields[Name],
@@ -21,7 +21,9 @@ export type Form<Fields extends Record<string, unknown>, SubmitContext> = {
     "value": Fields[Name];
   };
   useFieldError: (name: keyof Fields) => string | undefined;
-  useSubmit: (context: SubmitContext) => [() => Promise<void>, boolean];
+  useSubmit: (
+    onSubmit: (data: Partial<Fields>) => Promise<string | undefined>
+  ) => [() => Promise<void>, boolean];
   useSubmitError: () => string | undefined;
   useValid: () => boolean;
 };
@@ -31,14 +33,8 @@ export type Form<Fields extends Record<string, unknown>, SubmitContext> = {
 //------------------------------------------------------------------------------
 
 export function createForm<
-  Fields extends Record<string, unknown>,
-  SubmitContext
->(
-  onSubmit: (
-    data: Partial<Fields>,
-    context: SubmitContext
-  ) => Promise<string | undefined>
-): Form<Fields, SubmitContext> {
+  Fields extends Record<string, unknown>
+>(): Form<Fields> {
   //----------------------------------------------------------------------------
   // Values Store
   //----------------------------------------------------------------------------
@@ -147,7 +143,9 @@ export function createForm<
   // Submit
   //----------------------------------------------------------------------------
 
-  function useSubmit(context: SubmitContext): [() => Promise<void>, boolean] {
+  function useSubmit(
+    onSubmit: (data: Partial<Fields>) => Promise<string | undefined>
+  ): [() => Promise<void>, boolean] {
     const [submitting, setSubmitting] = useSubmitting();
     const setSubmitError = submitErrorStore.useSetValue();
 
@@ -162,10 +160,10 @@ export function createForm<
         data[field] = getValue(field, undefined as Fields[keyof Fields]);
       });
 
-      const error = await onSubmit(data, context);
+      const error = await onSubmit(data);
       setSubmitError(error);
       setSubmitting(false);
-    }, [context, setSubmitError, setSubmitting]);
+    }, [onSubmit, setSubmitError, setSubmitting]);
 
     return [submit, submitting];
   }

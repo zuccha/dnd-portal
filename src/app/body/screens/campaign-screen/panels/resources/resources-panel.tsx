@@ -52,6 +52,7 @@ export function createResourcesPanel<
   listTableDescriptionKey,
   store,
   form,
+  onSubmitEditorForm,
   useLocalizeResource,
 }: {
   Filters: React.FC;
@@ -61,7 +62,11 @@ export function createResourcesPanel<
   listTableColumnsI18nContext: I18nLangContext;
   listTableDescriptionKey: keyof L | undefined;
   store: ResourceStore<R, T, F>;
-  form: Form<FF, { id: string; lang: string }>;
+  form: Form<FF>;
+  onSubmitEditorForm: (
+    data: Partial<FF>,
+    context: { id: string; lang: string }
+  ) => Promise<string | undefined>;
   useLocalizeResource: () => (resource: R) => L;
 }) {
   //----------------------------------------------------------------------------
@@ -113,6 +118,7 @@ export function createResourcesPanel<
     useEditedResource,
     useSetEditedResource,
     form,
+    onSubmitEditorForm,
     ResourceEditorContent
   );
 

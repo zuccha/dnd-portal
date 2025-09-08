@@ -1,5 +1,5 @@
 import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { translate } from "../../../../../../i18n/i18n-string";
 import type { Resource } from "../../../../../../resources/resource";
@@ -26,7 +26,11 @@ export function createResourceEditor<
   useSetEditedResource: (
     campaignId: string
   ) => [(resource: R | undefined) => void, boolean],
-  form: Form<FF, { id: string; lang: string }>,
+  form: Form<FF>,
+  onSubmitForm: (
+    data: Partial<FF>,
+    context: { id: string; lang: string }
+  ) => Promise<string | undefined>,
   Content: React.FC<ResourceEditorContentProps<R>>
 ) {
   const { useSubmit, useValid } = form;
@@ -37,7 +41,10 @@ export function createResourceEditor<
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
     const [submit, saving] = useSubmit(
-      useMemo(() => ({ id: resource?.id ?? "", lang }), [lang, resource?.id])
+      useCallback(
+        (data) => onSubmitForm(data, { id: resource?.id ?? "", lang }),
+        [lang, resource?.id]
+      )
     );
 
     const save = useCallback(async () => {
