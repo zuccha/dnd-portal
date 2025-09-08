@@ -92,6 +92,10 @@ export function createForm<
     const [pristine, setPristine] = useState(true);
     const [disabled] = useSubmitting();
 
+    useLayoutEffect(() => {
+      setError(validate(defaultValue));
+    }, [defaultValue, setError, validate]);
+
     const onBlur = useCallback(() => {
       setPristine(false);
       setError(validate(value as Fields[Name]));
@@ -106,9 +110,9 @@ export function createForm<
     );
 
     return {
-      "data-invalid": error ? "" : undefined,
+      "data-invalid": !pristine && error ? "" : undefined,
       disabled,
-      error,
+      "error": pristine ? undefined : error,
       name,
       onBlur,
       onValueChange,
