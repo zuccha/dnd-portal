@@ -31,20 +31,6 @@ export function createResourceEditor<
 ) {
   const { useSubmit, useValid } = form;
 
-  function SaveButton({ label, saving }: { label: string; saving: boolean }) {
-    const valid = useValid();
-    return (
-      <Button
-        disabled={!valid || saving}
-        form="edit-resource"
-        loading={saving}
-        type="submit"
-      >
-        {label}
-      </Button>
-    );
-  }
-
   return function ResourceEditor({ campaignId }: { campaignId: string }) {
     const resource = useEditedResource();
     const [setEditedResource] = useSetEditedResource(campaignId);
@@ -54,13 +40,17 @@ export function createResourceEditor<
       useMemo(() => ({ id: resource?.id ?? "", lang }), [lang, resource?.id])
     );
 
-    const save = useCallback(
-      (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        submit();
-      },
-      [submit]
-    );
+    const save = useCallback(async () => {
+      await submit();
+    }, [submit]);
+
+    const saveAndClose = useCallback(async () => {
+      await submit();
+      setEditedResource(undefined);
+    }, [setEditedResource, submit]);
+
+    const valid = useValid();
+    const disabled = !valid || saving;
 
     return (
       <Dialog.Root
@@ -86,18 +76,26 @@ export function createResourceEditor<
               </Dialog.Header>
 
               <Dialog.Body>
-                {resource && (
-                  <form id="edit-resource" onSubmit={save}>
-                    <Content resource={resource} />
-                  </form>
-                )}
+                {resource && <Content resource={resource} />}
               </Dialog.Body>
 
               <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>
                   <Button variant="outline">Cancel</Button>
                 </Dialog.ActionTrigger>
-                <SaveButton label={t("save")} saving={saving} />
+
+                <Button
+                  disabled={disabled}
+                  loading={saving}
+                  onClick={saveAndClose}
+                  variant="outline"
+                >
+                  {t("save_and_close")}
+                </Button>
+
+                <Button disabled={disabled} loading={saving} onClick={save}>
+                  {t("save")}
+                </Button>
               </Dialog.Footer>
 
               <Dialog.CloseTrigger asChild>
@@ -134,5 +132,10 @@ const i18nContext = {
   "save": {
     en: "Save",
     it: "Salva",
+  },
+
+  "save_and_close": {
+    en: "Save and close",
+    it: "Salva e chiudi",
   },
 };
