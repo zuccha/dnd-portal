@@ -99,6 +99,49 @@ export const spellFiltersSchema = z.object({
 export type SpellFilters = z.infer<typeof spellFiltersSchema>;
 
 //------------------------------------------------------------------------------
+// Create Spell
+//------------------------------------------------------------------------------
+
+export function createSpell(campaignId: string, lang: string): Spell {
+  return {
+    id: "",
+
+    campaign_id: campaignId,
+    campaign_name: "",
+
+    name: { [lang]: "" },
+    page: { [lang]: undefined },
+
+    level: 0,
+
+    character_classes: [],
+    school: "abjuration",
+
+    casting_time: "action",
+    casting_time_value: undefined,
+
+    duration: "instantaneous",
+    duration_value: undefined,
+
+    range: "self",
+    range_value_imp: undefined,
+    range_value_met: undefined,
+
+    concentration: false,
+    ritual: false,
+
+    material: false,
+    somatic: false,
+    verbal: false,
+
+    materials: undefined,
+
+    description: { [lang]: "" },
+    upgrade: { [lang]: "" },
+  };
+}
+
+//------------------------------------------------------------------------------
 // Spells Store
 //------------------------------------------------------------------------------
 

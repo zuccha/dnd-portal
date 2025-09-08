@@ -88,6 +88,48 @@ export const weaponFiltersSchema = z.object({
 export type WeaponFilters = z.infer<typeof weaponFiltersSchema>;
 
 //------------------------------------------------------------------------------
+// Create Weapon
+//------------------------------------------------------------------------------
+
+export function createWeapon(campaignId: string, lang: string): Weapon {
+  return {
+    id: "",
+
+    campaign_id: campaignId,
+    campaign_name: "",
+
+    type: "simple",
+
+    damage: "",
+    damage_type: "slashing",
+    damage_versatile: undefined,
+
+    mastery: "cleave",
+    properties: [],
+
+    magic: false,
+    melee: true,
+    ranged: false,
+
+    range_ft_long: undefined,
+    range_ft_short: undefined,
+    range_m_long: undefined,
+    range_m_short: undefined,
+
+    ammunition: { [lang]: undefined },
+
+    weight_kg: 0,
+    weight_lb: 0,
+
+    cost: 0,
+
+    name: { [lang]: "" },
+    notes: { [lang]: "" },
+    page: { [lang]: undefined },
+  };
+}
+
+//------------------------------------------------------------------------------
 // Weapons Store
 //------------------------------------------------------------------------------
 
