@@ -88,7 +88,7 @@ export function createResourceEditor<
 
               <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="outline">{t("cancel")}</Button>
                 </Dialog.ActionTrigger>
 
                 <Button
