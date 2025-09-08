@@ -147,12 +147,12 @@ export default function SpellEditor({
 //------------------------------------------------------------------------------
 
 function SpellEditorName({ defaultName }: { defaultName: string }) {
-  const { disabled, error, ...rest } = useSpellEditorFormName(defaultName);
+  const { error, ...rest } = useSpellEditorFormName(defaultName);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("name.label")}>
+    <Field error={message} label={t("name.label")}>
       <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
     </Field>
   );
@@ -164,18 +164,16 @@ function SpellEditorName({ defaultName }: { defaultName: string }) {
 
 function SpellEditorLevel({ defaultLevel }: { defaultLevel: Spell["level"] }) {
   const levelOptions = useListCollection(useSpellLevelOptions());
-  const { disabled, error, onValueChange, value, ...rest } =
-    useSpellEditorFormLevel(defaultLevel);
+  const level = useSpellEditorFormLevel(defaultLevel);
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("level.label");
 
   return (
-    <Field disabled={disabled} invalid={!!error} label={label} maxW="5em">
+    <Field label={t("level.label")} maxW="5em">
       <Select
-        {...rest}
-        onValueChange={(level) => onValueChange(parseInt(level))}
+        {...level}
+        onValueChange={(value) => level.onValueChange(parseInt(value))}
         options={levelOptions}
-        value={`${value}`}
+        value={`${level.value}`}
         withinDialog
       />
     </Field>
@@ -192,15 +190,14 @@ function SpellEditorCharacterClasses({
   defaultCharacterClasses: Spell["character_classes"];
 }) {
   const characterClassOptions = useListCollection(useCharacterClassOptions());
-  const { disabled, error, ...rest } = useSpellEditorFormCharacterClasses(
+  const { error, ...rest } = useSpellEditorFormCharacterClasses(
     defaultCharacterClasses
   );
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("character_classes.label");
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={label}>
+    <Field error={message} label={t("character_classes.label")}>
       <Select multiple options={characterClassOptions} withinDialog {...rest} />
     </Field>
   );
@@ -216,12 +213,12 @@ function SpellEditorSchool({
   defaultSchool: Spell["school"];
 }) {
   const schoolOptions = useListCollection(useSpellSchoolOptions());
-  const { disabled, error, ...rest } = useSpellEditorFormSchool(defaultSchool);
+  const { error, ...rest } = useSpellEditorFormSchool(defaultSchool);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("school.label")}>
+    <Field error={message} label={t("school.label")}>
       <Select options={schoolOptions} withinDialog {...rest} />
     </Field>
   );
@@ -239,15 +236,13 @@ function SpellEditorCastingTime({
   defaultCastingTimeValue: string;
 }) {
   const castingTimeOptions = useListCollection(useSpellCastingTimeOptions());
-  const { disabled, error, ...rest } =
-    useSpellEditorFormCastingTime(defaultCastingTime);
+  const { error, ...rest } = useSpellEditorFormCastingTime(defaultCastingTime);
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("casting_time.label");
   const message = error ? t(error) : undefined;
 
   return (
     <HStack align="flex-end" w="full">
-      <Field disabled={disabled} error={message} flex={1} label={label}>
+      <Field error={message} flex={1} label={t("casting_time.label")}>
         <Select options={castingTimeOptions} withinDialog {...rest} />
       </Field>
       {rest.value === "value" && (
@@ -269,21 +264,15 @@ function SpellEditorCastingTimeValue({
   defaultCastingTimeValue: string;
 }) {
   const timeUnitOptions = useTimeUnitOptions();
-  const castingTimeValue = useSpellEditorFormCastingTimeValue(
-    defaultCastingTimeValue
-  );
+  const value = useSpellEditorFormCastingTimeValue(defaultCastingTimeValue);
 
   return (
-    <Field
-      disabled={castingTimeValue.disabled}
-      invalid={!!castingTimeValue.error}
-      maxW="9em"
-    >
+    <Field maxW="9em">
       <MeasureInput
         min={0}
         onParse={parseTime}
         unitOptions={timeUnitOptions}
-        {...castingTimeValue}
+        {...value}
       />
     </Field>
   );
@@ -301,15 +290,13 @@ function SpellEditorDuration({
   defaultDurationValue: string;
 }) {
   const durationOptions = useListCollection(useSpellDurationOptions());
-  const { disabled, error, ...rest } =
-    useSpellEditorFormDuration(defaultDuration);
+  const { error, ...rest } = useSpellEditorFormDuration(defaultDuration);
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("duration.label");
   const message = error ? t(error) : undefined;
 
   return (
     <HStack align="flex-end" w="full">
-      <Field disabled={disabled} error={message} flex={1} label={label}>
+      <Field error={message} flex={1} label={t("duration.label")}>
         <Select options={durationOptions} withinDialog {...rest} />
       </Field>
       {rest.value === "value" && (
@@ -332,11 +319,7 @@ function SpellEditorDurationValue({
   const durationValue = useSpellEditorFormDurationValue(defaultDurationValue);
 
   return (
-    <Field
-      disabled={durationValue.disabled}
-      invalid={!!durationValue.error}
-      maxW="9em"
-    >
+    <Field maxW="9em">
       <MeasureInput
         min={0}
         onParse={parseTime}
@@ -361,14 +344,13 @@ function SpellEditorRange({
   defaultRangeValueMet: string;
 }) {
   const rangeOptions = useListCollection(useSpellRangeOptions());
-  const { disabled, error, ...rest } = useSpellEditorFormRange(defaultRange);
+  const { error, ...rest } = useSpellEditorFormRange(defaultRange);
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("range.label");
   const message = error ? t(error) : undefined;
 
   return (
     <HStack align="flex-end" w="full">
-      <Field disabled={disabled} error={message} flex={1} label={label}>
+      <Field error={message} flex={1} label={t("range.label")}>
         <Select options={rangeOptions} withinDialog {...rest} />
       </Field>
       {rest.value === "value" && (
@@ -414,14 +396,12 @@ function SpellEditorRangeValues({
     rangeValueImp.onValueChange(`${iv} ${iu}`);
   };
 
+  const metric = system === "metric";
+  const imperial = system === "imperial";
+
   return (
     <>
-      <Field
-        disabled={rangeValueImp.disabled}
-        hidden={system === "metric"}
-        invalid={!!rangeValueImp.error}
-        maxW="9em"
-      >
+      <Field hidden={metric} maxW="9em">
         <MeasureInput
           min={0}
           onParse={parseDistanceImp}
@@ -430,12 +410,7 @@ function SpellEditorRangeValues({
           onValueChange={setRangeImpValue}
         />
       </Field>
-      <Field
-        disabled={rangeValueMet.disabled}
-        hidden={system === "imperial"}
-        invalid={!!rangeValueMet.error}
-        maxW="9em"
-      >
+      <Field hidden={imperial} maxW="9em">
         <MeasureInput
           min={0}
           onParse={parseDistanceMet}
@@ -457,13 +432,12 @@ function SpellEditorMaterials({
 }: {
   defaultMaterials: string;
 }) {
-  const { disabled, error, ...rest } =
-    useSpellEditorFormMaterials(defaultMaterials);
+  const { error, ...rest } = useSpellEditorFormMaterials(defaultMaterials);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("materials.label")}>
+    <Field error={message} label={t("materials.label")}>
       <Input placeholder={t("materials.placeholder")} {...rest} />
     </Field>
   );
@@ -478,13 +452,12 @@ function SpellEditorDescription({
 }: {
   defaultDescription: string;
 }) {
-  const { disabled, error, ...rest } =
-    useSpellEditorFormDescription(defaultDescription);
+  const { error, ...rest } = useSpellEditorFormDescription(defaultDescription);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("description.label")}>
+    <Field error={message} label={t("description.label")}>
       <Textarea {...rest} h="12em" placeholder={t("description.placeholder")} />
     </Field>
   );
@@ -501,15 +474,13 @@ function SpellEditorUpgrade({
   defaultLevel: number;
   defaultUpgrade: string;
 }) {
-  const { disabled, error, ...rest } =
-    useSpellEditorFormUpgrade(defaultUpgrade);
+  const { error, ...rest } = useSpellEditorFormUpgrade(defaultUpgrade);
   const { value: level } = useSpellEditorFormLevel(defaultLevel);
   const { t, tp } = useI18nLangContext(i18nContext);
-  const label = tp("upgrade.label", level);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={label}>
+    <Field error={message} label={tp("upgrade.label", level)}>
       <Textarea placeholder={tp("upgrade.placeholder", level)} {...rest} />
     </Field>
   );

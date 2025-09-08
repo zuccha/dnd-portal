@@ -119,12 +119,12 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
 //------------------------------------------------------------------------------
 
 function WeaponEditorName({ defaultName }: { defaultName: string }) {
-  const { disabled, error, ...rest } = useWeaponEditorFormName(defaultName);
+  const { error, ...rest } = useWeaponEditorFormName(defaultName);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("name.label")}>
+    <Field error={message} label={t("name.label")}>
       <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
     </Field>
   );
@@ -136,13 +136,12 @@ function WeaponEditorName({ defaultName }: { defaultName: string }) {
 
 function WeaponEditorType({ defaultType }: { defaultType: Weapon["type"] }) {
   const typeOptions = useListCollection(useWeaponTypeOptions());
-  const { disabled, error, ...rest } = useWeaponEditorFormType(defaultType);
+  const { error, ...rest } = useWeaponEditorFormType(defaultType);
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("type.label");
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={label} w="20em">
+    <Field error={message} label={t("type.label")} w="20em">
       <Select options={typeOptions} withinDialog {...rest} />
     </Field>
   );
@@ -158,13 +157,12 @@ function WeaponEditorProperties({
   defaultProperties: Weapon["properties"];
 }) {
   const propertyOptions = useListCollection(useWeaponPropertyOptions());
-  const { disabled, error, ...rest } =
-    useWeaponEditorFormProperties(defaultProperties);
+  const { error, ...rest } = useWeaponEditorFormProperties(defaultProperties);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("properties.label")}>
+    <Field error={message} label={t("properties.label")}>
       <Select multiple options={propertyOptions} withinDialog {...rest} />
     </Field>
   );
@@ -180,14 +178,12 @@ function WeaponEditorMastery({
   defaultMastery: Weapon["mastery"];
 }) {
   const masteryOptions = useListCollection(useWeaponMasteryOptions());
-  const { disabled, error, ...rest } =
-    useWeaponEditorFormMastery(defaultMastery);
+  const { error, ...rest } = useWeaponEditorFormMastery(defaultMastery);
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("mastery.label");
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={label} w="20em">
+    <Field error={message} label={t("mastery.label")} w="20em">
       <Select options={masteryOptions} withinDialog {...rest} />
     </Field>
   );
@@ -198,12 +194,12 @@ function WeaponEditorMastery({
 //------------------------------------------------------------------------------
 
 function WeaponEditorDamage({ defaultDamage }: { defaultDamage: string }) {
-  const { disabled, error, ...rest } = useWeaponEditorFormDamage(defaultDamage);
+  const { error, ...rest } = useWeaponEditorFormDamage(defaultDamage);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("damage.label")}>
+    <Field error={message} label={t("damage.label")}>
       <Input placeholder={t("damage.placeholder")} {...rest} />
     </Field>
   );
@@ -218,15 +214,14 @@ function WeaponEditorDamageVersatile({
 }: {
   defaultDamageVersatile: string;
 }) {
-  const { disabled, error, ...rest } = useWeaponEditorFormDamageVersatile(
+  const { error, ...rest } = useWeaponEditorFormDamageVersatile(
     defaultDamageVersatile
   );
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("damage_versatile.label");
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={label}>
+    <Field error={message} label={t("damage_versatile.label")}>
       <Input placeholder={t("damage_versatile.placeholder")} {...rest} />
     </Field>
   );
@@ -242,13 +237,12 @@ function WeaponEditorDamageType({
   defaultDamageType: Weapon["damage_type"];
 }) {
   const damageTypeOptions = useListCollection(useDamageTypeOptions());
-  const { disabled, error, ...rest } =
-    useWeaponEditorFormDamageType(defaultDamageType);
+  const { error, ...rest } = useWeaponEditorFormDamageType(defaultDamageType);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("damage_type.label")}>
+    <Field error={message} label={t("damage_type.label")}>
       <Select options={damageTypeOptions} withinDialog {...rest} />
     </Field>
   );
@@ -263,13 +257,12 @@ function WeaponEditorAmmunition({
 }: {
   defaultAmmunition: string;
 }) {
-  const { disabled, error, ...rest } =
-    useWeaponEditorFormAmmunition(defaultAmmunition);
+  const { error, ...rest } = useWeaponEditorFormAmmunition(defaultAmmunition);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("ammunition.label")}>
+    <Field error={message} label={t("ammunition.label")}>
       <Input placeholder={t("ammunition.placeholder")} {...rest} />
     </Field>
   );
@@ -318,43 +311,22 @@ function WeaponEditorRange({
     ftLong.onValueChange(convertDistanceMetToImp(value, "m", "ft")[0]);
   };
 
+  const metric = system === "metric";
+  const imperial = system === "imperial";
+
   return (
     <>
-      <Field
-        disabled={ftShort.disabled}
-        hidden={system === "metric"}
-        invalid={!!ftShort.error}
-        label={t("range.ft.short.label")}
-        maxW="6em"
-      >
+      <Field hidden={metric} label={t("range.ft.short.label")} maxW="6em">
         <NumberInput min={0} {...ftShort} onValueChange={setRangeFtShort} />
       </Field>
-      <Field
-        disabled={ftLong.disabled}
-        hidden={system === "metric"}
-        invalid={!!ftLong.error}
-        label={t("range.ft.long.label")}
-        maxW="6em"
-      >
+      <Field hidden={metric} label={t("range.ft.long.label")} maxW="6em">
         <NumberInput min={0} {...ftLong} onValueChange={setRangeFtLong} />
       </Field>
 
-      <Field
-        disabled={mShort.disabled}
-        hidden={system === "imperial"}
-        invalid={!!mShort.error}
-        label={t("range.m.short.label")}
-        maxW="6em"
-      >
+      <Field hidden={imperial} label={t("range.m.short.label")} maxW="6em">
         <NumberInput min={0} {...mShort} onValueChange={setRangeMShort} />
       </Field>
-      <Field
-        disabled={mLong.disabled}
-        hidden={system === "imperial"}
-        invalid={!!mLong.error}
-        label={t("range.m.long.label")}
-        maxW="6em"
-      >
+      <Field hidden={imperial} label={t("range.m.long.label")} maxW="6em">
         <NumberInput min={0} {...mLong} onValueChange={setRangeMLong} />
       </Field>
     </>
@@ -388,25 +360,16 @@ function WeaponEditorWeight({
     weightLb.onValueChange(convertWeightMetToImp(value, "kg", "lb")[0]);
   };
 
+  const metric = system === "metric";
+  const imperial = system === "imperial";
+
   return (
     <HStack align="flex-end">
-      <Field
-        disabled={weightLb.disabled}
-        hidden={system === "metric"}
-        invalid={!!weightLb.error}
-        label={t("weight.lb.label")}
-        maxW="6em"
-      >
+      <Field hidden={metric} label={t("weight.lb.label")} maxW="6em">
         <NumberInput min={0} {...weightLb} onValueChange={setWeightLb} />
       </Field>
 
-      <Field
-        disabled={weightKg.disabled}
-        hidden={system === "imperial"}
-        invalid={!!weightKg.error}
-        label={t("weight.kg.label")}
-        maxW="6em"
-      >
+      <Field hidden={imperial} label={t("weight.kg.label")} maxW="6em">
         <NumberInput min={0} {...weightKg} onValueChange={setWeightKg} />
       </Field>
     </HStack>
@@ -418,13 +381,12 @@ function WeaponEditorWeight({
 //------------------------------------------------------------------------------
 
 function WeaponEditorCost({ defaultCost }: { defaultCost: number }) {
-  const { disabled, error, ...rest } = useWeaponEditorFormCost(defaultCost);
+  const { error, ...rest } = useWeaponEditorFormCost(defaultCost);
   const { t } = useI18nLangContext(i18nContext);
-  const label = t("cost.label");
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={label} maxW="6em">
+    <Field error={message} label={t("cost.label")} maxW="6em">
       <NumberInput min={0} {...rest} />
     </Field>
   );
@@ -435,12 +397,12 @@ function WeaponEditorCost({ defaultCost }: { defaultCost: number }) {
 //------------------------------------------------------------------------------
 
 function WeaponEditorNotes({ defaultNotes }: { defaultNotes: string }) {
-  const { disabled, error, ...rest } = useWeaponEditorFormNotes(defaultNotes);
+  const { error, ...rest } = useWeaponEditorFormNotes(defaultNotes);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field disabled={disabled} error={message} label={t("notes.label")}>
+    <Field error={message} label={t("notes.label")}>
       <Textarea placeholder={t("notes.placeholder")} {...rest} />
     </Field>
   );
