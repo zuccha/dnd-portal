@@ -49,6 +49,12 @@ export type ResourceStore<
   ];
   useSelectionCount: () => number;
 
+  create: (
+    campaignId: string,
+    lang: string,
+    resource: Partial<DBR>,
+    translation: Partial<DBT>
+  ) => Promise<PostgrestSingleResponse<null>>;
   update: (
     id: string,
     lang: string,
@@ -210,6 +216,29 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
+  // Create
+  //----------------------------------------------------------------------------
+
+  async function create(
+    campaignId: string,
+    lang: string,
+    resource: Partial<DBR>,
+    translation: Partial<DBT>
+  ): Promise<PostgrestSingleResponse<null>> {
+    const response = await supabase.rpc(`create_${name.s}`, {
+      p_campaign_id: campaignId,
+      p_lang: lang,
+      [`p_${name.s}`]: resource,
+      [`p_${name.s}_translation`]: translation,
+    });
+    if (!response.error)
+      queryClient.invalidateQueries({
+        queryKey: [`resources[${name.p}]`, lang],
+      });
+    return response;
+  }
+
+  //----------------------------------------------------------------------------
   // Update
   //----------------------------------------------------------------------------
 
@@ -252,6 +281,7 @@ export function createResourceStore<
     useIsSelected,
     useSelectionCount,
 
+    create,
     update,
   };
 }

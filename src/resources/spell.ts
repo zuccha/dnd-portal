@@ -138,5 +138,6 @@ export const {
   useNameFilter: useSpellNameFilter,
   useIsSelected: useIsSpellSelected,
   useSelectionCount: useSpellsSelectionCount,
+  create: createSpell,
   update: updateSpell,
 } = spellsStore;
