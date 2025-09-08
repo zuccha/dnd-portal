@@ -1,39 +1,40 @@
-import {
-  Field as ChakraField,
-  type FieldRootProps as ChakraFieldRootProps,
-} from "@chakra-ui/react";
+import { type StackProps, Text, VStack } from "@chakra-ui/react";
 
 //------------------------------------------------------------------------------
 // Field
 //------------------------------------------------------------------------------
 
-export type FieldProps = ChakraFieldRootProps & {
+export type FieldProps = StackProps & {
   label?: string;
   error?: string;
   help?: string;
-  optional?: string;
 };
 
 export default function Field({
   children,
   error,
   help,
-  invalid,
-  optional,
   label,
   ...rest
 }: FieldProps) {
   return (
-    <ChakraField.Root {...rest} invalid={invalid || !!error}>
+    <VStack align="flex-start" gap={1.5} w="full" {...rest}>
       {label && (
-        <ChakraField.Label>
+        <Text fontSize="sm" fontWeight="medium" lineHeight={1.25}>
           {label}
-          <ChakraField.RequiredIndicator fallback={optional} />
-        </ChakraField.Label>
+        </Text>
       )}
       {children}
-      {help && <ChakraField.HelperText>{help}</ChakraField.HelperText>}
-      {error && <ChakraField.ErrorText>{error}</ChakraField.ErrorText>}
-    </ChakraField.Root>
+      {help && (
+        <Text color="fg.muted" fontSize="xs" lineHeight={1}>
+          {help}
+        </Text>
+      )}
+      {error && (
+        <Text color="fg.error" fontSize="xs" lineHeight={1}>
+          {error}
+        </Text>
+      )}
+    </VStack>
   );
 }
