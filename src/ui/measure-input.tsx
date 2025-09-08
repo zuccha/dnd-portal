@@ -11,6 +11,8 @@ export type MeasureInputProps<U extends string> = Omit<
   InputGroupProps,
   "children"
 > & {
+  id?: string;
+  name?: string;
   max?: number;
   min?: number;
   onParse: (value: string) => [number, U];
@@ -20,6 +22,8 @@ export type MeasureInputProps<U extends string> = Omit<
 };
 
 export default function MeasureInput<U extends string>({
+  id,
+  name,
   max,
   min,
   onParse,
@@ -44,6 +48,8 @@ export default function MeasureInput<U extends string>({
     <InputGroup
       endElement={
         <SelectNative
+          id={id ? `${id}-unit` : undefined}
+          name={name ? `${name}-unit` : undefined}
           onValueChange={changeUnit}
           options={unitOptions}
           value={unit}
@@ -54,8 +60,10 @@ export default function MeasureInput<U extends string>({
       {...rest}
     >
       <NumberInput
+        id={id ? `${id}-value` : undefined}
         max={max}
         min={min}
+        name={name ? `${name}-value` : undefined}
         onValueChange={changeValue}
         value={value}
         w="full"

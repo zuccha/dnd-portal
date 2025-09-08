@@ -13,6 +13,8 @@ export type SelectNativeProps<T extends string> = Omit<
   ChakraNativeSelectRootProps,
   "defaultValue" | "onValueChange" | "value"
 > & {
+  id?: string;
+  name?: string;
   options: SelectNativeOption<T>[];
   defaultValue?: T;
   onValueChange?: (value: T) => void;
@@ -20,6 +22,8 @@ export type SelectNativeProps<T extends string> = Omit<
 };
 
 export default function SelectNative<T extends string>({
+  id,
+  name,
   onValueChange,
   options,
   value,
@@ -28,6 +32,8 @@ export default function SelectNative<T extends string>({
   return (
     <ChakraNativeSelect.Root {...rest}>
       <ChakraNativeSelect.Field
+        id={id}
+        name={name}
         onChange={
           onValueChange
             ? (e) => onValueChange(e.currentTarget.value as T)
