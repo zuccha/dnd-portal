@@ -14,6 +14,7 @@ export type Form<Fields extends Record<string, unknown>, SubmitContext> = {
   ) => {
     disabled: boolean;
     error: string | undefined;
+    invalid: boolean;
     name: Name;
     onBlur: () => void;
     onValueChange: (value: Fields[Name]) => void;
@@ -84,6 +85,7 @@ export function createForm<
   ): {
     disabled: boolean;
     error: string | undefined;
+    invalid: boolean;
     name: Name;
     onBlur: () => void;
     onValueChange: (value: Fields[Name]) => void;
@@ -110,6 +112,7 @@ export function createForm<
     return {
       disabled,
       error,
+      invalid: !!error,
       name,
       onBlur,
       onValueChange,
