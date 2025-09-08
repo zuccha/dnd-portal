@@ -10,6 +10,7 @@ import {
 } from "../../../../../../resources/localized-spell";
 import {
   type Spell,
+  createSpell,
   defaultSpell,
   spellsStore,
   updateSpell,
@@ -177,9 +178,9 @@ async function submitCreatorForm(
   if (typeof errorOrData === "string") return errorOrData;
 
   const { spell, translation } = errorOrData;
-  // const response = await createSpell(campaignId, lang, spell, translation);
-  // if (response.error) return report(response.error, "form.error.creation_failure");
-  console.log(campaignId, lang, spell, translation);
+  const response = await createSpell(campaignId, lang, spell, translation);
+  if (response.error)
+    return report(response.error, "form.error.creation_failure");
 
   return undefined;
 }

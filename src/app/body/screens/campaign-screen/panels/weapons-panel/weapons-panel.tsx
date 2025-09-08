@@ -11,6 +11,7 @@ import {
 } from "../../../../../../resources/localized-weapon";
 import {
   type Weapon,
+  createWeapon,
   defaultWeapon,
   updateWeapon,
   weaponsStore,
@@ -179,9 +180,9 @@ async function submitCreatorForm(
 
   const { weapon, translation } = errorOrData;
 
-  // const response = await createWeapon(campaignId, lang, weapon, translation);
-  // if (response.error) report(response.error, "form.error.creation_failure");
-  console.log(campaignId, lang, weapon, translation);
+  const response = await createWeapon(campaignId, lang, weapon, translation);
+  if (response.error)
+    return report(response.error, "form.error.creation_failure");
 
   return undefined;
 }
