@@ -36,7 +36,9 @@ export default function SpellCard({ onClickTitle, resource }: SpellCardProps) {
   return (
     <ResourceCard>
       <ResourceCard.Header onToggleSelection={toggle} selected={selected}>
-        <ResourceCard.Title onClick={onClickTitle}>{name}</ResourceCard.Title>
+        <ResourceCard.Title onClick={onClickTitle}>
+          {name || <Span fontStyle="italic">{t("name.missing")}</Span>}
+        </ResourceCard.Title>
       </ResourceCard.Header>
 
       <ResourceCard.Caption>
@@ -85,22 +87,27 @@ export default function SpellCard({ onClickTitle, resource }: SpellCardProps) {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  casting_time: {
+  "name.missing": {
+    en: "Untitled",
+    it: "Senza titolo",
+  },
+
+  "casting_time": {
     en: "Casting Time",
     it: "Tempo di Lancio",
   },
 
-  duration: {
+  "duration": {
     en: "Duration",
     it: "Durata",
   },
 
-  components: {
+  "components": {
     en: "Components",
     it: "Componenti",
   },
 
-  range: {
+  "range": {
     en: "Range",
     it: "Gittata",
   },
