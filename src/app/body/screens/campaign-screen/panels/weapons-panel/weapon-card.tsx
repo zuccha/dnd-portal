@@ -1,5 +1,4 @@
 import { Span } from "@chakra-ui/react";
-import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type { LocalizedWeapon } from "../../../../../../resources/localized-weapon";
 import { useIsWeaponSelected } from "../../../../../../resources/weapon";
 import ResourceCard from "../resources/resource-card";
@@ -19,16 +18,12 @@ export default function WeaponCard({
 }: WeaponCardProps) {
   const { campaign, cost, description, id, name, type, weight } = resource;
 
-  const { t } = useI18nLangContext(i18nContext);
-
   const [selected, { toggle }] = useIsWeaponSelected(id);
 
   return (
     <ResourceCard>
       <ResourceCard.Header onToggleSelection={toggle} selected={selected}>
-        <ResourceCard.Title onClick={onClickTitle}>
-          {name || <Span fontStyle="italic">{t("name.missing")}</Span>}
-        </ResourceCard.Title>
+        <ResourceCard.Title onClick={onClickTitle}>{name}</ResourceCard.Title>
       </ResourceCard.Header>
 
       <ResourceCard.Caption>
@@ -45,14 +40,3 @@ export default function WeaponCard({
     </ResourceCard>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  "name.missing": {
-    en: "Untitled",
-    it: "Senza titolo",
-  },
-};

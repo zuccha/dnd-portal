@@ -55,7 +55,7 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 //------------------------------------------------------------------------------
 
 export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
-  const { lang, ti } = useI18nLangContext(i18nContext);
+  const { lang, t, ti } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateDamageType = useTranslateDamageType(lang);
@@ -108,7 +108,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
         campaign_with_page: page
           ? ti("campaign_with_page", weapon.campaign_name, page)
           : weapon.campaign_name,
-        name: translate(weapon.name, lang),
+        name: translate(weapon.name, lang) || t("name.missing"),
         page: page ? ti("page", page) : "",
 
         type: translateWeaponType(weapon.type).label,
@@ -154,6 +154,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
     [
       lang,
       system,
+      t,
       ti,
       translateDamageType,
       translateWeaponMastery,
@@ -168,6 +169,11 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "name.missing": {
+    en: "<Untitled>",
+    it: "<Senza nome>",
+  },
+
   "campaign_with_page": {
     en: "<1> (p. <2>)", // 1 = campaign, 2 = page
     it: "<1> (p. <2>)", // 1 = campaign, 2 = page

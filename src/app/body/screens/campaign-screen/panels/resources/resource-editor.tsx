@@ -59,6 +59,8 @@ export function createResourceEditor<
     const valid = useValid();
     const disabled = !valid || saving;
 
+    const name = resource ? translate(resource.name, lang) : "";
+
     return (
       <Dialog.Root
         closeOnEscape={!saving}
@@ -76,9 +78,7 @@ export function createResourceEditor<
             <Dialog.Content>
               <Dialog.Header>
                 <Dialog.Title>
-                  {resource
-                    ? ti("title", translate(resource.name, lang))
-                    : t("title.empty")}
+                  {name ? ti("title", name) : t("title.empty")}
                 </Dialog.Title>
               </Dialog.Header>
 

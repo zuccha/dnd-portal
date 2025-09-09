@@ -36,9 +36,7 @@ export default function SpellCard({ onClickTitle, resource }: SpellCardProps) {
   return (
     <ResourceCard>
       <ResourceCard.Header onToggleSelection={toggle} selected={selected}>
-        <ResourceCard.Title onClick={onClickTitle}>
-          {name || <Span fontStyle="italic">{t("name.missing")}</Span>}
-        </ResourceCard.Title>
+        <ResourceCard.Title onClick={onClickTitle}>{name}</ResourceCard.Title>
       </ResourceCard.Header>
 
       <ResourceCard.Caption>

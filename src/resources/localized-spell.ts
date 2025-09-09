@@ -120,7 +120,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
         level: `${spell.level}`,
         level_long: ti("level_long", `${spell.level}`),
         materials: materials ? materials : t("materials.none"),
-        name: translate(spell.name, lang),
+        name: translate(spell.name, lang) || t("name.missing"),
         page: page ? ti("page", page) : "",
         range,
         ritual: spell.ritual,
@@ -150,6 +150,11 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "name.missing": {
+    en: "<Untitled>",
+    it: "<Senza nome>",
+  },
+
   "campaign_with_page": {
     en: "<1> (p. <2>)", // 1 = campaign, 2 = page
     it: "<1> (p. <2>)", // 1 = campaign, 2 = page
