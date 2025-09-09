@@ -47,8 +47,8 @@ export function createResourceCreator<
     );
 
     const createAndAddMore = useCallback(async () => {
-      await submit();
-      // TODO: Reset form.
+      const error = await submit();
+      if (!error) form.reset();
     }, [submit]);
 
     const createAndClose = useCallback(async () => {

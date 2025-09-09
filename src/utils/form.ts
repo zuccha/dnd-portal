@@ -1,12 +1,14 @@
 import { useCallback, useLayoutEffect, useState } from "react";
 import { createMemorySetStore } from "../store/memory-set-store";
 import { createMemoryStore } from "../store/memory-store";
+import { createObservable } from "./observable";
 
 //------------------------------------------------------------------------------
 // Form
 //------------------------------------------------------------------------------
 
 export type Form<Fields extends Record<string, unknown>> = {
+  reset: () => void;
   useField: <Name extends keyof Fields>(
     name: Name,
     defaultValue: Fields[Name],
@@ -96,6 +98,14 @@ export function createForm<
       setError(validate(defaultValue));
     }, [defaultValue, setError, validate]);
 
+    useLayoutEffect(() => {
+      subscribeReset(() => {
+        setValue(defaultValue);
+        setError(validate(defaultValue));
+        setPristine(true);
+      });
+    }, [defaultValue, setError, setValue, validate]);
+
     const onBlur = useCallback(() => {
       setPristine(false);
       setError(validate(value as Fields[Name]));
@@ -175,8 +185,25 @@ export function createForm<
   }
 
   //----------------------------------------------------------------------------
+  // Reset
+  //----------------------------------------------------------------------------
+
+  const { notify: notifyReset, subscribe: subscribeReset } = createObservable();
+
+  function reset() {
+    notifyReset(undefined);
+  }
+
+  //----------------------------------------------------------------------------
   // Return
   //----------------------------------------------------------------------------
 
-  return { useField, useFieldError, useSubmit, useSubmitError, useValid };
+  return {
+    reset,
+    useField,
+    useFieldError,
+    useSubmit,
+    useSubmitError,
+    useValid,
+  };
 }
