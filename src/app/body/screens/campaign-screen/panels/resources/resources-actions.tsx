@@ -11,7 +11,7 @@ import type {
   ResourceStore,
 } from "../../../../../../resources/resource";
 import IconButton from "../../../../../../ui/icon-button";
-import { downloadJson } from "../../../../../../utils/download";
+import { downloadFile } from "../../../../../../utils/download";
 
 //------------------------------------------------------------------------------
 // Create Resources Actions
@@ -61,7 +61,7 @@ export function createResourcesActions<
     const downloadSelected = useCallback(async () => {
       if (!count) return;
       const json = computeSelectedAsJson();
-      downloadJson(json, `${store.id}.json`);
+      downloadFile(json, `${store.id}.json`, "json");
     }, [computeSelectedAsJson, count]);
 
     return (

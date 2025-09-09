@@ -1,5 +1,9 @@
-export function downloadJson(json: string, filename: string) {
-  const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+export function downloadFile(
+  data: string,
+  filename: string,
+  format: "csv" | "json"
+) {
+  const blob = new Blob([data], { type: typeByFormats[format] });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -9,3 +13,8 @@ export function downloadJson(json: string, filename: string) {
   a.remove();
   URL.revokeObjectURL(url);
 }
+
+const typeByFormats = {
+  csv: "text/csv;charset=utf-8",
+  json: "application/json;charset=utf-8",
+} as const;
