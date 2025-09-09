@@ -91,7 +91,6 @@ export function createForm<
   } {
     const [value, setValue] = useValue(name, defaultValue);
     const [error, setError] = useError(name, undefined);
-    const [pristine, setPristine] = useState(true);
     const [disabled] = useSubmitting();
 
     useLayoutEffect(() => {
@@ -102,27 +101,25 @@ export function createForm<
       subscribeReset(() => {
         setValue(defaultValue);
         setError(validate(defaultValue));
-        setPristine(true);
       });
     }, [defaultValue, setError, setValue, validate]);
 
     const onBlur = useCallback(() => {
-      setPristine(false);
-      setError(validate(value as Fields[Name]));
-    }, [setError, validate, value]);
+      // Nothing.
+    }, []);
 
     const onValueChange = useCallback(
       (value: Fields[Name]) => {
-        if (!pristine) setError(validate(value));
+        setError(validate(value));
         setValue(value);
       },
-      [pristine, setError, setValue, validate]
+      [setError, setValue, validate]
     );
 
     return {
-      "data-invalid": !pristine && error ? "" : undefined,
+      "data-invalid": error ? "" : undefined,
       disabled,
-      "error": pristine ? undefined : error,
+      error,
       name,
       onBlur,
       onValueChange,
