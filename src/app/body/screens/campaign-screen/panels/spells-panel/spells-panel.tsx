@@ -126,6 +126,7 @@ function parseFormData(
     school: data.school,
     somatic: data.somatic,
     verbal: data.verbal,
+    visibility: data.visibility,
   };
 
   const maybeTranslation = {

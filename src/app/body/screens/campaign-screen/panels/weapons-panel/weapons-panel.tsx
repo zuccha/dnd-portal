@@ -125,6 +125,7 @@ function parseFormData(
     range_m_short: data.range_m_short,
     ranged: data.ranged,
     type: data.type,
+    visibility: data.visibility,
     weight_kg: data.weight_kg,
     weight_lb: data.weight_lb,
   };

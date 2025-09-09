@@ -1,3 +1,4 @@
+import type { CampaignRole } from "../../../../../../resources/campaign-role";
 import type { DamageType } from "../../../../../../resources/damage-type";
 import type { WeaponMastery } from "../../../../../../resources/weapon-mastery";
 import type { WeaponProperty } from "../../../../../../resources/weapon-property";
@@ -28,6 +29,7 @@ export type WeaponEditorFormFields = {
   cost: number;
   ammunition: string;
   notes: string;
+  visibility: CampaignRole;
 };
 
 export const weaponEditorForm = createForm<WeaponEditorFormFields>();
@@ -178,3 +180,11 @@ export const useWeaponEditorFormAmmunition = (defaultAmmunition: string) =>
 
 export const useWeaponEditorFormNotes = (defaultNotes: string) =>
   useWeaponEditorFormField("notes", defaultNotes);
+
+//------------------------------------------------------------------------------
+// Visibility
+//------------------------------------------------------------------------------
+
+export const useWeaponEditorFormVisibility = (
+  defaultVisibility: CampaignRole
+) => useWeaponEditorFormField("visibility", defaultVisibility);

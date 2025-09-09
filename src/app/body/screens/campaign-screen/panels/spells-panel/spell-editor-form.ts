@@ -1,3 +1,4 @@
+import type { CampaignRole } from "../../../../../../resources/campaign-role";
 import { type CharacterClass } from "../../../../../../resources/character-class";
 import { type SpellCastingTime } from "../../../../../../resources/spell-casting-time";
 import { type SpellDuration } from "../../../../../../resources/spell-duration";
@@ -29,6 +30,7 @@ export type SpellEditorFormFields = {
   somatic: boolean;
   upgrade: string;
   verbal: boolean;
+  visibility: CampaignRole;
 };
 
 export const spellEditorForm = createForm<SpellEditorFormFields>();
@@ -160,3 +162,10 @@ export const useSpellEditorFormDescription = (defaultDescription: string) =>
 
 export const useSpellEditorFormUpgrade = (defaultUpgrade: string) =>
   useSpellEditorFormField("upgrade", defaultUpgrade);
+
+//------------------------------------------------------------------------------
+// Visibility
+//------------------------------------------------------------------------------
+
+export const useSpellEditorFormVisibility = (defaultVisibility: CampaignRole) =>
+  useSpellEditorFormField("visibility", defaultVisibility);

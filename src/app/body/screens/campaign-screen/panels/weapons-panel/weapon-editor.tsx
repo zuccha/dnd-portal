@@ -10,6 +10,7 @@ import {
   convertWeightImpToMet,
   convertWeightMetToImp,
 } from "../../../../../../i18n/i18n-weight";
+import { useCampaignRoleOptions } from "../../../../../../resources/campaign-role";
 import { useDamageTypeOptions } from "../../../../../../resources/damage-type";
 import type { Weapon } from "../../../../../../resources/weapon";
 import { useWeaponMasteryOptions } from "../../../../../../resources/weapon-mastery";
@@ -37,6 +38,7 @@ import {
   useWeaponEditorFormRangeMLong,
   useWeaponEditorFormRangeMShort,
   useWeaponEditorFormType,
+  useWeaponEditorFormVisibility,
   useWeaponEditorFormWeightKg,
   useWeaponEditorFormWeightLb,
 } from "./weapon-editor-form";
@@ -63,6 +65,7 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
       <HStack align="flex-start" gap={4}>
         <WeaponEditorName defaultName={resource.name[lang] ?? ""} />
         <WeaponEditorType defaultType={resource.type} />
+        <WeaponEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 
       <HStack align="flex-start" gap={4}>
@@ -126,6 +129,27 @@ function WeaponEditorName({ defaultName }: { defaultName: string }) {
   return (
     <Field error={message} label={t("name.label")}>
       <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Weapon Editor Visibility
+//------------------------------------------------------------------------------
+
+function WeaponEditorVisibility({
+  defaultVisibility,
+}: {
+  defaultVisibility: Weapon["visibility"];
+}) {
+  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const { error, ...rest } = useWeaponEditorFormVisibility(defaultVisibility);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("visibility.label")} maxW="10em">
+      <Select options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -442,6 +466,11 @@ const i18nContext = {
   "name.placeholder": {
     en: "E.g.: Flail",
     it: "Es: Mazzafrusto",
+  },
+
+  "visibility.label": {
+    en: "Visibility",
+    it: "Visibilità",
   },
 
   "name.error.empty": {

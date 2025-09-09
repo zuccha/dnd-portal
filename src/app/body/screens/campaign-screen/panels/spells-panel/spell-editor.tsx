@@ -14,6 +14,7 @@ import {
   parseTime,
   useTimeUnitOptions,
 } from "../../../../../../i18n/i18n-time";
+import { useCampaignRoleOptions } from "../../../../../../resources/campaign-role";
 import { useCharacterClassOptions } from "../../../../../../resources/character-class";
 import { type Spell } from "../../../../../../resources/spell";
 import { useSpellCastingTimeOptions } from "../../../../../../resources/spell-casting-time";
@@ -45,6 +46,7 @@ import {
   useSpellEditorFormSchool,
   useSpellEditorFormSubmitError,
   useSpellEditorFormUpgrade,
+  useSpellEditorFormVisibility,
 } from "./spell-editor-form";
 
 //------------------------------------------------------------------------------
@@ -73,6 +75,7 @@ export default function SpellEditor({
       <HStack align="flex-start" gap={4}>
         <SpellEditorName defaultName={resource.name[lang] ?? ""} />
         <SpellEditorLevel defaultLevel={resource.level} />
+        <SpellEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 
       <HStack align="flex-start" gap={4}>
@@ -176,6 +179,27 @@ function SpellEditorLevel({ defaultLevel }: { defaultLevel: Spell["level"] }) {
         value={`${level.value}`}
         withinDialog
       />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Spell Editor Visibility
+//------------------------------------------------------------------------------
+
+function SpellEditorVisibility({
+  defaultVisibility,
+}: {
+  defaultVisibility: Spell["visibility"];
+}) {
+  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const { error, ...rest } = useSpellEditorFormVisibility(defaultVisibility);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("visibility.label")} maxW="10em">
+      <Select options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -535,6 +559,11 @@ const i18nContext = {
   "level.error.empty": {
     en: "The level cannot be empty",
     it: "Il livello non può essere vuoto",
+  },
+
+  "visibility.label": {
+    en: "Visibility",
+    it: "Visibilità",
   },
 
   "character_classes.label": {
