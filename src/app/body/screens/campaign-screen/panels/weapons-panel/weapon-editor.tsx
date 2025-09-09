@@ -440,7 +440,7 @@ const i18nContext = {
   },
 
   "name.placeholder": {
-    en: "E.g.: FLail",
+    en: "E.g.: Flail",
     it: "Es: Mazzafrusto",
   },
 
