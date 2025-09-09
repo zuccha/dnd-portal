@@ -11,6 +11,7 @@ import type {
   ResourceStore,
 } from "../../../../../../resources/resource";
 import { createLocalStore } from "../../../../../../store/local-store";
+import { createMemoryStore } from "../../../../../../store/memory-store";
 import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../../ui/binary-button";
@@ -28,7 +29,6 @@ import {
   createResourcesListTable,
 } from "./resources-list-table";
 import { createUseFilteredLocalizedResources } from "./use-filtered-localized-resources";
-import { createUseResource } from "./use-resource";
 import { createUseSelectedFilteredLocalizedResourcesCount } from "./use-selected-filtered-localized-resources-count";
 
 //------------------------------------------------------------------------------
@@ -117,7 +117,8 @@ export function createResourcesPanel<
   // Use Edited Resource
   //----------------------------------------------------------------------------
 
-  const [useEditedResource, useSetEditedResource] = createUseResource<R>();
+  const { useValue: useEditedResource, useSetValue: useSetEditedResource } =
+    createMemoryStore<R | undefined>(undefined);
 
   //----------------------------------------------------------------------------
   // Resource Editor
@@ -135,7 +136,8 @@ export function createResourcesPanel<
   // Use New Resource
   //----------------------------------------------------------------------------
 
-  const [useNewResource, useSetNewResource] = createUseResource<R>();
+  const { useValue: useNewResource, useSetValue: useSetNewResource } =
+    createMemoryStore<R | undefined>(undefined);
 
   //----------------------------------------------------------------------------
   // Resource Creator

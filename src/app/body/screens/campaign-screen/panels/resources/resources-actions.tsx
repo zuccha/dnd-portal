@@ -2,6 +2,7 @@ import { Menu, Portal } from "@chakra-ui/react";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import { useIsGM } from "../../../../../../resources/campaign-role";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -10,6 +11,7 @@ import type {
   ResourceFilters,
   ResourceStore,
 } from "../../../../../../resources/resource";
+import type { StoreUpdater } from "../../../../../../store/store";
 import IconButton from "../../../../../../ui/icon-button";
 import { downloadFile } from "../../../../../../utils/download";
 
@@ -27,9 +29,7 @@ export function createResourcesActions<
   store: ResourceStore<R, DBR, DBT, F>,
   useLocalizedResources: (campaignId: string) => L[] | undefined,
   useSelectedTranslationsCount: (campaignId: string) => number,
-  useSetNewResource: (
-    campaignId: string
-  ) => [(resource: R | undefined) => void, boolean],
+  useSetNewResource: (campaignId: string) => StoreUpdater<R | undefined>,
   defaultResource: R
 ) {
   return function ResourcesActions({ campaignId }: { campaignId: string }) {
@@ -45,7 +45,8 @@ export function createResourcesActions<
       return JSON.stringify(selected, null, 2);
     }, [localizedResources]);
 
-    const [setNewResource, canSetNewResource] = useSetNewResource(campaignId);
+    const isGM = useIsGM(campaignId);
+    const setNewResource = useSetNewResource(campaignId);
 
     const addNew = useCallback(async () => {
       setNewResource(defaultResource);
@@ -72,7 +73,7 @@ export function createResourcesActions<
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
-              {canSetNewResource && (
+              {isGM && (
                 <Menu.Item onClick={addNew} value="add">
                   {t("add")}
                 </Menu.Item>

@@ -1,8 +1,10 @@
 import { Box, Wrap } from "@chakra-ui/react";
+import { useIsGM } from "../../../../../../resources/campaign-role";
 import type {
   LocalizedResource,
   Resource,
 } from "../../../../../../resources/resource";
+import type { StoreUpdater } from "../../../../../../store/store";
 import ResourcesListEmpty from "./resources-list-empty";
 
 //----------------------------------------------------------------------------
@@ -14,14 +16,13 @@ export function createResourcesListCards<
   L extends LocalizedResource<R>
 >(
   useLocalizedResources: (campaignId: string) => L[] | undefined,
-  useSetEditedResource: (
-    campaignId: string
-  ) => [(resource: R | undefined) => void, boolean],
+  useSetEditedResource: (campaignId: string) => StoreUpdater<R | undefined>,
   ResourceCard: React.FC<{ resource: L; onClickTitle?: () => void }>
 ) {
   return function ListCards({ campaignId }: { campaignId: string }) {
+    const isGM = useIsGM(campaignId);
     const localizedResources = useLocalizedResources(campaignId);
-    const [setEditedResource, canEdit] = useSetEditedResource(campaignId);
+    const setEditedResource = useSetEditedResource(campaignId);
 
     if (!localizedResources) return null;
 
@@ -33,7 +34,7 @@ export function createResourcesListCards<
               <ResourceCard
                 key={localizedResource.id}
                 onClickTitle={
-                  canEdit
+                  isGM
                     ? () => setEditedResource(localizedResource._raw)
                     : undefined
                 }

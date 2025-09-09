@@ -9,6 +9,7 @@ import type { LucideIcon } from "lucide-react";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import { useIsGM } from "../../../../../../resources/campaign-role";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -17,6 +18,7 @@ import type {
   ResourceFilters,
   ResourceStore,
 } from "../../../../../../resources/resource";
+import type { StoreUpdater } from "../../../../../../store/store";
 import Checkbox from "../../../../../../ui/checkbox";
 import Icon from "../../../../../../ui/icon";
 import Link from "../../../../../../ui/link";
@@ -46,9 +48,7 @@ export function createResourcesListTable<
   store: ResourceStore<R, DBR, DBT, F>,
   useLocalizedResources: (campaignId: string) => L[] | undefined,
   useSelectedLocalizedResourcesCount: (campaignId: string) => number,
-  useSetEditedResource: (
-    campaignId: string
-  ) => [(resource: R | undefined) => void, boolean],
+  useSetEditedResource: (campaignId: string) => StoreUpdater<R | undefined>,
   partialColumns: Omit<ResourcesListTableColumn<R, L>, "label">[],
   columnsI18nContext: I18nLangContext,
   expansionKey: keyof L | undefined
@@ -126,7 +126,8 @@ export function createResourcesListTable<
   }) {
     const [expanded, setExpanded] = useState(expandedRows.has(translation.id));
     const [selected, { toggle }] = useIsSelected(translation.id);
-    const [setEditedResource, canEdit] = useSetEditedResource(campaignId);
+    const setEditedResource = useSetEditedResource(campaignId);
+    const isGM = useIsGM(campaignId);
 
     const toggleExpanded = useCallback(() => {
       if (expansionKey)
@@ -162,7 +163,7 @@ export function createResourcesListTable<
                 whiteSpace="nowrap"
                 {...rest}
               >
-                {key === "name" && canEdit ? (
+                {key === "name" && isGM ? (
                   <Link
                     onClick={(e) => {
                       e.stopPropagation();

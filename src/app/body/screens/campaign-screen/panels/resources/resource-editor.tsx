@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { translate } from "../../../../../../i18n/i18n-string";
 import type { Resource } from "../../../../../../resources/resource";
+import type { StoreUpdater } from "../../../../../../store/store";
 import Button from "../../../../../../ui/button";
 import type { Form } from "../../../../../../utils/form";
 
@@ -23,9 +24,7 @@ export function createResourceEditor<
   FF extends Record<string, unknown>
 >(
   useEditedResource: () => R | undefined,
-  useSetEditedResource: (
-    campaignId: string
-  ) => [(resource: R | undefined) => void, boolean],
+  useSetEditedResource: (campaignId: string) => StoreUpdater<R | undefined>,
   form: Form<FF>,
   onSubmitForm: (
     data: Partial<FF>,
@@ -37,7 +36,7 @@ export function createResourceEditor<
 
   return function ResourceEditor({ campaignId }: { campaignId: string }) {
     const resource = useEditedResource();
-    const [setEditedResource] = useSetEditedResource(campaignId);
+    const setEditedResource = useSetEditedResource(campaignId);
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
     const [submit, saving] = useSubmit(

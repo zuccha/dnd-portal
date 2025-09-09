@@ -2,6 +2,7 @@ import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type { Resource } from "../../../../../../resources/resource";
+import type { StoreUpdater } from "../../../../../../store/store";
 import Button from "../../../../../../ui/button";
 import type { Form } from "../../../../../../utils/form";
 
@@ -22,9 +23,7 @@ export function createResourceCreator<
   FF extends Record<string, unknown>
 >(
   useNewResource: () => R | undefined,
-  useSetNewResource: (
-    campaignId: string
-  ) => [(resource: R | undefined) => void, boolean],
+  useSetNewResource: (campaignId: string) => StoreUpdater<R | undefined>,
   form: Form<FF>,
   onSubmitForm: (
     data: Partial<FF>,
@@ -36,7 +35,7 @@ export function createResourceCreator<
 
   return function ResourceCreator({ campaignId }: { campaignId: string }) {
     const resource = useNewResource();
-    const [setEditedResource] = useSetNewResource(campaignId);
+    const setEditedResource = useSetNewResource(campaignId);
     const { lang, t } = useI18nLangContext(i18nContext);
 
     const [submit, saving] = useSubmit(

@@ -33,3 +33,12 @@ export function useCampaignRole(campaignId: string) {
     queryKey: ["campaign-role", campaignId],
   });
 }
+
+//------------------------------------------------------------------------------
+// Use Is GM
+//------------------------------------------------------------------------------
+
+export function useIsGM(campaignId: string): boolean {
+  const { data: campaignRole } = useCampaignRole(campaignId);
+  return campaignRole === "game_master";
+}
