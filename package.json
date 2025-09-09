@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "deploy": "npm run build && rm -rf docs && cp -r dist docs && echo dnd.zuccha.io > docs/CNAME && git add ./docs && git commit -m 'Deploy'",
     "lint": "eslint .",
     "preview": "vite preview"
   },
