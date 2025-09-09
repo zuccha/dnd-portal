@@ -233,7 +233,7 @@ export function createResourceStore<
     });
     if (!response.error)
       queryClient.invalidateQueries({
-        queryKey: [`resources[${name.p}]`, lang],
+        queryKey: [`resources[${name.p}]`],
       });
     return response;
   }
