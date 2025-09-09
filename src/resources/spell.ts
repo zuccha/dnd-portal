@@ -2,6 +2,7 @@ import { z } from "zod";
 import { distanceImpSchema, distanceMetSchema } from "../i18n/i18n-distance";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { timeSchema } from "../i18n/i18n-time";
+import { campaignRoleSchema } from "./campaign-role";
 import { characterClassSchema } from "./character-class";
 import { createResourceStore } from "./resource";
 import { spellCastingTimeSchema } from "./spell-casting-time";
@@ -49,6 +50,8 @@ export const spellSchema = z.object({
 
   description: i18nStringSchema,
   upgrade: i18nStringSchema.nullish(),
+
+  visibility: campaignRoleSchema,
 });
 
 export type Spell = z.infer<typeof spellSchema>;
@@ -120,6 +123,8 @@ export const defaultSpell: Spell = {
 
   description: {},
   upgrade: {},
+
+  visibility: "game_master",
 };
 
 //------------------------------------------------------------------------------

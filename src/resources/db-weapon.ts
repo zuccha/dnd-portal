@@ -1,4 +1,5 @@
 import z from "zod";
+import { campaignRoleSchema } from "./campaign-role";
 import { damageTypeSchema } from "./damage-type";
 import { weaponMasterySchema } from "./weapon-mastery";
 import { weaponPropertySchema } from "./weapon-property";
@@ -35,6 +36,8 @@ export const dbWeaponSchema = z.object({
   weight_lb: z.number(),
 
   cost: z.number(),
+
+  visibility: campaignRoleSchema,
 });
 
 export type DBWeapon = z.infer<typeof dbWeaponSchema>;

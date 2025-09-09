@@ -2,6 +2,7 @@ import z from "zod";
 import { distanceImpSchema, distanceMetSchema } from "../i18n/i18n-distance";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { timeSchema } from "../i18n/i18n-time";
+import { campaignRoleSchema } from "./campaign-role";
 import { characterClassSchema } from "./character-class";
 import { spellCastingTimeSchema } from "./spell-casting-time";
 import { spellDurationSchema } from "./spell-duration";
@@ -42,6 +43,8 @@ export const dbSpellSchema = z.object({
   material: z.boolean(),
   somatic: z.boolean(),
   verbal: z.boolean(),
+
+  visibility: campaignRoleSchema,
 });
 
 export type DBSpell = z.infer<typeof dbSpellSchema>;

@@ -1,5 +1,6 @@
 import z from "zod";
 import { i18nStringSchema } from "../i18n/i18n-string";
+import { campaignRoleSchema } from "./campaign-role";
 import { damageTypeSchema } from "./damage-type";
 import { createResourceStore } from "./resource";
 import { weaponMasterySchema } from "./weapon-mastery";
@@ -44,6 +45,8 @@ export const weaponSchema = z.object({
   name: i18nStringSchema,
   notes: i18nStringSchema,
   page: i18nStringSchema,
+
+  visibility: campaignRoleSchema,
 });
 
 export type Weapon = z.infer<typeof weaponSchema>;
@@ -125,6 +128,8 @@ export const defaultWeapon: Weapon = {
   name: {},
   notes: {},
   page: {},
+
+  visibility: "game_master",
 };
 
 //------------------------------------------------------------------------------
