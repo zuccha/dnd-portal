@@ -55,6 +55,7 @@ export type ResourceStore<
     resource: Partial<DBR>,
     translation: Partial<DBT>
   ) => Promise<PostgrestSingleResponse<null>>;
+  remove: (ids: string[]) => Promise<PostgrestSingleResponse<null>>;
   update: (
     id: string,
     lang: string,
@@ -262,6 +263,17 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
+  // Remove
+  //----------------------------------------------------------------------------
+
+  async function remove(ids: string[]): Promise<PostgrestSingleResponse<null>> {
+    const response = await supabase.from(name.p).delete().in("id", ids);
+    if (!response.error)
+      queryClient.invalidateQueries({ queryKey: [`resources[${name.p}]`] });
+    return response;
+  }
+
+  //----------------------------------------------------------------------------
   // Return
   //----------------------------------------------------------------------------
 
@@ -282,6 +294,7 @@ export function createResourceStore<
     useSelectionCount,
 
     create,
+    remove,
     update,
   };
 }

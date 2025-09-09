@@ -65,6 +65,19 @@ export function createResourcesActions<
       downloadFile(json, `${store.id}.json`, "json");
     }, [computeSelectedAsJson, count]);
 
+    const removeSelected = useCallback(async () => {
+      if (!count) return;
+      try {
+        const selectedIds = localizedResources!
+          .map(({ id }) => id)
+          .filter(store.isSelected);
+        store.remove(selectedIds);
+      } catch (e) {
+        console.error(e);
+        // TODO: Show toast.
+      }
+    }, [count, localizedResources]);
+
     return (
       <Menu.Root>
         <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
@@ -78,9 +91,11 @@ export function createResourcesActions<
                   {t("add")}
                 </Menu.Item>
               )}
+
               <Menu.Item disabled={!count} onClick={copySelected} value="copy">
                 {t("copy")}
               </Menu.Item>
+
               <Menu.Item
                 disabled={!count}
                 onClick={downloadSelected}
@@ -88,6 +103,17 @@ export function createResourcesActions<
               >
                 {t("download")}
               </Menu.Item>
+              {isGM && (
+                <Menu.Item
+                  _hover={{ bg: "bg.error", color: "fg.error" }}
+                  color="fg.error"
+                  disabled={!count}
+                  onClick={removeSelected}
+                  value="remove"
+                >
+                  {t("remove")}
+                </Menu.Item>
+              )}
             </Menu.Content>
           </Menu.Positioner>
         </Portal>
@@ -105,12 +131,19 @@ const i18nContext = {
     en: "Add new",
     it: "Crea nuovo",
   },
+
   copy: {
     en: "Copy selected",
     it: "Copia selezionati",
   },
+
   download: {
     en: "Download selected",
     it: "Scarica selezionati",
+  },
+
+  remove: {
+    en: "Delete selected",
+    it: "Elimina selezionati",
   },
 };
