@@ -8,23 +8,31 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type WeaponCardProps = {
-  onClickTitle?: () => void;
+  isGM: boolean;
+  onClickTitle: () => void;
   resource: LocalizedWeapon;
 };
 
 export default function WeaponCard({
+  isGM,
   onClickTitle,
   resource,
 }: WeaponCardProps) {
-  const { campaign, cost, description, id, name, type, weight } = resource;
+  const { _raw, campaign, cost, description, id, name, type, weight } =
+    resource;
 
   const [selected, { toggle }] = useIsWeaponSelected(id);
 
   return (
     <ResourceCard>
-      <ResourceCard.Header onToggleSelection={toggle} selected={selected}>
-        <ResourceCard.Title onClick={onClickTitle}>{name}</ResourceCard.Title>
-      </ResourceCard.Header>
+      <ResourceCard.Header
+        isGM={isGM}
+        name={name}
+        onClick={onClickTitle}
+        onToggleSelection={toggle}
+        selected={selected}
+        visibility={_raw.visibility}
+      />
 
       <ResourceCard.Caption>
         <Span>{type}</Span>

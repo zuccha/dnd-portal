@@ -5,7 +5,7 @@ import {
   type TableRootProps,
   VStack,
 } from "@chakra-ui/react";
-import type { LucideIcon } from "lucide-react";
+import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
@@ -94,6 +94,10 @@ export function createResourcesListTable<
           <Checkbox checked={selected} onClick={toggleSelected} size="sm" />
         </Table.ColumnHeader>
 
+        <Table.ColumnHeader textAlign="center" w="3em">
+          <Icon Icon={EyeIcon} color="fg.muted" size="sm" />
+        </Table.ColumnHeader>
+
         {columns.map(({ icon, key, label, ...rest }) => {
           return (
             <Table.ColumnHeader
@@ -139,6 +143,8 @@ export function createResourcesListTable<
         });
     }, [translation.id]);
 
+    const columnCount = isGM ? columns.length + 2 : columns.length + 1;
+
     return (
       <>
         <Table.Row key={translation.id} onClick={toggleExpanded}>
@@ -149,6 +155,18 @@ export function createResourcesListTable<
                 e.stopPropagation();
                 toggle();
               }}
+              size="sm"
+            />
+          </Table.Cell>
+
+          <Table.Cell textAlign="center" w="3em">
+            <Icon
+              Icon={
+                translation._raw.visibility === "player"
+                  ? EyeIcon
+                  : EyeClosedIcon
+              }
+              color="fg.muted"
               size="sm"
             />
           </Table.Cell>
@@ -184,7 +202,7 @@ export function createResourcesListTable<
 
         {expansionKey && expanded && (
           <Table.Row bgColor="bg.muted" w="full">
-            <Table.Cell colSpan={columns.length + 1}>
+            <Table.Cell colSpan={columnCount}>
               <VStack align="flex-start" gap={1} w="full">
                 {String(translation[expansionKey])
                   .split("\n")

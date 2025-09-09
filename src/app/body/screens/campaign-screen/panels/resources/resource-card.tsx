@@ -1,6 +1,9 @@
 import { HStack, Separator, Span, VStack } from "@chakra-ui/react";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { type ReactNode } from "react";
+import { type CampaignRole } from "../../../../../../resources/campaign-role";
 import Checkbox from "../../../../../../ui/checkbox";
+import Icon from "../../../../../../ui/icon";
 import Link from "../../../../../../ui/link";
 import RichText from "../../../../../../ui/rich-text";
 
@@ -38,20 +41,25 @@ export default function ResourceCard({ children }: ResourceCardProps) {
 ResourceCard.Caption = ResourceCardCaption;
 ResourceCard.Description = ResourceCardDescription;
 ResourceCard.Header = ResourceCardHeader;
-ResourceCard.Title = ResourceCardTitle;
 
 //------------------------------------------------------------------------------
 // Resource Card Header
 //------------------------------------------------------------------------------
 
 function ResourceCardHeader({
-  children,
+  isGM,
+  name,
+  onClick,
   onToggleSelection,
   selected,
+  visibility,
 }: {
-  children?: ReactNode;
+  isGM: boolean;
+  name: string;
+  onClick: () => void;
   onToggleSelection: () => void;
   selected: boolean;
+  visibility: CampaignRole;
 }) {
   return (
     <HStack
@@ -62,7 +70,18 @@ function ResourceCardHeader({
       py={1}
       w="full"
     >
-      <HStack>{children}</HStack>
+      {isGM ? (
+        <HStack py={1}>
+          <Icon
+            Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}
+            color="fg.muted"
+            size="sm"
+          />
+          <Link onClick={onClick}>{name}</Link>
+        </HStack>
+      ) : (
+        <Span py={1}>{name}</Span>
+      )}
 
       <Checkbox
         checked={selected}
@@ -70,26 +89,6 @@ function ResourceCardHeader({
         size="sm"
       />
     </HStack>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Resource Card Title
-//------------------------------------------------------------------------------
-
-function ResourceCardTitle({
-  children,
-  onClick,
-}: {
-  children: ReactNode;
-  onClick?: () => void;
-}) {
-  return onClick ? (
-    <Link onClick={onClick} py={1}>
-      {children}
-    </Link>
-  ) : (
-    <Span py={1}>{children}</Span>
   );
 }
 

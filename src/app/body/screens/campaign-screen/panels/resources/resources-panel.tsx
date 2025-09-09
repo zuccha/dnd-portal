@@ -61,7 +61,11 @@ export function createResourcesPanel<
   useLocalizeResource,
 }: {
   Filters: React.FC;
-  ResourceCard: React.FC<{ resource: L }>;
+  ResourceCard: React.FC<{
+    isGM: boolean;
+    onClickTitle: () => void;
+    resource: L;
+  }>;
   ResourceEditorContent: React.FC<ResourceEditorContentProps<R>>;
   defaultResource: R;
   form: Form<FF>;

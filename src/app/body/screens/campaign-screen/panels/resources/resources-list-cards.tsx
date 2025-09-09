@@ -17,7 +17,11 @@ export function createResourcesListCards<
 >(
   useLocalizedResources: (campaignId: string) => L[] | undefined,
   useSetEditedResource: (campaignId: string) => StoreUpdater<R | undefined>,
-  ResourceCard: React.FC<{ resource: L; onClickTitle?: () => void }>
+  ResourceCard: React.FC<{
+    isGM: boolean;
+    onClickTitle: () => void;
+    resource: L;
+  }>
 ) {
   return function ListCards({ campaignId }: { campaignId: string }) {
     const isGM = useIsGM(campaignId);
@@ -32,12 +36,9 @@ export function createResourcesListCards<
           <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
             {localizedResources.map((localizedResource) => (
               <ResourceCard
+                isGM={isGM}
                 key={localizedResource.id}
-                onClickTitle={
-                  isGM
-                    ? () => setEditedResource(localizedResource._raw)
-                    : undefined
-                }
+                onClickTitle={() => setEditedResource(localizedResource._raw)}
                 resource={localizedResource}
               />
             ))}

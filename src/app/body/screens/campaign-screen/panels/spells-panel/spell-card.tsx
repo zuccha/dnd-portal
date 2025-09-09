@@ -9,12 +9,18 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type SpellCardProps = {
-  onClickTitle?: () => void;
+  isGM: boolean;
+  onClickTitle: () => void;
   resource: LocalizedSpell;
 };
 
-export default function SpellCard({ onClickTitle, resource }: SpellCardProps) {
+export default function SpellCard({
+  isGM,
+  onClickTitle,
+  resource,
+}: SpellCardProps) {
   const {
+    _raw,
     campaign,
     casting_time_with_ritual,
     character_classes,
@@ -35,9 +41,14 @@ export default function SpellCard({ onClickTitle, resource }: SpellCardProps) {
 
   return (
     <ResourceCard>
-      <ResourceCard.Header onToggleSelection={toggle} selected={selected}>
-        <ResourceCard.Title onClick={onClickTitle}>{name}</ResourceCard.Title>
-      </ResourceCard.Header>
+      <ResourceCard.Header
+        isGM={isGM}
+        name={name}
+        onClick={onClickTitle}
+        onToggleSelection={toggle}
+        selected={selected}
+        visibility={_raw.visibility}
+      />
 
       <ResourceCard.Caption>
         <Span>{school}</Span>

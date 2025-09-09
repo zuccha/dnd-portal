@@ -8,12 +8,17 @@ import { createLocalStore } from "../store/local-store";
 import supabase, { queryClient } from "../supabase";
 import { createObservable } from "../utils/observable";
 import { createObservableSet } from "../utils/observable-set";
+import type { CampaignRole } from "./campaign-role";
 
 //------------------------------------------------------------------------------
 // Resource
 //------------------------------------------------------------------------------
 
-export type Resource = { id: string; name: I18nString };
+export type Resource = {
+  id: string;
+  name: I18nString;
+  visibility: CampaignRole;
+};
 export type DBResource = { id: string };
 export type DBResourceTranslation = { lang: string };
 export type ResourceFilters = { order_by: string; order_dir: "asc" | "desc" };
