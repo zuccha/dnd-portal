@@ -36,6 +36,7 @@ export type ResourceStore<
 > = {
   id: string;
 
+  use: (id: string) => UseQueryResult<R | undefined, Error>;
   useFromCampaign: (campaignId: string) => UseQueryResult<R[], Error>;
 
   useFilters: () => [F, (partial: Partial<F>) => void];
@@ -60,6 +61,7 @@ export type ResourceStore<
     resource: Partial<DBR>,
     translation: Partial<DBT>
   ) => Promise<PostgrestSingleResponse<null>>;
+  fetch: (id: string) => Promise<R | undefined>;
   fetchFromCampaign: (
     campaignId: string,
     { order_by, order_dir, ...filters }: F,
@@ -138,10 +140,22 @@ export function createResourceStore<
       [`p_${name.s}_translation`]: translation,
     });
     if (!response.error)
-      queryClient.invalidateQueries({
-        queryKey: [`resources[${name.p}]`],
-      });
+      queryClient.invalidateQueries({ queryKey: [`resources`, name.p] });
     return response;
+  }
+
+  //----------------------------------------------------------------------------
+  // Fetch
+  //----------------------------------------------------------------------------
+
+  async function fetch(id: string): Promise<R | undefined> {
+    const { data } = await supabase.rpc(`fetch_${name.s}`, { p_id: id });
+    try {
+      return resourceSchema.parse(data);
+    } catch (e) {
+      console.error(e);
+      return undefined;
+    }
   }
 
   //----------------------------------------------------------------------------
@@ -184,10 +198,10 @@ export function createResourceStore<
       [`p_${name.s}`]: resource,
       [`p_${name.s}_translation`]: translation,
     });
-    if (!response.error)
-      queryClient.invalidateQueries({
-        queryKey: [`resources[${name.p}]`, lang],
-      });
+    if (!response.error) {
+      queryClient.invalidateQueries({ queryKey: [`resources`, name.p, lang] });
+      queryClient.invalidateQueries({ queryKey: [`resource`, name.s, id] });
+    }
     return response;
   }
 
@@ -197,9 +211,23 @@ export function createResourceStore<
 
   async function remove(ids: string[]): Promise<PostgrestSingleResponse<null>> {
     const response = await supabase.from(name.p).delete().in("id", ids);
-    if (!response.error)
-      queryClient.invalidateQueries({ queryKey: [`resources[${name.p}]`] });
+    if (!response.error) {
+      queryClient.invalidateQueries({ queryKey: [`resources`, name.p] });
+      for (const id of ids)
+        queryClient.invalidateQueries({ queryKey: [`resource`, name.s, id] });
+    }
     return response;
+  }
+
+  //----------------------------------------------------------------------------
+  // Use
+  //----------------------------------------------------------------------------
+
+  function use(id: string) {
+    return useQuery<R | undefined>({
+      queryFn: () => fetch(id),
+      queryKey: [`resource`, name.s, id],
+    });
   }
 
   //----------------------------------------------------------------------------
@@ -217,7 +245,7 @@ export function createResourceStore<
 
     return useQuery<R[]>({
       queryFn: fetchCampaignsResources,
-      queryKey: [`resources[${name.p}]`, lang, campaignId, filters],
+      queryKey: [`resources`, name.p, lang, campaignId, filters],
     });
   }
 
@@ -290,6 +318,7 @@ export function createResourceStore<
   return {
     id: name.p,
 
+    use,
     useFromCampaign,
 
     useFilters,
@@ -304,6 +333,7 @@ export function createResourceStore<
     useSelectionCount,
 
     create,
+    fetch,
     fetchFromCampaign,
     remove,
     update,
