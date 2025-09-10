@@ -60,6 +60,11 @@ export type ResourceStore<
     resource: Partial<DBR>,
     translation: Partial<DBT>
   ) => Promise<PostgrestSingleResponse<null>>;
+  fetchFromCampaign: (
+    campaignId: string,
+    { order_by, order_dir, ...filters }: F,
+    lang: string
+  ) => Promise<R[]>;
   remove: (ids: string[]) => Promise<PostgrestSingleResponse<null>>;
   update: (
     id: string,
@@ -117,6 +122,29 @@ export function createResourceStore<
   const useNameFilter = nameFilterStore.use;
 
   //----------------------------------------------------------------------------
+  // Create
+  //----------------------------------------------------------------------------
+
+  async function create(
+    campaignId: string,
+    lang: string,
+    resource: Partial<DBR>,
+    translation: Partial<DBT>
+  ): Promise<PostgrestSingleResponse<null>> {
+    const response = await supabase.rpc(`create_${name.s}`, {
+      p_campaign_id: campaignId,
+      p_lang: lang,
+      [`p_${name.s}`]: resource,
+      [`p_${name.s}_translation`]: translation,
+    });
+    if (!response.error)
+      queryClient.invalidateQueries({
+        queryKey: [`resources[${name.p}]`],
+      });
+    return response;
+  }
+
+  //----------------------------------------------------------------------------
   // Fetch From Campaign
   //----------------------------------------------------------------------------
 
@@ -138,6 +166,40 @@ export function createResourceStore<
       console.error(e);
       return [];
     }
+  }
+
+  //----------------------------------------------------------------------------
+  // Update
+  //----------------------------------------------------------------------------
+
+  async function update(
+    id: string,
+    lang: string,
+    resource: Partial<DBR>,
+    translation: Partial<DBT>
+  ): Promise<PostgrestSingleResponse<null>> {
+    const response = await supabase.rpc(`update_${name.s}`, {
+      p_id: id,
+      p_lang: lang,
+      [`p_${name.s}`]: resource,
+      [`p_${name.s}_translation`]: translation,
+    });
+    if (!response.error)
+      queryClient.invalidateQueries({
+        queryKey: [`resources[${name.p}]`, lang],
+      });
+    return response;
+  }
+
+  //----------------------------------------------------------------------------
+  // Remove
+  //----------------------------------------------------------------------------
+
+  async function remove(ids: string[]): Promise<PostgrestSingleResponse<null>> {
+    const response = await supabase.from(name.p).delete().in("id", ids);
+    if (!response.error)
+      queryClient.invalidateQueries({ queryKey: [`resources[${name.p}]`] });
+    return response;
   }
 
   //----------------------------------------------------------------------------
@@ -222,63 +284,6 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
-  // Create
-  //----------------------------------------------------------------------------
-
-  async function create(
-    campaignId: string,
-    lang: string,
-    resource: Partial<DBR>,
-    translation: Partial<DBT>
-  ): Promise<PostgrestSingleResponse<null>> {
-    const response = await supabase.rpc(`create_${name.s}`, {
-      p_campaign_id: campaignId,
-      p_lang: lang,
-      [`p_${name.s}`]: resource,
-      [`p_${name.s}_translation`]: translation,
-    });
-    if (!response.error)
-      queryClient.invalidateQueries({
-        queryKey: [`resources[${name.p}]`],
-      });
-    return response;
-  }
-
-  //----------------------------------------------------------------------------
-  // Update
-  //----------------------------------------------------------------------------
-
-  async function update(
-    id: string,
-    lang: string,
-    resource: Partial<DBR>,
-    translation: Partial<DBT>
-  ): Promise<PostgrestSingleResponse<null>> {
-    const response = await supabase.rpc(`update_${name.s}`, {
-      p_id: id,
-      p_lang: lang,
-      [`p_${name.s}`]: resource,
-      [`p_${name.s}_translation`]: translation,
-    });
-    if (!response.error)
-      queryClient.invalidateQueries({
-        queryKey: [`resources[${name.p}]`, lang],
-      });
-    return response;
-  }
-
-  //----------------------------------------------------------------------------
-  // Remove
-  //----------------------------------------------------------------------------
-
-  async function remove(ids: string[]): Promise<PostgrestSingleResponse<null>> {
-    const response = await supabase.from(name.p).delete().in("id", ids);
-    if (!response.error)
-      queryClient.invalidateQueries({ queryKey: [`resources[${name.p}]`] });
-    return response;
-  }
-
-  //----------------------------------------------------------------------------
   // Return
   //----------------------------------------------------------------------------
 
@@ -299,6 +304,7 @@ export function createResourceStore<
     useSelectionCount,
 
     create,
+    fetchFromCampaign,
     remove,
     update,
   };
