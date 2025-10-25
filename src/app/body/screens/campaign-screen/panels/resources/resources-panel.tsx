@@ -112,30 +112,35 @@ export function createResourcesPanel<
   //----------------------------------------------------------------------------
 
   async function submitCreatorForm(
+    campaignId: string,
     data: Partial<FF>,
-    { id, lang }: { id: string; lang: string }
+    { lang }: { lang: string }
   ) {
     const errorOrData = parseFormData(data);
     if (typeof errorOrData === "string") return errorOrData;
 
     const { resource, translation } = errorOrData;
-    const response = await store.create(id, lang, resource, translation);
+    const response = await store.create(
+      campaignId,
+      lang,
+      resource,
+      translation
+    );
     if (response.error)
       return report(response.error, "form.error.creation_failure");
 
     return undefined;
   }
 
-  function ResourceCreatorForm() {
+  function ResourceCreatorForm({ campaignId }: { campaignId: string }) {
     const [lang] = useI18nLang();
 
     const createdResource = createdResourceStore.useValue();
-    const createdResourceId = createdResource?.id ?? "";
 
     const [submit, saving] = form.useSubmit(
       useCallback(
-        (data) => submitCreatorForm(data, { id: createdResourceId, lang }),
-        [createdResourceId, lang]
+        (data) => submitCreatorForm(campaignId, data, { lang }),
+        [campaignId, lang]
       )
     );
 
@@ -302,7 +307,7 @@ export function createResourcesPanel<
         </Flex>
 
         <ResourceEditorForm />
-        <ResourceCreatorForm />
+        <ResourceCreatorForm campaignId={campaignId} />
       </VStack>
     );
   };
