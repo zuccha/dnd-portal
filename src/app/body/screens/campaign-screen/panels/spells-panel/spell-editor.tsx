@@ -532,6 +532,11 @@ const i18nContext = {
     it: "I dati inseriti non sono validi.",
   },
 
+  "form.error.creation_failure": {
+    en: "Failed to create the spell.",
+    it: "Errore durante la creazione.",
+  },
+
   "form.error.update_failure": {
     en: "Failed to update the spell.",
     it: "Errore durante il salvataggio.",

@@ -453,6 +453,11 @@ const i18nContext = {
     it: "I dati inseriti non sono validi.",
   },
 
+  "form.error.creation_failure": {
+    en: "Failed to create the weapon.",
+    it: "Errore durante la creazione.",
+  },
+
   "form.error.update_failure": {
     en: "Failed to update the weapon.",
     it: "Errore durante il salvataggio.",
