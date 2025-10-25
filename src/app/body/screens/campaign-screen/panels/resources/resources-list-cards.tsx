@@ -1,52 +1,48 @@
 import { Box, Wrap } from "@chakra-ui/react";
-import { useIsGM } from "../../../../../../resources/campaign-role";
-import type {
-  LocalizedResource,
-  Resource,
-} from "../../../../../../resources/resource";
-import type { StoreUpdater } from "../../../../../../store/store";
+import type { LocalizedResource } from "../../../../../../resources/localized-resource";
+import type { Resource } from "../../../../../../resources/resource";
 import ResourcesListEmpty from "./resources-list-empty";
 
 //----------------------------------------------------------------------------
-// Create Resources List Cards
+// Resources List Cards
 //----------------------------------------------------------------------------
 
-export function createResourcesListCards<
+export type ListCardsProps<
   R extends Resource,
   L extends LocalizedResource<R>
->(
-  useLocalizedResources: (campaignId: string) => L[] | undefined,
-  useSetEditedResource: (campaignId: string) => StoreUpdater<R | undefined>,
-  ResourceCard: React.FC<{
-    isGM: boolean;
-    onClickTitle: () => void;
-    resource: L;
-  }>
-) {
-  return function ListCards({ campaignId }: { campaignId: string }) {
-    const isGM = useIsGM(campaignId);
-    const localizedResources = useLocalizedResources(campaignId);
-    const setEditedResource = useSetEditedResource(campaignId);
+> = {
+  Card: React.FC<{
+    gm: boolean;
+    localizedResource: L;
+    onOpen: (resource: R) => void;
+  }>;
+  gm: boolean;
+  localizedResources: L[];
+  onOpen: (resource: R) => void;
+};
 
-    if (!localizedResources) return null;
+export default function ListCards<
+  R extends Resource,
+  L extends LocalizedResource<R>
+>({ Card, gm, localizedResources, onOpen }: ListCardsProps<R, L>) {
+  if (!localizedResources) return null;
 
-    return (
-      <Box bgColor="bg.subtle" w="full">
-        {localizedResources.length ? (
-          <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
-            {localizedResources.map((localizedResource) => (
-              <ResourceCard
-                isGM={isGM}
-                key={localizedResource.id}
-                onClickTitle={() => setEditedResource(localizedResource._raw)}
-                resource={localizedResource}
-              />
-            ))}
-          </Wrap>
-        ) : (
-          <ResourcesListEmpty />
-        )}
-      </Box>
-    );
-  };
+  return (
+    <Box bgColor="bg.subtle" w="full">
+      {localizedResources.length ? (
+        <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
+          {localizedResources.map((localizedResource) => (
+            <Card
+              gm={gm}
+              key={localizedResource.id}
+              localizedResource={localizedResource}
+              onOpen={onOpen}
+            />
+          ))}
+        </Wrap>
+      ) : (
+        <ResourcesListEmpty />
+      )}
+    </Box>
+  );
 }

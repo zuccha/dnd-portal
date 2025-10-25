@@ -1,35 +1,35 @@
 import { Flex, HStack, Separator, VStack } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
+import { useCallback } from "react";
 import z from "zod/v4";
-import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
+import { useI18nLang } from "../../../../../../i18n/i18n-lang";
+import type { I18nString } from "../../../../../../i18n/i18n-string";
+import { useIsGM } from "../../../../../../resources/campaign-role";
 import type {
   DBResource,
   DBResourceTranslation,
-  LocalizedResource,
+} from "../../../../../../resources/db-resource";
+import type { LocalizedResource } from "../../../../../../resources/localized-resource";
+import type {
   Resource,
   ResourceFilters,
-  ResourceStore,
 } from "../../../../../../resources/resource";
+import type { ResourcesStore } from "../../../../../../resources/resources-store";
 import { createLocalStore } from "../../../../../../store/local-store";
 import { createMemoryStore } from "../../../../../../store/memory-store";
 import BinaryButton, {
   type BinaryButtonProps,
 } from "../../../../../../ui/binary-button";
+import { report } from "../../../../../../utils/error";
 import type { Form } from "../../../../../../utils/form";
-import { createResourceCreator } from "./resource-creator";
-import {
-  type ResourceEditorContentProps,
-  createResourceEditor,
-} from "./resource-editor";
-import { createResourcesActions } from "./resources-actions";
-import { createResourcesCounter } from "./resources-counter";
-import { createResourcesListCards } from "./resources-list-cards";
-import {
+import ResourceCreator from "./resource-creator";
+import ResourceEditor from "./resource-editor";
+import ResourcesActions from "./resources-actions";
+import ResourcesCounter from "./resources-counter";
+import ResourcesListCards from "./resources-list-cards";
+import ResourcesListTable, {
   type ResourcesListTableColumn,
-  createResourcesListTable,
 } from "./resources-list-table";
-import { createUseFilteredLocalizedResources } from "./use-filtered-localized-resources";
-import { createUseSelectedFilteredLocalizedResourcesCount } from "./use-selected-filtered-localized-resources-count";
 
 //------------------------------------------------------------------------------
 // Create Resources Panel
@@ -41,50 +41,42 @@ export type ResourcesPanelProps = {
 
 export function createResourcesPanel<
   R extends Resource,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
   F extends ResourceFilters,
   L extends LocalizedResource<R>,
+  DBR extends DBResource,
+  DBT extends DBResourceTranslation,
   FF extends Record<string, unknown>
 >({
+  Card,
+  EditorContent,
   Filters,
-  ResourceCard,
-  ResourceEditorContent,
   defaultResource,
   form,
   listTableColumns,
-  listTableColumnsI18nContext,
   listTableDescriptionKey,
-  onSubmitCreatorForm,
-  onSubmitEditorForm,
+  name,
+  parseFormData,
   store,
-  useLocalizeResource,
 }: {
-  Filters: React.FC;
-  ResourceCard: React.FC<{
-    isGM: boolean;
-    onClickTitle: () => void;
-    resource: L;
+  Card: React.FC<{
+    gm: boolean;
+    localizedResource: L;
+    onOpen: (resource: R) => void;
   }>;
-  ResourceEditorContent: React.FC<ResourceEditorContentProps<R>>;
+  EditorContent: React.FC<{ resource: R }>;
+  Filters: React.FC;
   defaultResource: R;
   form: Form<FF>;
-  listTableColumns: Omit<ResourcesListTableColumn<R, L>, "label">[];
-  listTableColumnsI18nContext: I18nLangContext;
-  listTableDescriptionKey: keyof L | undefined;
-  onSubmitCreatorForm: (
-    data: Partial<FF>,
-    context: { campaignId: string; lang: string }
-  ) => Promise<string | undefined>;
-  onSubmitEditorForm: (
-    data: Partial<FF>,
-    context: { id: string; lang: string }
-  ) => Promise<string | undefined>;
-  store: ResourceStore<R, DBR, DBT, F>;
-  useLocalizeResource: () => (resource: R) => L;
+  listTableColumns: ResourcesListTableColumn<R, L>[];
+  listTableDescriptionKey: keyof L;
+  name: I18nString;
+  parseFormData: (
+    data: Partial<FF>
+  ) => { resource: Partial<DBR>; translation: Partial<DBT> } | string;
+  store: ResourcesStore<R, F, L, DBR, DBT>;
 }) {
   //----------------------------------------------------------------------------
-  // View
+  // Context - View
   //----------------------------------------------------------------------------
 
   const useView = createLocalStore(
@@ -99,105 +91,117 @@ export function createResourcesPanel<
   ];
 
   //----------------------------------------------------------------------------
-  // Use Filtered Localized Resources
+  // Context - Created Resource
   //----------------------------------------------------------------------------
 
-  const useFilteredLocalizedResources = createUseFilteredLocalizedResources(
-    store,
-    useLocalizeResource
-  );
+  const createdResourceStore = createMemoryStore<R | undefined>(undefined);
+
+  const unsetCreatedResource = () => createdResourceStore.set(undefined);
+  const setCreatedResource = () => createdResourceStore.set(defaultResource);
 
   //----------------------------------------------------------------------------
-  // Use Filtered Localized Resources
+  // Context - Edited Resource
   //----------------------------------------------------------------------------
 
-  const useSelectedFilteredLocalizedResourcesCount =
-    createUseSelectedFilteredLocalizedResourcesCount(
-      store,
-      useFilteredLocalizedResources
+  const editedResourceStore = createMemoryStore<R | undefined>(undefined);
+
+  const unsetEditedResource = () => editedResourceStore.set(undefined);
+
+  //----------------------------------------------------------------------------
+  // Resource Creator Form
+  //----------------------------------------------------------------------------
+
+  async function submitCreatorForm(
+    data: Partial<FF>,
+    { id, lang }: { id: string; lang: string }
+  ) {
+    const errorOrData = parseFormData(data);
+    if (typeof errorOrData === "string") return errorOrData;
+
+    const { resource, translation } = errorOrData;
+    const response = await store.create(id, lang, resource, translation);
+    if (response.error)
+      return report(response.error, "form.error.creation_failure");
+
+    return undefined;
+  }
+
+  function ResourceCreatorForm() {
+    const [lang] = useI18nLang();
+
+    const createdResource = createdResourceStore.useValue();
+    const createdResourceId = createdResource?.id ?? "";
+
+    const [submit, saving] = form.useSubmit(
+      useCallback(
+        (data) => submitCreatorForm(data, { id: createdResourceId, lang }),
+        [createdResourceId, lang]
+      )
     );
 
-  //----------------------------------------------------------------------------
-  // Use Edited Resource
-  //----------------------------------------------------------------------------
+    const valid = form.useValid();
 
-  const { useValue: useEditedResource, useSetValue: useSetEditedResource } =
-    createMemoryStore<R | undefined>(undefined);
-
-  //----------------------------------------------------------------------------
-  // Resource Editor
-  //----------------------------------------------------------------------------
-
-  const ResourceEditor = createResourceEditor(
-    useEditedResource,
-    useSetEditedResource,
-    form,
-    onSubmitEditorForm,
-    ResourceEditorContent
-  );
+    return (
+      <ResourceCreator
+        onClose={unsetCreatedResource}
+        onReset={form.reset}
+        onSubmit={submit}
+        open={!!createdResource}
+        saving={saving}
+        valid={valid}
+      >
+        <EditorContent resource={createdResource ?? defaultResource} />
+      </ResourceCreator>
+    );
+  }
 
   //----------------------------------------------------------------------------
-  // Use New Resource
+  // Resource Editor Form
   //----------------------------------------------------------------------------
 
-  const { useValue: useNewResource, useSetValue: useSetNewResource } =
-    createMemoryStore<R | undefined>(undefined);
+  async function submitEditorForm(
+    data: Partial<FF>,
+    { id, lang }: { id: string; lang: string }
+  ) {
+    const errorOrData = parseFormData(data);
+    if (typeof errorOrData === "string") return errorOrData;
 
-  //----------------------------------------------------------------------------
-  // Resource Creator
-  //----------------------------------------------------------------------------
+    const { resource, translation } = errorOrData;
+    const response = await store.update(id, lang, resource, translation);
+    if (response.error)
+      return report(response.error, "form.error.update_failure");
 
-  const ResourceCreator = createResourceCreator(
-    useNewResource,
-    useSetNewResource,
-    form,
-    onSubmitCreatorForm,
-    ResourceEditorContent
-  );
+    return undefined;
+  }
 
-  //----------------------------------------------------------------------------
-  // Resources List Cards
-  //----------------------------------------------------------------------------
+  function ResourceEditorForm() {
+    const [lang] = useI18nLang();
 
-  const ResourcesListCards = createResourcesListCards(
-    useFilteredLocalizedResources,
-    useSetEditedResource,
-    ResourceCard
-  );
+    const editedResource = editedResourceStore.useValue();
+    const editedResourceId = editedResource?.id ?? "";
 
-  //----------------------------------------------------------------------------
-  // Resources List Table
-  //----------------------------------------------------------------------------
+    const [submit, saving] = form.useSubmit(
+      useCallback(
+        (data) => submitEditorForm(data, { id: editedResourceId, lang }),
+        [editedResourceId, lang]
+      )
+    );
 
-  const ResourcesListTable = createResourcesListTable(
-    store,
-    useFilteredLocalizedResources,
-    useSelectedFilteredLocalizedResourcesCount,
-    useSetEditedResource,
-    listTableColumns,
-    listTableColumnsI18nContext,
-    listTableDescriptionKey
-  );
+    const valid = form.useValid();
 
-  //----------------------------------------------------------------------------
-  // Resources Counter
-  //----------------------------------------------------------------------------
-
-  const ResourcesCounter = createResourcesCounter(
-    useFilteredLocalizedResources
-  );
-
-  //----------------------------------------------------------------------------
-  // Resource Actions
-  //----------------------------------------------------------------------------
-
-  const ResourcesActions = createResourcesActions(
-    store,
-    useFilteredLocalizedResources,
-    useSelectedFilteredLocalizedResourcesCount,
-    useSetNewResource,
-    defaultResource
-  );
+    return (
+      <ResourceEditor
+        name={editedResource?.name[lang] ?? ""}
+        onClose={unsetEditedResource}
+        onSubmit={submit}
+        open={!!editedResource}
+        saving={saving}
+        valid={valid}
+      >
+        <EditorContent resource={editedResource ?? defaultResource} />
+      </ResourceEditor>
+    );
+  }
 
   //----------------------------------------------------------------------------
   // Resources Panel
@@ -205,6 +209,45 @@ export function createResourcesPanel<
 
   return function ResourcesPanel({ campaignId }: ResourcesPanelProps) {
     const [view, setView] = useView();
+    const gm = useIsGM(campaignId);
+
+    const [localizedResources] = store.useLocalizedFromCampaign(campaignId);
+    const [selectedLocalizedResources] =
+      store.useSelectedLocalizedFromCampaign(campaignId);
+
+    const ResourcesListTableHeader = useCallback(() => {
+      const [selectedLocalizedResources] =
+        store.useSelectedLocalizedFromCampaign(campaignId);
+      return (
+        <ResourcesListTable.Header
+          columns={listTableColumns}
+          localizedResources={localizedResources}
+          onDeselect={store.deselect}
+          onSelect={store.select}
+          selectedLocalizedResourcesCount={selectedLocalizedResources.length}
+        />
+      );
+    }, [campaignId, localizedResources]);
+
+    const ResourceListTableRow = useCallback(
+      ({ localizedResource }: { localizedResource: L }) => {
+        const [selected, { toggle }] = store.useIsSelected(
+          localizedResource.id
+        );
+        return (
+          <ResourcesListTable.Row
+            columns={listTableColumns}
+            descriptionKey={listTableDescriptionKey}
+            gm={gm}
+            localizedResource={localizedResource}
+            onOpen={editedResourceStore.set}
+            onToggleSelected={toggle}
+            selected={selected}
+          />
+        );
+      },
+      [gm]
+    );
 
     return (
       <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
@@ -218,10 +261,16 @@ export function createResourcesPanel<
           w="full"
         >
           <HStack>
-            <ResourcesActions campaignId={campaignId} />
+            <ResourcesActions
+              gm={gm}
+              name={name}
+              onAddNew={setCreatedResource}
+              onRemove={store.remove}
+              selectedLocalizedResources={selectedLocalizedResources}
+            />
             <Filters />
             <Separator h="1.5em" orientation="vertical" />
-            <ResourcesCounter campaignId={campaignId} />
+            <ResourcesCounter count={localizedResources.length} />
           </HStack>
 
           <HStack>
@@ -234,12 +283,26 @@ export function createResourcesPanel<
         </HStack>
 
         <Flex flex={1} overflow="auto" w="full">
-          {view === "table" && <ResourcesListTable campaignId={campaignId} />}
-          {view === "cards" && <ResourcesListCards campaignId={campaignId} />}
+          {view === "table" && (
+            <ResourcesListTable
+              Header={ResourcesListTableHeader}
+              Row={ResourceListTableRow}
+              localizedResources={localizedResources}
+            />
+          )}
+
+          {view === "cards" && (
+            <ResourcesListCards
+              Card={Card}
+              gm={gm}
+              localizedResources={localizedResources}
+              onOpen={editedResourceStore.set}
+            />
+          )}
         </Flex>
 
-        <ResourceEditor campaignId={campaignId} />
-        <ResourceCreator campaignId={campaignId} />
+        <ResourceEditorForm />
+        <ResourceCreatorForm />
       </VStack>
     );
   };

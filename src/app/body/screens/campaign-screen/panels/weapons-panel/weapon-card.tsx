@@ -1,6 +1,7 @@
 import { Span } from "@chakra-ui/react";
 import type { LocalizedWeapon } from "../../../../../../resources/localized-weapon";
-import { useIsWeaponSelected } from "../../../../../../resources/weapon";
+import type { Weapon } from "../../../../../../resources/weapon";
+import { useIsWeaponSelected } from "../../../../../../resources/weapons-store";
 import ResourceCard from "../resources/resource-card";
 
 //------------------------------------------------------------------------------
@@ -8,32 +9,30 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type WeaponCardProps = {
-  isGM: boolean;
-  onClickTitle: () => void;
-  resource: LocalizedWeapon;
+  gm: boolean;
+  localizedResource: LocalizedWeapon;
+  onOpen: (resource: Weapon) => void;
 };
 
 export default function WeaponCard({
-  isGM,
-  onClickTitle,
-  resource,
+  gm,
+  localizedResource,
+  onOpen,
 }: WeaponCardProps) {
   const { _raw, campaign, cost, description, id, name, type, weight } =
-    resource;
+    localizedResource;
 
   const [selected, { toggle }] = useIsWeaponSelected(id);
 
   return (
-    <ResourceCard>
-      <ResourceCard.Header
-        isGM={isGM}
-        name={name}
-        onClick={onClickTitle}
-        onToggleSelection={toggle}
-        selected={selected}
-        visibility={_raw.visibility}
-      />
-
+    <ResourceCard
+      gm={gm}
+      name={name}
+      onOpen={() => onOpen(localizedResource._raw)}
+      onToggleSelected={toggle}
+      selected={selected}
+      visibility={_raw.visibility}
+    >
       <ResourceCard.Caption>
         <Span>{type}</Span>
         <Span>{weight}</Span>

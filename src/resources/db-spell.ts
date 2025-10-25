@@ -1,9 +1,9 @@
 import z from "zod";
 import { distanceImpSchema, distanceMetSchema } from "../i18n/i18n-distance";
-import { i18nStringSchema } from "../i18n/i18n-string";
 import { timeSchema } from "../i18n/i18n-time";
 import { campaignRoleSchema } from "./campaign-role";
 import { characterClassSchema } from "./character-class";
+import { dbResourceSchema, dbResourceTranslationSchema } from "./db-resource";
 import { spellCastingTimeSchema } from "./spell-casting-time";
 import { spellDurationSchema } from "./spell-duration";
 import { spellLevelSchema } from "./spell-level";
@@ -14,14 +14,7 @@ import { spellSchoolSchema } from "./spell-school";
 // DBSpell
 //------------------------------------------------------------------------------
 
-export const dbSpellSchema = z.object({
-  id: z.uuid(),
-
-  campaign_id: z.string(),
-
-  name: i18nStringSchema,
-  page: i18nStringSchema.nullish(),
-
+export const dbSpellSchema = dbResourceSchema.extend({
   level: spellLevelSchema,
 
   character_classes: z.array(characterClassSchema),
@@ -53,14 +46,11 @@ export type DBSpell = z.infer<typeof dbSpellSchema>;
 // DB Spell Translation
 //------------------------------------------------------------------------------
 
-export const dbSpellTranslationSchema = z.object({
-  lang: z.string(),
+export const dbSpellTranslationSchema = dbResourceTranslationSchema.extend({
   spell_id: z.uuid(),
 
   description: z.string(),
   materials: z.string().nullish(),
-  name: z.string(),
-  page: z.string().nullish(),
   upgrade: z.string().nullish(),
 });
 

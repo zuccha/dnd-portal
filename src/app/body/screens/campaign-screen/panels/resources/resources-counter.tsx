@@ -1,29 +1,22 @@
 import { Flex } from "@chakra-ui/react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import type {
-  LocalizedResource,
-  Resource,
-} from "../../../../../../resources/resource";
 
 //------------------------------------------------------------------------------
-// Create Resources Counter
+// Resources Counter
 //------------------------------------------------------------------------------
 
-export function createResourcesCounter<
-  R extends Resource,
-  L extends LocalizedResource<R>
->(useLocalizedResources: (campaignId: string) => L[] | undefined) {
-  return function ResourcesCounter({ campaignId }: { campaignId: string }) {
-    const { tpi } = useI18nLangContext(i18nContext);
-    const localizedResources = useLocalizedResources(campaignId);
-    const count = localizedResources?.length ?? 0;
+export type ResourcesCounterProps = {
+  count: number;
+};
 
-    return (
-      <Flex fontSize="sm" whiteSpace="nowrap">
-        {tpi("count", count, `${count}`)}
-      </Flex>
-    );
-  };
+export default function ResourcesCounter({ count }: ResourcesCounterProps) {
+  const { tpi } = useI18nLangContext(i18nContext);
+
+  return (
+    <Flex fontSize="sm" whiteSpace="nowrap">
+      {tpi("count", count, `${count}`)}
+    </Flex>
+  );
 }
 
 //------------------------------------------------------------------------------

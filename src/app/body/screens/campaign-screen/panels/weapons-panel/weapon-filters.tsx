@@ -3,14 +3,11 @@ import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
 import { useMemo } from "react";
 import useDebouncedState from "../../../../../../hooks/use-debounced-value";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import {
-  type WeaponFilters,
-  useWeaponFilters,
-  useWeaponNameFilter,
-} from "../../../../../../resources/weapon";
+import { type WeaponFilters } from "../../../../../../resources/weapon";
 import { useWeaponMasteryOptions } from "../../../../../../resources/weapon-mastery";
 import { useWeaponPropertyOptions } from "../../../../../../resources/weapon-property";
 import { useWeaponTypeOptions } from "../../../../../../resources/weapon-type";
+import { weaponsStore } from "../../../../../../resources/weapons-store";
 import Icon from "../../../../../../ui/icon";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
@@ -23,9 +20,9 @@ import Select from "../../../../../../ui/select";
 
 export default function WeaponsFilters() {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useWeaponFilters();
+  const [filters, setFilters] = weaponsStore.useFilters();
 
-  const [nameFilter, setNameFilter] = useWeaponNameFilter();
+  const [nameFilter, setNameFilter] = weaponsStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
     nameFilter,
     setNameFilter,

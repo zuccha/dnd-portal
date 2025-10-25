@@ -6,28 +6,20 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
-import type { I18nLangContext } from "../../../../../../i18n/i18n-lang";
-import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useIsGM } from "../../../../../../resources/campaign-role";
-import type {
-  DBResource,
-  DBResourceTranslation,
-  LocalizedResource,
-  Resource,
-  ResourceFilters,
-  ResourceStore,
-} from "../../../../../../resources/resource";
-import type { StoreUpdater } from "../../../../../../store/store";
+import { type ReactNode, useCallback, useState } from "react";
+import { useI18nLang } from "../../../../../../i18n/i18n-lang";
+import { type I18nString, translate } from "../../../../../../i18n/i18n-string";
+import type { LocalizedResource } from "../../../../../../resources/localized-resource";
+import type { Resource } from "../../../../../../resources/resource";
 import Checkbox from "../../../../../../ui/checkbox";
 import Icon from "../../../../../../ui/icon";
 import Link from "../../../../../../ui/link";
 import RichText from "../../../../../../ui/rich-text";
 import ResourcesListEmpty from "./resources-list-empty";
 
-//------------------------------------------------------------------------------
-// Create Resources List Table
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+// Resources List Table
+//----------------------------------------------------------------------------
 
 export type ResourcesListTableColumn<
   R extends Resource,
@@ -35,245 +27,248 @@ export type ResourcesListTableColumn<
 > = Table.ColumnHeaderProps & {
   icon?: LucideIcon;
   key: keyof L;
-  label: string;
+  label: I18nString;
 };
 
-export function createResourcesListTable<
+export type ResourcesListTableProps<
   R extends Resource,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
-  F extends ResourceFilters,
   L extends LocalizedResource<R>
->(
-  store: ResourceStore<R, DBR, DBT, F>,
-  useLocalizedResources: (campaignId: string) => L[] | undefined,
-  useSelectedLocalizedResourcesCount: (campaignId: string) => number,
-  useSetEditedResource: (campaignId: string) => StoreUpdater<R | undefined>,
-  partialColumns: Omit<ResourcesListTableColumn<R, L>, "label">[],
-  columnsI18nContext: I18nLangContext,
-  expansionKey: keyof L | undefined
-) {
-  //----------------------------------------------------------------------------
-  // Hooks
-  //----------------------------------------------------------------------------
+> = Omit<TableRootProps, "children"> & {
+  Header: React.FC;
+  Row: React.FC<{ localizedResource: L }>;
+  localizedResources: L[];
+};
 
-  const { useIsSelected } = store;
+export default function ResourcesListTable<
+  R extends Resource,
+  L extends LocalizedResource<R>
+>({ Header, Row, localizedResources, ...rest }: ResourcesListTableProps<R, L>) {
+  return (
+    <Box bgColor="bg.subtle" w="full">
+      {localizedResources.length ? (
+        <Table.Root
+          borderCollapse="separate"
+          borderSpacing={0}
+          showColumnBorder
+          stickyHeader
+          variant="line"
+          {...rest}
+        >
+          <Table.Header>
+            <Header />
+          </Table.Header>
 
-  //----------------------------------------------------------------------------
-  // Expanded Table Rows
-  //----------------------------------------------------------------------------
+          <Table.Body>
+            {localizedResources.map((localizedResource) => (
+              <Row
+                key={localizedResource.id}
+                localizedResource={localizedResource}
+              />
+            ))}
+          </Table.Body>
+        </Table.Root>
+      ) : (
+        <ResourcesListEmpty />
+      )}
+    </Box>
+  );
+}
 
-  const expandedRows = new Set<string>();
+ResourcesListTable.Header = ResourcesListTableHeader;
+ResourcesListTable.Row = ResourcesListTableRow;
 
-  //----------------------------------------------------------------------------
-  // Resources List Table Header
-  //----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Expanded Table Rows
+//------------------------------------------------------------------------------
 
-  function ResourcesListTableHeader({
-    campaignId,
-    columns,
-  }: {
-    campaignId: string;
-    columns: ResourcesListTableColumn<R, L>[];
-  }) {
-    const localizedResources = useLocalizedResources(campaignId);
-    const count = useSelectedLocalizedResourcesCount(campaignId);
+const expandedRows = new Set<string>();
 
-    const selected =
-      count === localizedResources?.length ? true : count > 0 ? "-" : false;
+//------------------------------------------------------------------------------
+// Resources List Table Header
+//------------------------------------------------------------------------------
 
-    const toggleSelected = useCallback(() => {
-      if (selected === true)
-        localizedResources?.forEach(({ id }) => store.deselect(id));
-      else localizedResources?.forEach(({ id }) => store.select(id));
-    }, [localizedResources, selected]);
+type ResourceListTableHeaderProps<
+  R extends Resource,
+  L extends LocalizedResource<R>
+> = {
+  columns: ResourcesListTableColumn<R, L>[];
+  localizedResources: L[];
+  onDeselect: (id: string) => void;
+  onSelect: (id: string) => void;
+  selectedLocalizedResourcesCount: number;
+};
 
-    return (
-      <Table.Row>
-        <Table.ColumnHeader textAlign="center" w="4em">
-          <Checkbox checked={selected} onClick={toggleSelected} size="sm" />
-        </Table.ColumnHeader>
+function ResourcesListTableHeader<
+  R extends Resource,
+  L extends LocalizedResource<R>
+>({
+  columns,
+  localizedResources,
+  onDeselect,
+  onSelect,
+  selectedLocalizedResourcesCount,
+}: ResourceListTableHeaderProps<R, L>) {
+  const [lang] = useI18nLang();
 
-        <Table.ColumnHeader textAlign="center" w="3em">
-          <Icon Icon={EyeIcon} color="fg.muted" size="sm" />
-        </Table.ColumnHeader>
+  const selected =
+    selectedLocalizedResourcesCount === localizedResources.length
+      ? true
+      : selectedLocalizedResourcesCount > 0
+      ? "-"
+      : false;
 
-        {columns.map(({ icon, key, label, ...rest }) => {
+  const toggleSelected = useCallback(() => {
+    if (selected === true)
+      localizedResources.forEach(({ id }) => onDeselect(id));
+    else localizedResources.forEach(({ id }) => onSelect(id));
+  }, [localizedResources, onDeselect, onSelect, selected]);
+
+  return (
+    <Table.Row>
+      <Table.ColumnHeader textAlign="center" w="4em">
+        <Checkbox checked={selected} onClick={toggleSelected} size="sm" />
+      </Table.ColumnHeader>
+
+      <Table.ColumnHeader textAlign="center" w="3em">
+        <Icon Icon={EyeIcon} color="fg.muted" size="sm" />
+      </Table.ColumnHeader>
+
+      {columns.map(({ icon, key, label, ...rest }) => {
+        return (
+          <Table.ColumnHeader
+            key={String(key)}
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            {...rest}
+          >
+            {icon ? <Icon Icon={icon} size="sm" /> : translate(label, lang)}
+          </Table.ColumnHeader>
+        );
+      })}
+    </Table.Row>
+  );
+}
+
+//----------------------------------------------------------------------------
+// Resources List Table Row
+//----------------------------------------------------------------------------
+
+export type ResourcesListTableRowProps<
+  R extends Resource,
+  L extends LocalizedResource<R>
+> = {
+  columns: ResourcesListTableColumn<R, L>[];
+  descriptionKey?: keyof L;
+  gm: boolean;
+  localizedResource: L;
+  onOpen: (resource: R) => void;
+  onToggleSelected: (resource: R) => void;
+  selected: boolean;
+};
+
+function ResourcesListTableRow<
+  R extends Resource,
+  L extends LocalizedResource<R>
+>({
+  columns,
+  descriptionKey,
+  gm,
+  localizedResource,
+  onOpen,
+  onToggleSelected,
+  selected,
+}: ResourcesListTableRowProps<R, L>) {
+  const [expanded, setExpanded] = useState(
+    expandedRows.has(localizedResource.id)
+  );
+
+  const toggleExpanded = useCallback(() => {
+    if (descriptionKey)
+      setExpanded((prevExpanded) => {
+        const nextExpanded = !prevExpanded;
+        if (nextExpanded) expandedRows.add(localizedResource.id);
+        else expandedRows.delete(localizedResource.id);
+        return nextExpanded;
+      });
+  }, [descriptionKey, localizedResource.id]);
+
+  const columnCount = gm ? columns.length + 2 : columns.length + 1;
+
+  return (
+    <>
+      <Table.Row key={localizedResource.id} onClick={toggleExpanded}>
+        <Table.Cell textAlign="center" w="4em">
+          <Checkbox
+            checked={selected}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelected(localizedResource._raw);
+            }}
+            size="sm"
+          />
+        </Table.Cell>
+
+        <Table.Cell textAlign="center" w="3em">
+          <Icon
+            Icon={
+              localizedResource._raw.visibility === "player"
+                ? EyeIcon
+                : EyeClosedIcon
+            }
+            color="fg.muted"
+            size="sm"
+          />
+        </Table.Cell>
+
+        {columns.map(({ key, ...rest }) => {
+          const value = localizedResource[key];
           return (
-            <Table.ColumnHeader
-              key={String(key)}
+            <Table.Cell
+              key={key}
               overflow="hidden"
               textOverflow="ellipsis"
               whiteSpace="nowrap"
               {...rest}
             >
-              {icon ? <Icon Icon={icon} size="sm" /> : label}
-            </Table.ColumnHeader>
+              {key === "name" && gm ? (
+                <Link
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpen(localizedResource._raw);
+                  }}
+                >
+                  {String(value)}
+                </Link>
+              ) : typeof value === "boolean" ? (
+                <Checkbox checked={value} disabled size="sm" />
+              ) : (
+                String(value)
+              )}
+            </Table.Cell>
           );
         })}
       </Table.Row>
-    );
-  }
 
-  //----------------------------------------------------------------------------
-  // Resources List Table Row
-  //----------------------------------------------------------------------------
-
-  function ResourcesListTableRow({
-    campaignId,
-    columns,
-    translation,
-  }: {
-    campaignId: string;
-    columns: ResourcesListTableColumn<R, L>[];
-    translation: L;
-  }) {
-    const [expanded, setExpanded] = useState(expandedRows.has(translation.id));
-    const [selected, { toggle }] = useIsSelected(translation.id);
-    const setEditedResource = useSetEditedResource(campaignId);
-    const isGM = useIsGM(campaignId);
-
-    const toggleExpanded = useCallback(() => {
-      if (expansionKey)
-        setExpanded((prevExpanded) => {
-          const nextExpanded = !prevExpanded;
-          if (nextExpanded) expandedRows.add(translation.id);
-          else expandedRows.delete(translation.id);
-          return nextExpanded;
-        });
-    }, [translation.id]);
-
-    const columnCount = isGM ? columns.length + 2 : columns.length + 1;
-
-    return (
-      <>
-        <Table.Row key={translation.id} onClick={toggleExpanded}>
-          <Table.Cell textAlign="center" w="4em">
-            <Checkbox
-              checked={selected}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggle();
-              }}
-              size="sm"
-            />
+      {descriptionKey && expanded && (
+        <Table.Row bgColor="bg.muted" w="full">
+          <Table.Cell colSpan={columnCount}>
+            <VStack align="flex-start" gap={1} w="full">
+              {String(localizedResource[descriptionKey])
+                .split("\n")
+                .map((paragraph, i) => (
+                  <RichText
+                    key={i}
+                    patterns={expansionPatterns}
+                    text={paragraph}
+                  />
+                ))}
+            </VStack>
           </Table.Cell>
-
-          <Table.Cell textAlign="center" w="3em">
-            <Icon
-              Icon={
-                translation._raw.visibility === "player"
-                  ? EyeIcon
-                  : EyeClosedIcon
-              }
-              color="fg.muted"
-              size="sm"
-            />
-          </Table.Cell>
-
-          {columns.map(({ key, ...rest }) => {
-            const value = translation[key];
-            return (
-              <Table.Cell
-                key={key}
-                overflow="hidden"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-                {...rest}
-              >
-                {key === "name" && isGM ? (
-                  <Link
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditedResource(translation._raw);
-                    }}
-                  >
-                    {String(value)}
-                  </Link>
-                ) : typeof value === "boolean" ? (
-                  <Checkbox checked={value} disabled size="sm" />
-                ) : (
-                  String(value)
-                )}
-              </Table.Cell>
-            );
-          })}
         </Table.Row>
-
-        {expansionKey && expanded && (
-          <Table.Row bgColor="bg.muted" w="full">
-            <Table.Cell colSpan={columnCount}>
-              <VStack align="flex-start" gap={1} w="full">
-                {String(translation[expansionKey])
-                  .split("\n")
-                  .map((paragraph, i) => (
-                    <RichText
-                      key={i}
-                      patterns={expansionPatterns}
-                      text={paragraph}
-                    />
-                  ))}
-              </VStack>
-            </Table.Cell>
-          </Table.Row>
-        )}
-      </>
-    );
-  }
-
-  //----------------------------------------------------------------------------
-  // Resources List Table
-  //----------------------------------------------------------------------------
-
-  return function ResourcesListTable({
-    campaignId,
-    ...rest
-  }: Omit<TableRootProps, "children"> & { campaignId: string }) {
-    const { t } = useI18nLangContext(columnsI18nContext);
-    const translations = useLocalizedResources(campaignId);
-
-    const columns = useMemo(
-      () => partialColumns.map((p) => ({ ...p, label: t(`${p.key}`) })),
-      [t]
-    );
-
-    if (!translations) return null;
-
-    return (
-      <Box bgColor="bg.subtle" w="full">
-        {translations.length ? (
-          <Table.Root
-            borderCollapse="separate"
-            borderSpacing={0}
-            showColumnBorder
-            stickyHeader
-            variant="line"
-            {...rest}
-          >
-            <Table.Header>
-              <ResourcesListTableHeader
-                campaignId={campaignId}
-                columns={columns}
-              />
-            </Table.Header>
-
-            <Table.Body>
-              {translations.map((translation) => (
-                <ResourcesListTableRow
-                  campaignId={campaignId}
-                  columns={columns}
-                  key={translation.id}
-                  translation={translation}
-                />
-              ))}
-            </Table.Body>
-          </Table.Root>
-        ) : (
-          <ResourcesListEmpty />
-        )}
-      </Box>
-    );
-  };
+      )}
+    </>
+  );
 }
 
 //------------------------------------------------------------------------------

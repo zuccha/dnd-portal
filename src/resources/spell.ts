@@ -2,9 +2,8 @@ import { z } from "zod";
 import { distanceImpSchema, distanceMetSchema } from "../i18n/i18n-distance";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import { timeSchema } from "../i18n/i18n-time";
-import { campaignRoleSchema } from "./campaign-role";
 import { characterClassSchema } from "./character-class";
-import { createResourceStore } from "./resource";
+import { resourceFiltersSchema, resourceSchema } from "./resource";
 import { spellCastingTimeSchema } from "./spell-casting-time";
 import { spellDurationSchema } from "./spell-duration";
 import { spellLevelSchema, spellLevelStringSchema } from "./spell-level";
@@ -15,13 +14,7 @@ import { spellSchoolSchema } from "./spell-school";
 // Spell
 //------------------------------------------------------------------------------
 
-export const spellSchema = z.object({
-  id: z.uuid(),
-
-  campaign_id: z.string(),
-  campaign_name: z.string(),
-
-  name: i18nStringSchema,
+export const spellSchema = resourceSchema.extend({
   page: i18nStringSchema.nullish(),
 
   level: spellLevelSchema,
@@ -50,8 +43,6 @@ export const spellSchema = z.object({
 
   description: i18nStringSchema,
   upgrade: i18nStringSchema.nullish(),
-
-  visibility: campaignRoleSchema,
 });
 
 export type Spell = z.infer<typeof spellSchema>;
@@ -60,10 +51,7 @@ export type Spell = z.infer<typeof spellSchema>;
 // Spell Filters
 //------------------------------------------------------------------------------
 
-export const spellFiltersSchema = z.object({
-  order_by: z.enum(["level", "name"]).default("name"),
-  order_dir: z.enum(["asc", "desc"]).default("asc"),
-
+export const spellFiltersSchema = resourceFiltersSchema.extend({
   character_classes: z
     .partialRecord(characterClassSchema, z.boolean().optional())
     .optional(),
@@ -128,21 +116,10 @@ export const defaultSpell: Spell = {
 };
 
 //------------------------------------------------------------------------------
-// Spells Store
+// Default Spell Filters
 //------------------------------------------------------------------------------
 
-export const spellsStore = createResourceStore(
-  { p: "spells", s: "spell" },
-  spellSchema,
-  spellFiltersSchema
-);
-
-export const {
-  useFromCampaign: useSpellsFromCampaign,
-  useFilters: useSpellFilters,
-  useNameFilter: useSpellNameFilter,
-  useIsSelected: useIsSpellSelected,
-  useSelectionCount: useSpellsSelectionCount,
-  create: createSpell,
-  update: updateSpell,
-} = spellsStore;
+export const defaultSpellFilters: SpellFilters = {
+  order_by: "name",
+  order_dir: "asc",
+};

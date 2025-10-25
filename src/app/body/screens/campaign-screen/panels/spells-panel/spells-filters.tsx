@@ -3,13 +3,10 @@ import { useMemo } from "react";
 import useDebouncedState from "../../../../../../hooks/use-debounced-value";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import { useCharacterClassOptions } from "../../../../../../resources/character-class";
-import {
-  type SpellFilters,
-  useSpellFilters,
-  useSpellNameFilter,
-} from "../../../../../../resources/spell";
+import { type SpellFilters } from "../../../../../../resources/spell";
 import { useSpellLevelOptions } from "../../../../../../resources/spell-level";
 import { useSpellSchoolOptions } from "../../../../../../resources/spell-school";
+import { spellsStore } from "../../../../../../resources/spells-store";
 import InclusionButton from "../../../../../../ui/inclusion-button";
 import InclusionSelect from "../../../../../../ui/inclusion-select";
 import Input from "../../../../../../ui/input";
@@ -21,9 +18,9 @@ import Select from "../../../../../../ui/select";
 
 export default function SpellsFilters() {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useSpellFilters();
+  const [filters, setFilters] = spellsStore.useFilters();
 
-  const [nameFilter, setNameFilter] = useSpellNameFilter();
+  const [nameFilter, setNameFilter] = spellsStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
     nameFilter,
     setNameFilter,

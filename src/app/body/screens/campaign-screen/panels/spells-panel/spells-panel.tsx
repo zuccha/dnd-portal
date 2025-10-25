@@ -4,17 +4,9 @@ import {
   dbSpellSchema,
   dbSpellTranslationSchema,
 } from "../../../../../../resources/db-spell";
-import {
-  type LocalizedSpell,
-  useLocalizeSpell,
-} from "../../../../../../resources/localized-spell";
-import {
-  type Spell,
-  createSpell,
-  defaultSpell,
-  spellsStore,
-  updateSpell,
-} from "../../../../../../resources/spell";
+import { type LocalizedSpell } from "../../../../../../resources/localized-spell";
+import { type Spell, defaultSpell } from "../../../../../../resources/spell";
+import { spellsStore } from "../../../../../../resources/spells-store";
 import { report } from "../../../../../../utils/error";
 import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";
@@ -29,77 +21,59 @@ import SpellsFilters from "./spells-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: Omit<
-  ResourcesListTableColumn<Spell, LocalizedSpell>,
-  "label"
->[] = [
-  { key: "name" },
-  { key: "level", maxW: "5em", textAlign: "center" },
-  { key: "character_classes", maxW: "8em" },
-  { key: "school", maxW: "8em" },
-  { key: "casting_time", maxW: "9em" },
-  { key: "ritual", textAlign: "center", w: "4em" },
-  { key: "range", maxW: "8em" },
-  { key: "duration", maxW: "9em" },
-  { key: "concentration", textAlign: "center", w: "4em" },
-  { key: "components" },
+const columns: ResourcesListTableColumn<Spell, LocalizedSpell>[] = [
+  {
+    key: "name",
+    label: { en: "Name", it: "Nome" },
+  },
+  {
+    key: "level",
+    label: { en: "Lvl", it: "Lvl" },
+    maxW: "5em",
+    textAlign: "center",
+  },
+  {
+    key: "character_classes",
+    label: { en: "Classes", it: "Classi" },
+    maxW: "8em",
+  },
+  {
+    key: "school",
+    label: { en: "School", it: "Scuola" },
+    maxW: "8em",
+  },
+  {
+    key: "casting_time",
+    label: { en: "Cast", it: "Lancio" },
+    maxW: "9em",
+  },
+  {
+    key: "ritual",
+    label: { en: "R", it: "R" },
+    textAlign: "center",
+    w: "4em",
+  },
+  {
+    key: "range",
+    label: { en: "Range", it: "Gittata" },
+    maxW: "8em",
+  },
+  {
+    key: "duration",
+    label: { en: "Duration", it: "Durata" },
+    maxW: "9em",
+  },
+  {
+    key: "concentration",
+    label: { en: "C", it: "C" },
+    textAlign: "center",
+    w: "4em",
+  },
+  {
+    key: "components",
+    label: { en: "V, S, M", it: "V, S, M" },
+  },
 ] as const;
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  name: {
-    en: "Name",
-    it: "Nome",
-  },
-
-  level: {
-    en: "Lvl",
-    it: "Lvl",
-  },
-
-  character_classes: {
-    en: "Classes",
-    it: "Classi",
-  },
-
-  school: {
-    en: "School",
-    it: "Scuola",
-  },
-
-  casting_time: {
-    en: "Cast",
-    it: "Lancio",
-  },
-
-  range: {
-    en: "Range",
-    it: "Gittata",
-  },
-
-  duration: {
-    en: "Duration",
-    it: "Durata",
-  },
-
-  ritual: {
-    en: "R",
-    it: "R",
-  },
-
-  concentration: {
-    en: "C",
-    it: "C",
-  },
-
-  components: {
-    en: "V, S, M",
-    it: "V, S, M",
-  },
-};
 
 //------------------------------------------------------------------------------
 // Parse Form Data
@@ -108,7 +82,7 @@ const i18nContext = {
 function parseFormData(
   data: Partial<SpellEditorFormFields>
 ):
-  | { spell: Partial<DBSpell>; translation: Partial<DBSpellTranslation> }
+  | { resource: Partial<DBSpell>; translation: Partial<DBSpellTranslation> }
   | string {
   const maybeSpell = {
     casting_time: data.casting_time,
@@ -145,45 +119,7 @@ function parseFormData(
   if (!translation.success)
     return report(translation.error, "form.error.invalid_translation");
 
-  return { spell: spell.data, translation: translation.data };
-}
-
-//------------------------------------------------------------------------------
-// Submit Editor Form
-//------------------------------------------------------------------------------
-
-async function submitEditorForm(
-  data: Partial<SpellEditorFormFields>,
-  { id, lang }: { id: string; lang: string }
-) {
-  const errorOrData = parseFormData(data);
-  if (typeof errorOrData === "string") return errorOrData;
-
-  const { spell, translation } = errorOrData;
-  const response = await updateSpell(id, lang, spell, translation);
-  if (response.error)
-    return report(response.error, "form.error.update_failure");
-
-  return undefined;
-}
-
-//------------------------------------------------------------------------------
-// Submit Creator Form
-//------------------------------------------------------------------------------
-
-async function submitCreatorForm(
-  data: Partial<SpellEditorFormFields>,
-  { campaignId, lang }: { campaignId: string; lang: string }
-) {
-  const errorOrData = parseFormData(data);
-  if (typeof errorOrData === "string") return errorOrData;
-
-  const { spell, translation } = errorOrData;
-  const response = await createSpell(campaignId, lang, spell, translation);
-  if (response.error)
-    return report(response.error, "form.error.creation_failure");
-
-  return undefined;
+  return { resource: spell.data, translation: translation.data };
 }
 
 //------------------------------------------------------------------------------
@@ -191,18 +127,16 @@ async function submitCreatorForm(
 //------------------------------------------------------------------------------
 
 const SpellsPanel = createResourcesPanel({
+  Card: SpellCard,
+  EditorContent: SpellEditor,
   Filters: SpellsFilters,
-  ResourceCard: SpellCard,
-  ResourceEditorContent: SpellEditor,
   defaultResource: defaultSpell,
   form: spellEditorForm,
   listTableColumns: columns,
-  listTableColumnsI18nContext: i18nContext,
   listTableDescriptionKey: "description",
-  onSubmitCreatorForm: submitCreatorForm,
-  onSubmitEditorForm: submitEditorForm,
+  name: { en: "spells", it: "incantesimi" },
+  parseFormData,
   store: spellsStore,
-  useLocalizeResource: useLocalizeSpell,
 });
 
 export default SpellsPanel;

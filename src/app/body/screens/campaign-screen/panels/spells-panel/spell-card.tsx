@@ -1,7 +1,8 @@
 import { SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type { LocalizedSpell } from "../../../../../../resources/localized-spell";
-import { useIsSpellSelected } from "../../../../../../resources/spell";
+import type { Spell } from "../../../../../../resources/spell";
+import { useIsSpellSelected } from "../../../../../../resources/spells-store";
 import ResourceCard from "../resources/resource-card";
 
 //------------------------------------------------------------------------------
@@ -9,15 +10,15 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type SpellCardProps = {
-  isGM: boolean;
-  onClickTitle: () => void;
-  resource: LocalizedSpell;
+  gm: boolean;
+  localizedResource: LocalizedSpell;
+  onOpen: (resource: Spell) => void;
 };
 
 export default function SpellCard({
-  isGM,
-  onClickTitle,
-  resource,
+  gm,
+  localizedResource,
+  onOpen,
 }: SpellCardProps) {
   const {
     _raw,
@@ -33,23 +34,21 @@ export default function SpellCard({
     name,
     range,
     school,
-  } = resource;
+  } = localizedResource;
 
   const { t } = useI18nLangContext(i18nContext);
 
   const [selected, { toggle }] = useIsSpellSelected(id);
 
   return (
-    <ResourceCard>
-      <ResourceCard.Header
-        isGM={isGM}
-        name={name}
-        onClick={onClickTitle}
-        onToggleSelection={toggle}
-        selected={selected}
-        visibility={_raw.visibility}
-      />
-
+    <ResourceCard
+      gm={gm}
+      name={name}
+      onOpen={() => onOpen(localizedResource._raw)}
+      onToggleSelected={toggle}
+      selected={selected}
+      visibility={_raw.visibility}
+    >
       <ResourceCard.Caption>
         <Span>{school}</Span>
         <Span>{level_long}</Span>

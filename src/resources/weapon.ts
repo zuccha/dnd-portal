@@ -1,8 +1,7 @@
 import z from "zod";
 import { i18nStringSchema } from "../i18n/i18n-string";
-import { campaignRoleSchema } from "./campaign-role";
 import { damageTypeSchema } from "./damage-type";
-import { createResourceStore } from "./resource";
+import { resourceFiltersSchema, resourceSchema } from "./resource";
 import { weaponMasterySchema } from "./weapon-mastery";
 import { weaponPropertySchema } from "./weapon-property";
 import { weaponTypeSchema } from "./weapon-type";
@@ -11,12 +10,7 @@ import { weaponTypeSchema } from "./weapon-type";
 // Weapon
 //------------------------------------------------------------------------------
 
-export const weaponSchema = z.object({
-  id: z.uuid(),
-
-  campaign_id: z.string(),
-  campaign_name: z.string(),
-
+export const weaponSchema = resourceSchema.extend({
   type: weaponTypeSchema,
 
   damage: z.string(),
@@ -42,39 +36,17 @@ export const weaponSchema = z.object({
 
   cost: z.number(),
 
-  name: i18nStringSchema,
   notes: i18nStringSchema,
   page: i18nStringSchema,
-
-  visibility: campaignRoleSchema,
 });
 
 export type Weapon = z.infer<typeof weaponSchema>;
 
 //------------------------------------------------------------------------------
-// Weapon Translation
-//------------------------------------------------------------------------------
-
-export const weaponTranslationSchema = z.object({
-  lang: z.string(),
-  weapon_id: z.uuid(),
-
-  ammunition: z.string().nullish(),
-  name: z.string(),
-  notes: z.string().nullish(),
-  page: z.string().nullish(),
-});
-
-export type WeaponTranslation = z.infer<typeof weaponTranslationSchema>;
-
-//------------------------------------------------------------------------------
 // Weapon Filters
 //------------------------------------------------------------------------------
 
-export const weaponFiltersSchema = z.object({
-  order_by: z.enum(["name"]).default("name"),
-  order_dir: z.enum(["asc", "desc"]).default("asc"),
-
+export const weaponFiltersSchema = resourceFiltersSchema.extend({
   masteries: z
     .partialRecord(weaponMasterySchema, z.boolean().optional())
     .optional(),
@@ -133,21 +105,10 @@ export const defaultWeapon: Weapon = {
 };
 
 //------------------------------------------------------------------------------
-// Weapons Store
+// Default Weapon Filters
 //------------------------------------------------------------------------------
 
-export const weaponsStore = createResourceStore(
-  { p: "weapons", s: "weapon" },
-  weaponSchema,
-  weaponFiltersSchema
-);
-
-export const {
-  useFromCampaign: useWeaponsFromCampaign,
-  useFilters: useWeaponFilters,
-  useNameFilter: useWeaponNameFilter,
-  useIsSelected: useIsWeaponSelected,
-  useSelectionCount: useWeaponsSelectionCount,
-  create: createWeapon,
-  update: updateWeapon,
-} = weaponsStore;
+export const defaultWeaponFilters: WeaponFilters = {
+  order_by: "name",
+  order_dir: "asc",
+};

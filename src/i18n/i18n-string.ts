@@ -13,6 +13,10 @@ export type I18nString = z.infer<typeof i18nStringSchema>;
 // Translate
 //------------------------------------------------------------------------------
 
-export function translate(i18nString: I18nString, lang: I18nLang): string {
-  return i18nString[lang] ?? i18nString["en"] ?? "";
+export function translate(
+  i18nString: I18nString,
+  lang: I18nLang,
+  fallback: string = ""
+): string {
+  return i18nString[lang] ?? i18nString["en"] ?? fallback;
 }

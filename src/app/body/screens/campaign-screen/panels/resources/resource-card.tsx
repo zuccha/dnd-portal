@@ -13,9 +13,23 @@ import RichText from "../../../../../../ui/rich-text";
 
 export type ResourceCardProps = {
   children: ReactNode;
+  gm: boolean;
+  name: string;
+  onOpen: () => void;
+  onToggleSelected: () => void;
+  selected: boolean;
+  visibility: CampaignRole;
 };
 
-export default function ResourceCard({ children }: ResourceCardProps) {
+export default function ResourceCard({
+  children,
+  gm,
+  name,
+  onOpen,
+  onToggleSelected,
+  selected,
+  visibility,
+}: ResourceCardProps) {
   return (
     <VStack
       bgColor="bg"
@@ -33,6 +47,15 @@ export default function ResourceCard({ children }: ResourceCardProps) {
       separator={<Separator w="full" />}
       w="20em"
     >
+      <ResourceCard.Header
+        gm={gm}
+        name={name}
+        onClick={onOpen}
+        onToggleSelection={onToggleSelected}
+        selected={selected}
+        visibility={visibility}
+      />
+
       {children}
     </VStack>
   );
@@ -47,14 +70,14 @@ ResourceCard.Header = ResourceCardHeader;
 //------------------------------------------------------------------------------
 
 function ResourceCardHeader({
-  isGM,
+  gm,
   name,
   onClick,
   onToggleSelection,
   selected,
   visibility,
 }: {
-  isGM: boolean;
+  gm: boolean;
   name: string;
   onClick: () => void;
   onToggleSelection: () => void;
@@ -70,7 +93,7 @@ function ResourceCardHeader({
       py={1}
       w="full"
     >
-      {isGM ? (
+      {gm ? (
         <HStack py={1}>
           <Icon
             Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}

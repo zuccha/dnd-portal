@@ -28,7 +28,6 @@ import MeasureInput from "../../../../../../ui/measure-input";
 import Select from "../../../../../../ui/select";
 import Switch from "../../../../../../ui/switch";
 import Textarea from "../../../../../../ui/textarea";
-import type { ResourceEditorContentProps } from "../resources/resource-editor";
 import {
   useSpellEditorFormCastingTime,
   useSpellEditorFormCastingTimeValue,
@@ -53,9 +52,11 @@ import {
 // Spell Editor
 //------------------------------------------------------------------------------
 
-export default function SpellEditor({
-  resource,
-}: ResourceEditorContentProps<Spell>) {
+export type SpellEditorProps = {
+  resource: Spell;
+};
+
+export default function SpellEditor({ resource }: SpellEditorProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
 
   const submitError = useSpellEditorFormSubmitError();

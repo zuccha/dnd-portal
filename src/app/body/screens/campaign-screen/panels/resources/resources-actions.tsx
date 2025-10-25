@@ -2,124 +2,108 @@ import { Menu, Portal } from "@chakra-ui/react";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { useIsGM } from "../../../../../../resources/campaign-role";
-import type {
-  DBResource,
-  DBResourceTranslation,
-  LocalizedResource,
-  Resource,
-  ResourceFilters,
-  ResourceStore,
-} from "../../../../../../resources/resource";
-import type { StoreUpdater } from "../../../../../../store/store";
+import { type I18nString, translate } from "../../../../../../i18n/i18n-string";
+import type { LocalizedResource } from "../../../../../../resources/localized-resource";
+import type { Resource } from "../../../../../../resources/resource";
 import IconButton from "../../../../../../ui/icon-button";
 import { downloadFile } from "../../../../../../utils/download";
 
 //------------------------------------------------------------------------------
-// Create Resources Actions
+// Resources Actions
 //------------------------------------------------------------------------------
 
-export function createResourcesActions<
+type ResourcesActionsProps<
   R extends Resource,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
-  F extends ResourceFilters,
   L extends LocalizedResource<R>
->(
-  store: ResourceStore<R, DBR, DBT, F>,
-  useLocalizedResources: (campaignId: string) => L[] | undefined,
-  useSelectedTranslationsCount: (campaignId: string) => number,
-  useSetNewResource: (campaignId: string) => StoreUpdater<R | undefined>,
-  defaultResource: R
-) {
-  return function ResourcesActions({ campaignId }: { campaignId: string }) {
-    const { t } = useI18nLangContext(i18nContext);
+> = {
+  gm: boolean;
+  name: I18nString;
+  onAddNew: () => void;
+  onRemove: (ids: string[]) => void;
+  selectedLocalizedResources: L[];
+};
 
-    const localizedResources = useLocalizedResources(campaignId);
-    const count = useSelectedTranslationsCount(campaignId);
+export default function ResourcesActions<
+  R extends Resource,
+  L extends LocalizedResource<R>
+>({
+  gm,
+  onAddNew,
+  onRemove,
+  name,
+  selectedLocalizedResources,
+}: ResourcesActionsProps<R, L>) {
+  const { lang, t } = useI18nLangContext(i18nContext);
 
-    const computeSelectedAsJson = useCallback(() => {
-      const selected = localizedResources!
-        .filter(({ id }) => store.isSelected(id))
-        .map(({ _raw, ...rest }) => rest);
-      return JSON.stringify(selected, null, 2);
-    }, [localizedResources]);
+  const computeSelectedAsJson = useCallback(() => {
+    const data = selectedLocalizedResources.map(({ _raw, ...rest }) => rest);
+    return JSON.stringify(data, null, 2);
+  }, [selectedLocalizedResources]);
 
-    const isGM = useIsGM(campaignId);
-    const setNewResource = useSetNewResource(campaignId);
+  const copySelected = useCallback(async () => {
+    const json = computeSelectedAsJson();
+    await navigator.clipboard.writeText(json);
+    // TODO: Show toast.
+  }, [computeSelectedAsJson]);
 
-    const addNew = useCallback(async () => {
-      setNewResource(defaultResource);
-    }, [setNewResource]);
+  const downloadSelected = useCallback(async () => {
+    const json = computeSelectedAsJson();
+    downloadFile(json, `${translate(name, lang, "resources")}.json`, "json");
+  }, [computeSelectedAsJson, lang, name]);
 
-    const copySelected = useCallback(async () => {
-      if (!count) return;
-      const json = computeSelectedAsJson();
-      await navigator.clipboard.writeText(json);
+  const removeSelected = useCallback(async () => {
+    try {
+      onRemove(selectedLocalizedResources.map(({ id }) => id));
+    } catch (e) {
+      console.error(e);
       // TODO: Show toast.
-    }, [computeSelectedAsJson, count]);
+    }
+  }, [selectedLocalizedResources, onRemove]);
 
-    const downloadSelected = useCallback(async () => {
-      if (!count) return;
-      const json = computeSelectedAsJson();
-      downloadFile(json, `${store.id}.json`, "json");
-    }, [computeSelectedAsJson, count]);
+  const disabled = !selectedLocalizedResources.length;
 
-    const removeSelected = useCallback(async () => {
-      if (!count) return;
-      try {
-        const selectedIds = localizedResources!
-          .map(({ id }) => id)
-          .filter(store.isSelected);
-        store.remove(selectedIds);
-      } catch (e) {
-        console.error(e);
-        // TODO: Show toast.
-      }
-    }, [count, localizedResources]);
-
-    return (
-      <Menu.Root>
-        <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
-          <IconButton Icon={EllipsisVerticalIcon} size="sm" variant="ghost" />
-        </Menu.Trigger>
-        <Portal>
-          <Menu.Positioner>
-            <Menu.Content>
-              {isGM && (
-                <Menu.Item onClick={addNew} value="add">
-                  {t("add")}
-                </Menu.Item>
-              )}
-
-              <Menu.Item disabled={!count} onClick={copySelected} value="copy">
-                {t("copy")}
+  return (
+    <Menu.Root>
+      <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
+        <IconButton Icon={EllipsisVerticalIcon} size="sm" variant="ghost" />
+      </Menu.Trigger>
+      <Portal>
+        <Menu.Positioner>
+          <Menu.Content>
+            {gm && (
+              <Menu.Item onClick={onAddNew} value="add">
+                {t("add")}
               </Menu.Item>
+            )}
 
+            <Menu.Item disabled={disabled} onClick={copySelected} value="copy">
+              {t("copy")}
+            </Menu.Item>
+
+            <Menu.Item
+              disabled={disabled}
+              onClick={downloadSelected}
+              value="download"
+            >
+              {t("download")}
+            </Menu.Item>
+
+            {gm && (
               <Menu.Item
-                disabled={!count}
-                onClick={downloadSelected}
-                value="download"
+                _hover={{ bg: "bg.error", color: "fg.error" }}
+                color="fg.error"
+                disabled={disabled}
+                onClick={removeSelected}
+                value="remove"
               >
-                {t("download")}
+                {t("remove")}
               </Menu.Item>
-              {isGM && (
-                <Menu.Item
-                  _hover={{ bg: "bg.error", color: "fg.error" }}
-                  color="fg.error"
-                  disabled={!count}
-                  onClick={removeSelected}
-                  value="remove"
-                >
-                  {t("remove")}
-                </Menu.Item>
-              )}
-            </Menu.Content>
-          </Menu.Positioner>
-        </Portal>
-      </Menu.Root>
-    );
-  };
+            )}
+          </Menu.Content>
+        </Menu.Positioner>
+      </Portal>
+    </Menu.Root>
+  );
 }
 
 //------------------------------------------------------------------------------

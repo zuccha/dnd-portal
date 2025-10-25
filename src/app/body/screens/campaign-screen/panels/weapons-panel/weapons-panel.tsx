@@ -5,17 +5,9 @@ import {
   dbWeaponSchema,
   dbWeaponTranslationSchema,
 } from "../../../../../../resources/db-weapon";
-import {
-  type LocalizedWeapon,
-  useLocalizeWeapon,
-} from "../../../../../../resources/localized-weapon";
-import {
-  type Weapon,
-  createWeapon,
-  defaultWeapon,
-  updateWeapon,
-  weaponsStore,
-} from "../../../../../../resources/weapon";
+import { type LocalizedWeapon } from "../../../../../../resources/localized-weapon";
+import { type Weapon, defaultWeapon } from "../../../../../../resources/weapon";
+import { weaponsStore } from "../../../../../../resources/weapons-store";
 import { report } from "../../../../../../utils/error";
 import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";
@@ -30,76 +22,59 @@ import WeaponsFilters from "./weapon-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: Omit<
-  ResourcesListTableColumn<Weapon, LocalizedWeapon>,
-  "label"
->[] = [
-  { key: "name" },
-  { key: "type", maxW: "5em" },
-  { key: "damage_extended", maxW: "5em" },
-  { key: "properties_extended", maxW: "14em" },
-  { key: "mastery", maxW: "6em" },
-  { icon: WandIcon, key: "magic", textAlign: "center", w: "4em" },
-  { icon: SwordsIcon, key: "melee", textAlign: "center", w: "4em" },
-  { icon: BowArrowIcon, key: "ranged", textAlign: "center", w: "4em" },
-  { key: "weight", maxW: "3em", textAlign: "right" },
+const columns: ResourcesListTableColumn<Weapon, LocalizedWeapon>[] = [
+  {
+    key: "name",
+    label: { en: "Name", it: "Nome" },
+  },
+  {
+    key: "type",
+    label: { en: "Type", it: "Tipo" },
+    maxW: "5em",
+  },
+  {
+    key: "damage_extended",
+    label: { en: "Damage", it: "Danni" },
+    maxW: "5em",
+  },
+  {
+    key: "properties_extended",
+    label: { en: "Properties", it: "Proprietà" },
+    maxW: "14em",
+  },
+  {
+    key: "mastery",
+    label: { en: "Mastery", it: "Padronanza" },
+    maxW: "6em",
+  },
+  {
+    icon: WandIcon,
+    key: "magic",
+    label: { en: "🪄", it: "🪄" },
+    textAlign: "center",
+    w: "4em",
+  },
+  {
+    icon: SwordsIcon,
+    key: "melee",
+    label: { en: "⚔️", it: "⚔️" },
+    textAlign: "center",
+    w: "4em",
+  },
+  {
+    icon: BowArrowIcon,
+    key: "ranged",
+    label: { en: "🏹", it: "🏹" },
+    textAlign: "center",
+    w: "4em",
+  },
+  {
+    key: "weight",
+    label: { en: "Weight", it: "Peso" },
+    maxW: "3em",
+    textAlign: "right",
+  },
 ] as const;
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  name: {
-    en: "Name",
-    it: "Nome",
-  },
-
-  type: {
-    en: "Type",
-    it: "Tipo",
-  },
-
-  damage_extended: {
-    en: "Damage",
-    it: "Danni",
-  },
-
-  properties_extended: {
-    en: "Properties",
-    it: "Proprietà",
-  },
-
-  mastery: {
-    en: "Mastery",
-    it: "Padronanza",
-  },
-
-  magic: {
-    en: "🪄",
-    it: "🪄",
-  },
-
-  melee: {
-    en: "⚔️",
-    it: "⚔️",
-  },
-
-  ranged: {
-    en: "🏹",
-    it: "🏹",
-  },
-
-  range: {
-    en: "Range",
-    it: "Gittata",
-  },
-
-  weight: {
-    en: "Weight",
-    it: "Peso",
-  },
-};
 
 //------------------------------------------------------------------------------
 // Parse Form Data
@@ -108,7 +83,7 @@ const i18nContext = {
 function parseFormData(
   data: Partial<WeaponEditorFormFields>
 ):
-  | { weapon: Partial<DBWeapon>; translation: Partial<DBWeaponTranslation> }
+  | { resource: Partial<DBWeapon>; translation: Partial<DBWeaponTranslation> }
   | string {
   const maybeWeapon = {
     cost: data.cost,
@@ -145,47 +120,7 @@ function parseFormData(
   if (!translation.success)
     return report(translation.error, "form.error.invalid_translation");
 
-  return { translation: translation.data, weapon: weapon.data };
-}
-
-//------------------------------------------------------------------------------
-// Submit Editor Form
-//------------------------------------------------------------------------------
-
-async function submitEditorForm(
-  data: Partial<WeaponEditorFormFields>,
-  { id, lang }: { id: string; lang: string }
-) {
-  const errorOrData = parseFormData(data);
-  if (typeof errorOrData === "string") return errorOrData;
-
-  const { weapon, translation } = errorOrData;
-
-  const response = await updateWeapon(id, lang, weapon, translation);
-  if (response.error)
-    return report(response.error, "form.error.update_failure");
-
-  return undefined;
-}
-
-//------------------------------------------------------------------------------
-// Submit Creator Form
-//------------------------------------------------------------------------------
-
-async function submitCreatorForm(
-  data: Partial<WeaponEditorFormFields>,
-  { campaignId, lang }: { campaignId: string; lang: string }
-) {
-  const errorOrData = parseFormData(data);
-  if (typeof errorOrData === "string") return errorOrData;
-
-  const { weapon, translation } = errorOrData;
-
-  const response = await createWeapon(campaignId, lang, weapon, translation);
-  if (response.error)
-    return report(response.error, "form.error.creation_failure");
-
-  return undefined;
+  return { resource: weapon.data, translation: translation.data };
 }
 
 //------------------------------------------------------------------------------
@@ -193,18 +128,16 @@ async function submitCreatorForm(
 //------------------------------------------------------------------------------
 
 const WeaponsPanel = createResourcesPanel({
+  Card: WeaponCard,
+  EditorContent: WeaponEditor,
   Filters: WeaponsFilters,
-  ResourceCard: WeaponCard,
-  ResourceEditorContent: WeaponEditor,
   defaultResource: defaultWeapon,
   form: weaponEditorForm,
   listTableColumns: columns,
-  listTableColumnsI18nContext: i18nContext,
-  listTableDescriptionKey: "notes",
-  onSubmitCreatorForm: submitCreatorForm,
-  onSubmitEditorForm: submitEditorForm,
+  listTableDescriptionKey: "description",
+  name: { en: "weapons", it: "armi" },
+  parseFormData,
   store: weaponsStore,
-  useLocalizeResource: useLocalizeWeapon,
 });
 
 export default WeaponsPanel;

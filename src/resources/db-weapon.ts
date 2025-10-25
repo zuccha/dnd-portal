@@ -1,6 +1,7 @@
 import z from "zod";
 import { campaignRoleSchema } from "./campaign-role";
 import { damageTypeSchema } from "./damage-type";
+import { dbResourceSchema, dbResourceTranslationSchema } from "./db-resource";
 import { weaponMasterySchema } from "./weapon-mastery";
 import { weaponPropertySchema } from "./weapon-property";
 import { weaponTypeSchema } from "./weapon-type";
@@ -9,11 +10,7 @@ import { weaponTypeSchema } from "./weapon-type";
 // DBWeapon
 //------------------------------------------------------------------------------
 
-export const dbWeaponSchema = z.object({
-  id: z.uuid(),
-
-  campaign_id: z.string(),
-
+export const dbWeaponSchema = dbResourceSchema.extend({
   type: weaponTypeSchema,
 
   damage: z.string(),
@@ -46,14 +43,11 @@ export type DBWeapon = z.infer<typeof dbWeaponSchema>;
 // DB Weapon Translation
 //------------------------------------------------------------------------------
 
-export const dbWeaponTranslationSchema = z.object({
-  lang: z.string(),
+export const dbWeaponTranslationSchema = dbResourceTranslationSchema.extend({
   weapon_id: z.uuid(),
 
   ammunition: z.string().nullish(),
-  name: z.string(),
   notes: z.string().nullish(),
-  page: z.string().nullish(),
 });
 
 export type DBWeaponTranslation = z.infer<typeof dbWeaponTranslationSchema>;
