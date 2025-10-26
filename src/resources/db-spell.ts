@@ -1,7 +1,6 @@
 import z from "zod";
 import { distanceImpSchema, distanceMetSchema } from "../i18n/i18n-distance";
 import { timeSchema } from "../i18n/i18n-time";
-import { campaignRoleSchema } from "./campaign-role";
 import { characterClassSchema } from "./character-class";
 import { dbResourceSchema, dbResourceTranslationSchema } from "./db-resource";
 import { spellCastingTimeSchema } from "./spell-casting-time";
@@ -11,7 +10,7 @@ import { spellRangeSchema } from "./spell-range";
 import { spellSchoolSchema } from "./spell-school";
 
 //------------------------------------------------------------------------------
-// DBSpell
+// DB Spell
 //------------------------------------------------------------------------------
 
 export const dbSpellSchema = dbResourceSchema.extend({
@@ -36,8 +35,6 @@ export const dbSpellSchema = dbResourceSchema.extend({
   material: z.boolean(),
   somatic: z.boolean(),
   verbal: z.boolean(),
-
-  visibility: campaignRoleSchema,
 });
 
 export type DBSpell = z.infer<typeof dbSpellSchema>;

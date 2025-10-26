@@ -1,5 +1,4 @@
 import z from "zod";
-import { campaignRoleSchema } from "./campaign-role";
 import { damageTypeSchema } from "./damage-type";
 import { dbResourceSchema, dbResourceTranslationSchema } from "./db-resource";
 import { weaponMasterySchema } from "./weapon-mastery";
@@ -7,7 +6,7 @@ import { weaponPropertySchema } from "./weapon-property";
 import { weaponTypeSchema } from "./weapon-type";
 
 //------------------------------------------------------------------------------
-// DBWeapon
+// DB Weapon
 //------------------------------------------------------------------------------
 
 export const dbWeaponSchema = dbResourceSchema.extend({
@@ -33,8 +32,6 @@ export const dbWeaponSchema = dbResourceSchema.extend({
   weight_lb: z.number(),
 
   cost: z.number(),
-
-  visibility: campaignRoleSchema,
 });
 
 export type DBWeapon = z.infer<typeof dbWeaponSchema>;

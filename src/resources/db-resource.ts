@@ -1,4 +1,5 @@
 import z from "zod";
+import { campaignRoleSchema } from "./campaign-role";
 
 //------------------------------------------------------------------------------
 // DB Resource
@@ -8,6 +9,8 @@ export const dbResourceSchema = z.object({
   id: z.uuid(),
 
   campaign_id: z.string(),
+
+  visibility: campaignRoleSchema,
 });
 
 export type DBResource = z.infer<typeof dbResourceSchema>;
