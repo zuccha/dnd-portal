@@ -85,6 +85,10 @@ function SidebarCampaignSection({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "section.resource/eldritch-invocations": {
+    en: "Eldritch Invocations",
+    it: "Suppliche Occulte",
+  },
   "section.resource/spells": {
     en: "Spells",
     it: "Incantesimi",
