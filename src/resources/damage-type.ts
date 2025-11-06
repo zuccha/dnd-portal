@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import { z } from "zod";
-import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -28,42 +26,25 @@ export const damageTypes = damageTypeSchema.options;
 export type DamageType = z.infer<typeof damageTypeSchema>;
 
 //------------------------------------------------------------------------------
-// Damage Type Translation
-//------------------------------------------------------------------------------
-
-export const damageTypeTranslationSchema = z.object({
-  damage_type: damageTypeSchema,
-  label: z.string().default(""),
-  lang: z.string().default("en"),
-});
-
-export type damageTypeTranslation = z.infer<typeof damageTypeTranslationSchema>;
-
-//------------------------------------------------------------------------------
 // Damage Type Hooks
 //------------------------------------------------------------------------------
 
 export const {
+  useSortedOptions: useDamageTypeOptions,
   useTranslate: useTranslateDamageType,
   useTranslations: useDamageTypeTranslations,
-} = createTypeTranslationHooks(
-  "damage_type",
-  damageTypes,
-  damageTypeTranslationSchema
-);
-
-//------------------------------------------------------------------------------
-// Use Damage Type Options
-//------------------------------------------------------------------------------
-
-export function useDamageTypeOptions() {
-  const weaponMasteryTranslations = useDamageTypeTranslations();
-
-  return useMemo(
-    () =>
-      weaponMasteryTranslations
-        .map(({ damage_type, label }) => ({ label, value: damage_type }))
-        .sort(compareObjects("label")),
-    [weaponMasteryTranslations]
-  );
-}
+} = createTypeTranslationHooks(damageTypes, {
+  acid: { en: "Acid", it: "Acido" },
+  bludgeoning: { en: "Bludgeoning", it: "Contundente" },
+  cold: { en: "Cold", it: "Freddo" },
+  fire: { en: "Fire", it: "Fuoco" },
+  force: { en: "Force", it: "Forza" },
+  lightning: { en: "Lightning", it: "Fulmine" },
+  necrotic: { en: "Necrotic", it: "Necrotico" },
+  piercing: { en: "Piercing", it: "Perforante" },
+  poison: { en: "Poison", it: "Veleno" },
+  psychic: { en: "Psychic", it: "Psichico" },
+  radiant: { en: "Radiant", it: "Radioso" },
+  slashing: { en: "Slashing", it: "Tagliente" },
+  thunder: { en: "Thunder", it: "Tuono" },
+});

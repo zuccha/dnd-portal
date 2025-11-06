@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { z } from "zod";
 import { createTypeTranslationHooks } from "./type";
 
@@ -19,45 +18,20 @@ export const spellDurations = spellDurationSchema.options;
 export type SpellDuration = z.infer<typeof spellDurationSchema>;
 
 //------------------------------------------------------------------------------
-// Spell Duration Translation
-//------------------------------------------------------------------------------
-
-export const spellDurationTranslationSchema = z.object({
-  label: z.string().default(""),
-  lang: z.string().default("en"),
-  spell_duration: spellDurationSchema,
-});
-
-export type SpellDurationTranslation = z.infer<
-  typeof spellDurationTranslationSchema
->;
-
-//------------------------------------------------------------------------------
 // Spell Duration Hooks
 //------------------------------------------------------------------------------
 
 export const {
+  useOptions: useSpellDurationOptions,
   useTranslate: useTranslateSpellDuration,
   useTranslations: useSpellDurationTranslations,
-} = createTypeTranslationHooks(
-  "spell_duration",
-  spellDurations,
-  spellDurationTranslationSchema
-);
-
-//------------------------------------------------------------------------------
-// Use Spell Duration Options
-//------------------------------------------------------------------------------
-
-export function useSpellDurationOptions() {
-  const spellDurationTranslations = useSpellDurationTranslations();
-
-  return useMemo(
-    () =>
-      spellDurationTranslations.map(({ spell_duration, label }) => ({
-        label,
-        value: spell_duration,
-      })),
-    [spellDurationTranslations]
-  );
-}
+} = createTypeTranslationHooks(spellDurations, {
+  instantaneous: { en: "Instantaneous", it: "Istantaneo" },
+  special: { en: "Special", it: "Speciale" },
+  until_dispelled: { en: "Until dispelled", it: "Finché non disperso" },
+  until_dispelled_or_triggered: {
+    en: "Until Dispelled or Triggered",
+    it: "Finché non disperso o innescato",
+  },
+  value: { en: "Value", it: "Valore" },
+});

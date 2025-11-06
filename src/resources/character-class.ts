@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import { z } from "zod";
-import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -28,48 +26,43 @@ export const characterClasses = characterClassSchema.options;
 export type CharacterClass = z.infer<typeof characterClassSchema>;
 
 //------------------------------------------------------------------------------
-// Character Class Translation
-//------------------------------------------------------------------------------
-
-export const characterClassTranslationSchema = z.object({
-  character_class: characterClassSchema,
-  label: z.string().default(""),
-  label_short: z.string().default(""),
-  lang: z.string().default("en"),
-});
-
-export type CharacterClassTranslation = z.infer<
-  typeof characterClassTranslationSchema
->;
-
-//------------------------------------------------------------------------------
 // Character Class Hooks
 //------------------------------------------------------------------------------
 
 export const {
+  useSortedOptions: useCharacterClassOptions,
   useTranslate: useTranslateCharacterClass,
   useTranslations: useCharacterClassTranslations,
 } = createTypeTranslationHooks(
-  "character_class",
   characterClasses,
-  characterClassTranslationSchema
+  {
+    artificer: { en: "Artificer", it: "Artificiere" },
+    barbarian: { en: "Barbarian", it: "Barbaro" },
+    bard: { en: "Bard", it: "Bardo" },
+    cleric: { en: "Cleric", it: "Chierico" },
+    druid: { en: "Druid", it: "Druido" },
+    fighter: { en: "Fighter", it: "Guerriero" },
+    monk: { en: "Monk", it: "Monaco" },
+    paladin: { en: "Paladin", it: "Paladino" },
+    ranger: { en: "Ranger", it: "Ranger" },
+    rogue: { en: "Rogue", it: "Ladro" },
+    sorcerer: { en: "Sorcerer", it: "Stregone" },
+    warlock: { en: "Warlock", it: "Warlock" },
+    wizard: { en: "Wizard", it: "Mago" },
+  },
+  {
+    artificer: { en: "Art.", it: "Art." },
+    barbarian: { en: "Brb.", it: "Brb." },
+    bard: { en: "Brd.", it: "Brd." },
+    cleric: { en: "Cle.", it: "Chi." },
+    druid: { en: "Dru.", it: "Dru." },
+    fighter: { en: "Fig.", it: "Gue." },
+    monk: { en: "Mon.", it: "Mon." },
+    paladin: { en: "Pal.", it: "Pal." },
+    ranger: { en: "Ran.", it: "Ran." },
+    rogue: { en: "Rog.", it: "Lad." },
+    sorcerer: { en: "Sor.", it: "Str." },
+    warlock: { en: "War.", it: "War." },
+    wizard: { en: "Wiz.", it: "Mag." },
+  }
 );
-
-//------------------------------------------------------------------------------
-// Use Character Class Options
-//------------------------------------------------------------------------------
-
-export function useCharacterClassOptions() {
-  const characterClassTranslations = useCharacterClassTranslations();
-
-  return useMemo(
-    () =>
-      characterClassTranslations
-        .map(({ character_class, label }) => ({
-          label,
-          value: character_class,
-        }))
-        .sort(compareObjects("label")),
-    [characterClassTranslations]
-  );
-}

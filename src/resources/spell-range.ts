@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { z } from "zod";
 import { createTypeTranslationHooks } from "./type";
 
@@ -20,43 +19,18 @@ export const spellRanges = spellRangeSchema.options;
 export type SpellRange = z.infer<typeof spellRangeSchema>;
 
 //------------------------------------------------------------------------------
-// Spell Range Translation
-//------------------------------------------------------------------------------
-
-export const spellRangeTranslationSchema = z.object({
-  label: z.string().default(""),
-  lang: z.string().default("en"),
-  spell_range: spellRangeSchema,
-});
-
-export type SpellRangeTranslation = z.infer<typeof spellRangeTranslationSchema>;
-
-//------------------------------------------------------------------------------
 // Spell Range Hooks
 //------------------------------------------------------------------------------
 
 export const {
+  useOptions: useSpellRangeOptions,
   useTranslate: useTranslateSpellRange,
   useTranslations: useSpellRangeTranslations,
-} = createTypeTranslationHooks(
-  "spell_range",
-  spellRanges,
-  spellRangeTranslationSchema
-);
-
-//------------------------------------------------------------------------------
-// Use Spell Range Options
-//------------------------------------------------------------------------------
-
-export function useSpellRangeOptions() {
-  const spellRangeTranslations = useSpellRangeTranslations();
-
-  return useMemo(
-    () =>
-      spellRangeTranslations.map(({ spell_range, label }) => ({
-        label,
-        value: spell_range,
-      })),
-    [spellRangeTranslations]
-  );
-}
+} = createTypeTranslationHooks(spellRanges, {
+  self: { en: "Self", it: "Incantatore" },
+  sight: { en: "Sight", it: "Vista" },
+  special: { en: "Special", it: "Speciale" },
+  touch: { en: "Touch", it: "Contatto" },
+  unlimited: { en: "Unlimited", it: "Illimitato" },
+  value: { en: "Value", it: "Valore" },
+});

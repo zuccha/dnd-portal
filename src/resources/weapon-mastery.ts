@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import { z } from "zod";
-import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -23,44 +21,20 @@ export const weaponMasteries = weaponMasterySchema.options;
 export type WeaponMastery = z.infer<typeof weaponMasterySchema>;
 
 //------------------------------------------------------------------------------
-// Weapon Mastery Translation
-//------------------------------------------------------------------------------
-
-export const weaponMasteryTranslationSchema = z.object({
-  label: z.string().default(""),
-  lang: z.string().default("en"),
-  weapon_mastery: weaponMasterySchema,
-});
-
-export type WeaponMasteryTranslation = z.infer<
-  typeof weaponMasteryTranslationSchema
->;
-
-//------------------------------------------------------------------------------
 // Weapon Mastery Hooks
 //------------------------------------------------------------------------------
 
 export const {
+  useSortedOptions: useWeaponMasteryOptions,
   useTranslate: useTranslateWeaponMastery,
   useTranslations: useWeaponMasteryTranslations,
-} = createTypeTranslationHooks(
-  "weapon_mastery",
-  weaponMasteries,
-  weaponMasteryTranslationSchema
-);
-
-//------------------------------------------------------------------------------
-// Use Weapon Mastery Options
-//------------------------------------------------------------------------------
-
-export function useWeaponMasteryOptions() {
-  const weaponMasteryTranslations = useWeaponMasteryTranslations();
-
-  return useMemo(
-    () =>
-      weaponMasteryTranslations
-        .map(({ weapon_mastery, label }) => ({ label, value: weapon_mastery }))
-        .sort(compareObjects("label")),
-    [weaponMasteryTranslations]
-  );
-}
+} = createTypeTranslationHooks(weaponMasteries, {
+  cleave: { en: "Cleave", it: "Doppio fendente" },
+  graze: { en: "Graze", it: "Colpo di striscio" },
+  nick: { en: "Nick", it: "Graffio" },
+  push: { en: "Push", it: "Spinta" },
+  sap: { en: "Sap", it: "Prosciugamento" },
+  slow: { en: "Slow", it: "Lentezza" },
+  topple: { en: "Topple", it: "Rovesciamento" },
+  vex: { en: "Vex", it: "Vessazione" },
+});

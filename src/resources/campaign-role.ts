@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 import z from "zod";
 import supabase from "../supabase";
 import { createTypeTranslationHooks } from "./type";
@@ -15,48 +14,17 @@ export const campaignRoles = campaignRoleSchema.options;
 export type CampaignRole = z.infer<typeof campaignRoleSchema>;
 
 //------------------------------------------------------------------------------
-// Campaign Role Translation
-//------------------------------------------------------------------------------
-
-export const campaignRoleTranslationSchema = z.object({
-  campaign_role: campaignRoleSchema,
-  label: z.string().default(""),
-  lang: z.string().default("en"),
-});
-
-export type CampaignRoleTranslation = z.infer<
-  typeof campaignRoleTranslationSchema
->;
-
-//------------------------------------------------------------------------------
 // Campaign Role Hooks
 //------------------------------------------------------------------------------
 
 export const {
+  useOptions: useCampaignRoleOptions,
   useTranslate: useTranslateCampaignRole,
   useTranslations: useCampaignRoleTranslations,
-} = createTypeTranslationHooks(
-  "campaign_role",
-  campaignRoles,
-  campaignRoleTranslationSchema
-);
-
-//------------------------------------------------------------------------------
-// Use Campaign Role Options
-//------------------------------------------------------------------------------
-
-export function useCampaignRoleOptions() {
-  const campaignRoleTranslations = useCampaignRoleTranslations();
-
-  return useMemo(
-    () =>
-      campaignRoleTranslations.map(({ campaign_role, label }) => ({
-        label,
-        value: campaign_role,
-      })),
-    [campaignRoleTranslations]
-  );
-}
+} = createTypeTranslationHooks(campaignRoles, {
+  game_master: { en: "Game Master", it: "Game Master" },
+  player: { en: "Player", it: "Giocatore" },
+});
 
 //------------------------------------------------------------------------------
 // Fetch Campaign Role

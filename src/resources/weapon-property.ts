@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import { z } from "zod";
-import { compareObjects } from "../utils/object";
 import { createTypeTranslationHooks } from "./type";
 
 //------------------------------------------------------------------------------
@@ -25,47 +23,22 @@ export const weaponProperties = weaponPropertySchema.options;
 export type WeaponProperty = z.infer<typeof weaponPropertySchema>;
 
 //------------------------------------------------------------------------------
-// Weapon Property Translation
-//------------------------------------------------------------------------------
-
-export const weaponPropertyTranslationSchema = z.object({
-  label: z.string().default(""),
-  lang: z.string().default("en"),
-  weapon_property: weaponPropertySchema,
-});
-
-export type WeaponPropertyTranslation = z.infer<
-  typeof weaponPropertyTranslationSchema
->;
-
-//------------------------------------------------------------------------------
 // Weapon Property Hooks
 //------------------------------------------------------------------------------
 
 export const {
+  useSortedOptions: useWeaponPropertyOptions,
   useTranslate: useTranslateWeaponProperty,
   useTranslations: useWeaponPropertyTranslations,
-} = createTypeTranslationHooks(
-  "weapon_property",
-  weaponProperties,
-  weaponPropertyTranslationSchema
-);
-
-//------------------------------------------------------------------------------
-// Use Weapon Property Options
-//------------------------------------------------------------------------------
-
-export function useWeaponPropertyOptions() {
-  const weaponPropertyTranslations = useWeaponPropertyTranslations();
-
-  return useMemo(
-    () =>
-      weaponPropertyTranslations
-        .map(({ weapon_property, label }) => ({
-          label,
-          value: weapon_property,
-        }))
-        .sort(compareObjects("label")),
-    [weaponPropertyTranslations]
-  );
-}
+} = createTypeTranslationHooks(weaponProperties, {
+  "ammunition": { en: "Ammunition", it: "Munizioni" },
+  "finesse": { en: "Finesse", it: "Accurata" },
+  "heavy": { en: "Heavy", it: "Pesante" },
+  "light": { en: "Light", it: "Leggera" },
+  "loading": { en: "Loading", it: "Ricarica" },
+  "range": { en: "Range", it: "Gittata" },
+  "reach": { en: "Reach", it: "Portata" },
+  "throw": { en: "Throw", it: "Lancio" },
+  "two-handed": { en: "Two-Handed", it: "A due mani" },
+  "versatile": { en: "Versatile", it: "Versatile" },
+});
