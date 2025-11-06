@@ -1,5 +1,5 @@
+import { createResourcesStore } from "../resources-store";
 import { useLocalizeSpell } from "./localized-spell";
-import { createResourcesStore } from "./resources-store";
 import { defaultSpellFilters, spellFiltersSchema, spellSchema } from "./spell";
 
 //------------------------------------------------------------------------------

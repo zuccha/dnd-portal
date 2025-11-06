@@ -14,7 +14,7 @@ import {
   parseTime,
   useTimeUnitOptions,
 } from "../../../../../../i18n/i18n-time";
-import { type Spell } from "../../../../../../resources/spell";
+import { type Spell } from "../../../../../../resources/spells/spell";
 import { useCampaignRoleOptions } from "../../../../../../resources/types/campaign-role";
 import { useCharacterClassOptions } from "../../../../../../resources/types/character-class";
 import { useSpellCastingTimeOptions } from "../../../../../../resources/types/spell-casting-time";
