@@ -1,5 +1,5 @@
 import z from "zod";
-import { dbResourceSchema, dbResourceTranslationSchema } from "./db-resource";
+import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 
 //------------------------------------------------------------------------------
 // DB Eldritch Invocation

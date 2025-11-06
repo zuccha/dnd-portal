@@ -1,10 +1,10 @@
+import { createResourcesStore } from "../resources-store";
 import {
   defaultEldritchInvocationFilters,
   eldritchInvocationFiltersSchema,
   eldritchInvocationSchema,
 } from "./eldritch-invocation";
 import { useLocalizeEldritchInvocation } from "./localized-eldritch-invocation";
-import { createResourcesStore } from "./resources-store";
 
 //------------------------------------------------------------------------------
 // Eldritch Invocations Store

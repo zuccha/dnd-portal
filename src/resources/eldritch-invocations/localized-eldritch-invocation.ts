@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import z from "zod";
-import { useI18nLangContext } from "../i18n/i18n-lang-context";
-import { translate } from "../i18n/i18n-string";
+import { useI18nLangContext } from "../../i18n/i18n-lang-context";
+import { translate } from "../../i18n/i18n-string";
 import {
   type EldritchInvocation,
   eldritchInvocationSchema,

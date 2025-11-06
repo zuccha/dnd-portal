@@ -1,7 +1,7 @@
 import { Span } from "@chakra-ui/react";
-import type { EldritchInvocation } from "../../../../../../resources/eldritch-invocation";
-import { useIsEldritchInvocationSelected } from "../../../../../../resources/eldritch-invocations-store";
-import type { LocalizedEldritchInvocation } from "../../../../../../resources/localized-eldritch-invocation";
+import type { EldritchInvocation } from "../../../../../../resources/eldritch-invocations/eldritch-invocation";
+import { useIsEldritchInvocationSelected } from "../../../../../../resources/eldritch-invocations/eldritch-invocations-store";
+import type { LocalizedEldritchInvocation } from "../../../../../../resources/eldritch-invocations/localized-eldritch-invocation";
 import ResourceCard from "../resources/resource-card";
 
 //------------------------------------------------------------------------------

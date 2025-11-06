@@ -1,7 +1,7 @@
 import z from "zod";
-import { i18nStringSchema } from "../i18n/i18n-string";
-import { resourceFiltersSchema, resourceSchema } from "./resource";
-import { characterLevelSchema } from "./types/character-level";
+import { i18nStringSchema } from "../../i18n/i18n-string";
+import { resourceFiltersSchema, resourceSchema } from "../resource";
+import { characterLevelSchema } from "../types/character-level";
 
 //------------------------------------------------------------------------------
 // Eldritch Invocation
