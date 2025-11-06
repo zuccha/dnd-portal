@@ -15,7 +15,7 @@ import { useDamageTypeOptions } from "../../../../../../resources/types/damage-t
 import { useWeaponMasteryOptions } from "../../../../../../resources/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "../../../../../../resources/types/weapon-property";
 import { useWeaponTypeOptions } from "../../../../../../resources/types/weapon-type";
-import type { Weapon } from "../../../../../../resources/weapon";
+import type { Weapon } from "../../../../../../resources/weapons/weapon";
 import Field from "../../../../../../ui/field";
 import Input from "../../../../../../ui/input";
 import NumberInput from "../../../../../../ui/number-input";

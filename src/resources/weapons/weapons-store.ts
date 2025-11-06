@@ -1,5 +1,5 @@
+import { createResourcesStore } from "../resources-store";
 import { useLocalizeWeapon } from "./localized-weapon";
-import { createResourcesStore } from "./resources-store";
 import {
   defaultWeaponFilters,
   weaponFiltersSchema,

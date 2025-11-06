@@ -4,10 +4,13 @@ import {
   type DBWeaponTranslation,
   dbWeaponSchema,
   dbWeaponTranslationSchema,
-} from "../../../../../../resources/db-weapon";
-import { type LocalizedWeapon } from "../../../../../../resources/localized-weapon";
-import { type Weapon, defaultWeapon } from "../../../../../../resources/weapon";
-import { weaponsStore } from "../../../../../../resources/weapons-store";
+} from "../../../../../../resources/weapons/db-weapon";
+import { type LocalizedWeapon } from "../../../../../../resources/weapons/localized-weapon";
+import {
+  type Weapon,
+  defaultWeapon,
+} from "../../../../../../resources/weapons/weapon";
+import { weaponsStore } from "../../../../../../resources/weapons/weapons-store";
 import { report } from "../../../../../../utils/error";
 import type { ResourcesListTableColumn } from "../resources/resources-list-table";
 import { createResourcesPanel } from "../resources/resources-panel";

@@ -1,7 +1,7 @@
 import { Span } from "@chakra-ui/react";
-import type { LocalizedWeapon } from "../../../../../../resources/localized-weapon";
-import type { Weapon } from "../../../../../../resources/weapon";
-import { useIsWeaponSelected } from "../../../../../../resources/weapons-store";
+import type { LocalizedWeapon } from "../../../../../../resources/weapons/localized-weapon";
+import type { Weapon } from "../../../../../../resources/weapons/weapon";
+import { useIsWeaponSelected } from "../../../../../../resources/weapons/weapons-store";
 import ResourceCard from "../resources/resource-card";
 
 //------------------------------------------------------------------------------
