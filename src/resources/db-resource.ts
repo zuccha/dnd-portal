@@ -1,5 +1,5 @@
 import z from "zod";
-import { campaignRoleSchema } from "./campaign-role";
+import { campaignRoleSchema } from "./types/campaign-role";
 
 //------------------------------------------------------------------------------
 // DB Resource

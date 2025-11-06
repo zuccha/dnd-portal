@@ -1,4 +1,4 @@
-import type { CampaignRole } from "../../../../../../resources/campaign-role";
+import type { CampaignRole } from "../../../../../../resources/types/campaign-role";
 import { createForm } from "../../../../../../utils/form";
 
 //------------------------------------------------------------------------------

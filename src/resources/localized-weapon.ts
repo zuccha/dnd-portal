@@ -4,11 +4,11 @@ import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
 import { formatNumber } from "../utils/number";
-import { useTranslateDamageType } from "./damage-type";
+import { useTranslateDamageType } from "./types/damage-type";
+import { useTranslateWeaponMastery } from "./types/weapon-mastery";
+import { useTranslateWeaponProperty } from "./types/weapon-property";
+import { useTranslateWeaponType } from "./types/weapon-type";
 import { type Weapon, weaponSchema } from "./weapon";
-import { useTranslateWeaponMastery } from "./weapon-mastery";
-import { useTranslateWeaponProperty } from "./weapon-property";
-import { useTranslateWeaponType } from "./weapon-type";
 
 //------------------------------------------------------------------------------
 // Localized Weapon

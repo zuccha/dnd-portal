@@ -8,12 +8,12 @@ import { useI18nLangContext } from "../i18n/i18n-lang-context";
 import { translate } from "../i18n/i18n-string";
 import { useI18nSystem } from "../i18n/i18n-system";
 import { useTranslateTime } from "../i18n/i18n-time";
-import { useTranslateCharacterClass } from "./character-class";
 import { type Spell, spellSchema } from "./spell";
-import { useTranslateSpellCastingTime } from "./spell-casting-time";
-import { useTranslateSpellDuration } from "./spell-duration";
-import { useTranslateSpellRange } from "./spell-range";
-import { useTranslateSpellSchool } from "./spell-school";
+import { useTranslateCharacterClass } from "./types/character-class";
+import { useTranslateSpellCastingTime } from "./types/spell-casting-time";
+import { useTranslateSpellDuration } from "./types/spell-duration";
+import { useTranslateSpellRange } from "./types/spell-range";
+import { useTranslateSpellSchool } from "./types/spell-school";
 
 //------------------------------------------------------------------------------
 // Localized Spell

@@ -10,12 +10,12 @@ import {
   convertWeightImpToMet,
   convertWeightMetToImp,
 } from "../../../../../../i18n/i18n-weight";
-import { useCampaignRoleOptions } from "../../../../../../resources/campaign-role";
-import { useDamageTypeOptions } from "../../../../../../resources/damage-type";
+import { useCampaignRoleOptions } from "../../../../../../resources/types/campaign-role";
+import { useDamageTypeOptions } from "../../../../../../resources/types/damage-type";
+import { useWeaponMasteryOptions } from "../../../../../../resources/types/weapon-mastery";
+import { useWeaponPropertyOptions } from "../../../../../../resources/types/weapon-property";
+import { useWeaponTypeOptions } from "../../../../../../resources/types/weapon-type";
 import type { Weapon } from "../../../../../../resources/weapon";
-import { useWeaponMasteryOptions } from "../../../../../../resources/weapon-mastery";
-import { useWeaponPropertyOptions } from "../../../../../../resources/weapon-property";
-import { useWeaponTypeOptions } from "../../../../../../resources/weapon-type";
 import Field from "../../../../../../ui/field";
 import Input from "../../../../../../ui/input";
 import NumberInput from "../../../../../../ui/number-input";

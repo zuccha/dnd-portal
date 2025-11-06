@@ -1,6 +1,6 @@
 import z from "zod";
 import { i18nStringSchema } from "../i18n/i18n-string";
-import { campaignRoleSchema } from "./campaign-role";
+import { campaignRoleSchema } from "./types/campaign-role";
 
 //------------------------------------------------------------------------------
 // Resource

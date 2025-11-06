@@ -14,14 +14,14 @@ import {
   parseTime,
   useTimeUnitOptions,
 } from "../../../../../../i18n/i18n-time";
-import { useCampaignRoleOptions } from "../../../../../../resources/campaign-role";
-import { useCharacterClassOptions } from "../../../../../../resources/character-class";
 import { type Spell } from "../../../../../../resources/spell";
-import { useSpellCastingTimeOptions } from "../../../../../../resources/spell-casting-time";
-import { useSpellDurationOptions } from "../../../../../../resources/spell-duration";
-import { useSpellLevelOptions } from "../../../../../../resources/spell-level";
-import { useSpellRangeOptions } from "../../../../../../resources/spell-range";
-import { useSpellSchoolOptions } from "../../../../../../resources/spell-school";
+import { useCampaignRoleOptions } from "../../../../../../resources/types/campaign-role";
+import { useCharacterClassOptions } from "../../../../../../resources/types/character-class";
+import { useSpellCastingTimeOptions } from "../../../../../../resources/types/spell-casting-time";
+import { useSpellDurationOptions } from "../../../../../../resources/types/spell-duration";
+import { useSpellLevelOptions } from "../../../../../../resources/types/spell-level";
+import { useSpellRangeOptions } from "../../../../../../resources/types/spell-range";
+import { useSpellSchoolOptions } from "../../../../../../resources/types/spell-school";
 import Field from "../../../../../../ui/field";
 import Input from "../../../../../../ui/input";
 import MeasureInput from "../../../../../../ui/measure-input";

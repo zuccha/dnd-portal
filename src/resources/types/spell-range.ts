@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTypeTranslationHooks } from "./type";
+import { createTypeTranslationHooks } from "../type";
 
 //------------------------------------------------------------------------------
 // Spell Range

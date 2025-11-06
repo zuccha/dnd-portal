@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import z from "zod/v4";
 import { useI18nLang } from "../../../../../../i18n/i18n-lang";
 import type { I18nString } from "../../../../../../i18n/i18n-string";
-import { useIsGM } from "../../../../../../resources/campaign-role";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -15,6 +14,7 @@ import type {
   ResourceFilters,
 } from "../../../../../../resources/resource";
 import type { ResourcesStore } from "../../../../../../resources/resources-store";
+import { useIsGM } from "../../../../../../resources/types/campaign-role";
 import { createLocalStore } from "../../../../../../store/local-store";
 import { createMemoryStore } from "../../../../../../store/memory-store";
 import BinaryButton, {

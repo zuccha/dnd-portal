@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import z from "zod";
-import supabase from "../supabase";
-import { createTypeTranslationHooks } from "./type";
+import supabase from "../../supabase";
+import { createTypeTranslationHooks } from "../type";
 
 //------------------------------------------------------------------------------
 // Campaign Role

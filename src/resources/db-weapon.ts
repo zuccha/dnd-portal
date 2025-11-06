@@ -1,9 +1,9 @@
 import z from "zod";
-import { damageTypeSchema } from "./damage-type";
 import { dbResourceSchema, dbResourceTranslationSchema } from "./db-resource";
-import { weaponMasterySchema } from "./weapon-mastery";
-import { weaponPropertySchema } from "./weapon-property";
-import { weaponTypeSchema } from "./weapon-type";
+import { damageTypeSchema } from "./types/damage-type";
+import { weaponMasterySchema } from "./types/weapon-mastery";
+import { weaponPropertySchema } from "./types/weapon-property";
+import { weaponTypeSchema } from "./types/weapon-type";
 
 //------------------------------------------------------------------------------
 // DB Weapon
