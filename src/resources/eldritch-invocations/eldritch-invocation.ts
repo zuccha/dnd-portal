@@ -10,6 +10,8 @@ import { characterLevelSchema } from "../types/character-level";
 export const eldritchInvocationSchema = resourceSchema.extend({
   min_warlock_level: characterLevelSchema,
 
+  page: i18nStringSchema.nullish(),
+
   description: i18nStringSchema,
   prerequisite: i18nStringSchema,
 });
@@ -39,6 +41,8 @@ export const defaultEldritchInvocation: EldritchInvocation = {
   campaign_name: "",
 
   min_warlock_level: 0,
+
+  page: undefined,
 
   description: {},
   name: {},
