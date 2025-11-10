@@ -15,6 +15,7 @@
 
     /* Linting */
     "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
