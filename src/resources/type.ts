@@ -32,10 +32,10 @@ export function createTypeTranslationHooks<Type extends string>(
   ): (characterClass: Type) => TypeTranslation<Type> {
     const translate = useCallback(
       (type: Type): TypeTranslation<Type> => {
-        const label = labels[type][lang] ?? labels[type].en ?? type;
+        const label = labels[type][lang] ?? labels[type]["en"] ?? type;
         const label_short =
           shortLabels ?
-            (shortLabels[type][lang] ?? shortLabels[type].en ?? type)
+            (shortLabels[type][lang] ?? shortLabels[type]["en"] ?? type)
           : label;
         return { label, label_short, lang, value: type };
       },

@@ -66,14 +66,14 @@ export function mapSessionToAuthUser(
 
   const email =
     user.email ??
-    (user.user_metadata?.email as string | undefined) ??
+    (user.user_metadata?.["email"] as string | undefined) ??
     fromIdentities(user, (d) => d?.email as string | undefined);
 
   const name = firstDefined<string>(
-    user.user_metadata?.full_name as string | undefined,
-    user.user_metadata?.name as string | undefined,
-    user.user_metadata?.user_name as string | undefined,
-    user.user_metadata?.preferred_username as string | undefined,
+    user.user_metadata?.["full_name"] as string | undefined,
+    user.user_metadata?.["name"] as string | undefined,
+    user.user_metadata?.["user_name"] as string | undefined,
+    user.user_metadata?.["preferred_username"] as string | undefined,
     fromIdentities(
       user,
       (d) => d?.name ?? d?.full_name ?? d?.username ?? d?.user_name,
@@ -82,8 +82,8 @@ export function mapSessionToAuthUser(
   );
 
   const avatarUrl = firstDefined<string>(
-    user.user_metadata?.avatar_url as string | undefined,
-    user.user_metadata?.picture as string | undefined,
+    user.user_metadata?.["avatar_url"] as string | undefined,
+    user.user_metadata?.["picture"] as string | undefined,
     fromIdentities(user, (d) => d?.avatar_url ?? d?.picture),
   );
 
