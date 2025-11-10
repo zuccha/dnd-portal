@@ -6,7 +6,7 @@ import { useLayoutEffect } from "react";
 
 export default function useAsyncLayoutEffect(
   callback: () => Promise<unknown>,
-  deps: React.DependencyList
+  deps: React.DependencyList,
 ) {
   useLayoutEffect(() => {
     callback();

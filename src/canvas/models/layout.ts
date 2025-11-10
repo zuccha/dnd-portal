@@ -77,7 +77,7 @@ export const layoutItemLineSchema = z.intersection(
     thickness: z.number().default(1),
 
     color: z.string().default("rgba(0, 0, 0, 1)"),
-  })
+  }),
 );
 
 export type LayoutItemLine = z.infer<typeof layoutItemLineSchema>;
@@ -101,7 +101,7 @@ export const baseLayoutItemBoxSchema = z.intersection(
     pl: z.number().default(0),
     pr: z.number().default(0),
     pt: z.number().default(0),
-  })
+  }),
 );
 
 export type BaseLayoutItemBox = z.infer<typeof baseLayoutItemBoxSchema>;
@@ -115,7 +115,7 @@ export const layoutItemImageSchema = z.intersection(
   z.object({
     _type: z.literal("image").default("image"),
     source: z.string().default(""),
-  })
+  }),
 );
 
 export type LayoutItemImage = z.infer<typeof layoutItemImageSchema>;
@@ -129,7 +129,7 @@ export const layoutItemRectangleSchema = z.intersection(
   z.object({
     _type: z.literal("rectangle").default("rectangle"),
     source: z.string().default(""),
-  })
+  }),
 );
 
 export type LayoutItemRectangle = z.infer<typeof layoutItemRectangleSchema>;
@@ -157,7 +157,7 @@ export const layoutItemTextSchema = z.intersection(
     textTransform: z
       .enum(["none", "capitalize", "lowercase", "uppercase"])
       .default("none"),
-  })
+  }),
 );
 
 export type LayoutItemText = z.infer<typeof layoutItemTextSchema>;

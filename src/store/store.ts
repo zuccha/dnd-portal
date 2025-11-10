@@ -19,7 +19,7 @@ export type StoreUpdater<T> = (valueOrAction: T | StoreAction<T>) => T;
 export type SetStoreUpdater<T, K extends PropertyKey = string> = (
   id: K,
   valueOrAction: T | StoreAction<T>,
-  defaultValue: T
+  defaultValue: T,
 ) => T;
 
 //------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ export type SetStore<T, K extends PropertyKey = string> = {
 //------------------------------------------------------------------------------
 
 export function isStoreAction<T>(
-  valueOrAction: T | StoreAction<T>
+  valueOrAction: T | StoreAction<T>,
 ): valueOrAction is StoreAction<T> {
   return typeof valueOrAction === "function";
 }

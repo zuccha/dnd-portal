@@ -24,7 +24,7 @@ export type I18nSystemContext = Record<string, Record<I18nSystem, string>>;
 export const i18nSystemStore = createLocalStore(
   "i18n.system",
   "imperial",
-  i18nSystemSchema.parse
+  i18nSystemSchema.parse,
 );
 
 //------------------------------------------------------------------------------

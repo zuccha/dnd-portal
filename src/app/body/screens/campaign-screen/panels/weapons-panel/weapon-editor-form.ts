@@ -68,7 +68,7 @@ export const useWeaponEditorFormDamage = (defaultDamage: string) =>
 //------------------------------------------------------------------------------
 
 export const useWeaponEditorFormDamageVersatile = (
-  defaultDamageVersatile: string
+  defaultDamageVersatile: string,
 ) => useWeaponEditorFormField("damage_versatile", defaultDamageVersatile);
 
 //------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ export const useWeaponEditorFormDamageType = (defaultDamageType: DamageType) =>
 //------------------------------------------------------------------------------
 
 export const useWeaponEditorFormProperties = (
-  defaultProperties: WeaponProperty[]
+  defaultProperties: WeaponProperty[],
 ) => useWeaponEditorFormField("properties", defaultProperties);
 
 //------------------------------------------------------------------------------
@@ -186,5 +186,5 @@ export const useWeaponEditorFormNotes = (defaultNotes: string) =>
 //------------------------------------------------------------------------------
 
 export const useWeaponEditorFormVisibility = (
-  defaultVisibility: CampaignRole
+  defaultVisibility: CampaignRole,
 ) => useWeaponEditorFormField("visibility", defaultVisibility);

@@ -45,7 +45,7 @@ export function createResourcesPanel<
   L extends LocalizedResource<R>,
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
-  FF extends Record<string, unknown>
+  FF extends Record<string, unknown>,
 >({
   Card,
   EditorContent,
@@ -71,7 +71,7 @@ export function createResourcesPanel<
   listTableDescriptionKey: keyof L;
   name: I18nString;
   parseFormData: (
-    data: Partial<FF>
+    data: Partial<FF>,
   ) => { resource: Partial<DBR>; translation: Partial<DBT> } | string;
   store: ResourcesStore<R, F, L, DBR, DBT>;
 }) {
@@ -82,7 +82,7 @@ export function createResourcesPanel<
   const useView = createLocalStore(
     "resources.view",
     "table",
-    z.enum(["cards", "table"]).parse
+    z.enum(["cards", "table"]).parse,
   ).use;
 
   const viewOptions: BinaryButtonProps<"table", "cards">["options"] = [
@@ -114,7 +114,7 @@ export function createResourcesPanel<
   async function submitCreatorForm(
     campaignId: string,
     data: Partial<FF>,
-    { lang }: { lang: string }
+    { lang }: { lang: string },
   ) {
     const errorOrData = parseFormData(data);
     if (typeof errorOrData === "string") return errorOrData;
@@ -124,7 +124,7 @@ export function createResourcesPanel<
       campaignId,
       lang,
       resource,
-      translation
+      translation,
     );
     if (response.error)
       return report(response.error, "form.error.creation_failure");
@@ -140,8 +140,8 @@ export function createResourcesPanel<
     const [submit, saving] = form.useSubmit(
       useCallback(
         (data) => submitCreatorForm(campaignId, data, { lang }),
-        [campaignId, lang]
-      )
+        [campaignId, lang],
+      ),
     );
 
     const valid = form.useValid();
@@ -166,7 +166,7 @@ export function createResourcesPanel<
 
   async function submitEditorForm(
     data: Partial<FF>,
-    { id, lang }: { id: string; lang: string }
+    { id, lang }: { id: string; lang: string },
   ) {
     const errorOrData = parseFormData(data);
     if (typeof errorOrData === "string") return errorOrData;
@@ -188,8 +188,8 @@ export function createResourcesPanel<
     const [submit, saving] = form.useSubmit(
       useCallback(
         (data) => submitEditorForm(data, { id: editedResourceId, lang }),
-        [editedResourceId, lang]
-      )
+        [editedResourceId, lang],
+      ),
     );
 
     const valid = form.useValid();
@@ -237,7 +237,7 @@ export function createResourcesPanel<
     const ResourceListTableRow = useCallback(
       ({ localizedResource }: { localizedResource: L }) => {
         const [selected, { toggle }] = store.useIsSelected(
-          localizedResource.id
+          localizedResource.id,
         );
         return (
           <ResourcesListTable.Row
@@ -251,7 +251,7 @@ export function createResourcesPanel<
           />
         );
       },
-      [gm]
+      [gm],
     );
 
     return (

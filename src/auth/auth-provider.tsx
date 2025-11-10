@@ -43,7 +43,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const auth = useMemo(
     () => ({ loading, user: mapSessionToAuthUser(session) }),
-    [loading, session]
+    [loading, session],
   );
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;

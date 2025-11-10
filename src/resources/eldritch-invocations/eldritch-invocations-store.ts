@@ -15,7 +15,7 @@ export const eldritchInvocationsStore = createResourcesStore(
   eldritchInvocationSchema,
   eldritchInvocationFiltersSchema,
   defaultEldritchInvocationFilters,
-  useLocalizeEldritchInvocation
+  useLocalizeEldritchInvocation,
 );
 
 export const {

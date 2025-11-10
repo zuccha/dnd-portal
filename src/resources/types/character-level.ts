@@ -9,11 +9,11 @@ export const characterLevels = [
 ] as const;
 
 export const characterLevelSchema = z.union(
-  characterLevels.map((level) => z.literal(level))
+  characterLevels.map((level) => z.literal(level)),
 );
 
 export const characterLevelStringSchema = z.union(
-  characterLevels.map((level) => z.literal(`${level}`))
+  characterLevels.map((level) => z.literal(`${level}`)),
 );
 
 export type CharacterLevel = z.infer<typeof characterLevelSchema>;

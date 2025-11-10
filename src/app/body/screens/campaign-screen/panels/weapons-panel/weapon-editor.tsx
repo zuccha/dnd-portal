@@ -245,7 +245,7 @@ function WeaponEditorDamageVersatile({
   defaultDamageVersatile: string;
 }) {
   const { error, ...rest } = useWeaponEditorFormDamageVersatile(
-    defaultDamageVersatile
+    defaultDamageVersatile,
   );
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;

@@ -64,7 +64,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
   const ritual = useSpellEditorFormField("ritual", resource.ritual);
   const concentration = useSpellEditorFormField(
     "concentration",
-    resource.concentration
+    resource.concentration,
   );
 
   const verbal = useSpellEditorFormField("verbal", resource.verbal);
@@ -216,7 +216,7 @@ function SpellEditorCharacterClasses({
 }) {
   const characterClassOptions = useListCollection(useCharacterClassOptions());
   const { error, ...rest } = useSpellEditorFormCharacterClasses(
-    defaultCharacterClasses
+    defaultCharacterClasses,
   );
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;

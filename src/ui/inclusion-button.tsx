@@ -25,7 +25,7 @@ export default function InclusionButton({
 
   const toggleState = useCallback(
     () => onValueChange?.(nextIncludes[includeKey]),
-    [onValueChange, includeKey]
+    [onValueChange, includeKey],
   );
 
   return (

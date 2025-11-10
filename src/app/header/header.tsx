@@ -63,7 +63,7 @@ function LanguageSelect() {
           value: code,
         })) ?? [{ label: "EN", value: "en" }],
       }),
-    [languages.data]
+    [languages.data],
   );
 
   return (
@@ -95,7 +95,7 @@ function SystemSelect() {
           }))
           .sort(compareObjects("label")),
       }),
-    [t]
+    [t],
   );
 
   return (

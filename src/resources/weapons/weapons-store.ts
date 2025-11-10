@@ -15,7 +15,7 @@ export const weaponsStore = createResourcesStore(
   weaponSchema,
   weaponFiltersSchema,
   defaultWeaponFilters,
-  useLocalizeWeapon
+  useLocalizeWeapon,
 );
 
 export const {

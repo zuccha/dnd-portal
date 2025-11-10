@@ -56,7 +56,7 @@ export function parseDistanceMet(distance: string) {
 export function convertDistanceImpToMet(
   value: number,
   unit: string,
-  outUnit?: "m" | "km"
+  outUnit?: "m" | "km",
 ): [number, "m" | "km"] {
   const m =
     {
@@ -75,7 +75,7 @@ export function convertDistanceImpToMet(
 export function convertDistanceMetToImp(
   value: number,
   unit: string,
-  outUnit?: "ft" | "mi"
+  outUnit?: "ft" | "mi",
 ): [number, "ft" | "mi"] {
   const ft =
     {
@@ -92,13 +92,13 @@ export function convertDistanceMetToImp(
 //------------------------------------------------------------------------------
 
 export function useTranslateDistanceImp(
-  format: "long" | "short" = "short"
+  format: "long" | "short" = "short",
 ): (raw: string) => string {
   return useTranslateMeasure<DistanceImpUnit>(
     i18Context,
     distanceImpUnits,
     "ft",
-    format
+    format,
   );
 }
 
@@ -107,13 +107,13 @@ export function useTranslateDistanceImp(
 //------------------------------------------------------------------------------
 
 export function useTranslateDistanceMet(
-  format: "long" | "short" = "short"
+  format: "long" | "short" = "short",
 ): (raw: string) => string {
   return useTranslateMeasure<DistanceMetUnit>(
     i18Context,
     distanceMetUnits,
     "m",
-    format
+    format,
   );
 }
 
@@ -130,7 +130,7 @@ export function useDistanceImpUnitOptions(format: "long" | "short" = "short") {
         label: t(`${unit}.unit.${format}`),
         value: unit,
       })),
-    [format, t]
+    [format, t],
   );
 }
 
@@ -147,7 +147,7 @@ export function useDistanceMetUnitOptions(format: "long" | "short" = "short") {
         label: t(`${unit}.unit.${format}`),
         value: unit,
       })),
-    [format, t]
+    [format, t],
   );
 }
 

@@ -8,7 +8,7 @@ import IconButton from "./icon-button";
 
 export type BinaryButtonProps<
   O1 extends string,
-  O2 extends string
+  O2 extends string,
 > = StackProps & {
   onValueChange: (value: O1 | O2) => void;
   options: [{ Icon: LucideIcon; value: O1 }, { Icon: LucideIcon; value: O2 }];

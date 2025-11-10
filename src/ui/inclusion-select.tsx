@@ -23,7 +23,7 @@ export default function InclusionSelect({
   ...rest
 }: InclusionSelectProps) {
   const count = Object.values(includes).filter(
-    (include) => include !== undefined
+    (include) => include !== undefined,
   ).length;
 
   const reset = (e: React.MouseEvent) => {
@@ -38,14 +38,12 @@ export default function InclusionSelect({
         <Box position="relative">
           <Button {...rest} variant="outline">
             <HStack justify="space-between" w="full">
-              {count ? (
+              {count ?
                 <HStack gap={1}>
                   {children}
                   <Span>{` (${count})`}</Span>
                 </HStack>
-              ) : (
-                children
-              )}
+              : children}
               <Icon Icon={ChevronDownIcon} color="fg.muted" />
             </HStack>
           </Button>

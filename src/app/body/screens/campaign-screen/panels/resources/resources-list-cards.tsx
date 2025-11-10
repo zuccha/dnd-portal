@@ -9,7 +9,7 @@ import ResourcesListEmpty from "./resources-list-empty";
 
 export type ListCardsProps<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 > = {
   Card: React.FC<{
     gm: boolean;
@@ -23,13 +23,13 @@ export type ListCardsProps<
 
 export default function ListCards<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 >({ Card, gm, localizedResources, onOpen }: ListCardsProps<R, L>) {
   if (!localizedResources) return null;
 
   return (
     <Box bgColor="bg.subtle" w="full">
-      {localizedResources.length ? (
+      {localizedResources.length ?
         <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
           {localizedResources.map((localizedResource) => (
             <Card
@@ -40,9 +40,7 @@ export default function ListCards<
             />
           ))}
         </Wrap>
-      ) : (
-        <ResourcesListEmpty />
-      )}
+      : <ResourcesListEmpty />}
     </Box>
   );
 }

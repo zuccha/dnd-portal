@@ -83,7 +83,7 @@ const columns: ResourcesListTableColumn<Spell, LocalizedSpell>[] = [
 //------------------------------------------------------------------------------
 
 function parseFormData(
-  data: Partial<SpellEditorFormFields>
+  data: Partial<SpellEditorFormFields>,
 ):
   | { resource: Partial<DBSpell>; translation: Partial<DBSpellTranslation> }
   | string {

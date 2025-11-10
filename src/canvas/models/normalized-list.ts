@@ -17,7 +17,7 @@ export type NormalizedList<T> = {
 
 export function normalize<T>(
   items: T[],
-  getId: (item: T) => string
+  getId: (item: T) => string,
 ): NormalizedList<T> {
   const ids: string[] = new Array(items.length);
   const byId: Record<string, T> = {};

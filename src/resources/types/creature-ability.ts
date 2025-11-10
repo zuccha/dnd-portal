@@ -42,5 +42,5 @@ export const {
     intelligence: { en: "Int", it: "Int" },
     strength: { en: "Str", it: "For" },
     wisdom: { en: "Wis", it: "Sag" },
-  }
+  },
 );

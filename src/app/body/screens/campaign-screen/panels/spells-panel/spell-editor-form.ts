@@ -69,7 +69,7 @@ export const useSpellEditorFormLevel = (defaultLevel: number) =>
 //------------------------------------------------------------------------------
 
 export const useSpellEditorFormCharacterClasses = (
-  defaultCharacterClasses: CharacterClass[]
+  defaultCharacterClasses: CharacterClass[],
 ) => useSpellEditorFormField("character_classes", defaultCharacterClasses);
 
 //------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ export const useSpellEditorFormSchool = (defaultSchool: SpellSchool) =>
 //------------------------------------------------------------------------------
 
 export const useSpellEditorFormCastingTime = (
-  defaultCastingTime: SpellCastingTime
+  defaultCastingTime: SpellCastingTime,
 ) => useSpellEditorFormField("casting_time", defaultCastingTime);
 
 //------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ export const useSpellEditorFormCastingTime = (
 //------------------------------------------------------------------------------
 
 export const useSpellEditorFormCastingTimeValue = (
-  defaultCastingTimeValue: string
+  defaultCastingTimeValue: string,
 ) => useSpellEditorFormField("casting_time_value", defaultCastingTimeValue);
 
 //------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ export const useSpellEditorFormDescription = (defaultDescription: string) =>
   useSpellEditorFormField(
     "description",
     defaultDescription,
-    validateDescription
+    validateDescription,
   );
 
 //------------------------------------------------------------------------------

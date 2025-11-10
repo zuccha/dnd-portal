@@ -35,9 +35,9 @@ export default function SelectNative<T extends string>({
         id={id}
         name={name}
         onChange={
-          onValueChange
-            ? (e) => onValueChange(e.currentTarget.value as T)
-            : undefined
+          onValueChange ?
+            (e) => onValueChange(e.currentTarget.value as T)
+          : undefined
         }
         value={value}
       >

@@ -24,7 +24,7 @@ export default function SpellsFilters() {
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
     nameFilter,
     setNameFilter,
-    200
+    200,
   );
 
   const orderOptions = useMemo(
@@ -32,7 +32,7 @@ export default function SpellsFilters() {
       createListCollection({
         items: orders.map((value) => ({ label: t(`order.${value}`), value })),
       }),
-    [t]
+    [t],
   );
 
   const levelOptions = useSpellLevelOptions();
@@ -46,7 +46,7 @@ export default function SpellsFilters() {
         onValueChange={(value) => {
           const [order_by, order_dir] = value.split(".") as [
             SpellFilters["order_by"],
-            SpellFilters["order_dir"]
+            SpellFilters["order_dir"],
           ];
           setFilters({ order_by, order_dir });
         }}

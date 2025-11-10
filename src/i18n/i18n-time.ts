@@ -32,7 +32,7 @@ export function parseTime(time: string) {
 //------------------------------------------------------------------------------
 
 export function useTranslateTime(
-  format: "long" | "short" = "short"
+  format: "long" | "short" = "short",
 ): (raw: string) => string {
   return useTranslateMeasure<TimeUnit>(i18Context, timeUnits, "min", format);
 }
@@ -50,7 +50,7 @@ export function useTimeUnitOptions(format: "long" | "short" = "short") {
         label: t(`${unit}.unit.${format}`),
         value: unit,
       })),
-    [format, t]
+    [format, t],
   );
 }
 

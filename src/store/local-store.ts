@@ -16,7 +16,7 @@ const fullId = (id: string) => `dnd/${id}`;
 export function createLocalStore<T>(
   id: string,
   defaultValue: T,
-  parse: (maybeT: unknown) => T
+  parse: (maybeT: unknown) => T,
 ): Store<T> {
   id = fullId(id);
 
@@ -27,9 +27,9 @@ export function createLocalStore<T>(
   function get(): T {
     try {
       const stringOrNull = localStorage.getItem(id);
-      return stringOrNull === null
-        ? defaultValue
-        : parse(JSON.parse(stringOrNull));
+      return stringOrNull === null ? defaultValue : (
+          parse(JSON.parse(stringOrNull))
+        );
     } catch {
       localStorage.removeItem(id);
       return defaultValue;

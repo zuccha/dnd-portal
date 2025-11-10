@@ -62,5 +62,5 @@ export function useUserCampaigns() {
 export const useSelectedCampaignId = createLocalStore<string | undefined>(
   "campaigns.selected_id",
   undefined,
-  z.string().parse
+  z.string().parse,
 ).use;

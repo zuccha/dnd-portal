@@ -31,7 +31,7 @@ export const {
 //------------------------------------------------------------------------------
 
 export async function fetchCampaignRole(
-  campaignId: string
+  campaignId: string,
 ): Promise<CampaignRole> {
   const { data } = await supabase.rpc("fetch_campaign_role", {
     p_campaign_id: campaignId,

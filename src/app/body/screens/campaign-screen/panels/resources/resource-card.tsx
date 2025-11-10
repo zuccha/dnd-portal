@@ -93,7 +93,7 @@ function ResourceCardHeader({
       py={1}
       w="full"
     >
-      {gm ? (
+      {gm ?
         <HStack py={1}>
           <Icon
             Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}
@@ -102,9 +102,7 @@ function ResourceCardHeader({
           />
           <Link onClick={onClick}>{name}</Link>
         </HStack>
-      ) : (
-        <Span py={1}>{name}</Span>
-      )}
+      : <Span py={1}>{name}</Span>}
 
       <Checkbox
         checked={selected}

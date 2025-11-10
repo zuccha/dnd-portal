@@ -37,11 +37,11 @@ export const useEldritchInvocationEditorFormName = (defaultName: string) =>
 //------------------------------------------------------------------------------
 
 export const useEldritchInvocationEditorFormMinWarlockLevel = (
-  defaultMinWarlockLevel: number
+  defaultMinWarlockLevel: number,
 ) =>
   useEldritchInvocationEditorFormField(
     "min_warlock_level",
-    defaultMinWarlockLevel
+    defaultMinWarlockLevel,
   );
 
 //------------------------------------------------------------------------------
@@ -53,12 +53,12 @@ function validateDescription(name: string) {
 }
 
 export const useEldritchInvocationEditorFormDescription = (
-  defaultDescription: string
+  defaultDescription: string,
 ) =>
   useEldritchInvocationEditorFormField(
     "description",
     defaultDescription,
-    validateDescription
+    validateDescription,
   );
 
 //------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ export const useEldritchInvocationEditorFormDescription = (
 //------------------------------------------------------------------------------
 
 export const useEldritchInvocationEditorFormPrerequisite = (
-  defaultPrerequisite: string
+  defaultPrerequisite: string,
 ) => useEldritchInvocationEditorFormField("prerequisite", defaultPrerequisite);
 
 //------------------------------------------------------------------------------
@@ -74,5 +74,5 @@ export const useEldritchInvocationEditorFormPrerequisite = (
 //------------------------------------------------------------------------------
 
 export const useEldritchInvocationEditorFormVisibility = (
-  defaultVisibility: CampaignRole
+  defaultVisibility: CampaignRole,
 ) => useEldritchInvocationEditorFormField("visibility", defaultVisibility);

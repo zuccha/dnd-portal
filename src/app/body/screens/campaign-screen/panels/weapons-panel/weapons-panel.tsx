@@ -84,7 +84,7 @@ const columns: ResourcesListTableColumn<Weapon, LocalizedWeapon>[] = [
 //------------------------------------------------------------------------------
 
 function parseFormData(
-  data: Partial<WeaponEditorFormFields>
+  data: Partial<WeaponEditorFormFields>,
 ):
   | { resource: Partial<DBWeapon>; translation: Partial<DBWeaponTranslation> }
   | string {

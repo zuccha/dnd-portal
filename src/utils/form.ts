@@ -12,7 +12,7 @@ export type Form<Fields extends Record<string, unknown>> = {
   useField: <Name extends keyof Fields>(
     name: Name,
     defaultValue: Fields[Name],
-    validate?: (value: Fields[Name]) => string | undefined
+    validate?: (value: Fields[Name]) => string | undefined,
   ) => {
     "data-invalid": "" | undefined;
     "disabled": boolean;
@@ -24,7 +24,7 @@ export type Form<Fields extends Record<string, unknown>> = {
   };
   useFieldError: (name: keyof Fields) => string | undefined;
   useSubmit: (
-    onSubmit: (data: Partial<Fields>) => Promise<string | undefined>
+    onSubmit: (data: Partial<Fields>) => Promise<string | undefined>,
   ) => [() => Promise<string | undefined>, boolean];
   useSubmitError: () => string | undefined;
   useValid: () => boolean;
@@ -35,7 +35,7 @@ export type Form<Fields extends Record<string, unknown>> = {
 //------------------------------------------------------------------------------
 
 export function createForm<
-  Fields extends Record<string, unknown>
+  Fields extends Record<string, unknown>,
 >(): Form<Fields> {
   //----------------------------------------------------------------------------
   // Values Store
@@ -79,7 +79,7 @@ export function createForm<
   function useField<Name extends keyof Fields>(
     name: Name,
     defaultValue: Fields[Name],
-    validate: (value: Fields[Name]) => string | undefined = () => undefined
+    validate: (value: Fields[Name]) => string | undefined = () => undefined,
   ): {
     "data-invalid": "" | undefined;
     "disabled": boolean;
@@ -113,7 +113,7 @@ export function createForm<
         setError(validate(value));
         setValue(value);
       },
-      [setError, setValue, validate]
+      [setError, setValue, validate],
     );
 
     return {
@@ -155,7 +155,7 @@ export function createForm<
   //----------------------------------------------------------------------------
 
   function useSubmit(
-    onSubmit: (data: Partial<Fields>) => Promise<string | undefined>
+    onSubmit: (data: Partial<Fields>) => Promise<string | undefined>,
   ): [() => Promise<string | undefined>, boolean] {
     const [submitting, setSubmitting] = useSubmitting();
     const setSubmitError = submitErrorStore.useSetValue();

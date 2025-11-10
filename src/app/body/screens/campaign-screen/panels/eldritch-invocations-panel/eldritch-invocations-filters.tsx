@@ -20,7 +20,7 @@ export default function EldritchInvocationsFilters() {
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
     nameFilter,
     setNameFilter,
-    200
+    200,
   );
 
   const orderOptions = useMemo(
@@ -28,7 +28,7 @@ export default function EldritchInvocationsFilters() {
       createListCollection({
         items: orders.map((value) => ({ label: t(`order.${value}`), value })),
       }),
-    [t]
+    [t],
   );
 
   return (
@@ -38,7 +38,7 @@ export default function EldritchInvocationsFilters() {
         onValueChange={(value) => {
           const [order_by, order_dir] = value.split(".") as [
             EldritchInvocationFilters["order_by"],
-            EldritchInvocationFilters["order_dir"]
+            EldritchInvocationFilters["order_dir"],
           ];
           setFilters({ order_by, order_dir });
         }}

@@ -14,7 +14,7 @@ import { downloadFile } from "../../../../../../utils/download";
 
 type ResourcesActionsProps<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 > = {
   gm: boolean;
   name: I18nString;
@@ -25,7 +25,7 @@ type ResourcesActionsProps<
 
 export default function ResourcesActions<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 >({
   gm,
   onAddNew,

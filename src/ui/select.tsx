@@ -48,26 +48,25 @@ export default function Select<T extends string>({
   const Content = () => (
     <ChakraSelect.Positioner>
       <ChakraSelect.Content>
-        {categories
-          ? categories.map(({ id, items, title }) => (
-              <ChakraSelect.ItemGroup key={id}>
-                <ChakraSelect.ItemGroupLabel>
-                  {title}
-                </ChakraSelect.ItemGroupLabel>
-                {items.map((item) => (
-                  <ChakraSelect.Item item={item} key={item.value}>
-                    {item.label}
-                    <ChakraSelect.ItemIndicator />
-                  </ChakraSelect.Item>
-                ))}
-              </ChakraSelect.ItemGroup>
-            ))
-          : options.items.map((option) => (
-              <ChakraSelect.Item item={option} key={option.value}>
-                {option.label}
-                <ChakraSelect.ItemIndicator />
-              </ChakraSelect.Item>
-            ))}
+        {categories ?
+          categories.map(({ id, items, title }) => (
+            <ChakraSelect.ItemGroup key={id}>
+              <ChakraSelect.ItemGroupLabel>{title}</ChakraSelect.ItemGroupLabel>
+              {items.map((item) => (
+                <ChakraSelect.Item item={item} key={item.value}>
+                  {item.label}
+                  <ChakraSelect.ItemIndicator />
+                </ChakraSelect.Item>
+              ))}
+            </ChakraSelect.ItemGroup>
+          ))
+        : options.items.map((option) => (
+            <ChakraSelect.Item item={option} key={option.value}>
+              {option.label}
+              <ChakraSelect.ItemIndicator />
+            </ChakraSelect.Item>
+          ))
+        }
       </ChakraSelect.Content>
     </ChakraSelect.Positioner>
   );
@@ -76,18 +75,28 @@ export default function Select<T extends string>({
     <ChakraSelect.Root
       collection={options}
       defaultValue={
-        defaultValue ? (multiple ? defaultValue : [defaultValue]) : undefined
+        defaultValue ?
+          multiple ?
+            defaultValue
+          : [defaultValue]
+        : undefined
       }
       multiple={multiple}
       onValueChange={
-        onValueChange
-          ? (e) =>
-              multiple
-                ? onValueChange(e.value as T[])
-                : onValueChange(e.value[0] as T)
-          : undefined
+        onValueChange ?
+          (e) =>
+            multiple ?
+              onValueChange(e.value as T[])
+            : onValueChange(e.value[0] as T)
+        : undefined
       }
-      value={value ? (multiple ? value : [value]) : undefined}
+      value={
+        value ?
+          multiple ?
+            value
+          : [value]
+        : undefined
+      }
       {...rest}
     >
       <ChakraSelect.HiddenSelect aria-labelledby="" />
@@ -99,13 +108,12 @@ export default function Select<T extends string>({
           <ChakraSelect.Indicator />
         </ChakraSelect.IndicatorGroup>
       </ChakraSelect.Control>
-      {withinDialog ? (
+      {withinDialog ?
         <Content />
-      ) : (
-        <Portal>
+      : <Portal>
           <Content />
         </Portal>
-      )}
+      }
     </ChakraSelect.Root>
   );
 }

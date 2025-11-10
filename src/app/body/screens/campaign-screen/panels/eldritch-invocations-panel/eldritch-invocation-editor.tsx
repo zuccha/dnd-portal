@@ -83,7 +83,7 @@ function EldritchInvocationEditorMinWarlockLevel({
 }) {
   const levelOptions = useListCollection(useCharacterLevelOptions());
   const minWarlockLevel = useEldritchInvocationEditorFormMinWarlockLevel(
-    defaultMinWarlockLevel
+    defaultMinWarlockLevel,
   );
   const { t } = useI18nLangContext(i18nContext);
 

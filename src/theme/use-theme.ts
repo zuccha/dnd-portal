@@ -15,7 +15,7 @@ const themeStore = createLocalStore("theme", "light", themeSchema.parse);
 export default function useTheme(): [
   Theme,
   React.Dispatch<React.SetStateAction<Theme>>,
-  () => void
+  () => void,
 ] {
   const [theme, setTheme] = themeStore.use();
 

@@ -7,7 +7,7 @@ import { useLayoutEffect, useState } from "react";
 export default function useDebouncedState<T>(
   initialState: T,
   onDebounceEnd: (state: T) => void,
-  delay: number
+  delay: number,
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [tempState, setTempState] = useState(initialState);
 

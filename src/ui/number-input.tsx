@@ -25,7 +25,7 @@ export default function NumberInput({
 
   useLayoutEffect(() => {
     setLocalValue((prev) =>
-      (parseFloat(prev) || 0) === value ? prev : `${value}`
+      (parseFloat(prev) || 0) === value ? prev : `${value}`,
     );
   }, [value]);
 

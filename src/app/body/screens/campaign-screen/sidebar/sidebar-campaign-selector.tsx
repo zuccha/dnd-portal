@@ -21,12 +21,14 @@ export default function SidebarCampaignSelector() {
   const { t } = useI18nLangContext(i18nContext);
 
   const [campaignOptions, campaignCategories] = useMemo(() => {
-    const coreCampaignItems = coreCampaigns?.length
-      ? coreCampaigns.map(({ id, name }) => ({ label: name, value: id }))
+    const coreCampaignItems =
+      coreCampaigns?.length ?
+        coreCampaigns.map(({ id, name }) => ({ label: name, value: id }))
       : [];
 
-    const userCampaignItems = userCampaigns?.length
-      ? userCampaigns.map(({ id, name }) => ({ label: name, value: id }))
+    const userCampaignItems =
+      userCampaigns?.length ?
+        userCampaigns.map(({ id, name }) => ({ label: name, value: id }))
       : [];
 
     const items = [...coreCampaignItems, ...userCampaignItems];
@@ -42,10 +44,12 @@ export default function SidebarCampaignSelector() {
   useLayoutEffect(() => {
     if (coreCampaigns && userCampaigns)
       setSelectedCampaignId((prev) =>
-        coreCampaigns.every(({ id }) => id !== prev) &&
-        userCampaigns.every(({ id }) => id !== prev)
-          ? coreCampaigns[0]?.id
-          : prev
+        (
+          coreCampaigns.every(({ id }) => id !== prev) &&
+          userCampaigns.every(({ id }) => id !== prev)
+        ) ?
+          coreCampaigns[0]?.id
+        : prev,
       );
   }, [userCampaigns, setSelectedCampaignId, coreCampaigns]);
 

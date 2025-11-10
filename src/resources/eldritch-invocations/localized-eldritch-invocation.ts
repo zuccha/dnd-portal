@@ -34,15 +34,16 @@ export type LocalizedEldritchInvocation = z.infer<
 //------------------------------------------------------------------------------
 
 export function useLocalizeEldritchInvocation(): (
-  eldritchInvocation: EldritchInvocation
+  eldritchInvocation: EldritchInvocation,
 ) => LocalizedEldritchInvocation {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (eldritchInvocation: EldritchInvocation): LocalizedEldritchInvocation => {
       const minWarlockLevel = eldritchInvocation.min_warlock_level;
-      const otherPrerequisite = eldritchInvocation.prerequisite
-        ? translate(eldritchInvocation.prerequisite, lang)
+      const otherPrerequisite =
+        eldritchInvocation.prerequisite ?
+          translate(eldritchInvocation.prerequisite, lang)
         : undefined;
 
       return {
@@ -54,19 +55,17 @@ export function useLocalizeEldritchInvocation(): (
 
         description: translate(eldritchInvocation.description, lang),
         prerequisite:
-          minWarlockLevel > 0 && otherPrerequisite
-            ? ti("prerequisite.full", `${minWarlockLevel}`, otherPrerequisite)
-            : minWarlockLevel > 0
-            ? ti("prerequisite.level", `${minWarlockLevel}`)
-            : otherPrerequisite
-            ? ti("prerequisite.other", otherPrerequisite)
-            : t("prerequisite.none"),
+          minWarlockLevel > 0 && otherPrerequisite ?
+            ti("prerequisite.full", `${minWarlockLevel}`, otherPrerequisite)
+          : minWarlockLevel > 0 ? ti("prerequisite.level", `${minWarlockLevel}`)
+          : otherPrerequisite ? ti("prerequisite.other", otherPrerequisite)
+          : t("prerequisite.none"),
 
         min_warlock_level: `${minWarlockLevel}`,
         other_prerequisite: otherPrerequisite || t("prerequisite.none"),
       };
     },
-    [lang, t, ti]
+    [lang, t, ti],
   );
 }
 

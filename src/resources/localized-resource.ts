@@ -6,7 +6,7 @@ import type { Resource } from "./resource";
 //------------------------------------------------------------------------------
 
 export const localizedResourceSchema = <R extends Resource>(
-  rawSchema: ZodType<R>
+  rawSchema: ZodType<R>,
 ) =>
   z.object({
     _raw: rawSchema,

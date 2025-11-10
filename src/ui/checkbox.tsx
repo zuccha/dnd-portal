@@ -22,7 +22,7 @@ export default function Checkbox({
       e.preventDefault();
       onValueChange?.(!checked);
     },
-    [checked, onValueChange]
+    [checked, onValueChange],
   );
 
   return (

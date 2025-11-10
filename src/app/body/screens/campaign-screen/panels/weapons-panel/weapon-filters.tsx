@@ -26,7 +26,7 @@ export default function WeaponsFilters() {
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
     nameFilter,
     setNameFilter,
-    200
+    200,
   );
 
   const orderOptions = useMemo(
@@ -34,7 +34,7 @@ export default function WeaponsFilters() {
       createListCollection({
         items: orders.map((value) => ({ label: t(`order.${value}`), value })),
       }),
-    [t]
+    [t],
   );
 
   const typeOptions = useWeaponTypeOptions();
@@ -48,7 +48,7 @@ export default function WeaponsFilters() {
         onValueChange={(value) => {
           const [order_by, order_dir] = value.split(".") as [
             WeaponFilters["order_by"],
-            WeaponFilters["order_dir"]
+            WeaponFilters["order_dir"],
           ];
           setFilters({ order_by, order_dir });
         }}

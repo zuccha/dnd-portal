@@ -51,7 +51,7 @@ export function parseWeightMet(weight: string) {
 export function convertWeightImpToMet(
   value: number,
   unit: string,
-  _outUnit?: "kg"
+  _outUnit?: "kg",
 ): [number, "kg"] {
   const kg = { lb: value * lbToKgRatio }[unit] ?? 0;
   return [kg, "kg"];
@@ -64,7 +64,7 @@ export function convertWeightImpToMet(
 export function convertWeightMetToImp(
   value: number,
   unit: string,
-  _outUnit?: "lb"
+  _outUnit?: "lb",
 ): [number, "lb"] {
   const lb = { kg: value * kgToLbRatio }[unit] ?? 0;
   return [lb, "lb"];
@@ -75,13 +75,13 @@ export function convertWeightMetToImp(
 //------------------------------------------------------------------------------
 
 export function useTranslateWeightImp(
-  format: "long" | "short" = "short"
+  format: "long" | "short" = "short",
 ): (raw: string) => string {
   return useTranslateMeasure<WeightImpUnit>(
     i18Context,
     weightImpUnits,
     "lb",
-    format
+    format,
   );
 }
 
@@ -90,13 +90,13 @@ export function useTranslateWeightImp(
 //------------------------------------------------------------------------------
 
 export function useTranslateWeightMet(
-  format: "long" | "short" = "short"
+  format: "long" | "short" = "short",
 ): (raw: string) => string {
   return useTranslateMeasure<WeightMetUnit>(
     i18Context,
     weightMetUnits,
     "kg",
-    format
+    format,
   );
 }
 
@@ -113,7 +113,7 @@ export function useWeightImpUnitOptions(format: "long" | "short" = "short") {
         label: t(`${unit}.unit.${format}`),
         value: unit,
       })),
-    [format, t]
+    [format, t],
   );
 }
 
@@ -130,7 +130,7 @@ export function useWeightMetUnitOptions(format: "long" | "short" = "short") {
         label: t(`${unit}.unit.${format}`),
         value: unit,
       })),
-    [format, t]
+    [format, t],
   );
 }
 

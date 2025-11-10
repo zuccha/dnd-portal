@@ -63,20 +63,22 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
 
   return useCallback(
     (spell: Spell): LocalizedSpell => {
-      const casting_time = spell.casting_time_value
-        ? translateTime(spell.casting_time_value)
+      const casting_time =
+        spell.casting_time_value ?
+          translateTime(spell.casting_time_value)
         : translateSpellCastingTime(spell.casting_time).label;
 
-      const duration = spell.duration_value
-        ? translateTime(spell.duration_value)
+      const duration =
+        spell.duration_value ?
+          translateTime(spell.duration_value)
         : translateSpellDuration(spell.duration).label;
 
       const range =
-        system === "metric" && spell.range_value_met
-          ? translateDistanceMet(spell.range_value_met)
-          : system === "imperial" && spell.range_value_imp
-          ? translateDistanceImp(spell.range_value_imp)
-          : translateSpellRange(spell.range).label;
+        system === "metric" && spell.range_value_met ?
+          translateDistanceMet(spell.range_value_met)
+        : system === "imperial" && spell.range_value_imp ?
+          translateDistanceImp(spell.range_value_imp)
+        : translateSpellRange(spell.range).label;
 
       const description = translate(spell.description, lang);
       const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
@@ -87,12 +89,14 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       return {
         _raw: spell,
         campaign: spell.campaign_name,
-        campaign_with_page: page
-          ? ti("campaign_with_page", spell.campaign_name, page)
+        campaign_with_page:
+          page ?
+            ti("campaign_with_page", spell.campaign_name, page)
           : spell.campaign_name,
         casting_time,
-        casting_time_with_ritual: spell.ritual
-          ? ti("casting_time_with_ritual", casting_time)
+        casting_time_with_ritual:
+          spell.ritual ?
+            ti("casting_time_with_ritual", casting_time)
           : casting_time,
         character_classes: spell.character_classes
           .map(translateCharacterClass)
@@ -107,14 +111,16 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
           .filter((component) => component)
           .join(", "),
         concentration: spell.concentration,
-        description: description
-          ? upgrade
-            ? `${description}\n\n${tp("upgrade", spell.level)}\n${upgrade}`
+        description:
+          description ?
+            upgrade ?
+              `${description}\n\n${tp("upgrade", spell.level)}\n${upgrade}`
             : description
           : t("description.missing"),
         duration,
-        duration_with_concentration: spell.concentration
-          ? ti("duration_with_concentration", duration)
+        duration_with_concentration:
+          spell.concentration ?
+            ti("duration_with_concentration", duration)
           : duration,
         id: spell.id,
         level: `${spell.level}`,
@@ -141,7 +147,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       translateSpellRange,
       translateSpellSchool,
       translateTime,
-    ]
+    ],
   );
 }
 

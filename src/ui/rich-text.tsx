@@ -22,11 +22,9 @@ export type RichTextProps = {
 export default function RichText({ patterns, text, ...rest }: RichTextProps) {
   return (
     <Span {...rest}>
-      {isListWithAtLeastOneItem(patterns) ? (
+      {isListWithAtLeastOneItem(patterns) ?
         <RichTextRec patterns={patterns} text={text} />
-      ) : (
-        text
-      )}
+      : text}
     </Span>
   );
 }
@@ -45,11 +43,9 @@ function RichTextRec({ patterns, text }: RichTextRecProps) {
   const parts = text.split(regex);
 
   const renderPart = (part: string) =>
-    isListWithAtLeastOneItem(rest) ? (
+    isListWithAtLeastOneItem(rest) ?
       <RichTextRec patterns={rest} text={part} />
-    ) : (
-      part
-    );
+    : part;
 
   return parts.map((part, i) => (
     <Fragment key={i}>

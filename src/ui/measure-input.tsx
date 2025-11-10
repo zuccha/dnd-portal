@@ -36,12 +36,12 @@ export default function MeasureInput<U extends string>({
 
   const changeValue = useCallback(
     (next: number) => onValueChange(`${next} ${unit}`),
-    [onValueChange, unit]
+    [onValueChange, unit],
   );
 
   const changeUnit = useCallback(
     (next: U) => onValueChange(`${value} ${next}`),
-    [onValueChange, value]
+    [onValueChange, value],
   );
 
   return (

@@ -59,7 +59,7 @@ const fromIdentities = <T>(user: User, pick: (data: any) => T | undefined) =>
     .find((v) => v !== undefined);
 
 export function mapSessionToAuthUser(
-  session: Session | undefined
+  session: Session | undefined,
 ): AuthUser | undefined {
   const user = session?.user;
   if (!user) return undefined;
@@ -76,15 +76,15 @@ export function mapSessionToAuthUser(
     user.user_metadata?.preferred_username as string | undefined,
     fromIdentities(
       user,
-      (d) => d?.name ?? d?.full_name ?? d?.username ?? d?.user_name
+      (d) => d?.name ?? d?.full_name ?? d?.username ?? d?.user_name,
     ),
-    email ? email.split("@")[0] : undefined
+    email ? email.split("@")[0] : undefined,
   );
 
   const avatarUrl = firstDefined<string>(
     user.user_metadata?.avatar_url as string | undefined,
     user.user_metadata?.picture as string | undefined,
-    fromIdentities(user, (d) => d?.avatar_url ?? d?.picture)
+    fromIdentities(user, (d) => d?.avatar_url ?? d?.picture),
   );
 
   return {

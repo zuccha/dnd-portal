@@ -20,7 +20,7 @@ export type I18nLangContext = Record<string, Record<I18nLang, string>>;
 export const i18nLangStore = createLocalStore(
   "i18n.lang",
   "en",
-  z.string().parse
+  z.string().parse,
 );
 
 //------------------------------------------------------------------------------

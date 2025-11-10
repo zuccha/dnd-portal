@@ -4,14 +4,14 @@
 
 export function createUseShared<T>(
   defaultValue: T,
-  defaultDeps: React.DependencyList
+  defaultDeps: React.DependencyList,
 ) {
   let currValue = defaultValue;
   let currDeps = defaultDeps;
 
   return function useLocalMemo(
     compute: () => T,
-    nextDeps: React.DependencyList
+    nextDeps: React.DependencyList,
   ) {
     if (
       nextDeps.length === currDeps.length &&

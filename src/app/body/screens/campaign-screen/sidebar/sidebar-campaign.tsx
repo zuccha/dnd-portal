@@ -27,7 +27,7 @@ export default function SidebarCampaign(_props: SidebarCampaignProps) {
           value,
         }))
         .sort(compareObjects("label")),
-    [selectedPageId, setSelectedPageId, t]
+    [selectedPageId, setSelectedPageId, t],
   );
 
   return (

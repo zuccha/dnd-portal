@@ -8,7 +8,7 @@ import { useI18nLangContext } from "./i18n-lang-context";
 
 export function computeMeasureRegex(units: string[]) {
   return new RegExp(
-    `^(?<value>\\d+(?:\\.\\d+)?)\\s*(?<unit>${units.join("|")})$`
+    `^(?<value>\\d+(?:\\.\\d+)?)\\s*(?<unit>${units.join("|")})$`,
   );
 }
 
@@ -19,7 +19,7 @@ export function computeMeasureRegex(units: string[]) {
 export function parseMeasure<U extends string>(
   measure: string,
   units: U[],
-  fallbackUnit: U
+  fallbackUnit: U,
 ): [number, U] {
   const regex = computeMeasureRegex(units);
   const match = measure.match(regex);
@@ -38,7 +38,7 @@ export function useTranslateMeasure<U extends string>(
   context: I18nLangContext,
   units: U[],
   fallbackUnit: U,
-  format: "long" | "short" = "short"
+  format: "long" | "short" = "short",
 ): (raw: string) => string {
   const { tpi } = useI18nLangContext(context);
 
@@ -50,6 +50,6 @@ export function useTranslateMeasure<U extends string>(
       const [value, unit] = result;
       return tpi(`${unit}.${format}`, value, `${value}`);
     },
-    [fallbackUnit, format, tpi, units]
+    [fallbackUnit, format, tpi, units],
   );
 }

@@ -64,5 +64,5 @@ export const {
     sorcerer: { en: "Sor.", it: "Str." },
     warlock: { en: "War.", it: "War." },
     wizard: { en: "Wiz.", it: "Mag." },
-  }
+  },
 );

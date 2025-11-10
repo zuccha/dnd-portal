@@ -77,9 +77,9 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       const ril = formatNumber(weapon.range_ft_long ?? 0);
 
       const range =
-        system === "metric"
-          ? ti("range.m", `${rms}/${rml}`)
-          : ti("range.ft", `${ris}/${ril}`);
+        system === "metric" ?
+          ti("range.m", `${rms}/${rml}`)
+        : ti("range.ft", `${ris}/${ril}`);
 
       const ammunition = translate(weapon.ammunition, lang);
 
@@ -105,8 +105,9 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
         id: weapon.id,
 
         campaign: weapon.campaign_name,
-        campaign_with_page: page
-          ? ti("campaign_with_page", weapon.campaign_name, page)
+        campaign_with_page:
+          page ?
+            ti("campaign_with_page", weapon.campaign_name, page)
           : weapon.campaign_name,
         name: translate(weapon.name, lang) || t("name.missing"),
         page: page ? ti("page", page) : "",
@@ -133,16 +134,14 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
         range,
 
         weight:
-          system === "metric"
-            ? ti("weight.kg", `${weapon.weight_kg ?? 0}`)
-            : ti("weight.lb", `${weapon.weight_lb ?? 0}`),
+          system === "metric" ?
+            ti("weight.kg", `${weapon.weight_kg ?? 0}`)
+          : ti("weight.lb", `${weapon.weight_lb ?? 0}`),
 
         cost:
-          weapon.cost < 0.1
-            ? ti("cost.cp", `${weapon.cost * 100}`)
-            : weapon.cost < 1
-            ? ti("cost.sp", `${weapon.cost * 10}`)
-            : ti("cost.gp", `${weapon.cost}`),
+          weapon.cost < 0.1 ? ti("cost.cp", `${weapon.cost * 100}`)
+          : weapon.cost < 1 ? ti("cost.sp", `${weapon.cost * 10}`)
+          : ti("cost.gp", `${weapon.cost}`),
 
         notes: notes || ti("notes.none"),
 
@@ -160,7 +159,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       translateWeaponMastery,
       translateWeaponProperty,
       translateWeaponType,
-    ]
+    ],
   );
 }
 

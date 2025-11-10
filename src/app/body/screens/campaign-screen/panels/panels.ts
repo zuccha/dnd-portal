@@ -20,5 +20,5 @@ export type ResourcePanelId = (typeof resourcePanelIds)[number];
 export const useSelectedPanelId = createLocalStore<string>(
   "navigation.selected-panel-id",
   "",
-  z.string().parse
+  z.string().parse,
 ).use;

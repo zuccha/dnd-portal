@@ -21,24 +21,25 @@ export type TypeTranslation<Type extends string> = {
 export function createTypeTranslationHooks<Type extends string>(
   types: Type[],
   labels: Record<Type, I18nString>,
-  shortLabels?: Record<Type, I18nString>
+  shortLabels?: Record<Type, I18nString>,
 ) {
   //----------------------------------------------------------------------------
   // Use Translate
   //----------------------------------------------------------------------------
 
   function useTranslate(
-    lang: I18nLang
+    lang: I18nLang,
   ): (characterClass: Type) => TypeTranslation<Type> {
     const translate = useCallback(
       (type: Type): TypeTranslation<Type> => {
         const label = labels[type][lang] ?? labels[type].en ?? type;
-        const label_short = shortLabels
-          ? shortLabels[type][lang] ?? shortLabels[type].en ?? type
+        const label_short =
+          shortLabels ?
+            (shortLabels[type][lang] ?? shortLabels[type].en ?? type)
           : label;
         return { label, label_short, lang, value: type };
       },
-      [lang]
+      [lang],
     );
 
     return translate;
@@ -70,7 +71,7 @@ export function createTypeTranslationHooks<Type extends string>(
     const translations = useTranslations();
     return useMemo(
       () => translations.sort(compareObjects("label")),
-      [translations]
+      [translations],
     );
   }
 

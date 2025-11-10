@@ -11,7 +11,7 @@ export const spellsStore = createResourcesStore(
   spellSchema,
   spellFiltersSchema,
   defaultSpellFilters,
-  useLocalizeSpell
+  useLocalizeSpell,
 );
 
 export const {

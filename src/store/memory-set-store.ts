@@ -13,7 +13,7 @@ import {
 
 export function createMemorySetStore<
   T,
-  K extends PropertyKey = string
+  K extends PropertyKey = string,
 >(): SetStore<T, K> {
   const { notify, subscribe, unsubscribe, subscribeAll, unsubscribeAll } =
     createObservableSet<T, K>();
@@ -42,8 +42,9 @@ export function createMemorySetStore<
   }
 
   function set(id: K, valueOrAction: T | StoreAction<T>, defaultValue: T): T {
-    const value = isStoreAction(valueOrAction)
-      ? valueOrAction(get(id, defaultValue))
+    const value =
+      isStoreAction(valueOrAction) ?
+        valueOrAction(get(id, defaultValue))
       : valueOrAction;
     cache[id] = value;
     notify(id, value);
@@ -66,7 +67,7 @@ export function createMemorySetStore<
   function useSetValue(id: K, defaultValue: T): StoreUpdater<T> {
     return useCallback(
       (next: T | StoreAction<T>) => set(id, next, defaultValue),
-      [defaultValue, id]
+      [defaultValue, id],
     );
   }
 

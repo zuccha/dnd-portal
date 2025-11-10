@@ -23,7 +23,7 @@ import ResourcesListEmpty from "./resources-list-empty";
 
 export type ResourcesListTableColumn<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 > = Table.ColumnHeaderProps & {
   icon?: LucideIcon;
   key: keyof L;
@@ -32,7 +32,7 @@ export type ResourcesListTableColumn<
 
 export type ResourcesListTableProps<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 > = Omit<TableRootProps, "children"> & {
   Header: React.FC;
   Row: React.FC<{ localizedResource: L }>;
@@ -41,11 +41,11 @@ export type ResourcesListTableProps<
 
 export default function ResourcesListTable<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 >({ Header, Row, localizedResources, ...rest }: ResourcesListTableProps<R, L>) {
   return (
     <Box bgColor="bg.subtle" w="full">
-      {localizedResources.length ? (
+      {localizedResources.length ?
         <Table.Root
           borderCollapse="separate"
           borderSpacing={0}
@@ -67,9 +67,7 @@ export default function ResourcesListTable<
             ))}
           </Table.Body>
         </Table.Root>
-      ) : (
-        <ResourcesListEmpty />
-      )}
+      : <ResourcesListEmpty />}
     </Box>
   );
 }
@@ -89,7 +87,7 @@ const expandedRows = new Set<string>();
 
 type ResourceListTableHeaderProps<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 > = {
   columns: ResourcesListTableColumn<R, L>[];
   localizedResources: L[];
@@ -100,7 +98,7 @@ type ResourceListTableHeaderProps<
 
 function ResourcesListTableHeader<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 >({
   columns,
   localizedResources,
@@ -111,11 +109,9 @@ function ResourcesListTableHeader<
   const [lang] = useI18nLang();
 
   const selected =
-    selectedLocalizedResourcesCount === localizedResources.length
-      ? true
-      : selectedLocalizedResourcesCount > 0
-      ? "-"
-      : false;
+    selectedLocalizedResourcesCount === localizedResources.length ? true
+    : selectedLocalizedResourcesCount > 0 ? "-"
+    : false;
 
   const toggleSelected = useCallback(() => {
     if (selected === true)
@@ -142,7 +138,9 @@ function ResourcesListTableHeader<
             whiteSpace="nowrap"
             {...rest}
           >
-            {icon ? <Icon Icon={icon} size="sm" /> : translate(label, lang)}
+            {icon ?
+              <Icon Icon={icon} size="sm" />
+            : translate(label, lang)}
           </Table.ColumnHeader>
         );
       })}
@@ -156,7 +154,7 @@ function ResourcesListTableHeader<
 
 export type ResourcesListTableRowProps<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 > = {
   columns: ResourcesListTableColumn<R, L>[];
   descriptionKey?: keyof L;
@@ -169,7 +167,7 @@ export type ResourcesListTableRowProps<
 
 function ResourcesListTableRow<
   R extends Resource,
-  L extends LocalizedResource<R>
+  L extends LocalizedResource<R>,
 >({
   columns,
   descriptionKey,
@@ -180,7 +178,7 @@ function ResourcesListTableRow<
   selected,
 }: ResourcesListTableRowProps<R, L>) {
   const [expanded, setExpanded] = useState(
-    expandedRows.has(localizedResource.id)
+    expandedRows.has(localizedResource.id),
   );
 
   const toggleExpanded = useCallback(() => {
@@ -212,9 +210,9 @@ function ResourcesListTableRow<
         <Table.Cell textAlign="center" w="3em">
           <Icon
             Icon={
-              localizedResource._raw.visibility === "player"
-                ? EyeIcon
-                : EyeClosedIcon
+              localizedResource._raw.visibility === "player" ?
+                EyeIcon
+              : EyeClosedIcon
             }
             color="fg.muted"
             size="sm"
@@ -231,7 +229,7 @@ function ResourcesListTableRow<
               whiteSpace="nowrap"
               {...rest}
             >
-              {key === "name" && gm ? (
+              {key === "name" && gm ?
                 <Link
                   onClick={(e) => {
                     e.stopPropagation();
@@ -240,11 +238,9 @@ function ResourcesListTableRow<
                 >
                   {String(value)}
                 </Link>
-              ) : typeof value === "boolean" ? (
+              : typeof value === "boolean" ?
                 <Checkbox checked={value} disabled size="sm" />
-              ) : (
-                String(value)
-              )}
+              : String(value)}
             </Table.Cell>
           );
         })}

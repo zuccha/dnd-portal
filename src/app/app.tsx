@@ -27,7 +27,11 @@ export default function App() {
       <Header />
 
       <Box h={`calc(100vh - ${headerHeight})`} w="full">
-        {auth.user ? <CampaignScreen /> : !auth.loading ? <PageSignIn /> : null}
+        {auth.user ?
+          <CampaignScreen />
+        : !auth.loading ?
+          <PageSignIn />
+        : null}
       </Box>
     </VStack>
   );

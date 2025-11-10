@@ -21,17 +21,17 @@ export type ResourcesStore<
   F extends ResourceFilters,
   L extends LocalizedResource<R>,
   DBR extends DBResource,
-  DBT extends DBResourceTranslation
+  DBT extends DBResourceTranslation,
 > = {
   id: string;
 
   use: (id: string) => [R | undefined, boolean, Error | undefined];
   useFromCampaign: (campaignId: string) => [R[], boolean, Error | undefined];
   useLocalizedFromCampaign: (
-    campaignId: string
+    campaignId: string,
   ) => [L[], boolean, Error | undefined];
   useSelectedLocalizedFromCampaign: (
-    campaignId: string
+    campaignId: string,
   ) => [L[], boolean, Error | undefined];
 
   useFilters: () => [F, (partial: Partial<F>) => void];
@@ -43,10 +43,10 @@ export type ResourcesStore<
 
   isSelected: (resourceId: string) => void;
   useIsSelected: (
-    resourceId: string
+    resourceId: string,
   ) => [
     boolean,
-    { deselect: () => void; select: () => void; toggle: () => void }
+    { deselect: () => void; select: () => void; toggle: () => void },
   ];
   useSelectionCount: () => number;
 
@@ -54,20 +54,20 @@ export type ResourcesStore<
     campaignId: string,
     lang: string,
     resource: Partial<DBR>,
-    translation: Partial<DBT>
+    translation: Partial<DBT>,
   ) => Promise<PostgrestSingleResponse<null>>;
   fetch: (id: string) => Promise<R | undefined>;
   fetchFromCampaign: (
     campaignId: string,
     { order_by, order_dir, ...filters }: F,
-    lang: string
+    lang: string,
   ) => Promise<R[]>;
   remove: (ids: string[]) => Promise<PostgrestSingleResponse<null>>;
   update: (
     id: string,
     lang: string,
     resource: Partial<DBR>,
-    translation: Partial<DBT>
+    translation: Partial<DBT>,
   ) => Promise<PostgrestSingleResponse<null>>;
 };
 
@@ -80,13 +80,13 @@ export function createResourcesStore<
   F extends ResourceFilters,
   L extends LocalizedResource<R>,
   DBR extends DBResource,
-  DBT extends DBResourceTranslation
+  DBT extends DBResourceTranslation,
 >(
   name: { s: string; p: string },
   resourceSchema: ZodType<R>,
   filtersSchema: ZodType<F>,
   defaultFilters: F,
-  useLocalizeResource: () => (resource: R) => L
+  useLocalizeResource: () => (resource: R) => L,
 ): ResourcesStore<R, F, L, DBR, DBT> {
   //----------------------------------------------------------------------------
   // Use Filters
@@ -95,7 +95,7 @@ export function createResourcesStore<
   const filtersStore = createLocalStore(
     `resources[${name.p}].filters`,
     defaultFilters,
-    filtersSchema.parse
+    filtersSchema.parse,
   );
 
   function useFilters(): [F, (partial: Partial<F>) => void] {
@@ -103,7 +103,7 @@ export function createResourcesStore<
 
     const updateFilter = useCallback(
       (partial: Partial<F>) => setFilters((prev) => ({ ...prev, ...partial })),
-      [setFilters]
+      [setFilters],
     );
 
     return [filters, updateFilter];
@@ -116,7 +116,7 @@ export function createResourcesStore<
   const nameFilterStore = createLocalStore(
     `resources[${name.p}].filters.name`,
     "",
-    z.string().parse
+    z.string().parse,
   );
 
   const useNameFilter = nameFilterStore.use;
@@ -129,7 +129,7 @@ export function createResourcesStore<
     campaignId: string,
     lang: string,
     resource: Partial<DBR>,
-    translation: Partial<DBT>
+    translation: Partial<DBT>,
   ): Promise<PostgrestSingleResponse<null>> {
     const response = await supabase.rpc(`create_${name.s}`, {
       p_campaign_id: campaignId,
@@ -163,7 +163,7 @@ export function createResourcesStore<
   async function fetchFromCampaign(
     campaignId: string,
     { order_by, order_dir, ...filters }: F,
-    lang: string
+    lang: string,
   ): Promise<R[]> {
     const { data } = await supabase.rpc(`fetch_${name.p}`, {
       p_campaign_id: campaignId,
@@ -188,7 +188,7 @@ export function createResourcesStore<
     id: string,
     lang: string,
     resource: Partial<DBR>,
-    translation: Partial<DBT>
+    translation: Partial<DBT>,
   ): Promise<PostgrestSingleResponse<null>> {
     const response = await supabase.rpc(`update_${name.s}`, {
       p_id: id,
@@ -236,7 +236,7 @@ export function createResourcesStore<
   const useSharedResources = createUseShared<R[]>([], [undefined, undefined]);
 
   function useFromCampaign(
-    campaignId: string
+    campaignId: string,
   ): [R[], boolean, Error | undefined] {
     const [lang] = useI18nLang();
     const [filters] = useFilters();
@@ -244,7 +244,7 @@ export function createResourcesStore<
 
     const fetchCampaignsResources = useCallback(
       () => fetchFromCampaign(campaignId, filters, lang),
-      [campaignId, filters, lang]
+      [campaignId, filters, lang],
     );
 
     const { data, isPending, error } = useQuery<R[]>({
@@ -254,11 +254,11 @@ export function createResourcesStore<
 
     const resources = useSharedResources(() => {
       const trimmedNameFilter = nameFilter.trim().toLowerCase();
-      return data
-        ? data.filter((resource) => {
+      return data ?
+          data.filter((resource) => {
             const names = Object.values(resource.name);
             return names.some((name) =>
-              name?.trim().toLowerCase().includes(trimmedNameFilter)
+              name?.trim().toLowerCase().includes(trimmedNameFilter),
             );
           })
         : [];
@@ -307,16 +307,16 @@ export function createResourcesStore<
   }
 
   function useIsSelected(
-    resourceId: string
+    resourceId: string,
   ): [
     boolean,
-    { deselect: () => void; select: () => void; toggle: () => void }
+    { deselect: () => void; select: () => void; toggle: () => void },
   ] {
     const [selected, setSelected] = useState(selection.has(resourceId));
 
     useLayoutEffect(
       () => subscribeSelected(resourceId, setSelected),
-      [resourceId]
+      [resourceId],
     );
 
     return [
@@ -336,7 +336,7 @@ export function createResourcesStore<
   const useSharedLocalizedResources = createUseShared<L[]>([], []);
 
   function useLocalizedFromCampaign(
-    campaignId: string
+    campaignId: string,
   ): [L[], boolean, Error | undefined] {
     const [resources, isPending, error] = useFromCampaign(campaignId);
     const localize = useLocalizeResource();
@@ -355,7 +355,7 @@ export function createResourcesStore<
   const useSharedSelectedLocalizedResources = createUseShared<L[]>([], []);
 
   function useSelectedLocalizedFromCampaign(
-    campaignId: string
+    campaignId: string,
   ): [L[], boolean, Error | undefined] {
     const [resources, pending, error] = useLocalizedFromCampaign(campaignId);
     const selectionCount = useSelectionCount();

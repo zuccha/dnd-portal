@@ -45,7 +45,7 @@ function CanvasItemTextAux({
       item.fontStyle,
       item.fontWeight,
       item.textTransform,
-    ]
+    ],
   );
 
   const patterns = useMemo(
@@ -53,22 +53,23 @@ function CanvasItemTextAux({
       item.patterns.map((pattern) => ({
         delimiter: pattern.delimiter,
         formatting: {
-          color: pattern.styles.textColorCustom
-            ? pattern.styles.textColor
+          color:
+            pattern.styles.textColorCustom ?
+              pattern.styles.textColor
             : undefined,
           style: computeFontStyle(
             pattern.styles.fontWeight,
-            pattern.styles.fontStyle
+            pattern.styles.fontStyle,
           ),
           transform: pattern.styles.textTransform,
         },
         includeDelimiter: pattern.delimiterMode === "include",
         symbol:
-          pattern.type === "symbol"
-            ? { path: pattern.symbolPath, shadow: pattern.symbolShadow }
-            : undefined,
+          pattern.type === "symbol" ?
+            { path: pattern.symbolPath, shadow: pattern.symbolShadow }
+          : undefined,
       })),
-    [item.patterns]
+    [item.patterns],
   );
 
   const [textChunkRects, fontSize] = useMemo(() => {
@@ -82,7 +83,7 @@ function CanvasItemTextAux({
       item.paragraphGap,
       item.sectionGap,
       item.alignH,
-      item.alignV
+      item.alignV,
     );
   }, [
     font,
@@ -98,7 +99,7 @@ function CanvasItemTextAux({
   ]);
 
   return textChunkRects.map((rect, i) =>
-    rect.symbol ? (
+    rect.symbol ?
       <Symbol
         key={i}
         shadow={rect.symbol.shadow}
@@ -107,8 +108,7 @@ function CanvasItemTextAux({
         x={rect.x}
         y={rect.y}
       />
-    ) : (
-      <Text
+    : <Text
         fill={rect.color ?? item.textColor}
         fontFamily={item.fontFamily}
         fontSize={fontSize}
@@ -119,8 +119,7 @@ function CanvasItemTextAux({
         width={rect.w}
         x={rect.x}
         y={rect.y}
-      />
-    )
+      />,
   );
 }
 
@@ -161,7 +160,7 @@ function Symbol({
 
 function computeFontStyle(
   fontWeight: LayoutItemText["fontWeight"],
-  fontStyle: LayoutItemText["fontStyle"]
+  fontStyle: LayoutItemText["fontStyle"],
 ) {
   return ([
     fontWeight === "bold" ? "bold" : "",

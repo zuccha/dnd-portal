@@ -21,7 +21,7 @@ export type ObservableSet<T, K extends PropertyKey = string> = {
 
 export function createObservableSet<
   T,
-  K extends PropertyKey = string
+  K extends PropertyKey = string,
 >(): ObservableSet<T, K> {
   const {
     notify: notifyAll,

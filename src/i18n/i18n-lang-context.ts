@@ -21,7 +21,7 @@ export function useI18nLangContext(context: I18nLangContext) {
       const base = context[key] ?? {};
       return base[lang] ?? base.en ?? key;
     },
-    [context, lang]
+    [context, lang],
   );
 
   const tp = useCallback(
@@ -29,7 +29,7 @@ export function useI18nLangContext(context: I18nLangContext) {
       const base = context[`${key}/${count}`] ?? context[`${key}/*`] ?? {};
       return base[lang] ?? base.en ?? key;
     },
-    [context, lang]
+    [context, lang],
   );
 
   const ti = useCallback(
@@ -37,7 +37,7 @@ export function useI18nLangContext(context: I18nLangContext) {
       const base = context[key] ?? {};
       return interpolate(base[lang] ?? base.en ?? key, ...args);
     },
-    [context, lang]
+    [context, lang],
   );
 
   const tpi = useCallback(
@@ -45,7 +45,7 @@ export function useI18nLangContext(context: I18nLangContext) {
       const base = context[`${key}/${count}`] ?? context[`${key}/*`] ?? {};
       return interpolate(base[lang] ?? base.en ?? key, ...args);
     },
-    [context, lang]
+    [context, lang],
   );
 
   return useMemo(() => ({ lang, t, ti, tp, tpi }), [lang, t, tp, ti, tpi]);
