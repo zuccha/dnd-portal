@@ -20,6 +20,7 @@
     "allowUnusedLabels": false,
     "erasableSyntaxOnly": true,
     "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "noUnusedLocals": true,
