@@ -1,7 +1,7 @@
 import { Flex, HStack, Separator, VStack } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
 import { useCallback } from "react";
-import z from "zod/v4";
+import z from "zod";
 import { useI18nLang } from "../../../../../../i18n/i18n-lang";
 import type { I18nString } from "../../../../../../i18n/i18n-string";
 import type {
