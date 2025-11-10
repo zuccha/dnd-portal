@@ -62,9 +62,12 @@ export type DBCreature = z.infer<typeof dbCreatureSchema>;
 export const dbCreatureTranslationSchema = dbResourceTranslationSchema.extend({
   creature_id: z.uuid(),
 
+  page: z.string().nullish(),
+
   gear: z.string().nullish(),
   planes: z.string().nullish(),
   senses: z.string().nullish(),
+  traits: z.string().nullish(),
 
   actions: z.string().nullish(),
   bonus_actions: z.string().nullish(),
