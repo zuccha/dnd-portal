@@ -19,7 +19,6 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "erasableSyntaxOnly": true,
-    "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
