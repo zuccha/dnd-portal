@@ -67,12 +67,12 @@ export const dbCreatureTranslationSchema = dbResourceTranslationSchema.extend({
   gear: z.string().nullish(),
   planes: z.string().nullish(),
   senses: z.string().nullish(),
-  traits: z.string().nullish(),
 
   actions: z.string().nullish(),
   bonus_actions: z.string().nullish(),
   legendary_actions: z.string().nullish(),
   reactions: z.string().nullish(),
+  traits: z.string().nullish(),
 });
 
 export type DBCreatureTranslation = z.infer<typeof dbCreatureTranslationSchema>;

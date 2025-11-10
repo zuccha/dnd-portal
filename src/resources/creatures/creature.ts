@@ -58,12 +58,12 @@ export const creatureSchema = resourceSchema.extend({
   gear: i18nStringSchema,
   planes: i18nStringSchema,
   senses: i18nStringSchema,
-  traits: i18nStringSchema,
 
   actions: i18nStringSchema,
   bonus_actions: i18nStringSchema,
   legendary_actions: i18nStringSchema,
   reactions: i18nStringSchema,
+  traits: i18nStringSchema,
 });
 
 export type Creature = z.infer<typeof creatureSchema>;
@@ -138,12 +138,12 @@ export const defaultCreature: Creature = {
   gear: {},
   planes: {},
   senses: {},
-  traits: {},
 
   actions: {},
   bonus_actions: {},
   legendary_actions: {},
   reactions: {},
+  traits: {},
 
   visibility: "game_master",
 };
