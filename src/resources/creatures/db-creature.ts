@@ -29,7 +29,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   speed_climb: z.string().nullish(),
   speed_fly: z.string().nullish(),
   speed_swim: z.string().nullish(),
-  speed_walk: z.string(),
+  speed_walk: z.string().nullish(),
 
   ability_cha: z.number(),
   ability_con: z.number(),

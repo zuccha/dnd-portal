@@ -30,7 +30,7 @@ export const creatureSchema = resourceSchema.extend({
   speed_climb: z.string().nullish(),
   speed_fly: z.string().nullish(),
   speed_swim: z.string().nullish(),
-  speed_walk: z.string(),
+  speed_walk: z.string().nullish(),
 
   ability_cha: z.number(),
   ability_con: z.number(),
@@ -108,7 +108,7 @@ export const defaultCreature: Creature = {
   speed_climb: undefined,
   speed_fly: undefined,
   speed_swim: undefined,
-  speed_walk: "6",
+  speed_walk: undefined,
 
   ability_cha: 10,
   ability_con: 10,
