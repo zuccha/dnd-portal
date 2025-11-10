@@ -56,6 +56,7 @@ export const creatureSchema = resourceSchema.extend({
   page: i18nStringSchema.nullish(),
 
   gear: i18nStringSchema,
+  languages: i18nStringSchema,
   planes: i18nStringSchema,
   senses: i18nStringSchema,
 
@@ -136,6 +137,7 @@ export const defaultCreature: Creature = {
   page: undefined,
 
   gear: {},
+  languages: {},
   planes: {},
   senses: {},
 

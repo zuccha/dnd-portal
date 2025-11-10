@@ -65,6 +65,7 @@ export const dbCreatureTranslationSchema = dbResourceTranslationSchema.extend({
   page: z.string().nullish(),
 
   gear: z.string().nullish(),
+  languages: z.string().nullish(),
   planes: z.string().nullish(),
   senses: z.string().nullish(),
 
