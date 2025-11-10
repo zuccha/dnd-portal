@@ -25,8 +25,8 @@ export function parseMeasure<U extends string>(
   const match = measure.match(regex);
   if (!match || !match.groups) return [0, fallbackUnit];
 
-  const unit = match.groups["unit"];
-  const value = parseFloat(match.groups["value"]) || 0;
+  const unit = match.groups["unit"]!;
+  const value = parseFloat(match.groups["value"]!) || 0;
   return [value, unit as U];
 }
 

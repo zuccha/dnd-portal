@@ -22,7 +22,7 @@ export function normalize<T>(
   const ids: string[] = new Array(items.length);
   const byId: Record<string, T> = {};
   for (let i = 0; i < items.length; ++i) {
-    const item = items[i];
+    const item = items[i]!;
     const id = getId(item);
     ids[i] = id;
     byId[id] = item;

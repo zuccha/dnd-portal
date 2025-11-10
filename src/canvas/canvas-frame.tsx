@@ -32,7 +32,7 @@ export default function CanvasFrame({ data, layout }: CanvasFrameProps) {
         {layout.items.ids.map((itemId) => (
           <CanvasItem
             data={data}
-            item={layout.items.byId[itemId]}
+            item={layout.items.byId[itemId]!}
             key={itemId}
           />
         ))}
