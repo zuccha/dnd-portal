@@ -21,7 +21,7 @@ export const creatureSkillSchema = z.enum([
   "performance",
   "persuasion",
   "religion",
-  "sleigh_of_hand",
+  "sleight_of_hand",
   "stealth",
   "survival",
 ]);
@@ -53,7 +53,7 @@ export const {
   performance: { en: "Performance", it: "Intrattenere" },
   persuasion: { en: "Persuasion", it: "Persuasione" },
   religion: { en: "Religion", it: "Religione" },
-  sleigh_of_hand: { en: "Sleigh of Hand", it: "Rapidità di Mano" },
+  sleight_of_hand: { en: "Sleight of Hand", it: "Rapidità di Mano" },
   stealth: { en: "Stealth", it: "Furtività" },
   survival: { en: "Survival", it: "Sopravvivenza" },
 });
