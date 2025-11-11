@@ -157,6 +157,14 @@ function ResourceCardDescription({ description }: { description: string }) {
 
 const patterns = [
   {
+    regex: /^\s*#\s*(.+?)$/,
+    render: (val: ReactNode) => (
+      <Span fontWeight="bold" textTransform="uppercase">
+        {val}
+      </Span>
+    ),
+  },
+  {
     regex: /\*\*(.+?)\*\*/,
     render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
   },
