@@ -23,6 +23,7 @@ export type CreatureAbility = z.infer<typeof creatureAbilitySchema>;
 //------------------------------------------------------------------------------
 
 export const {
+  useOptions: useCreatureAbilityOptions,
   useTranslate: useTranslateCreatureAbility,
   useTranslations: useCreatureAbilityTranslations,
 } = createTypeTranslationHooks(

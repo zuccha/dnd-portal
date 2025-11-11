@@ -32,6 +32,7 @@ export type CreatureCondition = z.infer<typeof creatureConditionSchema>;
 //------------------------------------------------------------------------------
 
 export const {
+  useSortedOptions: useCreatureConditionOptions,
   useTranslate: useTranslateCreatureCondition,
   useTranslations: useCreatureConditionTranslations,
 } = createTypeTranslationHooks(creatureConditions, {
