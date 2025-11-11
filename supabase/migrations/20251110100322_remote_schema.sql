@@ -630,7 +630,7 @@ select
   coalesce(tt.description,  '{}'::jsonb)  as description,
   f.visibility
 from filtered f
-join public.campaigns c on c.id = f.campaign_id 
+join public.campaigns c on c.id = f.campaign_id
 left join t tt on tt.id = f.id
 order by
   case
@@ -766,7 +766,7 @@ src as (
 filtered as (
   select s.*
   from src s, prefs p
-  where 
+  where
     -- levels
         (p.levels_inc is null or s.level = any(p.levels_inc))
     and (p.levels_exc is null or not (s.level = any(p.levels_exc)))
@@ -825,7 +825,7 @@ select
   coalesce(tt.upgrade, '{}'::jsonb)       as upgrade,
   f.visibility
 from filtered f
-join public.campaigns c on c.id = f.campaign_id 
+join public.campaigns c on c.id = f.campaign_id
 left join t tt on tt.id = f.id
 order by
   case
@@ -962,7 +962,7 @@ src as (
 filtered as (
   select s.*
   from src s, prefs p
-  where 
+  where
     -- types
         (p.types_inc is null or s.type = any(p.types_inc))
     and (p.types_exc is null or not (s.type = any(p.types_exc)))
@@ -1018,7 +1018,7 @@ select
   coalesce(tt.ammunition, '{}'::jsonb)  as ammunition,
   f.visibility
 from filtered f
-join public.campaigns c on c.id = f.campaign_id 
+join public.campaigns c on c.id = f.campaign_id
 left join t tt on tt.id = f.id
 order by
   case
@@ -1190,7 +1190,7 @@ begin
     r.traits, r.actions, r.bonus_actions, r.reactions, r.legendary_actions
   )
   on conflict (creature_id, lang) do update
-  set 
+  set
     name = excluded.name,
     planes = excluded.planes,
     senses = excluded.senses,
@@ -1222,7 +1222,7 @@ begin
     p_id, p_lang, r.name, r.prerequisite, r.description
   )
   on conflict (eldritch_invocation_id, lang) do update
-  set 
+  set
     name = excluded.name,
     prerequisite = excluded.prerequisite,
     description = excluded.description;
@@ -1250,7 +1250,7 @@ begin
     r.materials, r.description, r.upgrade
   )
   on conflict (spell_id, lang) do update
-  set 
+  set
     name = excluded.name,
     page = excluded.page,
     materials = excluded.materials,
@@ -1280,7 +1280,7 @@ begin
     r.ammunition, r.notes
   )
   on conflict (weapon_id, lang) do update
-  set 
+  set
     name = excluded.name,
     page = excluded.page,
     ammunition = excluded.ammunition,
