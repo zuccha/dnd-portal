@@ -1,4 +1,5 @@
 import {
+  type InputProps,
   NumberInput as ChakraNumberInput,
   type NumberInputRootProps as ChakraNumberInputRootProps,
 } from "@chakra-ui/react";
@@ -12,11 +13,13 @@ export type NumberInputProps = Omit<
   ChakraNumberInputRootProps,
   "onChange" | "onValueChange" | "value"
 > & {
+  inputProps?: InputProps;
   onValueChange?: (value: number) => void;
   value: number;
 };
 
 export default function NumberInput({
+  inputProps,
   onValueChange,
   value,
   ...rest
@@ -39,7 +42,7 @@ export default function NumberInput({
       value={localValue}
     >
       <ChakraNumberInput.Control />
-      <ChakraNumberInput.Input placeholder="0" pr={6} />
+      <ChakraNumberInput.Input placeholder="0" pr={6} {...inputProps} />
     </ChakraNumberInput.Root>
   );
 }
