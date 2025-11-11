@@ -3,6 +3,7 @@ import type { FC } from "react";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
 import { useSelectedCampaignId } from "../../../../../resources/campaign";
 import EmptyState from "../../../../../ui/empty-state";
+import CreaturesPanel from "./creatures-panel/creatures-panel";
 import EldritchInvocationsPanel from "./eldritch-invocations-panel/eldritch-invocations-panel";
 import { type ResourcePanelId, useSelectedPanelId } from "./panels";
 import SpellsPanel from "./spells-panel/spells-panel";
@@ -38,6 +39,7 @@ export default function Content() {
 //------------------------------------------------------------------------------
 
 const resourcePanels: Record<ResourcePanelId, FC<{ campaignId: string }>> = {
+  "resource/creatures": CreaturesPanel,
   "resource/eldritch-invocations": EldritchInvocationsPanel,
   "resource/spells": SpellsPanel,
   "resource/weapons": WeaponsPanel,

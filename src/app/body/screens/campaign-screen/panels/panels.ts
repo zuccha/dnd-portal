@@ -6,6 +6,7 @@ import { createLocalStore } from "../../../../../store/local-store";
 //------------------------------------------------------------------------------
 
 export const resourcePanelIds = [
+  "resource/creatures",
   "resource/eldritch-invocations",
   "resource/spells",
   "resource/weapons",

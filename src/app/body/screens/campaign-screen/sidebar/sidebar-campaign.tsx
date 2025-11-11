@@ -85,6 +85,10 @@ function SidebarCampaignSection({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "section.resource/creatures": {
+    en: "Creatures",
+    it: "Creature",
+  },
   "section.resource/eldritch-invocations": {
     en: "Eldritch Invocations",
     it: "Suppliche Occulte",
