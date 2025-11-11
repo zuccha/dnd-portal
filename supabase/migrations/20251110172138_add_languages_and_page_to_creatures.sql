@@ -4,6 +4,9 @@
 ALTER TABLE "public"."creature_translations"
 ADD COLUMN "languages" "text";
 
+-- Remove function, since we change it's return type
+DROP FUNCTION "public"."fetch_creatures"(uuid, text[], jsonb, text, text);
+
 -- Update fetch_creatures RPC function to include languages field
 CREATE OR REPLACE FUNCTION "public"."fetch_creatures"(
   "p_campaign_id" "uuid",
