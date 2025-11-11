@@ -28,12 +28,11 @@ export const {
   useTranslate: useTranslateCreatureTreasure,
   useTranslations: useCreatureTreasureTranslations,
 } = createTypeTranslationHooks(creatureTreasures, {
-  // TODO: Localize IT.
-  any: { en: "Any", it: "" },
-  arcana: { en: "Arcana", it: "" },
-  armaments: { en: "Armaments", it: "" },
-  implements: { en: "Implements", it: "" },
-  individual: { en: "Individual", it: "" },
-  none: { en: "None", it: "" },
-  relics: { en: "Relics", it: "" },
+  any: { en: "Any", it: "Qualsiasi" },
+  arcana: { en: "Arcana", it: "Arcano" },
+  armaments: { en: "Armaments", it: "Armamenti" },
+  implements: { en: "Implements", it: "Strumenti" },
+  individual: { en: "Individual", it: "Individuale" },
+  none: { en: "None", it: "Nessuno" },
+  relics: { en: "Relics", it: "Reliquie" },
 });
