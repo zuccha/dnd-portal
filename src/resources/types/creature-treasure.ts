@@ -24,6 +24,7 @@ export type CreatureTreasure = z.infer<typeof creatureTreasureSchema>;
 //------------------------------------------------------------------------------
 
 export const {
+  useSortedOptions: useCreatureTreasureOptions,
   useTranslate: useTranslateCreatureTreasure,
   useTranslations: useCreatureTreasureTranslations,
 } = createTypeTranslationHooks(creatureTreasures, {

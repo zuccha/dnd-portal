@@ -27,6 +27,7 @@ export type CreatureAlignment = z.infer<typeof creatureAlignmentSchema>;
 //------------------------------------------------------------------------------
 
 export const {
+  useOptions: useCreatureAlignmentOptions,
   useTranslate: useTranslateCreatureAlignment,
   useTranslations: useCreatureAlignmentTranslations,
 } = createTypeTranslationHooks(creatureAlignments, {

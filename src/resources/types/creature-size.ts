@@ -23,6 +23,7 @@ export type CreatureSize = z.infer<typeof creatureSizeSchema>;
 //------------------------------------------------------------------------------
 
 export const {
+  useOptions: useCreatureSizeOptions,
   useTranslate: useTranslateCreatureSize,
   useTranslations: useCreatureSizeTranslations,
 } = createTypeTranslationHooks(creatureSizes, {

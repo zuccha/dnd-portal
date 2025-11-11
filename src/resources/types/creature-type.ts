@@ -31,6 +31,7 @@ export type CreatureType = z.infer<typeof creatureTypeSchema>;
 //------------------------------------------------------------------------------
 
 export const {
+  useSortedOptions: useCreatureTypeOptions,
   useTranslate: useTranslateCreatureType,
   useTranslations: useCreatureTypeTranslations,
 } = createTypeTranslationHooks(creatureTypes, {
