@@ -74,8 +74,15 @@ export type Creature = z.infer<typeof creatureSchema>;
 //------------------------------------------------------------------------------
 
 export const creatureFiltersSchema = resourceFiltersSchema.extend({
+  alignment: z
+    .partialRecord(creatureAlignmentSchema, z.boolean().optional())
+    .optional(),
   habitat: z
     .partialRecord(creatureHabitatSchema, z.boolean().optional())
+    .optional(),
+  size: z.partialRecord(creatureSizeSchema, z.boolean().optional()).optional(),
+  treasures: z
+    .partialRecord(creatureTreasureSchema, z.boolean().optional())
     .optional(),
   types: z.partialRecord(creatureTypeSchema, z.boolean().optional()).optional(),
 
@@ -158,7 +165,10 @@ export const defaultCreatureFilters: CreatureFilters = {
   order_by: "name",
   order_dir: "asc",
 
+  alignment: {},
   habitat: {},
+  size: {},
+  treasures: {},
   types: {},
 
   cr_max: 30,
