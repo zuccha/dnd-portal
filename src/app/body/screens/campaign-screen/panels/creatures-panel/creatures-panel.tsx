@@ -54,10 +54,59 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
   | string {
   const maybeCreature = {
     visibility: data.visibility,
+
+    alignment: data.alignment,
+    habitat: data.habitat,
+    size: data.size,
+    treasures: data.treasures,
+    type: data.type,
+
+    ac: data.ac,
+    cr: data.cr,
+    hp: data.hp,
+    hp_formula: data.hp_formula,
+
+    speed_climb: data.speed_climb,
+    speed_fly: data.speed_fly,
+    speed_swim: data.speed_swim,
+    speed_walk: data.speed_walk,
+
+    ability_cha: data.ability_cha,
+    ability_con: data.ability_con,
+    ability_dex: data.ability_dex,
+    ability_int: data.ability_int,
+    ability_str: data.ability_str,
+    ability_wis: data.ability_wis,
+
+    initiative: data.initiative,
+    passive_perception: data.passive_perception,
+
+    ability_proficiencies: data.ability_proficiencies,
+    skill_proficiencies: data.skill_proficiencies,
+
+    damage_immunities: data.damage_immunities,
+    damage_resistances: data.damage_resistances,
+    damage_vulnerabilities: data.damage_vulnerabilities,
+
+    condition_immunities: data.condition_immunities,
+    condition_resistances: data.condition_resistances,
+    condition_vulnerabilities: data.condition_vulnerabilities,
   };
 
   const maybeTranslation = {
     name: data.name,
+    page: data.page,
+
+    gear: data.gear,
+    languages: data.languages,
+    planes: data.planes,
+    senses: data.senses,
+
+    actions: data.actions,
+    bonus_actions: data.bonus_actions,
+    legendary_actions: data.legendary_actions,
+    reactions: data.reactions,
+    traits: data.traits,
   };
 
   const creature = dbCreatureSchema.partial().safeParse(maybeCreature);
