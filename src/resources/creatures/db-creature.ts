@@ -26,6 +26,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   hp: z.string(),
   hp_formula: z.string(),
 
+  speed_burrow: z.string().nullish(),
   speed_climb: z.string().nullish(),
   speed_fly: z.string().nullish(),
   speed_swim: z.string().nullish(),

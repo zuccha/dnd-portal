@@ -78,6 +78,7 @@ export const localizedCreatureSchema = z.object({
   passive_perception: z.string(),
 
   speed: z.string(),
+  speed_burrow: z.string(),
   speed_climb: z.string(),
   speed_fly: z.string(),
   speed_swim: z.string(),
@@ -151,6 +152,7 @@ export function useLocalizeCreature(): (
       };
 
       const speed_walk = convertSpeed(creature.speed_walk);
+      const speed_burrow = convertSpeed(creature.speed_burrow);
       const speed_climb = convertSpeed(creature.speed_climb);
       const speed_fly = convertSpeed(creature.speed_fly);
       const speed_swim = convertSpeed(creature.speed_swim);
@@ -159,6 +161,7 @@ export function useLocalizeCreature(): (
         speed_fly ? ti("speed.fly", speed_fly) : "",
         speed_swim ? ti("speed.swim", speed_swim) : "",
         speed_climb ? ti("speed.climb", speed_climb) : "",
+        speed_burrow ? ti("speed.burrow", speed_burrow) : "",
       ]
         .filter((speed) => speed)
         .join(", ");
@@ -385,6 +388,7 @@ export function useLocalizeCreature(): (
         passive_perception: creature.passive_perception,
 
         speed,
+        speed_burrow,
         speed_climb,
         speed_fly,
         speed_swim,

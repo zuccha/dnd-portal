@@ -52,6 +52,7 @@ export type CreatureEditorFormFields = {
   passive_perception: string;
   size: CreatureSize;
   skill_proficiencies: CreatureSkill[];
+  speed_burrow: string;
   speed_climb: string;
   speed_fly: string;
   speed_swim: string;
@@ -205,6 +206,13 @@ export const useCreatureEditorFormSpeedSwim = (defaultSpeedSwim: string) =>
 
 export const useCreatureEditorFormSpeedClimb = (defaultSpeedClimb: string) =>
   useCreatureEditorFormField("speed_climb", defaultSpeedClimb);
+
+//------------------------------------------------------------------------------
+// Speed Burrow
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormSpeedBurrow = (defaultSpeedBurrow: string) =>
+  useCreatureEditorFormField("speed_burrow", defaultSpeedBurrow);
 
 //------------------------------------------------------------------------------
 // Ability Scores

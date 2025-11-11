@@ -27,6 +27,7 @@ export const creatureSchema = resourceSchema.extend({
   hp: z.string(),
   hp_formula: z.string(),
 
+  speed_burrow: z.string().nullish(),
   speed_climb: z.string().nullish(),
   speed_fly: z.string().nullish(),
   speed_swim: z.string().nullish(),
@@ -113,6 +114,7 @@ export const defaultCreature: Creature = {
   hp: "11",
   hp_formula: "2d10",
 
+  speed_burrow: undefined,
   speed_climb: undefined,
   speed_fly: undefined,
   speed_swim: undefined,

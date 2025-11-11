@@ -66,6 +66,7 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     hp: data.hp,
     hp_formula: data.hp_formula,
 
+    speed_burrow: data.speed_burrow,
     speed_climb: data.speed_climb,
     speed_fly: data.speed_fly,
     speed_swim: data.speed_swim,

@@ -50,6 +50,7 @@ import {
   useCreatureEditorFormSenses,
   useCreatureEditorFormSize,
   useCreatureEditorFormSkillProficiencies,
+  useCreatureEditorFormSpeedBurrow,
   useCreatureEditorFormSpeedClimb,
   useCreatureEditorFormSpeedFly,
   useCreatureEditorFormSpeedSwim,
@@ -113,6 +114,9 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
         <CreatureEditorSpeedSwim defaultSpeedSwim={resource.speed_swim ?? ""} />
         <CreatureEditorSpeedClimb
           defaultSpeedClimb={resource.speed_climb ?? ""}
+        />
+        <CreatureEditorSpeedBurrow
+          defaultSpeedBurrow={resource.speed_burrow ?? ""}
         />
       </HStack>
 
@@ -567,6 +571,31 @@ function CreatureEditorSpeedClimb({
 
   return (
     <Field error={message} label={t("speed_climb.label")}>
+      <Input
+        autoComplete="off"
+        placeholder={t("speed.placeholder")}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Speed Burrow
+//------------------------------------------------------------------------------
+
+function CreatureEditorSpeedBurrow({
+  defaultSpeedBurrow,
+}: {
+  defaultSpeedBurrow: string;
+}) {
+  const { error, ...rest } =
+    useCreatureEditorFormSpeedBurrow(defaultSpeedBurrow);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("speed_burrow.label")}>
       <Input
         autoComplete="off"
         placeholder={t("speed.placeholder")}
@@ -1269,8 +1298,8 @@ const i18nContext = {
     it: "Piani",
   },
   "planes.placeholder": {
-    en: "Describe planes...",
-    it: "Descrivi i piani...",
+    en: "None",
+    it: "Nessuno",
   },
   "reactions.label": {
     en: "Reactions",
@@ -1304,21 +1333,25 @@ const i18nContext = {
     en: "In squares",
     it: "In quadretti",
   },
+  "speed_burrow.label": {
+    en: "Burrow",
+    it: "Scavo",
+  },
   "speed_climb.label": {
-    en: "Climb Speed",
-    it: "Velocità Scalare",
+    en: "Climb",
+    it: "Scalare",
   },
   "speed_fly.label": {
-    en: "Fly Speed",
-    it: "Velocità Volare",
+    en: "Fly",
+    it: "Volare",
   },
   "speed_swim.label": {
-    en: "Swim Speed",
-    it: "Velocità Nuotare",
+    en: "Swim",
+    it: "Nuotare",
   },
   "speed_walk.label": {
-    en: "Walk Speed",
-    it: "Velocità Camminare",
+    en: "Speed",
+    it: "Velocità",
   },
   "traits.label": {
     en: "Traits",
