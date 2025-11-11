@@ -44,7 +44,10 @@ export const localizedCreatureSchema = z.object({
   treasures: z.string(),
   type: z.string(),
 
+  title: z.string(),
+
   cr: z.string(),
+  cr_exp_pb: z.string(),
   exp: z.string(),
   pb: z.string(),
 
@@ -74,6 +77,7 @@ export const localizedCreatureSchema = z.object({
   initiative: z.string(),
   passive_perception: z.string(),
 
+  speed: z.string(),
   speed_climb: z.string(),
   speed_fly: z.string(),
   speed_swim: z.string(),
@@ -111,6 +115,12 @@ export function useLocalizeCreature(): (
       const name = translate(creature.name, lang) || t("name.missing");
       const page = creature.page ? translate(creature.page, lang) : "";
 
+      const size = translateCreatureSize(creature.size).label;
+      const type = translateCreatureType(creature.type).label;
+      const alignment = translateCreatureAlignment(creature.alignment).label;
+
+      const planes = translate(creature.planes, lang);
+
       const habitat = creature.habitat
         .map(translateCreatureHabitat)
         .map(({ label }) => label)
@@ -144,6 +154,14 @@ export function useLocalizeCreature(): (
       const speed_climb = convertSpeed(creature.speed_climb);
       const speed_fly = convertSpeed(creature.speed_fly);
       const speed_swim = convertSpeed(creature.speed_swim);
+      const speed = [
+        speed_walk ?? (system === "metric" ? "0 m" : "0 ft"),
+        speed_fly ? ti("speed.fly", speed_fly) : "",
+        speed_swim ? ti("speed.swim", speed_swim) : "",
+        speed_climb ? ti("speed.climb", speed_climb) : "",
+      ]
+        .filter((speed) => speed)
+        .join(", ");
 
       // Ability scores and modifiers
       const getAbilityMod = (score: number) => Math.floor((score - 10) / 2);
@@ -278,12 +296,6 @@ export function useLocalizeCreature(): (
         stats_parts.push(ti("stats.senses", senses));
       }
 
-      // Planes
-      const planes = translate(creature.planes, lang);
-      if (planes) {
-        stats_parts.push(ti("stats.planes", planes));
-      }
-
       const stats = stats_parts.join("\n");
 
       // Description section
@@ -333,13 +345,16 @@ export function useLocalizeCreature(): (
             ti("campaign_with_page", creature.campaign_name, page)
           : creature.campaign_name,
 
-        alignment: translateCreatureAlignment(creature.alignment).label,
-        habitat,
-        size: translateCreatureSize(creature.size).label,
+        alignment,
+        habitat: planes ? `${habitat} (${planes})` : habitat,
+        size,
         treasures,
-        type: translateCreatureType(creature.type).label,
+        type,
 
-        cr: `${creature.cr}`,
+        title: ti("title", size, type, alignment),
+
+        cr: ti("cr", `${creature.cr}`),
+        cr_exp_pb: ti("cr_exp_pb", `${creature.cr}`, exp, `${pb}`),
         exp,
         pb: `${pb}`,
 
@@ -369,6 +384,7 @@ export function useLocalizeCreature(): (
         initiative: creature.initiative,
         passive_perception: creature.passive_perception,
 
+        speed,
         speed_climb,
         speed_fly,
         speed_swim,
@@ -417,6 +433,41 @@ const i18nContext = {
     it: "p. <1>", // 1 = page
   },
 
+  "cr": {
+    en: "CR <1>",
+    it: "GS <1>",
+  },
+
+  "cr_exp_pb": {
+    en: "CR <1> (XP <2>, PB <3>)",
+    it: "GS <1> (PE <2>, BC <3>)",
+  },
+
+  "title": {
+    en: "<1> <2>, <3>", // 1 = size, 2 = type, 3 = alignment
+    it: "<2> <1>, <3>", // 1 = size, 2 = type, 3 = alignment
+  },
+
+  "speed.fly": {
+    en: "Fly <1>",
+    it: "volo <1>",
+  },
+
+  "speed.swim": {
+    en: "Swim <1>",
+    it: "nuoto <1>",
+  },
+
+  "speed.climb": {
+    en: "Climb <1>",
+    it: "scalata <1>",
+  },
+
+  "speed.burrow": {
+    en: "Burrow <1>",
+    it: "scavo <1>",
+  },
+
   "stats.skills": {
     en: "**Skills:** <1>",
     it: "**Abilità:** <1>",
@@ -453,28 +504,28 @@ const i18nContext = {
   },
 
   "description.traits": {
-    en: "**Traits**",
-    it: "**Tratti**",
+    en: "# Traits",
+    it: "# Tratti",
   },
 
   "description.actions": {
-    en: "**Actions**",
-    it: "**Azioni**",
+    en: "# Actions",
+    it: "# Azioni",
   },
 
   "description.bonus_actions": {
-    en: "**Bonus Actions**",
-    it: "**Azioni Bonus**",
+    en: "# Bonus Actions",
+    it: "# Azioni Bonus",
   },
 
   "description.reactions": {
-    en: "**Reactions**",
-    it: "**Reazioni**",
+    en: "# Reactions",
+    it: "# Reazioni",
   },
 
   "description.legendary_actions": {
-    en: "**Legendary Actions**",
-    it: "**Azioni Leggendarie**",
+    en: "# Legendary Actions",
+    it: "# Azioni Leggendarie",
   },
 };
 
