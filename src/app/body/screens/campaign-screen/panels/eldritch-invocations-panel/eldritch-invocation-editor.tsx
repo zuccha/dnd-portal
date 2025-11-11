@@ -150,7 +150,7 @@ function EldritchInvocationEditorPrerequisite({
 }
 
 //------------------------------------------------------------------------------
-// EldritchInvocation Editor Description
+// Eldritch Invocation Editor Description
 //------------------------------------------------------------------------------
 
 function EldritchInvocationEditorDescription({
