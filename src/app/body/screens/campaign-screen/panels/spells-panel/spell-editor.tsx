@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "../../../../../../hooks/use-list-collection";
 import {
   convertDistanceImpToMet,
@@ -43,7 +43,6 @@ import {
   useSpellEditorFormRangeValueImp,
   useSpellEditorFormRangeValueMet,
   useSpellEditorFormSchool,
-  useSpellEditorFormSubmitError,
   useSpellEditorFormUpgrade,
   useSpellEditorFormVisibility,
 } from "./spell-editor-form";
@@ -58,8 +57,6 @@ export type SpellEditorProps = {
 
 export default function SpellEditor({ resource }: SpellEditorProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
-
-  const submitError = useSpellEditorFormSubmitError();
 
   const ritual = useSpellEditorFormField("ritual", resource.ritual);
   const concentration = useSpellEditorFormField(
@@ -136,12 +133,6 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
         defaultLevel={resource.level}
         defaultUpgrade={resource.upgrade?.[lang] ?? ""}
       />
-
-      {submitError && (
-        <Text color="fg.error" fontSize="md">
-          {t(submitError)}
-        </Text>
-      )}
     </VStack>
   );
 }
@@ -522,26 +513,6 @@ function SpellEditorUpgrade({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "form.error.invalid": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-
-  "form.error.invalid_translation": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-
-  "form.error.creation_failure": {
-    en: "Failed to create the spell.",
-    it: "Errore durante la creazione.",
-  },
-
-  "form.error.update_failure": {
-    en: "Failed to update the spell.",
-    it: "Errore durante il salvataggio.",
-  },
-
   "name.label": {
     en: "Name",
     it: "Nome",

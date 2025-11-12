@@ -193,9 +193,11 @@ export function createResourcesPanel<
     );
 
     const valid = form.useValid();
+    const error = form.useSubmitError();
 
     return (
       <ResourceEditor
+        error={error}
         name={editedResource?.name[lang] ?? ""}
         onClose={unsetEditedResource}
         onSubmit={submit}

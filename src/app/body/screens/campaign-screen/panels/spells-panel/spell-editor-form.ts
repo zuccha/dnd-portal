@@ -35,10 +35,7 @@ export type SpellEditorFormFields = {
 
 export const spellEditorForm = createForm<SpellEditorFormFields>();
 
-export const {
-  useField: useSpellEditorFormField,
-  useSubmitError: useSpellEditorFormSubmitError,
-} = spellEditorForm;
+export const { useField: useSpellEditorFormField } = spellEditorForm;
 
 export default spellEditorForm;
 

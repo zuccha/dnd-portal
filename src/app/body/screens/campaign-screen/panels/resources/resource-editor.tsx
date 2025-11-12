@@ -1,4 +1,4 @@
-import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
+import { CloseButton, Dialog, Portal, Text } from "@chakra-ui/react";
 import { type ReactNode, useCallback } from "react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import Button from "../../../../../../ui/button";
@@ -9,6 +9,7 @@ import Button from "../../../../../../ui/button";
 
 export type ResourceEditorProps = {
   children: ReactNode;
+  error: string | undefined;
   name: string;
   onClose: () => void;
   onSubmit: () => Promise<string | undefined>;
@@ -19,6 +20,7 @@ export type ResourceEditorProps = {
 
 export default function ResourceEditor({
   children,
+  error,
   onClose,
   onSubmit,
   open,
@@ -33,8 +35,7 @@ export default function ResourceEditor({
   }, [onSubmit]);
 
   const saveAndClose = useCallback(async () => {
-    const error = await onSubmit();
-    if (!error) onClose();
+    if (!(await onSubmit())) onClose();
   }, [onClose, onSubmit]);
 
   const disabled = !valid || saving;
@@ -60,7 +61,14 @@ export default function ResourceEditor({
               </Dialog.Title>
             </Dialog.Header>
 
-            <Dialog.Body>{children}</Dialog.Body>
+            <Dialog.Body>
+              {children}
+              {error && (
+                <Text color="fg.error" fontSize="md" mt={4} w="full">
+                  {t(error)}
+                </Text>
+              )}
+            </Dialog.Body>
 
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
@@ -119,5 +127,25 @@ const i18nContext = {
   "save_and_close": {
     en: "Save and close",
     it: "Salva e chiudi",
+  },
+
+  "form.error.invalid": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+
+  "form.error.invalid_translation": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+
+  "form.error.creation_failure": {
+    en: "Failed to create the spell.",
+    it: "Errore durante la creazione.",
+  },
+
+  "form.error.update_failure": {
+    en: "Failed to update the spell.",
+    it: "Errore durante il salvataggio.",
   },
 };
