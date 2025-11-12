@@ -1,4 +1,4 @@
-import { SimpleGrid, Span, VStack } from "@chakra-ui/react";
+import { GridItem, SimpleGrid, Span } from "@chakra-ui/react";
 import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
 import type { Creature } from "../../../../../../resources/creatures/creature";
 import { useIsCreatureSelected } from "../../../../../../resources/creatures/creatures-store";
@@ -49,26 +49,22 @@ export default function CreatureCard({
         <Span>{title}</Span>
       </ResourceCard.Caption>
 
-      <SimpleGrid columns={4} fontSize="xs" gap={1} p={2} w="full">
-        <VStack gap={0}>
-          <Span color="fg.muted">{t("ac")}</Span>
-          <Span>{localizedResource.ac}</Span>
-        </VStack>
+      <SimpleGrid columns={10} fontSize="xs" gap={1} px={3} py={2} w="full">
+        <Span color="fg.muted">{t("ac")}</Span>
+        <GridItem colSpan={4}>{localizedResource.ac}</GridItem>
 
-        <VStack gap={0}>
-          <Span color="fg.muted">{t("hp")}</Span>
-          <Span>{`${localizedResource.hp} (${localizedResource.hp_formula})`}</Span>
-        </VStack>
+        <Span color="fg.muted">{t("hp")}</Span>
+        <GridItem
+          colSpan={4}
+        >{`${localizedResource.hp} (${localizedResource.hp_formula})`}</GridItem>
 
-        <VStack gap={0}>
-          <Span color="fg.muted">{t("initiative")}</Span>
-          <Span>{`${localizedResource.initiative} (${localizedResource.initiative_passive})`}</Span>
-        </VStack>
+        <Span color="fg.muted">{t("passive_perception")}</Span>
+        <GridItem colSpan={4}>{localizedResource.passive_perception}</GridItem>
 
-        <VStack gap={0}>
-          <Span color="fg.muted">{t("passive_perception")}</Span>
-          <Span>{localizedResource.passive_perception}</Span>
-        </VStack>
+        <Span color="fg.muted">{t("initiative")}</Span>
+        <GridItem
+          colSpan={4}
+        >{`${localizedResource.initiative} (${localizedResource.initiative_passive})`}</GridItem>
       </SimpleGrid>
 
       <ResourceCard.Caption>
@@ -76,7 +72,7 @@ export default function CreatureCard({
         <Span>{localizedResource.treasures}</Span>
       </ResourceCard.Caption>
 
-      <SimpleGrid columns={12} fontSize="xs" gap={1} p={2} w="full">
+      <SimpleGrid columns={8} fontSize="xs" gapX={1} px={3} py={1} w="full">
         <AbilityBody ability="str" creature={localizedResource} />
         <AbilityBody ability="dex" creature={localizedResource} />
         <AbilityBody ability="con" creature={localizedResource} />

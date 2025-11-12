@@ -120,6 +120,7 @@ function ResourceCardHeader({
 function ResourceCardCaption({ children }: { children: ReactNode }) {
   return (
     <HStack
+      align="flex-start"
       bgColor="bg.subtle"
       fontSize="xs"
       justify="space-between"
