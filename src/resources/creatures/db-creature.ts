@@ -16,7 +16,7 @@ import { damageTypeSchema } from "../types/damage-type";
 
 export const dbCreatureSchema = dbResourceSchema.extend({
   alignment: creatureAlignmentSchema,
-  habitat: z.array(creatureHabitatSchema),
+  habitats: z.array(creatureHabitatSchema),
   size: creatureSizeSchema,
   treasures: z.array(creatureTreasureSchema),
   type: creatureTypeSchema,

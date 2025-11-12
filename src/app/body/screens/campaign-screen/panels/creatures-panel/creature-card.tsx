@@ -72,7 +72,7 @@ export default function CreatureCard({
       </SimpleGrid>
 
       <ResourceCard.Caption>
-        <Span>{localizedResource.habitat}</Span>
+        <Span>{localizedResource.habitats}</Span>
         <Span>{localizedResource.treasures}</Span>
       </ResourceCard.Caption>
 

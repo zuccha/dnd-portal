@@ -39,7 +39,7 @@ export const localizedCreatureSchema = z.object({
   campaign_with_page: z.string(),
 
   alignment: z.string(),
-  habitat: z.string(),
+  habitats: z.string(),
   size: z.string(),
   treasures: z.string(),
   type: z.string(),
@@ -122,7 +122,7 @@ export function useLocalizeCreature(): (
 
       const planes = translate(creature.planes, lang);
 
-      const habitat = creature.habitat
+      const habitats = creature.habitats
         .map(translateCreatureHabitat)
         .map(({ label }) => label)
         .sort()
@@ -349,7 +349,7 @@ export function useLocalizeCreature(): (
           : creature.campaign_name,
 
         alignment,
-        habitat: planes ? `${habitat} (${planes})` : habitat,
+        habitats: planes ? `${habitats} (${planes})` : habitats,
         size,
         treasures,
         type,

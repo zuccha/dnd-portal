@@ -45,7 +45,7 @@ export type CreatureEditorFormFields = {
   damage_immunities: DamageType[];
   damage_resistances: DamageType[];
   damage_vulnerabilities: DamageType[];
-  habitat: CreatureHabitat[];
+  habitats: CreatureHabitat[];
   hp: string;
   hp_formula: string;
   initiative: string;
@@ -128,12 +128,12 @@ export const useCreatureEditorFormCR = (defaultCR: number) =>
   useCreatureEditorFormField("cr", defaultCR);
 
 //------------------------------------------------------------------------------
-// Habitat
+// Habitats
 //------------------------------------------------------------------------------
 
-export const useCreatureEditorFormHabitat = (
-  defaultHabitat: CreatureHabitat[],
-) => useCreatureEditorFormField("habitat", defaultHabitat);
+export const useCreatureEditorFormHabitats = (
+  defaultHabitats: CreatureHabitat[],
+) => useCreatureEditorFormField("habitats", defaultHabitats);
 
 //------------------------------------------------------------------------------
 // Treasures

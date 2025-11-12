@@ -39,7 +39,7 @@ import {
   useCreatureEditorFormGear,
   useCreatureEditorFormHP,
   useCreatureEditorFormHPFormula,
-  useCreatureEditorFormHabitat,
+  useCreatureEditorFormHabitats,
   useCreatureEditorFormInitiative,
   useCreatureEditorFormLanguages,
   useCreatureEditorFormLegendaryActions,
@@ -90,7 +90,7 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
 
       <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorTreasures defaultTreasures={resource.treasures} />
-        <CreatureEditorHabitat defaultHabitat={resource.habitat} />
+        <CreatureEditorHabitats defaultHabitat={resource.habitats} />
         <CreatureEditorPlanes defaultPlanes={resource.planes[lang] ?? ""} />
       </HStack>
 
@@ -311,22 +311,22 @@ function CreatureEditorAlignment({
 // Habitat
 //------------------------------------------------------------------------------
 
-function CreatureEditorHabitat({
+function CreatureEditorHabitats({
   defaultHabitat,
 }: {
-  defaultHabitat: Creature["habitat"];
+  defaultHabitat: Creature["habitats"];
 }) {
   const habitatOptions = useListCollection(useCreatureHabitatOptions());
-  const { error, ...rest } = useCreatureEditorFormHabitat(defaultHabitat);
+  const { error, ...rest } = useCreatureEditorFormHabitats(defaultHabitat);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("habitat.label")}>
+    <Field error={message} label={t("habitats.label")}>
       <Select
         multiple
         options={habitatOptions}
-        placeholder={t("habitat.placeholder")}
+        placeholder={t("habitats.placeholder")}
         withinDialog
         {...rest}
       />
@@ -1217,11 +1217,11 @@ const i18nContext = {
     en: "Describe gear...",
     it: "Descrivi l'equipaggiamento...",
   },
-  "habitat.label": {
+  "habitats.label": {
     en: "Habitat",
     it: "Habitat",
   },
-  "habitat.placeholder": {
+  "habitats.placeholder": {
     en: "None",
     it: "Nessuno",
   },

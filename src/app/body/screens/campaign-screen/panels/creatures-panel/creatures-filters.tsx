@@ -83,15 +83,15 @@ export default function CreaturesFilters() {
       </InclusionSelect>
 
       <InclusionSelect
-        includes={filters.habitat ?? {}}
+        includes={filters.habitats ?? {}}
         minW="10em"
         onValueChange={(partial) =>
-          setFilters({ habitat: { ...filters.habitat, ...partial } })
+          setFilters({ habitats: { ...filters.habitats, ...partial } })
         }
         options={habitatOptions}
         size="sm"
       >
-        {t("habitat")}
+        {t("habitats")}
       </InclusionSelect>
 
       <NumberInput
@@ -186,8 +186,8 @@ const i18nContext = {
     it: "CR Min",
   },
 
-  "habitat": {
-    en: "Habitat",
+  "habitats": {
+    en: "Habitats",
     it: "Habitat",
   },
 

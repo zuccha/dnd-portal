@@ -17,7 +17,7 @@ import { damageTypeSchema } from "../types/damage-type";
 
 export const creatureSchema = resourceSchema.extend({
   alignment: creatureAlignmentSchema,
-  habitat: z.array(creatureHabitatSchema),
+  habitats: z.array(creatureHabitatSchema),
   size: creatureSizeSchema,
   treasures: z.array(creatureTreasureSchema),
   type: creatureTypeSchema,
@@ -78,7 +78,7 @@ export const creatureFiltersSchema = resourceFiltersSchema.extend({
   alignment: z
     .partialRecord(creatureAlignmentSchema, z.boolean().optional())
     .optional(),
-  habitat: z
+  habitats: z
     .partialRecord(creatureHabitatSchema, z.boolean().optional())
     .optional(),
   size: z.partialRecord(creatureSizeSchema, z.boolean().optional()).optional(),
@@ -104,7 +104,7 @@ export const defaultCreature: Creature = {
   campaign_name: "",
 
   alignment: "true_neutral",
-  habitat: [],
+  habitats: [],
   size: "medium",
   treasures: [],
   type: "beast",
@@ -168,7 +168,7 @@ export const defaultCreatureFilters: CreatureFilters = {
   order_dir: "asc",
 
   alignment: {},
-  habitat: {},
+  habitats: {},
   size: {},
   treasures: {},
   types: {},
