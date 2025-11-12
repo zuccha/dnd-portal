@@ -1289,7 +1289,7 @@ const i18nContext = {
   },
   "languages.label": {
     en: "Languages",
-    it: "Linguaggi",
+    it: "Lingue",
   },
   "languages.placeholder": {
     en: "Describe languages...",
