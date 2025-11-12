@@ -1,5 +1,6 @@
 import {
   Box,
+  Em,
   Span,
   Table,
   type TableRootProps,
@@ -275,17 +276,17 @@ const expansionPatterns = [
   {
     regex: /^\s*#\s*(.+?)$/,
     render: (val: ReactNode) => (
-      <Span fontWeight="bold" textTransform="uppercase">
+      <Span fontSize="lg" fontVariant="small-caps">
         {val}
       </Span>
     ),
   },
   {
     regex: /\*\*(.+?)\*\*/,
-    render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
+    render: (val: ReactNode) => <b>{val}</b>,
   },
   {
     regex: /_(.+?)_/,
-    render: (val: ReactNode) => <Span fontStyle="italic">{val}</Span>,
+    render: (val: ReactNode) => <Em>{val}</Em>,
   },
 ];

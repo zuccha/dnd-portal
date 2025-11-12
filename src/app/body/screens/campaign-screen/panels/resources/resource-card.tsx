@@ -1,4 +1,4 @@
-import { HStack, Separator, Span, VStack } from "@chakra-ui/react";
+import { Em, HStack, Separator, Span, VStack } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { type ReactNode } from "react";
 import { type CampaignRole } from "../../../../../../resources/types/campaign-role";
@@ -159,17 +159,17 @@ const patterns = [
   {
     regex: /^\s*#\s*(.+?)$/,
     render: (val: ReactNode) => (
-      <Span fontWeight="bold" textTransform="uppercase">
+      <Span fontSize="lg" fontVariant="small-caps">
         {val}
       </Span>
     ),
   },
   {
     regex: /\*\*(.+?)\*\*/,
-    render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
+    render: (val: ReactNode) => <b>{val}</b>,
   },
   {
     regex: /_(.+?)_/,
-    render: (val: ReactNode) => <Span fontStyle="italic">{val}</Span>,
+    render: (val: ReactNode) => <Em>{val}</Em>,
   },
 ];
