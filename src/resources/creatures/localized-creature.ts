@@ -254,15 +254,19 @@ export function useLocalizeCreature(): (
         conditions: CreatureCondition[],
       ): string =>
         [
-          ...damages
+          damages
             .map(translateDamageType)
             .map(({ label }) => label)
-            .sort(),
-          ...conditions
+            .sort()
+            .join(", "),
+          conditions
             .map(translateCreatureCondition)
             .map(({ label }) => label)
-            .sort(),
-        ].join(", ");
+            .sort()
+            .join(", "),
+        ]
+          .filter((value) => value)
+          .join("; ");
 
       const all_immunities = formatDamagesAndConditions(
         creature.damage_immunities,
