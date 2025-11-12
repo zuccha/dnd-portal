@@ -154,8 +154,8 @@ export function useLocalizeCreature(): (
         if (isNaN(squares)) return "";
 
         return system === "metric" ?
-            translateDistanceMet(`${squares * 1.5}`)
-          : translateDistanceImp(`${squares * 5}`);
+            translateDistanceMet(`${squares * 1.5} m`)
+          : translateDistanceImp(`${squares * 5} ft`);
       };
 
       const speed_walk = convertSpeed(creature.speed_walk);
