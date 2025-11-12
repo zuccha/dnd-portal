@@ -49,6 +49,7 @@ export type CreatureEditorFormFields = {
   hp: string;
   hp_formula: string;
   initiative: string;
+  initiative_passive: string;
   passive_perception: string;
   size: CreatureSize;
   skill_proficiencies: CreatureSkill[];
@@ -170,6 +171,14 @@ export const useCreatureEditorFormHPFormula = (defaultHPFormula: string) =>
 
 export const useCreatureEditorFormInitiative = (defaultInitiative: string) =>
   useCreatureEditorFormField("initiative", defaultInitiative);
+
+//------------------------------------------------------------------------------
+// Initiative Passive
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormInitiativePassive = (
+  defaultInitiativePassive: string,
+) => useCreatureEditorFormField("initiative_passive", defaultInitiativePassive);
 
 //------------------------------------------------------------------------------
 // Passive Perception

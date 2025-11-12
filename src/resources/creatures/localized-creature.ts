@@ -75,6 +75,7 @@ export const localizedCreatureSchema = z.object({
   ability_wis_save: z.string(),
 
   initiative: z.string(),
+  initiative_passive: z.string(),
   passive_perception: z.string(),
 
   speed: z.string(),
@@ -391,6 +392,7 @@ export function useLocalizeCreature(): (
         ability_wis_save,
 
         initiative: creature.initiative,
+        initiative_passive: creature.initiative_passive,
         passive_perception: creature.passive_perception,
 
         speed,

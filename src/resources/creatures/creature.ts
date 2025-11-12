@@ -41,6 +41,7 @@ export const creatureSchema = resourceSchema.extend({
   ability_wis: z.number(),
 
   initiative: z.string(),
+  initiative_passive: z.string(),
   passive_perception: z.string(),
 
   ability_proficiencies: z.array(creatureAbilitySchema),
@@ -127,7 +128,8 @@ export const defaultCreature: Creature = {
   ability_str: 10,
   ability_wis: 10,
 
-  initiative: "+0 (10)",
+  initiative: "+0",
+  initiative_passive: "10",
   passive_perception: "10",
 
   ability_proficiencies: [],

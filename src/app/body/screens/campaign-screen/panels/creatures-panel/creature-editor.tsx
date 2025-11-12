@@ -41,6 +41,7 @@ import {
   useCreatureEditorFormHPFormula,
   useCreatureEditorFormHabitats,
   useCreatureEditorFormInitiative,
+  useCreatureEditorFormInitiativePassive,
   useCreatureEditorFormLanguages,
   useCreatureEditorFormLegendaryActions,
   useCreatureEditorFormName,
@@ -102,6 +103,9 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
 
       <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorInitiative defaultInitiative={resource.initiative} />
+        <CreatureEditorInitiativePassive
+          defaultInitiativePassive={resource.initiative_passive}
+        />
         <CreatureEditorPassivePerception
           defaultPassivePerception={resource.passive_perception}
         />
@@ -452,6 +456,32 @@ function CreatureEditorInitiative({
       <Input
         autoComplete="off"
         placeholder={t("initiative.placeholder")}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Initiative Passive
+//------------------------------------------------------------------------------
+
+function CreatureEditorInitiativePassive({
+  defaultInitiativePassive,
+}: {
+  defaultInitiativePassive: string;
+}) {
+  const { error, ...rest } = useCreatureEditorFormInitiativePassive(
+    defaultInitiativePassive,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("initiative_passive.label")}>
+      <Input
+        autoComplete="off"
+        placeholder={t("initiative_passive.placeholder")}
         {...rest}
       />
     </Field>
@@ -1248,6 +1278,14 @@ const i18nContext = {
   "initiative.placeholder": {
     en: "E.g.: +2",
     it: "Es: +2",
+  },
+  "initiative_passive.label": {
+    en: "Passive Initiative",
+    it: "Iniziativa Passiva",
+  },
+  "initiative_passive.placeholder": {
+    en: "E.g.: 11",
+    it: "Es: 11",
   },
   "languages.label": {
     en: "Languages",

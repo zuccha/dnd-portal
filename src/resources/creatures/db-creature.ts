@@ -40,6 +40,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   ability_wis: z.number(),
 
   initiative: z.string(),
+  initiative_passive: z.string(),
   passive_perception: z.string(),
 
   ability_proficiencies: z.array(creatureAbilitySchema),

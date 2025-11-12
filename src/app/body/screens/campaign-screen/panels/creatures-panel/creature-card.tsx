@@ -62,7 +62,7 @@ export default function CreatureCard({
 
         <VStack gap={0}>
           <Span color="fg.muted">{t("initiative")}</Span>
-          <Span>{localizedResource.initiative}</Span>
+          <Span>{`${localizedResource.initiative} (${localizedResource.initiative_passive})`}</Span>
         </VStack>
 
         <VStack gap={0}>
