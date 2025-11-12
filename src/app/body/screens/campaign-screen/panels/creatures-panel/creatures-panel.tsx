@@ -56,7 +56,7 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     visibility: data.visibility,
 
     alignment: data.alignment,
-    habitat: data.habitat,
+    habitats: data.habitats,
     size: data.size,
     treasures: data.treasures,
     type: data.type,
