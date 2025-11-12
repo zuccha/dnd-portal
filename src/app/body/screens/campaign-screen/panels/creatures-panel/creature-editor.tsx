@@ -1292,8 +1292,8 @@ const i18nContext = {
     it: "Lingue",
   },
   "languages.placeholder": {
-    en: "Describe languages...",
-    it: "Descrivi i linguaggi...",
+    en: "None",
+    it: "Nessuna",
   },
   "legendary_actions.label": {
     en: "Legendary Actions",
