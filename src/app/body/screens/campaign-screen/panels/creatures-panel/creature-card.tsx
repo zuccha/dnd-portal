@@ -72,7 +72,8 @@ export default function CreatureCard({
       </SimpleGrid>
 
       <ResourceCard.Caption>
-        <Span>{ti("habitat", localizedResource.habitat)}</Span>
+        <Span>{localizedResource.habitat}</Span>
+        <Span>{localizedResource.treasures}</Span>
       </ResourceCard.Caption>
 
       <SimpleGrid columns={12} fontSize="xs" gap={1} p={2} w="full">
@@ -88,9 +89,7 @@ export default function CreatureCard({
         <Span>{ti("speed", speed)}</Span>
       </ResourceCard.Caption>
 
-      <ResourceCard.Description
-        description={[stats, description].join("\n​\n")}
-      />
+      <ResourceCard.Description description={ti("body", stats, description)} />
 
       <ResourceCard.Caption>
         <Span>{cr_exp_pb}</Span>
@@ -152,11 +151,6 @@ const i18nContext = {
     it: "BC",
   },
 
-  "habitat": {
-    en: "<1>",
-    it: "<1>",
-  },
-
   "speed": {
     en: "Speed: <1>",
     it: "Velocità: <1>",
@@ -200,5 +194,10 @@ const i18nContext = {
   "ability.cha": {
     en: "Cha",
     it: "Car",
+  },
+
+  "body": {
+    en: "# Info\n<1>\n\n<2>",
+    it: "# Info\n<1>\n\n<2>",
   },
 };
