@@ -1184,8 +1184,8 @@ const i18nContext = {
     it: "Azioni Bonus",
   },
   "bonus_actions.placeholder": {
-    en: "Describe bonus actions...",
-    it: "Descrivi le azioni bonus...",
+    en: "None",
+    it: "Nessuna",
   },
   "condition_immunities.label": {
     en: "Condition Immunities",
@@ -1241,11 +1241,11 @@ const i18nContext = {
   },
   "gear.label": {
     en: "Gear",
-    it: "Equipaggiamento",
+    it: "Attrezzatura",
   },
   "gear.placeholder": {
-    en: "Describe gear...",
-    it: "Descrivi l'equipaggiamento...",
+    en: "None",
+    it: "Nessuno",
   },
   "habitats.label": {
     en: "Habitat",
@@ -1300,8 +1300,8 @@ const i18nContext = {
     it: "Azioni Leggendarie",
   },
   "legendary_actions.placeholder": {
-    en: "Describe legendary actions...",
-    it: "Descrivi le azioni leggendarie...",
+    en: "None",
+    it: "Nessuna",
   },
   "name.error.empty": {
     en: "Name is required",
@@ -1344,16 +1344,16 @@ const i18nContext = {
     it: "Reazioni",
   },
   "reactions.placeholder": {
-    en: "Describe reactions...",
-    it: "Descrivi le reazioni...",
+    en: "None",
+    it: "Nessuna",
   },
   "senses.label": {
     en: "Senses",
     it: "Sensi",
   },
   "senses.placeholder": {
-    en: "Describe senses...",
-    it: "Descrivi i sensi...",
+    en: "None",
+    it: "Nessuno",
   },
   "size.label": {
     en: "Size",
@@ -1396,8 +1396,8 @@ const i18nContext = {
     it: "Tratti",
   },
   "traits.placeholder": {
-    en: "Describe traits...",
-    it: "Descrivi i tratti...",
+    en: "None",
+    it: "Nessuno",
   },
   "treasures.label": {
     en: "Treasures",
