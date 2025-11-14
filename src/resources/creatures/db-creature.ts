@@ -44,6 +44,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   passive_perception: z.string(),
 
   ability_proficiencies: z.array(creatureAbilitySchema),
+  skill_expertise: z.array(creatureSkillSchema),
   skill_proficiencies: z.array(creatureSkillSchema),
 
   damage_immunities: z.array(damageTypeSchema),

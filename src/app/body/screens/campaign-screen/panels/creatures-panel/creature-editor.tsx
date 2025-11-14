@@ -50,6 +50,7 @@ import {
   useCreatureEditorFormReactions,
   useCreatureEditorFormSenses,
   useCreatureEditorFormSize,
+  useCreatureEditorFormSkillExpertise,
   useCreatureEditorFormSkillProficiencies,
   useCreatureEditorFormSpeedBurrow,
   useCreatureEditorFormSpeedClimb,
@@ -141,6 +142,9 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
         />
         <CreatureEditorSkillProficiencies
           defaultSkillProficiencies={resource.skill_proficiencies}
+        />
+        <CreatureEditorSkillExpertise
+          defaultSkillExpertise={resource.skill_expertise}
         />
       </HStack>
 
@@ -765,6 +769,35 @@ function CreatureEditorAbilityProficiencies({
 }
 
 //------------------------------------------------------------------------------
+// Skill Expertise
+//------------------------------------------------------------------------------
+
+function CreatureEditorSkillExpertise({
+  defaultSkillExpertise,
+}: {
+  defaultSkillExpertise: Creature["skill_expertise"];
+}) {
+  const skillOptions = useListCollection(useCreatureSkillOptions());
+  const { error, ...rest } = useCreatureEditorFormSkillExpertise(
+    defaultSkillExpertise,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("skill_expertise.label")}>
+      <Select
+        multiple
+        options={skillOptions}
+        placeholder={t("skill_expertise.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Skill Proficiencies
 //------------------------------------------------------------------------------
 
@@ -1145,7 +1178,7 @@ const i18nContext = {
   },
   "ability_proficiencies.label": {
     en: "Ability Proficiencies",
-    it: "Competenze nelle Caratteristiche",
+    it: "Caratteristiche - Competenze",
   },
   "ability_proficiencies.placeholder": {
     en: "None",
@@ -1359,9 +1392,17 @@ const i18nContext = {
     en: "Size",
     it: "Taglia",
   },
+  "skill_expertise.label": {
+    en: "Skill Expertise",
+    it: "Abilità - Maestrie",
+  },
+  "skill_expertise.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
   "skill_proficiencies.label": {
     en: "Skill Proficiencies",
-    it: "Competenze nelle Abilità",
+    it: "Abilità - Competenze",
   },
   "skill_proficiencies.placeholder": {
     en: "None",

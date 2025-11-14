@@ -235,14 +235,20 @@ export function useLocalizeCreature(): (
       const stats_parts: string[] = [];
 
       // Skill proficiencies
-      if (creature.skill_proficiencies.length > 0) {
-        const skills = creature.skill_proficiencies
-          .map((skill) => {
-            const skillLabel = translateCreatureSkill(skill).label;
-            const ability = skillToAbility[skill];
+      if (
+        creature.skill_proficiencies.length ||
+        creature.skill_expertise.length
+      ) {
+        const pbsBySkill: Partial<Record<CreatureSkill, number>> = {};
+        creature.skill_proficiencies.forEach((s) => (pbsBySkill[s] = pb));
+        creature.skill_expertise.forEach((s) => (pbsBySkill[s] = 2 * pb));
+        const skills = Object.entries(pbsBySkill)
+          .map(([skill, pb]) => {
+            const label = translateCreatureSkill(skill as CreatureSkill).label;
+            const ability = skillToAbility[skill as CreatureSkill];
             const abilityMod = abilityModByAbility[ability];
             const skillBonus = formatMod(abilityMod + pb);
-            return `${skillLabel} ${skillBonus}`;
+            return `${label} ${skillBonus}`;
           })
           .join(", ");
         stats_parts.push(ti("stats.skills", skills));

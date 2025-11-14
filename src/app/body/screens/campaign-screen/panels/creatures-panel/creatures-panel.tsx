@@ -84,6 +84,7 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     passive_perception: data.passive_perception,
 
     ability_proficiencies: data.ability_proficiencies,
+    skill_expertise: data.skill_expertise,
     skill_proficiencies: data.skill_proficiencies,
 
     damage_immunities: data.damage_immunities,

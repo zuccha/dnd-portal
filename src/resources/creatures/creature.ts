@@ -45,6 +45,7 @@ export const creatureSchema = resourceSchema.extend({
   passive_perception: z.string(),
 
   ability_proficiencies: z.array(creatureAbilitySchema),
+  skill_expertise: z.array(creatureSkillSchema),
   skill_proficiencies: z.array(creatureSkillSchema),
 
   damage_immunities: z.array(damageTypeSchema),
@@ -133,6 +134,7 @@ export const defaultCreature: Creature = {
   passive_perception: "10",
 
   ability_proficiencies: [],
+  skill_expertise: [],
   skill_proficiencies: [],
 
   damage_immunities: [],

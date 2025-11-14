@@ -52,6 +52,7 @@ export type CreatureEditorFormFields = {
   initiative_passive: string;
   passive_perception: string;
   size: CreatureSize;
+  skill_expertise: CreatureSkill[];
   skill_proficiencies: CreatureSkill[];
   speed_burrow: string;
   speed_climb: string;
@@ -256,6 +257,10 @@ export const useCreatureEditorFormAbilityProficiencies = (
     "ability_proficiencies",
     defaultAbilityProficiencies,
   );
+
+export const useCreatureEditorFormSkillExpertise = (
+  defaultSkillExpertise: CreatureSkill[],
+) => useCreatureEditorFormField("skill_expertise", defaultSkillExpertise);
 
 export const useCreatureEditorFormSkillProficiencies = (
   defaultSkillProficiencies: CreatureSkill[],
