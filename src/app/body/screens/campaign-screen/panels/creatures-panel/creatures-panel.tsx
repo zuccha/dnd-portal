@@ -32,13 +32,68 @@ const columns: ResourcesListTableColumn<Creature, LocalizedCreature>[] = [
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
+    w: "10em",
+  },
+  {
+    key: "size",
+    label: { en: "Size", it: "Taglia" },
+    w: "10em",
+  },
+  {
+    key: "alignment",
+    label: { en: "Alignment", it: "Allineamento" },
+    w: "10em",
+  },
+  {
+    key: "habitats",
+    label: { en: "Habitat", it: "Habitat" },
     maxW: "10em",
+    w: "10em",
   },
   {
     key: "cr",
     label: { en: "CR", it: "GS" },
-    maxW: "5em",
-    textAlign: "center",
+    w: "5em",
+  },
+  {
+    key: "hp",
+    label: { en: "HP", it: "PF" },
+    w: "5em",
+  },
+  {
+    key: "ac",
+    label: { en: "AC", it: "CA" },
+    w: "4em",
+  },
+  {
+    key: "ability_str",
+    label: { en: "Str", it: "For" },
+    w: "4em",
+  },
+  {
+    key: "ability_dex",
+    label: { en: "Dex", it: "Des" },
+    w: "4em",
+  },
+  {
+    key: "ability_con",
+    label: { en: "Con", it: "Cos" },
+    w: "4em",
+  },
+  {
+    key: "ability_int",
+    label: { en: "Int", it: "Int" },
+    w: "4em",
+  },
+  {
+    key: "ability_wis",
+    label: { en: "Wis", it: "Sag" },
+    w: "4em",
+  },
+  {
+    key: "ability_cha",
+    label: { en: "Cha", it: "Car" },
+    w: "4em",
   },
 ] as const;
 
