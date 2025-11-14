@@ -138,9 +138,9 @@ export function useLocalizeCreature(): (
       // EXP and PB from CR
       const cr =
         creature.cr === 0 ? "0"
-        : creature.cr <= 0.125 ? "1/8"
-        : creature.cr <= 0.25 ? "1/4"
-        : creature.cr <= 0.5 ? "1/2"
+        : creature.cr <= 0.125 ? "⅛"
+        : creature.cr <= 0.25 ? "¼"
+        : creature.cr <= 0.5 ? "½"
         : `${creature.cr}`;
       const exp = `${crToExp[creature.cr] ?? 0}`;
       const pb = crToPb[creature.cr] ?? 2;
@@ -373,7 +373,7 @@ export function useLocalizeCreature(): (
 
         title: ti("title", size, type, alignment),
 
-        cr: ti("cr", cr),
+        cr,
         cr_exp_pb: ti("cr_exp_pb", cr, exp, `${pb}`),
         exp,
         pb: `${pb}`,
@@ -453,11 +453,6 @@ const i18nContext = {
   "page": {
     en: "p. <1>", // 1 = page
     it: "p. <1>", // 1 = page
-  },
-
-  "cr": {
-    en: "CR <1>",
-    it: "GS <1>",
   },
 
   "cr_exp_pb": {

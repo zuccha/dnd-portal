@@ -53,12 +53,12 @@ const columns: ResourcesListTableColumn<Creature, LocalizedCreature>[] = [
   {
     key: "cr",
     label: { en: "CR", it: "GS" },
-    w: "5em",
+    w: "4em",
   },
   {
     key: "hp",
     label: { en: "HP", it: "PF" },
-    w: "5em",
+    w: "4em",
   },
   {
     key: "ac",
