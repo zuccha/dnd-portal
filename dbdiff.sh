@@ -1,3 +1,6 @@
+set -euo pipefail
+source .env
+
 # 0) Config
 DBDIFF_SCHEMAS="${DBDIFF_SCHEMAS:-public,auth}"
 DBDIFF_NEW="${DBDIFF_NEW:-db.dump.new.sql}"
@@ -11,8 +14,9 @@ npx supabase db start
 npx supabase db reset --local
 
 # 2) Dump **schema-only** from both sides (limit to your app schemas)
+SUPABASE_DB_PASSWORD="${DBDIFF_SUPABASE_PASSWORD:-}" \
+  npx supabase db dump --linked --schema "$DBDIFF_SCHEMAS" --file "$DBDIFF_OLD_TEMP"
 npx supabase db dump --local  --schema $DBDIFF_SCHEMAS > $DBDIFF_NEW_TEMP
-npx supabase db dump --linked --schema $DBDIFF_SCHEMAS > $DBDIFF_OLD_TEMP
 
 # 3) Normalize (strip volatile lines)
 sed -E 's/[[:space:]]+$//' $DBDIFF_OLD_TEMP > $DBDIFF_OLD
