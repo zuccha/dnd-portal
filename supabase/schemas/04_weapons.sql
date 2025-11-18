@@ -67,9 +67,9 @@ GRANT ALL ON TABLE public.weapon_translations TO service_role;
 
 CREATE OR REPLACE FUNCTION public.can_read_weapon(p_campaign_id uuid, p_weapon_visibility public.campaign_role) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
     LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
@@ -86,7 +86,6 @@ BEGIN
         ))
       )
   );
-END;
 $$;
 
 ALTER FUNCTION public.can_read_weapon(p_campaign_id uuid, p_weapon_visibility public.campaign_role) OWNER TO postgres;
@@ -102,13 +101,12 @@ GRANT ALL ON FUNCTION public.can_read_weapon(p_campaign_id uuid, p_weapon_visibi
 
 CREATE OR REPLACE FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT can_read_weapon(w.campaign_id, w.visibility)
   FROM public.weapons w
   WHERE w.id = p_weapon_id;
-END;
 $$;
 
 ALTER FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) OWNER TO postgres;
@@ -124,9 +122,9 @@ GRANT ALL ON FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) TO se
 
 CREATE OR REPLACE FUNCTION public.can_edit_weapon(p_campaign_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
     LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
@@ -138,7 +136,6 @@ BEGIN
         (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   );
-END;
 $$;
 
 ALTER FUNCTION public.can_edit_weapon(p_campaign_id uuid) OWNER TO postgres;
@@ -154,13 +151,12 @@ GRANT ALL ON FUNCTION public.can_edit_weapon(p_campaign_id uuid) TO service_role
 
 CREATE OR REPLACE FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT can_edit_weapon(w.campaign_id)
   FROM public.weapons w
   WHERE w.id = p_weapon_id;
-END;
 $$;
 
 ALTER FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) OWNER TO postgres;

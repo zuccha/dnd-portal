@@ -50,9 +50,9 @@ GRANT ALL ON TABLE public.eldritch_invocation_translations TO service_role;
 
 CREATE OR REPLACE FUNCTION public.can_read_eldritch_invocation(p_campaign_id uuid, p_eldritch_invocation_visibility public.campaign_role) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
     LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
@@ -69,7 +69,6 @@ BEGIN
         ))
       )
   );
-END;
 $$;
 
 ALTER FUNCTION public.can_read_eldritch_invocation(p_campaign_id uuid, p_eldritch_invocation_visibility public.campaign_role) OWNER TO postgres;
@@ -86,13 +85,12 @@ GRANT ALL ON FUNCTION public.can_read_eldritch_invocation(p_campaign_id uuid, p_
 
 CREATE OR REPLACE FUNCTION public.can_read_eldritch_invocation_translation(p_eldritch_invocation_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT can_read_eldritch_invocation(ei.campaign_id, ei.visibility)
   FROM public.eldritch_invocations ei
   WHERE ei.id = p_eldritch_invocation_id;
-END;
 $$;
 
 ALTER FUNCTION public.can_read_eldritch_invocation_translation(p_eldritch_invocation_id uuid) OWNER TO postgres;
@@ -108,9 +106,9 @@ GRANT ALL ON FUNCTION public.can_read_eldritch_invocation_translation(p_eldritch
 
 CREATE OR REPLACE FUNCTION public.can_edit_eldritch_invocation(p_campaign_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
     LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
@@ -122,7 +120,6 @@ BEGIN
         (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   );
-END;
 $$;
 
 ALTER FUNCTION public.can_edit_eldritch_invocation(p_campaign_id uuid) OWNER TO postgres;
@@ -138,13 +135,12 @@ GRANT ALL ON FUNCTION public.can_edit_eldritch_invocation(p_campaign_id uuid) TO
 
 CREATE OR REPLACE FUNCTION public.can_edit_eldritch_invocation_translation(p_eldritch_invocation_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT can_edit_eldritch_invocation(ei.campaign_id)
   FROM public.eldritch_invocations ei
   WHERE ei.id = p_eldritch_invocation_id;
-END;
 $$;
 
 ALTER FUNCTION public.can_edit_eldritch_invocation_translation(p_eldritch_invocation_id uuid) OWNER TO postgres;

@@ -90,7 +90,6 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
     LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
@@ -110,7 +109,6 @@ BEGIN
         ))
       )
   );
-END;
 $$;
 
 ALTER FUNCTION public.can_read_creature(p_campaign_id uuid, p_creature_visibility public.campaign_role) OWNER TO postgres;
@@ -129,11 +127,9 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN;
   SELECT can_read_creature(cr.campaign_id, cr.visibility)
   FROM public.creatures cr
   WHERE cr.id = p_creature_id;
-END;
 $$;
 
 ALTER FUNCTION public.can_read_creature_translation(p_creature_id uuid) OWNER TO postgres;
@@ -152,7 +148,6 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
     LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
@@ -166,7 +161,6 @@ BEGIN
         (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   );
-END;
 $$;
 
 ALTER FUNCTION public.can_edit_creature(p_campaign_id uuid) OWNER TO postgres;
@@ -185,11 +179,9 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT can_edit_creature(cr.campaign_id)
   FROM public.creatures cr
   WHERE cr.id = p_creature_id;
-END;
 $$;
 
 ALTER FUNCTION public.can_edit_creature_translation(p_creature_id uuid) OWNER TO postgres;

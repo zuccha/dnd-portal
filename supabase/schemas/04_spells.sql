@@ -75,9 +75,9 @@ GRANT ALL ON TABLE public.spell_translations TO service_role;
 
 CREATE OR REPLACE FUNCTION public.can_read_spell(p_campaign_id uuid, p_spell_visibility public.campaign_role) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
     LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
@@ -94,7 +94,6 @@ BEGIN
         ))
       )
   );
-END;
 $$;
 
 ALTER FUNCTION public.can_read_spell(p_campaign_id uuid, p_spell_visibility public.campaign_role) OWNER TO postgres;
@@ -110,13 +109,12 @@ GRANT ALL ON FUNCTION public.can_read_spell(p_campaign_id uuid, p_spell_visibili
 
 CREATE OR REPLACE FUNCTION public.can_read_spell_translation(p_spell_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT can_read_spell(s.campaign_id, s.visibility)
   FROM public.spells s
   WHERE s.id = p_spell_id;
-END;
 $$;
 
 ALTER FUNCTION public.can_read_spell_translation(p_spell_id uuid) OWNER TO postgres;
@@ -132,9 +130,9 @@ GRANT ALL ON FUNCTION public.can_read_spell_translation(p_spell_id uuid) TO serv
 
 CREATE OR REPLACE FUNCTION public.can_edit_spell(p_campaign_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
     LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
@@ -146,7 +144,6 @@ BEGIN
         (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   );
-END;
 $$;
 
 ALTER FUNCTION public.can_edit_spell(p_campaign_id uuid) OWNER TO postgres;
@@ -162,13 +159,12 @@ GRANT ALL ON FUNCTION public.can_edit_spell(p_campaign_id uuid) TO service_role;
 
 CREATE OR REPLACE FUNCTION public.can_edit_spell_translation(p_spell_id uuid) RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-BEGIN
   SELECT can_edit_spell(s.campaign_id)
   FROM public.spells s
   WHERE s.id = p_spell_id;
-END
 $$;
 
 ALTER FUNCTION public.can_edit_spell_translation(p_spell_id uuid) OWNER TO postgres;
