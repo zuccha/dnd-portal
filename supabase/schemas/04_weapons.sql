@@ -62,91 +62,172 @@ GRANT ALL ON TABLE public.weapon_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
--- WEAPONS POLICIES
+-- CAN READ WEAPON
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read weapons" ON public.weapons FOR SELECT TO authenticated USING (
-  EXISTS (
+CREATE OR REPLACE FUNCTION public.can_read_weapon(p_campaign_id uuid, p_weapon_visibility public.campaign_role) RETURNS boolean
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
-    WHERE c.id = weapons.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() AS uid))
+    WHERE c.id = p_campaign_id
       AND (
-        -- Public modules
         (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
         OR
-        -- Owned modules
         (c.is_module = true AND um.user_id IS NOT NULL)
         OR
-        -- Non-module campaigns with visibility check
         (c.is_module = false AND cp.user_id IS NOT NULL AND (
-          weapons.visibility = 'player'::public.campaign_role
+          p_weapon_visibility = 'player'::public.campaign_role
           OR cp.role = 'game_master'::public.campaign_role
         ))
       )
-  )
-);
+  );
+END;
+$$;
 
-CREATE POLICY "Creators and GMs can edit weapons" ON public.weapons TO authenticated USING (
-  EXISTS (
+ALTER FUNCTION public.can_read_weapon(p_campaign_id uuid, p_weapon_visibility public.campaign_role) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.can_read_weapon(p_campaign_id uuid, p_weapon_visibility public.campaign_role) TO anon;
+GRANT ALL ON FUNCTION public.can_read_weapon(p_campaign_id uuid, p_weapon_visibility public.campaign_role) TO authenticated;
+GRANT ALL ON FUNCTION public.can_read_weapon(p_campaign_id uuid, p_weapon_visibility public.campaign_role) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- CAN READ WEAPON TRANSLATION
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) RETURNS boolean
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  SELECT can_read_weapon(w.campaign_id, w.visibility)
+  FROM public.weapons w
+  WHERE w.id = p_weapon_id;
+END;
+$$;
+
+ALTER FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- CAN EDIT WEAPON
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.can_edit_weapon(p_campaign_id uuid) RETURNS boolean
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
-    WHERE c.id = weapons.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() as uid) AND cp.role = 'game_master'::public.campaign_role)
+    WHERE c.id = p_campaign_id
       AND (
-        -- Module creators
         (c.is_module = true AND um.user_id IS NOT NULL)
         OR
-        -- Campaign GMs
         (c.is_module = false AND cp.user_id IS NOT NULL)
       )
-  )
-);
+  );
+END;
+$$;
+
+ALTER FUNCTION public.can_edit_weapon(p_campaign_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.can_edit_weapon(p_campaign_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.can_edit_weapon(p_campaign_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.can_edit_weapon(p_campaign_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- CAN EDIT WEAPON TRANSLATION
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) RETURNS boolean
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  SELECT can_edit_weapon(w.campaign_id)
+  FROM public.weapons w
+  WHERE w.id = p_weapon_id;
+END;
+$$;
+
+ALTER FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- WEAPONS POLICIES
+--------------------------------------------------------------------------------
+
+CREATE POLICY "Users can read weapons"
+ON public.weapons
+FOR SELECT
+TO authenticated
+USING ( public.can_read_weapon(campaign_id, visibility) OR public.can_edit_weapon(campaign_id) );
+
+CREATE POLICY "Creators and GMs can create new weapons"
+ON public.weapons
+FOR INSERT
+TO authenticated
+WITH CHECK ( public.can_edit_weapon(campaign_id) );
+
+CREATE POLICY "Creators and GMs can update weapons"
+ON public.weapons
+FOR UPDATE
+TO authenticated
+USING ( public.can_edit_weapon(campaign_id) )
+WITH CHECK ( public.can_edit_weapon(campaign_id) );
+
+CREATE POLICY "Creators and GMs can delete weapons"
+ON public.weapons
+FOR DELETE
+TO authenticated
+USING ( public.can_edit_weapon(campaign_id) );
 
 
 --------------------------------------------------------------------------------
 -- WEAPON TRANSLATIONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read weapon translations" ON public.weapon_translations FOR SELECT TO authenticated USING (
-  EXISTS (
-    SELECT 1 FROM public.weapons w
-    JOIN public.campaigns c ON c.id = w.campaign_id
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
-    WHERE w.id = weapon_translations.weapon_id
-      AND (
-        -- Public modules
-        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
-        OR
-        -- Owned modules
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        -- Non-module campaigns with visibility check
-        (c.is_module = false AND cp.user_id IS NOT NULL AND (
-          w.visibility = 'player'::public.campaign_role
-          OR cp.role = 'game_master'::public.campaign_role
-        ))
-      )
-  )
-);
+CREATE POLICY "Users can read weapon translations"
+ON public.weapon_translations
+FOR SELECT
+TO authenticated
+USING ( public.can_read_weapon_translation(weapon_id) OR public.can_edit_weapon_translation(weapon_id) );
 
-CREATE POLICY "Creators and GMs can edit weapon translations" ON public.weapon_translations TO authenticated USING (
-  EXISTS (
-    SELECT 1 FROM public.weapons w
-    JOIN public.campaigns c ON c.id = w.campaign_id
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
-    WHERE w.id = weapon_translations.weapon_id
-      AND (
-        -- Module creators
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        -- Campaign GMs
-        (c.is_module = false AND cp.user_id IS NOT NULL)
-      )
-  )
-);
+CREATE POLICY "Creators and GMs can create new weapon translations"
+ON public.weapon_translations
+FOR INSERT
+TO authenticated
+WITH CHECK ( public.can_edit_weapon_translation(weapon_id) );
+
+CREATE POLICY "Creators and GMs can update weapon translations"
+ON public.weapon_translations
+FOR UPDATE
+TO authenticated
+USING ( public.can_edit_weapon_translation(weapon_id) )
+WITH CHECK ( public.can_edit_weapon_translation(weapon_id) );
+
+CREATE POLICY "Creators and GMs can delete weapon translations"
+ON public.weapon_translations
+FOR DELETE
+TO authenticated
+USING ( public.can_edit_weapon_translation(weapon_id) );
 
 
 --------------------------------------------------------------------------------

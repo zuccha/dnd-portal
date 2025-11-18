@@ -82,15 +82,20 @@ GRANT ALL ON TABLE public.creature_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
--- CREATURES POLICIES
+-- CAN READ CREATURE
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read creatures" ON public.creatures FOR SELECT TO authenticated USING (
-  EXISTS (
+CREATE OR REPLACE FUNCTION public.can_read_creature(p_campaign_id uuid, p_creature_visibility public.campaign_role) RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
-    WHERE c.id = creatures.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() AS uid))
+    WHERE c.id = p_campaign_id
       AND (
         -- Public modules
         (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
@@ -100,19 +105,59 @@ CREATE POLICY "Users can read creatures" ON public.creatures FOR SELECT TO authe
         OR
         -- Non-module campaigns with visibility check
         (c.is_module = false AND cp.user_id IS NOT NULL AND (
-          creatures.visibility = 'player'::public.campaign_role
+          p_creature_visibility = 'player'::public.campaign_role
           OR cp.role = 'game_master'::public.campaign_role
         ))
       )
-  )
-);
+  );
+END;
+$$;
 
-CREATE POLICY "Creators and GMs can edit creatures" ON public.creatures TO authenticated USING (
-  EXISTS (
+ALTER FUNCTION public.can_read_creature(p_campaign_id uuid, p_creature_visibility public.campaign_role) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.can_read_creature(p_campaign_id uuid, p_creature_visibility public.campaign_role) TO anon;
+GRANT ALL ON FUNCTION public.can_read_creature(p_campaign_id uuid, p_creature_visibility public.campaign_role) TO authenticated;
+GRANT ALL ON FUNCTION public.can_read_creature(p_campaign_id uuid, p_creature_visibility public.campaign_role) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- CAN READ CREATURE TRANSLATION
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.can_read_creature_translation(p_creature_id uuid) RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN;
+  SELECT can_read_creature(cr.campaign_id, cr.visibility)
+  FROM public.creatures cr
+  WHERE cr.id = p_creature_id;
+END;
+$$;
+
+ALTER FUNCTION public.can_read_creature_translation(p_creature_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.can_read_creature_translation(p_creature_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.can_read_creature_translation(p_creature_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.can_read_creature_translation(p_creature_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- CAN EDIT CREATURE
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.can_edit_creature(p_campaign_id uuid) RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  SELECT EXISTS (
     SELECT 1 FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
-    WHERE c.id = creatures.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() as uid) AND cp.role = 'game_master'::public.campaign_role)
+    WHERE c.id = p_campaign_id
       AND (
         -- Module creators
         (c.is_module = true AND um.user_id IS NOT NULL)
@@ -120,53 +165,98 @@ CREATE POLICY "Creators and GMs can edit creatures" ON public.creatures TO authe
         -- Campaign GMs
         (c.is_module = false AND cp.user_id IS NOT NULL)
       )
-  )
-);
+  );
+END;
+$$;
+
+ALTER FUNCTION public.can_edit_creature(p_campaign_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.can_edit_creature(p_campaign_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.can_edit_creature(p_campaign_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.can_edit_creature(p_campaign_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- CAN EDIT CREATURE TRANSLATION
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.can_edit_creature_translation(p_creature_id uuid) RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  SELECT can_edit_creature(cr.campaign_id)
+  FROM public.creatures cr
+  WHERE cr.id = p_creature_id;
+END;
+$$;
+
+ALTER FUNCTION public.can_edit_creature_translation(p_creature_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.can_edit_creature_translation(p_creature_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.can_edit_creature_translation(p_creature_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.can_edit_creature_translation(p_creature_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- CREATURES POLICIES
+--------------------------------------------------------------------------------
+
+CREATE POLICY "Users can read creatures"
+ON public.creatures
+FOR SELECT
+TO authenticated
+USING ( public.can_read_creature(campaign_id, visibility) OR public.can_edit_creature(campaign_id) );
+
+CREATE POLICY "Creators and GMs can create new creatures"
+ON public.creatures
+FOR INSERT
+TO authenticated
+WITH CHECK ( public.can_edit_creature(campaign_id) );
+
+CREATE POLICY "Creators and GMs can update creatures"
+ON public.creatures
+FOR UPDATE
+TO authenticated
+USING ( public.can_edit_creature(campaign_id) )
+WITH CHECK ( public.can_edit_creature(campaign_id) );
+
+CREATE POLICY "Creators and GMs can delete creatures"
+ON public.creatures
+FOR DELETE
+TO authenticated
+USING ( public.can_edit_creature(campaign_id) );
 
 
 --------------------------------------------------------------------------------
 -- CREATURE TRANSLATIONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read creature translations" ON public.creature_translations FOR SELECT TO authenticated USING (
-  EXISTS (
-    SELECT 1 FROM public.creatures cr
-    JOIN public.campaigns c ON c.id = cr.campaign_id
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
-    WHERE cr.id = creature_translations.creature_id
-      AND (
-        -- Public modules
-        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
-        OR
-        -- Owned modules
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        -- Non-module campaigns with visibility check
-        (c.is_module = false AND cp.user_id IS NOT NULL AND (
-          cr.visibility = 'player'::public.campaign_role
-          OR cp.role = 'game_master'::public.campaign_role
-        ))
-      )
-  )
-);
+CREATE POLICY "Users can read creature translations"
+ON public.creature_translations
+FOR SELECT
+TO authenticated
+USING ( public.can_read_creature_translation(creature_id) OR public.can_edit_creature_translation(creature_id) );
 
-CREATE POLICY "Creators and GMs can edit creature translations" ON public.creature_translations TO authenticated USING (
-  EXISTS (
-    SELECT 1 FROM public.creatures cr
-    JOIN public.campaigns c ON c.id = cr.campaign_id
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
-    WHERE cr.id = creature_translations.creature_id
-      AND (
-        -- Module creators
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        -- Campaign GMs
-        (c.is_module = false AND cp.user_id IS NOT NULL)
-      )
-  )
-);
+CREATE POLICY "Creators and GMs can create new creature translations"
+ON public.creature_translations
+FOR INSERT
+TO authenticated
+WITH CHECK ( public.can_edit_creature_translation(creature_id) );
+
+CREATE POLICY "Creators and GMs can update creature translations"
+ON public.creature_translations
+FOR UPDATE
+TO authenticated
+USING ( public.can_edit_creature_translation(creature_id) )
+WITH CHECK ( public.can_edit_creature_translation(creature_id) );
+
+CREATE POLICY "Creators and GMs can delete creature translations"
+ON public.creature_translations
+FOR DELETE
+TO authenticated
+USING ( public.can_edit_creature_translation(creature_id) );
 
 
 --------------------------------------------------------------------------------
