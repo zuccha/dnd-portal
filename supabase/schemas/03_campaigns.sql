@@ -237,6 +237,7 @@ CREATE POLICY "Module creators can manage ownership" ON public.user_modules FOR 
 CREATE OR REPLACE FUNCTION public.validate_campaign_module_is_module()
 RETURNS TRIGGER
 LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
 AS $$
 BEGIN
   IF NOT EXISTS (
@@ -268,6 +269,7 @@ GRANT ALL ON FUNCTION public.validate_campaign_module_is_module() TO service_rol
 CREATE OR REPLACE FUNCTION public.validate_user_module_is_module()
 RETURNS TRIGGER
 LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
 AS $$
 BEGIN
   IF NOT EXISTS (
