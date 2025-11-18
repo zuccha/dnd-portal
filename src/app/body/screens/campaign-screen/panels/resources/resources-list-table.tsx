@@ -157,9 +157,9 @@ export type ResourcesListTableRowProps<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
+  canEdit: boolean;
   columns: ResourcesListTableColumn<R, L>[];
   descriptionKey?: keyof L;
-  gm: boolean;
   localizedResource: L;
   onOpen: (resource: R) => void;
   onToggleSelected: (resource: R) => void;
@@ -170,9 +170,9 @@ function ResourcesListTableRow<
   R extends Resource,
   L extends LocalizedResource<R>,
 >({
+  canEdit,
   columns,
   descriptionKey,
-  gm,
   localizedResource,
   onOpen,
   onToggleSelected,
@@ -192,7 +192,7 @@ function ResourcesListTableRow<
       });
   }, [descriptionKey, localizedResource.id]);
 
-  const columnCount = gm ? columns.length + 2 : columns.length + 1;
+  const columnCount = canEdit ? columns.length + 2 : columns.length + 1;
 
   return (
     <>
@@ -230,7 +230,7 @@ function ResourcesListTableRow<
               whiteSpace="nowrap"
               {...rest}
             >
-              {key === "name" && gm ?
+              {key === "name" && canEdit ?
                 <Link
                   onClick={(e) => {
                     e.stopPropagation();

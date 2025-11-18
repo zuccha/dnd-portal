@@ -9,13 +9,13 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type WeaponCardProps = {
-  gm: boolean;
+  canEdit: boolean;
   localizedResource: LocalizedWeapon;
   onOpen: (resource: Weapon) => void;
 };
 
 export default function WeaponCard({
-  gm,
+  canEdit,
   localizedResource,
   onOpen,
 }: WeaponCardProps) {
@@ -26,7 +26,7 @@ export default function WeaponCard({
 
   return (
     <ResourceCard
-      gm={gm}
+      canEdit={canEdit}
       name={name}
       onOpen={() => onOpen(localizedResource._raw)}
       onToggleSelected={toggle}

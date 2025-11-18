@@ -69,3 +69,26 @@ export const useSelectedCampaignId = createLocalStore<string | undefined>(
   undefined,
   z.string().parse,
 ).use;
+
+//------------------------------------------------------------------------------
+// Fetch Can Edit Campaign
+//------------------------------------------------------------------------------
+
+export async function fetchCanEditCampaign(campaignId: string) {
+  const { data } = await supabase.rpc("can_edit_campaign_resource", {
+    p_campaign_id: campaignId,
+  });
+  return z.boolean().parse(data);
+}
+
+//------------------------------------------------------------------------------
+// Use Can Edit Campaign
+//------------------------------------------------------------------------------
+
+export function useCanEditCampaign(campaignId: string): boolean {
+  const { data: canEditCampaign } = useQuery<boolean>({
+    queryFn: () => fetchCanEditCampaign(campaignId),
+    queryKey: ["campaign/can-edit", campaignId],
+  });
+  return !!canEditCampaign;
+}

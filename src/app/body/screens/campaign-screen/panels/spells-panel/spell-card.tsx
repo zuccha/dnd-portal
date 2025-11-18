@@ -10,13 +10,13 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type SpellCardProps = {
-  gm: boolean;
+  canEdit: boolean;
   localizedResource: LocalizedSpell;
   onOpen: (resource: Spell) => void;
 };
 
 export default function SpellCard({
-  gm,
+  canEdit,
   localizedResource,
   onOpen,
 }: SpellCardProps) {
@@ -42,7 +42,7 @@ export default function SpellCard({
 
   return (
     <ResourceCard
-      gm={gm}
+      canEdit={canEdit}
       name={name}
       onOpen={() => onOpen(localizedResource._raw)}
       onToggleSelected={toggle}

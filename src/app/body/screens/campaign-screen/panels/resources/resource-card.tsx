@@ -12,8 +12,8 @@ import RichText from "../../../../../../ui/rich-text";
 //------------------------------------------------------------------------------
 
 export type ResourceCardProps = {
+  canEdit: boolean;
   children: ReactNode;
-  gm: boolean;
   name: string;
   onOpen: () => void;
   onToggleSelected: () => void;
@@ -22,8 +22,8 @@ export type ResourceCardProps = {
 };
 
 export default function ResourceCard({
+  canEdit,
   children,
-  gm,
   name,
   onOpen,
   onToggleSelected,
@@ -48,7 +48,7 @@ export default function ResourceCard({
       w="20em"
     >
       <ResourceCard.Header
-        gm={gm}
+        canEdit={canEdit}
         name={name}
         onClick={onOpen}
         onToggleSelection={onToggleSelected}
@@ -70,14 +70,14 @@ ResourceCard.Header = ResourceCardHeader;
 //------------------------------------------------------------------------------
 
 function ResourceCardHeader({
-  gm,
+  canEdit,
   name,
   onClick,
   onToggleSelection,
   selected,
   visibility,
 }: {
-  gm: boolean;
+  canEdit: boolean;
   name: string;
   onClick: () => void;
   onToggleSelection: () => void;
@@ -93,7 +93,7 @@ function ResourceCardHeader({
       py={1}
       w="full"
     >
-      {gm ?
+      {canEdit ?
         <HStack py={1}>
           <Icon
             Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}

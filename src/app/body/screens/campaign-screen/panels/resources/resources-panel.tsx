@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import z from "zod";
 import { useI18nLang } from "../../../../../../i18n/i18n-lang";
 import type { I18nString } from "../../../../../../i18n/i18n-string";
+import { useCanEditCampaign } from "../../../../../../resources/campaign";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -14,7 +15,6 @@ import type {
   ResourceFilters,
 } from "../../../../../../resources/resource";
 import type { ResourcesStore } from "../../../../../../resources/resources-store";
-import { useIsGM } from "../../../../../../resources/types/campaign-role";
 import { createLocalStore } from "../../../../../../store/local-store";
 import { createMemoryStore } from "../../../../../../store/memory-store";
 import BinaryButton, {
@@ -59,7 +59,7 @@ export function createResourcesPanel<
   store,
 }: {
   Card: React.FC<{
-    gm: boolean;
+    canEdit: boolean;
     localizedResource: L;
     onOpen: (resource: R) => void;
   }>;
@@ -216,7 +216,7 @@ export function createResourcesPanel<
 
   return function ResourcesPanel({ campaignId }: ResourcesPanelProps) {
     const [view, setView] = useView();
-    const gm = useIsGM(campaignId);
+    const canEdit = useCanEditCampaign(campaignId);
 
     const [localizedResources] = store.useLocalizedFromCampaign(campaignId);
     const [selectedLocalizedResources] =
@@ -243,9 +243,9 @@ export function createResourcesPanel<
         );
         return (
           <ResourcesListTable.Row
+            canEdit={canEdit}
             columns={listTableColumns}
             descriptionKey={listTableDescriptionKey}
-            gm={gm}
             localizedResource={localizedResource}
             onOpen={editedResourceStore.set}
             onToggleSelected={toggle}
@@ -253,7 +253,7 @@ export function createResourcesPanel<
           />
         );
       },
-      [gm],
+      [canEdit],
     );
 
     return (
@@ -269,7 +269,7 @@ export function createResourcesPanel<
         >
           <HStack>
             <ResourcesActions
-              gm={gm}
+              canEdit={canEdit}
               name={name}
               onAddNew={setCreatedResource}
               onRemove={store.remove}
@@ -301,7 +301,7 @@ export function createResourcesPanel<
           {view === "cards" && (
             <ResourcesListCards
               Card={Card}
-              gm={gm}
+              canEdit={canEdit}
               localizedResources={localizedResources}
               onOpen={editedResourceStore.set}
             />

@@ -16,7 +16,7 @@ type ResourcesActionsProps<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
-  gm: boolean;
+  canEdit: boolean;
   name: I18nString;
   onAddNew: () => void;
   onRemove: (ids: string[]) => void;
@@ -27,7 +27,7 @@ export default function ResourcesActions<
   R extends Resource,
   L extends LocalizedResource<R>,
 >({
-  gm,
+  canEdit,
   onAddNew,
   onRemove,
   name,
@@ -70,7 +70,7 @@ export default function ResourcesActions<
       <Portal>
         <Menu.Positioner>
           <Menu.Content>
-            {gm && (
+            {canEdit && (
               <Menu.Item onClick={onAddNew} value="add">
                 {t("add")}
               </Menu.Item>
@@ -88,7 +88,7 @@ export default function ResourcesActions<
               {t("download")}
             </Menu.Item>
 
-            {gm && (
+            {canEdit && (
               <Menu.Item
                 _hover={{ bg: "bg.error", color: "fg.error" }}
                 color="fg.error"

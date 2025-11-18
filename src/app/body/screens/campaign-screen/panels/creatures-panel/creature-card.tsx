@@ -10,13 +10,13 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type CreatureCardProps = {
-  gm: boolean;
+  canEdit: boolean;
   localizedResource: LocalizedCreature;
   onOpen: (resource: Creature) => void;
 };
 
 export default function CreatureCard({
-  gm,
+  canEdit,
   localizedResource,
   onOpen,
 }: CreatureCardProps) {
@@ -38,7 +38,7 @@ export default function CreatureCard({
 
   return (
     <ResourceCard
-      gm={gm}
+      canEdit={canEdit}
       name={name}
       onOpen={() => onOpen(localizedResource._raw)}
       onToggleSelected={toggle}

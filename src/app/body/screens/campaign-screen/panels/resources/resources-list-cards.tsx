@@ -12,11 +12,11 @@ export type ListCardsProps<
   L extends LocalizedResource<R>,
 > = {
   Card: React.FC<{
-    gm: boolean;
+    canEdit: boolean;
     localizedResource: L;
     onOpen: (resource: R) => void;
   }>;
-  gm: boolean;
+  canEdit: boolean;
   localizedResources: L[];
   onOpen: (resource: R) => void;
 };
@@ -24,7 +24,7 @@ export type ListCardsProps<
 export default function ListCards<
   R extends Resource,
   L extends LocalizedResource<R>,
->({ Card, gm, localizedResources, onOpen }: ListCardsProps<R, L>) {
+>({ Card, canEdit, localizedResources, onOpen }: ListCardsProps<R, L>) {
   if (!localizedResources) return null;
 
   return (
@@ -33,7 +33,7 @@ export default function ListCards<
         <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
           {localizedResources.map((localizedResource) => (
             <Card
-              gm={gm}
+              canEdit={canEdit}
               key={localizedResource.id}
               localizedResource={localizedResource}
               onOpen={onOpen}

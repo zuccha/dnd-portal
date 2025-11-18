@@ -9,13 +9,13 @@ import ResourceCard from "../resources/resource-card";
 //------------------------------------------------------------------------------
 
 export type EldritchInvocationCardProps = {
-  gm: boolean;
+  canEdit: boolean;
   localizedResource: LocalizedEldritchInvocation;
   onOpen: (resource: EldritchInvocation) => void;
 };
 
 export default function EldritchInvocationCard({
-  gm,
+  canEdit,
   localizedResource,
   onOpen,
 }: EldritchInvocationCardProps) {
@@ -26,7 +26,7 @@ export default function EldritchInvocationCard({
 
   return (
     <ResourceCard
-      gm={gm}
+      canEdit={canEdit}
       name={name}
       onOpen={() => onOpen(localizedResource._raw)}
       onToggleSelected={toggle}
