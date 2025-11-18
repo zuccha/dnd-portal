@@ -100,19 +100,40 @@ GRANT ALL ON TABLE "public"."user_modules" TO "service_role";
 -- CAMPAIGNS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Players can read campaigns they joined" ON "public"."campaigns" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."campaign_players" "cp"
-  WHERE (("cp"."campaign_id" = "campaigns"."id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
-
-CREATE POLICY "Players can read public modules" ON "public"."campaigns" FOR SELECT TO "authenticated" USING (
-  ("is_module" = true AND "visibility" = 'public'::"public"."campaign_visibility")
+CREATE POLICY "Users can read campaigns and modules" ON "public"."campaigns" FOR SELECT TO "authenticated" USING (
+  -- Modules: public/purchasable OR owned
+  ("is_module" = true AND (
+    "visibility" IN ('public'::"public"."campaign_visibility", 'purchasable'::"public"."campaign_visibility")
+    OR EXISTS (
+      SELECT 1 FROM "public"."user_modules" "um"
+      WHERE "um"."module_id" = "campaigns"."id"
+        AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+    )
+  ))
+  OR
+  -- Regular campaigns: participating
+  ("is_module" = false AND EXISTS (
+    SELECT 1 FROM "public"."campaign_players" "cp"
+    WHERE "cp"."campaign_id" = "campaigns"."id"
+      AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+  ))
 );
 
-CREATE POLICY "Players can read modules they own" ON "public"."campaigns" FOR SELECT TO "authenticated" USING (
+CREATE POLICY "Creators and GMs can edit campaigns" ON "public"."campaigns" TO "authenticated" USING (
+  -- Module creators (via user_modules)
   ("is_module" = true AND EXISTS (
     SELECT 1 FROM "public"."user_modules" "um"
     WHERE "um"."module_id" = "campaigns"."id"
       AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "um"."role" = 'creator'::"public"."module_role"
+  ))
+  OR
+  -- Campaign GMs (via campaign_players)
+  ("is_module" = false AND EXISTS (
+    SELECT 1 FROM "public"."campaign_players" "cp"
+    WHERE "cp"."campaign_id" = "campaigns"."id"
+      AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "cp"."role" = 'game_master'::"public"."campaign_role"
   ))
 );
 
@@ -152,7 +173,18 @@ CREATE POLICY "DMs can remove modules from campaigns" ON "public"."campaign_modu
 -- CAMPAIGN PLAYERS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can check if they joined a campaign" ON "public"."campaign_players" FOR SELECT TO "authenticated" USING (("user_id" = ( SELECT "auth"."uid"() AS "uid")));
+CREATE POLICY "Users can view their campaign memberships" ON "public"."campaign_players" FOR SELECT TO "authenticated" USING (
+  "user_id" = ( SELECT "auth"."uid"() AS "uid")
+);
+
+CREATE POLICY "GMs can manage campaign memberships" ON "public"."campaign_players" TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaign_players" "cp"
+    WHERE "cp"."campaign_id" = "campaign_players"."campaign_id"
+      AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "cp"."role" = 'game_master'::"public"."campaign_role"
+  )
+);
 
 
 --------------------------------------------------------------------------------
@@ -163,16 +195,7 @@ CREATE POLICY "Users can view their own module ownership" ON "public"."user_modu
   "user_id" = ( SELECT "auth"."uid"() AS "uid")
 );
 
-CREATE POLICY "Creators can manage module ownership" ON "public"."user_modules" FOR INSERT TO "authenticated" WITH CHECK (
-  EXISTS (
-    SELECT 1 FROM "public"."user_modules" "um"
-    WHERE "um"."module_id" = "user_modules"."module_id"
-      AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid")
-      AND "um"."role" = 'creator'::"public"."module_role"
-  )
-);
-
-CREATE POLICY "Creators can revoke module ownership" ON "public"."user_modules" FOR DELETE TO "authenticated" USING (
+CREATE POLICY "Module creators can manage ownership" ON "public"."user_modules" TO "authenticated" USING (
   EXISTS (
     SELECT 1 FROM "public"."user_modules" "um"
     WHERE "um"."module_id" = "user_modules"."module_id"

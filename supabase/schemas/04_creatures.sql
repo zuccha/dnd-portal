@@ -85,49 +85,88 @@ GRANT ALL ON TABLE "public"."creature_translations" TO "service_role";
 -- CREATURES POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "GMs can manipulate creatures in their campaigns" ON "public"."creatures" TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."campaign_players" "cp"
-  WHERE (("cp"."campaign_id" = "creatures"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")) AND ("cp"."role" = 'game_master'::"public"."campaign_role")))));
+CREATE POLICY "Users can read creatures" ON "public"."creatures" FOR SELECT TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaigns" "c"
+    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
+    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
+    WHERE "c"."id" = "creatures"."campaign_id"
+      AND (
+        -- Public modules
+        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        OR
+        -- Owned modules
+        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        OR
+        -- Non-module campaigns with visibility check
+        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
+          "creatures"."visibility" = 'player'::"public"."campaign_role"
+          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        ))
+      )
+  )
+);
 
-CREATE POLICY "Players can read creatures from public modules" ON "public"."creatures" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."campaigns" "c"
-  WHERE (("c"."id" = "creatures"."campaign_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
-
-CREATE POLICY "Players can read creatures from owned modules" ON "public"."creatures" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."campaigns" "c"
-   JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id")
-  WHERE (("c"."id" = "creatures"."campaign_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
-
-CREATE POLICY "Players can read public creatures from their campaigns" ON "public"."creatures" FOR SELECT TO "authenticated" USING ((("visibility" = 'player'::"public"."campaign_role") AND (EXISTS ( SELECT 1
-   FROM "public"."campaign_players" "cp"
-  WHERE (("cp"."campaign_id" = "creatures"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")))))));
+CREATE POLICY "Creators and GMs can edit creatures" ON "public"."creatures" TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaigns" "c"
+    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
+    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
+    WHERE "c"."id" = "creatures"."campaign_id"
+      AND (
+        -- Module creators
+        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        OR
+        -- Campaign GMs
+        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+      )
+  )
+);
 
 
 --------------------------------------------------------------------------------
 -- CREATURE TRANSLATIONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "GMs can manipulate creatures in their campaigns" ON "public"."creature_translations" TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM ("public"."creatures" "c"
-     JOIN "public"."campaign_players" "cp" ON ((("cp"."campaign_id" = "c"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")) AND ("cp"."role" = 'game_master'::"public"."campaign_role"))))
-  WHERE ("c"."id" = "creature_translations"."creature_id"))));
+CREATE POLICY "Users can read creature translations" ON "public"."creature_translations" FOR SELECT TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."creatures" "cr"
+    JOIN "public"."campaigns" "c" ON "c"."id" = "cr"."campaign_id"
+    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
+    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
+    WHERE "cr"."id" = "creature_translations"."creature_id"
+      AND (
+        -- Public modules
+        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        OR
+        -- Owned modules
+        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        OR
+        -- Non-module campaigns with visibility check
+        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
+          "cr"."visibility" = 'player'::"public"."campaign_role"
+          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        ))
+      )
+  )
+);
 
-CREATE POLICY "Players can read creatures from public modules" ON "public"."creature_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM ("public"."creatures" "m"
-     JOIN "public"."campaigns" "c" ON (("c"."id" = "m"."campaign_id")))
-  WHERE (("m"."id" = "creature_translations"."creature_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
-
-CREATE POLICY "Players can read creatures from owned modules" ON "public"."creature_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM ("public"."creatures" "m"
-     JOIN "public"."campaigns" "c" ON (("c"."id" = "m"."campaign_id"))
-     JOIN "public"."user_modules" "um" ON (("um"."module_id" = "c"."id")))
-  WHERE (("m"."id" = "creature_translations"."creature_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
-
-CREATE POLICY "Players can read public creatures from their campaigns" ON "public"."creature_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."creatures" "e"
-  WHERE (("e"."id" = "creature_translations"."creature_id") AND ("e"."visibility" = 'player'::"public"."campaign_role") AND (EXISTS ( SELECT 1
-           FROM "public"."campaign_players" "cp"
-          WHERE (("cp"."campaign_id" = "e"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")))))))));
+CREATE POLICY "Creators and GMs can edit creature translations" ON "public"."creature_translations" TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."creatures" "cr"
+    JOIN "public"."campaigns" "c" ON "c"."id" = "cr"."campaign_id"
+    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
+    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
+    WHERE "cr"."id" = "creature_translations"."creature_id"
+      AND (
+        -- Module creators
+        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        OR
+        -- Campaign GMs
+        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+      )
+  )
+);
 
 
 --------------------------------------------------------------------------------

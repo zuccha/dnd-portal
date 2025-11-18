@@ -65,49 +65,88 @@ GRANT ALL ON TABLE "public"."weapon_translations" TO "service_role";
 -- WEAPONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "GMs can manipulate weapons in their campaigns" ON "public"."weapons" TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."campaign_players" "cp"
-  WHERE (("cp"."campaign_id" = "weapons"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")) AND ("cp"."role" = 'game_master'::"public"."campaign_role")))));
+CREATE POLICY "Users can read weapons" ON "public"."weapons" FOR SELECT TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaigns" "c"
+    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
+    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
+    WHERE "c"."id" = "weapons"."campaign_id"
+      AND (
+        -- Public modules
+        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        OR
+        -- Owned modules
+        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        OR
+        -- Non-module campaigns with visibility check
+        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
+          "weapons"."visibility" = 'player'::"public"."campaign_role"
+          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        ))
+      )
+  )
+);
 
-CREATE POLICY "Players can read public weapons from campaigns they joined" ON "public"."weapons" FOR SELECT TO "authenticated" USING ((("visibility" = 'player'::"public"."campaign_role") AND (EXISTS ( SELECT 1
-   FROM "public"."campaign_players" "cp"
-  WHERE (("cp"."campaign_id" = "weapons"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")))))));
-
-CREATE POLICY "Players can read weapons from public modules" ON "public"."weapons" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."campaigns" "c"
-  WHERE (("c"."id" = "weapons"."campaign_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
-
-CREATE POLICY "Players can read weapons from owned modules" ON "public"."weapons" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."campaigns" "c"
-   JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id")
-  WHERE (("c"."id" = "weapons"."campaign_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
+CREATE POLICY "Creators and GMs can edit weapons" ON "public"."weapons" TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaigns" "c"
+    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
+    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
+    WHERE "c"."id" = "weapons"."campaign_id"
+      AND (
+        -- Module creators
+        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        OR
+        -- Campaign GMs
+        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+      )
+  )
+);
 
 
 --------------------------------------------------------------------------------
 -- WEAPON TRANSLATIONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "GMs can manipulate weapons in their campaigns" ON "public"."weapon_translations" TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM ("public"."weapons" "w"
-     JOIN "public"."campaign_players" "cp" ON ((("cp"."campaign_id" = "w"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")) AND ("cp"."role" = 'game_master'::"public"."campaign_role"))))
-  WHERE ("w"."id" = "weapon_translations"."weapon_id"))));
+CREATE POLICY "Users can read weapon translations" ON "public"."weapon_translations" FOR SELECT TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."weapons" "w"
+    JOIN "public"."campaigns" "c" ON "c"."id" = "w"."campaign_id"
+    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
+    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
+    WHERE "w"."id" = "weapon_translations"."weapon_id"
+      AND (
+        -- Public modules
+        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        OR
+        -- Owned modules
+        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        OR
+        -- Non-module campaigns with visibility check
+        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
+          "w"."visibility" = 'player'::"public"."campaign_role"
+          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        ))
+      )
+  )
+);
 
-CREATE POLICY "Players can read public weapons from campaigns they joined" ON "public"."weapon_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM "public"."weapons" "w"
-  WHERE (("w"."id" = "weapon_translations"."weapon_id") AND ("w"."visibility" = 'player'::"public"."campaign_role") AND (EXISTS ( SELECT 1
-           FROM "public"."campaign_players" "cp"
-          WHERE (("cp"."campaign_id" = "w"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")))))))));
-
-CREATE POLICY "Players can read weapons from public modules" ON "public"."weapon_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM ("public"."weapons" "w"
-     JOIN "public"."campaigns" "c" ON (("c"."id" = "w"."campaign_id")))
-  WHERE (("w"."id" = "weapon_translations"."weapon_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
-
-CREATE POLICY "Players can read weapons from owned modules" ON "public"."weapon_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM ("public"."weapons" "w"
-     JOIN "public"."campaigns" "c" ON (("c"."id" = "w"."campaign_id"))
-     JOIN "public"."user_modules" "um" ON (("um"."module_id" = "c"."id")))
-  WHERE (("w"."id" = "weapon_translations"."weapon_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
+CREATE POLICY "Creators and GMs can edit weapon translations" ON "public"."weapon_translations" TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."weapons" "w"
+    JOIN "public"."campaigns" "c" ON "c"."id" = "w"."campaign_id"
+    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
+    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
+    WHERE "w"."id" = "weapon_translations"."weapon_id"
+      AND (
+        -- Module creators
+        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        OR
+        -- Campaign GMs
+        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+      )
+  )
+);
 
 
 --------------------------------------------------------------------------------
