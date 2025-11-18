@@ -70,40 +70,6 @@ GRANT ALL ON TABLE public.spell_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
--- CAN READ SPELL
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.can_read_spell(p_campaign_id uuid, p_spell_visibility public.campaign_role) RETURNS boolean
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path TO 'public', 'pg_temp'
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() AS uid))
-    WHERE c.id = p_campaign_id
-      AND (
-        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
-        OR
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        (c.is_module = false AND cp.user_id IS NOT NULL AND (
-          p_spell_visibility = 'player'::public.campaign_role
-          OR cp.role = 'game_master'::public.campaign_role
-        ))
-      )
-  );
-$$;
-
-ALTER FUNCTION public.can_read_spell(p_campaign_id uuid, p_spell_visibility public.campaign_role) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.can_read_spell(p_campaign_id uuid, p_spell_visibility public.campaign_role) TO anon;
-GRANT ALL ON FUNCTION public.can_read_spell(p_campaign_id uuid, p_spell_visibility public.campaign_role) TO authenticated;
-GRANT ALL ON FUNCTION public.can_read_spell(p_campaign_id uuid, p_spell_visibility public.campaign_role) TO service_role;
-
-
---------------------------------------------------------------------------------
 -- CAN READ SPELL TRANSLATION
 --------------------------------------------------------------------------------
 
@@ -112,7 +78,7 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-  SELECT can_read_spell(s.campaign_id, s.visibility)
+  SELECT can_read_campaign_resource(s.campaign_id, s.visibility)
   FROM public.spells s
   WHERE s.id = p_spell_id;
 $$;
@@ -125,35 +91,6 @@ GRANT ALL ON FUNCTION public.can_read_spell_translation(p_spell_id uuid) TO serv
 
 
 --------------------------------------------------------------------------------
--- CAN EDIT SPELL
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.can_edit_spell(p_campaign_id uuid) RETURNS boolean
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path TO 'public', 'pg_temp'
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() as uid) AND cp.role = 'game_master'::public.campaign_role)
-    WHERE c.id = p_campaign_id
-      AND (
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        (c.is_module = false AND cp.user_id IS NOT NULL)
-      )
-  );
-$$;
-
-ALTER FUNCTION public.can_edit_spell(p_campaign_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.can_edit_spell(p_campaign_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.can_edit_spell(p_campaign_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.can_edit_spell(p_campaign_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
 -- CAN EDIT SPELL TRANSLATION
 --------------------------------------------------------------------------------
 
@@ -162,7 +99,7 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-  SELECT can_edit_spell(s.campaign_id)
+  SELECT can_edit_campaign_resource(s.campaign_id)
   FROM public.spells s
   WHERE s.id = p_spell_id;
 $$;
@@ -182,26 +119,26 @@ CREATE POLICY "Users can read spells"
 ON public.spells
 FOR SELECT
 TO authenticated
-USING ( public.can_read_spell(campaign_id, visibility) OR public.can_edit_spell(campaign_id) );
+USING ( public.can_read_campaign_resource(campaign_id, visibility) OR public.can_edit_campaign_resource(campaign_id) );
 
 CREATE POLICY "Creators and GMs can create new spells"
 ON public.spells
 FOR INSERT
 TO authenticated
-WITH CHECK ( public.can_edit_spell(campaign_id) );
+WITH CHECK ( public.can_edit_campaign_resource(campaign_id) );
 
 CREATE POLICY "Creators and GMs can update spells"
 ON public.spells
 FOR UPDATE
 TO authenticated
-USING ( public.can_edit_spell(campaign_id) )
-WITH CHECK ( public.can_edit_spell(campaign_id) );
+USING ( public.can_edit_campaign_resource(campaign_id) )
+WITH CHECK ( public.can_edit_campaign_resource(campaign_id) );
 
 CREATE POLICY "Creators and GMs can delete spells"
 ON public.spells
 FOR DELETE
 TO authenticated
-USING ( public.can_edit_spell(campaign_id) );
+USING ( public.can_edit_campaign_resource(campaign_id) );
 
 
 --------------------------------------------------------------------------------

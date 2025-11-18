@@ -45,40 +45,6 @@ GRANT ALL ON TABLE public.eldritch_invocation_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
--- CAN READ ELDRITCH INVOCATION
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.can_read_eldritch_invocation(p_campaign_id uuid, p_eldritch_invocation_visibility public.campaign_role) RETURNS boolean
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path TO 'public', 'pg_temp'
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() AS uid))
-    WHERE c.id = p_campaign_id
-      AND (
-        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
-        OR
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        (c.is_module = false AND cp.user_id IS NOT NULL AND (
-          p_eldritch_invocation_visibility = 'player'::public.campaign_role
-          OR cp.role = 'game_master'::public.campaign_role
-        ))
-      )
-  );
-$$;
-
-ALTER FUNCTION public.can_read_eldritch_invocation(p_campaign_id uuid, p_eldritch_invocation_visibility public.campaign_role) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.can_read_eldritch_invocation(p_campaign_id uuid, p_eldritch_invocation_visibility public.campaign_role) TO anon;
-GRANT ALL ON FUNCTION public.can_read_eldritch_invocation(p_campaign_id uuid, p_eldritch_invocation_visibility public.campaign_role) TO authenticated;
-GRANT ALL ON FUNCTION public.can_read_eldritch_invocation(p_campaign_id uuid, p_eldritch_invocation_visibility public.campaign_role) TO service_role;
-
-
---------------------------------------------------------------------------------
 -- CAN READ ELDRITCH INVOCATION TRANSLATION
 --------------------------------------------------------------------------------
 
@@ -88,7 +54,7 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-  SELECT can_read_eldritch_invocation(ei.campaign_id, ei.visibility)
+  SELECT can_read_campaign_resource(ei.campaign_id, ei.visibility)
   FROM public.eldritch_invocations ei
   WHERE ei.id = p_eldritch_invocation_id;
 $$;
@@ -101,35 +67,6 @@ GRANT ALL ON FUNCTION public.can_read_eldritch_invocation_translation(p_eldritch
 
 
 --------------------------------------------------------------------------------
--- CAN EDIT ELDRITCH INVOCATION
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.can_edit_eldritch_invocation(p_campaign_id uuid) RETURNS boolean
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path TO 'public', 'pg_temp'
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() as uid) AND cp.role = 'game_master'::public.campaign_role)
-    WHERE c.id = p_campaign_id
-      AND (
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        (c.is_module = false AND cp.user_id IS NOT NULL)
-      )
-  );
-$$;
-
-ALTER FUNCTION public.can_edit_eldritch_invocation(p_campaign_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.can_edit_eldritch_invocation(p_campaign_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.can_edit_eldritch_invocation(p_campaign_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.can_edit_eldritch_invocation(p_campaign_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
 -- CAN EDIT ELDRITCH INVOCATION TRANSLATION
 --------------------------------------------------------------------------------
 
@@ -138,7 +75,7 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
-  SELECT can_edit_eldritch_invocation(ei.campaign_id)
+  SELECT can_edit_campaign_resource(ei.campaign_id)
   FROM public.eldritch_invocations ei
   WHERE ei.id = p_eldritch_invocation_id;
 $$;
@@ -158,26 +95,26 @@ CREATE POLICY "Users can read eldritch invocations"
 ON public.eldritch_invocations
 FOR SELECT
 TO authenticated
-USING ( public.can_read_eldritch_invocation(campaign_id, visibility) OR public.can_edit_eldritch_invocation(campaign_id) );
+USING ( public.can_read_campaign_resource(campaign_id, visibility) OR public.can_edit_campaign_resource(campaign_id) );
 
 CREATE POLICY "Creators and GMs can create new eldritch invocations"
 ON public.eldritch_invocations
 FOR INSERT
 TO authenticated
-WITH CHECK ( public.can_edit_eldritch_invocation(campaign_id) );
+WITH CHECK ( public.can_edit_campaign_resource(campaign_id) );
 
 CREATE POLICY "Creators and GMs can update eldritch invocations"
 ON public.eldritch_invocations
 FOR UPDATE
 TO authenticated
-USING ( public.can_edit_eldritch_invocation(campaign_id) )
-WITH CHECK ( public.can_edit_eldritch_invocation(campaign_id) );
+USING ( public.can_edit_campaign_resource(campaign_id) )
+WITH CHECK ( public.can_edit_campaign_resource(campaign_id) );
 
 CREATE POLICY "Creators and GMs can delete eldritch invocations"
 ON public.eldritch_invocations
 FOR DELETE
 TO authenticated
-USING ( public.can_edit_eldritch_invocation(campaign_id) );
+USING ( public.can_edit_campaign_resource(campaign_id) );
 
 
 --------------------------------------------------------------------------------
