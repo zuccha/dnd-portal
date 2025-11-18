@@ -52,9 +52,14 @@ CREATE POLICY "GMs can manipulate eldritch invocations in their campaigns" ON "p
    FROM "public"."campaign_players" "cp"
   WHERE (("cp"."campaign_id" = "eldritch_invocations"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")) AND ("cp"."role" = 'game_master'::"public"."campaign_role")))));
 
-CREATE POLICY "Players can read eldritch invocations from core campaigns" ON "public"."eldritch_invocations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+CREATE POLICY "Players can read eldritch invocations from public modules" ON "public"."eldritch_invocations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
    FROM "public"."campaigns" "c"
-  WHERE (("c"."id" = "eldritch_invocations"."campaign_id") AND ("c"."core" = true)))));
+  WHERE (("c"."id" = "eldritch_invocations"."campaign_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
+
+CREATE POLICY "Players can read eldritch invocations from owned modules" ON "public"."eldritch_invocations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+   FROM "public"."campaigns" "c"
+   JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id")
+  WHERE (("c"."id" = "eldritch_invocations"."campaign_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
 
 CREATE POLICY "Players can read public eldritch invocations from campaigns the" ON "public"."eldritch_invocations" FOR SELECT TO "authenticated" USING ((("visibility" = 'player'::"public"."campaign_role") AND (EXISTS ( SELECT 1
    FROM "public"."campaign_players" "cp"
@@ -70,10 +75,16 @@ CREATE POLICY "GMs can manipulate eldritch invocations in their campaigns" ON "p
      JOIN "public"."campaign_players" "cp" ON ((("cp"."campaign_id" = "e"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")) AND ("cp"."role" = 'game_master'::"public"."campaign_role"))))
   WHERE ("e"."id" = "eldritch_invocation_translations"."eldritch_invocation_id"))));
 
-CREATE POLICY "Players can read eldritch invocations from core campaigns" ON "public"."eldritch_invocation_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+CREATE POLICY "Players can read eldritch invocations from public modules" ON "public"."eldritch_invocation_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
    FROM ("public"."eldritch_invocations" "e"
      JOIN "public"."campaigns" "c" ON (("c"."id" = "e"."campaign_id")))
-  WHERE (("e"."id" = "eldritch_invocation_translations"."eldritch_invocation_id") AND ("c"."core" = true)))));
+  WHERE (("e"."id" = "eldritch_invocation_translations"."eldritch_invocation_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
+
+CREATE POLICY "Players can read eldritch invocations from owned modules" ON "public"."eldritch_invocation_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+   FROM ("public"."eldritch_invocations" "e"
+     JOIN "public"."campaigns" "c" ON (("c"."id" = "e"."campaign_id"))
+     JOIN "public"."user_modules" "um" ON (("um"."module_id" = "c"."id")))
+  WHERE (("e"."id" = "eldritch_invocation_translations"."eldritch_invocation_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
 
 CREATE POLICY "Players can read public eldritch invocations from campaigns the" ON "public"."eldritch_invocation_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
    FROM "public"."eldritch_invocations" "e"
@@ -172,7 +183,6 @@ src as (
   from public.eldritch_invocations e
   join public.campaigns c on c.id = e.campaign_id
   where e.campaign_id = p_campaign_id
-    --  or c.core = true
 ),
 filtered as (
   select s.*

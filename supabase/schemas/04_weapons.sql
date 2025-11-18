@@ -73,9 +73,14 @@ CREATE POLICY "Players can read public weapons from campaigns they joined" ON "p
    FROM "public"."campaign_players" "cp"
   WHERE (("cp"."campaign_id" = "weapons"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")))))));
 
-CREATE POLICY "Players can read weapons from core campaigns" ON "public"."weapons" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+CREATE POLICY "Players can read weapons from public modules" ON "public"."weapons" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
    FROM "public"."campaigns" "c"
-  WHERE (("c"."id" = "weapons"."campaign_id") AND ("c"."core" = true)))));
+  WHERE (("c"."id" = "weapons"."campaign_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
+
+CREATE POLICY "Players can read weapons from owned modules" ON "public"."weapons" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+   FROM "public"."campaigns" "c"
+   JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id")
+  WHERE (("c"."id" = "weapons"."campaign_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
 
 
 --------------------------------------------------------------------------------
@@ -93,10 +98,16 @@ CREATE POLICY "Players can read public weapons from campaigns they joined" ON "p
            FROM "public"."campaign_players" "cp"
           WHERE (("cp"."campaign_id" = "w"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")))))))));
 
-CREATE POLICY "Players can read weapons from core campaigns" ON "public"."weapon_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+CREATE POLICY "Players can read weapons from public modules" ON "public"."weapon_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
    FROM ("public"."weapons" "w"
      JOIN "public"."campaigns" "c" ON (("c"."id" = "w"."campaign_id")))
-  WHERE (("w"."id" = "weapon_translations"."weapon_id") AND ("c"."core" = true)))));
+  WHERE (("w"."id" = "weapon_translations"."weapon_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
+
+CREATE POLICY "Players can read weapons from owned modules" ON "public"."weapon_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+   FROM ("public"."weapons" "w"
+     JOIN "public"."campaigns" "c" ON (("c"."id" = "w"."campaign_id"))
+     JOIN "public"."user_modules" "um" ON (("um"."module_id" = "c"."id")))
+  WHERE (("w"."id" = "weapon_translations"."weapon_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
 
 
 --------------------------------------------------------------------------------
@@ -258,7 +269,6 @@ src as (
   from public.weapons w
   join public.campaigns c on c.id = w.campaign_id
   where w.campaign_id = p_campaign_id
-    --  or c.core = true
 ),
 filtered as (
   select s.*

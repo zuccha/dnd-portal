@@ -2,7 +2,7 @@ import { Text, VStack, createListCollection } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
 import {
-  useCoreCampaigns,
+  useOwnedModules,
   useSelectedCampaignId,
   useUserCampaigns,
 } from "../../../../../resources/campaign";
@@ -15,7 +15,7 @@ import Select from "../../../../../ui/select";
 export default function SidebarCampaignSelector() {
   const [selectedCampaignId, setSelectedCampaignId] = useSelectedCampaignId();
 
-  const { data: coreCampaigns } = useCoreCampaigns();
+  const { data: coreCampaigns } = useOwnedModules();
   const { data: userCampaigns } = useUserCampaigns();
 
   const { t } = useI18nLangContext(i18nContext);
@@ -76,12 +76,12 @@ export default function SidebarCampaignSelector() {
 
 const i18nContext = {
   "select.core": {
-    en: "Core",
-    it: "Core",
+    en: "Modules",
+    it: "Moduli",
   },
   "select.user": {
-    en: "Yours",
-    it: "Personali",
+    en: "Campaigns",
+    it: "Campagne",
   },
   "title": {
     en: "Campaign",

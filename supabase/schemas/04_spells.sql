@@ -81,9 +81,14 @@ CREATE POLICY "Players can read public spells from campaigns they joined" ON "pu
    FROM "public"."campaign_players" "cp"
   WHERE (("cp"."campaign_id" = "spells"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")))))));
 
-CREATE POLICY "Players can read spells from core campaigns" ON "public"."spells" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+CREATE POLICY "Players can read spells from public modules" ON "public"."spells" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
    FROM "public"."campaigns" "c"
-  WHERE (("c"."id" = "spells"."campaign_id") AND ("c"."core" = true)))));
+  WHERE (("c"."id" = "spells"."campaign_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
+
+CREATE POLICY "Players can read spells from owned modules" ON "public"."spells" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+   FROM "public"."campaigns" "c"
+   JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id")
+  WHERE (("c"."id" = "spells"."campaign_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
 
 
 --------------------------------------------------------------------------------
@@ -101,10 +106,16 @@ CREATE POLICY "Players can read public spells from campaigns they joined" ON "pu
            FROM "public"."campaign_players" "cp"
           WHERE (("cp"."campaign_id" = "s"."campaign_id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")))))))));
 
-CREATE POLICY "Players can read spells from core campaigns" ON "public"."spell_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+CREATE POLICY "Players can read spells from public modules" ON "public"."spell_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
    FROM ("public"."spells" "s"
      JOIN "public"."campaigns" "c" ON (("c"."id" = "s"."campaign_id")))
-  WHERE (("s"."id" = "spell_translations"."spell_id") AND ("c"."core" = true)))));
+  WHERE (("s"."id" = "spell_translations"."spell_id") AND ("c"."is_module" = true) AND ("c"."visibility" = 'public'::"public"."campaign_visibility")))));
+
+CREATE POLICY "Players can read spells from owned modules" ON "public"."spell_translations" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
+   FROM ("public"."spells" "s"
+     JOIN "public"."campaigns" "c" ON (("c"."id" = "s"."campaign_id"))
+     JOIN "public"."user_modules" "um" ON (("um"."module_id" = "c"."id")))
+  WHERE (("s"."id" = "spell_translations"."spell_id") AND ("c"."is_module" = true) AND ("um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
 
 
 --------------------------------------------------------------------------------
@@ -272,7 +283,6 @@ src as (
   from public.spells s
   join public.campaigns c on c.id = s.campaign_id
   where s.campaign_id = p_campaign_id
-    --  or c.core = true
 ),
 filtered as (
   select s.*

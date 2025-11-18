@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS "public"."campaigns" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "name" "text" DEFAULT ''::"text" NOT NULL,
-    "core" boolean DEFAULT false NOT NULL,
     "creator_id" "uuid" REFERENCES "auth"."users"("id") ON DELETE SET NULL,
     "is_module" boolean DEFAULT false NOT NULL,
     "visibility" "public"."campaign_visibility" DEFAULT 'private'::"public"."campaign_visibility" NOT NULL,
@@ -104,8 +103,6 @@ GRANT ALL ON TABLE "public"."user_modules" TO "service_role";
 CREATE POLICY "Players can read campaigns they joined" ON "public"."campaigns" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
    FROM "public"."campaign_players" "cp"
   WHERE (("cp"."campaign_id" = "campaigns"."id") AND ("cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))))));
-
-CREATE POLICY "Players can read core campaigns" ON "public"."campaigns" FOR SELECT USING (("core" = true));
 
 CREATE POLICY "Players can read public modules" ON "public"."campaigns" FOR SELECT TO "authenticated" USING (
   ("is_module" = true AND "visibility" = 'public'::"public"."campaign_visibility")

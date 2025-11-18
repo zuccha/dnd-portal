@@ -8,7 +8,6 @@ import supabase from "../supabase";
 //------------------------------------------------------------------------------
 
 export const campaignSchema = z.object({
-  core: z.boolean(),
   id: z.uuid(),
   name: z.string(),
 });
@@ -16,22 +15,25 @@ export const campaignSchema = z.object({
 export type Campaign = z.infer<typeof campaignSchema>;
 
 //------------------------------------------------------------------------------
-// Fetch Core Campaigns
+// Fetch Owned Modules
 //------------------------------------------------------------------------------
 
-export async function fetchCoreCampaigns(): Promise<Campaign[]> {
-  const { data } = await supabase.from("campaigns").select().eq("core", true);
+export async function fetchOwnedModules(): Promise<Campaign[]> {
+  const { data } = await supabase
+    .from("campaigns")
+    .select()
+    .eq("is_module", true);
   return z.array(campaignSchema).parse(data);
 }
 
 //------------------------------------------------------------------------------
-// Use Core Campaigns
+// Use Owned Modules
 //------------------------------------------------------------------------------
 
-export function useCoreCampaigns() {
+export function useOwnedModules() {
   return useQuery<Campaign[]>({
-    queryFn: fetchCoreCampaigns,
-    queryKey: ["campaigns/core"],
+    queryFn: fetchOwnedModules,
+    queryKey: ["campaigns/modules"],
   });
 }
 
@@ -40,7 +42,10 @@ export function useCoreCampaigns() {
 //------------------------------------------------------------------------------
 
 export async function fetchUserCampaigns(): Promise<Campaign[]> {
-  const { data } = await supabase.from("campaigns").select().eq("core", false);
+  const { data } = await supabase
+    .from("campaigns")
+    .select()
+    .eq("is_module", false);
   return z.array(campaignSchema).parse(data);
 }
 
