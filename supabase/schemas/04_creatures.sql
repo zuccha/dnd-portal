@@ -69,8 +69,8 @@ CREATE TABLE IF NOT EXISTS public.creature_translations (
     page text,
     languages text,
     CONSTRAINT creature_translations_pkey PRIMARY KEY (creature_id, lang),
-    CONSTRAINT creature_translations_creature_id_fkey FOREIGN KEY (creature_id) REFERENCES public.creatures(id) ON UPDATE CASCADE ON DELETE CASCADE
-    -- TODO: CONSTRAINT creature_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON DELETE CASCADE
+    CONSTRAINT creature_translations_creature_id_fkey FOREIGN KEY (creature_id) REFERENCES public.creatures(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT creature_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.creature_translations OWNER TO postgres;

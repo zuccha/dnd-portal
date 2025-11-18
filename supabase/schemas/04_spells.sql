@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS public.spell_translations (
     upgrade text,
     CONSTRAINT spell_translations_pkey PRIMARY KEY (spell_id, lang),
     CONSTRAINT spell_translations_spell_id_fkey FOREIGN KEY (spell_id) REFERENCES public.spells(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT spell_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON DELETE CASCADE
+    CONSTRAINT spell_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.spell_translations OWNER TO postgres;

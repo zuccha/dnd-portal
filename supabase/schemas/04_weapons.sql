@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS public.weapon_translations (
     notes text,
     ammunition text,
     CONSTRAINT weapon_translations_pkey PRIMARY KEY (weapon_id, lang),
-    CONSTRAINT weapon_translations_weapon_id_fkey FOREIGN KEY (weapon_id) REFERENCES public.weapons(id) ON UPDATE CASCADE ON DELETE CASCADE
-    -- TODO: CONSTRAINT weapon_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON DELETE CASCADE
+    CONSTRAINT weapon_translations_weapon_id_fkey FOREIGN KEY (weapon_id) REFERENCES public.weapons(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT weapon_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.weapon_translations OWNER TO postgres;

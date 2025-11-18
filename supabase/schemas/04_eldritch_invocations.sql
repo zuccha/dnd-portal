@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS public.eldritch_invocation_translations (
     description text DEFAULT ''::text NOT NULL,
     page text,
     CONSTRAINT eldritch_invocation_translations_pkey PRIMARY KEY (eldritch_invocation_id, lang),
-    CONSTRAINT eldritch_invocation_translations_eldritch_invocation_id_fkey FOREIGN KEY (eldritch_invocation_id) REFERENCES public.eldritch_invocations(id) ON UPDATE CASCADE ON DELETE CASCADE
-    -- TODO: CONSTRAINT eldritch_invocation_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON DELETE CASCADE
+    CONSTRAINT eldritch_invocation_translations_eldritch_invocation_id_fkey FOREIGN KEY (eldritch_invocation_id) REFERENCES public.eldritch_invocations(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT eldritch_invocation_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.eldritch_invocation_translations OWNER TO postgres;
