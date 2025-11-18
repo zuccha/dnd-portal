@@ -119,22 +119,8 @@ CREATE POLICY "Users can read campaigns and modules" ON "public"."campaigns" FOR
   ))
 );
 
-CREATE POLICY "Creators and GMs can edit campaigns" ON "public"."campaigns" TO "authenticated" USING (
-  -- Module creators (via user_modules)
-  ("is_module" = true AND EXISTS (
-    SELECT 1 FROM "public"."user_modules" "um"
-    WHERE "um"."module_id" = "campaigns"."id"
-      AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid")
-      AND "um"."role" = 'creator'::"public"."module_role"
-  ))
-  OR
-  -- Campaign GMs (via campaign_players)
-  ("is_module" = false AND EXISTS (
-    SELECT 1 FROM "public"."campaign_players" "cp"
-    WHERE "cp"."campaign_id" = "campaigns"."id"
-      AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")
-      AND "cp"."role" = 'game_master'::"public"."campaign_role"
-  ))
+CREATE POLICY "Campaign creators can edit" ON "public"."campaigns" TO "authenticated" USING (
+  "creator_id" = ( SELECT "auth"."uid"() AS "uid")
 );
 
 
@@ -177,12 +163,30 @@ CREATE POLICY "Users can view their campaign memberships" ON "public"."campaign_
   "user_id" = ( SELECT "auth"."uid"() AS "uid")
 );
 
-CREATE POLICY "GMs can manage campaign memberships" ON "public"."campaign_players" TO "authenticated" USING (
+DROP POLICY IF EXISTS "Campaign creators can manage memberships" ON "public"."campaign_players";
+CREATE POLICY "Campaign creators can manage memberships" ON "public"."campaign_players" FOR INSERT TO "authenticated" WITH CHECK (
   EXISTS (
-    SELECT 1 FROM "public"."campaign_players" "cp"
-    WHERE "cp"."campaign_id" = "campaign_players"."campaign_id"
-      AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")
-      AND "cp"."role" = 'game_master'::"public"."campaign_role"
+    SELECT 1 FROM "public"."campaigns" "c"
+    WHERE "c"."id" = "campaign_players"."campaign_id"
+      AND "c"."creator_id" = ( SELECT "auth"."uid"() AS "uid")
+  )
+);
+
+DROP POLICY IF EXISTS "Campaign creators can manage memberships" ON "public"."campaign_players";
+CREATE POLICY "Campaign creators can manage memberships" ON "public"."campaign_players" FOR UPDATE TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaigns" "c"
+    WHERE "c"."id" = "campaign_players"."campaign_id"
+      AND "c"."creator_id" = ( SELECT "auth"."uid"() AS "uid")
+  )
+);
+
+DROP POLICY IF EXISTS "Campaign creators can manage memberships" ON "public"."campaign_players";
+CREATE POLICY "Campaign creators can manage memberships" ON "public"."campaign_players" FOR DELETE TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaigns" "c"
+    WHERE "c"."id" = "campaign_players"."campaign_id"
+      AND "c"."creator_id" = ( SELECT "auth"."uid"() AS "uid")
   )
 );
 
@@ -195,12 +199,33 @@ CREATE POLICY "Users can view their own module ownership" ON "public"."user_modu
   "user_id" = ( SELECT "auth"."uid"() AS "uid")
 );
 
-CREATE POLICY "Module creators can manage ownership" ON "public"."user_modules" TO "authenticated" USING (
+DROP POLICY IF EXISTS "Module creators can manage ownership" ON "public"."user_modules";
+CREATE POLICY "Module creators can manage ownership" ON "public"."user_modules" FOR INSERT TO "authenticated" WITH CHECK (
   EXISTS (
-    SELECT 1 FROM "public"."user_modules" "um"
-    WHERE "um"."module_id" = "user_modules"."module_id"
-      AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid")
-      AND "um"."role" = 'creator'::"public"."module_role"
+    SELECT 1 FROM "public"."campaigns" "c"
+    WHERE "c"."id" = "user_modules"."module_id"
+      AND "c"."creator_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "c"."is_module" = true
+  )
+);
+
+DROP POLICY IF EXISTS "Module creators can manage ownership" ON "public"."user_modules";
+CREATE POLICY "Module creators can manage ownership" ON "public"."user_modules" FOR UPDATE TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaigns" "c"
+    WHERE "c"."id" = "user_modules"."module_id"
+      AND "c"."creator_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "c"."is_module" = true
+  )
+);
+
+DROP POLICY IF EXISTS "Module creators can manage ownership" ON "public"."user_modules";
+CREATE POLICY "Module creators can manage ownership" ON "public"."user_modules" FOR DELETE TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaigns" "c"
+    WHERE "c"."id" = "user_modules"."module_id"
+      AND "c"."creator_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "c"."is_module" = true
   )
 );
 
