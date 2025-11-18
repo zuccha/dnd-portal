@@ -7,17 +7,45 @@ CREATE TABLE IF NOT EXISTS "public"."campaigns" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "name" "text" DEFAULT ''::"text" NOT NULL,
     "core" boolean DEFAULT false NOT NULL,
+    "creator_id" "uuid" REFERENCES "auth"."users"("id") ON DELETE SET NULL,
+    "is_module" boolean DEFAULT false NOT NULL,
+    "visibility" "public"."campaign_visibility" DEFAULT 'private'::"public"."campaign_visibility" NOT NULL,
     CONSTRAINT "campaign_pkey" PRIMARY KEY ("id")
 );
 
 ALTER TABLE "public"."campaigns" OWNER TO "postgres";
 
+CREATE INDEX "idx_campaigns_creator_id" ON "public"."campaigns" USING "btree" ("creator_id");
+CREATE INDEX "idx_campaigns_is_module" ON "public"."campaigns" USING "btree" ("is_module") WHERE "is_module" = true;
 
 ALTER TABLE "public"."campaigns" ENABLE ROW LEVEL SECURITY;
 
 GRANT ALL ON TABLE "public"."campaigns" TO "anon";
 GRANT ALL ON TABLE "public"."campaigns" TO "authenticated";
 GRANT ALL ON TABLE "public"."campaigns" TO "service_role";
+
+
+--------------------------------------------------------------------------------
+-- CAMPAIGN MODULES
+--------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS "public"."campaign_modules" (
+    "campaign_id" "uuid" NOT NULL REFERENCES "public"."campaigns"("id") ON DELETE CASCADE,
+    "module_id" "uuid" NOT NULL REFERENCES "public"."campaigns"("id") ON DELETE CASCADE,
+    "added_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    CONSTRAINT "campaign_modules_pkey" PRIMARY KEY ("campaign_id", "module_id")
+);
+
+ALTER TABLE "public"."campaign_modules" OWNER TO "postgres";
+
+CREATE INDEX "idx_campaign_modules_campaign_id" ON "public"."campaign_modules" USING "btree" ("campaign_id");
+CREATE INDEX "idx_campaign_modules_module_id" ON "public"."campaign_modules" USING "btree" ("module_id");
+
+ALTER TABLE "public"."campaign_modules" ENABLE ROW LEVEL SECURITY;
+
+GRANT ALL ON TABLE "public"."campaign_modules" TO "anon";
+GRANT ALL ON TABLE "public"."campaign_modules" TO "authenticated";
+GRANT ALL ON TABLE "public"."campaign_modules" TO "service_role";
 
 
 --------------------------------------------------------------------------------
@@ -46,6 +74,30 @@ GRANT ALL ON TABLE "public"."campaign_players" TO "service_role";
 
 
 --------------------------------------------------------------------------------
+-- USER MODULES
+--------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS "public"."user_modules" (
+    "user_id" "uuid" NOT NULL REFERENCES "auth"."users"("id") ON DELETE CASCADE,
+    "module_id" "uuid" NOT NULL REFERENCES "public"."campaigns"("id") ON DELETE CASCADE,
+    "role" "public"."module_role" NOT NULL,
+    "acquired_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    CONSTRAINT "user_modules_pkey" PRIMARY KEY ("user_id", "module_id")
+);
+
+ALTER TABLE "public"."user_modules" OWNER TO "postgres";
+
+CREATE INDEX "idx_user_modules_user_id" ON "public"."user_modules" USING "btree" ("user_id");
+CREATE INDEX "idx_user_modules_module_id" ON "public"."user_modules" USING "btree" ("module_id");
+
+ALTER TABLE "public"."user_modules" ENABLE ROW LEVEL SECURITY;
+
+GRANT ALL ON TABLE "public"."user_modules" TO "anon";
+GRANT ALL ON TABLE "public"."user_modules" TO "authenticated";
+GRANT ALL ON TABLE "public"."user_modules" TO "service_role";
+
+
+--------------------------------------------------------------------------------
 -- CAMPAIGNS POLICIES
 --------------------------------------------------------------------------------
 
@@ -55,12 +107,144 @@ CREATE POLICY "Players can read campaigns they joined" ON "public"."campaigns" F
 
 CREATE POLICY "Players can read core campaigns" ON "public"."campaigns" FOR SELECT USING (("core" = true));
 
+CREATE POLICY "Players can read public modules" ON "public"."campaigns" FOR SELECT TO "authenticated" USING (
+  ("is_module" = true AND "visibility" = 'public'::"public"."campaign_visibility")
+);
+
+CREATE POLICY "Players can read modules they own" ON "public"."campaigns" FOR SELECT TO "authenticated" USING (
+  ("is_module" = true AND EXISTS (
+    SELECT 1 FROM "public"."user_modules" "um"
+    WHERE "um"."module_id" = "campaigns"."id"
+      AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+  ))
+);
+
+
+--------------------------------------------------------------------------------
+-- CAMPAIGN MODULES POLICIES
+--------------------------------------------------------------------------------
+
+CREATE POLICY "Players can view modules used by campaigns they joined" ON "public"."campaign_modules" FOR SELECT TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaign_players" "cp"
+    WHERE "cp"."campaign_id" = "campaign_modules"."campaign_id"
+      AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+  )
+);
+
+CREATE POLICY "DMs can add modules to campaigns" ON "public"."campaign_modules" FOR INSERT TO "authenticated" WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM "public"."campaign_players" "cp"
+    WHERE "cp"."campaign_id" = "campaign_modules"."campaign_id"
+      AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "cp"."role" = 'game_master'::"public"."campaign_role"
+  )
+);
+
+CREATE POLICY "DMs can remove modules from campaigns" ON "public"."campaign_modules" FOR DELETE TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."campaign_players" "cp"
+    WHERE "cp"."campaign_id" = "campaign_modules"."campaign_id"
+      AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "cp"."role" = 'game_master'::"public"."campaign_role"
+  )
+);
+
 
 --------------------------------------------------------------------------------
 -- CAMPAIGN PLAYERS POLICIES
 --------------------------------------------------------------------------------
 
 CREATE POLICY "Users can check if they joined a campaign" ON "public"."campaign_players" FOR SELECT TO "authenticated" USING (("user_id" = ( SELECT "auth"."uid"() AS "uid")));
+
+
+--------------------------------------------------------------------------------
+-- USER MODULES POLICIES
+--------------------------------------------------------------------------------
+
+CREATE POLICY "Users can view their own module ownership" ON "public"."user_modules" FOR SELECT TO "authenticated" USING (
+  "user_id" = ( SELECT "auth"."uid"() AS "uid")
+);
+
+CREATE POLICY "Creators can manage module ownership" ON "public"."user_modules" FOR INSERT TO "authenticated" WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM "public"."user_modules" "um"
+    WHERE "um"."module_id" = "user_modules"."module_id"
+      AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "um"."role" = 'creator'::"public"."module_role"
+  )
+);
+
+CREATE POLICY "Creators can revoke module ownership" ON "public"."user_modules" FOR DELETE TO "authenticated" USING (
+  EXISTS (
+    SELECT 1 FROM "public"."user_modules" "um"
+    WHERE "um"."module_id" = "user_modules"."module_id"
+      AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid")
+      AND "um"."role" = 'creator'::"public"."module_role"
+  )
+);
+
+
+--------------------------------------------------------------------------------
+-- CAMPAIGN MODULES VALIDATION TRIGGER
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION "public"."validate_campaign_module_is_module"()
+RETURNS TRIGGER
+LANGUAGE "plpgsql"
+AS $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM "public"."campaigns"
+    WHERE "id" = NEW."module_id" AND "is_module" = true
+  ) THEN
+    RAISE EXCEPTION 'Referenced campaign % is not a module', NEW."module_id";
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION "public"."validate_campaign_module_is_module"() OWNER TO "postgres";
+
+CREATE TRIGGER "enforce_campaign_module_is_module"
+  BEFORE INSERT OR UPDATE ON "public"."campaign_modules"
+  FOR EACH ROW
+  EXECUTE FUNCTION "public"."validate_campaign_module_is_module"();
+
+GRANT ALL ON FUNCTION "public"."validate_campaign_module_is_module"() TO "anon";
+GRANT ALL ON FUNCTION "public"."validate_campaign_module_is_module"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."validate_campaign_module_is_module"() TO "service_role";
+
+
+--------------------------------------------------------------------------------
+-- USER MODULES VALIDATION TRIGGER
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION "public"."validate_user_module_is_module"()
+RETURNS TRIGGER
+LANGUAGE "plpgsql"
+AS $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM "public"."campaigns"
+    WHERE "id" = NEW."module_id" AND "is_module" = true
+  ) THEN
+    RAISE EXCEPTION 'Referenced campaign % is not a module', NEW."module_id";
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION "public"."validate_user_module_is_module"() OWNER TO "postgres";
+
+CREATE TRIGGER "enforce_user_module_is_module"
+  BEFORE INSERT OR UPDATE ON "public"."user_modules"
+  FOR EACH ROW
+  EXECUTE FUNCTION "public"."validate_user_module_is_module"();
+
+GRANT ALL ON FUNCTION "public"."validate_user_module_is_module"() TO "anon";
+GRANT ALL ON FUNCTION "public"."validate_user_module_is_module"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."validate_user_module_is_module"() TO "service_role";
 
 
 --------------------------------------------------------------------------------
