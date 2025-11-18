@@ -1,4 +1,4 @@
-CREATE TYPE "public"."spell_school" AS ENUM (
+CREATE TYPE public.spell_school AS ENUM (
     'abjuration',
     'conjuration',
     'divination',
@@ -9,4 +9,4 @@ CREATE TYPE "public"."spell_school" AS ENUM (
     'transmutation'
 );
 
-ALTER TYPE "public"."spell_school" OWNER TO "postgres";
+ALTER TYPE public.spell_school OWNER TO postgres;

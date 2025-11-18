@@ -2,123 +2,123 @@
 -- CREATURES
 --------------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS "public"."creatures" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "campaign_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "type" "public"."creature_type" NOT NULL,
-    "alignment" "public"."creature_alignment" NOT NULL,
-    "size" "public"."creature_size" NOT NULL,
-    "cr" numeric DEFAULT '0'::smallint NOT NULL,
-    "ac" "text" DEFAULT ''::"text" NOT NULL,
-    "hp" "text" DEFAULT ''::"text" NOT NULL,
-    "hp_formula" "text" DEFAULT ''::"text" NOT NULL,
-    "speed_walk" "text",
-    "speed_fly" "text",
-    "speed_swim" "text",
-    "speed_climb" "text",
-    "ability_str" smallint DEFAULT '10'::smallint NOT NULL,
-    "ability_dex" smallint DEFAULT '10'::smallint NOT NULL,
-    "ability_con" smallint DEFAULT '10'::smallint NOT NULL,
-    "ability_int" smallint DEFAULT '10'::smallint NOT NULL,
-    "ability_wis" smallint DEFAULT '10'::smallint NOT NULL,
-    "ability_cha" smallint DEFAULT '10'::smallint NOT NULL,
-    "initiative" "text" DEFAULT ''::"text" NOT NULL,
-    "passive_perception" "text" DEFAULT ''::"text" NOT NULL,
-    "ability_proficiencies" "public"."creature_ability"[] NOT NULL,
-    "skill_proficiencies" "public"."creature_skill"[] NOT NULL,
-    "damage_immunities" "public"."damage_type"[] NOT NULL,
-    "damage_resistances" "public"."damage_type"[] NOT NULL,
-    "damage_vulnerabilities" "public"."damage_type"[] NOT NULL,
-    "condition_immunities" "public"."creature_condition"[] NOT NULL,
-    "condition_resistances" "public"."creature_condition"[] NOT NULL,
-    "condition_vulnerabilities" "public"."creature_condition"[] NOT NULL,
-    "habitats" "public"."creature_habitat"[] NOT NULL,
-    "treasures" "public"."creature_treasure"[] NOT NULL,
-    "visibility" "public"."campaign_role" DEFAULT 'game_master'::"public"."campaign_role" NOT NULL,
-    "speed_burrow" "text",
-    "initiative_passive" "text" DEFAULT ''::"text" NOT NULL,
-    "skill_expertise" "public"."creature_skill"[] DEFAULT '{}'::"public"."creature_skill"[] NOT NULL,
-    CONSTRAINT "creature_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "creature_campaign_id_fkey" FOREIGN KEY ("campaign_id") REFERENCES "public"."campaigns"("id") ON UPDATE CASCADE ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS public.creatures (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    campaign_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    type public.creature_type NOT NULL,
+    alignment public.creature_alignment NOT NULL,
+    size public.creature_size NOT NULL,
+    cr numeric DEFAULT '0'::smallint NOT NULL,
+    ac text DEFAULT ''::text NOT NULL,
+    hp text DEFAULT ''::text NOT NULL,
+    hp_formula text DEFAULT ''::text NOT NULL,
+    speed_walk text,
+    speed_fly text,
+    speed_swim text,
+    speed_climb text,
+    ability_str smallint DEFAULT '10'::smallint NOT NULL,
+    ability_dex smallint DEFAULT '10'::smallint NOT NULL,
+    ability_con smallint DEFAULT '10'::smallint NOT NULL,
+    ability_int smallint DEFAULT '10'::smallint NOT NULL,
+    ability_wis smallint DEFAULT '10'::smallint NOT NULL,
+    ability_cha smallint DEFAULT '10'::smallint NOT NULL,
+    initiative text DEFAULT ''::text NOT NULL,
+    passive_perception text DEFAULT ''::text NOT NULL,
+    ability_proficiencies public.creature_ability[] NOT NULL,
+    skill_proficiencies public.creature_skill[] NOT NULL,
+    damage_immunities public.damage_type[] NOT NULL,
+    damage_resistances public.damage_type[] NOT NULL,
+    damage_vulnerabilities public.damage_type[] NOT NULL,
+    condition_immunities public.creature_condition[] NOT NULL,
+    condition_resistances public.creature_condition[] NOT NULL,
+    condition_vulnerabilities public.creature_condition[] NOT NULL,
+    habitats public.creature_habitat[] NOT NULL,
+    treasures public.creature_treasure[] NOT NULL,
+    visibility public.campaign_role DEFAULT 'game_master'::public.campaign_role NOT NULL,
+    speed_burrow text,
+    initiative_passive text DEFAULT ''::text NOT NULL,
+    skill_expertise public.creature_skill[] DEFAULT '{}'::public.creature_skill[] NOT NULL,
+    CONSTRAINT creature_pkey PRIMARY KEY (id),
+    CONSTRAINT creature_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."creatures" OWNER TO "postgres";
-ALTER TABLE "public"."creatures" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.creatures OWNER TO postgres;
+ALTER TABLE public.creatures ENABLE ROW LEVEL SECURITY;
 
-GRANT ALL ON TABLE "public"."creatures" TO "anon";
-GRANT ALL ON TABLE "public"."creatures" TO "authenticated";
-GRANT ALL ON TABLE "public"."creatures" TO "service_role";
+GRANT ALL ON TABLE public.creatures TO anon;
+GRANT ALL ON TABLE public.creatures TO authenticated;
+GRANT ALL ON TABLE public.creatures TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- CREATURE TRANSLATIONS
 --------------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS "public"."creature_translations" (
-    "creature_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "lang" "text" NOT NULL,
-    "senses" "text",
-    "gear" "text",
-    "traits" "text",
-    "actions" "text",
-    "bonus_actions" "text",
-    "reactions" "text",
-    "legendary_actions" "text",
-    "planes" "text",
-    "name" "text" NOT NULL,
-    "page" "text",
-    "languages" "text",
-    CONSTRAINT "creature_translations_pkey" PRIMARY KEY ("creature_id", "lang"),
-    CONSTRAINT "creature_translations_creature_id_fkey" FOREIGN KEY ("creature_id") REFERENCES "public"."creatures"("id") ON UPDATE CASCADE ON DELETE CASCADE
-    -- TODO: CONSTRAINT "creature_translations_lang_fkey" FOREIGN KEY ("lang") REFERENCES "public"."languages"("code") ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS public.creature_translations (
+    creature_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    lang text NOT NULL,
+    senses text,
+    gear text,
+    traits text,
+    actions text,
+    bonus_actions text,
+    reactions text,
+    legendary_actions text,
+    planes text,
+    name text NOT NULL,
+    page text,
+    languages text,
+    CONSTRAINT creature_translations_pkey PRIMARY KEY (creature_id, lang),
+    CONSTRAINT creature_translations_creature_id_fkey FOREIGN KEY (creature_id) REFERENCES public.creatures(id) ON UPDATE CASCADE ON DELETE CASCADE
+    -- TODO: CONSTRAINT creature_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."creature_translations" OWNER TO "postgres";
-ALTER TABLE "public"."creature_translations" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.creature_translations OWNER TO postgres;
+ALTER TABLE public.creature_translations ENABLE ROW LEVEL SECURITY;
 
-GRANT ALL ON TABLE "public"."creature_translations" TO "anon";
-GRANT ALL ON TABLE "public"."creature_translations" TO "authenticated";
-GRANT ALL ON TABLE "public"."creature_translations" TO "service_role";
+GRANT ALL ON TABLE public.creature_translations TO anon;
+GRANT ALL ON TABLE public.creature_translations TO authenticated;
+GRANT ALL ON TABLE public.creature_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- CREATURES POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read creatures" ON "public"."creatures" FOR SELECT TO "authenticated" USING (
+CREATE POLICY "Users can read creatures" ON public.creatures FOR SELECT TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."campaigns" "c"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    WHERE "c"."id" = "creatures"."campaign_id"
+    SELECT 1 FROM public.campaigns c
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
+    WHERE c.id = creatures.campaign_id
       AND (
         -- Public modules
-        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
         OR
         -- Owned modules
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Non-module campaigns with visibility check
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
-          "creatures"."visibility" = 'player'::"public"."campaign_role"
-          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        (c.is_module = false AND cp.user_id IS NOT NULL AND (
+          creatures.visibility = 'player'::public.campaign_role
+          OR cp.role = 'game_master'::public.campaign_role
         ))
       )
   )
 );
 
-CREATE POLICY "Creators and GMs can edit creatures" ON "public"."creatures" TO "authenticated" USING (
+CREATE POLICY "Creators and GMs can edit creatures" ON public.creatures TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."campaigns" "c"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
-    WHERE "c"."id" = "creatures"."campaign_id"
+    SELECT 1 FROM public.campaigns c
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
+    WHERE c.id = creatures.campaign_id
       AND (
         -- Module creators
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Campaign GMs
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+        (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   )
 );
@@ -128,42 +128,42 @@ CREATE POLICY "Creators and GMs can edit creatures" ON "public"."creatures" TO "
 -- CREATURE TRANSLATIONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read creature translations" ON "public"."creature_translations" FOR SELECT TO "authenticated" USING (
+CREATE POLICY "Users can read creature translations" ON public.creature_translations FOR SELECT TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."creatures" "cr"
-    JOIN "public"."campaigns" "c" ON "c"."id" = "cr"."campaign_id"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    WHERE "cr"."id" = "creature_translations"."creature_id"
+    SELECT 1 FROM public.creatures cr
+    JOIN public.campaigns c ON c.id = cr.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
+    WHERE cr.id = creature_translations.creature_id
       AND (
         -- Public modules
-        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
         OR
         -- Owned modules
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Non-module campaigns with visibility check
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
-          "cr"."visibility" = 'player'::"public"."campaign_role"
-          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        (c.is_module = false AND cp.user_id IS NOT NULL AND (
+          cr.visibility = 'player'::public.campaign_role
+          OR cp.role = 'game_master'::public.campaign_role
         ))
       )
   )
 );
 
-CREATE POLICY "Creators and GMs can edit creature translations" ON "public"."creature_translations" TO "authenticated" USING (
+CREATE POLICY "Creators and GMs can edit creature translations" ON public.creature_translations TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."creatures" "cr"
-    JOIN "public"."campaigns" "c" ON "c"."id" = "cr"."campaign_id"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
-    WHERE "cr"."id" = "creature_translations"."creature_id"
+    SELECT 1 FROM public.creatures cr
+    JOIN public.campaigns c ON c.id = cr.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
+    WHERE cr.id = creature_translations.creature_id
       AND (
         -- Module creators
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Campaign GMs
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+        (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   )
 );
@@ -173,9 +173,9 @@ CREATE POLICY "Creators and GMs can edit creature translations" ON "public"."cre
 -- CREATE CREATURE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."create_creature"("p_campaign_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") RETURNS "uuid"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) RETURNS uuid
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   v_id uuid;
@@ -208,20 +208,20 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."create_creature"("p_campaign_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."create_creature"("p_campaign_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."create_creature"("p_campaign_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."create_creature"("p_campaign_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- FETCH CREATURE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."fetch_creature"("p_id" "uuid") RETURNS "record"
-    LANGUAGE "sql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.fetch_creature(p_id uuid) RETURNS record
+    LANGUAGE sql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
   select
     r.id,
@@ -295,20 +295,20 @@ CREATE OR REPLACE FUNCTION "public"."fetch_creature"("p_id" "uuid") RETURNS "rec
   where r.id = p_id;
 $$;
 
-ALTER FUNCTION "public"."fetch_creature"("p_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION public.fetch_creature(p_id uuid) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."fetch_creature"("p_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."fetch_creature"("p_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."fetch_creature"("p_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION public.fetch_creature(p_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.fetch_creature(p_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_creature(p_id uuid) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- FETCH CREATURES
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."fetch_creatures"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb" DEFAULT '{}'::"jsonb", "p_order_by" "text" DEFAULT 'name'::"text", "p_order_dir" "text" DEFAULT 'asc'::"text") RETURNS TABLE("id" "uuid", "campaign_id" "uuid", "campaign_name" "text", "alignment" "public"."creature_alignment", "habitats" "public"."creature_habitat"[], "size" "public"."creature_size", "treasures" "public"."creature_treasure"[], "type" "public"."creature_type", "ac" "text", "cr" numeric, "hp" "text", "hp_formula" "text", "speed_burrow" "text", "speed_climb" "text", "speed_fly" "text", "speed_swim" "text", "speed_walk" "text", "ability_cha" smallint, "ability_con" smallint, "ability_dex" smallint, "ability_int" smallint, "ability_str" smallint, "ability_wis" smallint, "initiative" "text", "initiative_passive" "text", "passive_perception" "text", "ability_proficiencies" "public"."creature_ability"[], "skill_proficiencies" "public"."creature_skill"[], "skill_expertise" "public"."creature_skill"[], "damage_immunities" "public"."damage_type"[], "damage_resistances" "public"."damage_type"[], "damage_vulnerabilities" "public"."damage_type"[], "condition_immunities" "public"."creature_condition"[], "condition_resistances" "public"."creature_condition"[], "condition_vulnerabilities" "public"."creature_condition"[], "name" "jsonb", "page" "jsonb", "gear" "jsonb", "languages" "jsonb", "planes" "jsonb", "senses" "jsonb", "traits" "jsonb", "actions" "jsonb", "bonus_actions" "jsonb", "legendary_actions" "jsonb", "reactions" "jsonb", "visibility" "public"."campaign_role")
-    LANGUAGE "sql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text) RETURNS TABLE(id uuid, campaign_id uuid, campaign_name text, alignment public.creature_alignment, habitats public.creature_habitat[], size public.creature_size, treasures public.creature_treasure[], type public.creature_type, ac text, cr numeric, hp text, hp_formula text, speed_burrow text, speed_climb text, speed_fly text, speed_swim text, speed_walk text, ability_cha smallint, ability_con smallint, ability_dex smallint, ability_int smallint, ability_str smallint, ability_wis smallint, initiative text, initiative_passive text, passive_perception text, ability_proficiencies public.creature_ability[], skill_proficiencies public.creature_skill[], skill_expertise public.creature_skill[], damage_immunities public.damage_type[], damage_resistances public.damage_type[], damage_vulnerabilities public.damage_type[], condition_immunities public.creature_condition[], condition_resistances public.creature_condition[], condition_vulnerabilities public.creature_condition[], name jsonb, page jsonb, gear jsonb, languages jsonb, planes jsonb, senses jsonb, traits jsonb, actions jsonb, bonus_actions jsonb, legendary_actions jsonb, reactions jsonb, visibility public.campaign_role)
+    LANGUAGE sql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 with prefs as (
   select
@@ -491,20 +491,20 @@ order by
   end desc nulls last;
 $$;
 
-ALTER FUNCTION "public"."fetch_creatures"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") OWNER TO "postgres";
+ALTER FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."fetch_creatures"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."fetch_creatures"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."fetch_creatures"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "service_role";
+GRANT ALL ON FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- UPSERT CREATURE TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."upsert_creature_translation"("p_id" "uuid", "p_lang" "text", "p_creature_translation" "jsonb") RETURNS "void"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) RETURNS void
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   r public.creature_translations%ROWTYPE;
@@ -534,20 +534,20 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."upsert_creature_translation"("p_id" "uuid", "p_lang" "text", "p_creature_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."upsert_creature_translation"("p_id" "uuid", "p_lang" "text", "p_creature_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."upsert_creature_translation"("p_id" "uuid", "p_lang" "text", "p_creature_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."upsert_creature_translation"("p_id" "uuid", "p_lang" "text", "p_creature_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- UPDATE CREATURE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."update_creature"("p_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") RETURNS "void"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) RETURNS void
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   v_rows int;
@@ -582,8 +582,8 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."update_creature"("p_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."update_creature"("p_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."update_creature"("p_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_creature"("p_id" "uuid", "p_lang" "text", "p_creature" "jsonb", "p_creature_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO service_role;

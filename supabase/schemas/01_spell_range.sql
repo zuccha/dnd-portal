@@ -1,4 +1,4 @@
-CREATE TYPE "public"."spell_range" AS ENUM (
+CREATE TYPE public.spell_range AS ENUM (
     'self',
     'sight',
     'special',
@@ -7,4 +7,4 @@ CREATE TYPE "public"."spell_range" AS ENUM (
     'value'
 );
 
-ALTER TYPE "public"."spell_range" OWNER TO "postgres";
+ALTER TYPE public.spell_range OWNER TO postgres;

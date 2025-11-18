@@ -2,86 +2,86 @@
 -- ELDRITCH INVOCATIONS
 --------------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS "public"."eldritch_invocations" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "campaign_id" "uuid" NOT NULL,
-    "min_warlock_level" smallint NOT NULL,
-    "visibility" "public"."campaign_role" DEFAULT 'game_master'::"public"."campaign_role" NOT NULL,
-    CONSTRAINT "eldritch_invocations_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "eldritch_invocations_campaign_id_fkey" FOREIGN KEY ("campaign_id") REFERENCES "public"."campaigns"("id") ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT "eldritch_invocations_min_warlock_level_check" CHECK ((("min_warlock_level" >= 0) AND ("min_warlock_level" <= 20)))
+CREATE TABLE IF NOT EXISTS public.eldritch_invocations (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    campaign_id uuid NOT NULL,
+    min_warlock_level smallint NOT NULL,
+    visibility public.campaign_role DEFAULT 'game_master'::public.campaign_role NOT NULL,
+    CONSTRAINT eldritch_invocations_pkey PRIMARY KEY (id),
+    CONSTRAINT eldritch_invocations_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT eldritch_invocations_min_warlock_level_check CHECK (((min_warlock_level >= 0) AND (min_warlock_level <= 20)))
 );
 
-ALTER TABLE "public"."eldritch_invocations" OWNER TO "postgres";
-ALTER TABLE "public"."eldritch_invocations" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.eldritch_invocations OWNER TO postgres;
+ALTER TABLE public.eldritch_invocations ENABLE ROW LEVEL SECURITY;
 
-GRANT ALL ON TABLE "public"."eldritch_invocations" TO "anon";
-GRANT ALL ON TABLE "public"."eldritch_invocations" TO "authenticated";
-GRANT ALL ON TABLE "public"."eldritch_invocations" TO "service_role";
+GRANT ALL ON TABLE public.eldritch_invocations TO anon;
+GRANT ALL ON TABLE public.eldritch_invocations TO authenticated;
+GRANT ALL ON TABLE public.eldritch_invocations TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- ELDRITCH INVOCATION TRANSLATIONS
 --------------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS "public"."eldritch_invocation_translations" (
-    "eldritch_invocation_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "lang" "text" DEFAULT ''::"text" NOT NULL,
-    "name" "text" DEFAULT ''::"text" NOT NULL,
-    "prerequisite" "text",
-    "description" "text" DEFAULT ''::"text" NOT NULL,
-    "page" "text",
-    CONSTRAINT "eldritch_invocation_translations_pkey" PRIMARY KEY ("eldritch_invocation_id", "lang"),
-    CONSTRAINT "eldritch_invocation_translations_eldritch_invocation_id_fkey" FOREIGN KEY ("eldritch_invocation_id") REFERENCES "public"."eldritch_invocations"("id") ON UPDATE CASCADE ON DELETE CASCADE
-    -- TODO: CONSTRAINT "eldritch_invocation_translations_lang_fkey" FOREIGN KEY ("lang") REFERENCES "public"."languages"("code") ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS public.eldritch_invocation_translations (
+    eldritch_invocation_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    lang text DEFAULT ''::text NOT NULL,
+    name text DEFAULT ''::text NOT NULL,
+    prerequisite text,
+    description text DEFAULT ''::text NOT NULL,
+    page text,
+    CONSTRAINT eldritch_invocation_translations_pkey PRIMARY KEY (eldritch_invocation_id, lang),
+    CONSTRAINT eldritch_invocation_translations_eldritch_invocation_id_fkey FOREIGN KEY (eldritch_invocation_id) REFERENCES public.eldritch_invocations(id) ON UPDATE CASCADE ON DELETE CASCADE
+    -- TODO: CONSTRAINT eldritch_invocation_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."eldritch_invocation_translations" OWNER TO "postgres";
-ALTER TABLE "public"."eldritch_invocation_translations" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.eldritch_invocation_translations OWNER TO postgres;
+ALTER TABLE public.eldritch_invocation_translations ENABLE ROW LEVEL SECURITY;
 
-GRANT ALL ON TABLE "public"."eldritch_invocation_translations" TO "anon";
-GRANT ALL ON TABLE "public"."eldritch_invocation_translations" TO "authenticated";
-GRANT ALL ON TABLE "public"."eldritch_invocation_translations" TO "service_role";
+GRANT ALL ON TABLE public.eldritch_invocation_translations TO anon;
+GRANT ALL ON TABLE public.eldritch_invocation_translations TO authenticated;
+GRANT ALL ON TABLE public.eldritch_invocation_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- ELDRITCH INVOCATIONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read eldritch invocations" ON "public"."eldritch_invocations" FOR SELECT TO "authenticated" USING (
+CREATE POLICY "Users can read eldritch invocations" ON public.eldritch_invocations FOR SELECT TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."campaigns" "c"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    WHERE "c"."id" = "eldritch_invocations"."campaign_id"
+    SELECT 1 FROM public.campaigns c
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
+    WHERE c.id = eldritch_invocations.campaign_id
       AND (
         -- Public modules
-        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
         OR
         -- Owned modules
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Non-module campaigns with visibility check
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
-          "eldritch_invocations"."visibility" = 'player'::"public"."campaign_role"
-          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        (c.is_module = false AND cp.user_id IS NOT NULL AND (
+          eldritch_invocations.visibility = 'player'::public.campaign_role
+          OR cp.role = 'game_master'::public.campaign_role
         ))
       )
   )
 );
 
-CREATE POLICY "Creators and GMs can edit eldritch invocations" ON "public"."eldritch_invocations" TO "authenticated" USING (
+CREATE POLICY "Creators and GMs can edit eldritch invocations" ON public.eldritch_invocations TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."campaigns" "c"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
-    WHERE "c"."id" = "eldritch_invocations"."campaign_id"
+    SELECT 1 FROM public.campaigns c
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
+    WHERE c.id = eldritch_invocations.campaign_id
       AND (
         -- Module creators
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Campaign GMs
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+        (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   )
 );
@@ -91,42 +91,42 @@ CREATE POLICY "Creators and GMs can edit eldritch invocations" ON "public"."eldr
 -- ELDRITCH INVOCATION TRANSLATIONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read eldritch invocation translations" ON "public"."eldritch_invocation_translations" FOR SELECT TO "authenticated" USING (
+CREATE POLICY "Users can read eldritch invocation translations" ON public.eldritch_invocation_translations FOR SELECT TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."eldritch_invocations" "ei"
-    JOIN "public"."campaigns" "c" ON "c"."id" = "ei"."campaign_id"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    WHERE "ei"."id" = "eldritch_invocation_translations"."eldritch_invocation_id"
+    SELECT 1 FROM public.eldritch_invocations ei
+    JOIN public.campaigns c ON c.id = ei.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
+    WHERE ei.id = eldritch_invocation_translations.eldritch_invocation_id
       AND (
         -- Public modules
-        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
         OR
         -- Owned modules
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Non-module campaigns with visibility check
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
-          "ei"."visibility" = 'player'::"public"."campaign_role"
-          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        (c.is_module = false AND cp.user_id IS NOT NULL AND (
+          ei.visibility = 'player'::public.campaign_role
+          OR cp.role = 'game_master'::public.campaign_role
         ))
       )
   )
 );
 
-CREATE POLICY "Creators and GMs can edit eldritch invocation translations" ON "public"."eldritch_invocation_translations" TO "authenticated" USING (
+CREATE POLICY "Creators and GMs can edit eldritch invocation translations" ON public.eldritch_invocation_translations TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."eldritch_invocations" "ei"
-    JOIN "public"."campaigns" "c" ON "c"."id" = "ei"."campaign_id"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
-    WHERE "ei"."id" = "eldritch_invocation_translations"."eldritch_invocation_id"
+    SELECT 1 FROM public.eldritch_invocations ei
+    JOIN public.campaigns c ON c.id = ei.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
+    WHERE ei.id = eldritch_invocation_translations.eldritch_invocation_id
       AND (
         -- Module creators
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Campaign GMs
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+        (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   )
 );
@@ -136,9 +136,9 @@ CREATE POLICY "Creators and GMs can edit eldritch invocation translations" ON "p
 -- CREATE ELDRITCH INVOCATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."create_eldritch_invocation"("p_campaign_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") RETURNS "uuid"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) RETURNS uuid
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   v_id uuid;
@@ -159,20 +159,20 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."create_eldritch_invocation"("p_campaign_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."create_eldritch_invocation"("p_campaign_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."create_eldritch_invocation"("p_campaign_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."create_eldritch_invocation"("p_campaign_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- FETCH ELDRITCH INVOCATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."fetch_eldritch_invocation"("p_id" "uuid") RETURNS "record"
-    LANGUAGE "sql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.fetch_eldritch_invocation(p_id uuid) RETURNS record
+    LANGUAGE sql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
   select
     e.id,
@@ -199,20 +199,20 @@ CREATE OR REPLACE FUNCTION "public"."fetch_eldritch_invocation"("p_id" "uuid") R
   where e.id = p_id;
 $$;
 
-ALTER FUNCTION "public"."fetch_eldritch_invocation"("p_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION public.fetch_eldritch_invocation(p_id uuid) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."fetch_eldritch_invocation"("p_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."fetch_eldritch_invocation"("p_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."fetch_eldritch_invocation"("p_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocation(p_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocation(p_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocation(p_id uuid) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- FETCH ELDRITCH INVOCATIONS
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."fetch_eldritch_invocations"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb" DEFAULT '{}'::"jsonb", "p_order_by" "text" DEFAULT 'name'::"text", "p_order_dir" "text" DEFAULT 'asc'::"text") RETURNS TABLE("id" "uuid", "campaign_id" "uuid", "campaign_name" "text", "min_warlock_level" smallint, "name" "jsonb", "prerequisite" "jsonb", "description" "jsonb", "visibility" "public"."campaign_role")
-    LANGUAGE "sql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text) RETURNS TABLE(id uuid, campaign_id uuid, campaign_name text, min_warlock_level smallint, name jsonb, prerequisite jsonb, description jsonb, visibility public.campaign_role)
+    LANGUAGE sql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 with prefs as (
   select coalesce( (p_filters->>'warlock_level')::int, 20 ) as warlock_level
@@ -262,20 +262,20 @@ order by
   end desc nulls last;
 $$;
 
-ALTER FUNCTION "public"."fetch_eldritch_invocations"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") OWNER TO "postgres";
+ALTER FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."fetch_eldritch_invocations"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."fetch_eldritch_invocations"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."fetch_eldritch_invocations"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "service_role";
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- UPSERT ELDRITCH INVOCATION TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."upsert_eldritch_invocation_translation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation_translation" "jsonb") RETURNS "void"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.upsert_eldritch_invocation_translation(p_id uuid, p_lang text, p_eldritch_invocation_translation jsonb) RETURNS void
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   r public.eldritch_invocation_translations%ROWTYPE;
@@ -295,20 +295,20 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."upsert_eldritch_invocation_translation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.upsert_eldritch_invocation_translation(p_id uuid, p_lang text, p_eldritch_invocation_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."upsert_eldritch_invocation_translation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."upsert_eldritch_invocation_translation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."upsert_eldritch_invocation_translation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.upsert_eldritch_invocation_translation(p_id uuid, p_lang text, p_eldritch_invocation_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.upsert_eldritch_invocation_translation(p_id uuid, p_lang text, p_eldritch_invocation_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.upsert_eldritch_invocation_translation(p_id uuid, p_lang text, p_eldritch_invocation_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- UPDATE ELDRITCH INVOCATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."update_eldritch_invocation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") RETURNS "void"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.update_eldritch_invocation(p_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) RETURNS void
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   v_rows int;
@@ -331,8 +331,8 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."update_eldritch_invocation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.update_eldritch_invocation(p_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."update_eldritch_invocation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."update_eldritch_invocation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_eldritch_invocation"("p_id" "uuid", "p_lang" "text", "p_eldritch_invocation" "jsonb", "p_eldritch_invocation_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.update_eldritch_invocation(p_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.update_eldritch_invocation(p_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.update_eldritch_invocation(p_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO service_role;

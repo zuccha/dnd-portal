@@ -1,4 +1,4 @@
-CREATE TYPE "public"."creature_habitat" AS ENUM (
+CREATE TYPE public.creature_habitat AS ENUM (
     'any',
     'arctic',
     'coastal',
@@ -14,4 +14,4 @@ CREATE TYPE "public"."creature_habitat" AS ENUM (
     'urban'
 );
 
-ALTER TYPE "public"."creature_habitat" OWNER TO "postgres";
+ALTER TYPE public.creature_habitat OWNER TO postgres;

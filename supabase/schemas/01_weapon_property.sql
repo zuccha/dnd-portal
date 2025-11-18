@@ -1,4 +1,4 @@
-CREATE TYPE "public"."weapon_property" AS ENUM (
+CREATE TYPE public.weapon_property AS ENUM (
     'ammunition',
     'finesse',
     'heavy',
@@ -11,4 +11,4 @@ CREATE TYPE "public"."weapon_property" AS ENUM (
     'versatile'
 );
 
-ALTER TYPE "public"."weapon_property" OWNER TO "postgres";
+ALTER TYPE public.weapon_property OWNER TO postgres;

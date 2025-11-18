@@ -1,4 +1,4 @@
-CREATE TYPE "public"."damage_type" AS ENUM (
+CREATE TYPE public.damage_type AS ENUM (
     'acid',
     'bludgeoning',
     'cold',
@@ -14,4 +14,4 @@ CREATE TYPE "public"."damage_type" AS ENUM (
     'thunder'
 );
 
-ALTER TYPE "public"."damage_type" OWNER TO "postgres";
+ALTER TYPE public.damage_type OWNER TO postgres;

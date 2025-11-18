@@ -1,4 +1,4 @@
-CREATE TYPE "public"."creature_treasure" AS ENUM (
+CREATE TYPE public.creature_treasure AS ENUM (
     'any',
     'individual',
     'arcana',
@@ -8,4 +8,4 @@ CREATE TYPE "public"."creature_treasure" AS ENUM (
     'none'
 );
 
-ALTER TYPE "public"."creature_treasure" OWNER TO "postgres";
+ALTER TYPE public.creature_treasure OWNER TO postgres;

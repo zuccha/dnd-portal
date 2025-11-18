@@ -2,111 +2,111 @@
 -- SPELLS
 --------------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS "public"."spells" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "level" smallint NOT NULL,
-    "school" "public"."spell_school" NOT NULL,
-    "character_classes" "public"."character_class"[] NOT NULL,
-    "concentration" boolean NOT NULL,
-    "ritual" boolean NOT NULL,
-    "somatic" boolean NOT NULL,
-    "verbal" boolean NOT NULL,
-    "material" boolean NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "campaign_id" "uuid" NOT NULL,
-    "visibility" "public"."campaign_role" DEFAULT 'player'::"public"."campaign_role" NOT NULL,
-    "casting_time" "public"."spell_casting_time" DEFAULT 'action'::"public"."spell_casting_time" NOT NULL,
-    "casting_time_value" "text",
-    "duration" "public"."spell_duration" DEFAULT 'value'::"public"."spell_duration" NOT NULL,
-    "duration_value" "text",
-    "range" "public"."spell_range" DEFAULT 'self'::"public"."spell_range" NOT NULL,
-    "range_value_imp" "text",
-    "range_value_met" "text",
-    CONSTRAINT "spells_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "spells_campaign_id_fkey" FOREIGN KEY ("campaign_id") REFERENCES "public"."campaigns"("id") ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT "spells_casting_time_pair_chk" CHECK ((("casting_time" = 'value'::"public"."spell_casting_time") = ("casting_time_value" IS NOT NULL))),
-    CONSTRAINT "spells_casting_time_value_check" CHECK (("casting_time_value" ~ '^\d+(\.\d+)?\s*(round|s|min|hr|d)$'::"text")),
-    CONSTRAINT "spells_duration_pair_chk" CHECK ((("duration" = 'value'::"public"."spell_duration") = ("duration_value" IS NOT NULL))),
-    CONSTRAINT "spells_duration_value_check" CHECK (("duration_value" ~ '^\d+(\.\d+)?\s*(round|s|min|hr|d)$'::"text")),
-    CONSTRAINT "spells_level_check" CHECK ((("level" >= 0) AND ("level" <= 9))),
-    CONSTRAINT "spells_range_pair_chk" CHECK (((("range" = 'value'::"public"."spell_range") = ("range_value_imp" IS NOT NULL)) AND (("range" = 'value'::"public"."spell_range") = ("range_value_met" IS NOT NULL)))),
-    CONSTRAINT "spells_range_value_imp_check" CHECK (("range_value_imp" ~ '^\d+(\.\d+)?\s*(ft|mi)$'::"text")),
-    CONSTRAINT "spells_range_value_met_check" CHECK (("range_value_met" ~ '^\d+(\.\d+)?\s*(m|km)$'::"text"))
+CREATE TABLE IF NOT EXISTS public.spells (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    level smallint NOT NULL,
+    school public.spell_school NOT NULL,
+    character_classes public.character_class[] NOT NULL,
+    concentration boolean NOT NULL,
+    ritual boolean NOT NULL,
+    somatic boolean NOT NULL,
+    verbal boolean NOT NULL,
+    material boolean NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    campaign_id uuid NOT NULL,
+    visibility public.campaign_role DEFAULT 'player'::public.campaign_role NOT NULL,
+    casting_time public.spell_casting_time DEFAULT 'action'::public.spell_casting_time NOT NULL,
+    casting_time_value text,
+    duration public.spell_duration DEFAULT 'value'::public.spell_duration NOT NULL,
+    duration_value text,
+    range public.spell_range DEFAULT 'self'::public.spell_range NOT NULL,
+    range_value_imp text,
+    range_value_met text,
+    CONSTRAINT spells_pkey PRIMARY KEY (id),
+    CONSTRAINT spells_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT spells_casting_time_pair_chk CHECK (((casting_time = 'value'::public.spell_casting_time) = (casting_time_value IS NOT NULL))),
+    CONSTRAINT spells_casting_time_value_check CHECK ((casting_time_value ~ '^\d+(\.\d+)?\s*(round|s|min|hr|d)$'::text)),
+    CONSTRAINT spells_duration_pair_chk CHECK (((duration = 'value'::public.spell_duration) = (duration_value IS NOT NULL))),
+    CONSTRAINT spells_duration_value_check CHECK ((duration_value ~ '^\d+(\.\d+)?\s*(round|s|min|hr|d)$'::text)),
+    CONSTRAINT spells_level_check CHECK (((level >= 0) AND (level <= 9))),
+    CONSTRAINT spells_range_pair_chk CHECK ((((range = 'value'::public.spell_range) = (range_value_imp IS NOT NULL)) AND ((range = 'value'::public.spell_range) = (range_value_met IS NOT NULL)))),
+    CONSTRAINT spells_range_value_imp_check CHECK ((range_value_imp ~ '^\d+(\.\d+)?\s*(ft|mi)$'::text)),
+    CONSTRAINT spells_range_value_met_check CHECK ((range_value_met ~ '^\d+(\.\d+)?\s*(m|km)$'::text))
 );
 
-ALTER TABLE "public"."spells" OWNER TO "postgres";
-ALTER TABLE "public"."spells" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.spells OWNER TO postgres;
+ALTER TABLE public.spells ENABLE ROW LEVEL SECURITY;
 
-GRANT ALL ON TABLE "public"."spells" TO "anon";
-GRANT ALL ON TABLE "public"."spells" TO "authenticated";
-GRANT ALL ON TABLE "public"."spells" TO "service_role";
+GRANT ALL ON TABLE public.spells TO anon;
+GRANT ALL ON TABLE public.spells TO authenticated;
+GRANT ALL ON TABLE public.spells TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- SPELL TRANSLATIONS
 --------------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS "public"."spell_translations" (
-    "spell_id" "uuid" NOT NULL,
-    "lang" "text" NOT NULL,
-    "name" "text" NOT NULL,
-    "page" "text",
-    "materials" "text",
-    "description" "text" NOT NULL,
-    "upgrade" "text",
-    CONSTRAINT "spell_translations_pkey" PRIMARY KEY ("spell_id", "lang"),
-    CONSTRAINT "spell_translations_spell_id_fkey" FOREIGN KEY ("spell_id") REFERENCES "public"."spells"("id") ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT "spell_translations_lang_fkey" FOREIGN KEY ("lang") REFERENCES "public"."languages"("code") ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS public.spell_translations (
+    spell_id uuid NOT NULL,
+    lang text NOT NULL,
+    name text NOT NULL,
+    page text,
+    materials text,
+    description text NOT NULL,
+    upgrade text,
+    CONSTRAINT spell_translations_pkey PRIMARY KEY (spell_id, lang),
+    CONSTRAINT spell_translations_spell_id_fkey FOREIGN KEY (spell_id) REFERENCES public.spells(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT spell_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."spell_translations" OWNER TO "postgres";
-ALTER TABLE "public"."spell_translations" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.spell_translations OWNER TO postgres;
+ALTER TABLE public.spell_translations ENABLE ROW LEVEL SECURITY;
 
-CREATE INDEX "idx_spell_translations_lang" ON "public"."spell_translations" USING "btree" ("lang");
+CREATE INDEX idx_spell_translations_lang ON public.spell_translations USING btree (lang);
 
-GRANT ALL ON TABLE "public"."spell_translations" TO "anon";
-GRANT ALL ON TABLE "public"."spell_translations" TO "authenticated";
-GRANT ALL ON TABLE "public"."spell_translations" TO "service_role";
+GRANT ALL ON TABLE public.spell_translations TO anon;
+GRANT ALL ON TABLE public.spell_translations TO authenticated;
+GRANT ALL ON TABLE public.spell_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- SPELLS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read spells" ON "public"."spells" FOR SELECT TO "authenticated" USING (
+CREATE POLICY "Users can read spells" ON public.spells FOR SELECT TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."campaigns" "c"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    WHERE "c"."id" = "spells"."campaign_id"
+    SELECT 1 FROM public.campaigns c
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
+    WHERE c.id = spells.campaign_id
       AND (
         -- Public modules
-        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
         OR
         -- Owned modules
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Non-module campaigns with visibility check
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
-          "spells"."visibility" = 'player'::"public"."campaign_role"
-          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        (c.is_module = false AND cp.user_id IS NOT NULL AND (
+          spells.visibility = 'player'::public.campaign_role
+          OR cp.role = 'game_master'::public.campaign_role
         ))
       )
   )
 );
 
-CREATE POLICY "Creators and GMs can edit spells" ON "public"."spells" TO "authenticated" USING (
+CREATE POLICY "Creators and GMs can edit spells" ON public.spells TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."campaigns" "c"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
-    WHERE "c"."id" = "spells"."campaign_id"
+    SELECT 1 FROM public.campaigns c
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
+    WHERE c.id = spells.campaign_id
       AND (
         -- Module creators
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Campaign GMs
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+        (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   )
 );
@@ -116,42 +116,42 @@ CREATE POLICY "Creators and GMs can edit spells" ON "public"."spells" TO "authen
 -- SPELL TRANSLATIONS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read spell translations" ON "public"."spell_translations" FOR SELECT TO "authenticated" USING (
+CREATE POLICY "Users can read spell translations" ON public.spell_translations FOR SELECT TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."spells" "sp"
-    JOIN "public"."campaigns" "c" ON "c"."id" = "sp"."campaign_id"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid"))
-    WHERE "sp"."id" = "spell_translations"."spell_id"
+    SELECT 1 FROM public.spells sp
+    JOIN public.campaigns c ON c.id = sp.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid))
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid))
+    WHERE sp.id = spell_translations.spell_id
       AND (
         -- Public modules
-        ("c"."is_module" = true AND "c"."visibility" = 'public'::"public"."campaign_visibility")
+        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
         OR
         -- Owned modules
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Non-module campaigns with visibility check
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL AND (
-          "sp"."visibility" = 'player'::"public"."campaign_role"
-          OR "cp"."role" = 'game_master'::"public"."campaign_role"
+        (c.is_module = false AND cp.user_id IS NOT NULL AND (
+          sp.visibility = 'player'::public.campaign_role
+          OR cp.role = 'game_master'::public.campaign_role
         ))
       )
   )
 );
 
-CREATE POLICY "Creators and GMs can edit spell translations" ON "public"."spell_translations" TO "authenticated" USING (
+CREATE POLICY "Creators and GMs can edit spell translations" ON public.spell_translations TO authenticated USING (
   EXISTS (
-    SELECT 1 FROM "public"."spells" "sp"
-    JOIN "public"."campaigns" "c" ON "c"."id" = "sp"."campaign_id"
-    LEFT JOIN "public"."user_modules" "um" ON ("um"."module_id" = "c"."id" AND "um"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "um"."role" = 'creator'::"public"."module_role")
-    LEFT JOIN "public"."campaign_players" "cp" ON ("cp"."campaign_id" = "c"."id" AND "cp"."user_id" = ( SELECT "auth"."uid"() AS "uid") AND "cp"."role" = 'game_master'::"public"."campaign_role")
-    WHERE "sp"."id" = "spell_translations"."spell_id"
+    SELECT 1 FROM public.spells sp
+    JOIN public.campaigns c ON c.id = sp.campaign_id
+    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = ( SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
+    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = ( SELECT auth.uid() AS uid) AND cp.role = 'game_master'::public.campaign_role)
+    WHERE sp.id = spell_translations.spell_id
       AND (
         -- Module creators
-        ("c"."is_module" = true AND "um"."user_id" IS NOT NULL)
+        (c.is_module = true AND um.user_id IS NOT NULL)
         OR
         -- Campaign GMs
-        ("c"."is_module" = false AND "cp"."user_id" IS NOT NULL)
+        (c.is_module = false AND cp.user_id IS NOT NULL)
       )
   )
 );
@@ -161,9 +161,9 @@ CREATE POLICY "Creators and GMs can edit spell translations" ON "public"."spell_
 -- CREATE SPELL
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."create_spell"("p_campaign_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") RETURNS "uuid"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) RETURNS uuid
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   v_id uuid;
@@ -190,20 +190,20 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."create_spell"("p_campaign_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."create_spell"("p_campaign_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."create_spell"("p_campaign_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."create_spell"("p_campaign_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- FETCH SPELL
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."fetch_spell"("p_id" "uuid") RETURNS "record"
-    LANGUAGE "sql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.fetch_spell(p_id uuid) RETURNS record
+    LANGUAGE sql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
   select
     s.id,
@@ -248,20 +248,20 @@ CREATE OR REPLACE FUNCTION "public"."fetch_spell"("p_id" "uuid") RETURNS "record
   where s.id = p_id;
 $$;
 
-ALTER FUNCTION "public"."fetch_spell"("p_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION public.fetch_spell(p_id uuid) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."fetch_spell"("p_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."fetch_spell"("p_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."fetch_spell"("p_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION public.fetch_spell(p_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.fetch_spell(p_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_spell(p_id uuid) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- FETCH SPELLS
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."fetch_spells"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb" DEFAULT '{}'::"jsonb", "p_order_by" "text" DEFAULT 'name'::"text", "p_order_dir" "text" DEFAULT 'asc'::"text") RETURNS TABLE("id" "uuid", "campaign_id" "uuid", "campaign_name" "text", "level" smallint, "character_classes" "public"."character_class"[], "school" "public"."spell_school", "casting_time" "public"."spell_casting_time", "casting_time_value" "text", "duration" "public"."spell_duration", "duration_value" "text", "range" "public"."spell_range", "range_value_imp" "text", "range_value_met" "text", "concentration" boolean, "ritual" boolean, "somatic" boolean, "verbal" boolean, "material" boolean, "name" "jsonb", "description" "jsonb", "materials" "jsonb", "page" "jsonb", "upgrade" "jsonb", "visibility" "public"."campaign_role")
-    LANGUAGE "sql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text) RETURNS TABLE(id uuid, campaign_id uuid, campaign_name text, level smallint, character_classes public.character_class[], school public.spell_school, casting_time public.spell_casting_time, casting_time_value text, duration public.spell_duration, duration_value text, range public.spell_range, range_value_imp text, range_value_met text, concentration boolean, ritual boolean, somatic boolean, verbal boolean, material boolean, name jsonb, description jsonb, materials jsonb, page jsonb, upgrade jsonb, visibility public.campaign_role)
+    LANGUAGE sql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 with prefs as (
   select
@@ -406,20 +406,20 @@ order by
   end desc nulls last;
 $$;
 
-ALTER FUNCTION "public"."fetch_spells"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") OWNER TO "postgres";
+ALTER FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."fetch_spells"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."fetch_spells"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."fetch_spells"("p_campaign_id" "uuid", "p_langs" "text"[], "p_filters" "jsonb", "p_order_by" "text", "p_order_dir" "text") TO "service_role";
+GRANT ALL ON FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- UPSERT SPELL TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."upsert_spell_translation"("p_id" "uuid", "p_lang" "text", "p_spell_translation" "jsonb") RETURNS "void"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) RETURNS void
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   r public.spell_translations%ROWTYPE;
@@ -443,20 +443,20 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."upsert_spell_translation"("p_id" "uuid", "p_lang" "text", "p_spell_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."upsert_spell_translation"("p_id" "uuid", "p_lang" "text", "p_spell_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."upsert_spell_translation"("p_id" "uuid", "p_lang" "text", "p_spell_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."upsert_spell_translation"("p_id" "uuid", "p_lang" "text", "p_spell_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
 -- UPDATE SPELL
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION "public"."update_spell"("p_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") RETURNS "void"
-    LANGUAGE "plpgsql"
-    SET "search_path" TO 'public', 'pg_temp'
+CREATE OR REPLACE FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) RETURNS void
+    LANGUAGE plpgsql
+    SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
   v_rows int;
@@ -483,8 +483,8 @@ begin
 end;
 $$;
 
-ALTER FUNCTION "public"."update_spell"("p_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") OWNER TO "postgres";
+ALTER FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION "public"."update_spell"("p_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") TO "anon";
-GRANT ALL ON FUNCTION "public"."update_spell"("p_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."update_spell"("p_id" "uuid", "p_lang" "text", "p_spell" "jsonb", "p_spell_translation" "jsonb") TO "service_role";
+GRANT ALL ON FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO service_role;

@@ -1,4 +1,4 @@
-CREATE TYPE "public"."creature_alignment" AS ENUM (
+CREATE TYPE public.creature_alignment AS ENUM (
     'lawful_good',
     'lawful_neutral',
     'lawful_evil',
@@ -11,4 +11,4 @@ CREATE TYPE "public"."creature_alignment" AS ENUM (
     'unaligned'
 );
 
-ALTER TYPE "public"."creature_alignment" OWNER TO "postgres";
+ALTER TYPE public.creature_alignment OWNER TO postgres;

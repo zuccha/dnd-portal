@@ -1,4 +1,4 @@
-CREATE TYPE "public"."spell_duration" AS ENUM (
+CREATE TYPE public.spell_duration AS ENUM (
     'instantaneous',
     'special',
     'until_dispelled',
@@ -6,4 +6,4 @@ CREATE TYPE "public"."spell_duration" AS ENUM (
     'value'
 );
 
-ALTER TYPE "public"."spell_duration" OWNER TO "postgres";
+ALTER TYPE public.spell_duration OWNER TO postgres;

@@ -1,4 +1,4 @@
-CREATE TYPE "public"."creature_condition" AS ENUM (
+CREATE TYPE public.creature_condition AS ENUM (
     'blinded',
     'charmed',
     'deafened',
@@ -16,4 +16,4 @@ CREATE TYPE "public"."creature_condition" AS ENUM (
     'exhaustion'
 );
 
-ALTER TYPE "public"."creature_condition" OWNER TO "postgres";
+ALTER TYPE public.creature_condition OWNER TO postgres;
