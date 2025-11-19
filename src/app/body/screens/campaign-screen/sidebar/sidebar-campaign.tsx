@@ -1,6 +1,7 @@
 import { VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useCanEditCampaign } from "~/models/campaign";
 import { compareObjects } from "~/utils/object";
 import {
   resourcePanelIds,
@@ -14,12 +15,13 @@ import SidebarSection from "./sidebar-section";
 //------------------------------------------------------------------------------
 
 export type SidebarCampaignProps = {
-  id: string;
+  campaignId: string;
 };
 
-export default function SidebarCampaign(_props: SidebarCampaignProps) {
+export default function SidebarCampaign({ campaignId }: SidebarCampaignProps) {
   const { t } = useI18nLangContext(i18nContext);
   const [selectedPageId, setSelectedPageId] = useSelectedPanelId();
+  const canEdit = useCanEditCampaign(campaignId);
 
   const resourceItems = useMemo(
     () =>
@@ -53,10 +55,12 @@ export default function SidebarCampaign(_props: SidebarCampaignProps) {
         items={resourceItems}
         title={t("section.resources.title")}
       />
-      <SidebarSection
-        items={settingsItems}
-        title={t("section.settings.title")}
-      />
+      {canEdit && (
+        <SidebarSection
+          items={settingsItems}
+          title={t("section.settings.title")}
+        />
+      )}
     </VStack>
   );
 }

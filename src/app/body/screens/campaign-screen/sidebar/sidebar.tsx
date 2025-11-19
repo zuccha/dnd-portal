@@ -8,14 +8,12 @@ import SidebarCampaignSelector from "./sidebar-campaign-selector";
 //------------------------------------------------------------------------------
 
 export default function Sidebar() {
-  const [selectedUserCampaignId] = useSelectedCampaignId();
+  const [campaignId] = useSelectedCampaignId();
 
   return (
     <VStack borderRightWidth={1} gap={10} h="full" px={2} py={4} w="15em">
       <SidebarCampaignSelector />
-      {selectedUserCampaignId && (
-        <SidebarCampaign id={selectedUserCampaignId} />
-      )}
+      {campaignId && <SidebarCampaign campaignId={campaignId} />}
     </VStack>
   );
 }
