@@ -3,11 +3,11 @@ import type { FC } from "react";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
 import { useSelectedCampaignId } from "../../../../../resources/campaign";
 import EmptyState from "../../../../../ui/empty-state";
-import CreaturesPanel from "./creatures-panel/creatures-panel";
-import EldritchInvocationsPanel from "./eldritch-invocations-panel/eldritch-invocations-panel";
 import { type ResourcePanelId, useSelectedPanelId } from "./panels";
-import SpellsPanel from "./spells-panel/spells-panel";
-import WeaponsPanel from "./weapons-panel/weapons-panel";
+import CreaturesPanel from "./resources/creatures/creatures-panel";
+import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
+import SpellsPanel from "./resources/spells/spells-panel";
+import WeaponsPanel from "./resources/weapons/weapons-panel";
 
 //------------------------------------------------------------------------------
 // Panels
