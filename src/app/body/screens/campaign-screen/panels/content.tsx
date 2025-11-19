@@ -3,11 +3,16 @@ import type { FC } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedCampaignId } from "~/models/campaign";
 import EmptyState from "~/ui/empty-state";
-import { type ResourcePanelId, useSelectedPanelId } from "./panels";
+import {
+  type ResourcePanelId,
+  type SettingPanelId,
+  useSelectedPanelId,
+} from "./panels";
 import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
 import WeaponsPanel from "./resources/weapons/weapons-panel";
+import CampaignPanel from "./settings/campaign-panel";
 
 //------------------------------------------------------------------------------
 // Panels
@@ -23,6 +28,9 @@ export default function Content() {
 
   const ResourcePage = resourcePanels[selectedPanelId as ResourcePanelId];
   if (ResourcePage) return <ResourcePage campaignId={selectedCampaignId} />;
+
+  const SettingPage = settingPanels[selectedPanelId as SettingPanelId];
+  if (SettingPage) return <SettingPage campaignId={selectedCampaignId} />;
 
   return (
     <EmptyState
@@ -43,6 +51,10 @@ const resourcePanels: Record<ResourcePanelId, FC<{ campaignId: string }>> = {
   "resource/eldritch-invocations": EldritchInvocationsPanel,
   "resource/spells": SpellsPanel,
   "resource/weapons": WeaponsPanel,
+};
+
+const settingPanels: Record<SettingPanelId, FC<{ campaignId: string }>> = {
+  "setting/campaign": CampaignPanel,
 };
 
 const i18nContext = {

@@ -2,7 +2,11 @@ import { VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { compareObjects } from "~/utils/object";
-import { resourcePanelIds, useSelectedPanelId } from "../panels/panels";
+import {
+  resourcePanelIds,
+  settingPanelIds,
+  useSelectedPanelId,
+} from "../panels/panels";
 import SidebarSection from "./sidebar-section";
 
 //------------------------------------------------------------------------------
@@ -30,11 +34,28 @@ export default function SidebarCampaign(_props: SidebarCampaignProps) {
     [selectedPageId, setSelectedPageId, t],
   );
 
+  const settingsItems = useMemo(
+    () =>
+      settingPanelIds
+        .map((value) => ({
+          label: t(`section.${value}`),
+          onClick: () => setSelectedPageId(value),
+          selected: selectedPageId === value,
+          value,
+        }))
+        .sort(compareObjects("label")),
+    [selectedPageId, setSelectedPageId, t],
+  );
+
   return (
     <VStack gap={10} w="full">
       <SidebarSection
         items={resourceItems}
         title={t("section.resources.title")}
+      />
+      <SidebarSection
+        items={settingsItems}
+        title={t("section.settings.title")}
       />
     </VStack>
   );
@@ -64,5 +85,13 @@ const i18nContext = {
   "section.resources.title": {
     en: "Resources",
     it: "Risorse",
+  },
+  "section.setting/campaign": {
+    en: "Campaign",
+    it: "Campagna",
+  },
+  "section.settings.title": {
+    en: "Settings",
+    it: "Impostazioni",
   },
 };
