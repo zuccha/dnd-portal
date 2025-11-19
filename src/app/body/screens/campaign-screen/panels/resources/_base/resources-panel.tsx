@@ -4,14 +4,14 @@ import { useCallback } from "react";
 import z from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { I18nString } from "~/i18n/i18n-string";
-import { useCanEditCampaign } from "~/resources/campaign";
+import { useCanEditCampaign } from "~/models/campaign";
 import type {
   DBResource,
   DBResourceTranslation,
-} from "~/resources/db-resource";
-import type { LocalizedResource } from "~/resources/localized-resource";
-import type { Resource, ResourceFilters } from "~/resources/resource";
-import type { ResourcesStore } from "~/resources/resources-store";
+} from "~/models/resources/db-resource";
+import type { LocalizedResource } from "~/models/resources/localized-resource";
+import type { Resource, ResourceFilters } from "~/models/resources/resource";
+import type { ResourcesStore } from "~/models/resources/resources-store";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStore } from "~/store/memory-store";
 import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";

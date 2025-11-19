@@ -5,7 +5,7 @@ import {
   useOwnedModules,
   useSelectedCampaignId,
   useUserCampaigns,
-} from "~/resources/campaign";
+} from "~/models/campaign";
 import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 import { GridItem, SimpleGrid, Span } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { Creature } from "~/resources/creatures/creature";
-import { useIsCreatureSelected } from "~/resources/creatures/creatures-store";
-import type { LocalizedCreature } from "~/resources/creatures/localized-creature";
+import type { Creature } from "~/models/resources/creatures/creature";
+import { useIsCreatureSelected } from "~/models/resources/creatures/creatures-store";
+import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import ResourceCard from "../_base/resource-card";
 
 //------------------------------------------------------------------------------

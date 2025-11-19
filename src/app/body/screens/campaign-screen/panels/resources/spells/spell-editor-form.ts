@@ -1,9 +1,9 @@
-import type { CampaignRole } from "~/resources/types/campaign-role";
-import { type CharacterClass } from "~/resources/types/character-class";
-import { type SpellCastingTime } from "~/resources/types/spell-casting-time";
-import { type SpellDuration } from "~/resources/types/spell-duration";
-import { type SpellRange } from "~/resources/types/spell-range";
-import { type SpellSchool } from "~/resources/types/spell-school";
+import type { CampaignRole } from "~/models/types/campaign-role";
+import { type CharacterClass } from "~/models/types/character-class";
+import { type SpellCastingTime } from "~/models/types/spell-casting-time";
+import { type SpellDuration } from "~/models/types/spell-duration";
+import { type SpellRange } from "~/models/types/spell-range";
+import { type SpellSchool } from "~/models/types/spell-school";
 import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------

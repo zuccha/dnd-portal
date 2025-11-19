@@ -1,12 +1,15 @@
-import { type Creature, defaultCreature } from "~/resources/creatures/creature";
-import { creaturesStore } from "~/resources/creatures/creatures-store";
+import {
+  type Creature,
+  defaultCreature,
+} from "~/models/resources/creatures/creature";
+import { creaturesStore } from "~/models/resources/creatures/creatures-store";
 import {
   type DBCreature,
   type DBCreatureTranslation,
   dbCreatureSchema,
   dbCreatureTranslationSchema,
-} from "~/resources/creatures/db-creature";
-import { type LocalizedCreature } from "~/resources/creatures/localized-creature";
+} from "~/models/resources/creatures/db-creature";
+import { type LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import { report } from "~/utils/error";
 import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";

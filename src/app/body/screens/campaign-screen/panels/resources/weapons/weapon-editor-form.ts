@@ -1,8 +1,8 @@
-import type { CampaignRole } from "~/resources/types/campaign-role";
-import type { DamageType } from "~/resources/types/damage-type";
-import type { WeaponMastery } from "~/resources/types/weapon-mastery";
-import type { WeaponProperty } from "~/resources/types/weapon-property";
-import type { WeaponType } from "~/resources/types/weapon-type";
+import type { CampaignRole } from "~/models/types/campaign-role";
+import type { DamageType } from "~/models/types/damage-type";
+import type { WeaponMastery } from "~/models/types/weapon-mastery";
+import type { WeaponProperty } from "~/models/types/weapon-property";
+import type { WeaponType } from "~/models/types/weapon-type";
 import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------

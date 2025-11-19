@@ -3,8 +3,8 @@ import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type I18nString, translate } from "~/i18n/i18n-string";
-import type { LocalizedResource } from "~/resources/localized-resource";
-import type { Resource } from "~/resources/resource";
+import type { LocalizedResource } from "~/models/resources/localized-resource";
+import type { Resource } from "~/models/resources/resource";
 import IconButton from "~/ui/icon-button";
 import { downloadFile } from "~/utils/download";
 

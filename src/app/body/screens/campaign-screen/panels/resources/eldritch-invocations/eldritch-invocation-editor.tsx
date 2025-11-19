@@ -1,9 +1,9 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { EldritchInvocation } from "~/resources/eldritch-invocations/eldritch-invocation";
-import { useCampaignRoleOptions } from "~/resources/types/campaign-role";
-import { useCharacterLevelOptions } from "~/resources/types/character-level";
+import type { EldritchInvocation } from "~/models/resources/eldritch-invocations/eldritch-invocation";
+import { useCampaignRoleOptions } from "~/models/types/campaign-role";
+import { useCharacterLevelOptions } from "~/models/types/character-level";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
 import Select from "~/ui/select";

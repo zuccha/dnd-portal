@@ -1,6 +1,6 @@
 import { Box, Wrap } from "@chakra-ui/react";
-import type { LocalizedResource } from "~/resources/localized-resource";
-import type { Resource } from "~/resources/resource";
+import type { LocalizedResource } from "~/models/resources/localized-resource";
+import type { Resource } from "~/models/resources/resource";
 import ResourcesListEmpty from "./resources-list-empty";
 
 //----------------------------------------------------------------------------

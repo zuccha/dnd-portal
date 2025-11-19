@@ -1,13 +1,13 @@
-import type { CampaignRole } from "~/resources/types/campaign-role";
-import type { CreatureAbility } from "~/resources/types/creature-ability";
-import type { CreatureAlignment } from "~/resources/types/creature-alignment";
-import type { CreatureCondition } from "~/resources/types/creature-condition";
-import type { CreatureHabitat } from "~/resources/types/creature-habitat";
-import type { CreatureSize } from "~/resources/types/creature-size";
-import type { CreatureSkill } from "~/resources/types/creature-skill";
-import type { CreatureTreasure } from "~/resources/types/creature-treasure";
-import type { CreatureType } from "~/resources/types/creature-type";
-import type { DamageType } from "~/resources/types/damage-type";
+import type { CampaignRole } from "~/models/types/campaign-role";
+import type { CreatureAbility } from "~/models/types/creature-ability";
+import type { CreatureAlignment } from "~/models/types/creature-alignment";
+import type { CreatureCondition } from "~/models/types/creature-condition";
+import type { CreatureHabitat } from "~/models/types/creature-habitat";
+import type { CreatureSize } from "~/models/types/creature-size";
+import type { CreatureSkill } from "~/models/types/creature-skill";
+import type { CreatureTreasure } from "~/models/types/creature-treasure";
+import type { CreatureType } from "~/models/types/creature-type";
+import type { DamageType } from "~/models/types/damage-type";
 import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
