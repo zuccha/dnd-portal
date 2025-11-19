@@ -1,8 +1,8 @@
 import { SimpleGrid, Span, VStack } from "@chakra-ui/react";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
-import type { LocalizedSpell } from "../../../../../../../resources/spells/localized-spell";
-import type { Spell } from "../../../../../../../resources/spells/spell";
-import { useIsSpellSelected } from "../../../../../../../resources/spells/spells-store";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import type { LocalizedSpell } from "~/resources/spells/localized-spell";
+import type { Spell } from "~/resources/spells/spell";
+import { useIsSpellSelected } from "~/resources/spells/spells-store";
 import ResourceCard from "../_base/resource-card";
 
 //------------------------------------------------------------------------------

@@ -3,14 +3,14 @@ import {
   type DBEldritchInvocationTranslation,
   dbEldritchInvocationSchema,
   dbEldritchInvocationTranslationSchema,
-} from "../../../../../../../resources/eldritch-invocations/db-eldritch-invocation";
+} from "~/resources/eldritch-invocations/db-eldritch-invocation";
 import {
   type EldritchInvocation,
   defaultEldritchInvocation,
-} from "../../../../../../../resources/eldritch-invocations/eldritch-invocation";
-import { eldritchInvocationsStore } from "../../../../../../../resources/eldritch-invocations/eldritch-invocations-store";
-import { type LocalizedEldritchInvocation } from "../../../../../../../resources/eldritch-invocations/localized-eldritch-invocation";
-import { report } from "../../../../../../../utils/error";
+} from "~/resources/eldritch-invocations/eldritch-invocation";
+import { eldritchInvocationsStore } from "~/resources/eldritch-invocations/eldritch-invocations-store";
+import { type LocalizedEldritchInvocation } from "~/resources/eldritch-invocations/localized-eldritch-invocation";
+import { report } from "~/utils/error";
 import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
 import EldritchInvocationCard from "./eldritch-invocation-card";

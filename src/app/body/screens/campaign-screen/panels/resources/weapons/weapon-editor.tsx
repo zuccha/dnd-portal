@@ -1,27 +1,27 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "../../../../../../../hooks/use-list-collection";
+import useListCollection from "~/hooks/use-list-collection";
 import {
   convertDistanceImpToMet,
   convertDistanceMetToImp,
-} from "../../../../../../../i18n/i18n-distance";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
-import { useI18nSystem } from "../../../../../../../i18n/i18n-system";
+} from "~/i18n/i18n-distance";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useI18nSystem } from "~/i18n/i18n-system";
 import {
   convertWeightImpToMet,
   convertWeightMetToImp,
-} from "../../../../../../../i18n/i18n-weight";
-import { useCampaignRoleOptions } from "../../../../../../../resources/types/campaign-role";
-import { useDamageTypeOptions } from "../../../../../../../resources/types/damage-type";
-import { useWeaponMasteryOptions } from "../../../../../../../resources/types/weapon-mastery";
-import { useWeaponPropertyOptions } from "../../../../../../../resources/types/weapon-property";
-import { useWeaponTypeOptions } from "../../../../../../../resources/types/weapon-type";
-import type { Weapon } from "../../../../../../../resources/weapons/weapon";
-import Field from "../../../../../../../ui/field";
-import Input from "../../../../../../../ui/input";
-import NumberInput from "../../../../../../../ui/number-input";
-import Select from "../../../../../../../ui/select";
-import Switch from "../../../../../../../ui/switch";
-import Textarea from "../../../../../../../ui/textarea";
+} from "~/i18n/i18n-weight";
+import { useCampaignRoleOptions } from "~/resources/types/campaign-role";
+import { useDamageTypeOptions } from "~/resources/types/damage-type";
+import { useWeaponMasteryOptions } from "~/resources/types/weapon-mastery";
+import { useWeaponPropertyOptions } from "~/resources/types/weapon-property";
+import { useWeaponTypeOptions } from "~/resources/types/weapon-type";
+import type { Weapon } from "~/resources/weapons/weapon";
+import Field from "~/ui/field";
+import Input from "~/ui/input";
+import NumberInput from "~/ui/number-input";
+import Select from "~/ui/select";
+import Switch from "~/ui/switch";
+import Textarea from "~/ui/textarea";
 import {
   useWeaponEditorFormAmmunition,
   useWeaponEditorFormCost,

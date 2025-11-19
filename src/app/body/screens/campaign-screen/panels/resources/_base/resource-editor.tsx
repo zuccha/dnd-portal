@@ -1,7 +1,7 @@
 import { CloseButton, Dialog, Portal, Text } from "@chakra-ui/react";
 import { type ReactNode, useCallback } from "react";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
-import Button from "../../../../../../../ui/button";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import Button from "~/ui/button";
 
 //------------------------------------------------------------------------------
 // Resource Editor

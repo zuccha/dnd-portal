@@ -1,10 +1,10 @@
-import type { CampaignRole } from "../../../../../../../resources/types/campaign-role";
-import { type CharacterClass } from "../../../../../../../resources/types/character-class";
-import { type SpellCastingTime } from "../../../../../../../resources/types/spell-casting-time";
-import { type SpellDuration } from "../../../../../../../resources/types/spell-duration";
-import { type SpellRange } from "../../../../../../../resources/types/spell-range";
-import { type SpellSchool } from "../../../../../../../resources/types/spell-school";
-import { createForm } from "../../../../../../../utils/form";
+import type { CampaignRole } from "~/resources/types/campaign-role";
+import { type CharacterClass } from "~/resources/types/character-class";
+import { type SpellCastingTime } from "~/resources/types/spell-casting-time";
+import { type SpellDuration } from "~/resources/types/spell-duration";
+import { type SpellRange } from "~/resources/types/spell-range";
+import { type SpellSchool } from "~/resources/types/spell-school";
+import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
 // Form

@@ -1,6 +1,6 @@
 import z from "zod";
-import { distanceImpSchema, distanceMetSchema } from "../../i18n/i18n-distance";
-import { timeSchema } from "../../i18n/i18n-time";
+import { distanceImpSchema, distanceMetSchema } from "~/i18n/i18n-distance";
+import { timeSchema } from "~/i18n/i18n-time";
 import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 import { characterClassSchema } from "../types/character-class";
 import { spellCastingTimeSchema } from "../types/spell-casting-time";

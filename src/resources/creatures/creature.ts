@@ -1,5 +1,5 @@
 import z from "zod";
-import { i18nStringSchema } from "../../i18n/i18n-string";
+import { i18nStringSchema } from "~/i18n/i18n-string";
 import { resourceFiltersSchema, resourceSchema } from "../resource";
 import { creatureAbilitySchema } from "../types/creature-ability";
 import { creatureAlignmentSchema } from "../types/creature-alignment";

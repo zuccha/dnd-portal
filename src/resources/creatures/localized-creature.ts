@@ -3,10 +3,10 @@ import { z } from "zod";
 import {
   useTranslateDistanceImp,
   useTranslateDistanceMet,
-} from "../../i18n/i18n-distance";
-import { useI18nLangContext } from "../../i18n/i18n-lang-context";
-import { translate } from "../../i18n/i18n-string";
-import { useI18nSystem } from "../../i18n/i18n-system";
+} from "~/i18n/i18n-distance";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { translate } from "~/i18n/i18n-string";
+import { useI18nSystem } from "~/i18n/i18n-system";
 import type { CreatureAbility } from "../types/creature-ability";
 import { useTranslateCreatureAlignment } from "../types/creature-alignment";
 import {

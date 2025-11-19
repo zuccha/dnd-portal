@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { createLocalStore } from "../store/local-store";
-import supabase from "../supabase";
+import { createLocalStore } from "~/store/local-store";
+import supabase from "~/supabase";
 
 //------------------------------------------------------------------------------
 // Campaign

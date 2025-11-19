@@ -1,5 +1,5 @@
 import { MoonIcon, SunIcon } from "lucide-react";
-import IconButton from "../ui/icon-button";
+import IconButton from "~/ui/icon-button";
 import useTheme from "./use-theme";
 
 //------------------------------------------------------------------------------

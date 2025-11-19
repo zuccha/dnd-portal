@@ -1,11 +1,11 @@
 import { Em, HStack, Separator, Span, VStack } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { type ReactNode } from "react";
-import { type CampaignRole } from "../../../../../../../resources/types/campaign-role";
-import Checkbox from "../../../../../../../ui/checkbox";
-import Icon from "../../../../../../../ui/icon";
-import Link from "../../../../../../../ui/link";
-import RichText from "../../../../../../../ui/rich-text";
+import { type CampaignRole } from "~/resources/types/campaign-role";
+import Checkbox from "~/ui/checkbox";
+import Icon from "~/ui/icon";
+import Link from "~/ui/link";
+import RichText from "~/ui/rich-text";
 
 //------------------------------------------------------------------------------
 // Resource Card

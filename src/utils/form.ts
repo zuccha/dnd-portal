@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useState } from "react";
-import { createMemorySetStore } from "../store/memory-set-store";
-import { createMemoryStore } from "../store/memory-store";
+import { createMemorySetStore } from "~/store/memory-set-store";
+import { createMemoryStore } from "~/store/memory-store";
 import { createObservable } from "./observable";
 
 //------------------------------------------------------------------------------

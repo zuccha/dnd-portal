@@ -1,7 +1,7 @@
 import { Box, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import useAuth from "../auth/use-auth";
-import useAsyncLayoutEffect from "../hooks/use-async-layout-effect";
+import useAuth from "~/auth/use-auth";
+import useAsyncLayoutEffect from "~/hooks/use-async-layout-effect";
 import CampaignScreen from "./body/screens/campaign-screen/campaign-screen";
 import PageSignIn from "./body/screens/sign-in-screen/page-sign-in";
 import Header, { headerHeight } from "./header/header";

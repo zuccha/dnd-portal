@@ -1,8 +1,8 @@
 import { MapIcon } from "lucide-react";
 import type { FC } from "react";
-import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
-import { useSelectedCampaignId } from "../../../../../resources/campaign";
-import EmptyState from "../../../../../ui/empty-state";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useSelectedCampaignId } from "~/resources/campaign";
+import EmptyState from "~/ui/empty-state";
 import { type ResourcePanelId, useSelectedPanelId } from "./panels";
 import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";

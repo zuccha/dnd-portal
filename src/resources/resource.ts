@@ -1,5 +1,5 @@
 import z from "zod";
-import { i18nStringSchema } from "../i18n/i18n-string";
+import { i18nStringSchema } from "~/i18n/i18n-string";
 import { campaignRoleSchema } from "./types/campaign-role";
 
 //------------------------------------------------------------------------------

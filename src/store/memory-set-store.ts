@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from "react";
-import { createObservableSet } from "../utils/observable-set";
+import { createObservableSet } from "~/utils/observable-set";
 import {
   type SetStore,
   type StoreAction,

@@ -1,5 +1,5 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "../../../../../../../hooks/use-list-collection";
+import useListCollection from "~/hooks/use-list-collection";
 import {
   convertDistanceImpToMet,
   convertDistanceMetToImp,
@@ -7,27 +7,24 @@ import {
   parseDistanceMet,
   useDistanceImpUnitOptions,
   useDistanceMetUnitOptions,
-} from "../../../../../../../i18n/i18n-distance";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
-import { useI18nSystem } from "../../../../../../../i18n/i18n-system";
-import {
-  parseTime,
-  useTimeUnitOptions,
-} from "../../../../../../../i18n/i18n-time";
-import { type Spell } from "../../../../../../../resources/spells/spell";
-import { useCampaignRoleOptions } from "../../../../../../../resources/types/campaign-role";
-import { useCharacterClassOptions } from "../../../../../../../resources/types/character-class";
-import { useSpellCastingTimeOptions } from "../../../../../../../resources/types/spell-casting-time";
-import { useSpellDurationOptions } from "../../../../../../../resources/types/spell-duration";
-import { useSpellLevelOptions } from "../../../../../../../resources/types/spell-level";
-import { useSpellRangeOptions } from "../../../../../../../resources/types/spell-range";
-import { useSpellSchoolOptions } from "../../../../../../../resources/types/spell-school";
-import Field from "../../../../../../../ui/field";
-import Input from "../../../../../../../ui/input";
-import MeasureInput from "../../../../../../../ui/measure-input";
-import Select from "../../../../../../../ui/select";
-import Switch from "../../../../../../../ui/switch";
-import Textarea from "../../../../../../../ui/textarea";
+} from "~/i18n/i18n-distance";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useI18nSystem } from "~/i18n/i18n-system";
+import { parseTime, useTimeUnitOptions } from "~/i18n/i18n-time";
+import { type Spell } from "~/resources/spells/spell";
+import { useCampaignRoleOptions } from "~/resources/types/campaign-role";
+import { useCharacterClassOptions } from "~/resources/types/character-class";
+import { useSpellCastingTimeOptions } from "~/resources/types/spell-casting-time";
+import { useSpellDurationOptions } from "~/resources/types/spell-duration";
+import { useSpellLevelOptions } from "~/resources/types/spell-level";
+import { useSpellRangeOptions } from "~/resources/types/spell-range";
+import { useSpellSchoolOptions } from "~/resources/types/spell-school";
+import Field from "~/ui/field";
+import Input from "~/ui/input";
+import MeasureInput from "~/ui/measure-input";
+import Select from "~/ui/select";
+import Switch from "~/ui/switch";
+import Textarea from "~/ui/textarea";
 import {
   useSpellEditorFormCastingTime,
   useSpellEditorFormCastingTimeValue,

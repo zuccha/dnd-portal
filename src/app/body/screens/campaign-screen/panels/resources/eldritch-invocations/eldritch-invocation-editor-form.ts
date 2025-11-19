@@ -1,5 +1,5 @@
-import type { CampaignRole } from "../../../../../../../resources/types/campaign-role";
-import { createForm } from "../../../../../../../utils/form";
+import type { CampaignRole } from "~/resources/types/campaign-role";
+import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
 // Form

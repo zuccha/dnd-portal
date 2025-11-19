@@ -1,8 +1,8 @@
 import { Text, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
-import Button from "../../../../../ui/button";
-import { compareObjects } from "../../../../../utils/object";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import Button from "~/ui/button";
+import { compareObjects } from "~/utils/object";
 import { resourcePanelIds, useSelectedPanelId } from "../panels/panels";
 
 //------------------------------------------------------------------------------

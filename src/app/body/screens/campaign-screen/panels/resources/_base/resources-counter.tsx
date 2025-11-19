@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 
 //------------------------------------------------------------------------------
 // Resources Counter

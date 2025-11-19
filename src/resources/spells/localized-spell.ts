@@ -3,11 +3,11 @@ import { z } from "zod";
 import {
   useTranslateDistanceImp,
   useTranslateDistanceMet,
-} from "../../i18n/i18n-distance";
-import { useI18nLangContext } from "../../i18n/i18n-lang-context";
-import { translate } from "../../i18n/i18n-string";
-import { useI18nSystem } from "../../i18n/i18n-system";
-import { useTranslateTime } from "../../i18n/i18n-time";
+} from "~/i18n/i18n-distance";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { translate } from "~/i18n/i18n-string";
+import { useI18nSystem } from "~/i18n/i18n-system";
+import { useTranslateTime } from "~/i18n/i18n-time";
 import { useTranslateCharacterClass } from "../types/character-class";
 import { useTranslateSpellCastingTime } from "../types/spell-casting-time";
 import { useTranslateSpellDuration } from "../types/spell-duration";

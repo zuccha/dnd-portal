@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
-import { type I18nLang, useI18nLang } from "../i18n/i18n-lang";
-import type { I18nString } from "../i18n/i18n-string";
-import { compareObjects } from "../utils/object";
+import { type I18nLang, useI18nLang } from "~/i18n/i18n-lang";
+import type { I18nString } from "~/i18n/i18n-string";
+import { compareObjects } from "~/utils/object";
 
 //------------------------------------------------------------------------------
 // Type Translation

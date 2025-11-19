@@ -1,4 +1,4 @@
-import type { Callback1 } from "../utils/callback";
+import type { Callback1 } from "~/utils/callback";
 
 //------------------------------------------------------------------------------
 // Store Action

@@ -3,14 +3,11 @@ import {
   type DBSpellTranslation,
   dbSpellSchema,
   dbSpellTranslationSchema,
-} from "../../../../../../../resources/spells/db-spell";
-import { type LocalizedSpell } from "../../../../../../../resources/spells/localized-spell";
-import {
-  type Spell,
-  defaultSpell,
-} from "../../../../../../../resources/spells/spell";
-import { spellsStore } from "../../../../../../../resources/spells/spells-store";
-import { report } from "../../../../../../../utils/error";
+} from "~/resources/spells/db-spell";
+import { type LocalizedSpell } from "~/resources/spells/localized-spell";
+import { type Spell, defaultSpell } from "~/resources/spells/spell";
+import { spellsStore } from "~/resources/spells/spells-store";
+import { report } from "~/utils/error";
 import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
 import SpellCard from "./spell-card";

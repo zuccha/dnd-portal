@@ -2,26 +2,21 @@ import { Flex, HStack, Separator, VStack } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
 import { useCallback } from "react";
 import z from "zod";
-import { useI18nLang } from "../../../../../../../i18n/i18n-lang";
-import type { I18nString } from "../../../../../../../i18n/i18n-string";
-import { useCanEditCampaign } from "../../../../../../../resources/campaign";
+import { useI18nLang } from "~/i18n/i18n-lang";
+import type { I18nString } from "~/i18n/i18n-string";
+import { useCanEditCampaign } from "~/resources/campaign";
 import type {
   DBResource,
   DBResourceTranslation,
-} from "../../../../../../../resources/db-resource";
-import type { LocalizedResource } from "../../../../../../../resources/localized-resource";
-import type {
-  Resource,
-  ResourceFilters,
-} from "../../../../../../../resources/resource";
-import type { ResourcesStore } from "../../../../../../../resources/resources-store";
-import { createLocalStore } from "../../../../../../../store/local-store";
-import { createMemoryStore } from "../../../../../../../store/memory-store";
-import BinaryButton, {
-  type BinaryButtonProps,
-} from "../../../../../../../ui/binary-button";
-import { report } from "../../../../../../../utils/error";
-import type { Form } from "../../../../../../../utils/form";
+} from "~/resources/db-resource";
+import type { LocalizedResource } from "~/resources/localized-resource";
+import type { Resource, ResourceFilters } from "~/resources/resource";
+import type { ResourcesStore } from "~/resources/resources-store";
+import { createLocalStore } from "~/store/local-store";
+import { createMemoryStore } from "~/store/memory-store";
+import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";
+import { report } from "~/utils/error";
+import type { Form } from "~/utils/form";
 import ResourceCreator from "./resource-creator";
 import ResourceEditor from "./resource-editor";
 import ResourcesActions from "./resources-actions";

@@ -1,16 +1,16 @@
 import { HStack, Separator, createListCollection } from "@chakra-ui/react";
 import { useMemo } from "react";
-import useDebouncedState from "../../../../../../../hooks/use-debounced-value";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
-import { type SpellFilters } from "../../../../../../../resources/spells/spell";
-import { spellsStore } from "../../../../../../../resources/spells/spells-store";
-import { useCharacterClassOptions } from "../../../../../../../resources/types/character-class";
-import { useSpellLevelOptions } from "../../../../../../../resources/types/spell-level";
-import { useSpellSchoolOptions } from "../../../../../../../resources/types/spell-school";
-import InclusionButton from "../../../../../../../ui/inclusion-button";
-import InclusionSelect from "../../../../../../../ui/inclusion-select";
-import Input from "../../../../../../../ui/input";
-import Select from "../../../../../../../ui/select";
+import useDebouncedState from "~/hooks/use-debounced-value";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { type SpellFilters } from "~/resources/spells/spell";
+import { spellsStore } from "~/resources/spells/spells-store";
+import { useCharacterClassOptions } from "~/resources/types/character-class";
+import { useSpellLevelOptions } from "~/resources/types/spell-level";
+import { useSpellSchoolOptions } from "~/resources/types/spell-school";
+import InclusionButton from "~/ui/inclusion-button";
+import InclusionSelect from "~/ui/inclusion-select";
+import Input from "~/ui/input";
+import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
 // Spells Filters

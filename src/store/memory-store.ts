@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { createObservable } from "../utils/observable";
+import { createObservable } from "~/utils/observable";
 import {
   type Store,
   type StoreAction,

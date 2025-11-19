@@ -1,5 +1,5 @@
 import { VStack } from "@chakra-ui/react";
-import { useSelectedCampaignId } from "../../../../../resources/campaign";
+import { useSelectedCampaignId } from "~/resources/campaign";
 import SidebarCampaign from "./sidebar-campaign";
 import SidebarCampaignSelector from "./sidebar-campaign-selector";
 

@@ -1,5 +1,5 @@
 import z from "zod";
-import { i18nStringSchema } from "../../i18n/i18n-string";
+import { i18nStringSchema } from "~/i18n/i18n-string";
 import { resourceFiltersSchema, resourceSchema } from "../resource";
 import { damageTypeSchema } from "../types/damage-type";
 import { weaponMasterySchema } from "../types/weapon-mastery";

@@ -1,9 +1,9 @@
-import type { CampaignRole } from "../../../../../../../resources/types/campaign-role";
-import type { DamageType } from "../../../../../../../resources/types/damage-type";
-import type { WeaponMastery } from "../../../../../../../resources/types/weapon-mastery";
-import type { WeaponProperty } from "../../../../../../../resources/types/weapon-property";
-import type { WeaponType } from "../../../../../../../resources/types/weapon-type";
-import { createForm } from "../../../../../../../utils/form";
+import type { CampaignRole } from "~/resources/types/campaign-role";
+import type { DamageType } from "~/resources/types/damage-type";
+import type { WeaponMastery } from "~/resources/types/weapon-mastery";
+import type { WeaponProperty } from "~/resources/types/weapon-property";
+import type { WeaponType } from "~/resources/types/weapon-type";
+import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
 // Form

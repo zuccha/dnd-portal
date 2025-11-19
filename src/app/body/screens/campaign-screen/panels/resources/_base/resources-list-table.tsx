@@ -8,17 +8,14 @@ import {
 } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
 import { type ReactNode, useCallback, useState } from "react";
-import { useI18nLang } from "../../../../../../../i18n/i18n-lang";
-import {
-  type I18nString,
-  translate,
-} from "../../../../../../../i18n/i18n-string";
-import type { LocalizedResource } from "../../../../../../../resources/localized-resource";
-import type { Resource } from "../../../../../../../resources/resource";
-import Checkbox from "../../../../../../../ui/checkbox";
-import Icon from "../../../../../../../ui/icon";
-import Link from "../../../../../../../ui/link";
-import RichText from "../../../../../../../ui/rich-text";
+import { useI18nLang } from "~/i18n/i18n-lang";
+import { type I18nString, translate } from "~/i18n/i18n-string";
+import type { LocalizedResource } from "~/resources/localized-resource";
+import type { Resource } from "~/resources/resource";
+import Checkbox from "~/ui/checkbox";
+import Icon from "~/ui/icon";
+import Link from "~/ui/link";
+import RichText from "~/ui/rich-text";
 import ResourcesListEmpty from "./resources-list-empty";
 
 //----------------------------------------------------------------------------

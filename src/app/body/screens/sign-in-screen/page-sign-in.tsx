@@ -1,8 +1,8 @@
 import { Center, Heading, VStack, chakra } from "@chakra-ui/react";
-import RawDiscordIcon from "../../../../assets/images/icons/discord.svg?react";
-import { signInWithDiscord } from "../../../../auth/auth";
-import { useI18nLangContext } from "../../../../i18n/i18n-lang-context";
-import Button from "../../../../ui/button";
+import RawDiscordIcon from "~/assets/images/icons/discord.svg?react";
+import { signInWithDiscord } from "~/auth/auth";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import Button from "~/ui/button";
 
 //------------------------------------------------------------------------------
 // Page Sign In

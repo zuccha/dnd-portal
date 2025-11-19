@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { createLocalStore } from "../store/local-store";
+import { createLocalStore } from "~/store/local-store";
 import { type Theme, themeSchema } from "./theme";
 
 //------------------------------------------------------------------------------

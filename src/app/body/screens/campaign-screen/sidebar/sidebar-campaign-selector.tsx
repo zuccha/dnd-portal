@@ -1,12 +1,12 @@
 import { Text, VStack, createListCollection } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
-import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import {
   useOwnedModules,
   useSelectedCampaignId,
   useUserCampaigns,
-} from "../../../../../resources/campaign";
-import Select from "../../../../../ui/select";
+} from "~/resources/campaign";
+import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
 // Sidebar Campaign Selector

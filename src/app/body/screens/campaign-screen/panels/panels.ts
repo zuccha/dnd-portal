@@ -1,5 +1,5 @@
 import z from "zod";
-import { createLocalStore } from "../../../../../store/local-store";
+import { createLocalStore } from "~/store/local-store";
 
 //------------------------------------------------------------------------------
 // Panel Ids

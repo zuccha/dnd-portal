@@ -1,6 +1,6 @@
 import { RatIcon } from "lucide-react";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
-import EmptyState from "../../../../../../../ui/empty-state";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import EmptyState from "~/ui/empty-state";
 
 //----------------------------------------------------------------------------
 // Resources List Empty

@@ -1,18 +1,18 @@
 import { HStack, Separator, createListCollection } from "@chakra-ui/react";
 import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
 import { useMemo } from "react";
-import useDebouncedState from "../../../../../../../hooks/use-debounced-value";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
-import { useWeaponMasteryOptions } from "../../../../../../../resources/types/weapon-mastery";
-import { useWeaponPropertyOptions } from "../../../../../../../resources/types/weapon-property";
-import { useWeaponTypeOptions } from "../../../../../../../resources/types/weapon-type";
-import { type WeaponFilters } from "../../../../../../../resources/weapons/weapon";
-import { weaponsStore } from "../../../../../../../resources/weapons/weapons-store";
-import Icon from "../../../../../../../ui/icon";
-import InclusionButton from "../../../../../../../ui/inclusion-button";
-import InclusionSelect from "../../../../../../../ui/inclusion-select";
-import Input from "../../../../../../../ui/input";
-import Select from "../../../../../../../ui/select";
+import useDebouncedState from "~/hooks/use-debounced-value";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useWeaponMasteryOptions } from "~/resources/types/weapon-mastery";
+import { useWeaponPropertyOptions } from "~/resources/types/weapon-property";
+import { useWeaponTypeOptions } from "~/resources/types/weapon-type";
+import { type WeaponFilters } from "~/resources/weapons/weapon";
+import { weaponsStore } from "~/resources/weapons/weapons-store";
+import Icon from "~/ui/icon";
+import InclusionButton from "~/ui/inclusion-button";
+import InclusionSelect from "~/ui/inclusion-select";
+import Input from "~/ui/input";
+import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
 // Weapons Filters

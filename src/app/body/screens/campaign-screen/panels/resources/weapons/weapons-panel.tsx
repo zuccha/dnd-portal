@@ -4,14 +4,11 @@ import {
   type DBWeaponTranslation,
   dbWeaponSchema,
   dbWeaponTranslationSchema,
-} from "../../../../../../../resources/weapons/db-weapon";
-import { type LocalizedWeapon } from "../../../../../../../resources/weapons/localized-weapon";
-import {
-  type Weapon,
-  defaultWeapon,
-} from "../../../../../../../resources/weapons/weapon";
-import { weaponsStore } from "../../../../../../../resources/weapons/weapons-store";
-import { report } from "../../../../../../../utils/error";
+} from "~/resources/weapons/db-weapon";
+import { type LocalizedWeapon } from "~/resources/weapons/localized-weapon";
+import { type Weapon, defaultWeapon } from "~/resources/weapons/weapon";
+import { weaponsStore } from "~/resources/weapons/weapons-store";
+import { report } from "~/utils/error";
 import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
 import WeaponCard from "./weapon-card";
