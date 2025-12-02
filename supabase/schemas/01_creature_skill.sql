@@ -15,7 +15,8 @@ CREATE TYPE public.creature_skill AS ENUM (
     'deception',
     'intimidation',
     'performance',
-    'persuasion'
+    'persuasion',
+    'investigation'
 );
 
 ALTER TYPE public.creature_skill OWNER TO postgres;
