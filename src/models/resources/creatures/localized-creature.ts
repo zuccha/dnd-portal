@@ -253,6 +253,7 @@ export function useLocalizeCreature(): (
             const skillBonus = formatMod(abilityMod + pb);
             return `${label} ${skillBonus}`;
           })
+          .sort()
           .join(", ");
         stats_parts.push(ti("stats.skills", skills));
       }
