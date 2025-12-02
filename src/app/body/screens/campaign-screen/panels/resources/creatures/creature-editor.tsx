@@ -1205,8 +1205,8 @@ const i18nContext = {
     it: "Azioni",
   },
   "actions.placeholder": {
-    en: "Describe actions...",
-    it: "Descrivi le azioni...",
+    en: "None",
+    it: "Nessuna",
   },
   "alignment.label": {
     en: "Alignment",
