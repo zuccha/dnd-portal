@@ -8,6 +8,7 @@ import { createObservable } from "./observable";
 //------------------------------------------------------------------------------
 
 export type Form<Fields extends Record<string, unknown>> = {
+  copyDataToClipboard: () => Promise<void>;
   reset: () => void;
   useField: <Name extends keyof Fields>(
     name: Name,
@@ -71,6 +72,25 @@ export function createForm<
   //----------------------------------------------------------------------------
 
   const { use: useSubmitting } = createMemoryStore(false);
+
+  //----------------------------------------------------------------------------
+  // Build Data
+  //----------------------------------------------------------------------------
+
+  function buildData(): Partial<Fields> {
+    const data: Partial<Fields> = {};
+    const empty = undefined as Fields[keyof Fields];
+    valueFields().forEach((field) => (data[field] = getValue(field, empty)));
+    return data;
+  }
+
+  //----------------------------------------------------------------------------
+  // Copy Data to Clipboard
+  //----------------------------------------------------------------------------
+
+  async function copyDataToClipboard(): Promise<void> {
+    await navigator.clipboard.writeText(JSON.stringify(buildData(), null, 2));
+  }
 
   //----------------------------------------------------------------------------
   // Use Form Field
@@ -166,12 +186,7 @@ export function createForm<
       setSubmitError(undefined);
       setSubmitting(true);
 
-      const data: Partial<Fields> = {};
-      valueFields().forEach((field) => {
-        data[field] = getValue(field, undefined as Fields[keyof Fields]);
-      });
-
-      const error = await onSubmit(data);
+      const error = await onSubmit(buildData());
       setSubmitError(error);
       setSubmitting(false);
 
@@ -196,6 +211,7 @@ export function createForm<
   //----------------------------------------------------------------------------
 
   return {
+    copyDataToClipboard,
     reset,
     useField,
     useFieldError,

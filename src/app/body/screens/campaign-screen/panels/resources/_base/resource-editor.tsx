@@ -1,7 +1,9 @@
-import { CloseButton, Dialog, Portal, Text } from "@chakra-ui/react";
+import { CloseButton, Dialog, Menu, Portal, Text } from "@chakra-ui/react";
+import { EllipsisVerticalIcon } from "lucide-react";
 import { type ReactNode, useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Button from "~/ui/button";
+import IconButton from "~/ui/icon-button";
 
 //------------------------------------------------------------------------------
 // Resource Editor
@@ -12,6 +14,7 @@ export type ResourceEditorProps = {
   error: string | undefined;
   name: string;
   onClose: () => void;
+  onCopyToClipboard: () => Promise<void>;
   onSubmit: () => Promise<string | undefined>;
   open: boolean;
   saving: boolean;
@@ -22,6 +25,7 @@ export default function ResourceEditor({
   children,
   error,
   onClose,
+  onCopyToClipboard,
   onSubmit,
   open,
   name,
@@ -55,7 +59,28 @@ export default function ResourceEditor({
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
-            <Dialog.Header>
+            <Dialog.Header alignItems="center">
+              <Menu.Root>
+                <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
+                  <IconButton
+                    Icon={EllipsisVerticalIcon}
+                    size="xs"
+                    variant="ghost"
+                  />
+                </Menu.Trigger>
+                <Menu.Positioner>
+                  <Menu.Content>
+                    <Menu.Item
+                      disabled={disabled}
+                      onClick={onCopyToClipboard}
+                      value="copy"
+                    >
+                      {t("data.copy")}
+                    </Menu.Item>
+                  </Menu.Content>
+                </Menu.Positioner>
+              </Menu.Root>
+
               <Dialog.Title>
                 {name ? ti("title", name) : t("title.empty")}
               </Dialog.Title>
@@ -104,6 +129,11 @@ export default function ResourceEditor({
 //----------------------------------------------------------------------------
 
 const i18nContext = {
+  "data.copy": {
+    en: "Copy data",
+    it: "Copia dati",
+  },
+
   "title": {
     en: 'Edit "<1>"',
     it: 'Modifica "<1>"',
