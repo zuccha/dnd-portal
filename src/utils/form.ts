@@ -9,6 +9,7 @@ import { createObservable } from "./observable";
 
 export type Form<Fields extends Record<string, unknown>> = {
   copyDataToClipboard: () => Promise<void>;
+  pasteDataFromClipboard: () => Promise<void>;
   reset: () => void;
   useField: <Name extends keyof Fields>(
     name: Name,
@@ -35,9 +36,9 @@ export type Form<Fields extends Record<string, unknown>> = {
 // Create Form
 //------------------------------------------------------------------------------
 
-export function createForm<
-  Fields extends Record<string, unknown>,
->(): Form<Fields> {
+export function createForm<Fields extends Record<string, unknown>>(
+  parseData: (maybeData: unknown) => Fields,
+): Form<Fields> {
   //----------------------------------------------------------------------------
   // Values Store
   //----------------------------------------------------------------------------
@@ -74,6 +75,13 @@ export function createForm<
   const { use: useSubmitting } = createMemoryStore(false);
 
   //----------------------------------------------------------------------------
+  // Value Changers Store
+  //----------------------------------------------------------------------------
+
+  type Changer<Field extends keyof Fields> = (value: Fields[Field]) => void;
+  const valueChangers: { [K in keyof Fields]?: Changer<K> } = {};
+
+  //----------------------------------------------------------------------------
   // Build Data
   //----------------------------------------------------------------------------
 
@@ -90,6 +98,22 @@ export function createForm<
 
   async function copyDataToClipboard(): Promise<void> {
     await navigator.clipboard.writeText(JSON.stringify(buildData(), null, 2));
+  }
+
+  //----------------------------------------------------------------------------
+  // Paste Data from Clipboard
+  //----------------------------------------------------------------------------
+
+  async function pasteDataFromClipboard(): Promise<void> {
+    const text = await navigator.clipboard.readText();
+    const data = parseData(JSON.parse(text));
+    const fields = valueFields();
+
+    for (const field of fields) {
+      const onValueChange = valueChangers[field];
+      const value = data[field];
+      onValueChange?.(value);
+    }
   }
 
   //----------------------------------------------------------------------------
@@ -113,17 +137,6 @@ export function createForm<
     const [error, setError] = useError(name, undefined);
     const [disabled] = useSubmitting();
 
-    useLayoutEffect(() => {
-      setError(validate(defaultValue));
-    }, [defaultValue, setError, validate]);
-
-    useLayoutEffect(() => {
-      subscribeReset(() => {
-        setValue(defaultValue);
-        setError(validate(defaultValue));
-      });
-    }, [defaultValue, setError, setValue, validate]);
-
     const onBlur = useCallback(() => {
       // Nothing.
     }, []);
@@ -135,6 +148,22 @@ export function createForm<
       },
       [setError, setValue, validate],
     );
+
+    useLayoutEffect(() => {
+      valueChangers[name] = onValueChange;
+      return () => (valueChangers[name] = undefined);
+    }, [defaultValue, name, onValueChange]);
+
+    useLayoutEffect(() => {
+      setError(validate(defaultValue));
+    }, [defaultValue, setError, validate]);
+
+    useLayoutEffect(() => {
+      subscribeReset(() => {
+        setValue(defaultValue);
+        setError(validate(defaultValue));
+      });
+    }, [defaultValue, setError, setValue, validate]);
 
     return {
       "data-invalid": error ? "" : undefined,
@@ -212,6 +241,7 @@ export function createForm<
 
   return {
     copyDataToClipboard,
+    pasteDataFromClipboard,
     reset,
     useField,
     useFieldError,

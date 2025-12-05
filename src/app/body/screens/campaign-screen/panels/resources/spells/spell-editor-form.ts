@@ -40,7 +40,7 @@ export type SpellEditorFormFields = z.infer<typeof spellEditorFormFieldsSchema>;
 // Spell Editor Form
 //------------------------------------------------------------------------------
 
-export const spellEditorForm = createForm<SpellEditorFormFields>();
+export const spellEditorForm = createForm(spellEditorFormFieldsSchema.parse);
 
 export const { useField: useSpellEditorFormField } = spellEditorForm;
 

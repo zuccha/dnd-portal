@@ -41,7 +41,7 @@ export type WeaponEditorFormFields = z.infer<
 // Weapon Editor Form
 //------------------------------------------------------------------------------
 
-export const weaponEditorForm = createForm<WeaponEditorFormFields>();
+export const weaponEditorForm = createForm(weaponEditorFormFieldsSchema.parse);
 
 export const { useField: useWeaponEditorFormField } = weaponEditorForm;
 

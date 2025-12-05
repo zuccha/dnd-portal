@@ -69,7 +69,7 @@ export type CreatureEditorFormFields = z.infer<
 // Creature Editor Form
 //------------------------------------------------------------------------------
 
-const creatureEditorForm = createForm<CreatureEditorFormFields>();
+const creatureEditorForm = createForm(creatureEditorFormFieldsSchema.parse);
 
 export const { useField: useCreatureEditorFormField } = creatureEditorForm;
 
@@ -242,14 +242,6 @@ function validateName(name: string) {
 export const useCreatureEditorFormName = (
   defaultName: CreatureEditorFormFields["name"],
 ) => useCreatureEditorFormField("name", defaultName, validateName);
-
-//------------------------------------------------------------------------------
-// Page
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormPage = (
-  defaultPage: CreatureEditorFormFields["page"],
-) => useCreatureEditorFormField("page", defaultPage);
 
 //------------------------------------------------------------------------------
 // Passive Perception

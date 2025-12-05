@@ -196,6 +196,7 @@ export function createResourcesPanel<
         name={editedResource?.name[lang] ?? ""}
         onClose={unsetEditedResource}
         onCopyToClipboard={form.copyDataToClipboard}
+        onPasteFromClipboard={form.pasteDataFromClipboard}
         onSubmit={submit}
         open={!!editedResource}
         saving={saving}

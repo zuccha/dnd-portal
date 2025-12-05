@@ -22,8 +22,9 @@ export type EldritchInvocationEditorFormFields = z.infer<
 // Eldritch Invocation Editor Form
 //------------------------------------------------------------------------------
 
-export const eldritchInvocationEditorForm =
-  createForm<EldritchInvocationEditorFormFields>();
+export const eldritchInvocationEditorForm = createForm(
+  eldritchInvocationEditorFormFieldsSchema.parse,
+);
 
 export const { useField: useEldritchInvocationEditorFormField } =
   eldritchInvocationEditorForm;

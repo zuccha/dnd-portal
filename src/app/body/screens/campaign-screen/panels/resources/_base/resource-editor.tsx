@@ -15,6 +15,7 @@ export type ResourceEditorProps = {
   name: string;
   onClose: () => void;
   onCopyToClipboard: () => Promise<void>;
+  onPasteFromClipboard: () => Promise<void>;
   onSubmit: () => Promise<string | undefined>;
   open: boolean;
   saving: boolean;
@@ -26,6 +27,7 @@ export default function ResourceEditor({
   error,
   onClose,
   onCopyToClipboard,
+  onPasteFromClipboard,
   onSubmit,
   open,
   name,
@@ -73,9 +75,16 @@ export default function ResourceEditor({
                     <Menu.Item
                       disabled={disabled}
                       onClick={onCopyToClipboard}
-                      value="copy"
+                      value="data.copy"
                     >
                       {t("data.copy")}
+                    </Menu.Item>
+                    <Menu.Item
+                      disabled={disabled}
+                      onClick={onPasteFromClipboard}
+                      value="data.paste"
+                    >
+                      {t("data.paste")}
                     </Menu.Item>
                   </Menu.Content>
                 </Menu.Positioner>
@@ -132,6 +141,11 @@ const i18nContext = {
   "data.copy": {
     en: "Copy data",
     it: "Copia dati",
+  },
+
+  "data.paste": {
+    en: "Paste data",
+    it: "Incolla dati",
   },
 
   "title": {
