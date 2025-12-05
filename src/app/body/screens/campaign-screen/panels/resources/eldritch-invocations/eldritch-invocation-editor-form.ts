@@ -1,17 +1,26 @@
-import type { CampaignRole } from "~/models/types/campaign-role";
+import { z } from "zod";
+import { campaignRoleSchema } from "~/models/types/campaign-role";
 import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
-// Form
+// Eldritch Invocation Editor Form Fields
 //------------------------------------------------------------------------------
 
-export type EldritchInvocationEditorFormFields = {
-  name: string;
-  min_warlock_level: number;
-  description: string;
-  prerequisite: string;
-  visibility: CampaignRole;
-};
+export const eldritchInvocationEditorFormFieldsSchema = z.object({
+  description: z.string(),
+  min_warlock_level: z.number(),
+  name: z.string(),
+  prerequisite: z.string(),
+  visibility: campaignRoleSchema,
+});
+
+export type EldritchInvocationEditorFormFields = z.infer<
+  typeof eldritchInvocationEditorFormFieldsSchema
+>;
+
+//------------------------------------------------------------------------------
+// Eldritch Invocation Editor Form
+//------------------------------------------------------------------------------
 
 export const eldritchInvocationEditorForm =
   createForm<EldritchInvocationEditorFormFields>();
@@ -37,7 +46,7 @@ export const useEldritchInvocationEditorFormName = (defaultName: string) =>
 //------------------------------------------------------------------------------
 
 export const useEldritchInvocationEditorFormMinWarlockLevel = (
-  defaultMinWarlockLevel: number,
+  defaultMinWarlockLevel: EldritchInvocationEditorFormFields["min_warlock_level"],
 ) =>
   useEldritchInvocationEditorFormField(
     "min_warlock_level",
@@ -53,7 +62,7 @@ function validateDescription(name: string) {
 }
 
 export const useEldritchInvocationEditorFormDescription = (
-  defaultDescription: string,
+  defaultDescription: EldritchInvocationEditorFormFields["description"],
 ) =>
   useEldritchInvocationEditorFormField(
     "description",
@@ -66,7 +75,7 @@ export const useEldritchInvocationEditorFormDescription = (
 //------------------------------------------------------------------------------
 
 export const useEldritchInvocationEditorFormPrerequisite = (
-  defaultPrerequisite: string,
+  defaultPrerequisite: EldritchInvocationEditorFormFields["prerequisite"],
 ) => useEldritchInvocationEditorFormField("prerequisite", defaultPrerequisite);
 
 //------------------------------------------------------------------------------
@@ -74,5 +83,5 @@ export const useEldritchInvocationEditorFormPrerequisite = (
 //------------------------------------------------------------------------------
 
 export const useEldritchInvocationEditorFormVisibility = (
-  defaultVisibility: CampaignRole,
+  defaultVisibility: EldritchInvocationEditorFormFields["visibility"],
 ) => useEldritchInvocationEditorFormField("visibility", defaultVisibility);

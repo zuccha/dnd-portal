@@ -1,37 +1,44 @@
-import type { CampaignRole } from "~/models/types/campaign-role";
-import { type CharacterClass } from "~/models/types/character-class";
-import { type SpellCastingTime } from "~/models/types/spell-casting-time";
-import { type SpellDuration } from "~/models/types/spell-duration";
-import { type SpellRange } from "~/models/types/spell-range";
-import { type SpellSchool } from "~/models/types/spell-school";
+import { z } from "zod";
+import { campaignRoleSchema } from "~/models/types/campaign-role";
+import { characterClassSchema } from "~/models/types/character-class";
+import { spellCastingTimeSchema } from "~/models/types/spell-casting-time";
+import { spellDurationSchema } from "~/models/types/spell-duration";
+import { spellRangeSchema } from "~/models/types/spell-range";
+import { spellSchoolSchema } from "~/models/types/spell-school";
 import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
-// Form
+// Spell Editor Form Fields
 //------------------------------------------------------------------------------
 
-export type SpellEditorFormFields = {
-  casting_time: SpellCastingTime;
-  casting_time_value: string;
-  character_classes: CharacterClass[];
-  concentration: boolean;
-  description: string;
-  duration: SpellDuration;
-  duration_value: string;
-  level: number;
-  material: boolean;
-  materials: string;
-  name: string;
-  range: SpellRange;
-  range_value_imp: string;
-  range_value_met: string;
-  ritual: boolean;
-  school: SpellSchool;
-  somatic: boolean;
-  upgrade: string;
-  verbal: boolean;
-  visibility: CampaignRole;
-};
+export const spellEditorFormFieldsSchema = z.object({
+  casting_time: spellCastingTimeSchema,
+  casting_time_value: z.string(),
+  character_classes: z.array(characterClassSchema),
+  concentration: z.boolean(),
+  description: z.string(),
+  duration: spellDurationSchema,
+  duration_value: z.string(),
+  level: z.number(),
+  material: z.boolean(),
+  materials: z.string(),
+  name: z.string(),
+  range: spellRangeSchema,
+  range_value_imp: z.string(),
+  range_value_met: z.string(),
+  ritual: z.boolean(),
+  school: spellSchoolSchema,
+  somatic: z.boolean(),
+  upgrade: z.string(),
+  verbal: z.boolean(),
+  visibility: campaignRoleSchema,
+});
+
+export type SpellEditorFormFields = z.infer<typeof spellEditorFormFieldsSchema>;
+
+//------------------------------------------------------------------------------
+// Spell Editor Form
+//------------------------------------------------------------------------------
 
 export const spellEditorForm = createForm<SpellEditorFormFields>();
 
@@ -47,8 +54,9 @@ function validateName(name: string) {
   return name ? undefined : "name.error.empty";
 }
 
-export const useSpellEditorFormName = (defaultName: string) =>
-  useSpellEditorFormField("name", defaultName, validateName);
+export const useSpellEditorFormName = (
+  defaultName: SpellEditorFormFields["name"],
+) => useSpellEditorFormField("name", defaultName, validateName);
 
 //------------------------------------------------------------------------------
 // Level
@@ -58,30 +66,32 @@ function validateLevel(level: number) {
   return level >= 0 ? undefined : "level.error.empty";
 }
 
-export const useSpellEditorFormLevel = (defaultLevel: number) =>
-  useSpellEditorFormField("level", defaultLevel, validateLevel);
+export const useSpellEditorFormLevel = (
+  defaultLevel: SpellEditorFormFields["level"],
+) => useSpellEditorFormField("level", defaultLevel, validateLevel);
 
 //------------------------------------------------------------------------------
 // Character Classes
 //------------------------------------------------------------------------------
 
 export const useSpellEditorFormCharacterClasses = (
-  defaultCharacterClasses: CharacterClass[],
+  defaultCharacterClasses: SpellEditorFormFields["character_classes"],
 ) => useSpellEditorFormField("character_classes", defaultCharacterClasses);
 
 //------------------------------------------------------------------------------
 // School
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormSchool = (defaultSchool: SpellSchool) =>
-  useSpellEditorFormField("school", defaultSchool);
+export const useSpellEditorFormSchool = (
+  defaultSchool: SpellEditorFormFields["school"],
+) => useSpellEditorFormField("school", defaultSchool);
 
 //------------------------------------------------------------------------------
 // Casting Time
 //------------------------------------------------------------------------------
 
 export const useSpellEditorFormCastingTime = (
-  defaultCastingTime: SpellCastingTime,
+  defaultCastingTime: SpellEditorFormFields["casting_time"],
 ) => useSpellEditorFormField("casting_time", defaultCastingTime);
 
 //------------------------------------------------------------------------------
@@ -89,43 +99,48 @@ export const useSpellEditorFormCastingTime = (
 //------------------------------------------------------------------------------
 
 export const useSpellEditorFormCastingTimeValue = (
-  defaultCastingTimeValue: string,
+  defaultCastingTimeValue: SpellEditorFormFields["casting_time_value"],
 ) => useSpellEditorFormField("casting_time_value", defaultCastingTimeValue);
 
 //------------------------------------------------------------------------------
 // Duration
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormDuration = (defaultDuration: SpellDuration) =>
-  useSpellEditorFormField("duration", defaultDuration);
+export const useSpellEditorFormDuration = (
+  defaultDuration: SpellEditorFormFields["duration"],
+) => useSpellEditorFormField("duration", defaultDuration);
 
 //------------------------------------------------------------------------------
 // Duration Value
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormDurationValue = (defaultDurationValue: string) =>
-  useSpellEditorFormField("duration_value", defaultDurationValue);
+export const useSpellEditorFormDurationValue = (
+  defaultDurationValue: SpellEditorFormFields["duration_value"],
+) => useSpellEditorFormField("duration_value", defaultDurationValue);
 
 //------------------------------------------------------------------------------
 // Range
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormRange = (defaultRange: SpellRange) =>
-  useSpellEditorFormField("range", defaultRange);
+export const useSpellEditorFormRange = (
+  defaultRange: SpellEditorFormFields["range"],
+) => useSpellEditorFormField("range", defaultRange);
 
 //------------------------------------------------------------------------------
 // Range Value Imp
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormRangeValueImp = (defaultRangeValueImp: string) =>
-  useSpellEditorFormField("range_value_imp", defaultRangeValueImp);
+export const useSpellEditorFormRangeValueImp = (
+  defaultRangeValueImp: SpellEditorFormFields["range_value_imp"],
+) => useSpellEditorFormField("range_value_imp", defaultRangeValueImp);
 
 //------------------------------------------------------------------------------
 // Range Value Met
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormRangeValueMet = (defaultRangeValueMet: string) =>
-  useSpellEditorFormField("range_value_met", defaultRangeValueMet);
+export const useSpellEditorFormRangeValueMet = (
+  defaultRangeValueMet: SpellEditorFormFields["range_value_met"],
+) => useSpellEditorFormField("range_value_met", defaultRangeValueMet);
 
 //------------------------------------------------------------------------------
 // Materials
@@ -135,8 +150,9 @@ function validateMaterials(materials: string) {
   return materials ? undefined : "materials.error.empty";
 }
 
-export const useSpellEditorFormMaterials = (defaultMaterials: string) =>
-  useSpellEditorFormField("materials", defaultMaterials, validateMaterials);
+export const useSpellEditorFormMaterials = (
+  defaultMaterials: SpellEditorFormFields["materials"],
+) => useSpellEditorFormField("materials", defaultMaterials, validateMaterials);
 
 //------------------------------------------------------------------------------
 // Description
@@ -146,7 +162,9 @@ function validateDescription(description: string) {
   return description ? undefined : "description.error.empty";
 }
 
-export const useSpellEditorFormDescription = (defaultDescription: string) =>
+export const useSpellEditorFormDescription = (
+  defaultDescription: SpellEditorFormFields["description"],
+) =>
   useSpellEditorFormField(
     "description",
     defaultDescription,
@@ -157,12 +175,14 @@ export const useSpellEditorFormDescription = (defaultDescription: string) =>
 // Upgrade
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormUpgrade = (defaultUpgrade: string) =>
-  useSpellEditorFormField("upgrade", defaultUpgrade);
+export const useSpellEditorFormUpgrade = (
+  defaultUpgrade: SpellEditorFormFields["upgrade"],
+) => useSpellEditorFormField("upgrade", defaultUpgrade);
 
 //------------------------------------------------------------------------------
 // Visibility
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormVisibility = (defaultVisibility: CampaignRole) =>
-  useSpellEditorFormField("visibility", defaultVisibility);
+export const useSpellEditorFormVisibility = (
+  defaultVisibility: SpellEditorFormFields["visibility"],
+) => useSpellEditorFormField("visibility", defaultVisibility);
