@@ -153,7 +153,6 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
 
   const maybeTranslation = {
     name: data.name,
-    page: data.page,
 
     gear: data.gear,
     languages: data.languages,
