@@ -77,48 +77,40 @@ export const { useField: useCreatureEditorFormField } = creatureEditorForm;
 export default creatureEditorForm;
 
 //------------------------------------------------------------------------------
-// Name
+// Ability Scores
 //------------------------------------------------------------------------------
 
-function validateName(name: string) {
-  return name ? undefined : "name.error.empty";
-}
+export const useCreatureEditorFormAbilityStr = (
+  defaultAbilityStr: CreatureEditorFormFields["ability_str"],
+) => useCreatureEditorFormField("ability_str", defaultAbilityStr);
 
-export const useCreatureEditorFormName = (
-  defaultName: CreatureEditorFormFields["name"],
-) => useCreatureEditorFormField("name", defaultName, validateName);
+export const useCreatureEditorFormAbilityDex = (
+  defaultAbilityDex: CreatureEditorFormFields["ability_dex"],
+) => useCreatureEditorFormField("ability_dex", defaultAbilityDex);
 
-//------------------------------------------------------------------------------
-// Visibility
-//------------------------------------------------------------------------------
+export const useCreatureEditorFormAbilityCon = (
+  defaultAbilityCon: CreatureEditorFormFields["ability_con"],
+) => useCreatureEditorFormField("ability_con", defaultAbilityCon);
 
-export const useCreatureEditorFormVisibility = (
-  defaultVisibility: CreatureEditorFormFields["visibility"],
-) => useCreatureEditorFormField("visibility", defaultVisibility);
+export const useCreatureEditorFormAbilityInt = (
+  defaultAbilityInt: CreatureEditorFormFields["ability_int"],
+) => useCreatureEditorFormField("ability_int", defaultAbilityInt);
 
-//------------------------------------------------------------------------------
-// Page
-//------------------------------------------------------------------------------
+export const useCreatureEditorFormAbilityWis = (
+  defaultAbilityWis: CreatureEditorFormFields["ability_wis"],
+) => useCreatureEditorFormField("ability_wis", defaultAbilityWis);
 
-export const useCreatureEditorFormPage = (
-  defaultPage: CreatureEditorFormFields["page"],
-) => useCreatureEditorFormField("page", defaultPage);
-
-//------------------------------------------------------------------------------
-// Type
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormType = (
-  defaultType: CreatureEditorFormFields["type"],
-) => useCreatureEditorFormField("type", defaultType);
+export const useCreatureEditorFormAbilityCha = (
+  defaultAbilityCha: CreatureEditorFormFields["ability_cha"],
+) => useCreatureEditorFormField("ability_cha", defaultAbilityCha);
 
 //------------------------------------------------------------------------------
-// Size
+// AC
 //------------------------------------------------------------------------------
 
-export const useCreatureEditorFormSize = (
-  defaultSize: CreatureEditorFormFields["size"],
-) => useCreatureEditorFormField("size", defaultSize);
+export const useCreatureEditorFormAC = (
+  defaultAC: CreatureEditorFormFields["ac"],
+) => useCreatureEditorFormField("ac", defaultAC);
 
 //------------------------------------------------------------------------------
 // Alignment
@@ -129,6 +121,34 @@ export const useCreatureEditorFormAlignment = (
 ) => useCreatureEditorFormField("alignment", defaultAlignment);
 
 //------------------------------------------------------------------------------
+// Condition Interactions
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormConditionImmunities = (
+  defaultConditionImmunities: CreatureEditorFormFields["condition_immunities"],
+) =>
+  useCreatureEditorFormField(
+    "condition_immunities",
+    defaultConditionImmunities,
+  );
+
+export const useCreatureEditorFormConditionResistances = (
+  defaultConditionResistances: CreatureEditorFormFields["condition_resistances"],
+) =>
+  useCreatureEditorFormField(
+    "condition_resistances",
+    defaultConditionResistances,
+  );
+
+export const useCreatureEditorFormConditionVulnerabilities = (
+  defaultConditionVulnerabilities: CreatureEditorFormFields["condition_vulnerabilities"],
+) =>
+  useCreatureEditorFormField(
+    "condition_vulnerabilities",
+    defaultConditionVulnerabilities,
+  );
+
+//------------------------------------------------------------------------------
 // CR
 //------------------------------------------------------------------------------
 
@@ -137,28 +157,40 @@ export const useCreatureEditorFormCR = (
 ) => useCreatureEditorFormField("cr", defaultCR);
 
 //------------------------------------------------------------------------------
+// Damage Interactions
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormDamageImmunities = (
+  defaultDamageImmunities: CreatureEditorFormFields["damage_immunities"],
+) => useCreatureEditorFormField("damage_immunities", defaultDamageImmunities);
+
+export const useCreatureEditorFormDamageResistances = (
+  defaultDamageResistances: CreatureEditorFormFields["damage_resistances"],
+) => useCreatureEditorFormField("damage_resistances", defaultDamageResistances);
+
+export const useCreatureEditorFormDamageVulnerabilities = (
+  defaultDamageVulnerabilities: CreatureEditorFormFields["damage_vulnerabilities"],
+) =>
+  useCreatureEditorFormField(
+    "damage_vulnerabilities",
+    defaultDamageVulnerabilities,
+  );
+
+//------------------------------------------------------------------------------
+// Gear
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormGear = (
+  defaultGear: CreatureEditorFormFields["gear"],
+) => useCreatureEditorFormField("gear", defaultGear);
+
+//------------------------------------------------------------------------------
 // Habitats
 //------------------------------------------------------------------------------
 
 export const useCreatureEditorFormHabitats = (
   defaultHabitats: CreatureEditorFormFields["habitats"],
 ) => useCreatureEditorFormField("habitats", defaultHabitats);
-
-//------------------------------------------------------------------------------
-// Treasures
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormTreasures = (
-  defaultTreasures: CreatureEditorFormFields["treasures"],
-) => useCreatureEditorFormField("treasures", defaultTreasures);
-
-//------------------------------------------------------------------------------
-// AC
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormAC = (
-  defaultAC: CreatureEditorFormFields["ac"],
-) => useCreatureEditorFormField("ac", defaultAC);
 
 //------------------------------------------------------------------------------
 // HP
@@ -193,6 +225,34 @@ export const useCreatureEditorFormInitiativePassive = (
 ) => useCreatureEditorFormField("initiative_passive", defaultInitiativePassive);
 
 //------------------------------------------------------------------------------
+// Languages
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormLanguages = (
+  defaultLanguages: CreatureEditorFormFields["languages"],
+) => useCreatureEditorFormField("languages", defaultLanguages);
+
+//------------------------------------------------------------------------------
+// Name
+//------------------------------------------------------------------------------
+
+function validateName(name: string) {
+  return name ? undefined : "name.error.empty";
+}
+
+export const useCreatureEditorFormName = (
+  defaultName: CreatureEditorFormFields["name"],
+) => useCreatureEditorFormField("name", defaultName, validateName);
+
+//------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormPage = (
+  defaultPage: CreatureEditorFormFields["page"],
+) => useCreatureEditorFormField("page", defaultPage);
+
+//------------------------------------------------------------------------------
 // Passive Perception
 //------------------------------------------------------------------------------
 
@@ -201,72 +261,12 @@ export const useCreatureEditorFormPassivePerception = (
 ) => useCreatureEditorFormField("passive_perception", defaultPassivePerception);
 
 //------------------------------------------------------------------------------
-// Speed Walk
+// Planes
 //------------------------------------------------------------------------------
 
-export const useCreatureEditorFormSpeedWalk = (
-  defaultSpeedWalk: CreatureEditorFormFields["speed_walk"],
-) => useCreatureEditorFormField("speed_walk", defaultSpeedWalk);
-
-//------------------------------------------------------------------------------
-// Speed Fly
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormSpeedFly = (
-  defaultSpeedFly: CreatureEditorFormFields["speed_fly"],
-) => useCreatureEditorFormField("speed_fly", defaultSpeedFly);
-
-//------------------------------------------------------------------------------
-// Speed Swim
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormSpeedSwim = (
-  defaultSpeedSwim: CreatureEditorFormFields["speed_swim"],
-) => useCreatureEditorFormField("speed_swim", defaultSpeedSwim);
-
-//------------------------------------------------------------------------------
-// Speed Climb
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormSpeedClimb = (
-  defaultSpeedClimb: CreatureEditorFormFields["speed_climb"],
-) => useCreatureEditorFormField("speed_climb", defaultSpeedClimb);
-
-//------------------------------------------------------------------------------
-// Speed Burrow
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormSpeedBurrow = (
-  defaultSpeedBurrow: CreatureEditorFormFields["speed_burrow"],
-) => useCreatureEditorFormField("speed_burrow", defaultSpeedBurrow);
-
-//------------------------------------------------------------------------------
-// Ability Scores
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormAbilityStr = (
-  defaultAbilityStr: CreatureEditorFormFields["ability_str"],
-) => useCreatureEditorFormField("ability_str", defaultAbilityStr);
-
-export const useCreatureEditorFormAbilityDex = (
-  defaultAbilityDex: CreatureEditorFormFields["ability_dex"],
-) => useCreatureEditorFormField("ability_dex", defaultAbilityDex);
-
-export const useCreatureEditorFormAbilityCon = (
-  defaultAbilityCon: CreatureEditorFormFields["ability_con"],
-) => useCreatureEditorFormField("ability_con", defaultAbilityCon);
-
-export const useCreatureEditorFormAbilityInt = (
-  defaultAbilityInt: CreatureEditorFormFields["ability_int"],
-) => useCreatureEditorFormField("ability_int", defaultAbilityInt);
-
-export const useCreatureEditorFormAbilityWis = (
-  defaultAbilityWis: CreatureEditorFormFields["ability_wis"],
-) => useCreatureEditorFormField("ability_wis", defaultAbilityWis);
-
-export const useCreatureEditorFormAbilityCha = (
-  defaultAbilityCha: CreatureEditorFormFields["ability_cha"],
-) => useCreatureEditorFormField("ability_cha", defaultAbilityCha);
+export const useCreatureEditorFormPlanes = (
+  defaultPlanes: CreatureEditorFormFields["planes"],
+) => useCreatureEditorFormField("planes", defaultPlanes);
 
 //------------------------------------------------------------------------------
 // Proficiencies
@@ -290,72 +290,48 @@ export const useCreatureEditorFormSkillProficiencies = (
   useCreatureEditorFormField("skill_proficiencies", defaultSkillProficiencies);
 
 //------------------------------------------------------------------------------
-// Damage Interactions
+// Senses
 //------------------------------------------------------------------------------
-
-export const useCreatureEditorFormDamageImmunities = (
-  defaultDamageImmunities: CreatureEditorFormFields["damage_immunities"],
-) => useCreatureEditorFormField("damage_immunities", defaultDamageImmunities);
-
-export const useCreatureEditorFormDamageResistances = (
-  defaultDamageResistances: CreatureEditorFormFields["damage_resistances"],
-) => useCreatureEditorFormField("damage_resistances", defaultDamageResistances);
-
-export const useCreatureEditorFormDamageVulnerabilities = (
-  defaultDamageVulnerabilities: CreatureEditorFormFields["damage_vulnerabilities"],
-) =>
-  useCreatureEditorFormField(
-    "damage_vulnerabilities",
-    defaultDamageVulnerabilities,
-  );
-
-//------------------------------------------------------------------------------
-// Condition Interactions
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormConditionImmunities = (
-  defaultConditionImmunities: CreatureEditorFormFields["condition_immunities"],
-) =>
-  useCreatureEditorFormField(
-    "condition_immunities",
-    defaultConditionImmunities,
-  );
-
-export const useCreatureEditorFormConditionResistances = (
-  defaultConditionResistances: CreatureEditorFormFields["condition_resistances"],
-) =>
-  useCreatureEditorFormField(
-    "condition_resistances",
-    defaultConditionResistances,
-  );
-
-export const useCreatureEditorFormConditionVulnerabilities = (
-  defaultConditionVulnerabilities: CreatureEditorFormFields["condition_vulnerabilities"],
-) =>
-  useCreatureEditorFormField(
-    "condition_vulnerabilities",
-    defaultConditionVulnerabilities,
-  );
-
-//------------------------------------------------------------------------------
-// Descriptive Fields
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormGear = (
-  defaultGear: CreatureEditorFormFields["gear"],
-) => useCreatureEditorFormField("gear", defaultGear);
-
-export const useCreatureEditorFormLanguages = (
-  defaultLanguages: CreatureEditorFormFields["languages"],
-) => useCreatureEditorFormField("languages", defaultLanguages);
-
-export const useCreatureEditorFormPlanes = (
-  defaultPlanes: CreatureEditorFormFields["planes"],
-) => useCreatureEditorFormField("planes", defaultPlanes);
 
 export const useCreatureEditorFormSenses = (
   defaultSenses: CreatureEditorFormFields["senses"],
 ) => useCreatureEditorFormField("senses", defaultSenses);
+
+//------------------------------------------------------------------------------
+// Size
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormSize = (
+  defaultSize: CreatureEditorFormFields["size"],
+) => useCreatureEditorFormField("size", defaultSize);
+
+//------------------------------------------------------------------------------
+// Speeds
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormSpeedBurrow = (
+  defaultSpeedBurrow: CreatureEditorFormFields["speed_burrow"],
+) => useCreatureEditorFormField("speed_burrow", defaultSpeedBurrow);
+
+export const useCreatureEditorFormSpeedClimb = (
+  defaultSpeedClimb: CreatureEditorFormFields["speed_climb"],
+) => useCreatureEditorFormField("speed_climb", defaultSpeedClimb);
+
+export const useCreatureEditorFormSpeedFly = (
+  defaultSpeedFly: CreatureEditorFormFields["speed_fly"],
+) => useCreatureEditorFormField("speed_fly", defaultSpeedFly);
+
+export const useCreatureEditorFormSpeedSwim = (
+  defaultSpeedSwim: CreatureEditorFormFields["speed_swim"],
+) => useCreatureEditorFormField("speed_swim", defaultSpeedSwim);
+
+export const useCreatureEditorFormSpeedWalk = (
+  defaultSpeedWalk: CreatureEditorFormFields["speed_walk"],
+) => useCreatureEditorFormField("speed_walk", defaultSpeedWalk);
+
+//------------------------------------------------------------------------------
+// Traits/Actions
+//------------------------------------------------------------------------------
 
 export const useCreatureEditorFormTraits = (
   defaultTraits: CreatureEditorFormFields["traits"],
@@ -376,3 +352,27 @@ export const useCreatureEditorFormReactions = (
 export const useCreatureEditorFormLegendaryActions = (
   defaultLegendaryActions: CreatureEditorFormFields["legendary_actions"],
 ) => useCreatureEditorFormField("legendary_actions", defaultLegendaryActions);
+
+//------------------------------------------------------------------------------
+// Treasures
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormTreasures = (
+  defaultTreasures: CreatureEditorFormFields["treasures"],
+) => useCreatureEditorFormField("treasures", defaultTreasures);
+
+//------------------------------------------------------------------------------
+// Type
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormType = (
+  defaultType: CreatureEditorFormFields["type"],
+) => useCreatureEditorFormField("type", defaultType);
+
+//------------------------------------------------------------------------------
+// Visibility
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormVisibility = (
+  defaultVisibility: CreatureEditorFormFields["visibility"],
+) => useCreatureEditorFormField("visibility", defaultVisibility);

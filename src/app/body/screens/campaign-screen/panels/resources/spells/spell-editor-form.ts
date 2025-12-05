@@ -47,46 +47,6 @@ export const { useField: useSpellEditorFormField } = spellEditorForm;
 export default spellEditorForm;
 
 //------------------------------------------------------------------------------
-// Name
-//------------------------------------------------------------------------------
-
-function validateName(name: string) {
-  return name ? undefined : "name.error.empty";
-}
-
-export const useSpellEditorFormName = (
-  defaultName: SpellEditorFormFields["name"],
-) => useSpellEditorFormField("name", defaultName, validateName);
-
-//------------------------------------------------------------------------------
-// Level
-//------------------------------------------------------------------------------
-
-function validateLevel(level: number) {
-  return level >= 0 ? undefined : "level.error.empty";
-}
-
-export const useSpellEditorFormLevel = (
-  defaultLevel: SpellEditorFormFields["level"],
-) => useSpellEditorFormField("level", defaultLevel, validateLevel);
-
-//------------------------------------------------------------------------------
-// Character Classes
-//------------------------------------------------------------------------------
-
-export const useSpellEditorFormCharacterClasses = (
-  defaultCharacterClasses: SpellEditorFormFields["character_classes"],
-) => useSpellEditorFormField("character_classes", defaultCharacterClasses);
-
-//------------------------------------------------------------------------------
-// School
-//------------------------------------------------------------------------------
-
-export const useSpellEditorFormSchool = (
-  defaultSchool: SpellEditorFormFields["school"],
-) => useSpellEditorFormField("school", defaultSchool);
-
-//------------------------------------------------------------------------------
 // Casting Time
 //------------------------------------------------------------------------------
 
@@ -103,6 +63,31 @@ export const useSpellEditorFormCastingTimeValue = (
 ) => useSpellEditorFormField("casting_time_value", defaultCastingTimeValue);
 
 //------------------------------------------------------------------------------
+// Character Classes
+//------------------------------------------------------------------------------
+
+export const useSpellEditorFormCharacterClasses = (
+  defaultCharacterClasses: SpellEditorFormFields["character_classes"],
+) => useSpellEditorFormField("character_classes", defaultCharacterClasses);
+
+//------------------------------------------------------------------------------
+// Description
+//------------------------------------------------------------------------------
+
+function validateDescription(description: string) {
+  return description ? undefined : "description.error.empty";
+}
+
+export const useSpellEditorFormDescription = (
+  defaultDescription: SpellEditorFormFields["description"],
+) =>
+  useSpellEditorFormField(
+    "description",
+    defaultDescription,
+    validateDescription,
+  );
+
+//------------------------------------------------------------------------------
 // Duration
 //------------------------------------------------------------------------------
 
@@ -117,6 +102,42 @@ export const useSpellEditorFormDuration = (
 export const useSpellEditorFormDurationValue = (
   defaultDurationValue: SpellEditorFormFields["duration_value"],
 ) => useSpellEditorFormField("duration_value", defaultDurationValue);
+
+//------------------------------------------------------------------------------
+// Level
+//------------------------------------------------------------------------------
+
+function validateLevel(level: number) {
+  return level >= 0 ? undefined : "level.error.empty";
+}
+
+export const useSpellEditorFormLevel = (
+  defaultLevel: SpellEditorFormFields["level"],
+) => useSpellEditorFormField("level", defaultLevel, validateLevel);
+
+//------------------------------------------------------------------------------
+// Materials
+//------------------------------------------------------------------------------
+
+function validateMaterials(materials: string) {
+  return materials ? undefined : "materials.error.empty";
+}
+
+export const useSpellEditorFormMaterials = (
+  defaultMaterials: SpellEditorFormFields["materials"],
+) => useSpellEditorFormField("materials", defaultMaterials, validateMaterials);
+
+//------------------------------------------------------------------------------
+// Name
+//------------------------------------------------------------------------------
+
+function validateName(name: string) {
+  return name ? undefined : "name.error.empty";
+}
+
+export const useSpellEditorFormName = (
+  defaultName: SpellEditorFormFields["name"],
+) => useSpellEditorFormField("name", defaultName, validateName);
 
 //------------------------------------------------------------------------------
 // Range
@@ -143,33 +164,12 @@ export const useSpellEditorFormRangeValueMet = (
 ) => useSpellEditorFormField("range_value_met", defaultRangeValueMet);
 
 //------------------------------------------------------------------------------
-// Materials
+// School
 //------------------------------------------------------------------------------
 
-function validateMaterials(materials: string) {
-  return materials ? undefined : "materials.error.empty";
-}
-
-export const useSpellEditorFormMaterials = (
-  defaultMaterials: SpellEditorFormFields["materials"],
-) => useSpellEditorFormField("materials", defaultMaterials, validateMaterials);
-
-//------------------------------------------------------------------------------
-// Description
-//------------------------------------------------------------------------------
-
-function validateDescription(description: string) {
-  return description ? undefined : "description.error.empty";
-}
-
-export const useSpellEditorFormDescription = (
-  defaultDescription: SpellEditorFormFields["description"],
-) =>
-  useSpellEditorFormField(
-    "description",
-    defaultDescription,
-    validateDescription,
-  );
+export const useSpellEditorFormSchool = (
+  defaultSchool: SpellEditorFormFields["school"],
+) => useSpellEditorFormField("school", defaultSchool);
 
 //------------------------------------------------------------------------------
 // Upgrade

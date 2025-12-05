@@ -48,24 +48,25 @@ export const { useField: useWeaponEditorFormField } = weaponEditorForm;
 export default weaponEditorForm;
 
 //------------------------------------------------------------------------------
-// Name
+// Ammunition
 //------------------------------------------------------------------------------
 
-function validateName(name: string) {
-  return name ? undefined : "name.error.empty";
+function validateAmmunition(name: string) {
+  return name ? undefined : "ammunition.error.empty";
 }
 
-export const useWeaponEditorFormName = (
-  defaultName: WeaponEditorFormFields["name"],
-) => useWeaponEditorFormField("name", defaultName, validateName);
+export const useWeaponEditorFormAmmunition = (
+  defaultAmmunition: WeaponEditorFormFields["ammunition"],
+) =>
+  useWeaponEditorFormField("ammunition", defaultAmmunition, validateAmmunition);
 
 //------------------------------------------------------------------------------
-// Type
+// Cost
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormType = (
-  defaultType: WeaponEditorFormFields["type"],
-) => useWeaponEditorFormField("type", defaultType);
+export const useWeaponEditorFormCost = (
+  defaultCost: WeaponEditorFormFields["cost"],
+) => useWeaponEditorFormField("cost", defaultCost);
 
 //------------------------------------------------------------------------------
 // Damage
@@ -76,14 +77,6 @@ export const useWeaponEditorFormDamage = (
 ) => useWeaponEditorFormField("damage", defaultDamage);
 
 //------------------------------------------------------------------------------
-// Damage Versatile
-//------------------------------------------------------------------------------
-
-export const useWeaponEditorFormDamageVersatile = (
-  defaultDamageVersatile: WeaponEditorFormFields["damage_versatile"],
-) => useWeaponEditorFormField("damage_versatile", defaultDamageVersatile);
-
-//------------------------------------------------------------------------------
 // Damage Type
 //------------------------------------------------------------------------------
 
@@ -92,12 +85,20 @@ export const useWeaponEditorFormDamageType = (
 ) => useWeaponEditorFormField("damage_type", defaultDamageType);
 
 //------------------------------------------------------------------------------
-// Properties
+// Damage Versatile
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormProperties = (
-  defaultProperties: WeaponEditorFormFields["properties"],
-) => useWeaponEditorFormField("properties", defaultProperties);
+export const useWeaponEditorFormDamageVersatile = (
+  defaultDamageVersatile: WeaponEditorFormFields["damage_versatile"],
+) => useWeaponEditorFormField("damage_versatile", defaultDamageVersatile);
+
+//------------------------------------------------------------------------------
+// Magic
+//------------------------------------------------------------------------------
+
+export const useWeaponEditorFormMagic = (
+  defaultMagic: WeaponEditorFormFields["magic"],
+) => useWeaponEditorFormField("magic", defaultMagic);
 
 //------------------------------------------------------------------------------
 // Mastery
@@ -116,28 +117,32 @@ export const useWeaponEditorFormMelee = (
 ) => useWeaponEditorFormField("melee", defaultMelee);
 
 //------------------------------------------------------------------------------
-// Ranged
+// Name
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormRanged = (
-  defaultRanged: WeaponEditorFormFields["ranged"],
-) => useWeaponEditorFormField("ranged", defaultRanged);
+function validateName(name: string) {
+  return name ? undefined : "name.error.empty";
+}
+
+export const useWeaponEditorFormName = (
+  defaultName: WeaponEditorFormFields["name"],
+) => useWeaponEditorFormField("name", defaultName, validateName);
 
 //------------------------------------------------------------------------------
-// Magic
+// Notes
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormMagic = (
-  defaultMagic: WeaponEditorFormFields["magic"],
-) => useWeaponEditorFormField("magic", defaultMagic);
+export const useWeaponEditorFormNotes = (
+  defaultNotes: WeaponEditorFormFields["notes"],
+) => useWeaponEditorFormField("notes", defaultNotes);
 
 //------------------------------------------------------------------------------
-// Range Ft Short
+// Properties
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormRangeFtShort = (
-  defaultRangeFtShort: WeaponEditorFormFields["range_ft_short"],
-) => useWeaponEditorFormField("range_ft_short", defaultRangeFtShort);
+export const useWeaponEditorFormProperties = (
+  defaultProperties: WeaponEditorFormFields["properties"],
+) => useWeaponEditorFormField("properties", defaultProperties);
 
 //------------------------------------------------------------------------------
 // Range Ft Long
@@ -148,12 +153,12 @@ export const useWeaponEditorFormRangeFtLong = (
 ) => useWeaponEditorFormField("range_ft_long", defaultRangeFtLong);
 
 //------------------------------------------------------------------------------
-// Range M Short
+// Range Ft Short
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormRangeMShort = (
-  defaultRangeMShort: WeaponEditorFormFields["range_m_short"],
-) => useWeaponEditorFormField("range_m_short", defaultRangeMShort);
+export const useWeaponEditorFormRangeFtShort = (
+  defaultRangeFtShort: WeaponEditorFormFields["range_ft_short"],
+) => useWeaponEditorFormField("range_ft_short", defaultRangeFtShort);
 
 //------------------------------------------------------------------------------
 // Range M Long
@@ -162,6 +167,38 @@ export const useWeaponEditorFormRangeMShort = (
 export const useWeaponEditorFormRangeMLong = (
   defaultRangeMLong: WeaponEditorFormFields["range_m_long"],
 ) => useWeaponEditorFormField("range_m_long", defaultRangeMLong);
+
+//------------------------------------------------------------------------------
+// Range M Short
+//------------------------------------------------------------------------------
+
+export const useWeaponEditorFormRangeMShort = (
+  defaultRangeMShort: WeaponEditorFormFields["range_m_short"],
+) => useWeaponEditorFormField("range_m_short", defaultRangeMShort);
+
+//------------------------------------------------------------------------------
+// Ranged
+//------------------------------------------------------------------------------
+
+export const useWeaponEditorFormRanged = (
+  defaultRanged: WeaponEditorFormFields["ranged"],
+) => useWeaponEditorFormField("ranged", defaultRanged);
+
+//------------------------------------------------------------------------------
+// Type
+//------------------------------------------------------------------------------
+
+export const useWeaponEditorFormType = (
+  defaultType: WeaponEditorFormFields["type"],
+) => useWeaponEditorFormField("type", defaultType);
+
+//------------------------------------------------------------------------------
+// Visibility
+//------------------------------------------------------------------------------
+
+export const useWeaponEditorFormVisibility = (
+  defaultVisibility: WeaponEditorFormFields["visibility"],
+) => useWeaponEditorFormField("visibility", defaultVisibility);
 
 //------------------------------------------------------------------------------
 // Weight Kg
@@ -178,40 +215,3 @@ export const useWeaponEditorFormWeightKg = (
 export const useWeaponEditorFormWeightLb = (
   defaultWeightLb: WeaponEditorFormFields["weight_lb"],
 ) => useWeaponEditorFormField("weight_lb", defaultWeightLb);
-
-//------------------------------------------------------------------------------
-// Cost
-//------------------------------------------------------------------------------
-
-export const useWeaponEditorFormCost = (
-  defaultCost: WeaponEditorFormFields["cost"],
-) => useWeaponEditorFormField("cost", defaultCost);
-
-//------------------------------------------------------------------------------
-// Ammunition
-//------------------------------------------------------------------------------
-
-function validateAmmunition(name: string) {
-  return name ? undefined : "ammunition.error.empty";
-}
-
-export const useWeaponEditorFormAmmunition = (
-  defaultAmmunition: WeaponEditorFormFields["ammunition"],
-) =>
-  useWeaponEditorFormField("ammunition", defaultAmmunition, validateAmmunition);
-
-//------------------------------------------------------------------------------
-// Notes
-//------------------------------------------------------------------------------
-
-export const useWeaponEditorFormNotes = (
-  defaultNotes: WeaponEditorFormFields["notes"],
-) => useWeaponEditorFormField("notes", defaultNotes);
-
-//------------------------------------------------------------------------------
-// Visibility
-//------------------------------------------------------------------------------
-
-export const useWeaponEditorFormVisibility = (
-  defaultVisibility: WeaponEditorFormFields["visibility"],
-) => useWeaponEditorFormField("visibility", defaultVisibility);

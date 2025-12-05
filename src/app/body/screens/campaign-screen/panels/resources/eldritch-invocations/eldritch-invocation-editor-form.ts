@@ -31,29 +31,6 @@ export const { useField: useEldritchInvocationEditorFormField } =
 export default eldritchInvocationEditorForm;
 
 //------------------------------------------------------------------------------
-// Name
-//------------------------------------------------------------------------------
-
-function validateName(name: string) {
-  return name ? undefined : "name.error.empty";
-}
-
-export const useEldritchInvocationEditorFormName = (defaultName: string) =>
-  useEldritchInvocationEditorFormField("name", defaultName, validateName);
-
-//------------------------------------------------------------------------------
-// Min Warlock Level
-//------------------------------------------------------------------------------
-
-export const useEldritchInvocationEditorFormMinWarlockLevel = (
-  defaultMinWarlockLevel: EldritchInvocationEditorFormFields["min_warlock_level"],
-) =>
-  useEldritchInvocationEditorFormField(
-    "min_warlock_level",
-    defaultMinWarlockLevel,
-  );
-
-//------------------------------------------------------------------------------
 // Description
 //------------------------------------------------------------------------------
 
@@ -69,6 +46,29 @@ export const useEldritchInvocationEditorFormDescription = (
     defaultDescription,
     validateDescription,
   );
+
+//------------------------------------------------------------------------------
+// Min Warlock Level
+//------------------------------------------------------------------------------
+
+export const useEldritchInvocationEditorFormMinWarlockLevel = (
+  defaultMinWarlockLevel: EldritchInvocationEditorFormFields["min_warlock_level"],
+) =>
+  useEldritchInvocationEditorFormField(
+    "min_warlock_level",
+    defaultMinWarlockLevel,
+  );
+
+//------------------------------------------------------------------------------
+// Name
+//------------------------------------------------------------------------------
+
+function validateName(name: string) {
+  return name ? undefined : "name.error.empty";
+}
+
+export const useEldritchInvocationEditorFormName = (defaultName: string) =>
+  useEldritchInvocationEditorFormField("name", defaultName, validateName);
 
 //------------------------------------------------------------------------------
 // Prerequisite
