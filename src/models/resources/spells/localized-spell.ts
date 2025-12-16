@@ -187,12 +187,12 @@ const i18nContext = {
   },
 
   "upgrade/*": {
-    en: "# At Higher Levels",
-    it: "# A Livelli Superiori",
+    en: "**At Higher Levels**",
+    it: "**A Livelli Superiori**",
   },
   "upgrade/0": {
-    en: "# Cantrip Upgrade",
-    it: "# Potenziamento del Trucchetto",
+    en: "**Cantrip Upgrade**",
+    it: "**Potenziamento del Trucchetto**",
   },
 
   "materials.none": {
