@@ -33,7 +33,7 @@ export default function ResourcesActions<
   name,
   selectedLocalizedResources,
 }: ResourcesActionsProps<R, L>) {
-  const { lang, t } = useI18nLangContext(i18nContext);
+  const { lang, t, tpi } = useI18nLangContext(i18nContext);
 
   const computeSelectedAsJson = useCallback(() => {
     const data = selectedLocalizedResources.map(({ _raw, ...rest }) => rest);
@@ -53,12 +53,14 @@ export default function ResourcesActions<
 
   const removeSelected = useCallback(async () => {
     try {
-      onRemove(selectedLocalizedResources.map(({ id }) => id));
+      const count = selectedLocalizedResources.length;
+      const ok = confirm(tpi("remove.confirm", count, `${count}`));
+      if (ok) onRemove(selectedLocalizedResources.map(({ id }) => id));
     } catch (e) {
       console.error(e);
       // TODO: Show toast.
     }
-  }, [selectedLocalizedResources, onRemove]);
+  }, [tpi, onRemove, selectedLocalizedResources]);
 
   const disabled = !selectedLocalizedResources.length;
 
@@ -111,23 +113,33 @@ export default function ResourcesActions<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  add: {
+  "add": {
     en: "Add new",
     it: "Crea nuovo",
   },
 
-  copy: {
+  "copy": {
     en: "Copy selected",
     it: "Copia selezionati",
   },
 
-  download: {
+  "download": {
     en: "Download selected",
     it: "Scarica selezionati",
   },
 
-  remove: {
+  "remove": {
     en: "Delete selected",
     it: "Elimina selezionati",
+  },
+
+  "remove.confirm/*": {
+    en: "Are you sure you want to delete <1> items?",
+    it: "Sei sicuro di voler rimuovere <1> elementi?",
+  },
+
+  "remove.confirm/1": {
+    en: "Are you sure you want to delete <1> item?",
+    it: "Sei sicuro di voler rimuovere <1> elemento?",
   },
 };
