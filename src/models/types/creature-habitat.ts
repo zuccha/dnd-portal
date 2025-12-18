@@ -34,7 +34,7 @@ export const {
   useTranslate: useTranslateCreatureHabitat,
   useTranslations: useCreatureHabitatTranslations,
 } = createTypeTranslationHooks(creatureHabitats, {
-  any: { en: "Any", it: "Qualsiasi" },
+  any: { en: "Anywhere", it: "Ovunque" },
   arctic: { en: "Arctic", it: "Artico" },
   coastal: { en: "Coastal", it: "Costa" },
   desert: { en: "Desert", it: "Deserto" },
