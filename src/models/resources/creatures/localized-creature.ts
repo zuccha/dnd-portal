@@ -167,14 +167,14 @@ export function useLocalizeCreature(): (
       const speed_fly = convertSpeed(creature.speed_fly);
       const speed_swim = convertSpeed(creature.speed_swim);
       const speed = [
-        speed_walk ?? (system === "metric" ? "0 m" : "0 ft"),
+        ti("speed.walk", (speed_walk ?? system === "metric") ? "0 m" : "0 ft"),
         speed_fly ? ti("speed.fly", speed_fly) : "",
         speed_swim ? ti("speed.swim", speed_swim) : "",
         speed_climb ? ti("speed.climb", speed_climb) : "",
         speed_burrow ? ti("speed.burrow", speed_burrow) : "",
       ]
         .filter((speed) => speed)
-        .join(", ");
+        .join("  |  ");
 
       // Ability scores and modifiers
       const getAbilityMod = (score: number) => Math.floor((score - 10) / 2);
@@ -469,24 +469,29 @@ const i18nContext = {
     it: "<2> <1>, <3>", // 1 = size, 2 = type, 3 = alignment
   },
 
+  "speed.walk": {
+    en: "Speed: <1>",
+    it: "Velocità: <1>",
+  },
+
   "speed.fly": {
-    en: "Fly <1>",
-    it: "volo <1>",
+    en: "Fly: <1>",
+    it: "Volo: <1>",
   },
 
   "speed.swim": {
-    en: "Swim <1>",
-    it: "nuoto <1>",
+    en: "Swim: <1>",
+    it: "Nuoto: <1>",
   },
 
   "speed.climb": {
-    en: "Climb <1>",
-    it: "scalata <1>",
+    en: "Climb: <1>",
+    it: "Scalata: <1>",
   },
 
   "speed.burrow": {
-    en: "Burrow <1>",
-    it: "scavo <1>",
+    en: "Burrow: <1>",
+    it: "Scavo: <1>",
   },
 
   "stats.skills": {

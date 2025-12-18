@@ -82,7 +82,7 @@ export default function CreatureCard({
       </SimpleGrid>
 
       <ResourceCard.Caption>
-        <Span>{ti("speed", speed)}</Span>
+        <Span>{speed}</Span>
       </ResourceCard.Caption>
 
       <ResourceCard.Description description={ti("body", stats, description)} />
@@ -145,11 +145,6 @@ const i18nContext = {
   "pb": {
     en: "PB",
     it: "BC",
-  },
-
-  "speed": {
-    en: "Speed: <1>",
-    it: "Velocità: <1>",
   },
 
   "ability_mod": {
