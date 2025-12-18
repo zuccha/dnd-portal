@@ -274,7 +274,7 @@ function ResourcesListTableRow<
 
 const expansionPatterns = [
   {
-    regex: /^\s*#\s*(.+?)$/,
+    regex: /##(.+?)##/,
     render: (val: ReactNode) => (
       <Span fontSize="lg" fontVariant="small-caps">
         {val}

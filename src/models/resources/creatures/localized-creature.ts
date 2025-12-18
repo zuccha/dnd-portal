@@ -530,28 +530,28 @@ const i18nContext = {
   },
 
   "description.traits": {
-    en: "# Traits",
-    it: "# Tratti",
+    en: "##Traits##",
+    it: "##Tratti##",
   },
 
   "description.actions": {
-    en: "# Actions",
-    it: "# Azioni",
+    en: "##Actions##",
+    it: "##Azioni##",
   },
 
   "description.bonus_actions": {
-    en: "# Bonus Actions",
-    it: "# Azioni Bonus",
+    en: "##Bonus Actions##",
+    it: "##Azioni Bonus##",
   },
 
   "description.reactions": {
-    en: "# Reactions",
-    it: "# Reazioni",
+    en: "##Reactions##",
+    it: "##Reazioni##",
   },
 
   "description.legendary_actions": {
-    en: "# Legendary Actions",
-    it: "# Azioni Leggendarie",
+    en: "##Legendary Actions##",
+    it: "##Azioni Leggendarie##",
   },
 };
 

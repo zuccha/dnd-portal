@@ -85,7 +85,14 @@ export default function CreatureCard({
         <Span>{speed}</Span>
       </ResourceCard.Caption>
 
-      <ResourceCard.Description description={ti("body", stats, description)} />
+      <ResourceCard.Description
+        description={
+          description && stats ? ti("stats_and_description", stats, description)
+          : stats ?
+            ti("stats", stats)
+          : description
+        }
+      />
 
       <ResourceCard.Caption>
         <Span>{cr_exp_pb}</Span>
@@ -187,8 +194,13 @@ const i18nContext = {
     it: "Car",
   },
 
-  "body": {
-    en: "# Info\n<1>\n\n<2>",
-    it: "# Info\n<1>\n\n<2>",
+  "stats": {
+    en: "##Info##\n<1>",
+    it: "##Info##\n<1>",
+  },
+
+  "stats_and_description": {
+    en: "##Info##\n<1>\n\n<2>",
+    it: "##Info##\n<1>\n\n<2>",
   },
 };
