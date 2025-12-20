@@ -3,35 +3,35 @@
 --------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS public.spells (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    level smallint NOT NULL,
-    school public.spell_school NOT NULL,
-    character_classes public.character_class[] NOT NULL,
-    concentration boolean NOT NULL,
-    ritual boolean NOT NULL,
-    somatic boolean NOT NULL,
-    verbal boolean NOT NULL,
-    material boolean NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    campaign_id uuid NOT NULL,
-    visibility public.campaign_role DEFAULT 'player'::public.campaign_role NOT NULL,
-    casting_time public.spell_casting_time DEFAULT 'action'::public.spell_casting_time NOT NULL,
-    casting_time_value text,
-    duration public.spell_duration DEFAULT 'value'::public.spell_duration NOT NULL,
-    duration_value text,
-    range public.spell_range DEFAULT 'self'::public.spell_range NOT NULL,
-    range_value_imp text,
-    range_value_met text,
-    CONSTRAINT spells_pkey PRIMARY KEY (id),
-    CONSTRAINT spells_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT spells_casting_time_pair_chk CHECK (((casting_time = 'value'::public.spell_casting_time) = (casting_time_value IS NOT NULL))),
-    CONSTRAINT spells_casting_time_value_check CHECK ((casting_time_value ~ '^\d+(\.\d+)?\s*(round|s|min|hr|d)$'::text)),
-    CONSTRAINT spells_duration_pair_chk CHECK (((duration = 'value'::public.spell_duration) = (duration_value IS NOT NULL))),
-    CONSTRAINT spells_duration_value_check CHECK ((duration_value ~ '^\d+(\.\d+)?\s*(round|s|min|hr|d)$'::text)),
-    CONSTRAINT spells_level_check CHECK (((level >= 0) AND (level <= 9))),
-    CONSTRAINT spells_range_pair_chk CHECK ((((range = 'value'::public.spell_range) = (range_value_imp IS NOT NULL)) AND ((range = 'value'::public.spell_range) = (range_value_met IS NOT NULL)))),
-    CONSTRAINT spells_range_value_imp_check CHECK ((range_value_imp ~ '^\d+(\.\d+)?\s*(ft|mi)$'::text)),
-    CONSTRAINT spells_range_value_met_check CHECK ((range_value_met ~ '^\d+(\.\d+)?\s*(m|km)$'::text))
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  level smallint NOT NULL,
+  school public.spell_school NOT NULL,
+  character_classes public.character_class[] NOT NULL,
+  concentration boolean NOT NULL,
+  ritual boolean NOT NULL,
+  somatic boolean NOT NULL,
+  verbal boolean NOT NULL,
+  material boolean NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  campaign_id uuid NOT NULL,
+  visibility public.campaign_role DEFAULT 'player'::public.campaign_role NOT NULL,
+  casting_time public.spell_casting_time DEFAULT 'action'::public.spell_casting_time NOT NULL,
+  casting_time_value text,
+  duration public.spell_duration DEFAULT 'value'::public.spell_duration NOT NULL,
+  duration_value text,
+  range public.spell_range DEFAULT 'self'::public.spell_range NOT NULL,
+  range_value_imp text,
+  range_value_met text,
+  CONSTRAINT spells_pkey PRIMARY KEY (id),
+  CONSTRAINT spells_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT spells_casting_time_pair_chk CHECK (((casting_time = 'value'::public.spell_casting_time) = (casting_time_value IS NOT NULL))),
+  CONSTRAINT spells_casting_time_value_check CHECK ((casting_time_value ~ '^\d+(\.\d+)?\s*(round|s|min|hr|d)$'::text)),
+  CONSTRAINT spells_duration_pair_chk CHECK (((duration = 'value'::public.spell_duration) = (duration_value IS NOT NULL))),
+  CONSTRAINT spells_duration_value_check CHECK ((duration_value ~ '^\d+(\.\d+)?\s*(round|s|min|hr|d)$'::text)),
+  CONSTRAINT spells_level_check CHECK (((level >= 0) AND (level <= 9))),
+  CONSTRAINT spells_range_pair_chk CHECK ((((range = 'value'::public.spell_range) = (range_value_imp IS NOT NULL)) AND ((range = 'value'::public.spell_range) = (range_value_met IS NOT NULL)))),
+  CONSTRAINT spells_range_value_imp_check CHECK ((range_value_imp ~ '^\d+(\.\d+)?\s*(ft|mi)$'::text)),
+  CONSTRAINT spells_range_value_met_check CHECK ((range_value_met ~ '^\d+(\.\d+)?\s*(m|km)$'::text))
 );
 
 ALTER TABLE public.spells OWNER TO postgres;
@@ -47,16 +47,16 @@ GRANT ALL ON TABLE public.spells TO service_role;
 --------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS public.spell_translations (
-    spell_id uuid NOT NULL,
-    lang text NOT NULL,
-    name text NOT NULL,
-    page text,
-    materials text,
-    description text NOT NULL,
-    upgrade text,
-    CONSTRAINT spell_translations_pkey PRIMARY KEY (spell_id, lang),
-    CONSTRAINT spell_translations_spell_id_fkey FOREIGN KEY (spell_id) REFERENCES public.spells(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT spell_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  spell_id uuid NOT NULL,
+  lang text NOT NULL,
+  name text NOT NULL,
+  page text,
+  materials text,
+  description text NOT NULL,
+  upgrade text,
+  CONSTRAINT spell_translations_pkey PRIMARY KEY (spell_id, lang),
+  CONSTRAINT spell_translations_spell_id_fkey FOREIGN KEY (spell_id) REFERENCES public.spells(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT spell_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.spell_translations OWNER TO postgres;
@@ -73,7 +73,8 @@ GRANT ALL ON TABLE public.spell_translations TO service_role;
 -- CAN READ SPELL TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.can_read_spell_translation(p_spell_id uuid) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.can_read_spell_translation(p_spell_id uuid)
+RETURNS boolean
 LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
@@ -94,7 +95,8 @@ GRANT ALL ON FUNCTION public.can_read_spell_translation(p_spell_id uuid) TO serv
 -- CAN EDIT SPELL TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.can_edit_spell_translation(p_spell_id uuid) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.can_edit_spell_translation(p_spell_id uuid)
+RETURNS boolean
 LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
@@ -117,28 +119,24 @@ GRANT ALL ON FUNCTION public.can_edit_spell_translation(p_spell_id uuid) TO serv
 
 CREATE POLICY "Users can read spells"
 ON public.spells
-FOR SELECT
-TO authenticated
-USING ( public.can_read_campaign_resource(campaign_id, visibility) OR public.can_edit_campaign_resource(campaign_id) );
+FOR SELECT TO authenticated
+USING (public.can_read_campaign_resource(campaign_id, visibility) OR public.can_edit_campaign_resource(campaign_id));
 
 CREATE POLICY "Creators and GMs can create new spells"
 ON public.spells
-FOR INSERT
-TO authenticated
-WITH CHECK ( public.can_edit_campaign_resource(campaign_id) );
+FOR INSERT TO authenticated
+WITH CHECK (public.can_edit_campaign_resource(campaign_id));
 
 CREATE POLICY "Creators and GMs can update spells"
 ON public.spells
-FOR UPDATE
-TO authenticated
-USING ( public.can_edit_campaign_resource(campaign_id) )
-WITH CHECK ( public.can_edit_campaign_resource(campaign_id) );
+FOR UPDATE TO authenticated
+USING (public.can_edit_campaign_resource(campaign_id))
+WITH CHECK (public.can_edit_campaign_resource(campaign_id));
 
 CREATE POLICY "Creators and GMs can delete spells"
 ON public.spells
-FOR DELETE
-TO authenticated
-USING ( public.can_edit_campaign_resource(campaign_id) );
+FOR DELETE TO authenticated
+USING (public.can_edit_campaign_resource(campaign_id));
 
 
 --------------------------------------------------------------------------------
@@ -147,60 +145,61 @@ USING ( public.can_edit_campaign_resource(campaign_id) );
 
 CREATE POLICY "Users can read spell translations"
 ON public.spell_translations
-FOR SELECT
-TO authenticated
-USING ( public.can_read_spell_translation(spell_id) OR public.can_edit_spell_translation(spell_id) );
+FOR SELECT TO authenticated
+USING (public.can_read_spell_translation(spell_id) OR public.can_edit_spell_translation(spell_id));
 
 CREATE POLICY "Creators and GMs can create new spell translations"
 ON public.spell_translations
-FOR INSERT
-TO authenticated
-WITH CHECK ( public.can_edit_spell_translation(spell_id) );
+FOR INSERT TO authenticated
+WITH CHECK (public.can_edit_spell_translation(spell_id));
 
 CREATE POLICY "Creators and GMs can update spell translations"
 ON public.spell_translations
-FOR UPDATE
-TO authenticated
-USING ( public.can_edit_spell_translation(spell_id) )
-WITH CHECK ( public.can_edit_spell_translation(spell_id) );
+FOR UPDATE TO authenticated
+USING (public.can_edit_spell_translation(spell_id))
+WITH CHECK (public.can_edit_spell_translation(spell_id));
 
 CREATE POLICY "Creators and GMs can delete spell translations"
 ON public.spell_translations
-FOR DELETE
-TO authenticated
-USING ( public.can_edit_spell_translation(spell_id) );
+FOR DELETE TO authenticated
+USING (public.can_edit_spell_translation(spell_id));
 
 
 --------------------------------------------------------------------------------
 -- CREATE SPELL
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) RETURNS uuid
-    LANGUAGE plpgsql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-declare
+CREATE OR REPLACE FUNCTION public.create_spell(
+  p_campaign_id uuid,
+  p_lang text,
+  p_spell jsonb,
+  p_spell_translation jsonb)
+RETURNS uuid
+LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
   v_id uuid;
   r public.spells%ROWTYPE;
-begin
+BEGIN
   r := jsonb_populate_record(null::public.spells, p_spell);
 
-  insert into public.spells (
+  INSERT INTO public.spells (
     campaign_id, level, school,
     character_classes, casting_time, casting_time_value,
     duration, duration_value, range, range_value_imp, range_value_met,
     concentration, ritual, verbal, somatic, material, visibility
-  ) values (
+  ) VALUES (
     p_campaign_id, r.level, r.school,
     r.character_classes, r.casting_time, r.casting_time_value,
     r.duration, r.duration_value, r.range, r.range_value_imp, r.range_value_met,
     r.concentration, r.ritual, r.verbal, r.somatic, r.material, r.visibility
   )
-  returning id into v_id;
+  RETURNING id INTO v_id;
 
   perform public.upsert_spell_translation(v_id, p_lang, p_spell_translation);
 
-  return v_id;
+  RETURN v_id;
 end;
 $$;
 
@@ -215,14 +214,15 @@ GRANT ALL ON FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spe
 -- FETCH SPELL
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_spell(p_id uuid) RETURNS record
-    LANGUAGE sql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-  select
+CREATE OR REPLACE FUNCTION public.fetch_spell(p_id uuid)
+RETURNS record
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT
     s.id,
     s.campaign_id,
-    c.name as campaign_name,
+    c.name                                AS campaign_name,
     s.level,
     s.character_classes,
     s.school,
@@ -238,28 +238,28 @@ CREATE OR REPLACE FUNCTION public.fetch_spell(p_id uuid) RETURNS record
     s.somatic,
     s.verbal,
     s.material,
-    coalesce(tt.name, '{}'::jsonb)        as name,
-    coalesce(tt.description, '{}'::jsonb) as description,
-    coalesce(tt.materials, '{}'::jsonb)   as materials,
-    coalesce(tt.page, '{}'::jsonb)        as page,
-    coalesce(tt.upgrade, '{}'::jsonb)     as upgrade,
+    coalesce(tt.name, '{}'::jsonb)        AS name,
+    coalesce(tt.description, '{}'::jsonb) AS description,
+    coalesce(tt.materials, '{}'::jsonb)   AS materials,
+    coalesce(tt.page, '{}'::jsonb)        AS page,
+    coalesce(tt.upgrade, '{}'::jsonb)     AS upgrade,
     s.visibility
-  from public.spells s
-  join public.campaigns c on c.id = s.campaign_id
-  left join (
-    select
+  FROM public.spells s
+  JOIN public.campaigns c ON c.id = s.campaign_id
+  LEFT JOIN (
+    SELECT
       s.id,
-      jsonb_object_agg(t.lang, t.name)        as name,
-      jsonb_object_agg(t.lang, t.description) as description,
-      jsonb_object_agg(t.lang, t.materials)   as materials,
-      jsonb_object_agg(t.lang, t.page)        as page,
-      jsonb_object_agg(t.lang, t.upgrade)     as upgrade
-    from public.spells s
-    left join public.spell_translations t on t.spell_id = s.id
-    where s.id = p_id
-    group by s.id
-  ) tt on tt.id = s.id
-  where s.id = p_id;
+      jsonb_object_agg(t.lang, t.name)        AS name,
+      jsonb_object_agg(t.lang, t.description) AS description,
+      jsonb_object_agg(t.lang, t.materials)   AS materials,
+      jsonb_object_agg(t.lang, t.page)        AS page,
+      jsonb_object_agg(t.lang, t.upgrade)     AS upgrade
+    FROM public.spells s
+    LEFT JOIN public.spell_translations t ON t.spell_id = s.id
+    WHERE s.id = p_id
+    GROUP BY s.id
+  ) tt ON tt.id = s.id
+  WHERE s.id = p_id;
 $$;
 
 ALTER FUNCTION public.fetch_spell(p_id uuid) OWNER TO postgres;
@@ -273,110 +273,139 @@ GRANT ALL ON FUNCTION public.fetch_spell(p_id uuid) TO service_role;
 -- FETCH SPELLS
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text) RETURNS TABLE(id uuid, campaign_id uuid, campaign_name text, level smallint, character_classes public.character_class[], school public.spell_school, casting_time public.spell_casting_time, casting_time_value text, duration public.spell_duration, duration_value text, range public.spell_range, range_value_imp text, range_value_met text, concentration boolean, ritual boolean, somatic boolean, verbal boolean, material boolean, name jsonb, description jsonb, materials jsonb, page jsonb, upgrade jsonb, visibility public.campaign_role)
-    LANGUAGE sql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-with prefs as (
-  select
+CREATE OR REPLACE FUNCTION public.fetch_spells(
+  p_campaign_id uuid, p_langs text[],
+  p_filters jsonb DEFAULT '{}'::jsonb,
+  p_order_by text DEFAULT 'name'::text,
+  p_order_dir text DEFAULT 'asc'::text)
+RETURNS TABLE(
+  id uuid,
+  campaign_id uuid,
+  campaign_name text,
+  level smallint,
+  character_classes public.character_class[],
+  school public.spell_school,
+  casting_time public.spell_casting_time,
+  casting_time_value text,
+  duration public.spell_duration,
+  duration_value text,
+  range public.spell_range,
+  range_value_imp text,
+  range_value_met text,
+  concentration boolean,
+  ritual boolean,
+  somatic boolean,
+  verbal boolean,
+  material boolean,
+  name jsonb,
+  description jsonb,
+  materials jsonb,
+  page jsonb,
+  upgrade jsonb,
+  visibility public.campaign_role)
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+WITH prefs AS (
+  SELECT
     -- levels
     (
-      select coalesce(array_agg((e.key)::int), null)
-      from jsonb_each_text(p_filters->'levels') as e(key, value)
-      where e.value = 'true'
-    ) as levels_inc,
+      SELECT coalesce(array_agg((e.key)::int), null)
+      FROM jsonb_each_text(p_filters->'levels') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS levels_inc,
     (
-      select coalesce(array_agg((e.key)::int), null)
-      from jsonb_each_text(p_filters->'levels') as e(key, value)
-      where e.value = 'false'
-    ) as levels_exc,
+      SELECT coalesce(array_agg((e.key)::int), null)
+      FROM jsonb_each_text(p_filters->'levels') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS levels_exc,
 
     -- classes
     (
-      select coalesce(array_agg(lower(e.key)::public.character_class), null)
-      from jsonb_each_text(p_filters->'character_classes') as e(key, value)
-      where e.value = 'true'
-    ) as classes_inc,
+      SELECT coalesce(array_agg(lower(e.key)::public.character_class), null)
+      FROM jsonb_each_text(p_filters->'character_classes') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS classes_inc,
     (
-      select coalesce(array_agg(lower(e.key)::public.character_class), null)
-      from jsonb_each_text(p_filters->'character_classes') as e(key, value)
-      where e.value = 'false'
-    ) as classes_exc,
+      SELECT coalesce(array_agg(lower(e.key)::public.character_class), null)
+      FROM jsonb_each_text(p_filters->'character_classes') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS classes_exc,
 
     -- schools
     (
-      select coalesce(array_agg(lower(e.key)::public.spell_school), null)
-      from jsonb_each_text(p_filters->'schools') as e(key, value)
-      where e.value = 'true'
-    ) as schools_inc,
+      SELECT coalesce(array_agg(lower(e.key)::public.spell_school), null)
+      FROM jsonb_each_text(p_filters->'schools') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS schools_inc,
     (
-      select coalesce(array_agg(lower(e.key)::public.spell_school), null)
-      from jsonb_each_text(p_filters->'schools') as e(key, value)
-      where e.value = 'false'
-    ) as schools_exc,
+      SELECT coalesce(array_agg(lower(e.key)::public.spell_school), null)
+      FROM jsonb_each_text(p_filters->'schools') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS schools_exc,
 
     -- boolean flags; null = not relevant
-    (p_filters ? 'concentration')::int::boolean as has_conc_filter,
-    (p_filters->>'concentration')::boolean      as conc_val,
+    (p_filters ? 'concentration')::int::boolean AS has_conc_filter,
+    (p_filters->>'concentration')::boolean      AS conc_val,
 
-    (p_filters ? 'ritual')::int::boolean        as has_rit_filter,
-    (p_filters->>'ritual')::boolean             as rit_val,
+    (p_filters ? 'ritual')::int::boolean        AS has_rit_filter,
+    (p_filters->>'ritual')::boolean             AS rit_val,
 
-    (p_filters ? 'material')::int::boolean      as has_mat_filter,
-    (p_filters->>'material')::boolean           as mat_val,
+    (p_filters ? 'material')::int::boolean      AS has_mat_filter,
+    (p_filters->>'material')::boolean           AS mat_val,
 
-    (p_filters ? 'somatic')::int::boolean       as has_som_filter,
-    (p_filters->>'somatic')::boolean            as som_val,
+    (p_filters ? 'somatic')::int::boolean       AS has_som_filter,
+    (p_filters->>'somatic')::boolean            AS som_val,
 
-    (p_filters ? 'verbal')::int::boolean        as has_ver_filter,
-    (p_filters->>'verbal')::boolean             as ver_val
+    (p_filters ? 'verbal')::int::boolean        AS has_ver_filter,
+    (p_filters->>'verbal')::boolean             AS ver_val
 ),
-src as (
-  select s.*
-  from public.spells s
-  join public.campaigns c on c.id = s.campaign_id
-  where s.campaign_id = p_campaign_id
+src AS (
+  SELECT s.*
+  FROM public.spells s
+  JOIN public.campaigns c ON c.id = s.campaign_id
+  WHERE s.campaign_id = p_campaign_id
 ),
-filtered as (
-  select s.*
-  from src s, prefs p
-  where
+filtered AS (
+  SELECT s.*
+  FROM src s, prefs p
+  WHERE
     -- levels
-        (p.levels_inc is null or s.level = any(p.levels_inc))
-    and (p.levels_exc is null or not (s.level = any(p.levels_exc)))
+        (p.levels_inc IS NULL OR s.level = any(p.levels_inc))
+    AND (p.levels_exc IS NULL OR NOT (s.level = any(p.levels_exc)))
 
     -- classes
-    and (p.classes_inc is null or s.character_classes && p.classes_inc)
-    and (p.classes_exc is null or not (s.character_classes && p.classes_exc))
+    AND (p.classes_inc IS NULL OR s.character_classes && p.classes_inc)
+    AND (p.classes_exc IS NULL OR NOT (s.character_classes && p.classes_exc))
 
     -- schools
-    and (p.schools_inc is null or s.school = any(p.schools_inc))
-    and (p.schools_exc is null or not (s.school = any(p.schools_exc)))
+    AND (p.schools_inc IS NULL OR s.school = any(p.schools_inc))
+    AND (p.schools_exc IS NULL OR NOT (s.school = any(p.schools_exc)))
 
     -- flags
-    and (not p.has_conc_filter or s.concentration = p.conc_val)
-    and (not p.has_rit_filter  or s.ritual        = p.rit_val)
-    and (not p.has_mat_filter  or s.material      = p.mat_val)
-    and (not p.has_som_filter  or s.somatic       = p.som_val)
-    and (not p.has_ver_filter  or s.verbal        = p.ver_val)
+    AND (not p.has_conc_filter OR s.concentration = p.conc_val)
+    AND (not p.has_rit_filter  OR s.ritual        = p.rit_val)
+    AND (not p.has_mat_filter  OR s.material      = p.mat_val)
+    AND (not p.has_som_filter  OR s.somatic       = p.som_val)
+    AND (not p.has_ver_filter  OR s.verbal        = p.ver_val)
 ),
-t as (
-  select
+t AS (
+  SELECT
     f.id,
-    jsonb_object_agg(t.lang, t.name)                                                                                as name,
-    jsonb_object_agg(t.lang, t.description) filter (where array_length(p_langs,1) is null or t.lang = any(p_langs)) as description,
-    jsonb_object_agg(t.lang, t.materials)   filter (where array_length(p_langs,1) is null or t.lang = any(p_langs)) as materials,
-    jsonb_object_agg(t.lang, t.page)        filter (where array_length(p_langs,1) is null or t.lang = any(p_langs)) as page,
-    jsonb_object_agg(t.lang, t.upgrade)     filter (where array_length(p_langs,1) is null or t.lang = any(p_langs)) as upgrade
-  from filtered f
-  left join public.spell_translations t on t.spell_id = f.id
-  left join (select 1) _ on true  -- keep p_langs in scope
-  group by f.id
+    jsonb_object_agg(t.lang, t.name)                                                                                AS name,
+    jsonb_object_agg(t.lang, t.description) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS description,
+    jsonb_object_agg(t.lang, t.materials)   FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS materials,
+    jsonb_object_agg(t.lang, t.page)        FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS page,
+    jsonb_object_agg(t.lang, t.upgrade)     FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS upgrade
+  FROM filtered f
+  LEFT JOIN public.spell_translations t ON t.spell_id = f.id
+  LEFT JOIN (SELECT 1) _ ON true  -- keep p_langs in scope
+  GROUP BY f.id
 )
-select
+SELECT
   f.id,
   f.campaign_id,
-  c.name                                  as campaign_name,
+  c.name                                  AS campaign_name,
   f.level,
   f.character_classes,
   f.school,
@@ -392,32 +421,32 @@ select
   f.somatic,
   f.verbal,
   f.material,
-  coalesce(tt.name, '{}'::jsonb)          as name,
-  coalesce(tt.description, '{}'::jsonb)   as description,
-  coalesce(tt.materials, '{}'::jsonb)     as materials,
-  coalesce(tt.page, '{}'::jsonb)          as page,
-  coalesce(tt.upgrade, '{}'::jsonb)       as upgrade,
+  coalesce(tt.name, '{}'::jsonb)          AS name,
+  coalesce(tt.description, '{}'::jsonb)   AS description,
+  coalesce(tt.materials, '{}'::jsonb)     AS materials,
+  coalesce(tt.page, '{}'::jsonb)          AS page,
+  coalesce(tt.upgrade, '{}'::jsonb)       AS upgrade,
   f.visibility
-from filtered f
-join public.campaigns c on c.id = f.campaign_id
-left join t tt on tt.id = f.id
-order by
-  case
-    when p_order_by = 'name' and p_order_dir = 'asc'
-      then (tt.name->>coalesce(p_langs[1],'en'))
-  end asc nulls last,
-  case
-    when p_order_by = 'name' and p_order_dir = 'desc'
-      then (tt.name->>coalesce(p_langs[1],'en'))
-  end desc nulls last,
-  case
-    when p_order_by = 'level' and p_order_dir = 'asc'
-      then f.level
-  end asc nulls last,
-  case
-    when p_order_by = 'level' and p_order_dir = 'desc'
-      then f.level
-  end desc nulls last;
+FROM filtered f
+JOIN public.campaigns c ON c.id = f.campaign_id
+LEFT JOIN t tt ON tt.id = f.id
+ORDER BY
+  CASE
+    WHEN p_order_by = 'name' AND p_order_dir = 'asc'
+      THEN (tt.name->>coalesce(p_langs[1],'en'))
+  END ASC NULLS LAST,
+  CASE
+    WHEN p_order_by = 'name' AND p_order_dir = 'desc'
+      THEN (tt.name->>coalesce(p_langs[1],'en'))
+  END DESC NULLS LAST,
+  CASE
+    WHEN p_order_by = 'level' AND p_order_dir = 'asc'
+      THEN f.level
+  END ASC NULLS LAST,
+  CASE
+    WHEN p_order_by = 'level' AND p_order_dir = 'desc'
+      THEN f.level
+  END DESC NULLS LAST;
 $$;
 
 ALTER FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
@@ -431,30 +460,34 @@ GRANT ALL ON FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_
 -- UPSERT SPELL TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) RETURNS void
-    LANGUAGE plpgsql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-declare
+CREATE OR REPLACE FUNCTION public.upsert_spell_translation(
+  p_id uuid,
+  p_lang text,
+  p_spell_translation jsonb)
+RETURNS void
+LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
   r public.spell_translations%ROWTYPE;
-begin
+BEGIN
   r := jsonb_populate_record(null::public.spell_translations, p_spell_translation);
 
-  insert into public.spell_translations as st (
+  INSERT INTO public.spell_translations AS st (
     spell_id, lang, name, page,
     materials, description, upgrade
-  ) values (
+  ) VALUES (
     p_id, p_lang, r.name, r.page,
     r.materials, r.description, r.upgrade
   )
-  on conflict (spell_id, lang) do update
-  set
+  ON conflict (spell_id, lang) DO UPDATE
+  SET
     name = excluded.name,
     page = excluded.page,
     materials = excluded.materials,
     description = excluded.description,
     upgrade = excluded.upgrade;
-end;
+END;
 $$;
 
 ALTER FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) OWNER TO postgres;
@@ -468,33 +501,38 @@ GRANT ALL ON FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_
 -- UPDATE SPELL
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) RETURNS void
-    LANGUAGE plpgsql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-declare
+CREATE OR REPLACE FUNCTION public.update_spell(
+  p_id uuid,
+  p_lang text,
+  p_spell jsonb,
+  p_spell_translation jsonb)
+RETURNS void
+LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
   v_rows int;
-begin
-  update public.spells s
-  set (
+BEGIN
+  UPDATE public.spells s
+  SET (
     level, school, character_classes, casting_time, casting_time_value,
     duration, duration_value, range, range_value_imp, range_value_met,
     concentration, ritual, verbal, somatic, material, visibility
   ) = (
-    select r.level, r.school, r.character_classes, r.casting_time, r.casting_time_value,
+    SELECT r.level, r.school, r.character_classes, r.casting_time, r.casting_time_value,
            r.duration, r.duration_value, r.range, r.range_value_imp, r.range_value_met,
            r.concentration, r.ritual, r.verbal, r.somatic, r.material, r.visibility
-    from jsonb_populate_record(null::public.spells, to_jsonb(s) || p_spell) as r
+    FROM jsonb_populate_record(null::public.spells, to_jsonb(s) || p_spell) AS r
   )
-  where s.id = p_id;
+  WHERE s.id = p_id;
 
-  get diagnostics v_rows = ROW_COUNT;
-  if v_rows = 0 then
+  GET diagnostics v_rows = ROW_COUNT;
+  IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
-  end if;
+  END IF;
 
   perform public.upsert_spell_translation(p_id, p_lang, p_spell_translation);
-end;
+END;
 $$;
 
 ALTER FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) OWNER TO postgres;
