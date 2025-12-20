@@ -2,7 +2,7 @@ import { Text, VStack, createListCollection } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import {
-  useOwnedModules,
+  useCreatedModules,
   useSelectedCampaignId,
   useUserCampaigns,
 } from "~/models/campaign";
@@ -15,43 +15,43 @@ import Select from "~/ui/select";
 export default function SidebarCampaignSelector() {
   const [selectedCampaignId, setSelectedCampaignId] = useSelectedCampaignId();
 
-  const { data: coreCampaigns } = useOwnedModules();
-  const { data: userCampaigns } = useUserCampaigns();
+  const { data: modules } = useCreatedModules();
+  const { data: campaigns } = useUserCampaigns();
 
   const { t } = useI18nLangContext(i18nContext);
 
   const [campaignOptions, campaignCategories] = useMemo(() => {
-    const coreCampaignItems =
-      coreCampaigns?.length ?
-        coreCampaigns.map(({ id, name }) => ({ label: name, value: id }))
+    const moduleItems =
+      modules?.length ?
+        modules.map(({ id, name }) => ({ label: name, value: id }))
       : [];
 
-    const userCampaignItems =
-      userCampaigns?.length ?
-        userCampaigns.map(({ id, name }) => ({ label: name, value: id }))
+    const campaignItems =
+      campaigns?.length ?
+        campaigns.map(({ id, name }) => ({ label: name, value: id }))
       : [];
 
-    const items = [...coreCampaignItems, ...userCampaignItems];
+    const items = [...moduleItems, ...campaignItems];
 
     const categories = [
-      { id: "core", items: coreCampaignItems, title: t("select.core") },
-      { id: "user", items: userCampaignItems, title: t("select.user") },
+      { id: "modules", items: moduleItems, title: t("select.modules") },
+      { id: "campaigns", items: campaignItems, title: t("select.campaigns") },
     ];
 
     return [createListCollection({ items }), categories];
-  }, [coreCampaigns, t, userCampaigns]);
+  }, [modules, t, campaigns]);
 
   useLayoutEffect(() => {
-    if (coreCampaigns && userCampaigns)
+    if (modules && campaigns)
       setSelectedCampaignId((prev) =>
         (
-          coreCampaigns.every(({ id }) => id !== prev) &&
-          userCampaigns.every(({ id }) => id !== prev)
+          modules.every(({ id }) => id !== prev) &&
+          campaigns.every(({ id }) => id !== prev)
         ) ?
-          coreCampaigns[0]?.id
+          modules[0]?.id
         : prev,
       );
-  }, [userCampaigns, setSelectedCampaignId, coreCampaigns]);
+  }, [campaigns, setSelectedCampaignId, modules]);
 
   return (
     <VStack align="flex-start" px={4} w="full">
@@ -75,14 +75,16 @@ export default function SidebarCampaignSelector() {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "select.core": {
+  "select.modules": {
     en: "Modules",
     it: "Moduli",
   },
-  "select.user": {
+
+  "select.campaigns": {
     en: "Campaigns",
     it: "Campagne",
   },
+
   "title": {
     en: "Campaign",
     it: "Campagna",

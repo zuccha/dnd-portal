@@ -15,6 +15,33 @@ export const campaignSchema = z.object({
 export type Campaign = z.infer<typeof campaignSchema>;
 
 //------------------------------------------------------------------------------
+// Fetch Created Modules
+//------------------------------------------------------------------------------
+
+export async function fetchCreatedModules(): Promise<Campaign[]> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data } = await supabase
+    .from("campaigns")
+    .select()
+    .eq("is_module", true)
+    .eq("creator_id", user?.id);
+  return z.array(campaignSchema).parse(data);
+}
+
+//------------------------------------------------------------------------------
+// Use Created Modules
+//------------------------------------------------------------------------------
+
+export function useCreatedModules() {
+  return useQuery<Campaign[]>({
+    queryFn: fetchCreatedModules,
+    queryKey: ["campaigns/modules/created"],
+  });
+}
+
+//------------------------------------------------------------------------------
 // Fetch Owned Modules
 //------------------------------------------------------------------------------
 
@@ -33,7 +60,7 @@ export async function fetchOwnedModules(): Promise<Campaign[]> {
 export function useOwnedModules() {
   return useQuery<Campaign[]>({
     queryFn: fetchOwnedModules,
-    queryKey: ["campaigns/modules"],
+    queryKey: ["campaigns/modules/owned"],
   });
 }
 
