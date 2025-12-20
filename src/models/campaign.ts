@@ -65,10 +65,10 @@ export function useOwnedModules() {
 }
 
 //------------------------------------------------------------------------------
-// Fetch User Campaigns
+// Fetch Campaigns
 //------------------------------------------------------------------------------
 
-export async function fetchUserCampaigns(): Promise<Campaign[]> {
+export async function fetchCampaigns(): Promise<Campaign[]> {
   const { data } = await supabase
     .from("campaigns")
     .select()
@@ -77,13 +77,13 @@ export async function fetchUserCampaigns(): Promise<Campaign[]> {
 }
 
 //------------------------------------------------------------------------------
-// Use User Campaigns
+// Use Campaigns
 //------------------------------------------------------------------------------
 
-export function useUserCampaigns() {
+export function useCampaigns() {
   return useQuery<Campaign[]>({
-    queryFn: fetchUserCampaigns,
-    queryKey: ["campaigns/user"],
+    queryFn: fetchCampaigns,
+    queryKey: ["campaigns/campaigns"],
   });
 }
 
