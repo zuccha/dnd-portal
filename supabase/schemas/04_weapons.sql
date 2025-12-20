@@ -3,30 +3,30 @@
 --------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS public.weapons (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    campaign_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    damage text DEFAULT ''::text NOT NULL,
-    damage_versatile text,
-    damage_type public.damage_type NOT NULL,
-    properties public.weapon_property[] NOT NULL,
-    mastery public.weapon_mastery NOT NULL,
-    melee boolean NOT NULL,
-    ranged boolean NOT NULL,
-    magic boolean NOT NULL,
-    range_ft_short real,
-    range_ft_long real,
-    range_m_short real,
-    range_m_long real,
-    weight_lb real NOT NULL,
-    weight_kg real NOT NULL,
-    cost real NOT NULL,
-    visibility public.campaign_role DEFAULT 'player'::public.campaign_role NOT NULL,
-    type public.weapon_type NOT NULL,
-    CONSTRAINT weapons_pkey PRIMARY KEY (id),
-    CONSTRAINT weapons_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT weapons_damage_versatile_check CHECK (((damage_versatile IS NOT NULL) = (properties @> ARRAY['versatile'::public.weapon_property]))),
-    CONSTRAINT weapons_ranged_range_check CHECK ((ranged = ((range_ft_short IS NOT NULL) AND (range_ft_long IS NOT NULL) AND (range_m_short IS NOT NULL) AND (range_m_long IS NOT NULL))))
+  id uuid DEFAULT gen_random_uuid() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  campaign_id uuid DEFAULT gen_random_uuid() NOT NULL,
+  damage text DEFAULT ''::text NOT NULL,
+  damage_versatile text,
+  damage_type public.damage_type NOT NULL,
+  properties public.weapon_property[] NOT NULL,
+  mastery public.weapon_mastery NOT NULL,
+  melee boolean NOT NULL,
+  ranged boolean NOT NULL,
+  magic boolean NOT NULL,
+  range_ft_short real,
+  range_ft_long real,
+  range_m_short real,
+  range_m_long real,
+  weight_lb real NOT NULL,
+  weight_kg real NOT NULL,
+  cost real NOT NULL,
+  visibility public.campaign_role DEFAULT 'player'::public.campaign_role NOT NULL,
+  type public.weapon_type NOT NULL,
+  CONSTRAINT weapons_pkey PRIMARY KEY (id),
+  CONSTRAINT weapons_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT weapons_damage_versatile_check CHECK (((damage_versatile IS NOT NULL) = (properties @> ARRAY['versatile'::public.weapon_property]))),
+  CONSTRAINT weapons_ranged_range_check CHECK ((ranged = ((range_ft_short IS NOT NULL) AND (range_ft_long IS NOT NULL) AND (range_m_short IS NOT NULL) AND (range_m_long IS NOT NULL))))
 );
 
 ALTER TABLE public.weapons OWNER TO postgres;
@@ -42,15 +42,15 @@ GRANT ALL ON TABLE public.weapons TO service_role;
 --------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS public.weapon_translations (
-    weapon_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    lang text NOT NULL,
-    name text DEFAULT ''::text NOT NULL,
-    page text,
-    notes text,
-    ammunition text,
-    CONSTRAINT weapon_translations_pkey PRIMARY KEY (weapon_id, lang),
-    CONSTRAINT weapon_translations_weapon_id_fkey FOREIGN KEY (weapon_id) REFERENCES public.weapons(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT weapon_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  weapon_id uuid DEFAULT gen_random_uuid() NOT NULL,
+  lang text NOT NULL,
+  name text DEFAULT ''::text NOT NULL,
+  page text,
+  notes text,
+  ammunition text,
+  CONSTRAINT weapon_translations_pkey PRIMARY KEY (weapon_id, lang),
+  CONSTRAINT weapon_translations_weapon_id_fkey FOREIGN KEY (weapon_id) REFERENCES public.weapons(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT weapon_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.weapon_translations OWNER TO postgres;
@@ -65,7 +65,8 @@ GRANT ALL ON TABLE public.weapon_translations TO service_role;
 -- CAN READ WEAPON TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.can_read_weapon_translation(p_weapon_id uuid)
+RETURNS boolean
 LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
@@ -86,7 +87,8 @@ GRANT ALL ON FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) TO se
 -- CAN EDIT WEAPON TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid)
+RETURNS boolean
 LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
@@ -109,28 +111,24 @@ GRANT ALL ON FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) TO se
 
 CREATE POLICY "Users can read weapons"
 ON public.weapons
-FOR SELECT
-TO authenticated
-USING ( public.can_read_campaign_resource(campaign_id, visibility) OR public.can_edit_campaign_resource(campaign_id) );
+FOR SELECT TO authenticated
+USING (public.can_read_campaign_resource(campaign_id, visibility) OR public.can_edit_campaign_resource(campaign_id));
 
 CREATE POLICY "Creators and GMs can create new weapons"
 ON public.weapons
-FOR INSERT
-TO authenticated
-WITH CHECK ( public.can_edit_campaign_resource(campaign_id) );
+FOR INSERT TO authenticated
+WITH CHECK (public.can_edit_campaign_resource(campaign_id));
 
 CREATE POLICY "Creators and GMs can update weapons"
 ON public.weapons
-FOR UPDATE
-TO authenticated
-USING ( public.can_edit_campaign_resource(campaign_id) )
-WITH CHECK ( public.can_edit_campaign_resource(campaign_id) );
+FOR UPDATE TO authenticated
+USING (public.can_edit_campaign_resource(campaign_id))
+WITH CHECK (public.can_edit_campaign_resource(campaign_id));
 
 CREATE POLICY "Creators and GMs can delete weapons"
 ON public.weapons
-FOR DELETE
-TO authenticated
-USING ( public.can_edit_campaign_resource(campaign_id) );
+FOR DELETE TO authenticated
+USING (public.can_edit_campaign_resource(campaign_id));
 
 
 --------------------------------------------------------------------------------
@@ -139,61 +137,62 @@ USING ( public.can_edit_campaign_resource(campaign_id) );
 
 CREATE POLICY "Users can read weapon translations"
 ON public.weapon_translations
-FOR SELECT
-TO authenticated
-USING ( public.can_read_weapon_translation(weapon_id) OR public.can_edit_weapon_translation(weapon_id) );
+FOR SELECT TO authenticated
+USING (public.can_read_weapon_translation(weapon_id) OR public.can_edit_weapon_translation(weapon_id));
 
 CREATE POLICY "Creators and GMs can create new weapon translations"
 ON public.weapon_translations
-FOR INSERT
-TO authenticated
-WITH CHECK ( public.can_edit_weapon_translation(weapon_id) );
+FOR INSERT TO authenticated
+WITH CHECK (public.can_edit_weapon_translation(weapon_id));
 
 CREATE POLICY "Creators and GMs can update weapon translations"
 ON public.weapon_translations
-FOR UPDATE
-TO authenticated
-USING ( public.can_edit_weapon_translation(weapon_id) )
-WITH CHECK ( public.can_edit_weapon_translation(weapon_id) );
+FOR UPDATE TO authenticated
+USING (public.can_edit_weapon_translation(weapon_id))
+WITH CHECK (public.can_edit_weapon_translation(weapon_id));
 
 CREATE POLICY "Creators and GMs can delete weapon translations"
 ON public.weapon_translations
-FOR DELETE
-TO authenticated
-USING ( public.can_edit_weapon_translation(weapon_id) );
+FOR DELETE TO authenticated
+USING (public.can_edit_weapon_translation(weapon_id));
 
 
 --------------------------------------------------------------------------------
 -- CREATE WEAPON
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.create_weapon(p_campaign_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) RETURNS uuid
-    LANGUAGE plpgsql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-declare
+CREATE OR REPLACE FUNCTION public.create_weapon(
+  p_campaign_id uuid,
+  p_lang text,
+  p_weapon jsonb,
+  p_weapon_translation jsonb)
+RETURNS uuid
+LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
   v_id uuid;
   r public.weapons%ROWTYPE;
-begin
+BEGIN
   r := jsonb_populate_record(null::public.weapons, p_weapon);
 
-  insert into public.weapons (
+  INSERT INTO public.weapons (
     campaign_id, type, damage, damage_versatile, damage_type,
     properties, mastery, melee, ranged, magic,
     range_ft_short, range_ft_long, range_m_short, range_m_long,
     weight_kg, weight_lb, cost, visibility
-  ) values (
+  ) VALUES (
     p_campaign_id, r.type, r.damage, r.damage_versatile, r.damage_type,
     r.properties, r.mastery, r.melee, r.ranged, r.magic,
     r.range_ft_short, r.range_ft_long, r.range_m_short, r.range_m_long,
     r.weight_kg, r.weight_lb, r.cost, r.visibility
   )
-  returning id into v_id;
+  RETURNING id INTO v_id;
 
   perform public.upsert_weapon_translation(v_id, p_lang, p_weapon_translation);
 
-  return v_id;
-end;
+  RETURN v_id;
+END;
 $$;
 
 
@@ -208,14 +207,15 @@ GRANT ALL ON FUNCTION public.create_weapon(p_campaign_id uuid, p_lang text, p_we
 -- FETCH WEAPON
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_weapon(p_id uuid) RETURNS record
-    LANGUAGE sql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-  select
+CREATE OR REPLACE FUNCTION public.fetch_weapon(p_id uuid)
+RETURNS record
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT
     w.id,
     w.campaign_id,
-    c.name as campaign_name,
+    c.name                                AS campaign_name,
     w.type,
     w.damage,
     w.damage_type,
@@ -232,26 +232,26 @@ CREATE OR REPLACE FUNCTION public.fetch_weapon(p_id uuid) RETURNS record
     w.weight_kg,
     w.weight_lb,
     w.cost,
-    coalesce(tt.name,       '{}'::jsonb)  as name,
-    coalesce(tt.notes,      '{}'::jsonb)  as notes,
-    coalesce(tt.page,       '{}'::jsonb)  as page,
-    coalesce(tt.ammunition, '{}'::jsonb)  as ammunition,
+    coalesce(tt.name,       '{}'::jsonb)  AS name,
+    coalesce(tt.notes,      '{}'::jsonb)  AS notes,
+    coalesce(tt.page,       '{}'::jsonb)  AS page,
+    coalesce(tt.ammunition, '{}'::jsonb)  AS ammunition,
     w.visibility
-  from public.weapons w
-  join public.campaigns c on c.id = w.campaign_id
-  left join (
-    select
+  FROM public.weapons w
+  JOIN public.campaigns c ON c.id = w.campaign_id
+  LEFT JOIN (
+    SELECT
       w.id,
-      jsonb_object_agg(t.lang, t.name)        as name,
-      jsonb_object_agg(t.lang, t.notes)       as notes,
-      jsonb_object_agg(t.lang, t.page)        as page,
-      jsonb_object_agg(t.lang, t.ammunition)  as ammunition
-    from public.weapons w
-    left join public.weapon_translations t on t.weapon_id = w.id
-    where w.id = p_id
-    group by w.id
-  ) tt on tt.id = w.id
-  where w.id = p_id;
+      jsonb_object_agg(t.lang, t.name)        AS name,
+      jsonb_object_agg(t.lang, t.notes)       AS notes,
+      jsonb_object_agg(t.lang, t.page)        AS page,
+      jsonb_object_agg(t.lang, t.ammunition)  AS ammunition
+    FROM public.weapons w
+    LEFT JOIN public.weapon_translations t ON t.weapon_id = w.id
+    WHERE w.id = p_id
+    GROUP BY w.id
+  ) tt ON tt.id = w.id
+  WHERE w.id = p_id;
 $$;
 
 ALTER FUNCTION public.fetch_weapon(p_id uuid) OWNER TO postgres;
@@ -265,101 +265,131 @@ GRANT ALL ON FUNCTION public.fetch_weapon(p_id uuid) TO service_role;
 -- FETCH WEAPONS
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text) RETURNS TABLE(id uuid, campaign_id uuid, campaign_name text, type public.weapon_type, damage text, damage_type public.damage_type, damage_versatile text, mastery public.weapon_mastery, properties public.weapon_property[], magic boolean, melee boolean, ranged boolean, range_ft_long real, range_ft_short real, range_m_long real, range_m_short real, weight_kg real, weight_lb real, cost real, name jsonb, notes jsonb, page jsonb, ammunition jsonb, visibility public.campaign_role)
-    LANGUAGE sql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-with prefs as (
-  select
+CREATE OR REPLACE FUNCTION public.fetch_weapons(
+  p_campaign_id uuid,
+  p_langs text[],
+  p_filters jsonb DEFAULT '{}'::jsonb,
+  p_order_by text DEFAULT 'name'::text,
+  p_order_dir text DEFAULT 'asc'::text)
+RETURNS TABLE(
+  id uuid,
+  campaign_id uuid,
+  campaign_name text,
+  type public.weapon_type,
+  damage text,
+  damage_type public.damage_type,
+  damage_versatile text,
+  mastery public.weapon_mastery,
+  properties public.weapon_property[],
+  magic boolean,
+  melee boolean,
+  ranged boolean,
+  range_ft_long real,
+  range_ft_short real,
+  range_m_long real,
+  range_m_short real,
+  weight_kg real,
+  weight_lb real,
+  cost real,
+  name jsonb,
+  notes jsonb,
+  page jsonb,
+  ammunition jsonb,
+  visibility public.campaign_role)
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+with prefs AS (
+  SELECT
     -- types
     (
-      select coalesce(array_agg((e.key)::public.weapon_type), null)
-      from jsonb_each_text(p_filters->'types') as e(key, value)
-      where e.value = 'true'
-    ) as types_inc,
+      SELECT coalesce(array_agg((e.key)::public.weapon_type), null)
+      FROM jsonb_each_text(p_filters->'types') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS types_inc,
     (
-      select coalesce(array_agg((e.key)::public.weapon_type), null)
-      from jsonb_each_text(p_filters->'types') as e(key, value)
-      where e.value = 'false'
-    ) as types_exc,
+      SELECT coalesce(array_agg((e.key)::public.weapon_type), null)
+      FROM jsonb_each_text(p_filters->'types') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS types_exc,
 
     -- properties
     (
-      select coalesce(array_agg(lower(e.key)::public.weapon_property), null)
-      from jsonb_each_text(p_filters->'weapon_properties') as e(key, value)
-      where e.value = 'true'
-    ) as properties_inc,
+      SELECT coalesce(array_agg(lower(e.key)::public.weapon_property), null)
+      FROM jsonb_each_text(p_filters->'weapon_properties') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS properties_inc,
     (
-      select coalesce(array_agg(lower(e.key)::public.weapon_property), null)
-      from jsonb_each_text(p_filters->'weapon_properties') as e(key, value)
-      where e.value = 'false'
-    ) as properties_exc,
+      SELECT coalesce(array_agg(lower(e.key)::public.weapon_property), null)
+      FROM jsonb_each_text(p_filters->'weapon_properties') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS properties_exc,
 
     -- mastery
     (
-      select coalesce(array_agg(lower(e.key)::public.weapon_mastery), null)
-      from jsonb_each_text(p_filters->'masteries') as e(key, value)
-      where e.value = 'true'
-    ) as masteries_inc,
+      SELECT coalesce(array_agg(lower(e.key)::public.weapon_mastery), null)
+      FROM jsonb_each_text(p_filters->'masteries') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS masteries_inc,
     (
-      select coalesce(array_agg(lower(e.key)::public.weapon_mastery), null)
-      from jsonb_each_text(p_filters->'masteries') as e(key, value)
-      where e.value = 'false'
-    ) as masteries_exc,
+      SELECT coalesce(array_agg(lower(e.key)::public.weapon_mastery), null)
+      FROM jsonb_each_text(p_filters->'masteries') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS masteries_exc,
 
     -- boolean flags; null = not relevant
-    (p_filters ? 'magic')::int::boolean   as has_magic_filter,
-    (p_filters->>'magic')::boolean        as magic_val,
+    (p_filters ? 'magic')::int::boolean   AS has_magic_filter,
+    (p_filters->>'magic')::boolean        AS magic_val,
 
-    (p_filters ? 'melee')::int::boolean   as has_melee_filter,
-    (p_filters->>'melee')::boolean        as melee_val,
+    (p_filters ? 'melee')::int::boolean   AS has_melee_filter,
+    (p_filters->>'melee')::boolean        AS melee_val,
 
-    (p_filters ? 'ranged')::int::boolean  as has_ranged_filter,
-    (p_filters->>'ranged')::boolean       as ranged_val
+    (p_filters ? 'ranged')::int::boolean  AS has_ranged_filter,
+    (p_filters->>'ranged')::boolean       AS ranged_val
 ),
-src as (
-  select w.*
-  from public.weapons w
-  join public.campaigns c on c.id = w.campaign_id
-  where w.campaign_id = p_campaign_id
+src AS (
+  SELECT w.*
+  FROM public.weapons w
+  JOIN public.campaigns c ON c.id = w.campaign_id
+  WHERE w.campaign_id = p_campaign_id
 ),
-filtered as (
-  select s.*
-  from src s, prefs p
-  where
+filtered AS (
+  SELECT s.*
+  FROM src s, prefs p
+  WHERE
     -- types
-        (p.types_inc is null or s.type = any(p.types_inc))
-    and (p.types_exc is null or not (s.type = any(p.types_exc)))
+        (p.types_inc IS NULL OR s.type = any(p.types_inc))
+    AND (p.types_exc IS NULL OR NOT (s.type = any(p.types_exc)))
 
     -- properties
-    and (p.properties_inc is null or s.properties && p.properties_inc)
-    and (p.properties_exc is null or not (s.properties && p.properties_exc))
+    AND (p.properties_inc IS NULL OR s.properties && p.properties_inc)
+    AND (p.properties_exc IS NULL OR NOT (s.properties && p.properties_exc))
 
     -- masteries
-    and (p.masteries_inc is null or s.mastery = any(p.masteries_inc))
-    and (p.masteries_exc is null or not (s.mastery = any(p.masteries_exc)))
+    AND (p.masteries_inc IS NULL OR s.mastery = any(p.masteries_inc))
+    AND (p.masteries_exc IS NULL OR NOT (s.mastery = any(p.masteries_exc)))
 
     -- flags
-    and (not p.has_magic_filter  or s.magic  = p.magic_val)
-    and (not p.has_melee_filter  or s.melee  = p.melee_val)
-    and (not p.has_ranged_filter or s.ranged = p.ranged_val)
+    AND (NOT p.has_magic_filter  OR s.magic  = p.magic_val)
+    AND (NOT p.has_melee_filter  OR s.melee  = p.melee_val)
+    AND (NOT p.has_ranged_filter OR s.ranged = p.ranged_val)
 ),
-t as (
-  select
+t AS (
+  SELECT
     f.id,
-    jsonb_object_agg(t.lang, t.name)                                                                                as name,
-    jsonb_object_agg(t.lang, t.notes)       filter (where array_length(p_langs,1) is null or t.lang = any(p_langs)) as notes,
-    jsonb_object_agg(t.lang, t.page)        filter (where array_length(p_langs,1) is null or t.lang = any(p_langs)) as page,
-    jsonb_object_agg(t.lang, t.ammunition)  filter (where array_length(p_langs,1) is null or t.lang = any(p_langs)) as ammunition
-  from filtered f
-  left join public.weapon_translations t on t.weapon_id = f.id
-  left join (select 1) _ on true  -- keep p_langs in scope
-  group by f.id
+    jsonb_object_agg(t.lang, t.name)                                                                                AS name,
+    jsonb_object_agg(t.lang, t.notes)       FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS notes,
+    jsonb_object_agg(t.lang, t.page)        FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS page,
+    jsonb_object_agg(t.lang, t.ammunition)  FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS ammunition
+  FROM filtered f
+  LEFT JOIN public.weapon_translations t ON t.weapon_id = f.id
+  LEFT JOIN (SELECT 1) _ ON true  -- keep p_langs in scope
+  GROUP BY f.id
 )
-select
+SELECT
   f.id,
   f.campaign_id,
-  c.name as campaign_name,
+  c.name                                AS campaign_name,
   f.type,
   f.damage,
   f.damage_type,
@@ -376,23 +406,23 @@ select
   f.weight_kg,
   f.weight_lb,
   f.cost,
-  coalesce(tt.name,       '{}'::jsonb)  as name,
-  coalesce(tt.notes,      '{}'::jsonb)  as notes,
-  coalesce(tt.page,       '{}'::jsonb)  as page,
-  coalesce(tt.ammunition, '{}'::jsonb)  as ammunition,
+  coalesce(tt.name,       '{}'::jsonb)  AS name,
+  coalesce(tt.notes,      '{}'::jsonb)  AS notes,
+  coalesce(tt.page,       '{}'::jsonb)  AS page,
+  coalesce(tt.ammunition, '{}'::jsonb)  AS ammunition,
   f.visibility
-from filtered f
-join public.campaigns c on c.id = f.campaign_id
-left join t tt on tt.id = f.id
-order by
-  case
-    when p_order_by = 'name' and p_order_dir = 'asc'
-      then (tt.name->>coalesce(p_langs[1],'en'))
-  end asc nulls last,
-  case
-    when p_order_by = 'name' and p_order_dir = 'desc'
-      then (tt.name->>coalesce(p_langs[1],'en'))
-  end desc nulls last;
+FROM filtered f
+JOIN public.campaigns c ON c.id = f.campaign_id
+LEFT JOIN t tt ON tt.id = f.id
+ORDER BY
+  CASE
+    WHEN p_order_by = 'name' AND p_order_dir = 'asc'
+      THEN (tt.name->>coalesce(p_langs[1],'en'))
+  END ASC NULLS LAST,
+  CASE
+    WHEN p_order_by = 'name' AND p_order_dir = 'desc'
+      THEN (tt.name->>coalesce(p_langs[1],'en'))
+  END DESC NULLS LAST;
 $$;
 
 ALTER FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
@@ -406,29 +436,33 @@ GRANT ALL ON FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p
 -- UPSERT WEAPON TRANSLATION
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.upsert_weapon_translation(p_id uuid, p_lang text, p_weapon_translation jsonb) RETURNS void
-    LANGUAGE plpgsql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-declare
+CREATE OR REPLACE FUNCTION public.upsert_weapon_translation(
+  p_id uuid,
+  p_lang text,
+  p_weapon_translation jsonb)
+RETURNS void
+LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
   r public.weapon_translations%ROWTYPE;
-begin
+BEGIN
   r := jsonb_populate_record(null::public.weapon_translations, p_weapon_translation);
 
-  insert into public.weapon_translations as st (
+  INSERT INTO public.weapon_translations AS st (
     weapon_id, lang, name, page,
     ammunition, notes
-  ) values (
+  ) VALUES (
     p_id, p_lang, r.name, r.page,
     r.ammunition, r.notes
   )
-  on conflict (weapon_id, lang) do update
-  set
+  ON conflict (weapon_id, lang) DO UPDATE
+  SET
     name = excluded.name,
     page = excluded.page,
     ammunition = excluded.ammunition,
     notes = excluded.notes;
-end;
+END;
 $$;
 
 ALTER FUNCTION public.upsert_weapon_translation(p_id uuid, p_lang text, p_weapon_translation jsonb) OWNER TO postgres;
@@ -442,35 +476,40 @@ GRANT ALL ON FUNCTION public.upsert_weapon_translation(p_id uuid, p_lang text, p
 -- UPDATE WEAPON
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.update_weapon(p_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) RETURNS void
-    LANGUAGE plpgsql
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-declare
+CREATE OR REPLACE FUNCTION public.update_weapon(
+  p_id uuid,
+  p_lang text,
+  p_weapon jsonb,
+  p_weapon_translation jsonb)
+RETURNS void
+LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
   v_rows int;
-begin
-  update public.weapons s
-  set (
+BEGIN
+  UPDATE public.weapons s
+  SET (
     type, damage, damage_versatile, damage_type,
     properties, mastery, melee, ranged, magic,
     range_ft_short, range_ft_long, range_m_short, range_m_long,
     weight_kg, weight_lb, cost, visibility
   ) = (
-    select r.type, r.damage, r.damage_versatile, r.damage_type,
+    SELECT r.type, r.damage, r.damage_versatile, r.damage_type,
            r.properties, r.mastery, r.melee, r.ranged, r.magic,
            r.range_ft_short, r.range_ft_long, r.range_m_short, r.range_m_long,
            r.weight_kg, r.weight_lb, r.cost, r.visibility
-    from jsonb_populate_record(null::public.weapons, to_jsonb(s) || p_weapon) as r
+    FROM jsonb_populate_record(null::public.weapons, to_jsonb(s) || p_weapon) AS r
   )
-  where s.id = p_id;
+  WHERE s.id = p_id;
 
-  get diagnostics v_rows = ROW_COUNT;
-  if v_rows = 0 then
+  GET diagnostics v_rows = ROW_COUNT;
+  IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
-  end if;
+  END IF;
 
   perform public.upsert_weapon_translation(p_id, p_lang, p_weapon_translation);
-end;
+END;
 $$;
 
 ALTER FUNCTION public.update_weapon(p_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) OWNER TO postgres;
