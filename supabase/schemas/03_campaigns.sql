@@ -410,6 +410,86 @@ GRANT ALL ON FUNCTION public.can_edit_campaign_resource(p_campaign_id uuid) TO s
 
 
 --------------------------------------------------------------------------------
+-- FETCH CAMPAIGN MODULES
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.fetch_campaign_modules(p_campaign_id uuid)
+RETURNS TABLE(id uuid, name text)
+LANGUAGE sql STABLE
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT m.id, m.name
+  FROM public.campaign_modules cm
+  JOIN public.campaigns m ON m.id = cm.module_id
+  WHERE cm.campaign_id = p_campaign_id
+    AND m.is_module = true
+  ORDER BY m.name;
+$$;
+
+ALTER FUNCTION public.fetch_campaign_modules(p_campaign_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.fetch_campaign_modules(p_campaign_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.fetch_campaign_modules(p_campaign_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_campaign_modules(p_campaign_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- FETCH CAMPAIGNS
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.fetch_campaigns()
+RETURNS TABLE(id uuid, name text, modules jsonb)
+LANGUAGE sql STABLE
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT
+    c.id,
+    c.name,
+    coalesce(
+      jsonb_agg(
+        jsonb_build_object('id', m.id, 'name', m.name)
+        ORDER BY m.name
+      ) FILTER (WHERE m.id IS NOT NULL),
+      '[]'::jsonb
+    ) AS modules
+  FROM public.campaigns c
+  LEFT JOIN public.campaign_modules cm ON cm.campaign_id = c.id
+  LEFT JOIN public.campaigns m ON m.id = cm.module_id AND m.is_module = true
+  WHERE c.is_module = false
+  GROUP BY c.id, c.name
+  ORDER BY c.name;
+$$;
+
+ALTER FUNCTION public.fetch_campaigns() OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.fetch_campaigns() TO anon;
+GRANT ALL ON FUNCTION public.fetch_campaigns() TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_campaigns() TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- FETCH MODULES
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.fetch_modules()
+RETURNS TABLE(id uuid, name text)
+LANGUAGE sql STABLE
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT c.id, c.name
+  FROM public.campaigns c
+  WHERE c.is_module = true
+  ORDER BY c.name;
+$$;
+
+ALTER FUNCTION public.fetch_modules() OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.fetch_modules() TO anon;
+GRANT ALL ON FUNCTION public.fetch_modules() TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_modules() TO service_role;
+
+
+--------------------------------------------------------------------------------
 -- FETCH CAMPAIGN ROLE
 --------------------------------------------------------------------------------
 
