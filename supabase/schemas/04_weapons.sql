@@ -301,8 +301,8 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 WITH prefs AS (
   SELECT
-    -- include modules
-    coalesce((p_filters->>'include_modules')::boolean, false) AS include_modules,
+    -- campaign/modules include/exclude filter (keys are campaign or module ids)
+    coalesce(p_filters->'campaigns', '{}'::jsonb) AS campaign_filter,
 
     -- types
     (
@@ -354,7 +354,7 @@ src AS (
   SELECT w.*
   FROM public.weapons w
   JOIN prefs p ON true
-  JOIN public.campaign_resource_ids(p_campaign_id, p.include_modules) ci ON ci.id = w.campaign_id
+  JOIN public.campaign_resource_ids(p_campaign_id, p.campaign_filter) ci ON ci.id = w.campaign_id
   JOIN public.campaigns c ON c.id = w.campaign_id
 ),
 filtered AS (

@@ -323,24 +323,45 @@ GRANT ALL ON FUNCTION public.validate_user_module_is_module() TO service_role;
 
 CREATE OR REPLACE FUNCTION public.campaign_resource_ids(
   p_campaign_id uuid,
-  p_include_modules boolean DEFAULT false)
+  p_campaign_filter jsonb DEFAULT '{}'::jsonb
+)
 RETURNS TABLE(id uuid)
 LANGUAGE sql STABLE
 SET search_path TO 'public', 'pg_temp'
 AS $$
-  SELECT p_campaign_id AS id
-  UNION
-  SELECT cm.module_id
-  FROM public.campaign_modules cm
-  WHERE p_include_modules
-    AND cm.campaign_id = p_campaign_id;
+  WITH prefs AS (
+    SELECT
+      -- include these ids
+      (
+        SELECT coalesce(array_agg(e.key::uuid), null)
+        FROM jsonb_each_text(p_campaign_filter) AS e(key, value)
+        WHERE e.value = 'true'
+      ) AS ids_inc,
+      -- exclude these ids
+      (
+        SELECT coalesce(array_agg(e.key::uuid), null)
+        FROM jsonb_each_text(p_campaign_filter) AS e(key, value)
+        WHERE e.value = 'false'
+      ) AS ids_exc
+  ),
+  base_ids AS (
+    SELECT p_campaign_id AS id
+    UNION
+    SELECT cm.module_id
+    FROM public.campaign_modules cm
+    WHERE cm.campaign_id = p_campaign_id
+  )
+  SELECT b.id
+  FROM base_ids b, prefs p
+  WHERE (p.ids_inc IS NULL OR b.id = ANY(p.ids_inc))
+    AND (p.ids_exc IS NULL OR NOT (b.id = ANY(p.ids_exc)));
 $$;
 
-ALTER FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_include_modules boolean) OWNER TO postgres;
+ALTER FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_campaign_filter jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_include_modules boolean) TO anon;
-GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_include_modules boolean) TO authenticated;
-GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_include_modules boolean) TO service_role;
+GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_campaign_filter jsonb) TO anon;
+GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_campaign_filter jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_campaign_filter jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
