@@ -15,6 +15,18 @@ export const campaignSchema = z.object({
 export type Campaign = z.infer<typeof campaignSchema>;
 
 //------------------------------------------------------------------------------
+// Fetch Campaigns
+//------------------------------------------------------------------------------
+
+export async function fetchCampaigns(): Promise<Campaign[]> {
+  const { data } = await supabase
+    .from("campaigns")
+    .select()
+    .eq("is_module", false);
+  return z.array(campaignSchema).parse(data);
+}
+
+//------------------------------------------------------------------------------
 // Fetch Created Modules
 //------------------------------------------------------------------------------
 
@@ -31,17 +43,6 @@ export async function fetchCreatedModules(): Promise<Campaign[]> {
 }
 
 //------------------------------------------------------------------------------
-// Use Created Modules
-//------------------------------------------------------------------------------
-
-export function useCreatedModules() {
-  return useQuery<Campaign[]>({
-    queryFn: fetchCreatedModules,
-    queryKey: ["campaigns/modules/created"],
-  });
-}
-
-//------------------------------------------------------------------------------
 // Fetch Owned Modules
 //------------------------------------------------------------------------------
 
@@ -54,29 +55,6 @@ export async function fetchOwnedModules(): Promise<Campaign[]> {
 }
 
 //------------------------------------------------------------------------------
-// Use Owned Modules
-//------------------------------------------------------------------------------
-
-export function useOwnedModules() {
-  return useQuery<Campaign[]>({
-    queryFn: fetchOwnedModules,
-    queryKey: ["campaigns/modules/owned"],
-  });
-}
-
-//------------------------------------------------------------------------------
-// Fetch Campaigns
-//------------------------------------------------------------------------------
-
-export async function fetchCampaigns(): Promise<Campaign[]> {
-  const { data } = await supabase
-    .from("campaigns")
-    .select()
-    .eq("is_module", false);
-  return z.array(campaignSchema).parse(data);
-}
-
-//------------------------------------------------------------------------------
 // Use Campaigns
 //------------------------------------------------------------------------------
 
@@ -84,6 +62,28 @@ export function useCampaigns() {
   return useQuery<Campaign[]>({
     queryFn: fetchCampaigns,
     queryKey: ["campaigns/campaigns"],
+  });
+}
+
+//------------------------------------------------------------------------------
+// Use Created Modules
+//------------------------------------------------------------------------------
+
+export function useCreatedModules() {
+  return useQuery<Campaign[]>({
+    queryFn: fetchCreatedModules,
+    queryKey: ["campaigns/modules/created"],
+  });
+}
+
+//------------------------------------------------------------------------------
+// Use Owned Modules
+//------------------------------------------------------------------------------
+
+export function useOwnedModules() {
+  return useQuery<Campaign[]>({
+    queryFn: fetchOwnedModules,
+    queryKey: ["campaigns/modules/owned"],
   });
 }
 
