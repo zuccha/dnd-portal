@@ -100,14 +100,16 @@ GRANT ALL ON TABLE public.user_modules TO service_role;
 -- CAMPAIGNS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can read campaigns and modules" ON public.campaigns FOR SELECT TO authenticated USING (
+CREATE POLICY "Users can read campaigns and modules" ON public.campaigns
+FOR SELECT TO authenticated
+USING (
   -- Modules: public/purchasable OR owned
   (is_module = true AND (
     visibility IN ('public'::public.campaign_visibility, 'purchasable'::public.campaign_visibility)
     OR EXISTS (
       SELECT 1 FROM public.user_modules um
       WHERE um.module_id = campaigns.id
-        AND um.user_id = ( SELECT auth.uid() AS uid)
+        AND um.user_id = (SELECT auth.uid() AS uid)
     )
   ))
   OR
@@ -115,41 +117,47 @@ CREATE POLICY "Users can read campaigns and modules" ON public.campaigns FOR SEL
   (is_module = false AND EXISTS (
     SELECT 1 FROM public.campaign_players cp
     WHERE cp.campaign_id = campaigns.id
-      AND cp.user_id = ( SELECT auth.uid() AS uid)
+      AND cp.user_id = (SELECT auth.uid() AS uid)
   ))
 );
 
-CREATE POLICY "Campaign creators can edit" ON public.campaigns TO authenticated USING (
-  creator_id = ( SELECT auth.uid() AS uid)
-);
+CREATE POLICY "Campaign creators can edit" ON public.campaigns
+TO authenticated
+USING (creator_id = (SELECT auth.uid() AS uid));
 
 
 --------------------------------------------------------------------------------
 -- CAMPAIGN MODULES POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Players can view modules used by campaigns they joined" ON public.campaign_modules FOR SELECT TO authenticated USING (
+CREATE POLICY "Players can view modules used by campaigns they joined" ON public.campaign_modules
+FOR SELECT TO authenticated
+USING (
   EXISTS (
     SELECT 1 FROM public.campaign_players cp
     WHERE cp.campaign_id = campaign_modules.campaign_id
-      AND cp.user_id = ( SELECT auth.uid() AS uid)
+      AND cp.user_id = (SELECT auth.uid() AS uid)
   )
 );
 
-CREATE POLICY "DMs can add modules to campaigns" ON public.campaign_modules FOR INSERT TO authenticated WITH CHECK (
+CREATE POLICY "DMs can add modules to campaigns" ON public.campaign_modules
+FOR INSERT TO authenticated
+WITH CHECK (
   EXISTS (
     SELECT 1 FROM public.campaign_players cp
     WHERE cp.campaign_id = campaign_modules.campaign_id
-      AND cp.user_id = ( SELECT auth.uid() AS uid)
+      AND cp.user_id = (SELECT auth.uid() AS uid)
       AND cp.role = 'game_master'::public.campaign_role
   )
 );
 
-CREATE POLICY "DMs can remove modules from campaigns" ON public.campaign_modules FOR DELETE TO authenticated USING (
+CREATE POLICY "DMs can remove modules from campaigns" ON public.campaign_modules
+FOR DELETE TO authenticated
+USING (
   EXISTS (
     SELECT 1 FROM public.campaign_players cp
     WHERE cp.campaign_id = campaign_modules.campaign_id
-      AND cp.user_id = ( SELECT auth.uid() AS uid)
+      AND cp.user_id = (SELECT auth.uid() AS uid)
       AND cp.role = 'game_master'::public.campaign_role
   )
 );
@@ -159,34 +167,42 @@ CREATE POLICY "DMs can remove modules from campaigns" ON public.campaign_modules
 -- CAMPAIGN PLAYERS POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can view their campaign memberships" ON public.campaign_players FOR SELECT TO authenticated USING (
-  user_id = ( SELECT auth.uid() AS uid)
+CREATE POLICY "Users can view their campaign memberships" ON public.campaign_players
+FOR SELECT TO authenticated
+USING (
+  user_id = (SELECT auth.uid() AS uid)
 );
 
 DROP POLICY IF EXISTS "Campaign creators can manage memberships" ON public.campaign_players;
-CREATE POLICY "Campaign creators can manage memberships" ON public.campaign_players FOR INSERT TO authenticated WITH CHECK (
+CREATE POLICY "Campaign creators can manage memberships" ON public.campaign_players
+FOR INSERT TO authenticated
+WITH CHECK (
   EXISTS (
     SELECT 1 FROM public.campaigns c
     WHERE c.id = campaign_players.campaign_id
-      AND c.creator_id = ( SELECT auth.uid() AS uid)
+      AND c.creator_id = (SELECT auth.uid() AS uid)
   )
 );
 
 DROP POLICY IF EXISTS "Campaign creators can manage memberships" ON public.campaign_players;
-CREATE POLICY "Campaign creators can manage memberships" ON public.campaign_players FOR UPDATE TO authenticated USING (
+CREATE POLICY "Campaign creators can manage memberships" ON public.campaign_players
+FOR UPDATE TO authenticated
+USING (
   EXISTS (
     SELECT 1 FROM public.campaigns c
     WHERE c.id = campaign_players.campaign_id
-      AND c.creator_id = ( SELECT auth.uid() AS uid)
+      AND c.creator_id = (SELECT auth.uid() AS uid)
   )
 );
 
 DROP POLICY IF EXISTS "Campaign creators can manage memberships" ON public.campaign_players;
-CREATE POLICY "Campaign creators can manage memberships" ON public.campaign_players FOR DELETE TO authenticated USING (
+CREATE POLICY "Campaign creators can manage memberships" ON public.campaign_players
+FOR DELETE TO authenticated
+USING (
   EXISTS (
     SELECT 1 FROM public.campaigns c
     WHERE c.id = campaign_players.campaign_id
-      AND c.creator_id = ( SELECT auth.uid() AS uid)
+      AND c.creator_id = (SELECT auth.uid() AS uid)
   )
 );
 
@@ -195,36 +211,43 @@ CREATE POLICY "Campaign creators can manage memberships" ON public.campaign_play
 -- USER MODULES POLICIES
 --------------------------------------------------------------------------------
 
-CREATE POLICY "Users can view their own module ownership" ON public.user_modules FOR SELECT TO authenticated USING (
-  user_id = ( SELECT auth.uid() AS uid)
+CREATE POLICY "Users can view their own module ownership" ON public.user_modules
+FOR SELECT TO authenticated
+USING (
+  user_id = (SELECT auth.uid() AS uid)
 );
 
 DROP POLICY IF EXISTS "Module creators can manage ownership" ON public.user_modules;
-CREATE POLICY "Module creators can manage ownership" ON public.user_modules FOR INSERT TO authenticated WITH CHECK (
+CREATE POLICY "Module creators can manage ownership" ON public.user_modules
+FOR INSERT TO authenticated WITH CHECK (
   EXISTS (
     SELECT 1 FROM public.campaigns c
     WHERE c.id = user_modules.module_id
-      AND c.creator_id = ( SELECT auth.uid() AS uid)
+      AND c.creator_id = (SELECT auth.uid() AS uid)
       AND c.is_module = true
   )
 );
 
 DROP POLICY IF EXISTS "Module creators can manage ownership" ON public.user_modules;
-CREATE POLICY "Module creators can manage ownership" ON public.user_modules FOR UPDATE TO authenticated USING (
+CREATE POLICY "Module creators can manage ownership" ON public.user_modules
+FOR UPDATE TO authenticated
+USING (
   EXISTS (
     SELECT 1 FROM public.campaigns c
     WHERE c.id = user_modules.module_id
-      AND c.creator_id = ( SELECT auth.uid() AS uid)
+      AND c.creator_id = (SELECT auth.uid() AS uid)
       AND c.is_module = true
   )
 );
 
 DROP POLICY IF EXISTS "Module creators can manage ownership" ON public.user_modules;
-CREATE POLICY "Module creators can manage ownership" ON public.user_modules FOR DELETE TO authenticated USING (
+CREATE POLICY "Module creators can manage ownership" ON public.user_modules
+FOR DELETE TO authenticated
+USING (
   EXISTS (
     SELECT 1 FROM public.campaigns c
     WHERE c.id = user_modules.module_id
-      AND c.creator_id = ( SELECT auth.uid() AS uid)
+      AND c.creator_id = (SELECT auth.uid() AS uid)
       AND c.is_module = true
   )
 );
@@ -298,7 +321,8 @@ GRANT ALL ON FUNCTION public.validate_user_module_is_module() TO service_role;
 -- CAN READ CAMPAIGN RESOURCE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.can_read_campaign_resource(p_campaign_id uuid, p_resource_visibility public.campaign_role) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.can_read_campaign_resource(p_campaign_id uuid, p_resource_visibility public.campaign_role)
+RETURNS boolean
 LANGUAGE sql
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
@@ -332,7 +356,8 @@ GRANT ALL ON FUNCTION public.can_read_campaign_resource(p_campaign_id uuid, p_re
 -- CAN EDIT CAMPAIGN RESOURCE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.can_edit_campaign_resource(p_campaign_id uuid) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.can_edit_campaign_resource(p_campaign_id uuid)
+RETURNS boolean
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
@@ -362,15 +387,16 @@ GRANT ALL ON FUNCTION public.can_edit_campaign_resource(p_campaign_id uuid) TO s
 -- FETCH CAMPAIGN ROLE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_campaign_role(p_campaign_id uuid) RETURNS public.campaign_role
-    LANGUAGE sql STABLE
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-  select cp.role
-  from public.campaign_players cp
-  where cp.campaign_id = p_campaign_id
-    and cp.user_id = auth.uid()
-  limit 1;
+CREATE OR REPLACE FUNCTION public.fetch_campaign_role(p_campaign_id uuid)
+RETURNS public.campaign_role
+LANGUAGE sql STABLE
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT cp.role
+  FROM public.campaign_players cp
+  WHERE cp.campaign_id = p_campaign_id
+    AND cp.user_id = auth.uid()
+  LIMIT 1;
 $$;
 
 ALTER FUNCTION public.fetch_campaign_role(p_campaign_id uuid) OWNER TO postgres;
@@ -384,15 +410,16 @@ GRANT ALL ON FUNCTION public.fetch_campaign_role(p_campaign_id uuid) TO service_
 -- FETCH MODULE ROLE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_module_role(p_module_id uuid) RETURNS public.module_role
-    LANGUAGE sql STABLE
-    SET search_path TO 'public', 'pg_temp'
-    AS $$
-  select um.role
-  from public.user_modules um
-  where um.module_id = p_module_id
-    and um.user_id = auth.uid()
-  limit 1;
+CREATE OR REPLACE FUNCTION public.fetch_module_role(p_module_id uuid)
+RETURNS public.module_role
+LANGUAGE sql STABLE
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT um.role
+  FROM public.user_modules um
+  WHERE um.module_id = p_module_id
+    AND um.user_id = auth.uid()
+  LIMIT 1;
 $$;
 
 ALTER FUNCTION public.fetch_module_role(p_module_id uuid) OWNER TO postgres;
