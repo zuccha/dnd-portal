@@ -10,6 +10,8 @@ import supabase from "~/supabase";
 export const campaignSchema = z.object({
   id: z.uuid(),
   name: z.string(),
+
+  modules: z.array(z.object({ id: z.uuid(), name: z.string() })).default([]),
 });
 
 export type Campaign = z.infer<typeof campaignSchema>;
@@ -19,10 +21,7 @@ export type Campaign = z.infer<typeof campaignSchema>;
 //------------------------------------------------------------------------------
 
 export async function fetchCampaigns(): Promise<Campaign[]> {
-  const { data } = await supabase
-    .from("campaigns")
-    .select()
-    .eq("is_module", false);
+  const { data } = await supabase.rpc("fetch_campaigns");
   return z.array(campaignSchema).parse(data);
 }
 
