@@ -318,6 +318,32 @@ GRANT ALL ON FUNCTION public.validate_user_module_is_module() TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- CAMPAIGN RESOURCE IDS
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.campaign_resource_ids(
+  p_campaign_id uuid,
+  p_include_modules boolean DEFAULT false)
+RETURNS TABLE(id uuid)
+LANGUAGE sql STABLE
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT p_campaign_id AS id
+  UNION
+  SELECT cm.module_id
+  FROM public.campaign_modules cm
+  WHERE p_include_modules
+    AND cm.campaign_id = p_campaign_id;
+$$;
+
+ALTER FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_include_modules boolean) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_include_modules boolean) TO anon;
+GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_include_modules boolean) TO authenticated;
+GRANT ALL ON FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_include_modules boolean) TO service_role;
+
+
+--------------------------------------------------------------------------------
 -- CAN READ CAMPAIGN RESOURCE
 --------------------------------------------------------------------------------
 

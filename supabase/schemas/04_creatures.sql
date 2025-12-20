@@ -378,6 +378,9 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 WITH prefs AS (
   SELECT
+    -- include modules
+    coalesce((p_filters->>'include_modules')::boolean, false) AS include_modules,
+
     -- types
     (
       SELECT coalesce(array_agg(lower(e.key)::public.creature_type), null)
@@ -445,8 +448,9 @@ WITH prefs AS (
 src AS (
   SELECT c.*
   FROM public.creatures c
+  JOIN prefs p ON true
+  JOIN public.campaign_resource_ids(p_campaign_id, p.include_modules) ci ON ci.id = c.campaign_id
   JOIN public.campaigns cmp ON cmp.id = c.campaign_id
-  WHERE c.campaign_id = p_campaign_id
 ),
 filtered AS (
   SELECT c.*

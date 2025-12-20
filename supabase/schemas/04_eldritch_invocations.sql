@@ -243,13 +243,16 @@ LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
 WITH prefs AS (
-  SELECT coalesce( (p_filters->>'warlock_level')::int, 20 ) AS warlock_level
+  SELECT
+    coalesce((p_filters->>'include_modules')::boolean, false) AS include_modules,
+    coalesce((p_filters->>'warlock_level')::int, 20) AS warlock_level
 ),
 src AS (
   SELECT e.*
   FROM public.eldritch_invocations e
+  JOIN prefs p ON true
+  JOIN public.campaign_resource_ids(p_campaign_id, p.include_modules) ci ON ci.id = e.campaign_id
   JOIN public.campaigns c ON c.id = e.campaign_id
-  WHERE e.campaign_id = p_campaign_id
 ),
 filtered AS (
   SELECT s.*

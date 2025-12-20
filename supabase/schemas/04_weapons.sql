@@ -299,8 +299,11 @@ RETURNS TABLE(
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
-with prefs AS (
+WITH prefs AS (
   SELECT
+    -- include modules
+    coalesce((p_filters->>'include_modules')::boolean, false) AS include_modules,
+
     -- types
     (
       SELECT coalesce(array_agg((e.key)::public.weapon_type), null)
@@ -350,8 +353,9 @@ with prefs AS (
 src AS (
   SELECT w.*
   FROM public.weapons w
+  JOIN prefs p ON true
+  JOIN public.campaign_resource_ids(p_campaign_id, p.include_modules) ci ON ci.id = w.campaign_id
   JOIN public.campaigns c ON c.id = w.campaign_id
-  WHERE w.campaign_id = p_campaign_id
 ),
 filtered AS (
   SELECT s.*

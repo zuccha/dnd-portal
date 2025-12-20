@@ -308,6 +308,9 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 WITH prefs AS (
   SELECT
+    -- include modules
+    coalesce((p_filters->>'include_modules')::boolean, false) AS include_modules,
+
     -- levels
     (
       SELECT coalesce(array_agg((e.key)::int), null)
@@ -363,8 +366,9 @@ WITH prefs AS (
 src AS (
   SELECT s.*
   FROM public.spells s
+  JOIN prefs p ON true
+  JOIN public.campaign_resource_ids(p_campaign_id, p.include_modules) ci ON ci.id = s.campaign_id
   JOIN public.campaigns c ON c.id = s.campaign_id
-  WHERE s.campaign_id = p_campaign_id
 ),
 filtered AS (
   SELECT s.*
