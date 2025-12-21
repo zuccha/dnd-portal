@@ -151,6 +151,10 @@ export function createStoreSet<K, T>(
 
   function useValue(key: K, defaultValue: T): T {
     const [value, setValue] = useState(() => get(key, defaultValue));
+    useLayoutEffect(
+      () => setValue(get(key, defaultValue)),
+      [defaultValue, key],
+    );
     useLayoutEffect(() => subscribe(key, setValue), [key]);
     return value;
   }
@@ -175,6 +179,11 @@ export function createStoreSet<K, T>(
   ): PathValue<T, P> {
     const [pathValue, setPathValue] = useState(() =>
       getPath(key, defaultValue, path),
+    );
+
+    useLayoutEffect(
+      () => setPathValue(getPath(key, defaultValue, path)),
+      [defaultValue, key, ...path], // eslint-disable-line react-hooks/exhaustive-deps
     );
 
     useLayoutEffect(() => {

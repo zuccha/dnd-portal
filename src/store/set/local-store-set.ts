@@ -16,12 +16,9 @@ export function createLocalStoreSet<T>(
 
       for (let i = 0; i < localStorage.length; ++i) {
         const storageId = localStorage.key(i)!;
+        if (!storageId.startsWith(id)) continue;
 
-        const match = storageId.match(new RegExp(`^${id}/(.+)$`));
-        if (!match || match.length < 2) continue;
-
-        const key = match[1]!;
-
+        const key = storageId.substring(id.length + 1);
         try {
           const item = localStorage.getItem(storageId);
           const value = item === null ? defaultValue : parse(JSON.parse(item));
