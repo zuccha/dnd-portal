@@ -25,6 +25,7 @@ import ResourcesListCards from "./resources-list-cards";
 import ResourcesListTable, {
   type ResourcesListTableColumn,
 } from "./resources-list-table";
+import ResourcesModulesFilter from "./resources-modules-filter";
 
 //------------------------------------------------------------------------------
 // Create Resources Panel
@@ -272,6 +273,7 @@ export function createResourcesPanel<
               onRemove={store.remove}
               selectedLocalizedResources={selectedLocalizedResources}
             />
+            <ResourcesModulesFilter />
             <Filters />
             <Separator h="1.5em" orientation="vertical" />
             <ResourcesCounter count={localizedResources.length} />
