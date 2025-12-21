@@ -256,37 +256,40 @@ export function createResourcesPanel<
 
     return (
       <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
-        <HStack
+        <VStack
+          align="space-between"
           borderBottomWidth={1}
-          gap={4}
-          h="4em"
-          justify="space-between"
+          gap={2}
+          h="6em"
+          justify="center"
           overflow="auto"
-          p={2}
+          px={4}
+          py={2}
           w="full"
         >
-          <HStack>
-            <ResourcesActions
-              canEdit={canEdit}
-              name={name}
-              onAddNew={setCreatedResource}
-              onRemove={store.remove}
-              selectedLocalizedResources={selectedLocalizedResources}
-            />
-            <ResourcesModulesFilter />
-            <Filters />
-            <Separator h="1.5em" orientation="vertical" />
-            <ResourcesCounter count={localizedResources.length} />
-          </HStack>
-
-          <HStack>
+          <HStack justify="space-between" w="full">
+            <HStack>
+              <ResourcesActions
+                canEdit={canEdit}
+                name={name}
+                onAddNew={setCreatedResource}
+                onRemove={store.remove}
+                selectedLocalizedResources={selectedLocalizedResources}
+              />
+              <ResourcesModulesFilter />
+              <Separator h="1.5em" orientation="vertical" />
+              <ResourcesCounter count={localizedResources.length} />
+            </HStack>
             <BinaryButton
               onValueChange={setView}
               options={viewOptions}
               value={view}
             />
           </HStack>
-        </HStack>
+          <HStack overflow="auto" w="full">
+            <Filters />
+          </HStack>
+        </VStack>
 
         <Flex flex={1} overflow="auto" w="full">
           {view === "table" && (
