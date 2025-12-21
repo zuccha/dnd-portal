@@ -111,6 +111,16 @@ export const useSelectedCampaignId = createLocalStore<string | undefined>(
 ).use;
 
 //------------------------------------------------------------------------------
+// Use Selected Campaign
+//------------------------------------------------------------------------------
+
+export function useSelectedCampaign() {
+  const [id] = useSelectedCampaignId();
+  const { all } = useCampaignsAndCreatedModules();
+  return all.find((campaign) => campaign.id === id);
+}
+
+//------------------------------------------------------------------------------
 // Fetch Can Edit Campaign
 //------------------------------------------------------------------------------
 
