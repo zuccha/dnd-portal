@@ -31,10 +31,25 @@ export default function SidebarCampaignSelector() {
 
     const items = [...moduleItems, ...campaignItems];
 
-    const categories = [
-      { id: "modules", items: moduleItems, title: t("select.modules") },
-      { id: "campaigns", items: campaignItems, title: t("select.campaigns") },
-    ];
+    const categories: {
+      id: string;
+      items: { label: string; value: string }[];
+      title: string;
+    }[] = [];
+
+    if (moduleItems.length)
+      categories.push({
+        id: "modules",
+        items: moduleItems,
+        title: t("select.modules"),
+      });
+
+    if (campaignItems.length)
+      categories.push({
+        id: "campaigns",
+        items: campaignItems,
+        title: t("select.campaigns"),
+      });
 
     return [createListCollection({ items }), categories];
   }, [modules, t, campaigns]);
@@ -79,7 +94,7 @@ const i18nContext = {
   },
 
   "title": {
-    en: "Campaign",
-    it: "Campagna",
+    en: "Content",
+    it: "Contenuti",
   },
 };
