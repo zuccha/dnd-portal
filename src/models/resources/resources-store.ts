@@ -274,10 +274,10 @@ export function createResourcesStore<
   const selection = new Set<string>();
 
   const { notify: notifySelectionCount, subscribe: subscribeSelectionCount } =
-    createObservable<number>();
+    createObservable<number>(`resources[${name.p}].count`);
 
   const { notify: notifySelected, subscribe: subscribeSelected } =
-    createObservableSet<boolean>();
+    createObservableSet<string, boolean>(`resources[${name.p}].selected`);
 
   function isSelected(resourceId: string) {
     return selection.has(resourceId);

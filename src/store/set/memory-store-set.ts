@@ -1,11 +1,14 @@
-import { type Store, createStore } from "./store";
+import { type StoreSet, createStoreSet } from "./store-set";
 
 //------------------------------------------------------------------------------
-// Create Memory Store
+// Create Memory Store Set
 //------------------------------------------------------------------------------
 
-export function createMemoryStore<T>(id: string, defaultValue: T): Store<T> {
-  return createStore(id, {
+export function createMemoryStoreSet<K, T>(
+  id: string,
+  defaultValue = new Map<K, T>(),
+): StoreSet<K, T> {
+  return createStoreSet(id, {
     initCache: () => defaultValue,
     onCacheUpdate: () => {},
   });

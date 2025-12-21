@@ -1,63 +1,59 @@
-import type { Callback1 } from "./callback";
-import { createObservable } from "./observable";
+import type { Callback2 } from "./callback";
+
+//------------------------------------------------------------------------------
+// Ids
+//------------------------------------------------------------------------------
+
+const ids = new Set<string>();
 
 //------------------------------------------------------------------------------
 // Observable Set
 //------------------------------------------------------------------------------
 
-export type ObservableSet<T, K extends PropertyKey = string> = {
-  notify: (id: K, value: T) => void;
-  subscribe: (id: K, callback: Callback1<T>) => () => void;
-  unsubscribe: (id: K, callback: Callback1<T>) => void;
-
-  notifyAll: (value: T) => void;
-  subscribeAll: (callback: Callback1<T>) => () => void;
-  unsubscribeAll: (callback: Callback1<T>) => void;
+export type ObservableSet<K, T> = {
+  notify: (key: K, value: T) => void;
+  subscribe: (key: K, callback: Callback2<T, K>) => () => void;
+  subscribeAny: (callback: Callback2<T, K>) => () => void;
+  unsubscribe: (key: K, callback: Callback2<T, K>) => void;
+  unsubscribeAny: (callback: Callback2<T, K>) => void;
 };
 
 //------------------------------------------------------------------------------
 // Create Observable Set
 //------------------------------------------------------------------------------
 
-export function createObservableSet<
-  T,
-  K extends PropertyKey = string,
->(): ObservableSet<T, K> {
-  const {
-    notify: notifyAll,
-    subscribe: subscribeAll,
-    unsubscribe: unsubscribeAll,
-  } = createObservable<T>();
+export function createObservableSet<K, T>(id: string): ObservableSet<K, T> {
+  if (ids.has(id)) throw new Error(`Observable Set "${id}" already exists`);
+  ids.add(id);
 
-  const listeners = new Map<K, Set<Callback1<T>>>();
+  const listenersByKey = new Map<K, Set<Callback2<T, K>>>();
+  const anyListeners = new Set<Callback2<T, K>>();
 
-  function notify(id: K, value: T): void {
-    listeners.get(id)?.forEach((callback) => callback(value));
-    notifyAll(value);
+  function notify(key: K, value: T): void {
+    listenersByKey.get(key)?.forEach((callback) => callback(value, key));
+    anyListeners.forEach((callback) => callback(value, key));
   }
 
-  function subscribe(id: K, callback: Callback1<T>): () => void {
-    if (!listeners.has(id)) listeners.set(id, new Set());
-    listeners.get(id)!.add(callback);
-
-    return () => {
-      listeners.get(id)?.delete(callback);
-      if (listeners.get(id)?.size === 0) listeners.delete(id);
-    };
+  function subscribe(key: K, callback: Callback2<T, K>): () => void {
+    if (!listenersByKey.has(key)) listenersByKey.set(key, new Set());
+    listenersByKey.get(key)!.add(callback);
+    return () => unsubscribe(key, callback);
   }
 
-  function unsubscribe(id: K, callback: Callback1<T>): void {
-    listeners.get(id)?.delete(callback);
-    if (listeners.get(id)?.size === 0) listeners.delete(id);
+  function subscribeAny(callback: Callback2<T, K>): () => void {
+    anyListeners.add(callback);
+    return () => unsubscribeAny(callback);
   }
 
-  return {
-    notify,
-    subscribe,
-    unsubscribe,
+  function unsubscribe(key: K, callback: Callback2<T, K>): void {
+    if (!listenersByKey.has(key)) return;
+    listenersByKey.get(key)!.delete(callback);
+    if (listenersByKey.get(key)!.size === 0) listenersByKey.delete(key);
+  }
 
-    notifyAll,
-    subscribeAll,
-    unsubscribeAll,
-  };
+  function unsubscribeAny(callback: Callback2<T, K>): void {
+    anyListeners.delete(callback);
+  }
+
+  return { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny };
 }

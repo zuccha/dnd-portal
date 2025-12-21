@@ -76,7 +76,7 @@ export function createResourcesPanel<
   //----------------------------------------------------------------------------
 
   const useView = createLocalStore(
-    "resources.view",
+    `resources[${store.id}].view`,
     "table",
     z.enum(["cards", "table"]).parse,
   ).use;
@@ -90,7 +90,10 @@ export function createResourcesPanel<
   // Context - Created Resource
   //----------------------------------------------------------------------------
 
-  const createdResourceStore = createMemoryStore<R | undefined>(undefined);
+  const createdResourceStore = createMemoryStore<R | undefined>(
+    `resources[${store.id}].created_resource`,
+    undefined,
+  );
 
   const unsetCreatedResource = () => createdResourceStore.set(undefined);
   const setCreatedResource = () => createdResourceStore.set(defaultResource);
@@ -99,7 +102,10 @@ export function createResourcesPanel<
   // Context - Edited Resource
   //----------------------------------------------------------------------------
 
-  const editedResourceStore = createMemoryStore<R | undefined>(undefined);
+  const editedResourceStore = createMemoryStore<R | undefined>(
+    `resources[${store.id}].edited_resource`,
+    undefined,
+  );
 
   const unsetEditedResource = () => editedResourceStore.set(undefined);
 

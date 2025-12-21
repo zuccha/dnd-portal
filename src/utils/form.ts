@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useState } from "react";
-import { createMemorySetStore } from "~/store/memory-set-store";
 import { createMemoryStore } from "~/store/memory-store";
+import { createMemoryStoreSet } from "~/store/set/memory-store-set";
 import { createObservable } from "./observable";
 
 //------------------------------------------------------------------------------
@@ -37,6 +37,7 @@ export type Form<Fields extends Record<string, unknown>> = {
 //------------------------------------------------------------------------------
 
 export function createForm<Fields extends Record<string, unknown>>(
+  id: string,
   parseData: (maybeData: unknown) => Fields,
 ): Form<Fields> {
   //----------------------------------------------------------------------------
@@ -47,7 +48,9 @@ export function createForm<Fields extends Record<string, unknown>>(
     keys: valueFields,
     get: getValue,
     use: useValue,
-  } = createMemorySetStore<Fields[keyof Fields], keyof Fields>();
+  } = createMemoryStoreSet<keyof Fields, Fields[keyof Fields]>(
+    `form[${id}].fields`,
+  );
 
   //----------------------------------------------------------------------------
   // Errors Store
@@ -57,14 +60,19 @@ export function createForm<Fields extends Record<string, unknown>>(
     keys: errorFields,
     get: getError,
     use: useError,
-    subscribeAll: subscribeAllErrors,
-  } = createMemorySetStore<string | undefined, keyof Fields>();
+    subscribeAny: subscribeAnyError,
+  } = createMemoryStoreSet<keyof Fields, string | undefined>(
+    `form[${id}].errors`,
+  );
 
   //----------------------------------------------------------------------------
   // Submit Error Store
   //----------------------------------------------------------------------------
 
-  const submitErrorStore = createMemoryStore<string | undefined>(undefined);
+  const submitErrorStore = createMemoryStore<string | undefined>(
+    `form[${id}].submit_error`,
+    undefined,
+  );
 
   const useSubmitError = submitErrorStore.useValue;
 
@@ -72,7 +80,10 @@ export function createForm<Fields extends Record<string, unknown>>(
   // Submitting Store
   //----------------------------------------------------------------------------
 
-  const { use: useSubmitting } = createMemoryStore(false);
+  const { use: useSubmitting } = createMemoryStore(
+    `form[${id}].submitting`,
+    false,
+  );
 
   //----------------------------------------------------------------------------
   // Value Changers Store
@@ -195,7 +206,7 @@ export function createForm<Fields extends Record<string, unknown>>(
 
   function useValid(): boolean {
     const [valid, setValid] = useState(isValid);
-    useLayoutEffect(() => subscribeAllErrors(() => setValid(isValid())), []);
+    useLayoutEffect(() => subscribeAnyError(() => setValid(isValid())), []);
     return valid;
   }
 
@@ -229,7 +240,9 @@ export function createForm<Fields extends Record<string, unknown>>(
   // Reset
   //----------------------------------------------------------------------------
 
-  const { notify: notifyReset, subscribe: subscribeReset } = createObservable();
+  const { notify: notifyReset, subscribe: subscribeReset } = createObservable(
+    `form[${id}].reset`,
+  );
 
   function reset() {
     notifyReset(undefined);

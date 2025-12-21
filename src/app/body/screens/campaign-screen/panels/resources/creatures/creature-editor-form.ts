@@ -69,7 +69,10 @@ export type CreatureEditorFormFields = z.infer<
 // Creature Editor Form
 //------------------------------------------------------------------------------
 
-const creatureEditorForm = createForm(creatureEditorFormFieldsSchema.parse);
+const creatureEditorForm = createForm(
+  "creature_editor",
+  creatureEditorFormFieldsSchema.parse,
+);
 
 export const { useField: useCreatureEditorFormField } = creatureEditorForm;
 

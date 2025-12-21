@@ -1,6 +1,12 @@
 import type { Callback1 } from "./callback";
 
 //------------------------------------------------------------------------------
+// Ids
+//------------------------------------------------------------------------------
+
+const ids = new Set<string>();
+
+//------------------------------------------------------------------------------
 // Observable
 //------------------------------------------------------------------------------
 
@@ -14,7 +20,10 @@ export type Observable<T> = {
 // Create Observable
 //------------------------------------------------------------------------------
 
-export function createObservable<T>(): Observable<T> {
+export function createObservable<T>(id: string): Observable<T> {
+  if (ids.has(id)) throw new Error(`Observable "${id}" already exists`);
+  ids.add(id);
+
   const listeners = new Set<Callback1<T>>();
 
   function notify(value: T): void {
