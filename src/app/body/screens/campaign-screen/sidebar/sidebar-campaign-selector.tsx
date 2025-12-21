@@ -2,8 +2,7 @@ import { Text, VStack, createListCollection } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import {
-  useCampaigns,
-  useCreatedModules,
+  useCampaignsAndCreatedModules,
   useSelectedCampaignId,
 } from "~/models/campaign";
 import Select from "~/ui/select";
@@ -15,21 +14,20 @@ import Select from "~/ui/select";
 export default function SidebarCampaignSelector() {
   const [selectedCampaignId, setSelectedCampaignId] = useSelectedCampaignId();
 
-  const { data: modules } = useCreatedModules();
-  const { data: campaigns } = useCampaigns();
+  const { all, campaigns, modules } = useCampaignsAndCreatedModules();
 
   const { t } = useI18nLangContext(i18nContext);
 
   const [campaignOptions, campaignCategories] = useMemo(() => {
-    const moduleItems =
-      modules?.length ?
-        modules.map(({ id, name }) => ({ label: name, value: id }))
-      : [];
+    const moduleItems = modules.map(({ id, name }) => ({
+      label: name,
+      value: id,
+    }));
 
-    const campaignItems =
-      campaigns?.length ?
-        campaigns.map(({ id, name }) => ({ label: name, value: id }))
-      : [];
+    const campaignItems = campaigns.map(({ id, name }) => ({
+      label: name,
+      value: id,
+    }));
 
     const items = [...moduleItems, ...campaignItems];
 
@@ -42,16 +40,11 @@ export default function SidebarCampaignSelector() {
   }, [modules, t, campaigns]);
 
   useLayoutEffect(() => {
-    if (modules && campaigns)
+    if (all.length)
       setSelectedCampaignId((prev) =>
-        (
-          modules.every(({ id }) => id !== prev) &&
-          campaigns.every(({ id }) => id !== prev)
-        ) ?
-          modules[0]?.id
-        : prev,
+        all.every(({ id }) => id !== prev) ? all[0]?.id : prev,
       );
-  }, [campaigns, setSelectedCampaignId, modules]);
+  }, [all, setSelectedCampaignId]);
 
   return (
     <VStack align="flex-start" px={4} w="full">

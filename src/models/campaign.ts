@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { z } from "zod";
 import { createLocalStore } from "~/store/local-store";
 import supabase from "~/supabase";
@@ -87,7 +88,20 @@ export function useOwnedModules() {
 }
 
 //------------------------------------------------------------------------------
-// Use Selected Campaign
+// Use Campaigns And Created Modules
+//------------------------------------------------------------------------------
+
+export function useCampaignsAndCreatedModules() {
+  const { data: modules = [] } = useCreatedModules();
+  const { data: campaigns = [] } = useCampaigns();
+
+  const all = useMemo(() => [...campaigns, ...modules], [campaigns, modules]);
+
+  return { all, campaigns, modules };
+}
+
+//------------------------------------------------------------------------------
+// Use Selected Campaign Id
 //------------------------------------------------------------------------------
 
 export const useSelectedCampaignId = createLocalStore<string | undefined>(
