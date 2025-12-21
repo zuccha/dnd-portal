@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedCampaign } from "~/models/campaign";
+import { useResourcesModulesFilter } from "~/models/resources/resources-modules-filter";
 import InclusionSelect from "~/ui/inclusion-select";
 
 //------------------------------------------------------------------------------
@@ -10,6 +11,7 @@ import InclusionSelect from "~/ui/inclusion-select";
 export default function ResourcesModulesFilter() {
   const { t } = useI18nLangContext(i18nContext);
   const campaign = useSelectedCampaign();
+  const [filter, setFilter] = useResourcesModulesFilter(campaign?.id ?? "");
 
   const options = useMemo(() => {
     if (!campaign) return [];
@@ -22,9 +24,11 @@ export default function ResourcesModulesFilter() {
   return (
     <InclusionSelect
       disabled={!options.length}
-      includes={{}} // TODO
+      includes={filter}
       minW="10em"
-      onValueChange={() => {}} // TODO
+      onValueChange={(partial) =>
+        setFilter((prev) => ({ ...prev, ...partial }))
+      }
       options={options}
       size="sm"
     >

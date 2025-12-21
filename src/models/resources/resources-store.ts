@@ -10,7 +10,8 @@ import { createObservable } from "~/utils/observable";
 import { createObservableSet } from "~/utils/observable-set";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
-import type { Resource, ResourceFilters } from "./resource";
+import { type Resource, type ResourceFilters } from "./resource";
+import { useResourcesModulesFilter } from "./resources-modules-filter";
 
 //------------------------------------------------------------------------------
 // Resources Store
@@ -59,6 +60,7 @@ export type ResourcesStore<
   fetch: (id: string) => Promise<R | undefined>;
   fetchFromCampaign: (
     campaignId: string,
+    modules: Record<string, boolean>,
     { order_by, order_dir, ...filters }: F,
     lang: string,
   ) => Promise<R[]>;
@@ -162,12 +164,13 @@ export function createResourcesStore<
 
   async function fetchFromCampaign(
     campaignId: string,
+    modules: Record<string, boolean | undefined>,
     { order_by, order_dir, ...filters }: F,
     lang: string,
   ): Promise<R[]> {
     const { data } = await supabase.rpc(`fetch_${name.p}`, {
       p_campaign_id: campaignId,
-      p_filters: filters,
+      p_filters: { ...filters, campaigns: modules },
       p_langs: [lang],
       p_order_by: order_by,
       p_order_dir: order_dir,
@@ -241,15 +244,16 @@ export function createResourcesStore<
     const [lang] = useI18nLang();
     const [filters] = useFilters();
     const [nameFilter] = useNameFilter();
+    const [modules] = useResourcesModulesFilter(campaignId);
 
     const fetchCampaignsResources = useCallback(
-      () => fetchFromCampaign(campaignId, filters, lang),
-      [campaignId, filters, lang],
+      () => fetchFromCampaign(campaignId, modules, filters, lang),
+      [campaignId, filters, lang, modules],
     );
 
     const { data, isPending, error } = useQuery<R[]>({
       queryFn: fetchCampaignsResources,
-      queryKey: [`resources`, name.p, lang, campaignId, filters],
+      queryKey: [`resources`, name.p, lang, campaignId, filters, modules],
     });
 
     const resources = useSharedResources(() => {
