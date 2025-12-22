@@ -1,4 +1,10 @@
-import { Flex, HStack, Separator, VStack } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Separator,
+  type StackProps,
+  VStack,
+} from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
 import { useCallback } from "react";
 import z from "zod";
@@ -60,7 +66,7 @@ export function createResourcesPanel<
     onOpen: (resource: R) => void;
   }>;
   EditorContent: React.FC<{ resource: R }>;
-  Filters: React.FC;
+  Filters: React.FC<StackProps>;
   defaultResource: R;
   form: Form<FF>;
   listTableColumns: ResourcesListTableColumn<R, L>[];
@@ -266,9 +272,7 @@ export function createResourcesPanel<
           align="space-between"
           borderBottomWidth={1}
           gap={2}
-          h="6em"
           justify="center"
-          overflow="auto"
           px={4}
           py={2}
           w="full"
@@ -292,9 +296,7 @@ export function createResourcesPanel<
               value={view}
             />
           </HStack>
-          <HStack overflow="auto" w="full">
-            <Filters />
-          </HStack>
+          <Filters w="full" wrap="wrap" />
         </VStack>
 
         <Flex flex={1} overflow="auto" w="full">

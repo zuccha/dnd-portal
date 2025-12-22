@@ -1,4 +1,9 @@
-import { HStack, Separator, createListCollection } from "@chakra-ui/react";
+import {
+  HStack,
+  Separator,
+  type StackProps,
+  createListCollection,
+} from "@chakra-ui/react";
 import { useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -12,7 +17,7 @@ import Select from "~/ui/select";
 // EldritchInvocations Filters
 //------------------------------------------------------------------------------
 
-export default function EldritchInvocationsFilters() {
+export default function EldritchInvocationsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
   const [filters, setFilters] = eldritchInvocationsStore.useFilters();
 
@@ -32,7 +37,7 @@ export default function EldritchInvocationsFilters() {
   );
 
   return (
-    <HStack>
+    <HStack {...props}>
       <Select
         minW="13.5em"
         onValueChange={(value) => {
@@ -45,11 +50,13 @@ export default function EldritchInvocationsFilters() {
         options={orderOptions}
         size="sm"
         value={`${filters.order_by}.${filters.order_dir}`}
+        w="13.5em"
       />
 
       <Separator h="1.5em" orientation="vertical" />
 
       <Input
+        groupProps={{ w: "auto" }}
         id="filter-eldritch-invocation-name"
         onValueChange={setTempNameFilter}
         placeholder={t("name")}
@@ -61,6 +68,7 @@ export default function EldritchInvocationsFilters() {
         onValueChange={(warlock_level) => setFilters({ warlock_level })}
         size="sm"
         value={filters.warlock_level ?? 20}
+        w="4em"
       />
     </HStack>
   );

@@ -1,4 +1,9 @@
-import { HStack, Separator, createListCollection } from "@chakra-ui/react";
+import {
+  HStack,
+  Separator,
+  type StackProps,
+  createListCollection,
+} from "@chakra-ui/react";
 import { useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -18,7 +23,7 @@ import Select from "~/ui/select";
 // Creatures Filters
 //------------------------------------------------------------------------------
 
-export default function CreaturesFilters() {
+export default function CreaturesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
   const [filters, setFilters] = creaturesStore.useFilters();
 
@@ -44,9 +49,8 @@ export default function CreaturesFilters() {
   const sizeOptions = useCreatureSizeOptions();
 
   return (
-    <HStack>
+    <HStack {...props}>
       <Select
-        minW="13.5em"
         onValueChange={(value) => {
           const [order_by, order_dir] = value.split(".") as [
             CreatureFilters["order_by"],
@@ -57,11 +61,13 @@ export default function CreaturesFilters() {
         options={orderOptions}
         size="sm"
         value={`${filters.order_by}.${filters.order_dir}`}
+        w="13.5em"
       />
 
       <Separator h="1.5em" orientation="vertical" />
 
       <Input
+        groupProps={{ w: "auto" }}
         id="filter-creature-name"
         onValueChange={setTempNameFilter}
         placeholder={t("name")}
@@ -94,22 +100,26 @@ export default function CreaturesFilters() {
         {t("habitats")}
       </InclusionSelect>
 
-      <NumberInput
-        inputProps={{ minW: "5em" }}
-        max={filters.cr_max}
-        min={0}
-        onValueChange={(value) => setFilters({ cr_min: value })}
-        size="sm"
-        value={filters.cr_min}
-      />
+      <HStack>
+        <NumberInput
+          inputProps={{ minW: "4em" }}
+          max={filters.cr_max}
+          min={0}
+          onValueChange={(value) => setFilters({ cr_min: value })}
+          size="sm"
+          value={filters.cr_min}
+          w="4em"
+        />
 
-      <NumberInput
-        inputProps={{ minW: "5em" }}
-        min={filters.cr_min}
-        onValueChange={(value) => setFilters({ cr_max: value })}
-        size="sm"
-        value={filters.cr_max}
-      />
+        <NumberInput
+          inputProps={{ minW: "4em" }}
+          min={filters.cr_min}
+          onValueChange={(value) => setFilters({ cr_max: value })}
+          size="sm"
+          value={filters.cr_max}
+          w="4em"
+        />
+      </HStack>
 
       <InclusionSelect
         includes={filters.alignment ?? {}}

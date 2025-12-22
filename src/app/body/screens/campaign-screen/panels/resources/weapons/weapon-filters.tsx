@@ -1,4 +1,9 @@
-import { HStack, Separator, createListCollection } from "@chakra-ui/react";
+import {
+  HStack,
+  Separator,
+  type StackProps,
+  createListCollection,
+} from "@chakra-ui/react";
 import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
 import { useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
@@ -18,7 +23,7 @@ import Select from "~/ui/select";
 // Weapons Filters
 //------------------------------------------------------------------------------
 
-export default function WeaponsFilters() {
+export default function WeaponsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
   const [filters, setFilters] = weaponsStore.useFilters();
 
@@ -42,7 +47,7 @@ export default function WeaponsFilters() {
   const masteryOptions = useWeaponMasteryOptions();
 
   return (
-    <HStack>
+    <HStack {...props}>
       <Select
         minW="13.5em"
         onValueChange={(value) => {
@@ -55,11 +60,13 @@ export default function WeaponsFilters() {
         options={orderOptions}
         size="sm"
         value={`${filters.order_by}.${filters.order_dir}`}
+        w="13.5em"
       />
 
       <Separator h="1.5em" orientation="vertical" />
 
       <Input
+        groupProps={{ w: "auto" }}
         id="filter-weapon-name"
         onValueChange={setTempNameFilter}
         placeholder={t("name")}
