@@ -79,8 +79,8 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
       {/* Basic Information */}
       <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorName defaultName={resource.name[lang] ?? ""} />
-        <CreatureEditorVisibility defaultVisibility={resource.visibility} />
         <CreatureEditorCR defaultCR={resource.cr} />
+        <CreatureEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 
       {/* Type and Basic Stats */}
