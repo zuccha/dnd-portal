@@ -18,5 +18,5 @@ export function translateNumber(
   lang: I18nLang,
   fallback: number = 0,
 ): number {
-  return i18nNumber[lang] ?? i18nNumber["en"] ?? fallback;
+  return i18nNumber[lang] ?? fallback;
 }
