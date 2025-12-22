@@ -58,47 +58,28 @@ export default function EldritchInvocationEditor({
 }
 
 //------------------------------------------------------------------------------
-// Eldritch Invocation Editor Name
+// Description
 //------------------------------------------------------------------------------
 
-function EldritchInvocationEditorName({
-  defaultName,
+function EldritchInvocationEditorDescription({
+  defaultDescription,
 }: {
-  defaultName: string;
+  defaultDescription: string;
 }) {
-  const { error, ...rest } = useEldritchInvocationEditorFormName(defaultName);
+  const { error, ...rest } =
+    useEldritchInvocationEditorFormDescription(defaultDescription);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    <Field error={message} label={t("description.label")}>
+      <Textarea placeholder={t("description.placeholder")} rows={5} {...rest} />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// Eldritch Invocation Editor Page
-//------------------------------------------------------------------------------
-
-function EldritchInvocationEditorPage({
-  defaultPage,
-}: {
-  defaultPage: number;
-}) {
-  const { error, ...rest } = useEldritchInvocationEditorFormPage(defaultPage);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Eldritch Invocation Editor Level
+// Level
 //------------------------------------------------------------------------------
 
 function EldritchInvocationEditorMinWarlockLevel({
@@ -128,29 +109,47 @@ function EldritchInvocationEditorMinWarlockLevel({
 }
 
 //------------------------------------------------------------------------------
-// Eldritch Invocation Editor Visibility
+// Name
 //------------------------------------------------------------------------------
 
-function EldritchInvocationEditorVisibility({
-  defaultVisibility,
+function EldritchInvocationEditorName({
+  defaultName,
 }: {
-  defaultVisibility: EldritchInvocation["visibility"];
+  defaultName: string;
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
-  const { error, ...rest } =
-    useEldritchInvocationEditorFormVisibility(defaultVisibility);
+  const { error, ...rest } = useEldritchInvocationEditorFormName(defaultName);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+    <Field error={message} label={t("name.label")}>
+      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// Eldritch Invocation Editor Prerequisite
+// Page
+//------------------------------------------------------------------------------
+
+function EldritchInvocationEditorPage({
+  defaultPage,
+}: {
+  defaultPage: number;
+}) {
+  const { error, ...rest } = useEldritchInvocationEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput {...rest} w="6em" />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Prerequisite
 //------------------------------------------------------------------------------
 
 function EldritchInvocationEditorPrerequisite({
@@ -175,22 +174,23 @@ function EldritchInvocationEditorPrerequisite({
 }
 
 //------------------------------------------------------------------------------
-// Eldritch Invocation Editor Description
+// Visibility
 //------------------------------------------------------------------------------
 
-function EldritchInvocationEditorDescription({
-  defaultDescription,
+function EldritchInvocationEditorVisibility({
+  defaultVisibility,
 }: {
-  defaultDescription: string;
+  defaultVisibility: EldritchInvocation["visibility"];
 }) {
+  const visibilityOptions = useListCollection(useCampaignRoleOptions());
   const { error, ...rest } =
-    useEldritchInvocationEditorFormDescription(defaultDescription);
+    useEldritchInvocationEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("description.label")}>
-      <Textarea placeholder={t("description.placeholder")} rows={5} {...rest} />
+    <Field error={message} label={t("visibility.label")} maxW="10em">
+      <Select options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -200,78 +200,64 @@ function EldritchInvocationEditorDescription({
 //----------------------------------------------------------------------------
 
 const i18nContext = {
-  "form.error.invalid": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
+  "description.error.empty": {
+    en: "The description cannot be empty",
+    it: "La descrizione non può essere vuota",
   },
-
-  "form.error.invalid_translation": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-
-  "form.error.creation_failure": {
-    en: "Failed to create the eldritch invocation.",
-    it: "Errore durante la creazione.",
-  },
-
-  "form.error.update_failure": {
-    en: "Failed to update the eldritch invocation.",
-    it: "Errore durante il salvataggio.",
-  },
-
-  "name.label": {
-    en: "Name",
-    it: "Nome",
-  },
-
-  "name.placeholder": {
-    en: "E.g.: Witch Sight",
-    it: "Es: Vista Stregata",
-  },
-
-  "name.error.empty": {
-    en: "The name cannot be empty",
-    it: "Il nome non può essere vuoto",
-  },
-
-  "min_warlock_level.label": {
-    en: "Min. Lvl.",
-    it: "Lvl. Min.",
-  },
-
-  "visibility.label": {
-    en: "Visibility",
-    it: "Visibilità",
-  },
-
-  "page.label": {
-    en: "Page",
-    it: "Pagina",
-  },
-
-  "prerequisite.label": {
-    en: "Prerequisite",
-    it: "Prerequisito",
-  },
-
-  "prerequisite.placeholder": {
-    en: "None",
-    it: "Nessuno",
-  },
-
   "description.label": {
     en: "Description",
     it: "Descrizione",
   },
-
   "description.placeholder": {
     en: "E.g.: You have Truesight with a range of 30 feet.",
     it: "Es: Il warlock ottiene vista pure con un raggio di 9 metri.",
   },
-
-  "description.error.empty": {
-    en: "The description cannot be empty",
-    it: "La descrizione non può essere vuota",
+  "form.error.creation_failure": {
+    en: "Failed to create the eldritch invocation.",
+    it: "Errore durante la creazione.",
+  },
+  "form.error.invalid": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+  "form.error.invalid_translation": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+  "form.error.update_failure": {
+    en: "Failed to update the eldritch invocation.",
+    it: "Errore durante il salvataggio.",
+  },
+  "min_warlock_level.label": {
+    en: "Min. Lvl.",
+    it: "Lvl. Min.",
+  },
+  "name.error.empty": {
+    en: "The name cannot be empty",
+    it: "Il nome non può essere vuoto",
+  },
+  "name.label": {
+    en: "Name",
+    it: "Nome",
+  },
+  "name.placeholder": {
+    en: "E.g.: Witch Sight",
+    it: "Es: Vista Stregata",
+  },
+  "page.label": {
+    en: "Page",
+    it: "Pagina",
+  },
+  "prerequisite.label": {
+    en: "Prerequisite",
+    it: "Prerequisito",
+  },
+  "prerequisite.placeholder": {
+    en: "None",
+    it: "Nessuno",
+  },
+  "visibility.label": {
+    en: "Visibility",
+    it: "Visibilità",
   },
 };
