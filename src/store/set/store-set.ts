@@ -13,7 +13,9 @@ import type { Path, PathValue } from "../path";
 //------------------------------------------------------------------------------
 
 export type StoreSet<K, T> = {
-  keys: () => K[];
+  register: (key: K, defaultValue: T) => () => void;
+  registered: () => K[];
+  unregister: (key: K) => void;
 
   get: (key: K, defaultValue: T) => T;
   set: (key: K, defaultValue: T, update: StateUpdate<T>) => T;
@@ -107,10 +109,7 @@ export function createStoreSet<K, T>(
     createObservableSet<K, T>(id);
 
   const cache = initCache();
-
-  function keys(): K[] {
-    return [...cache.keys()];
-  }
+  const cacheCount = new Map<K, number>();
 
   function get(key: K, defaultValue: T): T {
     return cache.get(key) ?? defaultValue;
@@ -123,6 +122,27 @@ export function createStoreSet<K, T>(
     onCacheUpdate(key, value);
     notify(key, value);
     return value;
+  }
+
+  function unregister(key: K) {
+    const count = cacheCount.get(key) ?? 0;
+    if (count < 0) {
+      cache.delete(key);
+      cacheCount.delete(key);
+    } else {
+      cacheCount.set(key, count);
+    }
+  }
+
+  function register(key: K, defaultValue: T) {
+    const count = cacheCount.get(key) ?? 0;
+    if (count === 0) cache.set(key, defaultValue);
+    cacheCount.set(key, count + 1);
+    return () => unregister(key);
+  }
+
+  function registered(): K[] {
+    return [...cacheCount.keys()];
   }
 
   function getPath<P extends Path<T>>(
@@ -151,10 +171,10 @@ export function createStoreSet<K, T>(
 
   function useValue(key: K, defaultValue: T): T {
     const [value, setValue] = useState(() => get(key, defaultValue));
-    useLayoutEffect(
-      () => setValue(get(key, defaultValue)),
-      [defaultValue, key],
-    );
+    useLayoutEffect(() => {
+      setValue(get(key, defaultValue));
+      return register(key, defaultValue);
+    }, [defaultValue, key]);
     useLayoutEffect(() => subscribe(key, setValue), [key]);
     return value;
   }
@@ -217,7 +237,9 @@ export function createStoreSet<K, T>(
   }
 
   return {
-    keys,
+    register,
+    registered,
+    unregister,
 
     get,
     set,

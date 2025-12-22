@@ -45,7 +45,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   //----------------------------------------------------------------------------
 
   const {
-    keys: valueFields,
+    registered: valueFields,
     get: getValue,
     use: useValue,
   } = createMemoryStoreSet<keyof Fields, Fields[keyof Fields]>(
@@ -57,7 +57,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   //----------------------------------------------------------------------------
 
   const {
-    keys: errorFields,
+    registered: errorFields,
     get: getError,
     use: useError,
     subscribeAny: subscribeAnyError,
