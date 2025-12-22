@@ -61,6 +61,7 @@ function parseFormData(data: Partial<EldritchInvocationEditorFormFields>):
   const maybeTranslation = {
     description: data.description,
     name: data.name,
+    page: data.page || null,
     prerequisite: data.prerequisite,
   };
 

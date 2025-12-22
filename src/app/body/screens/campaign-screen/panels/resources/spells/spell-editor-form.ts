@@ -23,6 +23,7 @@ export const spellEditorFormFieldsSchema = z.object({
   material: z.boolean(),
   materials: z.string(),
   name: z.string(),
+  page: z.number(),
   range: spellRangeSchema,
   range_value_imp: z.string(),
   range_value_met: z.string(),

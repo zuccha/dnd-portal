@@ -10,6 +10,7 @@ export const eldritchInvocationEditorFormFieldsSchema = z.object({
   description: z.string(),
   min_warlock_level: z.number(),
   name: z.string(),
+  page: z.number(),
   prerequisite: z.string(),
   visibility: campaignRoleSchema,
 });

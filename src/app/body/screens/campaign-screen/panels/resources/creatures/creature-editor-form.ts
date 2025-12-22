@@ -43,6 +43,7 @@ export const creatureEditorFormFieldsSchema = z.object({
   languages: z.string(),
   legendary_actions: z.string(),
   name: z.string(),
+  page: z.number(),
   passive_perception: z.string(),
   planes: z.string(),
   reactions: z.string(),

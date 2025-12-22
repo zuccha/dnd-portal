@@ -21,6 +21,7 @@ export const weaponEditorFormFieldsSchema = z.object({
   melee: z.boolean(),
   name: z.string(),
   notes: z.string(),
+  page: z.number(),
   properties: z.array(weaponPropertySchema),
   range_ft_long: z.number(),
   range_ft_short: z.number(),

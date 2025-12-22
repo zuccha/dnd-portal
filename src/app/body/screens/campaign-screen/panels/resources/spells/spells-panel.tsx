@@ -107,6 +107,7 @@ function parseFormData(
     description: data.description,
     materials: data.materials,
     name: data.name,
+    page: data.page || null,
     upgrade: data.upgrade,
   };
 

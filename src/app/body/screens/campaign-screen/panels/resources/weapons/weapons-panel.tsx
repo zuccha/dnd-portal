@@ -109,6 +109,7 @@ function parseFormData(
     ammunition: data.ammunition,
     name: data.name,
     notes: data.notes,
+    page: data.page || null,
   };
 
   const weapon = dbWeaponSchema.partial().safeParse(maybeWeapon);
