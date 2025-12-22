@@ -10,8 +10,6 @@ import { resourceFiltersSchema, resourceSchema } from "../resource";
 export const eldritchInvocationSchema = resourceSchema.extend({
   min_warlock_level: characterLevelSchema,
 
-  page: i18nStringSchema.nullish(),
-
   description: i18nStringSchema,
   prerequisite: i18nStringSchema,
 });
@@ -42,7 +40,7 @@ export const defaultEldritchInvocation: EldritchInvocation = {
 
   min_warlock_level: 0,
 
-  page: undefined,
+  page: {},
 
   description: {},
   name: {},

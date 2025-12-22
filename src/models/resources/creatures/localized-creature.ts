@@ -25,22 +25,19 @@ import {
   type DamageType,
   useTranslateDamageType,
 } from "../../types/damage-type";
+import {
+  localizedResourceSchema,
+  useLocalizeResource,
+} from "../localized-resource";
 import { type Creature, creatureSchema } from "./creature";
 
 //------------------------------------------------------------------------------
 // Localized Creature
 //------------------------------------------------------------------------------
 
-export const localizedCreatureSchema = z.object({
-  _raw: creatureSchema,
-
-  id: z.uuid(),
-  name: z.string(),
-  page: z.string(),
-
-  campaign: z.string(),
-  campaign_with_page: z.string(),
-
+export const localizedCreatureSchema = localizedResourceSchema(
+  creatureSchema,
+).extend({
   alignment: z.string(),
   habitats: z.string(),
   size: z.string(),
@@ -101,6 +98,7 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 export function useLocalizeCreature(): (
   creature: Creature,
 ) => LocalizedCreature {
+  const localizeResource = useLocalizeResource<Creature>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
@@ -117,9 +115,6 @@ export function useLocalizeCreature(): (
 
   return useCallback(
     (creature: Creature): LocalizedCreature => {
-      const name = translate(creature.name, lang) || t("name.missing");
-      const page = creature.page ? translate(creature.page, lang) : "";
-
       const size = translateCreatureSize(creature.size).label;
       const type = translateCreatureType(creature.type).label;
       const alignment = translateCreatureAlignment(creature.alignment).label;
@@ -357,17 +352,7 @@ export function useLocalizeCreature(): (
       const description = description_parts.join("\n\n");
 
       return {
-        _raw: creature,
-
-        id: creature.id,
-        name,
-        page: page ? ti("page", page) : "",
-
-        campaign: creature.campaign_name,
-        campaign_with_page:
-          page ?
-            ti("campaign_with_page", creature.campaign_name, page)
-          : creature.campaign_name,
+        ...localizeResource(creature),
 
         alignment,
         habitats: planes ? `${habitats} (${planes})` : habitats,
@@ -422,6 +407,7 @@ export function useLocalizeCreature(): (
     },
     [
       lang,
+      localizeResource,
       system,
       t,
       ti,
@@ -444,21 +430,6 @@ export function useLocalizeCreature(): (
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "name.missing": {
-    en: "<Untitled>",
-    it: "<Senza nome>",
-  },
-
-  "campaign_with_page": {
-    en: "<1> (p. <2>)", // 1 = campaign, 2 = page
-    it: "<1> (p. <2>)", // 1 = campaign, 2 = page
-  },
-
-  "page": {
-    en: "p. <1>", // 1 = page
-    it: "p. <1>", // 1 = page
-  },
-
   "cr_exp_pb": {
     en: "CR <1> (XP <2>, PB <3>)",
     it: "GS <1> (PE <2>, BC <3>)",

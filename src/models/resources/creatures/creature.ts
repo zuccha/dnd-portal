@@ -56,8 +56,6 @@ export const creatureSchema = resourceSchema.extend({
   condition_resistances: z.array(creatureConditionSchema),
   condition_vulnerabilities: z.array(creatureConditionSchema),
 
-  page: i18nStringSchema.nullish(),
-
   gear: i18nStringSchema,
   languages: i18nStringSchema,
   planes: i18nStringSchema,
@@ -147,7 +145,7 @@ export const defaultCreature: Creature = {
 
   name: {},
 
-  page: undefined,
+  page: {},
 
   gear: {},
   languages: {},

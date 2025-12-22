@@ -1,4 +1,5 @@
 import z from "zod";
+import { i18nNumberSchema } from "~/i18n/i18n-number";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { campaignRoleSchema } from "../types/campaign-role";
 
@@ -13,6 +14,8 @@ export const resourceSchema = z.object({
   campaign_name: z.string(),
 
   name: i18nStringSchema,
+
+  page: i18nNumberSchema.nullish(),
 
   visibility: campaignRoleSchema,
 });

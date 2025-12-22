@@ -18,8 +18,6 @@ import { resourceFiltersSchema, resourceSchema } from "../resource";
 //------------------------------------------------------------------------------
 
 export const spellSchema = resourceSchema.extend({
-  page: i18nStringSchema.nullish(),
-
   level: spellLevelSchema,
 
   character_classes: z.array(characterClassSchema),

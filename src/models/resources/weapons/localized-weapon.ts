@@ -8,21 +8,19 @@ import { useTranslateDamageType } from "../../types/damage-type";
 import { useTranslateWeaponMastery } from "../../types/weapon-mastery";
 import { useTranslateWeaponProperty } from "../../types/weapon-property";
 import { useTranslateWeaponType } from "../../types/weapon-type";
+import {
+  localizedResourceSchema,
+  useLocalizeResource,
+} from "../localized-resource";
 import { type Weapon, weaponSchema } from "./weapon";
 
 //------------------------------------------------------------------------------
 // Localized Weapon
 //------------------------------------------------------------------------------
 
-export const localizedWeaponSchema = z.object({
-  _raw: weaponSchema,
-  id: z.uuid(),
-
-  campaign: z.string(),
-  campaign_with_page: z.string(),
-  name: z.string(),
-  page: z.string(),
-
+export const localizedWeaponSchema = localizedResourceSchema(
+  weaponSchema,
+).extend({
   type: z.string(),
 
   damage: z.string(),
@@ -55,7 +53,8 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 //------------------------------------------------------------------------------
 
 export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const localizeResource = useLocalizeResource<Weapon>();
+  const { lang, ti } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateDamageType = useTranslateDamageType(lang);
@@ -65,8 +64,6 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
-      const page = weapon.page ? translate(weapon.page, lang) : "";
-
       const damage_type = translateDamageType(weapon.damage_type).label;
       const damage_versatile = weapon.damage_versatile ?? "0";
       const damage_extended = ti("damage_extended", weapon.damage, damage_type);
@@ -101,16 +98,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       const notes = translate(weapon.notes, lang);
 
       return {
-        _raw: weapon,
-        id: weapon.id,
-
-        campaign: weapon.campaign_name,
-        campaign_with_page:
-          page ?
-            ti("campaign_with_page", weapon.campaign_name, page)
-          : weapon.campaign_name,
-        name: translate(weapon.name, lang) || t("name.missing"),
-        page: page ? ti("page", page) : "",
+        ...localizeResource(weapon),
 
         type: translateWeaponType(weapon.type).label,
 
@@ -152,8 +140,8 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
     },
     [
       lang,
+      localizeResource,
       system,
-      t,
       ti,
       translateDamageType,
       translateWeaponMastery,
@@ -168,21 +156,6 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "name.missing": {
-    en: "<Untitled>",
-    it: "<Senza nome>",
-  },
-
-  "campaign_with_page": {
-    en: "<1> (p. <2>)", // 1 = campaign, 2 = page
-    it: "<1> (p. <2>)", // 1 = campaign, 2 = page
-  },
-
-  "page": {
-    en: "p. <1>", // 1 = page
-    it: "p. <1>", // 1 = page
-  },
-
   "damage_extended": {
     en: "<1> <2>", // 1 = damage value, 2 = damage type
     it: "<1> <2>", // 1 = damage value, 2 = damage type

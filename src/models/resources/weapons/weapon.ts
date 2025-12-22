@@ -37,7 +37,6 @@ export const weaponSchema = resourceSchema.extend({
   cost: z.number(),
 
   notes: i18nStringSchema,
-  page: i18nStringSchema.nullish(),
 });
 
 export type Weapon = z.infer<typeof weaponSchema>;
@@ -99,7 +98,7 @@ export const defaultWeapon: Weapon = {
 
   name: {},
   notes: {},
-  page: undefined,
+  page: {},
 
   visibility: "game_master",
 };

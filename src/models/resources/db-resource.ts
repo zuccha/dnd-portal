@@ -23,7 +23,7 @@ export const dbResourceTranslationSchema = z.object({
   lang: z.string(),
 
   name: z.string(),
-  page: z.string().nullish(),
+  page: z.number().nullish(),
 });
 
 export type DBResourceTranslation = z.infer<typeof dbResourceTranslationSchema>;
