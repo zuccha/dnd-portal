@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.eldritch_invocation_translations (
   name text DEFAULT ''::text NOT NULL,
   prerequisite text,
   description text DEFAULT ''::text NOT NULL,
-  page text,
+  page smallint,
   CONSTRAINT eldritch_invocation_translations_pkey PRIMARY KEY (eldritch_invocation_id, lang),
   CONSTRAINT eldritch_invocation_translations_eldritch_invocation_id_fkey FOREIGN KEY (eldritch_invocation_id) REFERENCES public.eldritch_invocations(id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT eldritch_invocation_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE

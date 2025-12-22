@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS public.spell_translations (
   spell_id uuid NOT NULL,
   lang text NOT NULL,
   name text NOT NULL,
-  page text,
+  page smallint,
   materials text,
   description text NOT NULL,
   upgrade text,

@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS public.weapon_translations (
   weapon_id uuid DEFAULT gen_random_uuid() NOT NULL,
   lang text NOT NULL,
   name text DEFAULT ''::text NOT NULL,
-  page text,
+  page smallint,
   notes text,
   ammunition text,
   CONSTRAINT weapon_translations_pkey PRIMARY KEY (weapon_id, lang),

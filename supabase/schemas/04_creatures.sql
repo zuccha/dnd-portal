@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS public.creature_translations (
   legendary_actions text,
   planes text,
   name text NOT NULL,
-  page text,
+  page smallint,
   languages text,
   CONSTRAINT creature_translations_pkey PRIMARY KEY (creature_id, lang),
   CONSTRAINT creature_translations_creature_id_fkey FOREIGN KEY (creature_id) REFERENCES public.creatures(id) ON UPDATE CASCADE ON DELETE CASCADE,
