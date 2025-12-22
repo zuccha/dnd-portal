@@ -190,7 +190,7 @@ function EldritchInvocationEditorDescription({
 
   return (
     <Field error={message} label={t("description.label")}>
-      <Textarea placeholder={t("description.placeholder")} {...rest} />
+      <Textarea placeholder={t("description.placeholder")} rows={5} {...rest} />
     </Field>
   );
 }

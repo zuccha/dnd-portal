@@ -451,7 +451,7 @@ function WeaponEditorNotes({ defaultNotes }: { defaultNotes: string }) {
 
   return (
     <Field error={message} label={t("notes.label")}>
-      <Textarea placeholder={t("notes.placeholder")} {...rest} />
+      <Textarea placeholder={t("notes.placeholder")} rows={5} {...rest} />
     </Field>
   );
 }
