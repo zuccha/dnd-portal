@@ -126,11 +126,11 @@ export function createStoreSet<K, T>(
 
   function unregister(key: K) {
     const count = cacheCount.get(key) ?? 0;
-    if (count < 0) {
+    if (count - 1 <= 0) {
       cache.delete(key);
       cacheCount.delete(key);
     } else {
-      cacheCount.set(key, count);
+      cacheCount.set(key, count - 1);
     }
   }
 
