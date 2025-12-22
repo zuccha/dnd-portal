@@ -1,6 +1,7 @@
 import {
   Input as ChakraInput,
   InputGroup,
+  type InputGroupProps,
   type InputProps as ChakraInputProps,
 } from "@chakra-ui/react";
 import { XIcon } from "lucide-react";
@@ -11,11 +12,17 @@ import IconButton from "./icon-button";
 //------------------------------------------------------------------------------
 
 export type InputProps = Omit<ChakraInputProps, "onChange" | "value"> & {
+  groupProps?: Omit<InputGroupProps, "children">;
   onValueChange?: (value: string) => void;
   value?: string;
 };
 
-export default function Input({ onValueChange, value, ...rest }: InputProps) {
+export default function Input({
+  groupProps,
+  onValueChange,
+  value,
+  ...rest
+}: InputProps) {
   return (
     <InputGroup
       endElement={
@@ -31,6 +38,7 @@ export default function Input({ onValueChange, value, ...rest }: InputProps) {
           />
         )
       }
+      {...groupProps}
     >
       <ChakraInput
         {...rest}
