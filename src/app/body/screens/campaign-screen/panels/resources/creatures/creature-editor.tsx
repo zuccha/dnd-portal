@@ -202,112 +202,137 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
 }
 
 //------------------------------------------------------------------------------
-// Name
+// Ability - Cha
 //------------------------------------------------------------------------------
 
-function CreatureEditorName({ defaultName }: { defaultName: string }) {
-  const { error, ...rest } = useCreatureEditorFormName(defaultName);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Page
-//------------------------------------------------------------------------------
-
-function CreatureEditorPage({ defaultPage }: { defaultPage: number }) {
-  const { error, ...rest } = useCreatureEditorFormPage(defaultPage);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Visibility
-//------------------------------------------------------------------------------
-
-function CreatureEditorVisibility({
-  defaultVisibility,
+function CreatureEditorAbilityCha({
+  defaultAbilityCha,
 }: {
-  defaultVisibility: Creature["visibility"];
+  defaultAbilityCha: number;
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
-  const { error, ...rest } = useCreatureEditorFormVisibility(defaultVisibility);
+  const { error, ...rest } = useCreatureEditorFormAbilityCha(defaultAbilityCha);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+    <Field error={message} label={t("ability_cha.label")}>
+      <NumberInput {...rest} />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// CR
+// Ability - Con
 //------------------------------------------------------------------------------
 
-function CreatureEditorCR({ defaultCR }: { defaultCR: number }) {
-  const { error, ...rest } = useCreatureEditorFormCR(defaultCR);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} flex={0} label={t("cr.label")}>
-      <NumberInput {...rest} inputProps={{ w: "5em" }} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Type
-//------------------------------------------------------------------------------
-
-function CreatureEditorType({
-  defaultType,
+function CreatureEditorAbilityCon({
+  defaultAbilityCon,
 }: {
-  defaultType: Creature["type"];
+  defaultAbilityCon: number;
 }) {
-  const typeOptions = useListCollection(useCreatureTypeOptions());
-  const { error, ...rest } = useCreatureEditorFormType(defaultType);
+  const { error, ...rest } = useCreatureEditorFormAbilityCon(defaultAbilityCon);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("type.label")}>
-      <Select options={typeOptions} withinDialog {...rest} />
+    <Field error={message} label={t("ability_con.label")}>
+      <NumberInput {...rest} />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// Size
+// Ability - Dex
 //------------------------------------------------------------------------------
 
-function CreatureEditorSize({
-  defaultSize,
+function CreatureEditorAbilityDex({
+  defaultAbilityDex,
 }: {
-  defaultSize: Creature["size"];
+  defaultAbilityDex: number;
 }) {
-  const sizeOptions = useListCollection(useCreatureSizeOptions());
-  const { error, ...rest } = useCreatureEditorFormSize(defaultSize);
+  const { error, ...rest } = useCreatureEditorFormAbilityDex(defaultAbilityDex);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("size.label")}>
-      <Select options={sizeOptions} withinDialog {...rest} />
+    <Field error={message} label={t("ability_dex.label")}>
+      <NumberInput {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Ability - Int
+//------------------------------------------------------------------------------
+
+function CreatureEditorAbilityInt({
+  defaultAbilityInt,
+}: {
+  defaultAbilityInt: number;
+}) {
+  const { error, ...rest } = useCreatureEditorFormAbilityInt(defaultAbilityInt);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("ability_int.label")}>
+      <NumberInput {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Ability - Str
+//------------------------------------------------------------------------------
+
+function CreatureEditorAbilityStr({
+  defaultAbilityStr,
+}: {
+  defaultAbilityStr: number;
+}) {
+  const { error, ...rest } = useCreatureEditorFormAbilityStr(defaultAbilityStr);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("ability_str.label")}>
+      <NumberInput {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Ability - Wis
+//------------------------------------------------------------------------------
+
+function CreatureEditorAbilityWis({
+  defaultAbilityWis,
+}: {
+  defaultAbilityWis: number;
+}) {
+  const { error, ...rest } = useCreatureEditorFormAbilityWis(defaultAbilityWis);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("ability_wis.label")}>
+      <NumberInput {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// AC
+//------------------------------------------------------------------------------
+
+function CreatureEditorAC({ defaultAC }: { defaultAC: string }) {
+  const { error, ...rest } = useCreatureEditorFormAC(defaultAC);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("ac.label")}>
+      <Input autoComplete="off" placeholder={t("ac.placeholder")} {...rest} />
     </Field>
   );
 }
@@ -329,6 +354,315 @@ function CreatureEditorAlignment({
   return (
     <Field error={message} label={t("alignment.label")}>
       <Select options={alignmentOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Condition Immunities
+//------------------------------------------------------------------------------
+
+function CreatureEditorConditionImmunities({
+  defaultConditionImmunities,
+}: {
+  defaultConditionImmunities: Creature["condition_immunities"];
+}) {
+  const conditionOptions = useListCollection(useCreatureConditionOptions());
+  const { error, ...rest } = useCreatureEditorFormConditionImmunities(
+    defaultConditionImmunities,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("condition_immunities.label")}>
+      <Select
+        multiple
+        options={conditionOptions}
+        placeholder={t("condition_immunities.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Condition Resistances
+//------------------------------------------------------------------------------
+
+function CreatureEditorConditionResistances({
+  defaultConditionResistances,
+}: {
+  defaultConditionResistances: Creature["condition_resistances"];
+}) {
+  const conditionOptions = useListCollection(useCreatureConditionOptions());
+  const { error, ...rest } = useCreatureEditorFormConditionResistances(
+    defaultConditionResistances,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("condition_resistances.label")}>
+      <Select
+        multiple
+        options={conditionOptions}
+        placeholder={t("condition_resistances.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Condition Vulnerabilities
+//------------------------------------------------------------------------------
+
+function CreatureEditorConditionVulnerabilities({
+  defaultConditionVulnerabilities,
+}: {
+  defaultConditionVulnerabilities: Creature["condition_vulnerabilities"];
+}) {
+  const conditionOptions = useListCollection(useCreatureConditionOptions());
+  const { error, ...rest } = useCreatureEditorFormConditionVulnerabilities(
+    defaultConditionVulnerabilities,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("condition_vulnerabilities.label")}>
+      <Select
+        multiple
+        options={conditionOptions}
+        placeholder={t("condition_vulnerabilities.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// CR
+//------------------------------------------------------------------------------
+
+function CreatureEditorCR({ defaultCR }: { defaultCR: number }) {
+  const { error, ...rest } = useCreatureEditorFormCR(defaultCR);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} flex={0} label={t("cr.label")}>
+      <NumberInput {...rest} inputProps={{ w: "5em" }} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Damage Immunities
+//------------------------------------------------------------------------------
+
+function CreatureEditorDamageImmunities({
+  defaultDamageImmunities,
+}: {
+  defaultDamageImmunities: Creature["damage_immunities"];
+}) {
+  const damageTypeOptions = useListCollection(useDamageTypeOptions());
+  const { error, ...rest } = useCreatureEditorFormDamageImmunities(
+    defaultDamageImmunities,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("damage_immunities.label")}>
+      <Select
+        multiple
+        options={damageTypeOptions}
+        placeholder={t("damage_immunities.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Damage Resistances
+//------------------------------------------------------------------------------
+
+function CreatureEditorDamageResistances({
+  defaultDamageResistances,
+}: {
+  defaultDamageResistances: Creature["damage_resistances"];
+}) {
+  const damageTypeOptions = useListCollection(useDamageTypeOptions());
+  const { error, ...rest } = useCreatureEditorFormDamageResistances(
+    defaultDamageResistances,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("damage_resistances.label")}>
+      <Select
+        multiple
+        options={damageTypeOptions}
+        placeholder={t("damage_resistances.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Damage Vulnerabilities
+//------------------------------------------------------------------------------
+
+function CreatureEditorDamageVulnerabilities({
+  defaultDamageVulnerabilities,
+}: {
+  defaultDamageVulnerabilities: Creature["damage_vulnerabilities"];
+}) {
+  const damageTypeOptions = useListCollection(useDamageTypeOptions());
+  const { error, ...rest } = useCreatureEditorFormDamageVulnerabilities(
+    defaultDamageVulnerabilities,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("damage_vulnerabilities.label")}>
+      <Select
+        multiple
+        options={damageTypeOptions}
+        placeholder={t("damage_vulnerabilities.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Features - Actions
+//------------------------------------------------------------------------------
+
+function CreatureEditorActions({ defaultActions }: { defaultActions: string }) {
+  const { error, ...rest } = useCreatureEditorFormActions(defaultActions);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("actions.label")}>
+      <Textarea placeholder={t("actions.placeholder")} rows={5} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Features - Bonus Actions
+//------------------------------------------------------------------------------
+
+function CreatureEditorBonusActions({
+  defaultBonusActions,
+}: {
+  defaultBonusActions: string;
+}) {
+  const { error, ...rest } =
+    useCreatureEditorFormBonusActions(defaultBonusActions);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("bonus_actions.label")}>
+      <Textarea
+        placeholder={t("bonus_actions.placeholder")}
+        rows={5}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Features - Legendary Actions
+//------------------------------------------------------------------------------
+
+function CreatureEditorLegendaryActions({
+  defaultLegendaryActions,
+}: {
+  defaultLegendaryActions: string;
+}) {
+  const { error, ...rest } = useCreatureEditorFormLegendaryActions(
+    defaultLegendaryActions,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("legendary_actions.label")}>
+      <Textarea
+        placeholder={t("legendary_actions.placeholder")}
+        rows={5}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Features - Reactions
+//------------------------------------------------------------------------------
+
+function CreatureEditorReactions({
+  defaultReactions,
+}: {
+  defaultReactions: string;
+}) {
+  const { error, ...rest } = useCreatureEditorFormReactions(defaultReactions);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("reactions.label")}>
+      <Textarea placeholder={t("reactions.placeholder")} rows={5} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Features - Traits
+//------------------------------------------------------------------------------
+
+function CreatureEditorTraits({ defaultTraits }: { defaultTraits: string }) {
+  const { error, ...rest } = useCreatureEditorFormTraits(defaultTraits);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("traits.label")}>
+      <Textarea placeholder={t("traits.placeholder")} rows={5} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Gear
+//------------------------------------------------------------------------------
+
+function CreatureEditorGear({ defaultGear }: { defaultGear: string }) {
+  const { error, ...rest } = useCreatureEditorFormGear(defaultGear);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("gear.label")}>
+      <Input placeholder={t("gear.placeholder")} {...rest} />
     </Field>
   );
 }
@@ -356,66 +690,6 @@ function CreatureEditorHabitats({
         withinDialog
         {...rest}
       />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Planes
-//------------------------------------------------------------------------------
-
-function CreatureEditorPlanes({ defaultPlanes }: { defaultPlanes: string }) {
-  const { error, ...rest } = useCreatureEditorFormPlanes(defaultPlanes);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("planes.label")}>
-      <Input placeholder={t("planes.placeholder")} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Treasures
-//------------------------------------------------------------------------------
-
-function CreatureEditorTreasures({
-  defaultTreasures,
-}: {
-  defaultTreasures: Creature["treasures"];
-}) {
-  const treasureOptions = useListCollection(useCreatureTreasureOptions());
-
-  const { error, ...rest } = useCreatureEditorFormTreasures(defaultTreasures);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("treasures.label")}>
-      <Select
-        multiple
-        options={treasureOptions}
-        placeholder={t("treasures.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// AC
-//------------------------------------------------------------------------------
-
-function CreatureEditorAC({ defaultAC }: { defaultAC: string }) {
-  const { error, ...rest } = useCreatureEditorFormAC(defaultAC);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ac.label")}>
-      <Input autoComplete="off" placeholder={t("ac.placeholder")} {...rest} />
     </Field>
   );
 }
@@ -511,6 +785,58 @@ function CreatureEditorInitiativePassive({
 }
 
 //------------------------------------------------------------------------------
+// Languages
+//------------------------------------------------------------------------------
+
+function CreatureEditorLanguages({
+  defaultLanguages,
+}: {
+  defaultLanguages: string;
+}) {
+  const { error, ...rest } = useCreatureEditorFormLanguages(defaultLanguages);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("languages.label")}>
+      <Input placeholder={t("languages.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Name
+//------------------------------------------------------------------------------
+
+function CreatureEditorName({ defaultName }: { defaultName: string }) {
+  const { error, ...rest } = useCreatureEditorFormName(defaultName);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("name.label")}>
+      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+function CreatureEditorPage({ defaultPage }: { defaultPage: number }) {
+  const { error, ...rest } = useCreatureEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput {...rest} w="6em" />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Passive Perception
 //------------------------------------------------------------------------------
 
@@ -537,228 +863,23 @@ function CreatureEditorPassivePerception({
 }
 
 //------------------------------------------------------------------------------
-// Speed Walk
+// Planes
 //------------------------------------------------------------------------------
 
-function CreatureEditorSpeedWalk({
-  defaultSpeedWalk,
-}: {
-  defaultSpeedWalk: string;
-}) {
-  const { error, ...rest } = useCreatureEditorFormSpeedWalk(defaultSpeedWalk);
+function CreatureEditorPlanes({ defaultPlanes }: { defaultPlanes: string }) {
+  const { error, ...rest } = useCreatureEditorFormPlanes(defaultPlanes);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("speed_walk.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
+    <Field error={message} label={t("planes.label")}>
+      <Input placeholder={t("planes.placeholder")} {...rest} />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// Speed Fly
-//------------------------------------------------------------------------------
-
-function CreatureEditorSpeedFly({
-  defaultSpeedFly,
-}: {
-  defaultSpeedFly: string;
-}) {
-  const { error, ...rest } = useCreatureEditorFormSpeedFly(defaultSpeedFly);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("speed_fly.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Speed Swim
-//------------------------------------------------------------------------------
-
-function CreatureEditorSpeedSwim({
-  defaultSpeedSwim,
-}: {
-  defaultSpeedSwim: string;
-}) {
-  const { error, ...rest } = useCreatureEditorFormSpeedSwim(defaultSpeedSwim);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("speed_swim.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Speed Climb
-//------------------------------------------------------------------------------
-
-function CreatureEditorSpeedClimb({
-  defaultSpeedClimb,
-}: {
-  defaultSpeedClimb: string;
-}) {
-  const { error, ...rest } = useCreatureEditorFormSpeedClimb(defaultSpeedClimb);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("speed_climb.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Speed Burrow
-//------------------------------------------------------------------------------
-
-function CreatureEditorSpeedBurrow({
-  defaultSpeedBurrow,
-}: {
-  defaultSpeedBurrow: string;
-}) {
-  const { error, ...rest } =
-    useCreatureEditorFormSpeedBurrow(defaultSpeedBurrow);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("speed_burrow.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Ability Scores
-//------------------------------------------------------------------------------
-
-function CreatureEditorAbilityStr({
-  defaultAbilityStr,
-}: {
-  defaultAbilityStr: number;
-}) {
-  const { error, ...rest } = useCreatureEditorFormAbilityStr(defaultAbilityStr);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ability_str.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function CreatureEditorAbilityDex({
-  defaultAbilityDex,
-}: {
-  defaultAbilityDex: number;
-}) {
-  const { error, ...rest } = useCreatureEditorFormAbilityDex(defaultAbilityDex);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ability_dex.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function CreatureEditorAbilityCon({
-  defaultAbilityCon,
-}: {
-  defaultAbilityCon: number;
-}) {
-  const { error, ...rest } = useCreatureEditorFormAbilityCon(defaultAbilityCon);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ability_con.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function CreatureEditorAbilityInt({
-  defaultAbilityInt,
-}: {
-  defaultAbilityInt: number;
-}) {
-  const { error, ...rest } = useCreatureEditorFormAbilityInt(defaultAbilityInt);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ability_int.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function CreatureEditorAbilityWis({
-  defaultAbilityWis,
-}: {
-  defaultAbilityWis: number;
-}) {
-  const { error, ...rest } = useCreatureEditorFormAbilityWis(defaultAbilityWis);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ability_wis.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function CreatureEditorAbilityCha({
-  defaultAbilityCha,
-}: {
-  defaultAbilityCha: number;
-}) {
-  const { error, ...rest } = useCreatureEditorFormAbilityCha(defaultAbilityCha);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ability_cha.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Ability Proficiencies
+// Proficiencies - Ability Proficiencies
 //------------------------------------------------------------------------------
 
 function CreatureEditorAbilityProficiencies({
@@ -787,7 +908,7 @@ function CreatureEditorAbilityProficiencies({
 }
 
 //------------------------------------------------------------------------------
-// Skill Expertise
+// Proficiencies - Skill Expertise
 //------------------------------------------------------------------------------
 
 function CreatureEditorSkillExpertise({
@@ -816,7 +937,7 @@ function CreatureEditorSkillExpertise({
 }
 
 //------------------------------------------------------------------------------
-// Skill Proficiencies
+// Proficiencies - Skill Proficiencies
 //------------------------------------------------------------------------------
 
 function CreatureEditorSkillProficiencies({
@@ -845,216 +966,6 @@ function CreatureEditorSkillProficiencies({
 }
 
 //------------------------------------------------------------------------------
-// Damage Immunities
-//------------------------------------------------------------------------------
-
-function CreatureEditorDamageImmunities({
-  defaultDamageImmunities,
-}: {
-  defaultDamageImmunities: Creature["damage_immunities"];
-}) {
-  const damageTypeOptions = useListCollection(useDamageTypeOptions());
-  const { error, ...rest } = useCreatureEditorFormDamageImmunities(
-    defaultDamageImmunities,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("damage_immunities.label")}>
-      <Select
-        multiple
-        options={damageTypeOptions}
-        placeholder={t("damage_immunities.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Damage Resistances
-//------------------------------------------------------------------------------
-
-function CreatureEditorDamageResistances({
-  defaultDamageResistances,
-}: {
-  defaultDamageResistances: Creature["damage_resistances"];
-}) {
-  const damageTypeOptions = useListCollection(useDamageTypeOptions());
-  const { error, ...rest } = useCreatureEditorFormDamageResistances(
-    defaultDamageResistances,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("damage_resistances.label")}>
-      <Select
-        multiple
-        options={damageTypeOptions}
-        placeholder={t("damage_resistances.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Damage Vulnerabilities
-//------------------------------------------------------------------------------
-
-function CreatureEditorDamageVulnerabilities({
-  defaultDamageVulnerabilities,
-}: {
-  defaultDamageVulnerabilities: Creature["damage_vulnerabilities"];
-}) {
-  const damageTypeOptions = useListCollection(useDamageTypeOptions());
-  const { error, ...rest } = useCreatureEditorFormDamageVulnerabilities(
-    defaultDamageVulnerabilities,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("damage_vulnerabilities.label")}>
-      <Select
-        multiple
-        options={damageTypeOptions}
-        placeholder={t("damage_vulnerabilities.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Condition Immunities
-//------------------------------------------------------------------------------
-
-function CreatureEditorConditionImmunities({
-  defaultConditionImmunities,
-}: {
-  defaultConditionImmunities: Creature["condition_immunities"];
-}) {
-  const conditionOptions = useListCollection(useCreatureConditionOptions());
-  const { error, ...rest } = useCreatureEditorFormConditionImmunities(
-    defaultConditionImmunities,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("condition_immunities.label")}>
-      <Select
-        multiple
-        options={conditionOptions}
-        placeholder={t("condition_immunities.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Condition Resistances
-//------------------------------------------------------------------------------
-
-function CreatureEditorConditionResistances({
-  defaultConditionResistances,
-}: {
-  defaultConditionResistances: Creature["condition_resistances"];
-}) {
-  const conditionOptions = useListCollection(useCreatureConditionOptions());
-  const { error, ...rest } = useCreatureEditorFormConditionResistances(
-    defaultConditionResistances,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("condition_resistances.label")}>
-      <Select
-        multiple
-        options={conditionOptions}
-        placeholder={t("condition_resistances.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Condition Vulnerabilities
-//------------------------------------------------------------------------------
-
-function CreatureEditorConditionVulnerabilities({
-  defaultConditionVulnerabilities,
-}: {
-  defaultConditionVulnerabilities: Creature["condition_vulnerabilities"];
-}) {
-  const conditionOptions = useListCollection(useCreatureConditionOptions());
-  const { error, ...rest } = useCreatureEditorFormConditionVulnerabilities(
-    defaultConditionVulnerabilities,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("condition_vulnerabilities.label")}>
-      <Select
-        multiple
-        options={conditionOptions}
-        placeholder={t("condition_vulnerabilities.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Gear
-//------------------------------------------------------------------------------
-
-function CreatureEditorGear({ defaultGear }: { defaultGear: string }) {
-  const { error, ...rest } = useCreatureEditorFormGear(defaultGear);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("gear.label")}>
-      <Input placeholder={t("gear.placeholder")} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Languages
-//------------------------------------------------------------------------------
-
-function CreatureEditorLanguages({
-  defaultLanguages,
-}: {
-  defaultLanguages: string;
-}) {
-  const { error, ...rest } = useCreatureEditorFormLanguages(defaultLanguages);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("languages.label")}>
-      <Input placeholder={t("languages.placeholder")} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
 // Senses
 //------------------------------------------------------------------------------
 
@@ -1071,56 +982,45 @@ function CreatureEditorSenses({ defaultSenses }: { defaultSenses: string }) {
 }
 
 //------------------------------------------------------------------------------
-// Traits
+// Size
 //------------------------------------------------------------------------------
 
-function CreatureEditorTraits({ defaultTraits }: { defaultTraits: string }) {
-  const { error, ...rest } = useCreatureEditorFormTraits(defaultTraits);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("traits.label")}>
-      <Textarea placeholder={t("traits.placeholder")} rows={5} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Actions
-//------------------------------------------------------------------------------
-
-function CreatureEditorActions({ defaultActions }: { defaultActions: string }) {
-  const { error, ...rest } = useCreatureEditorFormActions(defaultActions);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("actions.label")}>
-      <Textarea placeholder={t("actions.placeholder")} rows={5} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Bonus Actions
-//------------------------------------------------------------------------------
-
-function CreatureEditorBonusActions({
-  defaultBonusActions,
+function CreatureEditorSize({
+  defaultSize,
 }: {
-  defaultBonusActions: string;
+  defaultSize: Creature["size"];
+}) {
+  const sizeOptions = useListCollection(useCreatureSizeOptions());
+  const { error, ...rest } = useCreatureEditorFormSize(defaultSize);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("size.label")}>
+      <Select options={sizeOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Speed - Burrow
+//------------------------------------------------------------------------------
+
+function CreatureEditorSpeedBurrow({
+  defaultSpeedBurrow,
+}: {
+  defaultSpeedBurrow: string;
 }) {
   const { error, ...rest } =
-    useCreatureEditorFormBonusActions(defaultBonusActions);
+    useCreatureEditorFormSpeedBurrow(defaultSpeedBurrow);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("bonus_actions.label")}>
-      <Textarea
-        placeholder={t("bonus_actions.placeholder")}
-        rows={5}
+    <Field error={message} label={t("speed_burrow.label")}>
+      <Input
+        autoComplete="off"
+        placeholder={t("speed.placeholder")}
         {...rest}
       />
     </Field>
@@ -1128,47 +1028,167 @@ function CreatureEditorBonusActions({
 }
 
 //------------------------------------------------------------------------------
-// Reactions
+// Speed - Climb
 //------------------------------------------------------------------------------
 
-function CreatureEditorReactions({
-  defaultReactions,
+function CreatureEditorSpeedClimb({
+  defaultSpeedClimb,
 }: {
-  defaultReactions: string;
+  defaultSpeedClimb: string;
 }) {
-  const { error, ...rest } = useCreatureEditorFormReactions(defaultReactions);
+  const { error, ...rest } = useCreatureEditorFormSpeedClimb(defaultSpeedClimb);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("reactions.label")}>
-      <Textarea placeholder={t("reactions.placeholder")} rows={5} {...rest} />
+    <Field error={message} label={t("speed_climb.label")}>
+      <Input
+        autoComplete="off"
+        placeholder={t("speed.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// Legendary Actions
+// Speed - Fly
 //------------------------------------------------------------------------------
 
-function CreatureEditorLegendaryActions({
-  defaultLegendaryActions,
+function CreatureEditorSpeedFly({
+  defaultSpeedFly,
 }: {
-  defaultLegendaryActions: string;
+  defaultSpeedFly: string;
 }) {
-  const { error, ...rest } = useCreatureEditorFormLegendaryActions(
-    defaultLegendaryActions,
-  );
+  const { error, ...rest } = useCreatureEditorFormSpeedFly(defaultSpeedFly);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("legendary_actions.label")}>
-      <Textarea
-        placeholder={t("legendary_actions.placeholder")}
-        rows={5}
+    <Field error={message} label={t("speed_fly.label")}>
+      <Input
+        autoComplete="off"
+        placeholder={t("speed.placeholder")}
         {...rest}
       />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Speed - Swim
+//------------------------------------------------------------------------------
+
+function CreatureEditorSpeedSwim({
+  defaultSpeedSwim,
+}: {
+  defaultSpeedSwim: string;
+}) {
+  const { error, ...rest } = useCreatureEditorFormSpeedSwim(defaultSpeedSwim);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("speed_swim.label")}>
+      <Input
+        autoComplete="off"
+        placeholder={t("speed.placeholder")}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Speed - Walk
+//------------------------------------------------------------------------------
+
+function CreatureEditorSpeedWalk({
+  defaultSpeedWalk,
+}: {
+  defaultSpeedWalk: string;
+}) {
+  const { error, ...rest } = useCreatureEditorFormSpeedWalk(defaultSpeedWalk);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("speed_walk.label")}>
+      <Input
+        autoComplete="off"
+        placeholder={t("speed.placeholder")}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Treasures
+//------------------------------------------------------------------------------
+
+function CreatureEditorTreasures({
+  defaultTreasures,
+}: {
+  defaultTreasures: Creature["treasures"];
+}) {
+  const treasureOptions = useListCollection(useCreatureTreasureOptions());
+
+  const { error, ...rest } = useCreatureEditorFormTreasures(defaultTreasures);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("treasures.label")}>
+      <Select
+        multiple
+        options={treasureOptions}
+        placeholder={t("treasures.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Type
+//------------------------------------------------------------------------------
+
+function CreatureEditorType({
+  defaultType,
+}: {
+  defaultType: Creature["type"];
+}) {
+  const typeOptions = useListCollection(useCreatureTypeOptions());
+  const { error, ...rest } = useCreatureEditorFormType(defaultType);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("type.label")}>
+      <Select options={typeOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Visibility
+//------------------------------------------------------------------------------
+
+function CreatureEditorVisibility({
+  defaultVisibility,
+}: {
+  defaultVisibility: Creature["visibility"];
+}) {
+  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const { error, ...rest } = useCreatureEditorFormVisibility(defaultVisibility);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("visibility.label")} maxW="10em">
+      <Select options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }
