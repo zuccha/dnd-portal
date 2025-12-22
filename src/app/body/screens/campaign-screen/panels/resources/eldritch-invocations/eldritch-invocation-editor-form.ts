@@ -74,6 +74,14 @@ export const useEldritchInvocationEditorFormName = (defaultName: string) =>
   useEldritchInvocationEditorFormField("name", defaultName, validateName);
 
 //------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+export const useEldritchInvocationEditorFormPage = (
+  defaultPage: EldritchInvocationEditorFormFields["page"],
+) => useEldritchInvocationEditorFormField("page", defaultPage);
+
+//------------------------------------------------------------------------------
 // Prerequisite
 //------------------------------------------------------------------------------
 

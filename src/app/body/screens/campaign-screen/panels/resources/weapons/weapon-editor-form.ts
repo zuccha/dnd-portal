@@ -141,6 +141,14 @@ export const useWeaponEditorFormNotes = (
 ) => useWeaponEditorFormField("notes", defaultNotes);
 
 //------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+export const useWeaponEditorFormPage = (
+  defaultPage: WeaponEditorFormFields["page"],
+) => useWeaponEditorFormField("page", defaultPage);
+
+//------------------------------------------------------------------------------
 // Properties
 //------------------------------------------------------------------------------
 

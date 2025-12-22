@@ -22,6 +22,7 @@ import { useSpellSchoolOptions } from "~/models/types/spell-school";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
 import MeasureInput from "~/ui/measure-input";
+import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Switch from "~/ui/switch";
 import Textarea from "~/ui/textarea";
@@ -36,6 +37,7 @@ import {
   useSpellEditorFormLevel,
   useSpellEditorFormMaterials,
   useSpellEditorFormName,
+  useSpellEditorFormPage,
   useSpellEditorFormRange,
   useSpellEditorFormRangeValueImp,
   useSpellEditorFormRangeValueMet,
@@ -70,6 +72,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
       <HStack align="flex-start" gap={4}>
         <SpellEditorName defaultName={resource.name[lang] ?? ""} />
         <SpellEditorLevel defaultLevel={resource.level} />
+        <SpellEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <SpellEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 
@@ -146,6 +149,22 @@ function SpellEditorName({ defaultName }: { defaultName: string }) {
   return (
     <Field error={message} label={t("name.label")}>
       <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Spell Editor Page
+//------------------------------------------------------------------------------
+
+function SpellEditorPage({ defaultPage }: { defaultPage: number }) {
+  const { error, ...rest } = useSpellEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput {...rest} w="6em" />
     </Field>
   );
 }
@@ -523,6 +542,11 @@ const i18nContext = {
   "name.error.empty": {
     en: "The name cannot be empty",
     it: "Il nome non può essere vuoto",
+  },
+
+  "page.label": {
+    en: "Page",
+    it: "Pagina",
   },
 
   "level.label": {

@@ -248,6 +248,14 @@ export const useCreatureEditorFormName = (
 ) => useCreatureEditorFormField("name", defaultName, validateName);
 
 //------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormPage = (
+  defaultPage: CreatureEditorFormFields["page"],
+) => useCreatureEditorFormField("page", defaultPage);
+
+//------------------------------------------------------------------------------
 // Passive Perception
 //------------------------------------------------------------------------------
 

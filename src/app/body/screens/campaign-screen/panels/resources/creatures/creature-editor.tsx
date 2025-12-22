@@ -45,6 +45,7 @@ import {
   useCreatureEditorFormLanguages,
   useCreatureEditorFormLegendaryActions,
   useCreatureEditorFormName,
+  useCreatureEditorFormPage,
   useCreatureEditorFormPassivePerception,
   useCreatureEditorFormPlanes,
   useCreatureEditorFormReactions,
@@ -80,6 +81,7 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
       <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorName defaultName={resource.name[lang] ?? ""} />
         <CreatureEditorCR defaultCR={resource.cr} />
+        <CreatureEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <CreatureEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 
@@ -211,6 +213,22 @@ function CreatureEditorName({ defaultName }: { defaultName: string }) {
   return (
     <Field error={message} label={t("name.label")}>
       <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+function CreatureEditorPage({ defaultPage }: { defaultPage: number }) {
+  const { error, ...rest } = useCreatureEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput {...rest} w="6em" />
     </Field>
   );
 }
@@ -1351,10 +1369,6 @@ const i18nContext = {
   "page.label": {
     en: "Page",
     it: "Pagina",
-  },
-  "page.placeholder": {
-    en: "E.g.: 42",
-    it: "Es: 42",
   },
   "passive_perception.label": {
     en: "Passive Perception",

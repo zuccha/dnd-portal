@@ -32,6 +32,7 @@ import {
   useWeaponEditorFormMastery,
   useWeaponEditorFormName,
   useWeaponEditorFormNotes,
+  useWeaponEditorFormPage,
   useWeaponEditorFormProperties,
   useWeaponEditorFormRangeFtLong,
   useWeaponEditorFormRangeFtShort,
@@ -65,6 +66,7 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
       <HStack align="flex-start" gap={4}>
         <WeaponEditorName defaultName={resource.name[lang] ?? ""} />
         <WeaponEditorType defaultType={resource.type} />
+        <WeaponEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <WeaponEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 
@@ -129,6 +131,22 @@ function WeaponEditorName({ defaultName }: { defaultName: string }) {
   return (
     <Field error={message} label={t("name.label")}>
       <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Weapon Editor Page
+//------------------------------------------------------------------------------
+
+function WeaponEditorPage({ defaultPage }: { defaultPage: number }) {
+  const { error, ...rest } = useWeaponEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput {...rest} w="6em" />
     </Field>
   );
 }
@@ -481,6 +499,11 @@ const i18nContext = {
   "name.error.empty": {
     en: "The name cannot be empty",
     it: "Il nome non può essere vuoto",
+  },
+
+  "page.label": {
+    en: "Page",
+    it: "Pagina",
   },
 
   "type.label": {

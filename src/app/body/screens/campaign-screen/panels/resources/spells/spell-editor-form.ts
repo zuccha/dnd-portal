@@ -144,6 +144,14 @@ export const useSpellEditorFormName = (
 ) => useSpellEditorFormField("name", defaultName, validateName);
 
 //------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+export const useSpellEditorFormPage = (
+  defaultPage: SpellEditorFormFields["page"],
+) => useSpellEditorFormField("page", defaultPage);
+
+//------------------------------------------------------------------------------
 // Range
 //------------------------------------------------------------------------------
 

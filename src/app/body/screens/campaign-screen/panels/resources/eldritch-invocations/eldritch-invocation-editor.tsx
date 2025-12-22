@@ -6,12 +6,14 @@ import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useCharacterLevelOptions } from "~/models/types/character-level";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
+import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Textarea from "~/ui/textarea";
 import {
   useEldritchInvocationEditorFormDescription,
   useEldritchInvocationEditorFormMinWarlockLevel,
   useEldritchInvocationEditorFormName,
+  useEldritchInvocationEditorFormPage,
   useEldritchInvocationEditorFormPrerequisite,
   useEldritchInvocationEditorFormVisibility,
 } from "./eldritch-invocation-editor-form";
@@ -35,6 +37,9 @@ export default function EldritchInvocationEditor({
         <EldritchInvocationEditorName defaultName={resource.name[lang] ?? ""} />
         <EldritchInvocationEditorMinWarlockLevel
           defaultMinWarlockLevel={resource.min_warlock_level}
+        />
+        <EldritchInvocationEditorPage
+          defaultPage={resource.page?.[lang] ?? 0}
         />
         <EldritchInvocationEditorVisibility
           defaultVisibility={resource.visibility}
@@ -68,6 +73,26 @@ function EldritchInvocationEditorName({
   return (
     <Field error={message} label={t("name.label")}>
       <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Eldritch Invocation Editor Page
+//------------------------------------------------------------------------------
+
+function EldritchInvocationEditorPage({
+  defaultPage,
+}: {
+  defaultPage: number;
+}) {
+  const { error, ...rest } = useEldritchInvocationEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput {...rest} w="6em" />
     </Field>
   );
 }
@@ -218,6 +243,11 @@ const i18nContext = {
   "visibility.label": {
     en: "Visibility",
     it: "Visibilità",
+  },
+
+  "page.label": {
+    en: "Page",
+    it: "Pagina",
   },
 
   "prerequisite.label": {
