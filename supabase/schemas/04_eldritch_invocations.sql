@@ -194,6 +194,7 @@ AS $$
     c.name                                  AS campaign_name,
     e.min_warlock_level,
     coalesce(tt.name,         '{}'::jsonb)  AS name,
+    coalesce(tt.page,         '{}'::jsonb)  AS page,
     coalesce(tt.prerequisite, '{}'::jsonb)  AS prerequisite,
     coalesce(tt.description,  '{}'::jsonb)  AS description,
     e.visibility
@@ -203,6 +204,7 @@ AS $$
     SELECT
       e.id,
       jsonb_object_agg(t.lang, t.name)         AS name,
+      jsonb_object_agg(t.lang, t.page)         AS page,
       jsonb_object_agg(t.lang, t.prerequisite) AS prerequisite,
       jsonb_object_agg(t.lang, t.description)  AS description
     FROM public.eldritch_invocations e
@@ -236,6 +238,7 @@ RETURNS TABLE(
   campaign_name text,
   min_warlock_level smallint,
   name jsonb,
+  page jsonb,
   prerequisite jsonb,
   description jsonb,
   visibility public.campaign_role)
@@ -263,6 +266,7 @@ t AS (
   SELECT
     f.id,
     jsonb_object_agg(t.lang, t.name)                                                                                 AS name,
+    jsonb_object_agg(t.lang, t.page)         FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS page,
     jsonb_object_agg(t.lang, t.prerequisite) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS prerequisite,
     jsonb_object_agg(t.lang, t.description)  FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS description
   FROM filtered f
@@ -276,6 +280,7 @@ SELECT
   c.name                                  AS campaign_name,
   f.min_warlock_level,
   coalesce(tt.name,         '{}'::jsonb)  AS name,
+  coalesce(tt.page,         '{}'::jsonb)  AS page,
   coalesce(tt.prerequisite, '{}'::jsonb)  AS prerequisite,
   coalesce(tt.description,  '{}'::jsonb)  AS description,
   f.visibility
@@ -318,13 +323,14 @@ BEGIN
   r := jsonb_populate_record(null::public.eldritch_invocation_translations, p_eldritch_invocation_translation);
 
   INSERT INTO public.eldritch_invocation_translations AS st (
-    eldritch_invocation_id, lang, name, prerequisite, description
+    eldritch_invocation_id, lang, name, page, prerequisite, description
   ) VALUES (
-    p_id, p_lang, r.name, r.prerequisite, r.description
+    p_id, p_lang, r.name, r.page, r.prerequisite, r.description
   )
   ON conflict (eldritch_invocation_id, lang) DO UPDATE
   SET
     name = excluded.name,
+    page = excluded.page,
     prerequisite = excluded.prerequisite,
     description = excluded.description;
 END;
