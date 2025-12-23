@@ -23,10 +23,8 @@ export const dbWeaponSchema = dbResourceSchema.extend({
   melee: z.boolean(),
   ranged: z.boolean(),
 
-  range_ft_long: z.number().nullish(),
-  range_ft_short: z.number().nullish(),
-  range_m_long: z.number().nullish(),
-  range_m_short: z.number().nullish(),
+  range_long: z.number().nullish(),
+  range_short: z.number().nullish(),
 
   weight_kg: z.number(),
   weight_lb: z.number(),

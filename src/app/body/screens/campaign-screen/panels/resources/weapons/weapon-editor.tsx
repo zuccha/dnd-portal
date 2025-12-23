@@ -1,9 +1,5 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "~/hooks/use-list-collection";
-import {
-  convertDistanceImpToMet,
-  convertDistanceMetToImp,
-} from "~/i18n/i18n-distance";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import {
@@ -16,6 +12,7 @@ import { useDamageTypeOptions } from "~/models/types/damage-type";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
+import DistanceInput from "~/ui/distance-input";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
@@ -34,10 +31,8 @@ import {
   useWeaponEditorFormNotes,
   useWeaponEditorFormPage,
   useWeaponEditorFormProperties,
-  useWeaponEditorFormRangeFtLong,
-  useWeaponEditorFormRangeFtShort,
-  useWeaponEditorFormRangeMLong,
-  useWeaponEditorFormRangeMShort,
+  useWeaponEditorFormRangeLong,
+  useWeaponEditorFormRangeShort,
   useWeaponEditorFormType,
   useWeaponEditorFormVisibility,
   useWeaponEditorFormWeightKg,
@@ -105,12 +100,14 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
         <WeaponEditorCost defaultCost={resource.cost} />
 
         {ranged.value && (
-          <WeaponEditorRange
-            defaultRangeFtLong={resource.range_ft_long ?? 0}
-            defaultRangeFtShort={resource.range_ft_short ?? 0}
-            defaultRangeMLong={resource.range_m_long ?? 0}
-            defaultRangeMShort={resource.range_m_short ?? 0}
-          />
+          <>
+            <WeaponEditorRangeShort
+              defaultRangeShort={resource.range_short ?? 0}
+            />
+            <WeaponEditorRangeLong
+              defaultRangeLong={resource.range_long ?? 0}
+            />
+          </>
         )}
       </HStack>
 
@@ -149,7 +146,7 @@ function WeaponEditorCost({ defaultCost }: { defaultCost: number }) {
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("cost.label")} maxW="6em">
+    <Field error={message} label={t("cost.label")}>
       <NumberInput min={0} {...rest} />
     </Field>
   );
@@ -311,67 +308,42 @@ function WeaponEditorProperties({
 }
 
 //------------------------------------------------------------------------------
-// Editor Range
+// Range Long
 //------------------------------------------------------------------------------
 
-function WeaponEditorRange({
-  defaultRangeFtLong,
-  defaultRangeFtShort,
-  defaultRangeMLong,
-  defaultRangeMShort,
+function WeaponEditorRangeLong({
+  defaultRangeLong,
 }: {
-  defaultRangeFtLong: number;
-  defaultRangeFtShort: number;
-  defaultRangeMLong: number;
-  defaultRangeMShort: number;
+  defaultRangeLong: number;
 }) {
+  const { error, ...rest } = useWeaponEditorFormRangeLong(defaultRangeLong);
   const { t } = useI18nLangContext(i18nContext);
-  const [system] = useI18nSystem();
-
-  const ftShort = useWeaponEditorFormRangeFtShort(defaultRangeFtShort);
-  const ftLong = useWeaponEditorFormRangeFtLong(defaultRangeFtLong);
-  const mShort = useWeaponEditorFormRangeMShort(defaultRangeMShort);
-  const mLong = useWeaponEditorFormRangeMLong(defaultRangeMLong);
-
-  const setRangeFtShort = (value: number) => {
-    ftShort.onValueChange(value);
-    mShort.onValueChange(convertDistanceImpToMet(value, "ft", "m")[0]);
-  };
-
-  const setRangeFtLong = (value: number) => {
-    ftLong.onValueChange(value);
-    mLong.onValueChange(convertDistanceImpToMet(value, "ft", "m")[0]);
-  };
-
-  const setRangeMShort = (value: number) => {
-    mShort.onValueChange(value);
-    ftShort.onValueChange(convertDistanceMetToImp(value, "m", "ft")[0]);
-  };
-
-  const setRangeMLong = (value: number) => {
-    mLong.onValueChange(value);
-    ftLong.onValueChange(convertDistanceMetToImp(value, "m", "ft")[0]);
-  };
-
-  const metric = system === "metric";
-  const imperial = system === "imperial";
+  const message = error ? t(error) : undefined;
 
   return (
-    <>
-      <Field hidden={metric} label={t("range.ft.short.label")} maxW="6em">
-        <NumberInput min={0} {...ftShort} onValueChange={setRangeFtShort} />
-      </Field>
-      <Field hidden={metric} label={t("range.ft.long.label")} maxW="6em">
-        <NumberInput min={0} {...ftLong} onValueChange={setRangeFtLong} />
-      </Field>
+    <Field error={message} label={t("range.long.label")}>
+      <DistanceInput min={0} {...rest} />
+    </Field>
+  );
+}
 
-      <Field hidden={imperial} label={t("range.m.short.label")} maxW="6em">
-        <NumberInput min={0} {...mShort} onValueChange={setRangeMShort} />
-      </Field>
-      <Field hidden={imperial} label={t("range.m.long.label")} maxW="6em">
-        <NumberInput min={0} {...mLong} onValueChange={setRangeMLong} />
-      </Field>
-    </>
+//------------------------------------------------------------------------------
+// Range Short
+//------------------------------------------------------------------------------
+
+function WeaponEditorRangeShort({
+  defaultRangeShort,
+}: {
+  defaultRangeShort: number;
+}) {
+  const { error, ...rest } = useWeaponEditorFormRangeShort(defaultRangeShort);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("range.short.label")}>
+      <DistanceInput min={0} {...rest} />
+    </Field>
   );
 }
 
@@ -445,11 +417,11 @@ function WeaponEditorWeight({
 
   return (
     <HStack align="flex-end">
-      <Field hidden={metric} label={t("weight.lb.label")} maxW="6em">
+      <Field hidden={metric} label={t("weight.lb.label")}>
         <NumberInput min={0} {...weightLb} onValueChange={setWeightLb} />
       </Field>
 
-      <Field hidden={imperial} label={t("weight.kg.label")} maxW="6em">
+      <Field hidden={imperial} label={t("weight.kg.label")}>
         <NumberInput min={0} {...weightKg} onValueChange={setWeightKg} />
       </Field>
     </HStack>
@@ -557,21 +529,13 @@ const i18nContext = {
     en: "None",
     it: "Nessuna",
   },
-  "range.ft.long.label": {
-    en: "Long (ft)",
-    it: "Lungo (ft)",
+  "range.long.label": {
+    en: "Long",
+    it: "Lungo",
   },
-  "range.ft.short.label": {
-    en: "Short (ft)",
-    it: "Corto (ft)",
-  },
-  "range.m.long.label": {
-    en: "Long (m)",
-    it: "Lungo (m)",
-  },
-  "range.m.short.label": {
-    en: "Short (m)",
-    it: "Corto (m)",
+  "range.short.label": {
+    en: "Short",
+    it: "Corto",
   },
   "ranged.label": {
     en: "Ranged",

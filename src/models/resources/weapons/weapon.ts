@@ -24,10 +24,8 @@ export const weaponSchema = resourceSchema.extend({
   melee: z.boolean(),
   ranged: z.boolean(),
 
-  range_ft_long: z.number().nullish(),
-  range_ft_short: z.number().nullish(),
-  range_m_long: z.number().nullish(),
-  range_m_short: z.number().nullish(),
+  range_long: z.number().nullish(),
+  range_short: z.number().nullish(),
 
   ammunition: i18nStringSchema,
 
@@ -84,10 +82,8 @@ export const defaultWeapon: Weapon = {
   melee: true,
   ranged: false,
 
-  range_ft_long: undefined,
-  range_ft_short: undefined,
-  range_m_long: undefined,
-  range_m_short: undefined,
+  range_long: undefined,
+  range_short: undefined,
 
   ammunition: {},
 

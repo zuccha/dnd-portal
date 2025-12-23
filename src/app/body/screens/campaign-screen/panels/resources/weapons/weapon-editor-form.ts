@@ -23,10 +23,8 @@ export const weaponEditorFormFieldsSchema = z.object({
   notes: z.string(),
   page: z.number(),
   properties: z.array(weaponPropertySchema),
-  range_ft_long: z.number(),
-  range_ft_short: z.number(),
-  range_m_long: z.number(),
-  range_m_short: z.number(),
+  range_long: z.number(),
+  range_short: z.number(),
   ranged: z.boolean(),
   type: weaponTypeSchema,
   visibility: campaignRoleSchema,
@@ -157,36 +155,20 @@ export const useWeaponEditorFormProperties = (
 ) => useWeaponEditorFormField("properties", defaultProperties);
 
 //------------------------------------------------------------------------------
-// Range Ft Long
+// Range Long
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormRangeFtLong = (
-  defaultRangeFtLong: WeaponEditorFormFields["range_ft_long"],
-) => useWeaponEditorFormField("range_ft_long", defaultRangeFtLong);
+export const useWeaponEditorFormRangeLong = (
+  defaultRangeLong: WeaponEditorFormFields["range_long"],
+) => useWeaponEditorFormField("range_long", defaultRangeLong);
 
 //------------------------------------------------------------------------------
-// Range Ft Short
+// Range Short
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormRangeFtShort = (
-  defaultRangeFtShort: WeaponEditorFormFields["range_ft_short"],
-) => useWeaponEditorFormField("range_ft_short", defaultRangeFtShort);
-
-//------------------------------------------------------------------------------
-// Range M Long
-//------------------------------------------------------------------------------
-
-export const useWeaponEditorFormRangeMLong = (
-  defaultRangeMLong: WeaponEditorFormFields["range_m_long"],
-) => useWeaponEditorFormField("range_m_long", defaultRangeMLong);
-
-//------------------------------------------------------------------------------
-// Range M Short
-//------------------------------------------------------------------------------
-
-export const useWeaponEditorFormRangeMShort = (
-  defaultRangeMShort: WeaponEditorFormFields["range_m_short"],
-) => useWeaponEditorFormField("range_m_short", defaultRangeMShort);
+export const useWeaponEditorFormRangeShort = (
+  defaultRangeShort: WeaponEditorFormFields["range_short"],
+) => useWeaponEditorFormField("range_short", defaultRangeShort);
 
 //------------------------------------------------------------------------------
 // Ranged

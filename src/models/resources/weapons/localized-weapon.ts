@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import z from "zod";
+import { cmToDistanceValue } from "~/i18n/i18n-distance-2";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
@@ -68,15 +69,15 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       const damage_versatile = weapon.damage_versatile ?? "0";
       const damage_extended = ti("damage_extended", weapon.damage, damage_type);
 
-      const rms = formatNumber(weapon.range_m_short ?? 0);
-      const rml = formatNumber(weapon.range_m_long ?? 0);
-      const ris = formatNumber(weapon.range_ft_short ?? 0);
-      const ril = formatNumber(weapon.range_ft_long ?? 0);
+      const rms = cmToDistanceValue(weapon.range_short ?? 0, "m");
+      const rml = cmToDistanceValue(weapon.range_long ?? 0, "m");
+      const ris = cmToDistanceValue(weapon.range_short ?? 0, "ft");
+      const ril = cmToDistanceValue(weapon.range_long ?? 0, "ft");
 
       const range =
         system === "metric" ?
-          ti("range.m", `${rms}/${rml}`)
-        : ti("range.ft", `${ris}/${ril}`);
+          ti("range.m", `${formatNumber(rms)}/${formatNumber(rml)}`)
+        : ti("range.ft", `${formatNumber(ris)}/${formatNumber(ril)}`);
 
       const ammunition = translate(weapon.ammunition, lang);
 
