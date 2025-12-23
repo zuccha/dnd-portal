@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
 import z from "zod";
 import { formatNumber } from "~/utils/number";
-import { useI18nLangContext } from "./i18n-lang-context";
-import { useI18nSystem } from "./i18n-system";
+import { useI18nLangContext } from "../i18n/i18n-lang-context";
+import { useI18nSystem } from "../i18n/i18n-system";
 
 //------------------------------------------------------------------------------
 // Distance Unit

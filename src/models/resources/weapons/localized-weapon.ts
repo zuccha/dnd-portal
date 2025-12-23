@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import z from "zod";
-import { cmToDistanceValue } from "~/i18n/i18n-distance-2";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
+import { cmToDistanceValue } from "~/measures/distance";
 import { useFormatG } from "~/measures/weight";
 import { formatNumber } from "~/utils/number";
 import { useTranslateDamageType } from "../../types/damage-type";

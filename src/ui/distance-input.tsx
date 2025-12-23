@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
+import { useI18nSystem } from "~/i18n/i18n-system";
 import {
   type DistanceUnit,
   cmToDistanceValue,
   distanceToCm,
   useDistanceUnitOptions,
-} from "~/i18n/i18n-distance-2";
-import { useI18nSystem } from "~/i18n/i18n-system";
+} from "~/measures/distance";
 import MeasureInput, { type MeasureInputProps } from "./measure-input-2";
 
 //------------------------------------------------------------------------------

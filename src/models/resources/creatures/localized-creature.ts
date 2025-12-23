@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { z } from "zod";
-import { useFormatCmWithUnit } from "~/i18n/i18n-distance-2";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
+import { useFormatCmWithUnit } from "~/measures/distance";
 import type { CreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import {
