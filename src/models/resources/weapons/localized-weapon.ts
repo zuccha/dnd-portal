@@ -3,6 +3,7 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
+import { useFormatCp } from "~/measures/cost";
 import { cmToDistanceValue } from "~/measures/distance";
 import { useFormatG } from "~/measures/weight";
 import { formatNumber } from "~/utils/number";
@@ -65,6 +66,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const translateWeaponType = useTranslateWeaponType(lang);
 
   const formatWeight = useFormatG();
+  const formatCost = useFormatCp();
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
@@ -127,10 +129,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
         weight: formatWeight(weapon.weight),
 
-        cost:
-          weapon.cost < 0.1 ? ti("cost.cp", `${weapon.cost * 100}`)
-          : weapon.cost < 1 ? ti("cost.sp", `${weapon.cost * 10}`)
-          : ti("cost.gp", `${weapon.cost}`),
+        cost: formatCost(weapon.cost),
 
         notes: notes || ti("notes.none"),
 
@@ -140,6 +139,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       };
     },
     [
+      formatCost,
       formatWeight,
       lang,
       localizeResource,
@@ -183,23 +183,6 @@ const i18nContext = {
   "range.m": {
     en: "<1> m", // 1 = range
     it: "<1> m", // 1 = range
-  },
-
-  "cost.cp": {
-    en: "<1> CP",
-    it: "<1> MR",
-  },
-  "cost.gp": {
-    en: "<1> GP",
-    it: "<1> MO",
-  },
-  "cost.pp": {
-    en: "<1> PP",
-    it: "<1> MP",
-  },
-  "cost.sp": {
-    en: "<1> SP",
-    it: "<1> MA",
   },
 
   "notes.none": {

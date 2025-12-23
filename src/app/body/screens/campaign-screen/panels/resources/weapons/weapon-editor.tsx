@@ -7,6 +7,7 @@ import { useDamageTypeOptions } from "~/models/types/damage-type";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
+import CostInput from "~/ui/cost-input";
 import DistanceInput from "~/ui/distance-input";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
@@ -139,7 +140,7 @@ function WeaponEditorCost({ defaultCost }: { defaultCost: number }) {
 
   return (
     <Field error={message} label={t("cost.label")}>
-      <NumberInput min={0} {...rest} />
+      <CostInput min={0} {...rest} />
     </Field>
   );
 }
@@ -411,8 +412,8 @@ const i18nContext = {
     it: "Es: freccia",
   },
   "cost.label": {
-    en: "Cost (gp)",
-    it: "Costo (mo)",
+    en: "Cost",
+    it: "Costo",
   },
   "damage.label": {
     en: "Damage",
