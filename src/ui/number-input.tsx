@@ -34,6 +34,7 @@ export default function NumberInput({
 
   return (
     <ChakraNumberInput.Root
+      w="inherit"
       {...rest}
       onValueChange={(e) => {
         setLocalValue(e.value);
