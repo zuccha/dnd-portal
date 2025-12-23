@@ -103,7 +103,7 @@ export function useFormatCm() {
   const [system] = useI18nSystem();
 
   return useCallback(
-    (cm: number, format: "long" | "short") => {
+    (cm: number, format: "long" | "short" = "short") => {
       const { unit, value } =
         system === "metric" ? cmToDistanceMet(cm) : cmToDistanceImp(cm);
       return tpi(`${unit}.${format}`, value, formatNumber(value));
