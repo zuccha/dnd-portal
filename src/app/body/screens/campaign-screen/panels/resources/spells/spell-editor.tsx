@@ -138,132 +138,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Name
-//------------------------------------------------------------------------------
-
-function SpellEditorName({ defaultName }: { defaultName: string }) {
-  const { error, ...rest } = useSpellEditorFormName(defaultName);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Spell Editor Page
-//------------------------------------------------------------------------------
-
-function SpellEditorPage({ defaultPage }: { defaultPage: number }) {
-  const { error, ...rest } = useSpellEditorFormPage(defaultPage);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Spell Editor Level
-//------------------------------------------------------------------------------
-
-function SpellEditorLevel({ defaultLevel }: { defaultLevel: Spell["level"] }) {
-  const levelOptions = useListCollection(useSpellLevelOptions());
-  const level = useSpellEditorFormLevel(defaultLevel);
-  const { t } = useI18nLangContext(i18nContext);
-
-  return (
-    <Field label={t("level.label")} maxW="5em">
-      <Select
-        {...level}
-        onValueChange={(value) => level.onValueChange(parseInt(value))}
-        options={levelOptions}
-        value={`${level.value}`}
-        withinDialog
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Spell Editor Visibility
-//------------------------------------------------------------------------------
-
-function SpellEditorVisibility({
-  defaultVisibility,
-}: {
-  defaultVisibility: Spell["visibility"];
-}) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
-  const { error, ...rest } = useSpellEditorFormVisibility(defaultVisibility);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Spell Editor Character Classes
-//------------------------------------------------------------------------------
-
-function SpellEditorCharacterClasses({
-  defaultCharacterClasses,
-}: {
-  defaultCharacterClasses: Spell["character_classes"];
-}) {
-  const characterClassOptions = useListCollection(useCharacterClassOptions());
-  const { error, ...rest } = useSpellEditorFormCharacterClasses(
-    defaultCharacterClasses,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("character_classes.label")}>
-      <Select
-        multiple
-        options={characterClassOptions}
-        placeholder={t("character_classes.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Spell Editor School
-//------------------------------------------------------------------------------
-
-function SpellEditorSchool({
-  defaultSchool,
-}: {
-  defaultSchool: Spell["school"];
-}) {
-  const schoolOptions = useListCollection(useSpellSchoolOptions());
-  const { error, ...rest } = useSpellEditorFormSchool(defaultSchool);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("school.label")}>
-      <Select options={schoolOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Spell Editor Casting Time
+// Casting Time
 //------------------------------------------------------------------------------
 
 function SpellEditorCastingTime({
@@ -293,7 +168,7 @@ function SpellEditorCastingTime({
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Casting Time Value
+// Casting Time Value
 //------------------------------------------------------------------------------
 
 function SpellEditorCastingTimeValue({
@@ -317,7 +192,56 @@ function SpellEditorCastingTimeValue({
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Duration
+// Character Classes
+//------------------------------------------------------------------------------
+
+function SpellEditorCharacterClasses({
+  defaultCharacterClasses,
+}: {
+  defaultCharacterClasses: Spell["character_classes"];
+}) {
+  const characterClassOptions = useListCollection(useCharacterClassOptions());
+  const { error, ...rest } = useSpellEditorFormCharacterClasses(
+    defaultCharacterClasses,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("character_classes.label")}>
+      <Select
+        multiple
+        options={characterClassOptions}
+        placeholder={t("character_classes.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Description
+//------------------------------------------------------------------------------
+
+function SpellEditorDescription({
+  defaultDescription,
+}: {
+  defaultDescription: string;
+}) {
+  const { error, ...rest } = useSpellEditorFormDescription(defaultDescription);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("description.label")}>
+      <Textarea {...rest} h="12em" placeholder={t("description.placeholder")} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Duration
 //------------------------------------------------------------------------------
 
 function SpellEditorDuration({
@@ -345,7 +269,7 @@ function SpellEditorDuration({
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Duration Value
+// Duration Value
 //------------------------------------------------------------------------------
 
 function SpellEditorDurationValue({
@@ -369,7 +293,81 @@ function SpellEditorDurationValue({
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Range
+// Level
+//------------------------------------------------------------------------------
+
+function SpellEditorLevel({ defaultLevel }: { defaultLevel: Spell["level"] }) {
+  const levelOptions = useListCollection(useSpellLevelOptions());
+  const level = useSpellEditorFormLevel(defaultLevel);
+  const { t } = useI18nLangContext(i18nContext);
+
+  return (
+    <Field label={t("level.label")} maxW="5em">
+      <Select
+        {...level}
+        onValueChange={(value) => level.onValueChange(parseInt(value))}
+        options={levelOptions}
+        value={`${level.value}`}
+        withinDialog
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Materials
+//------------------------------------------------------------------------------
+
+function SpellEditorMaterials({
+  defaultMaterials,
+}: {
+  defaultMaterials: string;
+}) {
+  const { error, ...rest } = useSpellEditorFormMaterials(defaultMaterials);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("materials.label")}>
+      <Input placeholder={t("materials.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Name
+//------------------------------------------------------------------------------
+
+function SpellEditorName({ defaultName }: { defaultName: string }) {
+  const { error, ...rest } = useSpellEditorFormName(defaultName);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("name.label")}>
+      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+function SpellEditorPage({ defaultPage }: { defaultPage: number }) {
+  const { error, ...rest } = useSpellEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput {...rest} w="6em" />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Range
 //------------------------------------------------------------------------------
 
 function SpellEditorRange({
@@ -402,7 +400,7 @@ function SpellEditorRange({
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Range Values
+// Range Values
 //------------------------------------------------------------------------------
 
 function SpellEditorRangeValues({
@@ -462,47 +460,49 @@ function SpellEditorRangeValues({
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Materials
+// School
 //------------------------------------------------------------------------------
 
-function SpellEditorMaterials({
-  defaultMaterials,
+function SpellEditorSchool({
+  defaultSchool,
 }: {
-  defaultMaterials: string;
+  defaultSchool: Spell["school"];
 }) {
-  const { error, ...rest } = useSpellEditorFormMaterials(defaultMaterials);
+  const schoolOptions = useListCollection(useSpellSchoolOptions());
+  const { error, ...rest } = useSpellEditorFormSchool(defaultSchool);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("materials.label")}>
-      <Input placeholder={t("materials.placeholder")} {...rest} />
+    <Field error={message} label={t("school.label")}>
+      <Select options={schoolOptions} withinDialog {...rest} />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Description
+// Visibility
 //------------------------------------------------------------------------------
 
-function SpellEditorDescription({
-  defaultDescription,
+function SpellEditorVisibility({
+  defaultVisibility,
 }: {
-  defaultDescription: string;
+  defaultVisibility: Spell["visibility"];
 }) {
-  const { error, ...rest } = useSpellEditorFormDescription(defaultDescription);
+  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const { error, ...rest } = useSpellEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("description.label")}>
-      <Textarea {...rest} h="12em" placeholder={t("description.placeholder")} />
+    <Field error={message} label={t("visibility.label")} maxW="10em">
+      <Select options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }
 
 //------------------------------------------------------------------------------
-// Spell Editor Upgrade
+// Upgrade
 //------------------------------------------------------------------------------
 
 function SpellEditorUpgrade({
@@ -529,143 +529,116 @@ function SpellEditorUpgrade({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "name.label": {
-    en: "Name",
-    it: "Nome",
-  },
-
-  "name.placeholder": {
-    en: "E.g.: Fireball",
-    it: "Es: Palla di Fuoco",
-  },
-
-  "name.error.empty": {
-    en: "The name cannot be empty",
-    it: "Il nome non può essere vuoto",
-  },
-
-  "page.label": {
-    en: "Page",
-    it: "Pagina",
-  },
-
-  "level.label": {
-    en: "Level",
-    it: "Livello",
-  },
-
-  "level.error.empty": {
-    en: "The level cannot be empty",
-    it: "Il livello non può essere vuoto",
-  },
-
-  "visibility.label": {
-    en: "Visibility",
-    it: "Visibilità",
-  },
-
-  "character_classes.label": {
-    en: "Classes",
-    it: "Classi",
-  },
-
-  "character_classes.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-
-  "school.label": {
-    en: "School",
-    it: "Scuola",
-  },
-
   "casting_time.label": {
     en: "Casting Time",
     it: "Tempo di Lancio",
   },
-
-  "duration.label": {
-    en: "Duration",
-    it: "Durata",
+  "character_classes.label": {
+    en: "Classes",
+    it: "Classi",
   },
-
-  "range.label": {
-    en: "Range",
-    it: "Gittata",
+  "character_classes.placeholder": {
+    en: "None",
+    it: "Nessuna",
   },
-
-  "ritual.label": {
-    en: "Ritual",
-    it: "Rituale",
-  },
-
   "concentration.label": {
     en: "Concentration",
     it: "Concentrazione",
   },
-
-  "verbal.label": {
-    en: "Verbal",
-    it: "Verbale",
-  },
-
-  "somatic.label": {
-    en: "Somatic",
-    it: "Somatico",
-  },
-
-  "material.label": {
-    en: "Material",
-    it: "Materiale",
-  },
-
-  "materials.label": {
-    en: "Materials",
-    it: "Materiali",
-  },
-
-  "materials.placeholder": {
-    en: "E.g.: A ball of bat guano and sulfur.",
-    it: "Es: Una pallina di guano di pipistrello e zolfo.",
-  },
-
-  "materials.error.empty": {
-    en: "The materials cannot be empty",
-    it: "I materiali non possono essere vuoti",
-  },
-
-  "description.label": {
-    en: "Effect",
-    it: "Effetto",
-  },
-
-  "description.placeholder": {
-    en: "E.g.: A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 8d6 Fire damage on a failed save or half as much damage on a successful one.\nFlammable objects in the area that aren't being worn or carried start burning.",
-    it: "Es: Una scia di luce brillante parte dall'incantatore e sfreccia fino a un punto a sua scelta entro gittata, provocando un'esplosione infuocata con un profondo boato. Ogni creatura presente in una sfera del raggio di 6 metri e centrata su quel punto deve effettuare un tiro salvezza su Destrezza, subendo 8d6 danni da fuoco in caso di fallimento, o la metà di quei danni in caso di successo.\nGli oggetti infiammabili nell'area che non sono indossati o trasportati iniziano a bruciare.",
-  },
-
   "description.error.empty": {
     en: "The effect cannot be empty",
     it: "L'effetto non può essere vuoto",
   },
-
+  "description.label": {
+    en: "Effect",
+    it: "Effetto",
+  },
+  "description.placeholder": {
+    en: "E.g.: A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 8d6 Fire damage on a failed save or half as much damage on a successful one.\nFlammable objects in the area that aren't being worn or carried start burning.",
+    it: "Es: Una scia di luce brillante parte dall'incantatore e sfreccia fino a un punto a sua scelta entro gittata, provocando un'esplosione infuocata con un profondo boato. Ogni creatura presente in una sfera del raggio di 6 metri e centrata su quel punto deve effettuare un tiro salvezza su Destrezza, subendo 8d6 danni da fuoco in caso di fallimento, o la metà di quei danni in caso di successo.\nGli oggetti infiammabili nell'area che non sono indossati o trasportati iniziano a bruciare.",
+  },
+  "duration.label": {
+    en: "Duration",
+    it: "Durata",
+  },
+  "level.error.empty": {
+    en: "The level cannot be empty",
+    it: "Il livello non può essere vuoto",
+  },
+  "level.label": {
+    en: "Level",
+    it: "Livello",
+  },
+  "material.label": {
+    en: "Material",
+    it: "Materiale",
+  },
+  "materials.error.empty": {
+    en: "The materials cannot be empty",
+    it: "I materiali non possono essere vuoti",
+  },
+  "materials.label": {
+    en: "Materials",
+    it: "Materiali",
+  },
+  "materials.placeholder": {
+    en: "E.g.: A ball of bat guano and sulfur.",
+    it: "Es: Una pallina di guano di pipistrello e zolfo.",
+  },
+  "name.error.empty": {
+    en: "The name cannot be empty",
+    it: "Il nome non può essere vuoto",
+  },
+  "name.label": {
+    en: "Name",
+    it: "Nome",
+  },
+  "name.placeholder": {
+    en: "E.g.: Fireball",
+    it: "Es: Palla di Fuoco",
+  },
+  "page.label": {
+    en: "Page",
+    it: "Pagina",
+  },
+  "range.label": {
+    en: "Range",
+    it: "Gittata",
+  },
+  "ritual.label": {
+    en: "Ritual",
+    it: "Rituale",
+  },
+  "school.label": {
+    en: "School",
+    it: "Scuola",
+  },
+  "somatic.label": {
+    en: "Somatic",
+    it: "Somatico",
+  },
   "upgrade.label/*": {
     en: "At Higher Levels",
     it: "A Livelli Superiori",
   },
-
   "upgrade.label/0": {
     en: "Cantrip Upgrade",
     it: "Potenziamento del Trucchetto",
   },
-
   "upgrade.placeholder/*": {
     en: "No additional effect.",
     it: "Nessun effetto addizionale.",
   },
-
   "upgrade.placeholder/0": {
     en: "No upgrade.",
     it: "Nessun potenziamento.",
+  },
+  "verbal.label": {
+    en: "Verbal",
+    it: "Verbale",
+  },
+  "visibility.label": {
+    en: "Visibility",
+    it: "Visibilità",
   },
 };
