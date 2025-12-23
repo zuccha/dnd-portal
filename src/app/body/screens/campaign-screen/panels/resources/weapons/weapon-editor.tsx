@@ -120,7 +120,123 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
 }
 
 //------------------------------------------------------------------------------
-// Weapon Editor Name
+// Editor Ammunition
+//------------------------------------------------------------------------------
+
+function WeaponEditorAmmunition({
+  defaultAmmunition,
+}: {
+  defaultAmmunition: string;
+}) {
+  const { error, ...rest } = useWeaponEditorFormAmmunition(defaultAmmunition);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("ammunition.label")}>
+      <Input placeholder={t("ammunition.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Cost
+//------------------------------------------------------------------------------
+
+function WeaponEditorCost({ defaultCost }: { defaultCost: number }) {
+  const { error, ...rest } = useWeaponEditorFormCost(defaultCost);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("cost.label")} maxW="6em">
+      <NumberInput min={0} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Damage
+//------------------------------------------------------------------------------
+
+function WeaponEditorDamage({ defaultDamage }: { defaultDamage: string }) {
+  const { error, ...rest } = useWeaponEditorFormDamage(defaultDamage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("damage.label")}>
+      <Input placeholder={t("damage.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Damage (Versatile)
+//------------------------------------------------------------------------------
+
+function WeaponEditorDamageVersatile({
+  defaultDamageVersatile,
+}: {
+  defaultDamageVersatile: string;
+}) {
+  const { error, ...rest } = useWeaponEditorFormDamageVersatile(
+    defaultDamageVersatile,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("damage_versatile.label")}>
+      <Input placeholder={t("damage_versatile.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Damage Type
+//------------------------------------------------------------------------------
+
+function WeaponEditorDamageType({
+  defaultDamageType,
+}: {
+  defaultDamageType: Weapon["damage_type"];
+}) {
+  const damageTypeOptions = useListCollection(useDamageTypeOptions());
+  const { error, ...rest } = useWeaponEditorFormDamageType(defaultDamageType);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("damage_type.label")}>
+      <Select options={damageTypeOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Mastery
+//------------------------------------------------------------------------------
+
+function WeaponEditorMastery({
+  defaultMastery,
+}: {
+  defaultMastery: Weapon["mastery"];
+}) {
+  const masteryOptions = useListCollection(useWeaponMasteryOptions());
+  const { error, ...rest } = useWeaponEditorFormMastery(defaultMastery);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("mastery.label")} w="20em">
+      <Select options={masteryOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Name
 //------------------------------------------------------------------------------
 
 function WeaponEditorName({ defaultName }: { defaultName: string }) {
@@ -136,7 +252,23 @@ function WeaponEditorName({ defaultName }: { defaultName: string }) {
 }
 
 //------------------------------------------------------------------------------
-// Weapon Editor Page
+// Editor Notes
+//------------------------------------------------------------------------------
+
+function WeaponEditorNotes({ defaultNotes }: { defaultNotes: string }) {
+  const { error, ...rest } = useWeaponEditorFormNotes(defaultNotes);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("notes.label")}>
+      <Textarea placeholder={t("notes.placeholder")} rows={5} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Page
 //------------------------------------------------------------------------------
 
 function WeaponEditorPage({ defaultPage }: { defaultPage: number }) {
@@ -152,45 +284,7 @@ function WeaponEditorPage({ defaultPage }: { defaultPage: number }) {
 }
 
 //------------------------------------------------------------------------------
-// Weapon Editor Visibility
-//------------------------------------------------------------------------------
-
-function WeaponEditorVisibility({
-  defaultVisibility,
-}: {
-  defaultVisibility: Weapon["visibility"];
-}) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
-  const { error, ...rest } = useWeaponEditorFormVisibility(defaultVisibility);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Editor Type
-//------------------------------------------------------------------------------
-
-function WeaponEditorType({ defaultType }: { defaultType: Weapon["type"] }) {
-  const typeOptions = useListCollection(useWeaponTypeOptions());
-  const { error, ...rest } = useWeaponEditorFormType(defaultType);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("type.label")} w="20em">
-      <Select options={typeOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Editor Properties
+// Editor Properties
 //------------------------------------------------------------------------------
 
 function WeaponEditorProperties({
@@ -217,107 +311,7 @@ function WeaponEditorProperties({
 }
 
 //------------------------------------------------------------------------------
-// Weapon Editor Mastery
-//------------------------------------------------------------------------------
-
-function WeaponEditorMastery({
-  defaultMastery,
-}: {
-  defaultMastery: Weapon["mastery"];
-}) {
-  const masteryOptions = useListCollection(useWeaponMasteryOptions());
-  const { error, ...rest } = useWeaponEditorFormMastery(defaultMastery);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("mastery.label")} w="20em">
-      <Select options={masteryOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Editor Damage
-//------------------------------------------------------------------------------
-
-function WeaponEditorDamage({ defaultDamage }: { defaultDamage: string }) {
-  const { error, ...rest } = useWeaponEditorFormDamage(defaultDamage);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("damage.label")}>
-      <Input placeholder={t("damage.placeholder")} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Editor Damage Versatile
-//------------------------------------------------------------------------------
-
-function WeaponEditorDamageVersatile({
-  defaultDamageVersatile,
-}: {
-  defaultDamageVersatile: string;
-}) {
-  const { error, ...rest } = useWeaponEditorFormDamageVersatile(
-    defaultDamageVersatile,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("damage_versatile.label")}>
-      <Input placeholder={t("damage_versatile.placeholder")} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Editor Damage Type
-//------------------------------------------------------------------------------
-
-function WeaponEditorDamageType({
-  defaultDamageType,
-}: {
-  defaultDamageType: Weapon["damage_type"];
-}) {
-  const damageTypeOptions = useListCollection(useDamageTypeOptions());
-  const { error, ...rest } = useWeaponEditorFormDamageType(defaultDamageType);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("damage_type.label")}>
-      <Select options={damageTypeOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Editor Ammunition
-//------------------------------------------------------------------------------
-
-function WeaponEditorAmmunition({
-  defaultAmmunition,
-}: {
-  defaultAmmunition: string;
-}) {
-  const { error, ...rest } = useWeaponEditorFormAmmunition(defaultAmmunition);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ammunition.label")}>
-      <Input placeholder={t("ammunition.placeholder")} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Editor Range
+// Editor Range
 //------------------------------------------------------------------------------
 
 function WeaponEditorRange({
@@ -382,7 +376,45 @@ function WeaponEditorRange({
 }
 
 //------------------------------------------------------------------------------
-// Weapon Editor Weight
+// Editor Type
+//------------------------------------------------------------------------------
+
+function WeaponEditorType({ defaultType }: { defaultType: Weapon["type"] }) {
+  const typeOptions = useListCollection(useWeaponTypeOptions());
+  const { error, ...rest } = useWeaponEditorFormType(defaultType);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("type.label")} w="20em">
+      <Select options={typeOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Visibility
+//------------------------------------------------------------------------------
+
+function WeaponEditorVisibility({
+  defaultVisibility,
+}: {
+  defaultVisibility: Weapon["visibility"];
+}) {
+  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const { error, ...rest } = useWeaponEditorFormVisibility(defaultVisibility);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("visibility.label")} maxW="10em">
+      <Select options={visibilityOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Editor Weight
 //------------------------------------------------------------------------------
 
 function WeaponEditorWeight({
@@ -424,205 +456,141 @@ function WeaponEditorWeight({
   );
 }
 
-//------------------------------------------------------------------------------
-// Weapon Editor Cost
-//------------------------------------------------------------------------------
-
-function WeaponEditorCost({ defaultCost }: { defaultCost: number }) {
-  const { error, ...rest } = useWeaponEditorFormCost(defaultCost);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("cost.label")} maxW="6em">
-      <NumberInput min={0} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Editor Notes
-//------------------------------------------------------------------------------
-
-function WeaponEditorNotes({ defaultNotes }: { defaultNotes: string }) {
-  const { error, ...rest } = useWeaponEditorFormNotes(defaultNotes);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("notes.label")}>
-      <Textarea placeholder={t("notes.placeholder")} rows={5} {...rest} />
-    </Field>
-  );
-}
-
 //----------------------------------------------------------------------------
 // I18n Context
 //----------------------------------------------------------------------------
 
 const i18nContext = {
-  "form.error.invalid": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-
-  "form.error.invalid_translation": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-
-  "form.error.creation_failure": {
-    en: "Failed to create the weapon.",
-    it: "Errore durante la creazione.",
-  },
-
-  "form.error.update_failure": {
-    en: "Failed to update the weapon.",
-    it: "Errore durante il salvataggio.",
-  },
-
-  "name.label": {
-    en: "Name",
-    it: "Nome",
-  },
-
-  "name.placeholder": {
-    en: "E.g.: Flail",
-    it: "Es: Mazzafrusto",
-  },
-
-  "visibility.label": {
-    en: "Visibility",
-    it: "Visibilità",
-  },
-
-  "name.error.empty": {
-    en: "The name cannot be empty",
-    it: "Il nome non può essere vuoto",
-  },
-
-  "page.label": {
-    en: "Page",
-    it: "Pagina",
-  },
-
-  "type.label": {
-    en: "Type",
-    it: "Tipo",
-  },
-
-  "properties.label": {
-    en: "Properties",
-    it: "Proprietà",
-  },
-
-  "properties.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-
-  "mastery.label": {
-    en: "Mastery",
-    it: "Padronanza",
-  },
-
-  "damage.label": {
-    en: "Damage",
-    it: "Danni",
-  },
-
-  "damage.placeholder": {
-    en: "E.g.: 1d8",
-    it: "Es: 1d8",
-  },
-
-  "damage_versatile.label": {
-    en: "Versatile",
-    it: "Versatile",
-  },
-
-  "damage_versatile.placeholder": {
-    en: "E.g.: 1d10",
-    it: "Es: 1d10",
-  },
-
-  "damage_type.label": {
-    en: "Type",
-    it: "Tipo",
-  },
-
-  "ammunition.label": {
-    en: "Ammunition",
-    it: "Munizione",
-  },
-
-  "ammunition.placeholder": {
-    en: "E.g.: arrow",
-    it: "Es: freccia",
-  },
-
   "ammunition.error.empty": {
     en: "The ammunition cannot be empty",
     it: "La munizione non può essere vuota",
   },
-
-  "magic.label": {
-    en: "Magic",
-    it: "Magica",
+  "ammunition.label": {
+    en: "Ammunition",
+    it: "Munizione",
   },
-
-  "melee.label": {
-    en: "Melee",
-    it: "Mischia",
+  "ammunition.placeholder": {
+    en: "E.g.: arrow",
+    it: "Es: freccia",
   },
-
-  "ranged.label": {
-    en: "Ranged",
-    it: "A distanza",
-  },
-
-  "range.ft.short.label": {
-    en: "Short (ft)",
-    it: "Corto (ft)",
-  },
-
-  "range.ft.long.label": {
-    en: "Long (ft)",
-    it: "Lungo (ft)",
-  },
-
-  "range.m.short.label": {
-    en: "Short (m)",
-    it: "Corto (m)",
-  },
-
-  "range.m.long.label": {
-    en: "Long (m)",
-    it: "Lungo (m)",
-  },
-
-  "weight.lb.label": {
-    en: "Weight (lb)",
-    it: "Peso (lb)",
-  },
-
-  "weight.kg.label": {
-    en: "Weight (kg)",
-    it: "Peso (kg)",
-  },
-
   "cost.label": {
     en: "Cost (gp)",
     it: "Costo (mo)",
   },
-
+  "damage.label": {
+    en: "Damage",
+    it: "Danni",
+  },
+  "damage.placeholder": {
+    en: "E.g.: 1d8",
+    it: "Es: 1d8",
+  },
+  "damage_type.label": {
+    en: "Type",
+    it: "Tipo",
+  },
+  "damage_versatile.label": {
+    en: "Versatile",
+    it: "Versatile",
+  },
+  "damage_versatile.placeholder": {
+    en: "E.g.: 1d10",
+    it: "Es: 1d10",
+  },
+  "form.error.creation_failure": {
+    en: "Failed to create the weapon.",
+    it: "Errore durante la creazione.",
+  },
+  "form.error.invalid": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+  "form.error.invalid_translation": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+  "form.error.update_failure": {
+    en: "Failed to update the weapon.",
+    it: "Errore durante il salvataggio.",
+  },
+  "magic.label": {
+    en: "Magic",
+    it: "Magica",
+  },
+  "mastery.label": {
+    en: "Mastery",
+    it: "Padronanza",
+  },
+  "melee.label": {
+    en: "Melee",
+    it: "Mischia",
+  },
+  "name.error.empty": {
+    en: "The name cannot be empty",
+    it: "Il nome non può essere vuoto",
+  },
+  "name.label": {
+    en: "Name",
+    it: "Nome",
+  },
+  "name.placeholder": {
+    en: "E.g.: Flail",
+    it: "Es: Mazzafrusto",
+  },
   "notes.label": {
     en: "Notes",
     it: "Note",
   },
-
   "notes.placeholder": {
     en: "E.g.: Inflicts double damage to dragons.",
     it: "Es: Infligge il doppio dei danni ai draghi.",
+  },
+  "page.label": {
+    en: "Page",
+    it: "Pagina",
+  },
+  "properties.label": {
+    en: "Properties",
+    it: "Proprietà",
+  },
+  "properties.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
+  "range.ft.long.label": {
+    en: "Long (ft)",
+    it: "Lungo (ft)",
+  },
+  "range.ft.short.label": {
+    en: "Short (ft)",
+    it: "Corto (ft)",
+  },
+  "range.m.long.label": {
+    en: "Long (m)",
+    it: "Lungo (m)",
+  },
+  "range.m.short.label": {
+    en: "Short (m)",
+    it: "Corto (m)",
+  },
+  "ranged.label": {
+    en: "Ranged",
+    it: "A distanza",
+  },
+  "type.label": {
+    en: "Type",
+    it: "Tipo",
+  },
+  "visibility.label": {
+    en: "Visibility",
+    it: "Visibilità",
+  },
+  "weight.kg.label": {
+    en: "Weight (kg)",
+    it: "Peso (kg)",
+  },
+  "weight.lb.label": {
+    en: "Weight (lb)",
+    it: "Peso (lb)",
   },
 };
