@@ -12,6 +12,7 @@ import { useCreatureSkillOptions } from "~/models/types/creature-skill";
 import { useCreatureTreasureOptions } from "~/models/types/creature-treasure";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
+import DistanceInput from "~/ui/distance-input";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
@@ -108,11 +109,11 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
         <CreatureEditorPassivePerception
           defaultPassivePerception={resource.passive_perception}
         />
+        <CreatureEditorSpeedWalk defaultSpeedWalk={resource.speed_walk ?? 0} />
       </HStack>
 
       {/* Speed */}
       <HStack align="flex-start" gap={4} w="full">
-        <CreatureEditorSpeedWalk defaultSpeedWalk={resource.speed_walk ?? 0} />
         <CreatureEditorSpeedFly defaultSpeedFly={resource.speed_fly ?? 0} />
         <CreatureEditorSpeedSwim defaultSpeedSwim={resource.speed_swim ?? 0} />
         <CreatureEditorSpeedClimb
@@ -980,7 +981,7 @@ function CreatureEditorSpeedBurrow({
 
   return (
     <Field error={message} label={t("speed_burrow.label")}>
-      <NumberInput {...rest} />
+      <DistanceInput min={0} {...rest} />
     </Field>
   );
 }
@@ -1000,7 +1001,7 @@ function CreatureEditorSpeedClimb({
 
   return (
     <Field error={message} label={t("speed_climb.label")}>
-      <NumberInput {...rest} />
+      <DistanceInput min={0} {...rest} />
     </Field>
   );
 }
@@ -1020,7 +1021,7 @@ function CreatureEditorSpeedFly({
 
   return (
     <Field error={message} label={t("speed_fly.label")}>
-      <NumberInput {...rest} />
+      <DistanceInput min={0} {...rest} />
     </Field>
   );
 }
@@ -1040,7 +1041,7 @@ function CreatureEditorSpeedSwim({
 
   return (
     <Field error={message} label={t("speed_swim.label")}>
-      <NumberInput {...rest} />
+      <DistanceInput min={0} {...rest} />
     </Field>
   );
 }
@@ -1060,7 +1061,7 @@ function CreatureEditorSpeedWalk({
 
   return (
     <Field error={message} label={t("speed_walk.label")}>
-      <NumberInput {...rest} />
+      <DistanceInput min={0} {...rest} />
     </Field>
   );
 }

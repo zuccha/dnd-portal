@@ -1,9 +1,6 @@
 import { useCallback } from "react";
 import { z } from "zod";
-import {
-  useTranslateDistanceImp,
-  useTranslateDistanceMet,
-} from "~/i18n/i18n-distance";
+import { useFormatCmWithUnit } from "~/i18n/i18n-distance-2";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
@@ -110,8 +107,7 @@ export function useLocalizeCreature(): (
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateCreatureCondition = useTranslateCreatureCondition(lang);
   const translateDamageType = useTranslateDamageType(lang);
-  const translateDistanceImp = useTranslateDistanceImp();
-  const translateDistanceMet = useTranslateDistanceMet();
+  const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 
   return useCallback(
     (creature: Creature): LocalizedCreature => {
@@ -144,14 +140,11 @@ export function useLocalizeCreature(): (
       const pb = crToPb[creature.cr] ?? 2;
 
       // Speed conversions
-      const convertSpeed = (squares: number | null | undefined): string => {
-        if (!squares) return "";
-        return system === "metric" ?
-            translateDistanceMet(`${squares * 1.5} m`)
-          : translateDistanceImp(`${squares * 5} ft`);
+      const convertSpeed = (cm: number | null | undefined): string => {
+        return !cm ? "" : formatCm(cm);
       };
 
-      const speed_walk = convertSpeed(creature.speed_walk);
+      const speed_walk = formatCm(creature.speed_walk);
       const speed_burrow = convertSpeed(creature.speed_burrow);
       const speed_climb = convertSpeed(creature.speed_climb);
       const speed_fly = convertSpeed(creature.speed_fly);
@@ -404,6 +397,7 @@ export function useLocalizeCreature(): (
       };
     },
     [
+      formatCm,
       lang,
       localizeResource,
       system,
@@ -417,8 +411,6 @@ export function useLocalizeCreature(): (
       translateCreatureTreasure,
       translateCreatureType,
       translateDamageType,
-      translateDistanceImp,
-      translateDistanceMet,
     ],
   );
 }
