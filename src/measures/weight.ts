@@ -39,35 +39,35 @@ const gIn = {
 };
 
 //------------------------------------------------------------------------------
-// G to Weight Value
+// Grams to Weight Value
 //------------------------------------------------------------------------------
 
-export function gToWeightValue(g: number, unit: WeightUnit): number {
+export function gramsToWeightValue(g: number, unit: WeightUnit): number {
   return g / gIn[unit];
 }
 
 //------------------------------------------------------------------------------
-// G to Weight Imp
+// Grams to Weight Imp
 //------------------------------------------------------------------------------
 
-export function gToWeightImp(g: number): Weight {
+export function gramsToWeightImp(g: number): Weight {
   return { unit: "g", value: g / gInLb };
 }
 
 //------------------------------------------------------------------------------
-// G to Weight Met
+// Grams to Weight Met
 //------------------------------------------------------------------------------
 
-export function gToWeightMet(g: number): Weight {
+export function gramsToWeightMet(g: number): Weight {
   if (g < gInKg) return { unit: "g", value: g };
   return { unit: "kg", value: g / gInKg };
 }
 
 //------------------------------------------------------------------------------
-// Weight to G
+// Weight to Grams
 //------------------------------------------------------------------------------
 
-export function weightToG(weight: Weight): number {
+export function weightToGrams(weight: Weight): number {
   return gIn[weight.unit] * weight.value;
 }
 
@@ -87,17 +87,17 @@ export function useWeightUnitOptions(format: "long" | "short" = "short") {
 }
 
 //------------------------------------------------------------------------------
-// Use Format G
+// Use Format Grams
 //------------------------------------------------------------------------------
 
-export function useFormatG() {
+export function useFormatGrams() {
   const { tpi } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   return useCallback(
     (g: number, format: "long" | "short" = "short") => {
       const { unit, value } =
-        system === "metric" ? gToWeightMet(g) : gToWeightImp(g);
+        system === "metric" ? gramsToWeightMet(g) : gramsToWeightImp(g);
       return tpi(`${unit}.${format}`, value, formatNumber(value));
     },
     [system, tpi],
@@ -105,10 +105,10 @@ export function useFormatG() {
 }
 
 //------------------------------------------------------------------------------
-// Use Format G With Unit
+// Use Format Grams With Unit
 //------------------------------------------------------------------------------
 
-export function useFormatGWithUnit(unit: WeightUnit) {
+export function useFormatGramsWithUnit(unit: WeightUnit) {
   const { tpi } = useI18nLangContext(i18nContext);
 
   return useCallback(

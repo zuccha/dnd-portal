@@ -5,7 +5,7 @@ import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCp } from "~/measures/cost";
 import { cmToDistanceValue } from "~/measures/distance";
-import { useFormatG } from "~/measures/weight";
+import { useFormatGrams } from "~/measures/weight";
 import { formatNumber } from "~/utils/number";
 import { useTranslateDamageType } from "../../types/damage-type";
 import { useTranslateWeaponMastery } from "../../types/weapon-mastery";
@@ -65,7 +65,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
 
-  const formatWeight = useFormatG();
+  const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
 
   return useCallback(

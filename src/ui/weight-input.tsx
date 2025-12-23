@@ -2,9 +2,9 @@ import { useCallback, useState } from "react";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import {
   type WeightUnit,
-  gToWeightValue,
+  gramsToWeightValue,
   useWeightUnitOptions,
-  weightToG,
+  weightToGrams,
 } from "~/measures/weight";
 import MeasureInput, { type MeasureInputProps } from "./measure-input-2";
 
@@ -46,7 +46,7 @@ export default function WeightInput({
 
   const changeValue = useCallback(
     (value: number) => {
-      onValueChange(weightToG({ unit, value }));
+      onValueChange(weightToGrams({ unit, value }));
     },
     [onValueChange, unit],
   );
@@ -58,7 +58,7 @@ export default function WeightInput({
       onValueChange={changeValue}
       unit={unit}
       unitOptions={unitOptions}
-      value={gToWeightValue(value, unit)}
+      value={gramsToWeightValue(value, unit)}
     />
   );
 }
