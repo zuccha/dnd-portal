@@ -1,5 +1,5 @@
 const fmt = new Intl.NumberFormat("en-US", {
-  maximumFractionDigits: 2,
+  maximumFractionDigits: 3,
   minimumFractionDigits: 0,
 });
 
