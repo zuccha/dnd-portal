@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
 import z from "zod";
+import { formatNumber } from "~/utils/number";
 import { useI18nLangContext } from "./i18n-lang-context";
 import { useI18nSystem } from "./i18n-system";
 
@@ -105,7 +106,7 @@ export function useFormatCm() {
     (cm: number, format: "long" | "short") => {
       const { unit, value } =
         system === "metric" ? cmToDistanceMet(cm) : cmToDistanceImp(cm);
-      return tpi(`${unit}.${format}`, value, `${value}`);
+      return tpi(`${unit}.${format}`, value, formatNumber(value));
     },
     [system, tpi],
   );
@@ -121,7 +122,7 @@ export function useFormatCmWithUnit(unit: DistanceUnit) {
   return useCallback(
     (cm: number, format: "long" | "short" = "short") => {
       const value = cm / cmIn[unit];
-      return tpi(`${unit}.${format}`, value, `${value}`);
+      return tpi(`${unit}.${format}`, value, formatNumber(value));
     },
     [tpi, unit],
   );
