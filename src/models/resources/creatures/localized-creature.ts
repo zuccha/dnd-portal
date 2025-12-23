@@ -144,13 +144,8 @@ export function useLocalizeCreature(): (
       const pb = crToPb[creature.cr] ?? 2;
 
       // Speed conversions
-      const convertSpeed = (
-        speedSquares: string | null | undefined,
-      ): string => {
-        if (!speedSquares) return "";
-        const squares = parseInt(speedSquares, 10);
-        if (isNaN(squares)) return "";
-
+      const convertSpeed = (squares: number | null | undefined): string => {
+        if (!squares) return "";
         return system === "metric" ?
             translateDistanceMet(`${squares * 1.5} m`)
           : translateDistanceImp(`${squares * 5} ft`);
@@ -162,14 +157,14 @@ export function useLocalizeCreature(): (
       const speed_fly = convertSpeed(creature.speed_fly);
       const speed_swim = convertSpeed(creature.speed_swim);
       const speed = [
-        ti("speed.walk", (speed_walk ?? system === "metric") ? "0 m" : "0 ft"),
+        ti("speed.walk", speed_walk ?? (system === "metric" ? "0 m" : "0 ft")),
         speed_fly ? ti("speed.fly", speed_fly) : "",
         speed_swim ? ti("speed.swim", speed_swim) : "",
         speed_climb ? ti("speed.climb", speed_climb) : "",
         speed_burrow ? ti("speed.burrow", speed_burrow) : "",
       ]
         .filter((speed) => speed)
-        .join("  |  ");
+        .join("; ");
 
       // Ability scores and modifiers
       const getAbilityMod = (score: number) => Math.floor((score - 10) / 2);
@@ -367,8 +362,8 @@ export function useLocalizeCreature(): (
         exp,
         pb: `${pb}`,
 
-        ac: creature.ac,
-        hp: creature.hp,
+        ac: `${creature.ac}`,
+        hp: `${creature.hp}`,
         hp_formula: creature.hp_formula,
 
         ability_cha,
@@ -390,9 +385,12 @@ export function useLocalizeCreature(): (
         ability_wis_mod,
         ability_wis_save,
 
-        initiative: creature.initiative,
-        initiative_passive: creature.initiative_passive,
-        passive_perception: creature.passive_perception,
+        initiative:
+          creature.initiative < 0 ?
+            `${creature.initiative}`
+          : `+${creature.initiative}`,
+        initiative_passive: `${10 + creature.initiative}`,
+        passive_perception: `${creature.passive_perception}`,
 
         speed,
         speed_burrow,
@@ -446,23 +444,23 @@ const i18nContext = {
   },
 
   "speed.fly": {
-    en: "Fly: <1>",
-    it: "Volo: <1>",
+    en: "fly <1>",
+    it: "volo <1>",
   },
 
   "speed.swim": {
-    en: "Swim: <1>",
-    it: "Nuoto: <1>",
+    en: "swim <1>",
+    it: "nuoto <1>",
   },
 
   "speed.climb": {
-    en: "Climb: <1>",
-    it: "Scalata: <1>",
+    en: "climb <1>",
+    it: "scalata <1>",
   },
 
   "speed.burrow": {
-    en: "Burrow: <1>",
-    it: "Scavo: <1>",
+    en: "burrow <1>",
+    it: "scavo <1>",
   },
 
   "stats.skills": {

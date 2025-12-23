@@ -23,7 +23,7 @@ export const creatureEditorFormFieldsSchema = z.object({
   ability_proficiencies: z.array(creatureAbilitySchema),
   ability_str: z.number(),
   ability_wis: z.number(),
-  ac: z.string(),
+  ac: z.number(),
   actions: z.string(),
   alignment: creatureAlignmentSchema,
   bonus_actions: z.string(),
@@ -36,26 +36,25 @@ export const creatureEditorFormFieldsSchema = z.object({
   damage_vulnerabilities: z.array(damageTypeSchema),
   gear: z.string(),
   habitats: z.array(creatureHabitatSchema),
-  hp: z.string(),
+  hp: z.number(),
   hp_formula: z.string(),
-  initiative: z.string(),
-  initiative_passive: z.string(),
+  initiative: z.number(),
   languages: z.string(),
   legendary_actions: z.string(),
   name: z.string(),
   page: z.number(),
-  passive_perception: z.string(),
+  passive_perception: z.number(),
   planes: z.string(),
   reactions: z.string(),
   senses: z.string(),
   size: creatureSizeSchema,
   skill_expertise: z.array(creatureSkillSchema),
   skill_proficiencies: z.array(creatureSkillSchema),
-  speed_burrow: z.string(),
-  speed_climb: z.string(),
-  speed_fly: z.string(),
-  speed_swim: z.string(),
-  speed_walk: z.string(),
+  speed_burrow: z.number(),
+  speed_climb: z.number(),
+  speed_fly: z.number(),
+  speed_swim: z.number(),
+  speed_walk: z.number(),
   traits: z.string(),
   treasures: z.array(creatureTreasureSchema),
   type: creatureTypeSchema,
@@ -242,14 +241,6 @@ export const useCreatureEditorFormHPFormula = (
 export const useCreatureEditorFormInitiative = (
   defaultInitiative: CreatureEditorFormFields["initiative"],
 ) => useCreatureEditorFormField("initiative", defaultInitiative);
-
-//------------------------------------------------------------------------------
-// Initiative Passive
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormInitiativePassive = (
-  defaultInitiativePassive: CreatureEditorFormFields["initiative_passive"],
-) => useCreatureEditorFormField("initiative_passive", defaultInitiativePassive);
 
 //------------------------------------------------------------------------------
 // Languages

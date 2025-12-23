@@ -135,7 +135,6 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     ability_wis: data.ability_wis,
 
     initiative: data.initiative,
-    initiative_passive: data.initiative_passive,
     passive_perception: data.passive_perception,
 
     ability_proficiencies: data.ability_proficiencies,

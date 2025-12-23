@@ -21,16 +21,16 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   treasures: z.array(creatureTreasureSchema),
   type: creatureTypeSchema,
 
-  ac: z.string(),
+  ac: z.number(),
   cr: z.number(),
-  hp: z.string(),
+  hp: z.number(),
   hp_formula: z.string(),
 
-  speed_burrow: z.string().nullish(),
-  speed_climb: z.string().nullish(),
-  speed_fly: z.string().nullish(),
-  speed_swim: z.string().nullish(),
-  speed_walk: z.string().nullish(),
+  speed_burrow: z.number(),
+  speed_climb: z.number(),
+  speed_fly: z.number(),
+  speed_swim: z.number(),
+  speed_walk: z.number(),
 
   ability_cha: z.number(),
   ability_con: z.number(),
@@ -39,9 +39,8 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   ability_str: z.number(),
   ability_wis: z.number(),
 
-  initiative: z.string(),
-  initiative_passive: z.string(),
-  passive_perception: z.string(),
+  initiative: z.number(),
+  passive_perception: z.number(),
 
   ability_proficiencies: z.array(creatureAbilitySchema),
   skill_expertise: z.array(creatureSkillSchema),

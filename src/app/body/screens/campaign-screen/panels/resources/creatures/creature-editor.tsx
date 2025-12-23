@@ -41,7 +41,6 @@ import {
   useCreatureEditorFormHPFormula,
   useCreatureEditorFormHabitats,
   useCreatureEditorFormInitiative,
-  useCreatureEditorFormInitiativePassive,
   useCreatureEditorFormLanguages,
   useCreatureEditorFormLegendaryActions,
   useCreatureEditorFormName,
@@ -100,30 +99,27 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
 
       <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorAC defaultAC={resource.ac} />
-        <CreatureEditorHP defaultHP={resource.hp} />
-        <CreatureEditorHPFormula defaultHPFormula={resource.hp_formula} />
-      </HStack>
-
-      <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorInitiative defaultInitiative={resource.initiative} />
-        <CreatureEditorInitiativePassive
-          defaultInitiativePassive={resource.initiative_passive}
-        />
         <CreatureEditorPassivePerception
           defaultPassivePerception={resource.passive_perception}
         />
       </HStack>
 
+      <HStack align="flex-start" gap={4} w="full">
+        <CreatureEditorHP defaultHP={resource.hp} />
+        <CreatureEditorHPFormula defaultHPFormula={resource.hp_formula} />
+      </HStack>
+
       {/* Speed */}
       <HStack align="flex-start" gap={4} w="full">
-        <CreatureEditorSpeedWalk defaultSpeedWalk={resource.speed_walk ?? ""} />
-        <CreatureEditorSpeedFly defaultSpeedFly={resource.speed_fly ?? ""} />
-        <CreatureEditorSpeedSwim defaultSpeedSwim={resource.speed_swim ?? ""} />
+        <CreatureEditorSpeedWalk defaultSpeedWalk={resource.speed_walk ?? 0} />
+        <CreatureEditorSpeedFly defaultSpeedFly={resource.speed_fly ?? 0} />
+        <CreatureEditorSpeedSwim defaultSpeedSwim={resource.speed_swim ?? 0} />
         <CreatureEditorSpeedClimb
-          defaultSpeedClimb={resource.speed_climb ?? ""}
+          defaultSpeedClimb={resource.speed_climb ?? 0}
         />
         <CreatureEditorSpeedBurrow
-          defaultSpeedBurrow={resource.speed_burrow ?? ""}
+          defaultSpeedBurrow={resource.speed_burrow ?? 0}
         />
       </HStack>
 
@@ -325,14 +321,14 @@ function CreatureEditorAbilityWis({
 // AC
 //------------------------------------------------------------------------------
 
-function CreatureEditorAC({ defaultAC }: { defaultAC: string }) {
+function CreatureEditorAC({ defaultAC }: { defaultAC: number }) {
   const { error, ...rest } = useCreatureEditorFormAC(defaultAC);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
     <Field error={message} label={t("ac.label")}>
-      <Input autoComplete="off" placeholder={t("ac.placeholder")} {...rest} />
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -698,14 +694,14 @@ function CreatureEditorHabitats({
 // HP
 //------------------------------------------------------------------------------
 
-function CreatureEditorHP({ defaultHP }: { defaultHP: string }) {
+function CreatureEditorHP({ defaultHP }: { defaultHP: number }) {
   const { error, ...rest } = useCreatureEditorFormHP(defaultHP);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("hp.label")}>
-      <Input autoComplete="off" placeholder={t("hp.placeholder")} {...rest} />
+    <Field error={message} flex={1} label={t("hp.label")}>
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -724,7 +720,7 @@ function CreatureEditorHPFormula({
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("hp_formula.label")}>
+    <Field error={message} flex={2} label={t("hp_formula.label")}>
       <Input
         autoComplete="off"
         placeholder={t("hp_formula.placeholder")}
@@ -741,7 +737,7 @@ function CreatureEditorHPFormula({
 function CreatureEditorInitiative({
   defaultInitiative,
 }: {
-  defaultInitiative: string;
+  defaultInitiative: number;
 }) {
   const { error, ...rest } = useCreatureEditorFormInitiative(defaultInitiative);
   const { t } = useI18nLangContext(i18nContext);
@@ -749,37 +745,7 @@ function CreatureEditorInitiative({
 
   return (
     <Field error={message} label={t("initiative.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("initiative.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Initiative Passive
-//------------------------------------------------------------------------------
-
-function CreatureEditorInitiativePassive({
-  defaultInitiativePassive,
-}: {
-  defaultInitiativePassive: string;
-}) {
-  const { error, ...rest } = useCreatureEditorFormInitiativePassive(
-    defaultInitiativePassive,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("initiative_passive.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("initiative_passive.placeholder")}
-        {...rest}
-      />
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -843,7 +809,7 @@ function CreatureEditorPage({ defaultPage }: { defaultPage: number }) {
 function CreatureEditorPassivePerception({
   defaultPassivePerception,
 }: {
-  defaultPassivePerception: string;
+  defaultPassivePerception: number;
 }) {
   const { error, ...rest } = useCreatureEditorFormPassivePerception(
     defaultPassivePerception,
@@ -853,11 +819,7 @@ function CreatureEditorPassivePerception({
 
   return (
     <Field error={message} label={t("passive_perception.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("passive_perception.placeholder")}
-        {...rest}
-      />
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -1009,7 +971,7 @@ function CreatureEditorSize({
 function CreatureEditorSpeedBurrow({
   defaultSpeedBurrow,
 }: {
-  defaultSpeedBurrow: string;
+  defaultSpeedBurrow: number;
 }) {
   const { error, ...rest } =
     useCreatureEditorFormSpeedBurrow(defaultSpeedBurrow);
@@ -1018,11 +980,7 @@ function CreatureEditorSpeedBurrow({
 
   return (
     <Field error={message} label={t("speed_burrow.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -1034,7 +992,7 @@ function CreatureEditorSpeedBurrow({
 function CreatureEditorSpeedClimb({
   defaultSpeedClimb,
 }: {
-  defaultSpeedClimb: string;
+  defaultSpeedClimb: number;
 }) {
   const { error, ...rest } = useCreatureEditorFormSpeedClimb(defaultSpeedClimb);
   const { t } = useI18nLangContext(i18nContext);
@@ -1042,11 +1000,7 @@ function CreatureEditorSpeedClimb({
 
   return (
     <Field error={message} label={t("speed_climb.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -1058,7 +1012,7 @@ function CreatureEditorSpeedClimb({
 function CreatureEditorSpeedFly({
   defaultSpeedFly,
 }: {
-  defaultSpeedFly: string;
+  defaultSpeedFly: number;
 }) {
   const { error, ...rest } = useCreatureEditorFormSpeedFly(defaultSpeedFly);
   const { t } = useI18nLangContext(i18nContext);
@@ -1066,11 +1020,7 @@ function CreatureEditorSpeedFly({
 
   return (
     <Field error={message} label={t("speed_fly.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -1082,7 +1032,7 @@ function CreatureEditorSpeedFly({
 function CreatureEditorSpeedSwim({
   defaultSpeedSwim,
 }: {
-  defaultSpeedSwim: string;
+  defaultSpeedSwim: number;
 }) {
   const { error, ...rest } = useCreatureEditorFormSpeedSwim(defaultSpeedSwim);
   const { t } = useI18nLangContext(i18nContext);
@@ -1090,11 +1040,7 @@ function CreatureEditorSpeedSwim({
 
   return (
     <Field error={message} label={t("speed_swim.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -1106,7 +1052,7 @@ function CreatureEditorSpeedSwim({
 function CreatureEditorSpeedWalk({
   defaultSpeedWalk,
 }: {
-  defaultSpeedWalk: string;
+  defaultSpeedWalk: number;
 }) {
   const { error, ...rest } = useCreatureEditorFormSpeedWalk(defaultSpeedWalk);
   const { t } = useI18nLangContext(i18nContext);
@@ -1114,11 +1060,7 @@ function CreatureEditorSpeedWalk({
 
   return (
     <Field error={message} label={t("speed_walk.label")}>
-      <Input
-        autoComplete="off"
-        placeholder={t("speed.placeholder")}
-        {...rest}
-      />
+      <NumberInput {...rest} />
     </Field>
   );
 }

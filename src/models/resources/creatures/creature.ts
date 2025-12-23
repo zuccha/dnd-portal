@@ -22,16 +22,16 @@ export const creatureSchema = resourceSchema.extend({
   treasures: z.array(creatureTreasureSchema),
   type: creatureTypeSchema,
 
-  ac: z.string(),
+  ac: z.number(),
   cr: z.number(),
-  hp: z.string(),
+  hp: z.number(),
   hp_formula: z.string(),
 
-  speed_burrow: z.string().nullish(),
-  speed_climb: z.string().nullish(),
-  speed_fly: z.string().nullish(),
-  speed_swim: z.string().nullish(),
-  speed_walk: z.string().nullish(),
+  speed_burrow: z.number(),
+  speed_climb: z.number(),
+  speed_fly: z.number(),
+  speed_swim: z.number(),
+  speed_walk: z.number(),
 
   ability_cha: z.number(),
   ability_con: z.number(),
@@ -40,9 +40,8 @@ export const creatureSchema = resourceSchema.extend({
   ability_str: z.number(),
   ability_wis: z.number(),
 
-  initiative: z.string(),
-  initiative_passive: z.string(),
-  passive_perception: z.string(),
+  initiative: z.number(),
+  passive_perception: z.number(),
 
   ability_proficiencies: z.array(creatureAbilitySchema),
   skill_expertise: z.array(creatureSkillSchema),
@@ -109,16 +108,16 @@ export const defaultCreature: Creature = {
   treasures: [],
   type: "beast",
 
-  ac: "10",
+  ac: 10,
   cr: 0,
-  hp: "11",
+  hp: 11,
   hp_formula: "2d10",
 
-  speed_burrow: undefined,
-  speed_climb: undefined,
-  speed_fly: undefined,
-  speed_swim: undefined,
-  speed_walk: undefined,
+  speed_burrow: 0,
+  speed_climb: 0,
+  speed_fly: 0,
+  speed_swim: 0,
+  speed_walk: 0,
 
   ability_cha: 10,
   ability_con: 10,
@@ -127,9 +126,8 @@ export const defaultCreature: Creature = {
   ability_str: 10,
   ability_wis: 10,
 
-  initiative: "+0",
-  initiative_passive: "10",
-  passive_perception: "10",
+  initiative: 0,
+  passive_perception: 10,
 
   ability_proficiencies: [],
   skill_expertise: [],
