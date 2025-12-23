@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS public.weapons (
   melee boolean NOT NULL,
   ranged boolean NOT NULL,
   magic boolean NOT NULL,
+  range_short integer,
+  range_long integer,
   range_ft_short real,
   range_ft_long real,
   range_m_short real,
@@ -26,7 +28,7 @@ CREATE TABLE IF NOT EXISTS public.weapons (
   CONSTRAINT weapons_pkey PRIMARY KEY (id),
   CONSTRAINT weapons_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT weapons_damage_versatile_check CHECK (((damage_versatile IS NOT NULL) = (properties @> ARRAY['versatile'::public.weapon_property]))),
-  CONSTRAINT weapons_ranged_range_check CHECK ((ranged = ((range_ft_short IS NOT NULL) AND (range_ft_long IS NOT NULL) AND (range_m_short IS NOT NULL) AND (range_m_long IS NOT NULL))))
+  CONSTRAINT weapons_ranged_range_check CHECK ((ranged = ((range_short IS NOT NULL) AND (range_long IS NOT NULL) AND (range_ft_short IS NOT NULL) AND (range_ft_long IS NOT NULL) AND (range_m_short IS NOT NULL) AND (range_m_long IS NOT NULL))))
 );
 
 ALTER TABLE public.weapons OWNER TO postgres;
@@ -179,12 +181,12 @@ BEGIN
   INSERT INTO public.weapons (
     campaign_id, type, damage, damage_versatile, damage_type,
     properties, mastery, melee, ranged, magic,
-    range_ft_short, range_ft_long, range_m_short, range_m_long,
+    range_short, range_long, range_ft_short, range_ft_long, range_m_short, range_m_long,
     weight_kg, weight_lb, cost, visibility
   ) VALUES (
     p_campaign_id, r.type, r.damage, r.damage_versatile, r.damage_type,
     r.properties, r.mastery, r.melee, r.ranged, r.magic,
-    r.range_ft_short, r.range_ft_long, r.range_m_short, r.range_m_long,
+    r.range_short, r.range_long, r.range_ft_short, r.range_ft_long, r.range_m_short, r.range_m_long,
     r.weight_kg, r.weight_lb, r.cost, r.visibility
   )
   RETURNING id INTO v_id;
@@ -225,6 +227,8 @@ AS $$
     w.magic,
     w.melee,
     w.ranged,
+    w.range_long,
+    w.range_short,
     w.range_ft_long,
     w.range_ft_short,
     w.range_m_long,
@@ -284,6 +288,8 @@ RETURNS TABLE(
   magic boolean,
   melee boolean,
   ranged boolean,
+  range_long integer,
+  range_short integer,
   range_ft_long real,
   range_ft_short real,
   range_m_long real,
@@ -403,6 +409,8 @@ SELECT
   f.magic,
   f.melee,
   f.ranged,
+  f.range_long,
+  f.range_short,
   f.range_ft_long,
   f.range_ft_short,
   f.range_m_long,
@@ -496,12 +504,12 @@ BEGIN
   SET (
     type, damage, damage_versatile, damage_type,
     properties, mastery, melee, ranged, magic,
-    range_ft_short, range_ft_long, range_m_short, range_m_long,
+    range_short, range_long, range_ft_short, range_ft_long, range_m_short, range_m_long,
     weight_kg, weight_lb, cost, visibility
   ) = (
     SELECT r.type, r.damage, r.damage_versatile, r.damage_type,
            r.properties, r.mastery, r.melee, r.ranged, r.magic,
-           r.range_ft_short, r.range_ft_long, r.range_m_short, r.range_m_long,
+           r.range_short, r.range_long, r.range_ft_short, r.range_ft_long, r.range_m_short, r.range_m_long,
            r.weight_kg, r.weight_lb, r.cost, r.visibility
     FROM jsonb_populate_record(null::public.weapons, to_jsonb(s) || p_weapon) AS r
   )
