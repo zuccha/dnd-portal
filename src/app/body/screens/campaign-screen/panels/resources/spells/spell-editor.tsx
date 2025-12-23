@@ -71,7 +71,6 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <SpellEditorName defaultName={resource.name[lang] ?? ""} />
-        <SpellEditorLevel defaultLevel={resource.level} />
         <SpellEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <SpellEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
@@ -81,6 +80,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
           defaultCharacterClasses={resource.character_classes}
         />
         <SpellEditorSchool defaultSchool={resource.school} />
+        <SpellEditorLevel defaultLevel={resource.level} />
       </HStack>
 
       <HStack align="flex-start" gap={4}>
@@ -474,7 +474,7 @@ function SpellEditorSchool({
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("school.label")}>
+    <Field error={message} label={t("school.label")} w="20em">
       <Select options={schoolOptions} withinDialog {...rest} />
     </Field>
   );

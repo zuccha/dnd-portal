@@ -35,9 +35,6 @@ export default function EldritchInvocationEditor({
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <EldritchInvocationEditorName defaultName={resource.name[lang] ?? ""} />
-        <EldritchInvocationEditorMinWarlockLevel
-          defaultMinWarlockLevel={resource.min_warlock_level}
-        />
         <EldritchInvocationEditorPage
           defaultPage={resource.page?.[lang] ?? 0}
         />
@@ -46,9 +43,14 @@ export default function EldritchInvocationEditor({
         />
       </HStack>
 
-      <EldritchInvocationEditorPrerequisite
-        defaultPrerequisite={resource.prerequisite[lang] ?? ""}
-      />
+      <HStack align="flex-start" gap={4}>
+        <EldritchInvocationEditorMinWarlockLevel
+          defaultMinWarlockLevel={resource.min_warlock_level}
+        />
+        <EldritchInvocationEditorPrerequisite
+          defaultPrerequisite={resource.prerequisite[lang] ?? ""}
+        />
+      </HStack>
 
       <EldritchInvocationEditorDescription
         defaultDescription={resource.description[lang] ?? ""}

@@ -65,12 +65,12 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <WeaponEditorName defaultName={resource.name[lang] ?? ""} />
-        <WeaponEditorType defaultType={resource.type} />
         <WeaponEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <WeaponEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 
       <HStack align="flex-start" gap={4}>
+        <WeaponEditorType defaultType={resource.type} />
         <WeaponEditorProperties defaultProperties={resource.properties} />
         <WeaponEditorMastery defaultMastery={resource.mastery} />
       </HStack>
@@ -229,7 +229,7 @@ function WeaponEditorMastery({
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("mastery.label")} w="20em">
+    <Field error={message} label={t("mastery.label")}>
       <Select options={masteryOptions} withinDialog {...rest} />
     </Field>
   );
@@ -386,7 +386,7 @@ function WeaponEditorType({ defaultType }: { defaultType: Weapon["type"] }) {
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("type.label")} w="20em">
+    <Field error={message} label={t("type.label")}>
       <Select options={typeOptions} withinDialog {...rest} />
     </Field>
   );

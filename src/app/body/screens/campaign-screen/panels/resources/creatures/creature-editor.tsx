@@ -79,7 +79,6 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
       {/* Basic Information */}
       <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorName defaultName={resource.name[lang] ?? ""} />
-        <CreatureEditorCR defaultCR={resource.cr} />
         <CreatureEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <CreatureEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
@@ -98,16 +97,17 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
       </HStack>
 
       <HStack align="flex-start" gap={4} w="full">
+        <CreatureEditorHP defaultHP={resource.hp} />
+        <CreatureEditorHPFormula defaultHPFormula={resource.hp_formula} />
+        <CreatureEditorCR defaultCR={resource.cr} />
+      </HStack>
+
+      <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorAC defaultAC={resource.ac} />
         <CreatureEditorInitiative defaultInitiative={resource.initiative} />
         <CreatureEditorPassivePerception
           defaultPassivePerception={resource.passive_perception}
         />
-      </HStack>
-
-      <HStack align="flex-start" gap={4} w="full">
-        <CreatureEditorHP defaultHP={resource.hp} />
-        <CreatureEditorHPFormula defaultHPFormula={resource.hp_formula} />
       </HStack>
 
       {/* Speed */}
@@ -451,8 +451,8 @@ function CreatureEditorCR({ defaultCR }: { defaultCR: number }) {
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} flex={0} label={t("cr.label")}>
-      <NumberInput {...rest} inputProps={{ w: "5em" }} />
+    <Field error={message} label={t("cr.label")}>
+      <NumberInput {...rest} />
     </Field>
   );
 }
@@ -700,7 +700,7 @@ function CreatureEditorHP({ defaultHP }: { defaultHP: number }) {
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} flex={1} label={t("hp.label")}>
+    <Field error={message} label={t("hp.label")}>
       <NumberInput {...rest} />
     </Field>
   );
@@ -720,7 +720,7 @@ function CreatureEditorHPFormula({
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} flex={2} label={t("hp_formula.label")}>
+    <Field error={message} label={t("hp_formula.label")}>
       <Input
         autoComplete="off"
         placeholder={t("hp_formula.placeholder")}
@@ -1225,8 +1225,8 @@ const i18nContext = {
     it: "Nessuna",
   },
   "cr.label": {
-    en: "CR",
-    it: "GS",
+    en: "Challenge Rating",
+    it: "Grado Sfida",
   },
   "damage_immunities.label": {
     en: "Damage Immunities",
