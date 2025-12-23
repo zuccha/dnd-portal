@@ -99,8 +99,7 @@ function parseFormData(
     ranged: data.ranged,
     type: data.type,
     visibility: data.visibility,
-    weight_kg: data.weight_kg,
-    weight_lb: data.weight_lb,
+    weight: data.weight,
   };
 
   const maybeTranslation = {

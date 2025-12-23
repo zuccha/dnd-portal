@@ -29,8 +29,7 @@ export const weaponSchema = resourceSchema.extend({
 
   ammunition: i18nStringSchema,
 
-  weight_kg: z.number(),
-  weight_lb: z.number(),
+  weight: z.number(),
 
   cost: z.number(),
 
@@ -87,8 +86,7 @@ export const defaultWeapon: Weapon = {
 
   ammunition: {},
 
-  weight_kg: 0,
-  weight_lb: 0,
+  weight: 0,
 
   cost: 0,
 

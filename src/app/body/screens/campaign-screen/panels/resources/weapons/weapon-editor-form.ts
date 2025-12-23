@@ -28,8 +28,7 @@ export const weaponEditorFormFieldsSchema = z.object({
   ranged: z.boolean(),
   type: weaponTypeSchema,
   visibility: campaignRoleSchema,
-  weight_kg: z.number(),
-  weight_lb: z.number(),
+  weight: z.number(),
 });
 
 export type WeaponEditorFormFields = z.infer<
@@ -195,17 +194,9 @@ export const useWeaponEditorFormVisibility = (
 ) => useWeaponEditorFormField("visibility", defaultVisibility);
 
 //------------------------------------------------------------------------------
-// Weight Kg
+// Weight
 //------------------------------------------------------------------------------
 
-export const useWeaponEditorFormWeightKg = (
-  defaultWeightKg: WeaponEditorFormFields["weight_kg"],
-) => useWeaponEditorFormField("weight_kg", defaultWeightKg);
-
-//------------------------------------------------------------------------------
-// Weight Lb
-//------------------------------------------------------------------------------
-
-export const useWeaponEditorFormWeightLb = (
-  defaultWeightLb: WeaponEditorFormFields["weight_lb"],
-) => useWeaponEditorFormField("weight_lb", defaultWeightLb);
+export const useWeaponEditorFormWeight = (
+  defaultWeight: WeaponEditorFormFields["weight"],
+) => useWeaponEditorFormField("weight", defaultWeight);

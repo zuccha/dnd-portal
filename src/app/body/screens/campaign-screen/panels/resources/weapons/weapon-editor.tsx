@@ -1,11 +1,6 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useI18nSystem } from "~/i18n/i18n-system";
-import {
-  convertWeightImpToMet,
-  convertWeightMetToImp,
-} from "~/i18n/i18n-weight";
 import type { Weapon } from "~/models/resources/weapons/weapon";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
@@ -19,6 +14,7 @@ import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Switch from "~/ui/switch";
 import Textarea from "~/ui/textarea";
+import WeightInput from "~/ui/weight-input";
 import {
   useWeaponEditorFormAmmunition,
   useWeaponEditorFormCost,
@@ -35,8 +31,7 @@ import {
   useWeaponEditorFormRangeShort,
   useWeaponEditorFormType,
   useWeaponEditorFormVisibility,
-  useWeaponEditorFormWeightKg,
-  useWeaponEditorFormWeightLb,
+  useWeaponEditorFormWeight,
 } from "./weapon-editor-form";
 
 //------------------------------------------------------------------------------
@@ -92,10 +87,7 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
       </HStack>
 
       <HStack align="flex-start" gap={4}>
-        <WeaponEditorWeight
-          defaultWeightKg={resource.weight_kg}
-          defaultWeightLb={resource.weight_lb}
-        />
+        <WeaponEditorWeight defaultWeight={resource.weight} />
 
         <WeaponEditorCost defaultCost={resource.cost} />
 
@@ -389,42 +381,15 @@ function WeaponEditorVisibility({
 // Editor Weight
 //------------------------------------------------------------------------------
 
-function WeaponEditorWeight({
-  defaultWeightKg,
-  defaultWeightLb,
-}: {
-  defaultWeightKg: number;
-  defaultWeightLb: number;
-}) {
+function WeaponEditorWeight({ defaultWeight }: { defaultWeight: number }) {
+  const { error, ...rest } = useWeaponEditorFormWeight(defaultWeight);
   const { t } = useI18nLangContext(i18nContext);
-  const [system] = useI18nSystem();
-
-  const weightLb = useWeaponEditorFormWeightLb(defaultWeightLb);
-  const weightKg = useWeaponEditorFormWeightKg(defaultWeightKg);
-
-  const setWeightLb = (value: number) => {
-    weightLb.onValueChange(value);
-    weightKg.onValueChange(convertWeightImpToMet(value, "lb", "kg")[0]);
-  };
-
-  const setWeightKg = (value: number) => {
-    weightKg.onValueChange(value);
-    weightLb.onValueChange(convertWeightMetToImp(value, "kg", "lb")[0]);
-  };
-
-  const metric = system === "metric";
-  const imperial = system === "imperial";
+  const message = error ? t(error) : undefined;
 
   return (
-    <HStack align="flex-end">
-      <Field hidden={metric} label={t("weight.lb.label")}>
-        <NumberInput min={0} {...weightLb} onValueChange={setWeightLb} />
-      </Field>
-
-      <Field hidden={imperial} label={t("weight.kg.label")}>
-        <NumberInput min={0} {...weightKg} onValueChange={setWeightKg} />
-      </Field>
-    </HStack>
+    <Field error={message} label={t("weight.label")}>
+      <WeightInput min={0} {...rest} />
+    </Field>
   );
 }
 
@@ -549,12 +514,8 @@ const i18nContext = {
     en: "Visibility",
     it: "Visibilità",
   },
-  "weight.kg.label": {
-    en: "Weight (kg)",
-    it: "Peso (kg)",
-  },
-  "weight.lb.label": {
-    en: "Weight (lb)",
-    it: "Peso (lb)",
+  "weight.label": {
+    en: "Weight",
+    it: "Peso",
   },
 };

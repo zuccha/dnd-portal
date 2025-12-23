@@ -4,6 +4,7 @@ import { cmToDistanceValue } from "~/i18n/i18n-distance-2";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
+import { useFormatG } from "~/measures/weight";
 import { formatNumber } from "~/utils/number";
 import { useTranslateDamageType } from "../../types/damage-type";
 import { useTranslateWeaponMastery } from "../../types/weapon-mastery";
@@ -62,6 +63,8 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const translateWeaponMastery = useTranslateWeaponMastery(lang);
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
+
+  const formatWeight = useFormatG();
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
@@ -122,10 +125,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
         range,
 
-        weight:
-          system === "metric" ?
-            ti("weight.kg", `${weapon.weight_kg ?? 0}`)
-          : ti("weight.lb", `${weapon.weight_lb ?? 0}`),
+        weight: formatWeight(weapon.weight),
 
         cost:
           weapon.cost < 0.1 ? ti("cost.cp", `${weapon.cost * 100}`)
@@ -140,6 +140,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       };
     },
     [
+      formatWeight,
       lang,
       localizeResource,
       system,
@@ -182,15 +183,6 @@ const i18nContext = {
   "range.m": {
     en: "<1> m", // 1 = range
     it: "<1> m", // 1 = range
-  },
-
-  "weight.kg": {
-    en: "<1> kg", // 1 = weight
-    it: "<1> kg", // 1 = weight
-  },
-  "weight.lb": {
-    en: "<1> lb", // 1 = weight
-    it: "<1> lb", // 1 = weight
   },
 
   "cost.cp": {

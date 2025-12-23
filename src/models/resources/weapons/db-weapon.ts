@@ -26,8 +26,7 @@ export const dbWeaponSchema = dbResourceSchema.extend({
   range_long: z.number().nullish(),
   range_short: z.number().nullish(),
 
-  weight_kg: z.number(),
-  weight_lb: z.number(),
+  weight: z.number(),
 
   cost: z.number(),
 });
