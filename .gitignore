@@ -26,5 +26,6 @@ dist-ssr
 # Local files
 *.env
 db.dump.*
+db-dump/
 _local/
 TODO.local.md
