@@ -70,6 +70,10 @@ export default function SidebarCampaign({ campaignId }: SidebarCampaignProps) {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "section.resource/armors": {
+    en: "Armors",
+    it: "Armature",
+  },
   "section.resource/creatures": {
     en: "Creatures",
     it: "Creature",
