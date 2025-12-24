@@ -104,11 +104,7 @@ function ResourceCardHeader({
         </HStack>
       : <Span py={1}>{name}</Span>}
 
-      <Checkbox
-        checked={selected}
-        onValueChange={onToggleSelection}
-        size="sm"
-      />
+      <Checkbox onValueChange={onToggleSelection} size="sm" value={selected} />
     </HStack>
   );
 }

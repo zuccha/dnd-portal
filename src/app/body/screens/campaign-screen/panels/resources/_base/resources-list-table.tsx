@@ -123,7 +123,7 @@ function ResourcesListTableHeader<
   return (
     <Table.Row>
       <Table.ColumnHeader textAlign="center" w="4em">
-        <Checkbox checked={selected} onClick={toggleSelected} size="sm" />
+        <Checkbox onClick={toggleSelected} size="sm" value={selected} />
       </Table.ColumnHeader>
 
       <Table.ColumnHeader textAlign="center" w="3em">
@@ -199,12 +199,12 @@ function ResourcesListTableRow<
       <Table.Row key={localizedResource.id} onClick={toggleExpanded}>
         <Table.Cell textAlign="center" w="4em">
           <Checkbox
-            checked={selected}
             onClick={(e) => {
               e.stopPropagation();
               onToggleSelected(localizedResource._raw);
             }}
             size="sm"
+            value={selected}
           />
         </Table.Cell>
 
@@ -240,7 +240,7 @@ function ResourcesListTableRow<
                   {String(value)}
                 </Link>
               : typeof value === "boolean" ?
-                <Checkbox checked={value} disabled size="sm" />
+                <Checkbox disabled size="sm" value={value} />
               : String(value)}
             </Table.Cell>
           );

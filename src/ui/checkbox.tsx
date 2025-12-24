@@ -6,31 +6,31 @@ import { useCallback } from "react";
 //------------------------------------------------------------------------------
 
 export type CheckboxProps = Omit<CheckmarkProps, "checked"> & {
-  checked: boolean | "-";
   disabled?: boolean;
   onValueChange?: (checked: boolean) => void;
+  value: boolean | "-";
 };
 
 export default function Checkbox({
-  checked,
   disabled,
   onValueChange,
+  value,
   ...rest
 }: CheckboxProps) {
   const toggle = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
       e.preventDefault();
-      onValueChange?.(!checked);
+      onValueChange?.(!value);
     },
-    [checked, onValueChange],
+    [value, onValueChange],
   );
 
   return (
     <Checkmark
-      checked={!!checked}
+      checked={!!value}
       cursor={disabled ? "disabled" : "pointer"}
       disabled={disabled}
-      indeterminate={checked === "-"}
+      indeterminate={value === "-"}
       onClick={toggle}
       {...rest}
     />
