@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { distanceImpSchema, distanceMetSchema } from "~/i18n/i18n-distance";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { timeSchema } from "~/i18n/i18n-time";
 import { characterClassSchema } from "../../types/character-class";
@@ -30,8 +29,7 @@ export const spellSchema = resourceSchema.extend({
   duration_value: timeSchema.nullish(),
 
   range: spellRangeSchema,
-  range_value_imp: distanceImpSchema.nullish(),
-  range_value_met: distanceMetSchema.nullish(),
+  range_value: z.number().nullish(),
 
   concentration: z.boolean(),
   ritual: z.boolean(),
@@ -98,8 +96,7 @@ export const defaultSpell: Spell = {
   duration_value: undefined,
 
   range: "self",
-  range_value_imp: undefined,
-  range_value_met: undefined,
+  range_value: undefined,
 
   concentration: false,
   ritual: false,

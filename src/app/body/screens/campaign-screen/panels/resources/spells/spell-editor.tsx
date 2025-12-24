@@ -1,15 +1,6 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "~/hooks/use-list-collection";
-import {
-  convertDistanceImpToMet,
-  convertDistanceMetToImp,
-  parseDistanceImp,
-  parseDistanceMet,
-  useDistanceImpUnitOptions,
-  useDistanceMetUnitOptions,
-} from "~/i18n/i18n-distance";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useI18nSystem } from "~/i18n/i18n-system";
 import { parseTime, useTimeUnitOptions } from "~/i18n/i18n-time";
 import { type Spell } from "~/models/resources/spells/spell";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
@@ -19,6 +10,7 @@ import { useSpellDurationOptions } from "~/models/types/spell-duration";
 import { useSpellLevelOptions } from "~/models/types/spell-level";
 import { useSpellRangeOptions } from "~/models/types/spell-range";
 import { useSpellSchoolOptions } from "~/models/types/spell-school";
+import DistanceInput from "~/ui/distance-input";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
 import MeasureInput from "~/ui/measure-input";
@@ -39,8 +31,7 @@ import {
   useSpellEditorFormName,
   useSpellEditorFormPage,
   useSpellEditorFormRange,
-  useSpellEditorFormRangeValueImp,
-  useSpellEditorFormRangeValueMet,
+  useSpellEditorFormRangeValue,
   useSpellEditorFormSchool,
   useSpellEditorFormUpgrade,
   useSpellEditorFormVisibility,
@@ -107,11 +98,15 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
         </Box>
       </HStack>
 
-      <SpellEditorRange
-        defaultRange={resource.range}
-        defaultRangeValueImp={resource.range_value_imp ?? "0 ft"}
-        defaultRangeValueMet={resource.range_value_met ?? "0 m"}
-      />
+      <HStack>
+        <Box flex={1}>
+          <SpellEditorRange
+            defaultRange={resource.range}
+            defaultRangeValue={resource.range_value ?? 0}
+          />
+        </Box>
+        <Box flex={1} />
+      </HStack>
 
       <HStack gap={8}>
         <Switch label={t("verbal.label")} size="lg" {...verbal} />
@@ -372,12 +367,10 @@ function SpellEditorPage({ defaultPage }: { defaultPage: number }) {
 
 function SpellEditorRange({
   defaultRange,
-  defaultRangeValueImp,
-  defaultRangeValueMet,
+  defaultRangeValue,
 }: {
   defaultRange: Spell["range"];
-  defaultRangeValueImp: string;
-  defaultRangeValueMet: string;
+  defaultRangeValue: number;
 }) {
   const rangeOptions = useListCollection(useSpellRangeOptions());
   const { error, ...rest } = useSpellEditorFormRange(defaultRange);
@@ -386,76 +379,31 @@ function SpellEditorRange({
 
   return (
     <HStack align="flex-end" w="full">
-      <Field error={message} flex={1} label={t("range.label")}>
+      <Field error={message} label={t("range.label")}>
         <Select options={rangeOptions} withinDialog {...rest} />
       </Field>
       {rest.value === "value" && (
-        <SpellEditorRangeValues
-          defaultRangeValueImp={defaultRangeValueImp}
-          defaultRangeValueMet={defaultRangeValueMet}
-        />
+        <SpellEditorRangeValue defaultRangeValue={defaultRangeValue} />
       )}
     </HStack>
   );
 }
 
 //------------------------------------------------------------------------------
-// Range Values
+// Range Value
 //------------------------------------------------------------------------------
 
-function SpellEditorRangeValues({
-  defaultRangeValueImp,
-  defaultRangeValueMet,
+function SpellEditorRangeValue({
+  defaultRangeValue,
 }: {
-  defaultRangeValueImp: string;
-  defaultRangeValueMet: string;
+  defaultRangeValue: number;
 }) {
-  const [system] = useI18nSystem();
-
-  const distanceImpOptions = useDistanceImpUnitOptions();
-  const distanceMetOptions = useDistanceMetUnitOptions();
-
-  const rangeValueImp = useSpellEditorFormRangeValueImp(defaultRangeValueImp);
-  const rangeValueMet = useSpellEditorFormRangeValueMet(defaultRangeValueMet);
-
-  const setRangeImpValue = (value: string) => {
-    rangeValueImp.onValueChange(value);
-    const [iv, iu] = parseDistanceImp(value);
-    const [mv, mu] = convertDistanceImpToMet(iv, iu);
-    rangeValueMet.onValueChange(`${mv} ${mu}`);
-  };
-
-  const setRangeMetValue = (value: string) => {
-    rangeValueMet.onValueChange(value);
-    const [mv, mu] = parseDistanceMet(value);
-    const [iv, iu] = convertDistanceMetToImp(mv, mu);
-    rangeValueImp.onValueChange(`${iv} ${iu}`);
-  };
-
-  const metric = system === "metric";
-  const imperial = system === "imperial";
+  const { error: _, ...rest } = useSpellEditorFormRangeValue(defaultRangeValue);
 
   return (
-    <>
-      <Field hidden={metric} maxW="9em">
-        <MeasureInput
-          min={0}
-          onParse={parseDistanceImp}
-          unitOptions={distanceImpOptions}
-          {...rangeValueImp}
-          onValueChange={setRangeImpValue}
-        />
-      </Field>
-      <Field hidden={imperial} maxW="9em">
-        <MeasureInput
-          min={0}
-          onParse={parseDistanceMet}
-          unitOptions={distanceMetOptions}
-          {...rangeValueMet}
-          onValueChange={setRangeMetValue}
-        />
-      </Field>
-    </>
+    <Field>
+      <DistanceInput min={0} {...rest} />
+    </Field>
   );
 }
 

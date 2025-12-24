@@ -1,13 +1,9 @@
 import { useCallback } from "react";
 import { z } from "zod";
-import {
-  useTranslateDistanceImp,
-  useTranslateDistanceMet,
-} from "~/i18n/i18n-distance";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import { useI18nSystem } from "~/i18n/i18n-system";
 import { useTranslateTime } from "~/i18n/i18n-time";
+import { useFormatCm } from "~/measures/distance";
 import { useTranslateCharacterClass } from "../../types/character-class";
 import { useTranslateSpellCastingTime } from "../../types/spell-casting-time";
 import { useTranslateSpellDuration } from "../../types/spell-duration";
@@ -51,16 +47,15 @@ export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const localizeResource = useLocalizeResource<Spell>();
   const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
-  const [system] = useI18nSystem();
 
   const translateCharacterClass = useTranslateCharacterClass(lang);
   const translateSpellSchool = useTranslateSpellSchool(lang);
   const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
   const translateSpellDuration = useTranslateSpellDuration(lang);
   const translateSpellRange = useTranslateSpellRange(lang);
-  const translateDistanceImp = useTranslateDistanceImp();
-  const translateDistanceMet = useTranslateDistanceMet();
   const translateTime = useTranslateTime();
+
+  const formatRange = useFormatCm();
 
   return useCallback(
     (spell: Spell): LocalizedSpell => {
@@ -75,10 +70,8 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
         : translateSpellDuration(spell.duration).label;
 
       const range =
-        system === "metric" && spell.range_value_met ?
-          translateDistanceMet(spell.range_value_met)
-        : system === "imperial" && spell.range_value_imp ?
-          translateDistanceImp(spell.range_value_imp)
+        spell.range_value ?
+          formatRange(spell.range_value)
         : translateSpellRange(spell.range).label;
 
       const description = translate(spell.description, lang);
@@ -125,15 +118,13 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       };
     },
     [
+      formatRange,
       lang,
       localizeResource,
-      system,
       t,
       ti,
       tp,
       translateCharacterClass,
-      translateDistanceImp,
-      translateDistanceMet,
       translateSpellCastingTime,
       translateSpellDuration,
       translateSpellRange,

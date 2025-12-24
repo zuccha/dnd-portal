@@ -1,5 +1,4 @@
 import z from "zod";
-import { distanceImpSchema, distanceMetSchema } from "~/i18n/i18n-distance";
 import { timeSchema } from "~/i18n/i18n-time";
 import { characterClassSchema } from "../../types/character-class";
 import { spellCastingTimeSchema } from "../../types/spell-casting-time";
@@ -26,8 +25,7 @@ export const dbSpellSchema = dbResourceSchema.extend({
   duration_value: timeSchema.nullish(),
 
   range: spellRangeSchema,
-  range_value_imp: distanceImpSchema.nullish(),
-  range_value_met: distanceMetSchema.nullish(),
+  range_value: z.number().nullish(),
 
   concentration: z.boolean(),
   ritual: z.boolean(),

@@ -25,8 +25,7 @@ export const spellEditorFormFieldsSchema = z.object({
   name: z.string(),
   page: z.number(),
   range: spellRangeSchema,
-  range_value_imp: z.string(),
-  range_value_met: z.string(),
+  range_value: z.number(),
   ritual: z.boolean(),
   school: spellSchoolSchema,
   somatic: z.boolean(),
@@ -160,20 +159,12 @@ export const useSpellEditorFormRange = (
 ) => useSpellEditorFormField("range", defaultRange);
 
 //------------------------------------------------------------------------------
-// Range Value Imp
+// Range Value
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormRangeValueImp = (
-  defaultRangeValueImp: SpellEditorFormFields["range_value_imp"],
-) => useSpellEditorFormField("range_value_imp", defaultRangeValueImp);
-
-//------------------------------------------------------------------------------
-// Range Value Met
-//------------------------------------------------------------------------------
-
-export const useSpellEditorFormRangeValueMet = (
-  defaultRangeValueMet: SpellEditorFormFields["range_value_met"],
-) => useSpellEditorFormField("range_value_met", defaultRangeValueMet);
+export const useSpellEditorFormRangeValue = (
+  defaultRangeValue: SpellEditorFormFields["range_value"],
+) => useSpellEditorFormField("range_value", defaultRangeValue);
 
 //------------------------------------------------------------------------------
 // School
