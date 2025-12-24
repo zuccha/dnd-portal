@@ -16,7 +16,7 @@ import WeaponEditor from "./weapon-editor";
 import weaponEditorForm, {
   type WeaponEditorFormFields,
 } from "./weapon-editor-form";
-import WeaponsFilters from "./weapon-filters";
+import WeaponsFilters from "./weapons-filters";
 
 //------------------------------------------------------------------------------
 // Columns
