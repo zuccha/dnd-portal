@@ -18,7 +18,7 @@ export const spellEditorFormFieldsSchema = z.object({
   concentration: z.boolean(),
   description: z.string(),
   duration: spellDurationSchema,
-  duration_value: z.string(),
+  duration_value: z.number(),
   level: z.number(),
   material: z.boolean(),
   materials: z.string(),

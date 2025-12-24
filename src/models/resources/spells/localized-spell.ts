@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { z } from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import { useTranslateTime } from "~/i18n/i18n-time";
 import { useFormatCm } from "~/measures/distance";
 import { useFormatSeconds } from "~/measures/time";
 import { useTranslateCharacterClass } from "../../types/character-class";
@@ -54,7 +53,6 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
   const translateSpellDuration = useTranslateSpellDuration(lang);
   const translateSpellRange = useTranslateSpellRange(lang);
-  const translateTime = useTranslateTime();
 
   const formatRange = useFormatCm();
   const formatTime = useFormatSeconds();
@@ -67,8 +65,8 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
         : translateSpellCastingTime(spell.casting_time).label;
 
       const duration =
-        spell.duration_value ?
-          translateTime(spell.duration_value)
+        spell.duration_value_temp ?
+          formatTime(spell.duration_value_temp)
         : translateSpellDuration(spell.duration).label;
 
       const range =
@@ -132,7 +130,6 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       translateSpellDuration,
       translateSpellRange,
       translateSpellSchool,
-      translateTime,
     ],
   );
 }

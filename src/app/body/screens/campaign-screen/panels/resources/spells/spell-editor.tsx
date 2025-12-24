@@ -1,7 +1,6 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { parseTime, useTimeUnitOptions } from "~/i18n/i18n-time";
 import { type Spell } from "~/models/resources/spells/spell";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useCharacterClassOptions } from "~/models/types/character-class";
@@ -13,7 +12,6 @@ import { useSpellSchoolOptions } from "~/models/types/spell-school";
 import DistanceInput from "~/ui/distance-input";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
-import MeasureInput from "~/ui/measure-input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Switch from "~/ui/switch";
@@ -82,7 +80,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
         />
         <SpellEditorDuration
           defaultDuration={resource.duration}
-          defaultDurationValue={resource.duration_value ?? "0 min"}
+          defaultDurationValue={resource.duration_value_temp ?? 0}
         />
       </HStack>
 
@@ -241,7 +239,7 @@ function SpellEditorDuration({
   defaultDurationValue,
 }: {
   defaultDuration: Spell["duration"];
-  defaultDurationValue: string;
+  defaultDurationValue: number;
 }) {
   const durationOptions = useListCollection(useSpellDurationOptions());
   const { error, ...rest } = useSpellEditorFormDuration(defaultDuration);
@@ -267,19 +265,14 @@ function SpellEditorDuration({
 function SpellEditorDurationValue({
   defaultDurationValue,
 }: {
-  defaultDurationValue: string;
+  defaultDurationValue: number;
 }) {
-  const timeUnitOptions = useTimeUnitOptions();
-  const durationValue = useSpellEditorFormDurationValue(defaultDurationValue);
+  const { error: _, ...rest } =
+    useSpellEditorFormDurationValue(defaultDurationValue);
 
   return (
     <Field maxW="9em">
-      <MeasureInput
-        min={0}
-        onParse={parseTime}
-        unitOptions={timeUnitOptions}
-        {...durationValue}
-      />
+      <TimeInput min={0} {...rest} />
     </Field>
   );
 }

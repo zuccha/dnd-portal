@@ -1,5 +1,4 @@
 import z from "zod";
-import { timeSchema } from "~/i18n/i18n-time";
 import { characterClassSchema } from "../../types/character-class";
 import { spellCastingTimeSchema } from "../../types/spell-casting-time";
 import { spellDurationSchema } from "../../types/spell-duration";
@@ -22,7 +21,7 @@ export const dbSpellSchema = dbResourceSchema.extend({
   casting_time_value_temp: z.number().nullish(),
 
   duration: spellDurationSchema,
-  duration_value: timeSchema.nullish(),
+  duration_value_temp: z.number().nullish(),
 
   range: spellRangeSchema,
   range_value: z.number().nullish(),

@@ -90,7 +90,7 @@ function parseFormData(
     character_classes: data.character_classes,
     concentration: data.concentration,
     duration: data.duration,
-    duration_value: data.duration_value,
+    duration_value_temp: data.duration_value,
     level: data.level,
     material: data.material,
     range: data.range,
