@@ -18,6 +18,7 @@ import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Switch from "~/ui/switch";
 import Textarea from "~/ui/textarea";
+import TimeInput from "~/ui/time-input";
 import {
   useSpellEditorFormCastingTime,
   useSpellEditorFormCastingTimeValue,
@@ -77,7 +78,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
       <HStack align="flex-start" gap={4}>
         <SpellEditorCastingTime
           defaultCastingTime={resource.casting_time}
-          defaultCastingTimeValue={resource.casting_time_value ?? "0 min"}
+          defaultCastingTimeValue={resource.casting_time_value_temp ?? 0}
         />
         <SpellEditorDuration
           defaultDuration={resource.duration}
@@ -141,7 +142,7 @@ function SpellEditorCastingTime({
   defaultCastingTimeValue,
 }: {
   defaultCastingTime: Spell["casting_time"];
-  defaultCastingTimeValue: string;
+  defaultCastingTimeValue: number;
 }) {
   const castingTimeOptions = useListCollection(useSpellCastingTimeOptions());
   const { error, ...rest } = useSpellEditorFormCastingTime(defaultCastingTime);
@@ -169,19 +170,15 @@ function SpellEditorCastingTime({
 function SpellEditorCastingTimeValue({
   defaultCastingTimeValue,
 }: {
-  defaultCastingTimeValue: string;
+  defaultCastingTimeValue: number;
 }) {
-  const timeUnitOptions = useTimeUnitOptions();
-  const value = useSpellEditorFormCastingTimeValue(defaultCastingTimeValue);
+  const { error: _, ...rest } = useSpellEditorFormCastingTimeValue(
+    defaultCastingTimeValue,
+  );
 
   return (
     <Field maxW="9em">
-      <MeasureInput
-        min={0}
-        onParse={parseTime}
-        unitOptions={timeUnitOptions}
-        {...value}
-      />
+      <TimeInput min={0} {...rest} />
     </Field>
   );
 }

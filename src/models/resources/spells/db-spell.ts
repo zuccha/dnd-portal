@@ -19,7 +19,7 @@ export const dbSpellSchema = dbResourceSchema.extend({
   school: spellSchoolSchema,
 
   casting_time: spellCastingTimeSchema,
-  casting_time_value: timeSchema.nullish(),
+  casting_time_value_temp: z.number().nullish(),
 
   duration: spellDurationSchema,
   duration_value: timeSchema.nullish(),

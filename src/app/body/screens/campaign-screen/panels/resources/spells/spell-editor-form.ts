@@ -13,7 +13,7 @@ import { createForm } from "~/utils/form";
 
 export const spellEditorFormFieldsSchema = z.object({
   casting_time: spellCastingTimeSchema,
-  casting_time_value: z.string(),
+  casting_time_value: z.number(),
   character_classes: z.array(characterClassSchema),
   concentration: z.boolean(),
   description: z.string(),

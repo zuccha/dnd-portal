@@ -4,6 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateTime } from "~/i18n/i18n-time";
 import { useFormatCm } from "~/measures/distance";
+import { useFormatSeconds } from "~/measures/time";
 import { useTranslateCharacterClass } from "../../types/character-class";
 import { useTranslateSpellCastingTime } from "../../types/spell-casting-time";
 import { useTranslateSpellDuration } from "../../types/spell-duration";
@@ -56,12 +57,13 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const translateTime = useTranslateTime();
 
   const formatRange = useFormatCm();
+  const formatTime = useFormatSeconds();
 
   return useCallback(
     (spell: Spell): LocalizedSpell => {
       const casting_time =
-        spell.casting_time_value ?
-          translateTime(spell.casting_time_value)
+        spell.casting_time_value_temp ?
+          formatTime(spell.casting_time_value_temp)
         : translateSpellCastingTime(spell.casting_time).label;
 
       const duration =
@@ -119,6 +121,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
     },
     [
       formatRange,
+      formatTime,
       lang,
       localizeResource,
       t,

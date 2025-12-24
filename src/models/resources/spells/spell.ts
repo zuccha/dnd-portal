@@ -23,7 +23,7 @@ export const spellSchema = resourceSchema.extend({
   school: spellSchoolSchema,
 
   casting_time: spellCastingTimeSchema,
-  casting_time_value: timeSchema.nullish(),
+  casting_time_value_temp: z.number().nullish(),
 
   duration: spellDurationSchema,
   duration_value: timeSchema.nullish(),
@@ -90,7 +90,7 @@ export const defaultSpell: Spell = {
   school: "abjuration",
 
   casting_time: "action",
-  casting_time_value: undefined,
+  casting_time_value_temp: undefined,
 
   duration: "instantaneous",
   duration_value: undefined,
