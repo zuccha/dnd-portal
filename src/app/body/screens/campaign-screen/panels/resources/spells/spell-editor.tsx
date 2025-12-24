@@ -76,11 +76,11 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
       <HStack align="flex-start" gap={4}>
         <SpellEditorCastingTime
           defaultCastingTime={resource.casting_time}
-          defaultCastingTimeValue={resource.casting_time_value_temp ?? 0}
+          defaultCastingTimeValue={resource.casting_time_value ?? 0}
         />
         <SpellEditorDuration
           defaultDuration={resource.duration}
-          defaultDurationValue={resource.duration_value_temp ?? 0}
+          defaultDurationValue={resource.duration_value ?? 0}
         />
       </HStack>
 

@@ -86,11 +86,11 @@ function parseFormData(
   | string {
   const maybeSpell = {
     casting_time: data.casting_time,
-    casting_time_value_temp: data.casting_time_value,
+    casting_time_value: data.casting_time_value,
     character_classes: data.character_classes,
     concentration: data.concentration,
     duration: data.duration,
-    duration_value_temp: data.duration_value,
+    duration_value: data.duration_value,
     level: data.level,
     material: data.material,
     range: data.range,

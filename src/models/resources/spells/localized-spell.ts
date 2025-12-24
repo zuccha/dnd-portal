@@ -60,13 +60,13 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   return useCallback(
     (spell: Spell): LocalizedSpell => {
       const casting_time =
-        spell.casting_time_value_temp ?
-          formatTime(spell.casting_time_value_temp)
+        spell.casting_time_value ?
+          formatTime(spell.casting_time_value)
         : translateSpellCastingTime(spell.casting_time).label;
 
       const duration =
-        spell.duration_value_temp ?
-          formatTime(spell.duration_value_temp)
+        spell.duration_value ?
+          formatTime(spell.duration_value)
         : translateSpellDuration(spell.duration).label;
 
       const range =
