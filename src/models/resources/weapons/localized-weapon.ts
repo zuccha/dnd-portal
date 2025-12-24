@@ -3,7 +3,7 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
-import { useFormatCp } from "~/measures/cost";
+import { useFormatCpWithUnit } from "~/measures/cost";
 import { cmToDistanceValue } from "~/measures/distance";
 import { useFormatGrams } from "~/measures/weight";
 import { formatNumber } from "~/utils/number";
@@ -66,7 +66,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const translateWeaponType = useTranslateWeaponType(lang);
 
   const formatWeight = useFormatGrams();
-  const formatCost = useFormatCp();
+  const formatCost = useFormatCpWithUnit("gp");
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
@@ -129,7 +129,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
         weight: formatWeight(weapon.weight),
 
-        cost: formatCost(weapon.cost),
+        cost: formatCost(weapon.cost).toUpperCase(),
 
         notes: notes || ti("notes.none"),
 
