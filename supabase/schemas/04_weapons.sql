@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS public.weapons (
   range_short integer,
   range_long integer,
   weight integer DEFAULT '0'::integer NOT NULL,
-  cost integer DEFAULT '0'::integer NOT NULL NOT NULL,
+  cost integer DEFAULT '0'::integer NOT NULL,
   visibility public.campaign_role DEFAULT 'player'::public.campaign_role NOT NULL,
   type public.weapon_type NOT NULL,
   CONSTRAINT weapons_pkey PRIMARY KEY (id),
