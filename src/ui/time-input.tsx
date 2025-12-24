@@ -5,7 +5,7 @@ import {
   timeToSeconds,
   useTimeUnitOptions,
 } from "~/measures/time";
-import MeasureInput, { type MeasureInputProps } from "./measure-input-2";
+import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 //------------------------------------------------------------------------------
 // Time Input

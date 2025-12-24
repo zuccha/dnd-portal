@@ -5,7 +5,7 @@ import {
   cpToCostValue,
   useCostUnitOptions,
 } from "~/measures/cost";
-import MeasureInput, { type MeasureInputProps } from "./measure-input-2";
+import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 //------------------------------------------------------------------------------
 // Cost Input

@@ -6,7 +6,7 @@ import {
   useWeightUnitOptions,
   weightToGrams,
 } from "~/measures/weight";
-import MeasureInput, { type MeasureInputProps } from "./measure-input-2";
+import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 //------------------------------------------------------------------------------
 // Weight Input

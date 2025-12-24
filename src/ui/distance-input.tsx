@@ -6,7 +6,7 @@ import {
   distanceToCm,
   useDistanceUnitOptions,
 } from "~/measures/distance";
-import MeasureInput, { type MeasureInputProps } from "./measure-input-2";
+import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 //------------------------------------------------------------------------------
 // Distance Input
