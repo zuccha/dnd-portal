@@ -86,7 +86,7 @@ const i18nContext = {
   },
 
   "prerequisite.none": {
-    en: "No prerequisite",
-    it: "Nessun prerequisito",
+    en: "no prerequisite",
+    it: "nessun prerequisito",
   },
 };
