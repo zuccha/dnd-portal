@@ -17,22 +17,16 @@ CREATE TABLE IF NOT EXISTS public.spells (
   visibility public.campaign_role DEFAULT 'player'::public.campaign_role NOT NULL,
   casting_time public.spell_casting_time DEFAULT 'action'::public.spell_casting_time NOT NULL,
   casting_time_value integer,
-  casting_time_value_temp integer,
   duration public.spell_duration DEFAULT 'value'::public.spell_duration NOT NULL,
   duration_value integer,
-  duration_value_temp integer,
   range public.spell_range DEFAULT 'self'::public.spell_range NOT NULL,
   range_value integer,
-  range_value_imp text,
-  range_value_met text,
   CONSTRAINT spells_pkey PRIMARY KEY (id),
   CONSTRAINT spells_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT spells_casting_time_pair_chk CHECK (((casting_time = 'value'::public.spell_casting_time) = (casting_time_value IS NOT NULL)) AND ((casting_time = 'value'::public.spell_casting_time) = (casting_time_value_temp IS NOT NULL))),
-  CONSTRAINT spells_duration_pair_chk CHECK (((duration = 'value'::public.spell_duration) = (duration_value IS NOT NULL)) AND ((duration = 'value'::public.spell_duration) = (duration_value_temp IS NOT NULL))),
+  CONSTRAINT spells_casting_time_pair_chk CHECK ((casting_time = 'value'::public.spell_casting_time) = (casting_time_value IS NOT NULL)),
+  CONSTRAINT spells_duration_pair_chk CHECK ((duration = 'value'::public.spell_duration) = (duration_value IS NOT NULL)),
   CONSTRAINT spells_level_check CHECK (((level >= 0) AND (level <= 9))),
-  CONSTRAINT spells_range_pair_chk CHECK ((((range = 'value'::public.spell_range) = (range_value_imp IS NOT NULL)) AND ((range = 'value'::public.spell_range) = (range_value_met IS NOT NULL)) AND ((range = 'value'::public.spell_range) = (range_value IS NOT NULL)))),
-  CONSTRAINT spells_range_value_imp_check CHECK ((range_value_imp ~ '^\d+(\.\d+)?\s*(ft|mi)$'::text)),
-  CONSTRAINT spells_range_value_met_check CHECK ((range_value_met ~ '^\d+(\.\d+)?\s*(m|km)$'::text))
+  CONSTRAINT spells_range_pair_chk CHECK ((range = 'value'::public.spell_range) = (range_value IS NOT NULL))
 );
 
 ALTER TABLE public.spells OWNER TO postgres;
@@ -187,13 +181,13 @@ BEGIN
 
   INSERT INTO public.spells (
     campaign_id, level, school,
-    character_classes, casting_time, casting_time_value, casting_time_value_temp,
-    duration, duration_value, duration_value_temp, range, range_value, range_value_imp, range_value_met,
+    character_classes, casting_time, casting_time_value,
+    duration, duration_value, range, range_value,
     concentration, ritual, verbal, somatic, material, visibility
   ) VALUES (
     p_campaign_id, r.level, r.school,
-    r.character_classes, r.casting_time, r.casting_time_value, r.casting_time_value_temp,
-    r.duration, r.duration_value, r.duration_value_temp, r.range, r.range_value, r.range_value_imp, r.range_value_met,
+    r.character_classes, r.casting_time, r.casting_time_value,
+    r.duration, r.duration_value, r.range, r.range_value,
     r.concentration, r.ritual, r.verbal, r.somatic, r.material, r.visibility
   )
   RETURNING id INTO v_id;
@@ -229,14 +223,10 @@ AS $$
     s.school,
     s.casting_time,
     s.casting_time_value,
-    s.casting_time_value_temp,
     s.duration,
     s.duration_value,
-    s.duration_value_temp,
     s.range,
     s.range_value,
-    s.range_value_imp,
-    s.range_value_met,
     s.concentration,
     s.ritual,
     s.somatic,
@@ -291,14 +281,10 @@ RETURNS TABLE(
   school public.spell_school,
   casting_time public.spell_casting_time,
   casting_time_value integer,
-  casting_time_value_temp integer,
   duration public.spell_duration,
   duration_value integer,
-  duration_value_temp integer,
   range public.spell_range,
   range_value integer,
-  range_value_imp text,
-  range_value_met text,
   concentration boolean,
   ritual boolean,
   somatic boolean,
@@ -422,14 +408,10 @@ SELECT
   f.school,
   f.casting_time,
   f.casting_time_value,
-  f.casting_time_value_temp,
   f.duration,
   f.duration_value,
-  f.duration_value_temp,
   f.range,
   f.range_value,
-  f.range_value_imp,
-  f.range_value_met,
   f.concentration,
   f.ritual,
   f.somatic,
@@ -529,12 +511,12 @@ DECLARE
 BEGIN
   UPDATE public.spells s
   SET (
-    level, school, character_classes, casting_time, casting_time_value, casting_time_value_temp,
-    duration, duration_value, duration_value_temp, range, range_value, range_value_imp, range_value_met,
+    level, school, character_classes, casting_time, casting_time_value,
+    duration, duration_value, range, range_value,
     concentration, ritual, verbal, somatic, material, visibility
   ) = (
-    SELECT r.level, r.school, r.character_classes, r.casting_time, r.casting_time_value, r.casting_time_value_temp,
-           r.duration, r.duration_value, r.duration_value_temp, r.range, r.range_value, r.range_value_imp, r.range_value_met,
+    SELECT r.level, r.school, r.character_classes, r.casting_time, r.casting_time_value,
+           r.duration, r.duration_value, r.range, r.range_value,
            r.concentration, r.ritual, r.verbal, r.somatic, r.material, r.visibility
     FROM jsonb_populate_record(null::public.spells, to_jsonb(s) || p_spell) AS r
   )
