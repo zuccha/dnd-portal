@@ -211,7 +211,7 @@ export function createResourcesStore<
   //----------------------------------------------------------------------------
 
   async function remove(ids: string[]): Promise<PostgrestSingleResponse<null>> {
-    const response = await supabase.from(name.p).delete().in("id", ids);
+    const response = await supabase.from("resources").delete().in("id", ids);
     if (!response.error) {
       queryClient.invalidateQueries({ queryKey: [`resources`, name.p] });
       for (const id of ids)
