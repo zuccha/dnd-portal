@@ -344,7 +344,7 @@ filtered AS (
 t AS (
   SELECT
     f.id,
-    jsonb_object_agg(t.lang, t.name) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS name,
+    jsonb_object_agg(t.lang, t.name) AS name,
     jsonb_object_agg(t.lang, t.page) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS page
   FROM filtered f
   LEFT JOIN public.resource_translations t ON t.resource_id = f.id
