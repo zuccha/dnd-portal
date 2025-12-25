@@ -19,7 +19,9 @@ export type Equipment = z.infer<typeof equipmentSchema>;
 // Equipment Filters
 //------------------------------------------------------------------------------
 
-export const equipmentFiltersSchema = resourceFiltersSchema.extend({});
+export const equipmentFiltersSchema = resourceFiltersSchema.extend({
+  magic: z.boolean().optional(),
+});
 
 export type EquipmentFilters = z.infer<typeof equipmentFiltersSchema>;
 

@@ -39,7 +39,6 @@ export const weaponFiltersSchema = equipmentFiltersSchema.extend({
     .optional(),
   types: z.partialRecord(weaponTypeSchema, z.boolean().optional()).optional(),
 
-  magic: z.boolean().optional(),
   melee: z.boolean().optional(),
   ranged: z.boolean().optional(),
 });
