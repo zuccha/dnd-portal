@@ -126,6 +126,7 @@ GRANT ALL ON FUNCTION public.can_edit_resource(p_resource_id uuid) TO anon;
 GRANT ALL ON FUNCTION public.can_edit_resource(p_resource_id uuid) TO authenticated;
 GRANT ALL ON FUNCTION public.can_edit_resource(p_resource_id uuid) TO service_role;
 
+
 --------------------------------------------------------------------------------
 -- CAN CREATE RESOURCE
 --------------------------------------------------------------------------------

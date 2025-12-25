@@ -26,3 +26,13 @@ GRANT USAGE ON SCHEMA public TO postgres;
 GRANT USAGE ON SCHEMA public TO anon;
 GRANT USAGE ON SCHEMA public TO authenticated;
 GRANT USAGE ON SCHEMA public TO service_role;
+
+CREATE OR REPLACE FUNCTION public.debug_auth()
+RETURNS jsonb
+LANGUAGE sql
+AS $$
+  SELECT jsonb_build_object(
+    'uid', auth.uid(),
+    'role', current_setting('request.jwt.claim.role', true)
+  );
+$$;
