@@ -8,6 +8,7 @@ import { createForm } from "~/utils/form";
 
 export const itemEditorFormFieldsSchema = z.object({
   cost: z.number(),
+  magic: z.boolean(),
   name: z.string(),
   notes: z.string(),
   page: z.number(),
@@ -37,6 +38,14 @@ export default itemEditorForm;
 export const useItemEditorFormCost = (
   defaultCost: ItemEditorFormFields["cost"],
 ) => useItemEditorFormField("cost", defaultCost);
+
+//------------------------------------------------------------------------------
+// Magic
+//------------------------------------------------------------------------------
+
+export const useItemEditorFormMagic = (
+  defaultMagic: ItemEditorFormFields["magic"],
+) => useItemEditorFormField("magic", defaultMagic);
 
 //------------------------------------------------------------------------------
 // Name

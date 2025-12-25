@@ -134,6 +134,7 @@ function parseFormData(
     base_armor_class: data.base_armor_class,
     cost: data.cost,
     disadvantage_on_stealth: data.disadvantage_on_stealth,
+    magic: data.magic,
     required_cha: data.required_cha,
     required_con: data.required_con,
     required_dex: data.required_dex,

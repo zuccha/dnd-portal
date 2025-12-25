@@ -62,6 +62,7 @@ function parseFormData(
   | string {
   const maybeItem = {
     cost: data.cost,
+    magic: data.magic,
     visibility: data.visibility,
     weight: data.weight,
   };

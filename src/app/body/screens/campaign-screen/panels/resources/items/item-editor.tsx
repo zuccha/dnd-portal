@@ -8,10 +8,12 @@ import Field from "~/ui/field";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
+import Switch from "~/ui/switch";
 import Textarea from "~/ui/textarea";
 import WeightInput from "~/ui/weight-input";
 import {
   useItemEditorFormCost,
+  useItemEditorFormMagic,
   useItemEditorFormName,
   useItemEditorFormNotes,
   useItemEditorFormPage,
@@ -43,6 +45,8 @@ export default function ItemEditor({ resource }: ItemEditorProps) {
         <ItemEditorCost defaultCost={resource.cost} />
       </HStack>
 
+      <ItemEditorMagic defaultMagic={resource.magic} />
+
       <ItemEditorNotes defaultNotes={resource.notes[lang] ?? ""} />
     </VStack>
   );
@@ -62,6 +66,17 @@ function ItemEditorCost({ defaultCost }: { defaultCost: number }) {
       <CostInput min={0} {...rest} />
     </Field>
   );
+}
+
+//------------------------------------------------------------------------------
+// Magic
+//------------------------------------------------------------------------------
+
+function ItemEditorMagic({ defaultMagic }: { defaultMagic: boolean }) {
+  const { error: _, ...rest } = useItemEditorFormMagic(defaultMagic);
+  const { t } = useI18nLangContext(i18nContext);
+
+  return <Switch label={t("magic.label")} size="lg" {...rest} />;
 }
 
 //------------------------------------------------------------------------------
@@ -173,6 +188,10 @@ const i18nContext = {
   "form.error.update_failure": {
     en: "Failed to update the item.",
     it: "Errore durante il salvataggio.",
+  },
+  "magic.label": {
+    en: "Magic",
+    it: "Magico",
   },
   "name.error.empty": {
     en: "The name cannot be empty",

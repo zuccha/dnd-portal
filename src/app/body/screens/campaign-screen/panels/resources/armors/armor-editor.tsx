@@ -30,6 +30,7 @@ import {
   useArmorEditorFormBaseArmorClass,
   useArmorEditorFormCost,
   useArmorEditorFormDisadvantageOnStealth,
+  useArmorEditorFormMagic,
   useArmorEditorFormName,
   useArmorEditorFormNotes,
   useArmorEditorFormPage,
@@ -139,9 +140,12 @@ export default function ArmorEditor({ resource }: ArmorEditorProps) {
         <ArmorEditorRequiredCha defaultRequiredCha={resource.required_cha} />
       </HStack>
 
-      <ArmorEditorDisadvantageOnStealth
-        defaultDisadvantageOnStealth={resource.disadvantage_on_stealth}
-      />
+      <HStack align="flex-start" gap={4}>
+        <ArmorEditorMagic defaultMagic={resource.magic} />
+        <ArmorEditorDisadvantageOnStealth
+          defaultDisadvantageOnStealth={resource.disadvantage_on_stealth}
+        />
+      </HStack>
 
       <HStack align="flex-start" gap={4}>
         <ArmorEditorWeight defaultWeight={resource.weight} />
@@ -419,6 +423,17 @@ function ArmorEditorDisadvantageOnStealth({
 }
 
 //------------------------------------------------------------------------------
+// Magic
+//------------------------------------------------------------------------------
+
+function ArmorEditorMagic({ defaultMagic }: { defaultMagic: boolean }) {
+  const { error: _, ...rest } = useArmorEditorFormMagic(defaultMagic);
+  const { t } = useI18nLangContext(i18nContext);
+
+  return <Switch label={t("magic.label")} size="lg" {...rest} />;
+}
+
+//------------------------------------------------------------------------------
 // Name
 //------------------------------------------------------------------------------
 
@@ -680,6 +695,10 @@ const i18nContext = {
   "form.error.update_failure": {
     en: "Failed to update the armor.",
     it: "Errore durante il salvataggio.",
+  },
+  "magic.label": {
+    en: "Magic",
+    it: "Magica",
   },
   "name.error.empty": {
     en: "The name cannot be empty",

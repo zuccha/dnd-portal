@@ -24,6 +24,7 @@ export const armorEditorFormFieldsSchema = z.object({
   base_armor_class: z.number(),
   cost: z.number(),
   disadvantage_on_stealth: z.boolean(),
+  magic: z.boolean(),
   name: z.string(),
   notes: z.string(),
   page: z.number(),
@@ -192,6 +193,14 @@ export const useArmorEditorFormDisadvantageOnStealth = (
     "disadvantage_on_stealth",
     defaultDisadvantageOnStealth,
   );
+
+//------------------------------------------------------------------------------
+// Magic
+//------------------------------------------------------------------------------
+
+export const useArmorEditorFormMagic = (
+  defaultMagic: ArmorEditorFormFields["magic"],
+) => useArmorEditorFormField("magic", defaultMagic);
 
 //------------------------------------------------------------------------------
 // Name
