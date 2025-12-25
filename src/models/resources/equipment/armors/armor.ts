@@ -1,5 +1,4 @@
 import z from "zod";
-import { i18nStringSchema } from "~/i18n/i18n-string";
 import { armorTypeSchema } from "../../../types/armor-type";
 import { equipmentFiltersSchema, equipmentSchema } from "../equipment";
 
@@ -16,9 +15,7 @@ export const armorSchema = equipmentSchema.extend({
   armor_class_max_wis_modifier: z.number().nullish(),
   armor_class_modifier: z.number(),
   base_armor_class: z.number(),
-  cost: z.number(),
   disadvantage_on_stealth: z.boolean(),
-  notes: i18nStringSchema,
   required_cha: z.number(),
   required_con: z.number(),
   required_dex: z.number(),
@@ -26,7 +23,6 @@ export const armorSchema = equipmentSchema.extend({
   required_str: z.number(),
   required_wis: z.number(),
   type: armorTypeSchema,
-  weight: z.number(),
 });
 
 export type Armor = z.infer<typeof armorSchema>;

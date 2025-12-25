@@ -18,7 +18,6 @@ export const dbArmorSchema = dbEquipmentSchema.extend({
   armor_class_max_wis_modifier: z.number().nullish(),
   armor_class_modifier: z.number(),
   base_armor_class: z.number(),
-  cost: z.number(),
   disadvantage_on_stealth: z.boolean(),
   required_cha: z.number(),
   required_con: z.number(),
@@ -27,7 +26,6 @@ export const dbArmorSchema = dbEquipmentSchema.extend({
   required_str: z.number(),
   required_wis: z.number(),
   type: armorTypeSchema,
-  weight: z.number(),
 });
 
 export type DBArmor = z.infer<typeof dbArmorSchema>;
@@ -36,8 +34,6 @@ export type DBArmor = z.infer<typeof dbArmorSchema>;
 // DB Armor Translation
 //------------------------------------------------------------------------------
 
-export const dbArmorTranslationSchema = dbEquipmentTranslationSchema.extend({
-  notes: z.string().nullish(),
-});
+export const dbArmorTranslationSchema = dbEquipmentTranslationSchema.extend({});
 
 export type DBArmorTranslation = z.infer<typeof dbArmorTranslationSchema>;
