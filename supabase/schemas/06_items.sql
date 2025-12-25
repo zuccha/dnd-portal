@@ -215,7 +215,7 @@ src AS (
     b.notes
   FROM base b
   JOIN public.items i ON i.resource_id = b.id
-),
+)
 SELECT
   s.campaign_id,
   s.campaign_name,
