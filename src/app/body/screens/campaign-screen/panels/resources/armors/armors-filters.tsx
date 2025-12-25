@@ -4,12 +4,15 @@ import {
   type StackProps,
   createListCollection,
 } from "@chakra-ui/react";
+import { WandIcon } from "lucide-react";
 import { useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type ArmorFilters } from "~/models/resources/equipment/armors/armor";
 import { armorsStore } from "~/models/resources/equipment/armors/armors-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
+import Icon from "~/ui/icon";
+import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
 import Input from "~/ui/input";
 import Select from "~/ui/select";
@@ -79,6 +82,14 @@ export default function ArmorsFilters(props: StackProps) {
       >
         {t("types")}
       </InclusionSelect>
+
+      <InclusionButton
+        include={filters.magic}
+        onValueChange={(magic) => setFilters({ magic })}
+        size="sm"
+      >
+        <Icon Icon={WandIcon} size="sm" />
+      </InclusionButton>
     </HStack>
   );
 }
