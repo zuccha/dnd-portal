@@ -50,7 +50,7 @@ CREATE TYPE public.resource_row AS (
   id uuid,
   campaign_id uuid,
   campaign_name text,
-  kind text,
+  kind public.resource_kind,
   visibility public.campaign_role,
   name jsonb,
   page jsonb
