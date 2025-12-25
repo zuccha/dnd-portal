@@ -110,7 +110,7 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
 }
 
 //------------------------------------------------------------------------------
-// Editor Ammunition
+// Ammunition
 //------------------------------------------------------------------------------
 
 function WeaponEditorAmmunition({
@@ -130,7 +130,7 @@ function WeaponEditorAmmunition({
 }
 
 //------------------------------------------------------------------------------
-// Editor Cost
+// Cost
 //------------------------------------------------------------------------------
 
 function WeaponEditorCost({ defaultCost }: { defaultCost: number }) {
@@ -146,7 +146,7 @@ function WeaponEditorCost({ defaultCost }: { defaultCost: number }) {
 }
 
 //------------------------------------------------------------------------------
-// Editor Damage
+// Damage
 //------------------------------------------------------------------------------
 
 function WeaponEditorDamage({ defaultDamage }: { defaultDamage: string }) {
@@ -162,7 +162,7 @@ function WeaponEditorDamage({ defaultDamage }: { defaultDamage: string }) {
 }
 
 //------------------------------------------------------------------------------
-// Editor Damage (Versatile)
+// Damage (Versatile)
 //------------------------------------------------------------------------------
 
 function WeaponEditorDamageVersatile({
@@ -184,7 +184,7 @@ function WeaponEditorDamageVersatile({
 }
 
 //------------------------------------------------------------------------------
-// Editor Damage Type
+// Damage Type
 //------------------------------------------------------------------------------
 
 function WeaponEditorDamageType({
@@ -205,7 +205,7 @@ function WeaponEditorDamageType({
 }
 
 //------------------------------------------------------------------------------
-// Editor Mastery
+// Mastery
 //------------------------------------------------------------------------------
 
 function WeaponEditorMastery({
@@ -226,7 +226,7 @@ function WeaponEditorMastery({
 }
 
 //------------------------------------------------------------------------------
-// Editor Name
+// Name
 //------------------------------------------------------------------------------
 
 function WeaponEditorName({ defaultName }: { defaultName: string }) {
@@ -242,7 +242,7 @@ function WeaponEditorName({ defaultName }: { defaultName: string }) {
 }
 
 //------------------------------------------------------------------------------
-// Editor Notes
+// Notes
 //------------------------------------------------------------------------------
 
 function WeaponEditorNotes({ defaultNotes }: { defaultNotes: string }) {
@@ -258,7 +258,7 @@ function WeaponEditorNotes({ defaultNotes }: { defaultNotes: string }) {
 }
 
 //------------------------------------------------------------------------------
-// Editor Page
+// Page
 //------------------------------------------------------------------------------
 
 function WeaponEditorPage({ defaultPage }: { defaultPage: number }) {
@@ -274,7 +274,7 @@ function WeaponEditorPage({ defaultPage }: { defaultPage: number }) {
 }
 
 //------------------------------------------------------------------------------
-// Editor Properties
+// Properties
 //------------------------------------------------------------------------------
 
 function WeaponEditorProperties({
@@ -341,7 +341,7 @@ function WeaponEditorRangeShort({
 }
 
 //------------------------------------------------------------------------------
-// Editor Type
+// Type
 //------------------------------------------------------------------------------
 
 function WeaponEditorType({ defaultType }: { defaultType: Weapon["type"] }) {
@@ -358,7 +358,7 @@ function WeaponEditorType({ defaultType }: { defaultType: Weapon["type"] }) {
 }
 
 //------------------------------------------------------------------------------
-// Editor Visibility
+// Visibility
 //------------------------------------------------------------------------------
 
 function WeaponEditorVisibility({
@@ -379,7 +379,7 @@ function WeaponEditorVisibility({
 }
 
 //------------------------------------------------------------------------------
-// Editor Weight
+// Weight
 //------------------------------------------------------------------------------
 
 function WeaponEditorWeight({ defaultWeight }: { defaultWeight: number }) {
