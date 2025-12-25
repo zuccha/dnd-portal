@@ -1,13 +1,10 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
-import { damageTypeSchema } from "../../types/damage-type";
-import { weaponMasterySchema } from "../../types/weapon-mastery";
-import { weaponPropertySchema } from "../../types/weapon-property";
-import { weaponTypeSchema } from "../../types/weapon-type";
-import {
-  equipmentFiltersSchema,
-  equipmentSchema,
-} from "../equipment/equipment";
+import { damageTypeSchema } from "../../../types/damage-type";
+import { weaponMasterySchema } from "../../../types/weapon-mastery";
+import { weaponPropertySchema } from "../../../types/weapon-property";
+import { weaponTypeSchema } from "../../../types/weapon-type";
+import { equipmentFiltersSchema, equipmentSchema } from "../equipment";
 
 //------------------------------------------------------------------------------
 // Weapon

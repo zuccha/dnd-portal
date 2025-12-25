@@ -1,4 +1,4 @@
-import { createEquipmentStore } from "../equipment/equipment-store";
+import { createEquipmentStore } from "../equipment-store";
 import { useLocalizeWeapon } from "./localized-weapon";
 import {
   defaultWeaponFilters,

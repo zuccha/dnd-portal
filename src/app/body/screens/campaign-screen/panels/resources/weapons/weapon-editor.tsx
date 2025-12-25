@@ -1,7 +1,7 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { Weapon } from "~/models/resources/weapons/weapon";
+import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";

@@ -1,12 +1,12 @@
 import z from "zod";
-import { damageTypeSchema } from "../../types/damage-type";
-import { weaponMasterySchema } from "../../types/weapon-mastery";
-import { weaponPropertySchema } from "../../types/weapon-property";
-import { weaponTypeSchema } from "../../types/weapon-type";
+import { damageTypeSchema } from "../../../types/damage-type";
+import { weaponMasterySchema } from "../../../types/weapon-mastery";
+import { weaponPropertySchema } from "../../../types/weapon-property";
+import { weaponTypeSchema } from "../../../types/weapon-type";
 import {
   dbEquipmentSchema,
   dbEquipmentTranslationSchema,
-} from "../equipment/db-equipment";
+} from "../db-equipment";
 
 //------------------------------------------------------------------------------
 // DB Weapon

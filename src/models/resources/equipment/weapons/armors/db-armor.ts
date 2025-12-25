@@ -1,9 +1,9 @@
 import z from "zod";
-import { armorTypeSchema } from "../../types/armor-type";
+import { armorTypeSchema } from "../../../../types/armor-type";
 import {
   dbEquipmentSchema,
   dbEquipmentTranslationSchema,
-} from "../equipment/db-equipment";
+} from "../../db-equipment";
 
 //------------------------------------------------------------------------------
 // DB Armor

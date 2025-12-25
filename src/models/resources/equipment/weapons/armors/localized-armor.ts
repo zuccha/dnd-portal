@@ -2,11 +2,11 @@ import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { formatSigned } from "~/utils/number";
-import { useTranslateArmorType } from "../../types/armor-type";
+import { useTranslateArmorType } from "../../../../types/armor-type";
 import {
   localizedEquipmentSchema,
   useLocalizeEquipment,
-} from "../equipment/localized-equipment";
+} from "../../localized-equipment";
 import { type Armor, armorSchema } from "./armor";
 
 //------------------------------------------------------------------------------

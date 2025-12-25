@@ -1,10 +1,7 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
-import { armorTypeSchema } from "../../types/armor-type";
-import {
-  equipmentFiltersSchema,
-  equipmentSchema,
-} from "../equipment/equipment";
+import { armorTypeSchema } from "../../../../types/armor-type";
+import { equipmentFiltersSchema, equipmentSchema } from "../../equipment";
 
 //------------------------------------------------------------------------------
 // Armor

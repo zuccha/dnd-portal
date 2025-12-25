@@ -5,14 +5,14 @@ import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { cmToDistanceValue } from "~/measures/distance";
 import { formatNumber } from "~/utils/number";
-import { useTranslateDamageType } from "../../types/damage-type";
-import { useTranslateWeaponMastery } from "../../types/weapon-mastery";
-import { useTranslateWeaponProperty } from "../../types/weapon-property";
-import { useTranslateWeaponType } from "../../types/weapon-type";
+import { useTranslateDamageType } from "../../../types/damage-type";
+import { useTranslateWeaponMastery } from "../../../types/weapon-mastery";
+import { useTranslateWeaponProperty } from "../../../types/weapon-property";
+import { useTranslateWeaponType } from "../../../types/weapon-type";
 import {
   localizedEquipmentSchema,
   useLocalizeEquipment,
-} from "../equipment/localized-equipment";
+} from "../localized-equipment";
 import { type Weapon, weaponSchema } from "./weapon";
 
 //------------------------------------------------------------------------------

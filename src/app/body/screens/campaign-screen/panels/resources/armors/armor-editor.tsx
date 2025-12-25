@@ -1,7 +1,7 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { Armor } from "~/models/resources/armors/armor";
+import type { Armor } from "~/models/resources/equipment/weapons/armors/armor";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import Checkbox from "~/ui/checkbox";

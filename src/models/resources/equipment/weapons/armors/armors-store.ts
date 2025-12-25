@@ -1,4 +1,4 @@
-import { createResourcesStore } from "../resources-store";
+import { createResourcesStore } from "../../../resources-store";
 import { armorFiltersSchema, armorSchema, defaultArmorFilters } from "./armor";
 import { useLocalizeArmor } from "./localized-armor";
 
