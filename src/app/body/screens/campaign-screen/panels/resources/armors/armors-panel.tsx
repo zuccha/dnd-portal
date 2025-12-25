@@ -1,3 +1,4 @@
+import { WandIcon } from "lucide-react";
 import {
   type Armor,
   defaultArmor,
@@ -73,9 +74,25 @@ const columns: ResourcesListTableColumn<Armor, LocalizedArmor>[] = [
     label: { en: "Stealth", it: "Furtività" },
   },
   {
+    icon: WandIcon,
+    key: "magic",
+    label: { en: "🪄", it: "🪄" },
+    textAlign: "center",
+    w: "4em",
+  },
+  {
     key: "weight",
     label: { en: "Weight", it: "Peso" },
     textAlign: "right",
+    w: "1%",
+    whiteSpace: "nowrap",
+  },
+  {
+    key: "cost",
+    label: { en: "Cost", it: "Costo" },
+    textAlign: "right",
+    w: "1%",
+    whiteSpace: "nowrap",
   },
 ] as const;
 

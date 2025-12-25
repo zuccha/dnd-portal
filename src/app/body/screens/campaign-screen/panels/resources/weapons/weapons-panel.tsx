@@ -74,8 +74,16 @@ const columns: ResourcesListTableColumn<Weapon, LocalizedWeapon>[] = [
   {
     key: "weight",
     label: { en: "Weight", it: "Peso" },
-    maxW: "3em",
     textAlign: "right",
+    w: "1%",
+    whiteSpace: "nowrap",
+  },
+  {
+    key: "cost",
+    label: { en: "Cost", it: "Costo" },
+    textAlign: "right",
+    w: "1%",
+    whiteSpace: "nowrap",
   },
 ] as const;
 
