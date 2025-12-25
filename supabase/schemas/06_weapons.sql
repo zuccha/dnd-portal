@@ -3,9 +3,7 @@
 --------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS public.weapons (
-  id uuid DEFAULT gen_random_uuid() NOT NULL,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
-  campaign_id uuid DEFAULT gen_random_uuid() NOT NULL,
+  resource_id uuid NOT NULL,
   damage text DEFAULT ''::text NOT NULL,
   damage_versatile text,
   damage_type public.damage_type NOT NULL,
@@ -13,15 +11,11 @@ CREATE TABLE IF NOT EXISTS public.weapons (
   mastery public.weapon_mastery NOT NULL,
   melee boolean NOT NULL,
   ranged boolean NOT NULL,
-  magic boolean NOT NULL,
   range_short integer,
   range_long integer,
-  weight integer DEFAULT '0'::integer NOT NULL,
-  cost integer DEFAULT '0'::integer NOT NULL,
-  visibility public.campaign_role DEFAULT 'player'::public.campaign_role NOT NULL,
   type public.weapon_type NOT NULL,
-  CONSTRAINT weapons_pkey PRIMARY KEY (id),
-  CONSTRAINT weapons_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT weapons_pkey PRIMARY KEY (resource_id),
+  CONSTRAINT weapons_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.equipments(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT weapons_damage_versatile_check CHECK (((damage_versatile IS NOT NULL) = (properties @> ARRAY['versatile'::public.weapon_property]))),
   CONSTRAINT weapons_ranged_range_check CHECK ((ranged = ((range_short IS NOT NULL) AND (range_long IS NOT NULL))))
 );
@@ -39,14 +33,11 @@ GRANT ALL ON TABLE public.weapons TO service_role;
 --------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS public.weapon_translations (
-  weapon_id uuid DEFAULT gen_random_uuid() NOT NULL,
+  resource_id uuid NOT NULL,
   lang text NOT NULL,
-  name text DEFAULT ''::text NOT NULL,
-  page smallint,
-  notes text,
   ammunition text,
-  CONSTRAINT weapon_translations_pkey PRIMARY KEY (weapon_id, lang),
-  CONSTRAINT weapon_translations_weapon_id_fkey FOREIGN KEY (weapon_id) REFERENCES public.weapons(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT weapon_translations_pkey PRIMARY KEY (resource_id, lang),
+  CONSTRAINT weapon_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.weapons(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT weapon_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -59,47 +50,37 @@ GRANT ALL ON TABLE public.weapon_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
--- CAN READ WEAPON TRANSLATION
+-- WEAPON ROW
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.can_read_weapon_translation(p_weapon_id uuid)
-RETURNS boolean
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path TO 'public', 'pg_temp'
-AS $$
-  SELECT can_read_campaign_resource(w.campaign_id, w.visibility)
-  FROM public.weapons w
-  WHERE w.id = p_weapon_id;
-$$;
-
-ALTER FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.can_read_weapon_translation(p_weapon_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
--- CAN EDIT WEAPON TRANSLATION
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid)
-RETURNS boolean
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path TO 'public', 'pg_temp'
-AS $$
-  SELECT can_edit_campaign_resource(w.campaign_id)
-  FROM public.weapons w
-  WHERE w.id = p_weapon_id;
-$$;
-
-ALTER FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) TO service_role;
+CREATE TYPE public.weapon_row AS (
+  -- Resource
+  campaign_id uuid,
+  campaign_name text,
+  id uuid,
+  kind public.resource_kind,
+  visibility public.campaign_role,
+  name jsonb,
+  page jsonb,
+  -- Equipment
+  cost integer,
+  magic boolean,
+  weight integer,
+  -- Weapon
+  damage text,
+  damage_type public.damage_type,
+  damage_versatile text,
+  mastery public.weapon_mastery,
+  melee boolean,
+  properties public.weapon_property[],
+  range_long integer,
+  range_short integer,
+  ranged boolean,
+  type public.weapon_type,
+  -- Translation
+  ammunition jsonb,
+  notes jsonb
+);
 
 
 --------------------------------------------------------------------------------
@@ -109,23 +90,23 @@ GRANT ALL ON FUNCTION public.can_edit_weapon_translation(p_weapon_id uuid) TO se
 CREATE POLICY "Users can read weapons"
 ON public.weapons
 FOR SELECT TO authenticated
-USING (public.can_read_campaign_resource(campaign_id, visibility) OR public.can_edit_campaign_resource(campaign_id));
+USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new weapons"
 ON public.weapons
 FOR INSERT TO authenticated
-WITH CHECK (public.can_edit_campaign_resource(campaign_id));
+WITH CHECK (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can update weapons"
 ON public.weapons
 FOR UPDATE TO authenticated
-USING (public.can_edit_campaign_resource(campaign_id))
-WITH CHECK (public.can_edit_campaign_resource(campaign_id));
+USING (public.can_edit_resource(resource_id))
+WITH CHECK (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can delete weapons"
 ON public.weapons
 FOR DELETE TO authenticated
-USING (public.can_edit_campaign_resource(campaign_id));
+USING (public.can_edit_resource(resource_id));
 
 
 --------------------------------------------------------------------------------
@@ -135,23 +116,23 @@ USING (public.can_edit_campaign_resource(campaign_id));
 CREATE POLICY "Users can read weapon translations"
 ON public.weapon_translations
 FOR SELECT TO authenticated
-USING (public.can_read_weapon_translation(weapon_id) OR public.can_edit_weapon_translation(weapon_id));
+USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new weapon translations"
 ON public.weapon_translations
 FOR INSERT TO authenticated
-WITH CHECK (public.can_edit_weapon_translation(weapon_id));
+WITH CHECK (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can update weapon translations"
 ON public.weapon_translations
 FOR UPDATE TO authenticated
-USING (public.can_edit_weapon_translation(weapon_id))
-WITH CHECK (public.can_edit_weapon_translation(weapon_id));
+USING (public.can_edit_resource(resource_id))
+WITH CHECK (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can delete weapon translations"
 ON public.weapon_translations
 FOR DELETE TO authenticated
-USING (public.can_edit_weapon_translation(weapon_id));
+USING (public.can_edit_resource(resource_id));
 
 
 --------------------------------------------------------------------------------
@@ -173,18 +154,22 @@ DECLARE
 BEGIN
   r := jsonb_populate_record(null::public.weapons, p_weapon);
 
+  v_id := public.create_equipment(
+    p_campaign_id,
+    p_lang,
+    p_weapon,
+    p_weapon_translation
+  );
+
   INSERT INTO public.weapons (
-    campaign_id, type, damage, damage_versatile, damage_type,
-    properties, mastery, melee, ranged, magic,
-    range_short, range_long,
-    weight, cost, visibility
+    resource_id, type, damage, damage_versatile, damage_type,
+    properties, mastery, melee, ranged,
+    range_short, range_long
   ) VALUES (
-    p_campaign_id, r.type, r.damage, r.damage_versatile, r.damage_type,
-    r.properties, r.mastery, r.melee, r.ranged, r.magic,
-    r.range_short, r.range_long,
-    r.weight, r.cost, r.visibility
-  )
-  RETURNING id INTO v_id;
+    v_id, r.type, r.damage, r.damage_versatile, r.damage_type,
+    r.properties, r.mastery, r.melee, r.ranged,
+    r.range_short, r.range_long
+  );
 
   perform public.upsert_weapon_translation(v_id, p_lang, p_weapon_translation);
 
@@ -204,47 +189,45 @@ GRANT ALL ON FUNCTION public.create_weapon(p_campaign_id uuid, p_lang text, p_we
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_weapon(p_id uuid)
-RETURNS record
+RETURNS public.weapon_row
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT
-    w.id,
-    w.campaign_id,
-    c.name                                AS campaign_name,
-    w.type,
+    e.campaign_id,
+    e.campaign_name,
+    e.id,
+    e.kind,
+    e.visibility,
+    e.name,
+    e.page,
+    e.cost,
+    e.magic,
+    e.weight,
     w.damage,
     w.damage_type,
     w.damage_versatile,
     w.mastery,
-    w.properties,
-    w.magic,
     w.melee,
-    w.ranged,
+    w.properties,
     w.range_long,
     w.range_short,
-    w.weight,
-    w.cost,
-    coalesce(tt.name,       '{}'::jsonb)  AS name,
-    coalesce(tt.notes,      '{}'::jsonb)  AS notes,
-    coalesce(tt.page,       '{}'::jsonb)  AS page,
+    w.ranged,
+    w.type,
     coalesce(tt.ammunition, '{}'::jsonb)  AS ammunition,
-    w.visibility
-  FROM public.weapons w
-  JOIN public.campaigns c ON c.id = w.campaign_id
+    e.notes
+  FROM public.fetch_equipment(p_id) AS e
+  JOIN public.weapons w ON w.resource_id = e.id
   LEFT JOIN (
     SELECT
-      w.id,
-      jsonb_object_agg(t.lang, t.name)        AS name,
-      jsonb_object_agg(t.lang, t.notes)       AS notes,
-      jsonb_object_agg(t.lang, t.page)        AS page,
+      w.resource_id AS id,
       jsonb_object_agg(t.lang, t.ammunition)  AS ammunition
     FROM public.weapons w
-    LEFT JOIN public.weapon_translations t ON t.weapon_id = w.id
-    WHERE w.id = p_id
-    GROUP BY w.id
-  ) tt ON tt.id = w.id
-  WHERE w.id = p_id;
+    LEFT JOIN public.weapon_translations t ON t.resource_id = w.resource_id
+    WHERE w.resource_id = p_id
+    GROUP BY w.resource_id
+  ) tt ON tt.id = e.id
+  WHERE e.id = p_id;
 $$;
 
 ALTER FUNCTION public.fetch_weapon(p_id uuid) OWNER TO postgres;
@@ -264,28 +247,7 @@ CREATE OR REPLACE FUNCTION public.fetch_weapons(
   p_filters jsonb DEFAULT '{}'::jsonb,
   p_order_by text DEFAULT 'name'::text,
   p_order_dir text DEFAULT 'asc'::text)
-RETURNS TABLE(
-  id uuid,
-  campaign_id uuid,
-  campaign_name text,
-  type public.weapon_type,
-  damage text,
-  damage_type public.damage_type,
-  damage_versatile text,
-  mastery public.weapon_mastery,
-  properties public.weapon_property[],
-  magic boolean,
-  melee boolean,
-  ranged boolean,
-  range_long integer,
-  range_short integer,
-  weight integer,
-  cost integer,
-  name jsonb,
-  notes jsonb,
-  page jsonb,
-  ammunition jsonb,
-  visibility public.campaign_role)
+RETURNS SETOF public.weapon_row
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
@@ -340,12 +302,36 @@ WITH prefs AS (
     (p_filters ? 'ranged')::int::boolean  AS has_ranged_filter,
     (p_filters->>'ranged')::boolean       AS ranged_val
 ),
+base AS (
+  SELECT e.*
+  FROM public.fetch_equipments(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS e
+),
 src AS (
-  SELECT w.*
-  FROM public.weapons w
+  SELECT
+    b.id,
+    b.campaign_id,
+    b.campaign_name,
+    b.kind,
+    b.visibility,
+    b.name,
+    b.page,
+    b.cost,
+    b.magic,
+    b.weight,
+    b.notes,
+    w.type,
+    w.damage,
+    w.damage_type,
+    w.damage_versatile,
+    w.mastery,
+    w.properties,
+    w.melee,
+    w.ranged,
+    w.range_long,
+    w.range_short
+  FROM base b
+  JOIN public.weapons w ON w.resource_id = b.id
   JOIN prefs p ON true
-  JOIN public.campaign_resource_ids(p_campaign_id, p.campaign_filter) ci ON ci.id = w.campaign_id
-  JOIN public.campaigns c ON c.id = w.campaign_id
 ),
 filtered AS (
   SELECT s.*
@@ -371,48 +357,45 @@ filtered AS (
 t AS (
   SELECT
     f.id,
-    jsonb_object_agg(t.lang, t.name)                                                                                AS name,
-    jsonb_object_agg(t.lang, t.notes)       FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS notes,
-    jsonb_object_agg(t.lang, t.page)        FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS page,
     jsonb_object_agg(t.lang, t.ammunition)  FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS ammunition
   FROM filtered f
-  LEFT JOIN public.weapon_translations t ON t.weapon_id = f.id
+  LEFT JOIN public.weapon_translations t ON t.resource_id = f.id
   LEFT JOIN (SELECT 1) _ ON true  -- keep p_langs in scope
   GROUP BY f.id
 )
 SELECT
-  f.id,
   f.campaign_id,
-  c.name                                AS campaign_name,
-  f.type,
+  f.campaign_name,
+  f.id,
+  f.kind,
+  f.visibility,
+  f.name                          AS name,
+  f.page                          AS page,
+  f.cost,
+  f.magic,
+  f.weight,
   f.damage,
   f.damage_type,
   f.damage_versatile,
   f.mastery,
-  f.properties,
-  f.magic,
   f.melee,
-  f.ranged,
+  f.properties,
   f.range_long,
   f.range_short,
-  f.weight,
-  f.cost,
-  coalesce(tt.name,       '{}'::jsonb)  AS name,
-  coalesce(tt.notes,      '{}'::jsonb)  AS notes,
-  coalesce(tt.page,       '{}'::jsonb)  AS page,
+  f.ranged,
+  f.type,
   coalesce(tt.ammunition, '{}'::jsonb)  AS ammunition,
-  f.visibility
+  f.notes                        AS notes
 FROM filtered f
-JOIN public.campaigns c ON c.id = f.campaign_id
 LEFT JOIN t tt ON tt.id = f.id
 ORDER BY
   CASE
     WHEN p_order_by = 'name' AND p_order_dir = 'asc'
-      THEN (tt.name->>coalesce(p_langs[1],'en'))
+      THEN (f.name->>coalesce(p_langs[1],'en'))
   END ASC NULLS LAST,
   CASE
     WHEN p_order_by = 'name' AND p_order_dir = 'desc'
-      THEN (tt.name->>coalesce(p_langs[1],'en'))
+      THEN (f.name->>coalesce(p_langs[1],'en'))
   END DESC NULLS LAST;
 $$;
 
@@ -440,19 +423,17 @@ DECLARE
 BEGIN
   r := jsonb_populate_record(null::public.weapon_translations, p_weapon_translation);
 
-  INSERT INTO public.weapon_translations AS st (
-    weapon_id, lang, name, page,
-    ammunition, notes
+  INSERT INTO public.weapon_translations AS wt (
+    resource_id, lang, ammunition
   ) VALUES (
-    p_id, p_lang, r.name, r.page,
-    r.ammunition, r.notes
+    p_id, p_lang, r.ammunition
   )
-  ON conflict (weapon_id, lang) DO UPDATE
+  ON conflict (resource_id, lang) DO UPDATE
   SET
-    name = excluded.name,
-    page = excluded.page,
-    ammunition = excluded.ammunition,
-    notes = excluded.notes;
+    ammunition = excluded.ammunition;
+
+  perform public.upsert_resource_translation(p_id, p_lang, p_weapon_translation);
+  perform public.upsert_equipment_translation(p_id, p_lang, p_weapon_translation);
 END;
 $$;
 
@@ -479,20 +460,25 @@ AS $$
 DECLARE
   v_rows int;
 BEGIN
+  perform public.update_equipment(
+    p_id,
+    p_lang,
+    p_weapon,
+    p_weapon_translation
+  );
+
   UPDATE public.weapons s
   SET (
     type, damage, damage_versatile, damage_type,
-    properties, mastery, melee, ranged, magic,
-    range_short, range_long,
-    weight, cost, visibility
+    properties, mastery, melee, ranged,
+    range_short, range_long
   ) = (
     SELECT r.type, r.damage, r.damage_versatile, r.damage_type,
-           r.properties, r.mastery, r.melee, r.ranged, r.magic,
-           r.range_short, r.range_long,
-           r.weight, r.cost, r.visibility
+           r.properties, r.mastery, r.melee, r.ranged,
+           r.range_short, r.range_long
     FROM jsonb_populate_record(null::public.weapons, to_jsonb(s) || p_weapon) AS r
   )
-  WHERE s.id = p_id;
+  WHERE s.resource_id = p_id;
 
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
