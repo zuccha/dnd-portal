@@ -101,6 +101,7 @@ GRANT ALL ON FUNCTION public.can_read_resource(p_resource_id uuid) TO service_ro
 CREATE OR REPLACE FUNCTION public.can_edit_resource(p_resource_id uuid)
 RETURNS boolean
 LANGUAGE sql
+SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT EXISTS (
