@@ -1,0 +1,209 @@
+import { HStack, VStack } from "@chakra-ui/react";
+import useListCollection from "~/hooks/use-list-collection";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import type { Item } from "~/models/resources/equipment/items/item";
+import { useCampaignRoleOptions } from "~/models/types/campaign-role";
+import CostInput from "~/ui/cost-input";
+import Field from "~/ui/field";
+import Input from "~/ui/input";
+import NumberInput from "~/ui/number-input";
+import Select from "~/ui/select";
+import Textarea from "~/ui/textarea";
+import WeightInput from "~/ui/weight-input";
+import {
+  useItemEditorFormCost,
+  useItemEditorFormName,
+  useItemEditorFormNotes,
+  useItemEditorFormPage,
+  useItemEditorFormVisibility,
+  useItemEditorFormWeight,
+} from "./item-editor-form";
+
+//------------------------------------------------------------------------------
+// Item Editor
+//------------------------------------------------------------------------------
+
+export type ItemEditorProps = {
+  resource: Item;
+};
+
+export default function ItemEditor({ resource }: ItemEditorProps) {
+  const { lang } = useI18nLangContext(i18nContext);
+
+  return (
+    <VStack align="stretch" gap={4}>
+      <HStack align="flex-start" gap={4}>
+        <ItemEditorName defaultName={resource.name[lang] ?? ""} />
+        <ItemEditorPage defaultPage={resource.page?.[lang] ?? 0} />
+        <ItemEditorVisibility defaultVisibility={resource.visibility} />
+      </HStack>
+
+      <HStack align="flex-start" gap={4}>
+        <ItemEditorWeight defaultWeight={resource.weight} />
+        <ItemEditorCost defaultCost={resource.cost} />
+      </HStack>
+
+      <ItemEditorNotes defaultNotes={resource.notes[lang] ?? ""} />
+    </VStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Cost
+//------------------------------------------------------------------------------
+
+function ItemEditorCost({ defaultCost }: { defaultCost: number }) {
+  const { error, ...rest } = useItemEditorFormCost(defaultCost);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("cost.label")}>
+      <CostInput min={0} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Name
+//------------------------------------------------------------------------------
+
+function ItemEditorName({ defaultName }: { defaultName: string }) {
+  const { error, ...rest } = useItemEditorFormName(defaultName);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("name.label")}>
+      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Notes
+//------------------------------------------------------------------------------
+
+function ItemEditorNotes({ defaultNotes }: { defaultNotes: string }) {
+  const { error, ...rest } = useItemEditorFormNotes(defaultNotes);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("notes.label")}>
+      <Textarea placeholder={t("notes.placeholder")} rows={5} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+function ItemEditorPage({ defaultPage }: { defaultPage: number }) {
+  const { error, ...rest } = useItemEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput {...rest} w="6em" />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Visibility
+//------------------------------------------------------------------------------
+
+function ItemEditorVisibility({
+  defaultVisibility,
+}: {
+  defaultVisibility: Item["visibility"];
+}) {
+  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const { error, ...rest } = useItemEditorFormVisibility(defaultVisibility);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("visibility.label")} maxW="10em">
+      <Select options={visibilityOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Weight
+//------------------------------------------------------------------------------
+
+function ItemEditorWeight({ defaultWeight }: { defaultWeight: number }) {
+  const { error, ...rest } = useItemEditorFormWeight(defaultWeight);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("weight.label")}>
+      <WeightInput min={0} {...rest} />
+    </Field>
+  );
+}
+
+//----------------------------------------------------------------------------
+// I18n Context
+//----------------------------------------------------------------------------
+
+const i18nContext = {
+  "cost.label": {
+    en: "Cost",
+    it: "Costo",
+  },
+  "form.error.creation_failure": {
+    en: "Failed to create the item.",
+    it: "Errore durante la creazione.",
+  },
+  "form.error.invalid": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+  "form.error.invalid_translation": {
+    en: "The inserted data is not valid.",
+    it: "I dati inseriti non sono validi.",
+  },
+  "form.error.update_failure": {
+    en: "Failed to update the item.",
+    it: "Errore durante il salvataggio.",
+  },
+  "name.error.empty": {
+    en: "The name cannot be empty",
+    it: "Il nome non può essere vuoto",
+  },
+  "name.label": {
+    en: "Name",
+    it: "Nome",
+  },
+  "name.placeholder": {
+    en: "E.g.: Candle",
+    it: "Es: Candela",
+  },
+  "notes.label": {
+    en: "Notes",
+    it: "Note",
+  },
+  "notes.placeholder": {
+    en: "E.g.: For 1 hour, a lit Candle sheds Bright Light in a 5-foot radius and Dim Light for an additional 5 feet.",
+    it: "Es: Per 1 ora, una candela accesa proietta luce intensa entro un raggio di 1,5 metri e luce fioca per altri 1,5 metri.",
+  },
+  "page.label": {
+    en: "Page",
+    it: "Pagina",
+  },
+  "visibility.label": {
+    en: "Visibility",
+    it: "Visibilità",
+  },
+  "weight.label": {
+    en: "Weight",
+    it: "Peso",
+  },
+};

@@ -11,6 +11,7 @@ import {
 import ArmorsPanel from "./resources/armors/armors-panel";
 import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
+import ItemsPanel from "./resources/items/items-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
 import WeaponsPanel from "./resources/weapons/weapons-panel";
 import CampaignPanel from "./settings/campaign-panel";
@@ -51,6 +52,7 @@ const resourcePanels: Record<ResourcePanelId, FC<{ campaignId: string }>> = {
   "resource/armors": ArmorsPanel,
   "resource/creatures": CreaturesPanel,
   "resource/eldritch-invocations": EldritchInvocationsPanel,
+  "resource/items": ItemsPanel,
   "resource/spells": SpellsPanel,
   "resource/weapons": WeaponsPanel,
 };

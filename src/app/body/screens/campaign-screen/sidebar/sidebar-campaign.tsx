@@ -82,6 +82,10 @@ const i18nContext = {
     en: "Eldritch Invocations",
     it: "Suppliche Occulte",
   },
+  "section.resource/items": {
+    en: "Gear",
+    it: "Oggetti",
+  },
   "section.resource/spells": {
     en: "Spells",
     it: "Incantesimi",
