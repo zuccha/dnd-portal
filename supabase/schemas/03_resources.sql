@@ -315,12 +315,12 @@ WITH prefs AS (
 
     -- kinds
     (
-      SELECT coalesce(array_agg(lower(e.key)::text), null)
+      SELECT coalesce(array_agg(lower(e.key)::public.resource_kind), null)
       FROM jsonb_each_text(p_filters->'kinds') AS e(key, value)
       WHERE e.value = 'true'
     ) AS kinds_inc,
     (
-      SELECT coalesce(array_agg(lower(e.key)::text), null)
+      SELECT coalesce(array_agg(lower(e.key)::public.resource_kind), null)
       FROM jsonb_each_text(p_filters->'kinds') AS e(key, value)
       WHERE e.value = 'false'
     ) AS kinds_exc
@@ -336,8 +336,8 @@ filtered AS (
   SELECT r.*
   FROM src r, prefs p
   WHERE
-    (p.kinds_inc IS NULL OR lower(r.kind) = any(p.kinds_inc))
-    AND (p.kinds_exc IS NULL OR NOT (lower(r.kind) = any(p.kinds_exc)))
+    (p.kinds_inc IS NULL OR r.kind = any(p.kinds_inc))
+    AND (p.kinds_exc IS NULL OR NOT (r.kind = any(p.kinds_exc)))
 ),
 t AS (
   SELECT
