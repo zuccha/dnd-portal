@@ -1,15 +1,15 @@
 import {
   type Armor,
   defaultArmor,
-} from "~/models/resources/equipment/weapons/armors/armor";
-import { armorsStore } from "~/models/resources/equipment/weapons/armors/armors-store";
+} from "~/models/resources/equipment/armors/armor";
+import { armorsStore } from "~/models/resources/equipment/armors/armors-store";
 import {
   type DBArmor,
   type DBArmorTranslation,
   dbArmorSchema,
   dbArmorTranslationSchema,
-} from "~/models/resources/equipment/weapons/armors/db-armor";
-import { type LocalizedArmor } from "~/models/resources/equipment/weapons/armors/localized-armor";
+} from "~/models/resources/equipment/armors/db-armor";
+import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import { report } from "~/utils/error";
 import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";

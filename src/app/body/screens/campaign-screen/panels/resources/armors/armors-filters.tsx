@@ -7,8 +7,8 @@ import {
 import { useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { type ArmorFilters } from "~/models/resources/equipment/weapons/armors/armor";
-import { armorsStore } from "~/models/resources/equipment/weapons/armors/armors-store";
+import { type ArmorFilters } from "~/models/resources/equipment/armors/armor";
+import { armorsStore } from "~/models/resources/equipment/armors/armors-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
 import InclusionSelect from "~/ui/inclusion-select";
 import Input from "~/ui/input";

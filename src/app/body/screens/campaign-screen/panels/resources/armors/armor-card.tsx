@@ -1,8 +1,8 @@
 import { SimpleGrid, Span } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { Armor } from "~/models/resources/equipment/weapons/armors/armor";
-import { useIsArmorSelected } from "~/models/resources/equipment/weapons/armors/armors-store";
-import type { LocalizedArmor } from "~/models/resources/equipment/weapons/armors/localized-armor";
+import type { Armor } from "~/models/resources/equipment/armors/armor";
+import { useIsArmorSelected } from "~/models/resources/equipment/armors/armors-store";
+import type { LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import ResourceCard from "../_base/resource-card";
 
 //------------------------------------------------------------------------------
