@@ -17,8 +17,6 @@ export type DBEldritchInvocation = z.infer<typeof dbEldritchInvocationSchema>;
 
 export const dbEldritchInvocationTranslationSchema =
   dbResourceTranslationSchema.extend({
-    eldritch_invocation_id: z.uuid(),
-
     description: z.string(),
     prerequisite: z.string().nullish(),
   });

@@ -21,6 +21,7 @@ export type DBResource = z.infer<typeof dbResourceSchema>;
 
 export const dbResourceTranslationSchema = z.object({
   lang: z.string(),
+  resource_id: z.uuid(),
 
   name: z.string(),
   page: z.number().nullish(),

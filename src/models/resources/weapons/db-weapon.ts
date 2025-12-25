@@ -38,8 +38,6 @@ export type DBWeapon = z.infer<typeof dbWeaponSchema>;
 //------------------------------------------------------------------------------
 
 export const dbWeaponTranslationSchema = dbResourceTranslationSchema.extend({
-  weapon_id: z.uuid(),
-
   ammunition: z.string().nullish(),
   notes: z.string().nullish(),
 });

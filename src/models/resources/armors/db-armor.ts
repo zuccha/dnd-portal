@@ -34,8 +34,6 @@ export type DBArmor = z.infer<typeof dbArmorSchema>;
 //------------------------------------------------------------------------------
 
 export const dbArmorTranslationSchema = dbResourceTranslationSchema.extend({
-  armor_id: z.uuid(),
-
   notes: z.string().nullish(),
 });
 

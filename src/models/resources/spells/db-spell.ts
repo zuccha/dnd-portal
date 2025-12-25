@@ -41,8 +41,6 @@ export type DBSpell = z.infer<typeof dbSpellSchema>;
 //------------------------------------------------------------------------------
 
 export const dbSpellTranslationSchema = dbResourceTranslationSchema.extend({
-  spell_id: z.uuid(),
-
   description: z.string(),
   materials: z.string().nullish(),
   upgrade: z.string().nullish(),
