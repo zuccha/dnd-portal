@@ -1,47 +1,44 @@
 import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { translate } from "~/i18n/i18n-string";
-import { useFormatCpWithUnit } from "~/measures/cost";
-import { useFormatGrams } from "~/measures/weight";
 import { formatSigned } from "~/utils/number";
 import { useTranslateArmorType } from "../../types/armor-type";
 import {
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+  localizedEquipmentSchema,
+  useLocalizeEquipment,
+} from "../equipment/localized-equipment";
 import { type Armor, armorSchema } from "./armor";
 
 //------------------------------------------------------------------------------
 // Localized Armor
 //------------------------------------------------------------------------------
 
-export const localizedArmorSchema = localizedResourceSchema(armorSchema).extend(
-  {
-    armor_class: z.string(),
-    armor_class_max_cha_modifier: z.number().nullish(),
-    armor_class_max_con_modifier: z.number().nullish(),
-    armor_class_max_dex_modifier: z.number().nullish(),
-    armor_class_max_int_modifier: z.number().nullish(),
-    armor_class_max_str_modifier: z.number().nullish(),
-    armor_class_max_wis_modifier: z.number().nullish(),
-    armor_class_modifier: z.number(),
-    base_armor_class: z.number(),
-    cost: z.string(),
-    description: z.string(),
-    disadvantage_on_stealth: z.boolean(),
-    notes: z.string(),
-    required_cha: z.string(),
-    required_con: z.string(),
-    required_dex: z.string(),
-    required_int: z.string(),
-    required_str: z.string(),
-    required_wis: z.string(),
-    stealth: z.string(),
-    type: z.string(),
-    weight: z.string(),
-  },
-);
+export const localizedArmorSchema = localizedEquipmentSchema(
+  armorSchema,
+).extend({
+  armor_class: z.string(),
+  armor_class_max_cha_modifier: z.number().nullish(),
+  armor_class_max_con_modifier: z.number().nullish(),
+  armor_class_max_dex_modifier: z.number().nullish(),
+  armor_class_max_int_modifier: z.number().nullish(),
+  armor_class_max_str_modifier: z.number().nullish(),
+  armor_class_max_wis_modifier: z.number().nullish(),
+  armor_class_modifier: z.number(),
+  base_armor_class: z.number(),
+  cost: z.string(),
+  description: z.string(),
+  disadvantage_on_stealth: z.boolean(),
+  notes: z.string(),
+  required_cha: z.string(),
+  required_con: z.string(),
+  required_dex: z.string(),
+  required_int: z.string(),
+  required_str: z.string(),
+  required_wis: z.string(),
+  stealth: z.string(),
+  type: z.string(),
+  weight: z.string(),
+});
 
 export type LocalizedArmor = z.infer<typeof localizedArmorSchema>;
 
@@ -50,12 +47,9 @@ export type LocalizedArmor = z.infer<typeof localizedArmorSchema>;
 //------------------------------------------------------------------------------
 
 export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
-  const localizeResource = useLocalizeResource<Armor>();
+  const localizeEquipment = useLocalizeEquipment<Armor>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const translateArmorType = useTranslateArmorType(lang);
-
-  const formatWeight = useFormatGrams();
-  const formatCost = useFormatCpWithUnit("gp");
 
   return useCallback(
     (armor: Armor): LocalizedArmor => {
@@ -90,11 +84,10 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
         .filter((modifier) => modifier)
         .join(" + ");
 
-      const notes = translate(armor.notes, lang);
+      const equipment = localizeEquipment(armor);
 
       return {
-        ...localizeResource(armor),
-
+        ...equipment,
         armor_class: armorClass,
         armor_class_max_cha_modifier: armor.armor_class_max_cha_modifier,
         armor_class_max_con_modifier: armor.armor_class_max_con_modifier,
@@ -104,10 +97,8 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
         armor_class_max_wis_modifier: armor.armor_class_max_wis_modifier,
         armor_class_modifier: armor.armor_class_modifier,
         base_armor_class: armor.base_armor_class,
-        cost: formatCost(armor.cost).toUpperCase(),
-        description: notes || t("description.empty"),
+        description: equipment.notes || t("description.empty"),
         disadvantage_on_stealth: armor.disadvantage_on_stealth,
-        notes,
         required_cha: armor.required_cha ? `${armor.required_cha}` : "-",
         required_con: armor.required_con ? `${armor.required_con}` : "-",
         required_dex: armor.required_dex ? `${armor.required_dex}` : "-",
@@ -119,18 +110,9 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
             t("stealth.disadvantage")
           : t("stealth.normal"),
         type: translateArmorType(armor.type).label,
-        weight: formatWeight(armor.weight),
       };
     },
-    [
-      formatCost,
-      formatWeight,
-      lang,
-      localizeResource,
-      t,
-      ti,
-      translateArmorType,
-    ],
+    [localizeEquipment, t, ti, translateArmorType],
   );
 }
 
@@ -188,8 +170,8 @@ const i18nContext = {
     it: "modificatore di Sag",
   },
   "description.empty": {
-    en: "_Nothing._",
-    it: "_Niente._",
+    en: "_No notes._",
+    it: "_Nessuna nota._",
   },
   "stealth.disadvantage": {
     en: "Disadvantage",

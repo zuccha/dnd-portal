@@ -3,32 +3,26 @@ import { damageTypeSchema } from "../../types/damage-type";
 import { weaponMasterySchema } from "../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../types/weapon-property";
 import { weaponTypeSchema } from "../../types/weapon-type";
-import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
+import {
+  dbEquipmentSchema,
+  dbEquipmentTranslationSchema,
+} from "../equipment/db-equipment";
 
 //------------------------------------------------------------------------------
 // DB Weapon
 //------------------------------------------------------------------------------
 
-export const dbWeaponSchema = dbResourceSchema.extend({
-  type: weaponTypeSchema,
-
+export const dbWeaponSchema = dbEquipmentSchema.extend({
   damage: z.string(),
   damage_type: damageTypeSchema,
   damage_versatile: z.string().nullish(),
-
   mastery: weaponMasterySchema,
-  properties: z.array(weaponPropertySchema),
-
-  magic: z.boolean(),
   melee: z.boolean(),
-  ranged: z.boolean(),
-
+  properties: z.array(weaponPropertySchema),
   range_long: z.number().nullish(),
   range_short: z.number().nullish(),
-
-  weight: z.number(),
-
-  cost: z.number(),
+  ranged: z.boolean(),
+  type: weaponTypeSchema,
 });
 
 export type DBWeapon = z.infer<typeof dbWeaponSchema>;
@@ -37,9 +31,8 @@ export type DBWeapon = z.infer<typeof dbWeaponSchema>;
 // DB Weapon Translation
 //------------------------------------------------------------------------------
 
-export const dbWeaponTranslationSchema = dbResourceTranslationSchema.extend({
+export const dbWeaponTranslationSchema = dbEquipmentTranslationSchema.extend({
   ammunition: z.string().nullish(),
-  notes: z.string().nullish(),
 });
 
 export type DBWeaponTranslation = z.infer<typeof dbWeaponTranslationSchema>;

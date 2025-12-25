@@ -1,13 +1,16 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { armorTypeSchema } from "../../types/armor-type";
-import { resourceFiltersSchema, resourceSchema } from "../resource";
+import {
+  equipmentFiltersSchema,
+  equipmentSchema,
+} from "../equipment/equipment";
 
 //------------------------------------------------------------------------------
 // Armor
 //------------------------------------------------------------------------------
 
-export const armorSchema = resourceSchema.extend({
+export const armorSchema = equipmentSchema.extend({
   armor_class_max_cha_modifier: z.number().nullish(),
   armor_class_max_con_modifier: z.number().nullish(),
   armor_class_max_dex_modifier: z.number().nullish(),
@@ -35,7 +38,7 @@ export type Armor = z.infer<typeof armorSchema>;
 // Armor Filters
 //------------------------------------------------------------------------------
 
-export const armorFiltersSchema = resourceFiltersSchema.extend({
+export const armorFiltersSchema = equipmentFiltersSchema.extend({
   types: z.partialRecord(armorTypeSchema, z.boolean().optional()).optional(),
 });
 
@@ -53,6 +56,15 @@ export const defaultArmor: Armor = {
 
   visibility: "game_master",
 
+  name: {},
+  page: {},
+
+  cost: 0,
+  magic: false,
+  weight: 0,
+
+  notes: {},
+
   armor_class_max_cha_modifier: 0,
   armor_class_max_con_modifier: 0,
   armor_class_max_dex_modifier: 0,
@@ -61,11 +73,7 @@ export const defaultArmor: Armor = {
   armor_class_max_wis_modifier: 0,
   armor_class_modifier: 0,
   base_armor_class: 0,
-  cost: 0,
   disadvantage_on_stealth: false,
-  name: {},
-  notes: {},
-  page: {},
   required_cha: 0,
   required_con: 0,
   required_dex: 0,
@@ -73,7 +81,6 @@ export const defaultArmor: Armor = {
   required_str: 0,
   required_wis: 0,
   type: "light",
-  weight: 0,
 };
 
 //------------------------------------------------------------------------------

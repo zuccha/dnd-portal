@@ -4,36 +4,27 @@ import { damageTypeSchema } from "../../types/damage-type";
 import { weaponMasterySchema } from "../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../types/weapon-property";
 import { weaponTypeSchema } from "../../types/weapon-type";
-import { resourceFiltersSchema, resourceSchema } from "../resource";
+import {
+  equipmentFiltersSchema,
+  equipmentSchema,
+} from "../equipment/equipment";
 
 //------------------------------------------------------------------------------
 // Weapon
 //------------------------------------------------------------------------------
 
-export const weaponSchema = resourceSchema.extend({
-  type: weaponTypeSchema,
-
+export const weaponSchema = equipmentSchema.extend({
+  ammunition: i18nStringSchema,
   damage: z.string(),
   damage_type: damageTypeSchema,
   damage_versatile: z.string().nullish(),
-
   mastery: weaponMasterySchema,
-  properties: z.array(weaponPropertySchema),
-
-  magic: z.boolean(),
   melee: z.boolean(),
-  ranged: z.boolean(),
-
+  properties: z.array(weaponPropertySchema),
   range_long: z.number().nullish(),
   range_short: z.number().nullish(),
-
-  ammunition: i18nStringSchema,
-
-  weight: z.number(),
-
-  cost: z.number(),
-
-  notes: i18nStringSchema,
+  ranged: z.boolean(),
+  type: weaponTypeSchema,
 });
 
 export type Weapon = z.infer<typeof weaponSchema>;
@@ -42,7 +33,7 @@ export type Weapon = z.infer<typeof weaponSchema>;
 // Weapon Filters
 //------------------------------------------------------------------------------
 
-export const weaponFiltersSchema = resourceFiltersSchema.extend({
+export const weaponFiltersSchema = equipmentFiltersSchema.extend({
   masteries: z
     .partialRecord(weaponMasterySchema, z.boolean().optional())
     .optional(),
@@ -68,33 +59,28 @@ export const defaultWeapon: Weapon = {
   campaign_id: "",
   campaign_name: "",
 
-  type: "simple",
+  visibility: "game_master",
 
+  name: {},
+  page: {},
+
+  cost: 0,
+  weight: 0,
+
+  notes: {},
+
+  ammunition: {},
   damage: "",
   damage_type: "slashing",
   damage_versatile: undefined,
-
-  mastery: "cleave",
-  properties: [],
-
   magic: false,
+  mastery: "cleave",
   melee: true,
-  ranged: false,
-
+  properties: [],
   range_long: undefined,
   range_short: undefined,
-
-  ammunition: {},
-
-  weight: 0,
-
-  cost: 0,
-
-  name: {},
-  notes: {},
-  page: {},
-
-  visibility: "game_master",
+  ranged: false,
+  type: "simple",
 };
 
 //------------------------------------------------------------------------------

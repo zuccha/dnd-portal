@@ -3,50 +3,37 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
-import { useFormatCpWithUnit } from "~/measures/cost";
 import { cmToDistanceValue } from "~/measures/distance";
-import { useFormatGrams } from "~/measures/weight";
 import { formatNumber } from "~/utils/number";
 import { useTranslateDamageType } from "../../types/damage-type";
 import { useTranslateWeaponMastery } from "../../types/weapon-mastery";
 import { useTranslateWeaponProperty } from "../../types/weapon-property";
 import { useTranslateWeaponType } from "../../types/weapon-type";
 import {
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+  localizedEquipmentSchema,
+  useLocalizeEquipment,
+} from "../equipment/localized-equipment";
 import { type Weapon, weaponSchema } from "./weapon";
 
 //------------------------------------------------------------------------------
 // Localized Weapon
 //------------------------------------------------------------------------------
 
-export const localizedWeaponSchema = localizedResourceSchema(
+export const localizedWeaponSchema = localizedEquipmentSchema(
   weaponSchema,
 ).extend({
-  type: z.string(),
-
   damage: z.string(),
   damage_extended: z.string(),
   damage_type: z.string(),
   damage_versatile: z.string().nullish(),
-
+  description: z.string(),
   mastery: z.string(),
+  melee: z.boolean(),
   properties: z.string(),
   properties_extended: z.string(),
-
-  magic: z.boolean(),
-  melee: z.boolean(),
-  ranged: z.boolean(),
-
   range: z.string().nullish(),
-
-  weight: z.string(),
-
-  cost: z.string(),
-
-  description: z.string(),
-  notes: z.string(),
+  ranged: z.boolean(),
+  type: z.string(),
 });
 
 export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
@@ -56,17 +43,14 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 //------------------------------------------------------------------------------
 
 export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
-  const localizeResource = useLocalizeResource<Weapon>();
-  const { lang, ti } = useI18nLangContext(i18nContext);
+  const localizeEquipment = useLocalizeEquipment<Weapon>();
+  const { lang, t, ti } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateDamageType = useTranslateDamageType(lang);
   const translateWeaponMastery = useTranslateWeaponMastery(lang);
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
-
-  const formatWeight = useFormatGrams();
-  const formatCost = useFormatCpWithUnit("gp");
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
@@ -101,49 +85,36 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
       const mastery = translateWeaponMastery(weapon.mastery).label;
 
-      const notes = translate(weapon.notes, lang);
+      const equipment = localizeEquipment(weapon);
 
       return {
-        ...localizeResource(weapon),
-
-        type: translateWeaponType(weapon.type).label,
-
+        ...equipment,
         damage: weapon.damage,
         damage_extended,
         damage_type,
         damage_versatile: weapon.damage_versatile,
-
+        description:
+          [damage_extended, properties_extended, mastery, equipment.notes]
+            .filter((paragraph) => paragraph)
+            .join("\n") || t("description.empty"),
         mastery,
+        melee: weapon.melee,
         properties: weapon.properties
           .map(translateWeaponProperty)
           .map(({ label }) => label)
           .sort()
           .join(", "),
         properties_extended,
-
-        magic: weapon.magic,
-        melee: weapon.melee,
-        ranged: weapon.ranged,
-
         range,
-
-        weight: formatWeight(weapon.weight),
-
-        cost: formatCost(weapon.cost).toUpperCase(),
-
-        notes: notes || ti("notes.none"),
-
-        description: [damage_extended, properties_extended, mastery, notes]
-          .filter((paragraph) => paragraph)
-          .join("\n"),
+        ranged: weapon.ranged,
+        type: translateWeaponType(weapon.type).label,
       };
     },
     [
-      formatCost,
-      formatWeight,
       lang,
-      localizeResource,
+      localizeEquipment,
       system,
+      t,
       ti,
       translateDamageType,
       translateWeaponMastery,
@@ -162,7 +133,10 @@ const i18nContext = {
     en: "<1> <2>", // 1 = damage value, 2 = damage type
     it: "<1> <2>", // 1 = damage value, 2 = damage type
   },
-
+  "description.empty": {
+    en: "_No notes._",
+    it: "_Nessuna nota._",
+  },
   "properties.ammunition": {
     en: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
     it: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
@@ -175,7 +149,6 @@ const i18nContext = {
     en: "<1> (<2>)", // 1 = property label, 2 = value
     it: "<1> (<2>)", // 1 = property label, 2 = value
   },
-
   "range.ft": {
     en: "<1> ft", // 1 = range
     it: "<1> ft", // 1 = range
@@ -183,10 +156,5 @@ const i18nContext = {
   "range.m": {
     en: "<1> m", // 1 = range
     it: "<1> m", // 1 = range
-  },
-
-  "notes.none": {
-    en: "_No notes._",
-    it: "_Nessuna nota._",
   },
 };

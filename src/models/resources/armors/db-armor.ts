@@ -1,12 +1,15 @@
 import z from "zod";
 import { armorTypeSchema } from "../../types/armor-type";
-import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
+import {
+  dbEquipmentSchema,
+  dbEquipmentTranslationSchema,
+} from "../equipment/db-equipment";
 
 //------------------------------------------------------------------------------
 // DB Armor
 //------------------------------------------------------------------------------
 
-export const dbArmorSchema = dbResourceSchema.extend({
+export const dbArmorSchema = dbEquipmentSchema.extend({
   armor_class_max_cha_modifier: z.number().nullish(),
   armor_class_max_con_modifier: z.number().nullish(),
   armor_class_max_dex_modifier: z.number().nullish(),
@@ -33,7 +36,7 @@ export type DBArmor = z.infer<typeof dbArmorSchema>;
 // DB Armor Translation
 //------------------------------------------------------------------------------
 
-export const dbArmorTranslationSchema = dbResourceTranslationSchema.extend({
+export const dbArmorTranslationSchema = dbEquipmentTranslationSchema.extend({
   notes: z.string().nullish(),
 });
 

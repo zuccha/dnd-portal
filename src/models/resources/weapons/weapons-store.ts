@@ -1,4 +1,4 @@
-import { createResourcesStore } from "../resources-store";
+import { createEquipmentStore } from "../equipment/equipment-store";
 import { useLocalizeWeapon } from "./localized-weapon";
 import {
   defaultWeaponFilters,
@@ -10,7 +10,7 @@ import {
 // Weapons Store
 //------------------------------------------------------------------------------
 
-export const weaponsStore = createResourcesStore(
+export const weaponsStore = createEquipmentStore(
   { p: "weapons", s: "weapon" },
   weaponSchema,
   weaponFiltersSchema,
