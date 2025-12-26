@@ -7,7 +7,7 @@ import { useI18nLangContext } from "../i18n/i18n-lang-context";
 // Cost Unit
 //------------------------------------------------------------------------------
 
-export const costUnitSchema = z.enum(["cp", "sp", "ep", "gp", "pp"]);
+export const costUnitSchema = z.enum(["cp", "sp", /* "ep", */ "gp" /* "pp" */]);
 
 export type CostUnit = z.infer<typeof costUnitSchema>;
 
@@ -55,10 +55,11 @@ export function cpToCostValue(cp: number, unit: CostUnit): number {
 
 export function cpToCost(cp: number): Cost {
   if (cp < cpInSp) return { unit: "cp", value: cp };
-  if (cp < cpInEp) return { unit: "sp", value: cp / cpInSp };
-  if (cp < cpInGp) return { unit: "ep", value: cp / cpInEp };
-  if (cp < cpInPp) return { unit: "gp", value: cp / cpInGp };
-  return { unit: "pp", value: cp / cpInPp };
+  if (cp < cpInGp) return { unit: "sp", value: cp / cpInSp };
+  // if (cp < cpInGp) return { unit: "ep", value: cp / cpInEp };
+  return { unit: "gp", value: cp / cpInGp };
+  // if (cp < cpInPp) return { unit: "gp", value: cp / cpInGp };
+  // return { unit: "pp", value: cp / cpInPp };
 }
 
 //------------------------------------------------------------------------------
