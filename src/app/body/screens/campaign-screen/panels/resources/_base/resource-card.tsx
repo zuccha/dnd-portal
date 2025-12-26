@@ -146,27 +146,9 @@ function ResourceCardDescription({ description }: { description: string }) {
       w="full"
     >
       {description.split("\n").map((paragraph, i) => (
-        <RichText key={i} patterns={patterns} text={paragraph} />
+        <RichText key={i} text={paragraph} />
       ))}
     </VStack>
   );
 }
 
-const patterns = [
-  {
-    regex: /##(.+?)##/,
-    render: (val: ReactNode) => (
-      <Span fontSize="md" fontWeight="bold">
-        {val}
-      </Span>
-    ),
-  },
-  {
-    regex: /\*\*(.+?)\*\*/,
-    render: (val: ReactNode) => <b>{val}</b>,
-  },
-  {
-    regex: /_(.+?)_/,
-    render: (val: ReactNode) => <Em>{val}</Em>,
-  },
-];

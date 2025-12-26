@@ -1,4 +1,4 @@
-import { Span, type SpanProps } from "@chakra-ui/react";
+import { Em, Span, type SpanProps } from "@chakra-ui/react";
 import { Fragment, type ReactNode } from "react";
 
 //------------------------------------------------------------------------------
@@ -15,11 +15,15 @@ export type RichTextPattern = {
 //------------------------------------------------------------------------------
 
 export type RichTextProps = {
-  patterns: RichTextPattern[];
+  patterns?: RichTextPattern[];
   text: string;
 } & Omit<SpanProps, "children">;
 
-export default function RichText({ patterns, text, ...rest }: RichTextProps) {
+export default function RichText({
+  patterns = defaultPatterns,
+  text,
+  ...rest
+}: RichTextProps) {
   return (
     <Span {...rest}>
       {isListWithAtLeastOneItem(patterns) ?
@@ -61,3 +65,26 @@ function RichTextRec({ patterns, text }: RichTextRecProps) {
 function isListWithAtLeastOneItem<T>(items: T[]): items is [T, ...T[]] {
   return items.length > 0;
 }
+
+//------------------------------------------------------------------------------
+// Is List With At Least One Item
+//------------------------------------------------------------------------------
+
+const defaultPatterns = [
+  {
+    regex: /##(.+?)##/,
+    render: (val: ReactNode) => (
+      <Span fontSize="md" fontWeight="bold">
+        {val}
+      </Span>
+    ),
+  },
+  {
+    regex: /\*\*(.+?)\*\*/,
+    render: (val: ReactNode) => <b>{val}</b>,
+  },
+  {
+    regex: /_(.+?)_/,
+    render: (val: ReactNode) => <Em>{val}</Em>,
+  },
+];

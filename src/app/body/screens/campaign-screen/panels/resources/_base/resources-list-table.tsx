@@ -1,13 +1,6 @@
-import {
-  Box,
-  Em,
-  Span,
-  Table,
-  type TableRootProps,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Table, type TableRootProps, VStack } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
-import { type ReactNode, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
@@ -254,11 +247,7 @@ function ResourcesListTableRow<
               {String(localizedResource[descriptionKey])
                 .split("\n")
                 .map((paragraph, i) => (
-                  <RichText
-                    key={i}
-                    patterns={expansionPatterns}
-                    text={paragraph}
-                  />
+                  <RichText key={i} text={paragraph} />
                 ))}
             </VStack>
           </Table.Cell>
@@ -267,26 +256,3 @@ function ResourcesListTableRow<
     </>
   );
 }
-
-//------------------------------------------------------------------------------
-// Expansion Patterns
-//------------------------------------------------------------------------------
-
-const expansionPatterns = [
-  {
-    regex: /##(.+?)##/,
-    render: (val: ReactNode) => (
-      <Span fontSize="md" fontWeight="bold">
-        {val}
-      </Span>
-    ),
-  },
-  {
-    regex: /\*\*(.+?)\*\*/,
-    render: (val: ReactNode) => <b>{val}</b>,
-  },
-  {
-    regex: /_(.+?)_/,
-    render: (val: ReactNode) => <Em>{val}</Em>,
-  },
-];
