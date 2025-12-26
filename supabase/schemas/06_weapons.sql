@@ -293,9 +293,6 @@ WITH prefs AS (
     ) AS masteries_exc,
 
     -- boolean flags; null = not relevant
-    (p_filters ? 'magic')::int::boolean   AS has_magic_filter,
-    (p_filters->>'magic')::boolean        AS magic_val,
-
     (p_filters ? 'melee')::int::boolean   AS has_melee_filter,
     (p_filters->>'melee')::boolean        AS melee_val,
 
@@ -350,7 +347,6 @@ filtered AS (
     AND (p.masteries_exc IS NULL OR NOT (s.mastery = any(p.masteries_exc)))
 
     -- flags
-    AND (NOT p.has_magic_filter  OR s.magic  = p.magic_val)
     AND (NOT p.has_melee_filter  OR s.melee  = p.melee_val)
     AND (NOT p.has_ranged_filter OR s.ranged = p.ranged_val)
 ),

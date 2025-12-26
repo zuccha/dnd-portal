@@ -249,7 +249,12 @@ RETURNS SETOF public.equipment_row
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
-WITH base AS (
+WITH prefs AS (
+  SELECT
+    (p_filters ? 'magic')::int::boolean   AS has_magic_filter,
+    (p_filters->>'magic')::boolean        AS magic_val
+),
+base AS (
   SELECT r.*
   FROM public.fetch_resources(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
   WHERE r.kind = 'equipment'::public.resource_kind
@@ -269,37 +274,42 @@ src AS (
   FROM base b
   JOIN public.equipments e ON e.resource_id = b.id
 ),
+filtered AS (
+  SELECT s.*
+  FROM src s, prefs p
+  WHERE NOT p.has_magic_filter OR s.magic  = p.magic_val
+),
 t AS (
   SELECT
-    s.id,
+    f.id,
     jsonb_object_agg(t.lang, t.notes) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS notes
-  FROM src s
-  LEFT JOIN public.equipment_translations t ON t.resource_id = s.id
+  FROM filtered f
+  LEFT JOIN public.equipment_translations t ON t.resource_id = f.id
   LEFT JOIN (SELECT 1) _ ON true  -- keep p_langs in scope
-  GROUP BY s.id
+  GROUP BY f.id
 )
 SELECT
-  s.campaign_id,
-  s.campaign_name,
-  s.id,
-  s.kind,
-  s.visibility,
-  s.name,
-  s.page,
-  s.cost,
-  s.magic,
-  s.weight,
+  f.campaign_id,
+  f.campaign_name,
+  f.id,
+  f.kind,
+  f.visibility,
+  f.name,
+  f.page,
+  f.cost,
+  f.magic,
+  f.weight,
   coalesce(tt.notes, '{}'::jsonb) AS notes
-FROM src s
-LEFT JOIN t tt ON tt.id = s.id
+FROM filtered f
+LEFT JOIN t tt ON tt.id = f.id
 ORDER BY
   CASE
     WHEN p_order_by = 'name' AND p_order_dir = 'asc'
-      THEN (s.name->>coalesce(p_langs[1],'en'))
+      THEN (f.name->>coalesce(p_langs[1],'en'))
   END ASC NULLS LAST,
   CASE
     WHEN p_order_by = 'name' AND p_order_dir = 'desc'
-      THEN (s.name->>coalesce(p_langs[1],'en'))
+      THEN (f.name->>coalesce(p_langs[1],'en'))
   END DESC NULLS LAST;
 $$;
 
