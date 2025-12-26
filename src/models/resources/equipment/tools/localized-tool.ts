@@ -44,8 +44,8 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
 
       const description =
         [
-          craft ? ti("craft", craft) : "",
           utilize ? ti("utilize", utilize) : "",
+          craft ? ti("craft", craft) : "",
           equipment.notes,
         ]
           .filter((text) => text)

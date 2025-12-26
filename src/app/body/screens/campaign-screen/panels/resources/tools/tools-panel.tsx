@@ -30,7 +30,7 @@ const columns: ResourcesListTableColumn<Tool, LocalizedTool>[] = [
   },
   {
     key: "type",
-    label: { en: "Type", it: "Type" },
+    label: { en: "Type", it: "Tipo" },
   },
   {
     key: "ability",
