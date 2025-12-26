@@ -70,15 +70,15 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
 
 const i18nContext = {
   "craft": {
-    en: "##Craft##\n<1>",
-    it: "##Creazione##\n<1>",
+    en: "**Craft:** <1>",
+    it: "**Creazione:** <1>",
   },
   "description.empty": {
     en: "No description.",
     it: "Nessuna descrizione.",
   },
   "utilize": {
-    en: "##Utilize##\n<1>",
-    it: "##Utilizzo##\n<1>",
+    en: "**Utilize:** <1>",
+    it: "**Utilizzo:** <1>",
   },
 };
