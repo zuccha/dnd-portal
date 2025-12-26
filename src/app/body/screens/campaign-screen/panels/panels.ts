@@ -11,6 +11,7 @@ export const resourcePanelIds = [
   "resource/eldritch-invocations",
   "resource/items",
   "resource/spells",
+  "resource/tools",
   "resource/weapons",
 ] as const;
 

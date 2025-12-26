@@ -90,6 +90,10 @@ const i18nContext = {
     en: "Spells",
     it: "Incantesimi",
   },
+  "section.resource/tools": {
+    en: "Tools",
+    it: "Strumenti",
+  },
   "section.resource/weapons": {
     en: "Weapons",
     it: "Armi",

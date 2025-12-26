@@ -1,0 +1,84 @@
+import { useCallback } from "react";
+import z from "zod";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { translate } from "~/i18n/i18n-string";
+import { useTranslateCreatureAbility } from "../../../types/creature-ability";
+import { useTranslateToolType } from "../../../types/tool-type";
+import {
+  localizedEquipmentSchema,
+  useLocalizeEquipment,
+} from "../localized-equipment";
+import { type Tool, toolSchema } from "./tool";
+
+//------------------------------------------------------------------------------
+// Localized Tool
+//------------------------------------------------------------------------------
+
+export const localizedToolSchema = localizedEquipmentSchema(toolSchema).extend({
+  ability: z.string(),
+  craft: z.string(),
+  description: z.string(),
+  type: z.string(),
+  utilize: z.string(),
+});
+
+export type LocalizedTool = z.infer<typeof localizedToolSchema>;
+
+//------------------------------------------------------------------------------
+// Use Localized Tool
+//------------------------------------------------------------------------------
+
+export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
+  const localizeEquipment = useLocalizeEquipment<Tool>();
+  const { lang, ti } = useI18nLangContext(i18nContext);
+
+  const translateCreatureAbility = useTranslateCreatureAbility(lang);
+  const translateToolType = useTranslateToolType(lang);
+
+  return useCallback(
+    (tool: Tool): LocalizedTool => {
+      const equipment = localizeEquipment(tool);
+
+      const craft = translate(tool.craft, lang);
+      const utilize = translate(tool.utilize, lang);
+
+      const description =
+        [
+          craft ? ti("craft", craft) : "",
+          utilize ? ti("utilize", utilize) : "",
+          equipment.notes,
+        ]
+          .filter((text) => text)
+          .join("\n\n") || ti("description.empty");
+
+      return {
+        ...equipment,
+        ability: translateCreatureAbility(tool.ability).label,
+        craft,
+        description,
+        type: translateToolType(tool.type).label,
+        utilize,
+      };
+    },
+    [lang, localizeEquipment, ti, translateCreatureAbility, translateToolType],
+  );
+}
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  "craft": {
+    en: "##Craft##\n<1>",
+    it: "##Creazione##\n<1>",
+  },
+  "description.empty": {
+    en: "No description.",
+    it: "Nessuna descrizione.",
+  },
+  "utilize": {
+    en: "##Utilize##\n<1>",
+    it: "##Utilizzo##\n<1>",
+  },
+};
