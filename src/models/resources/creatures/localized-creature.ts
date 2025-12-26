@@ -42,9 +42,9 @@ export const localizedCreatureSchema = localizedResourceSchema(
   type: z.string(),
 
   title: z.string(),
+  title_partial: z.string(),
 
   cr: z.string(),
-  cr_exp_pb: z.string(),
   exp: z.string(),
   pb: z.string(),
 
@@ -81,6 +81,14 @@ export const localizedCreatureSchema = localizedResourceSchema(
   speed_fly: z.string(),
   speed_swim: z.string(),
   speed_walk: z.string(),
+
+  gear: z.string(),
+  immunities: z.string(),
+  languages: z.string(),
+  resistances: z.string(),
+  senses: z.string(),
+  skills: z.string(),
+  vulnerabilities: z.string(),
 
   description: z.string(),
   stats: z.string(),
@@ -157,7 +165,7 @@ export function useLocalizeCreature(): (
         speed_burrow ? ti("speed.burrow", speed_burrow) : "",
       ]
         .filter((speed) => speed)
-        .join("; ");
+        .join(", ");
 
       // Ability scores and modifiers
       const getAbilityMod = (score: number) => Math.floor((score - 10) / 2);
@@ -221,6 +229,7 @@ export function useLocalizeCreature(): (
       const stats_parts: string[] = [];
 
       // Skill proficiencies
+      let skills = "";
       if (
         creature.skill_proficiencies.length ||
         creature.skill_expertise.length
@@ -228,7 +237,7 @@ export function useLocalizeCreature(): (
         const pbsBySkill: Partial<Record<CreatureSkill, number>> = {};
         creature.skill_proficiencies.forEach((s) => (pbsBySkill[s] = pb));
         creature.skill_expertise.forEach((s) => (pbsBySkill[s] = 2 * pb));
-        const skills = Object.entries(pbsBySkill)
+        skills = Object.entries(pbsBySkill)
           .map(([skill, pb]) => {
             const label = translateCreatureSkill(skill as CreatureSkill).label;
             const ability = skillToAbility[skill as CreatureSkill];
@@ -261,28 +270,28 @@ export function useLocalizeCreature(): (
           .filter((value) => value)
           .join("; ");
 
-      const all_immunities = formatDamagesAndConditions(
+      const immunities = formatDamagesAndConditions(
         creature.damage_immunities,
         creature.condition_immunities,
       );
-      if (all_immunities.length) {
-        stats_parts.push(ti("stats.immunities", all_immunities));
+      if (immunities.length) {
+        stats_parts.push(ti("stats.immunities", immunities));
       }
 
-      const all_resistances = formatDamagesAndConditions(
+      const resistances = formatDamagesAndConditions(
         creature.damage_resistances,
         creature.condition_resistances,
       );
-      if (all_resistances) {
-        stats_parts.push(ti("stats.resistances", all_resistances));
+      if (resistances) {
+        stats_parts.push(ti("stats.resistances", resistances));
       }
 
-      const all_vulnerabilities = formatDamagesAndConditions(
+      const vulnerabilities = formatDamagesAndConditions(
         creature.damage_vulnerabilities,
         creature.condition_vulnerabilities,
       );
-      if (all_vulnerabilities) {
-        stats_parts.push(ti("stats.vulnerabilities", all_vulnerabilities));
+      if (vulnerabilities) {
+        stats_parts.push(ti("stats.vulnerabilities", vulnerabilities));
       }
 
       // Gear
@@ -349,9 +358,9 @@ export function useLocalizeCreature(): (
         type,
 
         title: ti("title", size, type, alignment),
+        title_partial: ti("title.partial", size, type),
 
         cr,
-        cr_exp_pb: ti("cr_exp_pb", cr, exp, `${pb}`),
         exp,
         pb: `${pb}`,
 
@@ -392,6 +401,14 @@ export function useLocalizeCreature(): (
         speed_swim,
         speed_walk,
 
+        gear,
+        immunities,
+        languages,
+        resistances,
+        senses,
+        skills,
+        vulnerabilities,
+
         description,
         stats,
       };
@@ -420,99 +437,85 @@ export function useLocalizeCreature(): (
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "cr_exp_pb": {
-    en: "CR <1> (XP <2>, PB <3>)",
-    it: "GS <1> (PE <2>, BC <3>)",
-  },
-
-  "title": {
-    en: "<1> <2>, <3>", // 1 = size, 2 = type, 3 = alignment
-    it: "<2> <1>, <3>", // 1 = size, 2 = type, 3 = alignment
-  },
-
-  "speed.walk": {
-    en: "Speed: <1>",
-    it: "Velocità: <1>",
-  },
-
-  "speed.fly": {
-    en: "fly <1>",
-    it: "volo <1>",
-  },
-
-  "speed.swim": {
-    en: "swim <1>",
-    it: "nuoto <1>",
-  },
-
-  "speed.climb": {
-    en: "climb <1>",
-    it: "scalata <1>",
-  },
-
-  "speed.burrow": {
-    en: "burrow <1>",
-    it: "scavo <1>",
-  },
-
-  "stats.skills": {
-    en: "**Skills:** <1>",
-    it: "**Abilità:** <1>",
-  },
-
-  "stats.immunities": {
-    en: "**Immunities:** <1>",
-    it: "**Immunità:** <1>",
-  },
-
-  "stats.resistances": {
-    en: "**Resistances:** <1>",
-    it: "**Resistenze:** <1>",
-  },
-
-  "stats.vulnerabilities": {
-    en: "**Vulnerabilities:** <1>",
-    it: "**Vulnerabilità:** <1>",
-  },
-
-  "stats.gear": {
-    en: "**Gear:** <1>",
-    it: "**Equipaggiamento:** <1>",
-  },
-
-  "stats.languages": {
-    en: "**Languages:** <1>",
-    it: "**Lingue:** <1>",
-  },
-
-  "stats.senses": {
-    en: "**Senses:** <1>",
-    it: "**Sensi:** <1>",
-  },
-
-  "description.traits": {
-    en: "##Traits##",
-    it: "##Tratti##",
-  },
-
   "description.actions": {
     en: "##Actions##",
     it: "##Azioni##",
   },
-
   "description.bonus_actions": {
     en: "##Bonus Actions##",
     it: "##Azioni Bonus##",
   },
-
+  "description.legendary_actions": {
+    en: "##Legendary Actions##",
+    it: "##Azioni Leggendarie##",
+  },
   "description.reactions": {
     en: "##Reactions##",
     it: "##Reazioni##",
   },
-
-  "description.legendary_actions": {
-    en: "##Legendary Actions##",
-    it: "##Azioni Leggendarie##",
+  "description.traits": {
+    en: "##Traits##",
+    it: "##Tratti##",
+  },
+  "exp_pb": {
+    en: "XP <2>, PB <3>",
+    it: "PE <2>, BC <3>",
+  },
+  "speed.burrow": {
+    en: "burrow <1>",
+    it: "scavo <1>",
+  },
+  "speed.climb": {
+    en: "climb <1>",
+    it: "scalata <1>",
+  },
+  "speed.fly": {
+    en: "fly <1>",
+    it: "volo <1>",
+  },
+  "speed.swim": {
+    en: "swim <1>",
+    it: "nuoto <1>",
+  },
+  "speed.walk": {
+    en: "<1>",
+    it: "<1>",
+  },
+  "stats.gear": {
+    en: "**Gear:** <1>",
+    it: "**Equipaggiamento:** <1>",
+  },
+  "stats.immunities": {
+    en: "**Immunities:** <1>",
+    it: "**Immunità:** <1>",
+  },
+  "stats.languages": {
+    en: "**Languages:** <1>",
+    it: "**Lingue:** <1>",
+  },
+  "stats.resistances": {
+    en: "**Resistances:** <1>",
+    it: "**Resistenze:** <1>",
+  },
+  "stats.senses": {
+    en: "**Senses:** <1>",
+    it: "**Sensi:** <1>",
+  },
+  "stats.skills": {
+    en: "**Skills:** <1>",
+    it: "**Abilità:** <1>",
+  },
+  "stats.vulnerabilities": {
+    en: "**Vulnerabilities:** <1>",
+    it: "**Vulnerabilità:** <1>",
+  },
+  "title": {
+    en: "<1> <2>, <3>", // 1 = size, 2 = type, 3 = alignment
+    it: "<2> <1>, <3>", // 1 = size, 2 = type, 3 = alignment
+  },
+  "title.partial": {
+    en: "<1> <2>", // 1 = size, 2 = type
+    it: "<2> <1>", // 1 = size, 2 = type
   },
 };
 

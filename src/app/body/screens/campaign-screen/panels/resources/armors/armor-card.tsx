@@ -1,4 +1,4 @@
-import { SimpleGrid, Span } from "@chakra-ui/react";
+import { HStack, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Armor } from "~/models/resources/equipment/armors/armor";
 import { useIsArmorSelected } from "~/models/resources/equipment/armors/armors-store";
@@ -25,17 +25,11 @@ export default function ArmorCard({
   const {
     _raw,
     armor_class,
-    campaign,
     cost,
     id,
-    name,
     notes,
-    required_cha,
-    required_con,
-    required_dex,
-    required_int,
-    required_str,
-    required_wis,
+    magic_type,
+    requirements,
     stealth,
     type,
     weight,
@@ -46,76 +40,43 @@ export default function ArmorCard({
   return (
     <ResourceCard
       canEdit={canEdit}
-      name={name}
-      onOpen={() => onOpen(localizedResource._raw)}
+      localizedResource={localizedResource}
+      onOpen={onOpen}
       onToggleSelected={toggle}
       selected={selected}
-      visibility={_raw.visibility}
     >
       <ResourceCard.Caption>
-        <Span>{type}</Span>
-        <Span>{weight}</Span>
+        <VStack gap={0} w="full">
+          <HStack justify="space-between" w="full">
+            <Span>{type}</Span>
+            <Span>{cost}</Span>
+          </HStack>
+          <HStack justify="space-between" w="full">
+            <Span>{magic_type}</Span>
+            <Span>{weight}</Span>
+          </HStack>
+        </VStack>
       </ResourceCard.Caption>
 
-      <SimpleGrid
-        fontSize="xs"
-        gap={1}
-        px={3}
-        py={2}
-        templateColumns="1fr 2fr"
-        w="full"
-      >
-        <Span color="fg.muted">{t("armor_class")}</Span>
-        <Span>{armor_class}</Span>
+      <ResourceCard.Info>
+        <ResourceCard.InfoCell label={t("armor_class")}>
+          {armor_class}
+        </ResourceCard.InfoCell>
 
-        <Span color="fg.muted">{t("stealth")}</Span>
-        <Span>{stealth}</Span>
+        {_raw.disadvantage_on_stealth && (
+          <ResourceCard.InfoCell label={t("stealth")}>
+            {stealth}
+          </ResourceCard.InfoCell>
+        )}
 
-        <Span color="fg.muted">{t("requirements")}</Span>
-        <SimpleGrid
-          gapX={0}
-          gapY={1}
-          templateColumns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
-          w="full"
-        >
-          <Span color="fg.muted">{t("ability[str].required")}</Span>
-          <Span textAlign="right">{required_str}</Span>
-
-          <Span />
-
-          <Span color="fg.muted">{t("ability[dex].required")}</Span>
-          <Span textAlign="right">{required_dex}</Span>
-
-          <Span />
-
-          <Span color="fg.muted">{t("ability[con].required")}</Span>
-          <Span textAlign="right">{required_con}</Span>
-
-          <Span />
-
-          <Span color="fg.muted">{t("ability[int].required")}</Span>
-          <Span textAlign="right">{required_int}</Span>
-
-          <Span />
-
-          <Span color="fg.muted">{t("ability[wis].required")}</Span>
-          <Span textAlign="right">{required_wis}</Span>
-
-          <Span />
-
-          <Span color="fg.muted">{t("ability[cha].required")}</Span>
-          <Span textAlign="right">{required_cha}</Span>
-
-          <Span />
-        </SimpleGrid>
-      </SimpleGrid>
+        {requirements && (
+          <ResourceCard.InfoCell label={t("requirements")}>
+            {requirements}
+          </ResourceCard.InfoCell>
+        )}
+      </ResourceCard.Info>
 
       <ResourceCard.Description description={notes} />
-
-      <ResourceCard.Caption>
-        <Span>{cost}</Span>
-        <Span>{campaign}</Span>
-      </ResourceCard.Caption>
     </ResourceCard>
   );
 }
@@ -125,39 +86,15 @@ export default function ArmorCard({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "ability[cha].required": {
-    en: "Cha",
-    it: "Car",
-  },
-  "ability[con].required": {
-    en: "Con",
-    it: "Cos",
-  },
-  "ability[dex].required": {
-    en: "Dex",
-    it: "Des",
-  },
-  "ability[int].required": {
-    en: "Int",
-    it: "Int",
-  },
-  "ability[str].required": {
-    en: "Str",
-    it: "For",
-  },
-  "ability[wis].required": {
-    en: "Wis",
-    it: "Sag",
-  },
-  "armor_class": {
+  armor_class: {
     en: "Armor Class",
     it: "Classe Armatura",
   },
-  "requirements": {
+  requirements: {
     en: "Requirements",
     it: "Requisiti",
   },
-  "stealth": {
+  stealth: {
     en: "Stealth",
     it: "Furtività",
   },

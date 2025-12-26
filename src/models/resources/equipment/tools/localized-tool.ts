@@ -17,7 +17,6 @@ import { type Tool, toolSchema } from "./tool";
 export const localizedToolSchema = localizedEquipmentSchema(toolSchema).extend({
   ability: z.string(),
   craft: z.string(),
-  description: z.string(),
   type: z.string(),
   utilize: z.string(),
 });
@@ -30,7 +29,7 @@ export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 
 export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
   const localizeEquipment = useLocalizeEquipment<Tool>();
-  const { lang, ti } = useI18nLangContext(i18nContext);
+  const { lang } = useI18nLangContext(i18nContext);
 
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateToolType = useTranslateToolType(lang);
@@ -42,25 +41,15 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
       const craft = translate(tool.craft, lang);
       const utilize = translate(tool.utilize, lang);
 
-      const description =
-        [
-          utilize ? ti("utilize", utilize) : "",
-          craft ? ti("craft", craft) : "",
-          equipment.notes,
-        ]
-          .filter((text) => text)
-          .join("\n\n") || ti("description.empty");
-
       return {
         ...equipment,
         ability: translateCreatureAbility(tool.ability).label,
         craft,
-        description,
         type: translateToolType(tool.type).label,
         utilize,
       };
     },
-    [lang, localizeEquipment, ti, translateCreatureAbility, translateToolType],
+    [lang, localizeEquipment, translateCreatureAbility, translateToolType],
   );
 }
 
@@ -69,15 +58,11 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "craft": {
+  craft: {
     en: "**Craft:** <1>",
     it: "**Creazione:** <1>",
   },
-  "description.empty": {
-    en: "No description.",
-    it: "Nessuna descrizione.",
-  },
-  "utilize": {
+  utilize: {
     en: "**Utilize:** <1>",
     it: "**Utilizzo:** <1>",
   },

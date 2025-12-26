@@ -35,6 +35,7 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema).extend(
     range: z.string(),
     ritual: z.boolean(),
     school: z.string(),
+    school_with_level: z.string(),
   },
 );
 
@@ -46,7 +47,7 @@ export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 
 export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const localizeResource = useLocalizeResource<Spell>();
-  const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
+  const { lang, ti, tp, tpi } = useI18nLangContext(i18nContext);
 
   const translateCharacterClass = useTranslateCharacterClass(lang);
   const translateSpellSchool = useTranslateSpellSchool(lang);
@@ -78,6 +79,8 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
       const materials = spell.materials ? translate(spell.materials, lang) : "";
 
+      const school = translateSpellSchool(spell.school).label;
+
       return {
         ...localizeResource(spell),
         casting_time,
@@ -99,11 +102,9 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
           .join(", "),
         concentration: spell.concentration,
         description:
-          description ?
-            upgrade ?
-              `${description}\n\n${tp("upgrade", spell.level)}\n${upgrade}`
-            : description
-          : t("description.missing"),
+          description && upgrade ?
+            `${description}\n\n${tp("upgrade", spell.level)}\n${upgrade}`
+          : description,
         duration,
         duration_with_concentration:
           spell.concentration ?
@@ -111,10 +112,16 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
           : duration,
         level: `${spell.level}`,
         level_long: ti("level_long", `${spell.level}`),
-        materials: materials ? materials : t("materials.none"),
+        materials,
         range,
         ritual: spell.ritual,
-        school: translateSpellSchool(spell.school).label,
+        school,
+        school_with_level: tpi(
+          "school_with_level",
+          spell.level,
+          school,
+          `${spell.level}`,
+        ),
       };
     },
     [
@@ -122,9 +129,9 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       formatTime,
       lang,
       localizeResource,
-      t,
       ti,
       tp,
+      tpi,
       translateCharacterClass,
       translateSpellCastingTime,
       translateSpellDuration,
@@ -139,26 +146,26 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "level_long": {
-    en: "Level <1>", // 1 = level
-    it: "Livello <1>", // 1 = level
-  },
-
   "casting_time_with_ritual": {
     en: "<1> or ritual", // 1 = casting time
     it: "<1> o rituale", // 1 = casting time
   },
-
   "duration_with_concentration": {
     en: "Up to <1> (C)", // <1> = duration
     it: "Fino a <1> (C)", // <1> = duration
   },
-
-  "description.missing": {
-    en: "_Missing description._",
-    it: "_Descrizione mancante._",
+  "level_long": {
+    en: "Level <1>", // 1 = level
+    it: "Livello <1>", // 1 = level
   },
-
+  "school_with_level/*": {
+    en: "Level <2> <1>", // 1 = school, 2 = level
+    it: "<1> di <2>˚ livello", // 1 = school, 2 = level
+  },
+  "school_with_level/0": {
+    en: "<1> Cantrip", // 1 = school
+    it: "Trucchetto di <1>", // 1 = school
+  },
   "upgrade/*": {
     en: "##At Higher Levels##",
     it: "##A Livelli Superiori##",
@@ -166,10 +173,5 @@ const i18nContext = {
   "upgrade/0": {
     en: "##Cantrip Upgrade##",
     it: "##Potenziamento del Trucchetto##",
-  },
-
-  "materials.none": {
-    en: "No materials.",
-    it: "Nessun materiale.",
   },
 };

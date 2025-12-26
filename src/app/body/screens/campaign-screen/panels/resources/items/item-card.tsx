@@ -1,4 +1,4 @@
-import { Span } from "@chakra-ui/react";
+import { HStack, Span, VStack } from "@chakra-ui/react";
 import type { Item } from "~/models/resources/equipment/items/item";
 import { useIsItemSelected } from "~/models/resources/equipment/items/items-store";
 import type { LocalizedItem } from "~/models/resources/equipment/items/localized-item";
@@ -19,30 +19,32 @@ export default function ItemCard({
   localizedResource,
   onOpen,
 }: ItemCardProps) {
-  const { _raw, campaign, cost, id, name, notes, weight } = localizedResource;
+  const { cost, id, magic_type, notes, weight } = localizedResource;
 
   const [selected, { toggle }] = useIsItemSelected(id);
 
   return (
     <ResourceCard
       canEdit={canEdit}
-      name={name}
-      onOpen={() => onOpen(localizedResource._raw)}
+      localizedResource={localizedResource}
+      onOpen={onOpen}
       onToggleSelected={toggle}
       selected={selected}
-      visibility={_raw.visibility}
     >
       <ResourceCard.Caption>
-        <Span />
-        <Span>{weight}</Span>
+        <VStack gap={0} w="full">
+          <HStack justify="space-between" w="full">
+            <Span>{magic_type}</Span>
+            <Span>{cost}</Span>
+          </HStack>
+          <HStack justify="space-between" w="full">
+            <Span></Span>
+            <Span>{weight}</Span>
+          </HStack>
+        </VStack>
       </ResourceCard.Caption>
 
       <ResourceCard.Description description={notes} />
-
-      <ResourceCard.Caption>
-        <Span>{cost}</Span>
-        <Span>{campaign}</Span>
-      </ResourceCard.Caption>
     </ResourceCard>
   );
 }

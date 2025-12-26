@@ -20,8 +20,8 @@ export const {
   useTranslate: useTranslateArmorType,
   useTranslations: useArmorTypeTranslations,
 } = createTypeTranslationHooks(armorTypes, {
-  heavy: { en: "Heavy", it: "Pesante" },
-  light: { en: "Light", it: "Leggera" },
-  medium: { en: "Medium", it: "Media" },
+  heavy: { en: "Heavy Armor", it: "Armatura Pesante" },
+  light: { en: "Light Armor", it: "Armatura Leggera" },
+  medium: { en: "Medium Armor", it: "Armatura Media" },
   shield: { en: "Shield", it: "Scudo" },
 });

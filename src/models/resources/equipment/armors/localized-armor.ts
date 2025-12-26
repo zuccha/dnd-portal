@@ -26,15 +26,9 @@ export const localizedArmorSchema = localizedEquipmentSchema(
   armor_class_modifier: z.number(),
   base_armor_class: z.number(),
   cost: z.string(),
-  description: z.string(),
   disadvantage_on_stealth: z.boolean(),
   notes: z.string(),
-  required_cha: z.string(),
-  required_con: z.string(),
-  required_dex: z.string(),
-  required_int: z.string(),
-  required_str: z.string(),
-  required_wis: z.string(),
+  requirements: z.string(),
   stealth: z.string(),
   type: z.string(),
   weight: z.string(),
@@ -86,6 +80,17 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
 
       const equipment = localizeEquipment(armor);
 
+      const requirements = [
+        armor.required_cha ? ti("required[cha]", `${armor.required_cha}`) : "",
+        armor.required_con ? ti("required[con]", `${armor.required_con}`) : "",
+        armor.required_dex ? ti("required[dex]", `${armor.required_dex}`) : "",
+        armor.required_int ? ti("required[int]", `${armor.required_int}`) : "",
+        armor.required_str ? ti("required[str]", `${armor.required_str}`) : "",
+        armor.required_wis ? ti("required[wis]", `${armor.required_wis}`) : "",
+      ]
+        .filter((requirement) => requirement)
+        .join(", ");
+
       return {
         ...equipment,
         armor_class: armorClass,
@@ -97,14 +102,8 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
         armor_class_max_wis_modifier: armor.armor_class_max_wis_modifier,
         armor_class_modifier: armor.armor_class_modifier,
         base_armor_class: armor.base_armor_class,
-        description: equipment.notes || t("description.empty"),
         disadvantage_on_stealth: armor.disadvantage_on_stealth,
-        required_cha: armor.required_cha ? `${armor.required_cha}` : "-",
-        required_con: armor.required_con ? `${armor.required_con}` : "-",
-        required_dex: armor.required_dex ? `${armor.required_dex}` : "-",
-        required_int: armor.required_int ? `${armor.required_int}` : "-",
-        required_str: armor.required_str ? `${armor.required_str}` : "-",
-        required_wis: armor.required_wis ? `${armor.required_wis}` : "-",
+        requirements,
         stealth:
           armor.disadvantage_on_stealth ?
             t("stealth.disadvantage")
@@ -172,6 +171,30 @@ const i18nContext = {
   "description.empty": {
     en: "_No notes._",
     it: "_Nessuna nota._",
+  },
+  "required[cha]": {
+    en: "<1> Cha",
+    it: "<1> Car",
+  },
+  "required[con]": {
+    en: "<1> Con",
+    it: "<1> Cos",
+  },
+  "required[dex]": {
+    en: "<1> Dex",
+    it: "<1> Des",
+  },
+  "required[int]": {
+    en: "<1> Int",
+    it: "<1> Int",
+  },
+  "required[str]": {
+    en: "<1> Str",
+    it: "<1> For",
+  },
+  "required[wis]": {
+    en: "<1> Wis",
+    it: "<1> Sag",
   },
   "stealth.disadvantage": {
     en: "Disadvantage",

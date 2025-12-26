@@ -108,7 +108,7 @@ const ToolsPanel = createResourcesPanel({
   defaultResource: defaultTool,
   form: toolEditorForm,
   listTableColumns: columns,
-  listTableDescriptionKey: "description",
+  listTableDescriptionKey: "notes",
   name: { en: "tools", it: "armi" },
   parseFormData,
   store: toolsStore,

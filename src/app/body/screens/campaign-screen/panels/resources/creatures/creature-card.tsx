@@ -1,4 +1,5 @@
-import { GridItem, SimpleGrid, Span } from "@chakra-ui/react";
+import { HStack, SimpleGrid, Span } from "@chakra-ui/react";
+import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Creature } from "~/models/resources/creatures/creature";
 import { useIsCreatureSelected } from "~/models/resources/creatures/creatures-store";
@@ -21,83 +22,181 @@ export default function CreatureCard({
   onOpen,
 }: CreatureCardProps) {
   const {
-    _raw,
-    campaign,
-    cr_exp_pb,
+    ac,
+    alignment,
+    cr,
     description,
+    exp,
+    gear,
+    habitats,
+    hp,
+    hp_formula,
     id,
-    name,
+    immunities,
+    initiative,
+    initiative_passive,
+    languages,
+    passive_perception,
+    pb,
+    resistances,
+    senses,
+    skills,
     speed,
-    stats,
-    title,
+    title_partial,
+    treasures,
+    vulnerabilities,
   } = localizedResource;
 
-  const { t, ti } = useI18nLangContext(i18nContext);
+  const { t } = useI18nLangContext(i18nContext);
 
   const [selected, { toggle }] = useIsCreatureSelected(id);
+  const [front, setFront] = useState(true);
+
+  if (!front)
+    return (
+      <ResourceCard
+        canEdit={canEdit}
+        localizedResource={localizedResource}
+        onOpen={onOpen}
+        onToggleFront={() => setFront((prev) => !prev)}
+        onToggleSelected={toggle}
+        selected={selected}
+      >
+        <ResourceCard.Description description={description} />
+      </ResourceCard>
+    );
 
   return (
     <ResourceCard
       canEdit={canEdit}
-      name={name}
-      onOpen={() => onOpen(localizedResource._raw)}
+      localizedResource={localizedResource}
+      onOpen={onOpen}
+      onToggleFront={() => setFront((prev) => !prev)}
       onToggleSelected={toggle}
       selected={selected}
-      visibility={_raw.visibility}
     >
       <ResourceCard.Caption>
-        <Span>{title}</Span>
+        <Span>{`${title_partial}, ${alignment}`}</Span>
       </ResourceCard.Caption>
 
-      <SimpleGrid columns={10} fontSize="xs" gap={1} px={3} py={2} w="full">
-        <Span color="fg.muted">{t("ac")}</Span>
-        <GridItem colSpan={4}>{localizedResource.ac}</GridItem>
+      <ResourceCard.Info>
+        <ResourceCard.InfoCell label={t("habitats")}>
+          {habitats}
+        </ResourceCard.InfoCell>
 
-        <Span color="fg.muted">{t("hp")}</Span>
-        <GridItem
-          colSpan={4}
-        >{`${localizedResource.hp} (${localizedResource.hp_formula})`}</GridItem>
+        <ResourceCard.InfoCell label={t("treasures")}>
+          {treasures}
+        </ResourceCard.InfoCell>
+      </ResourceCard.Info>
 
-        <Span color="fg.muted">{t("passive_perception")}</Span>
-        <GridItem colSpan={4}>{localizedResource.passive_perception}</GridItem>
+      <HStack fontSize="xs" px={3} py={2} w="full">
+        <ResourceCard.Info flex={1} p={0}>
+          <ResourceCard.InfoCell label={t("armor_class")}>
+            {ac}
+          </ResourceCard.InfoCell>
 
-        <Span color="fg.muted">{t("initiative")}</Span>
-        <GridItem
-          colSpan={4}
-        >{`${localizedResource.initiative} (${localizedResource.initiative_passive})`}</GridItem>
-      </SimpleGrid>
+          <ResourceCard.InfoCell label={t("hp")}>
+            {hp_formula ? `${hp} (${hp_formula})` : hp}
+          </ResourceCard.InfoCell>
 
-      <ResourceCard.Caption>
-        <Span>{localizedResource.habitats}</Span>
-        <Span>{localizedResource.treasures}</Span>
-      </ResourceCard.Caption>
+          <ResourceCard.InfoCell label={t("passive_perception")}>
+            {passive_perception}
+          </ResourceCard.InfoCell>
 
-      <SimpleGrid columns={8} fontSize="xs" gapX={1} px={3} py={1} w="full">
-        <AbilityBody ability="str" creature={localizedResource} />
-        <AbilityBody ability="dex" creature={localizedResource} />
-        <AbilityBody ability="con" creature={localizedResource} />
-        <AbilityBody ability="int" creature={localizedResource} />
-        <AbilityBody ability="wis" creature={localizedResource} />
-        <AbilityBody ability="cha" creature={localizedResource} />
-      </SimpleGrid>
+          <ResourceCard.InfoCell label={t("initiative")}>
+            {`${initiative} (${initiative_passive})`}
+          </ResourceCard.InfoCell>
 
-      <ResourceCard.Caption>
-        <Span>{speed}</Span>
-      </ResourceCard.Caption>
+          <ResourceCard.InfoCell label={t("challenge_rating")}>
+            {cr}
+          </ResourceCard.InfoCell>
 
-      <ResourceCard.Description
-        description={
-          description && stats ? ti("stats_and_description", stats, description)
-          : stats ?
-            ti("stats", stats)
-          : description
-        }
-      />
+          <ResourceCard.InfoCell label={t("proficiency_bonus")}>
+            {pb}
+          </ResourceCard.InfoCell>
 
-      <ResourceCard.Caption>
-        <Span>{cr_exp_pb}</Span>
-        <Span>{campaign}</Span>
-      </ResourceCard.Caption>
+          <ResourceCard.InfoCell label={t("experience_points")}>
+            {exp}
+          </ResourceCard.InfoCell>
+        </ResourceCard.Info>
+
+        <SimpleGrid
+          flex={1}
+          gap={1}
+          justifyContent="flex-end"
+          templateColumns="1.8em repeat(3, 2.2em)"
+        >
+          <Span />
+          <Span color="fg.muted" textAlign="right">
+            {t("ability.score")}
+          </Span>
+          <Span color="fg.muted" textAlign="right">
+            {t("ability.modifier")}
+          </Span>
+          <Span color="fg.muted" textAlign="right">
+            {t("ability.save")}
+          </Span>
+
+          <AbilityBody ability="str" creature={localizedResource} />
+          <AbilityBody ability="dex" creature={localizedResource} />
+          <AbilityBody ability="con" creature={localizedResource} />
+          <AbilityBody ability="int" creature={localizedResource} />
+          <AbilityBody ability="wis" creature={localizedResource} />
+          <AbilityBody ability="cha" creature={localizedResource} />
+        </SimpleGrid>
+      </HStack>
+
+      <ResourceCard.Info>
+        <ResourceCard.InfoCell label={t("speed")}>
+          {speed}
+        </ResourceCard.InfoCell>
+      </ResourceCard.Info>
+
+      <HStack align="flex-start" flex={1} w="full">
+        <ResourceCard.Info>
+          {skills && (
+            <ResourceCard.InfoCell label={t("skills")}>
+              {skills}
+            </ResourceCard.InfoCell>
+          )}
+
+          {immunities && (
+            <ResourceCard.InfoCell label={t("immunities")}>
+              {immunities}
+            </ResourceCard.InfoCell>
+          )}
+
+          {resistances && (
+            <ResourceCard.InfoCell label={t("resistances")}>
+              {resistances}
+            </ResourceCard.InfoCell>
+          )}
+
+          {vulnerabilities && (
+            <ResourceCard.InfoCell label={t("vulnerabilities")}>
+              {vulnerabilities}
+            </ResourceCard.InfoCell>
+          )}
+
+          {gear && (
+            <ResourceCard.InfoCell label={t("gear")}>
+              {gear}
+            </ResourceCard.InfoCell>
+          )}
+
+          {languages && (
+            <ResourceCard.InfoCell label={t("languages")}>
+              {languages}
+            </ResourceCard.InfoCell>
+          )}
+
+          {senses && (
+            <ResourceCard.InfoCell label={t("senses")}>
+              {senses}
+            </ResourceCard.InfoCell>
+          )}
+        </ResourceCard.Info>
+      </HStack>
     </ResourceCard>
   );
 }
@@ -116,10 +215,10 @@ function AbilityBody({
   const { t } = useI18nLangContext(i18nContext);
   return (
     <>
-      <Span color="fg.muted">{t(`ability.${ability}`)}</Span>
-      <Span>{creature[`ability_${ability}`]}</Span>
-      <Span>{creature[`ability_${ability}_mod`]}</Span>
-      <Span>{creature[`ability_${ability}_save`]}</Span>
+      <Span color="fg.muted">{t(`ability[${ability}]`)}</Span>
+      <Span textAlign="right">{creature[`ability_${ability}`]}</Span>
+      <Span textAlign="right">{creature[`ability_${ability}_mod`]}</Span>
+      <Span textAlign="right">{creature[`ability_${ability}_save`]}</Span>
     </>
   );
 }
@@ -129,78 +228,120 @@ function AbilityBody({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "ac": {
+  "ability.modifier": {
+    en: "M",
+    it: "M",
+  },
+  "ability.save": {
+    en: "TS",
+    it: "TS",
+  },
+  "ability.score": {
+    en: "S",
+    it: "P",
+  },
+  "ability[cha]": {
+    en: "Cha",
+    it: "Car",
+  },
+  "ability[con]": {
+    en: "Con",
+    it: "Cos",
+  },
+  "ability[dex]": {
+    en: "Dex",
+    it: "Des",
+  },
+  "ability[int]": {
+    en: "Int",
+    it: "Int",
+  },
+  "ability[str]": {
+    en: "Str",
+    it: "For",
+  },
+  "ability[wis]": {
+    en: "Wis",
+    it: "Sag",
+  },
+  "armor_class": {
     en: "AC",
     it: "CA",
   },
-
+  "challenge_rating": {
+    en: "CR",
+    it: "GS",
+  },
+  "cr_exp_pb": {
+    en: "CR <1> (XP <2>, PB <3>)",
+    it: "GS <1> (PE <2>, BC <3>)",
+  },
+  "experience_points": {
+    en: "XP",
+    it: "PE",
+  },
+  "gear": {
+    en: "Gear",
+    it: "Oggetti",
+  },
+  "habitats": {
+    en: "Habitat",
+    it: "Habitat",
+  },
   "hp": {
     en: "HP",
     it: "PF",
   },
-
+  "immunities": {
+    en: "Immunities",
+    it: "Immunità",
+  },
   "initiative": {
     en: "Init.",
     it: "Iniz.",
   },
-
+  "languages": {
+    en: "Languages",
+    it: "Lingue",
+  },
   "passive_perception": {
     en: "PP",
     it: "PP",
   },
-
-  "pb": {
+  "proficiency_bonus": {
     en: "PB",
     it: "BC",
   },
-
-  "ability_mod": {
-    en: "M",
-    it: "M",
+  "resistances": {
+    en: "Resistances",
+    it: "Resistenze",
   },
-
-  "ability_save": {
-    en: "S",
-    it: "S",
+  "senses": {
+    en: "Senses",
+    it: "Sensi",
   },
-
-  "ability.str": {
-    en: "Str",
-    it: "For",
+  "skills": {
+    en: "Skills",
+    it: "Abilità",
   },
-
-  "ability.dex": {
-    en: "Dex",
-    it: "Des",
+  "speed": {
+    en: "Speed",
+    it: "Velocità",
   },
-
-  "ability.con": {
-    en: "Con",
-    it: "Cos",
-  },
-
-  "ability.int": {
-    en: "Int",
-    it: "Int",
-  },
-
-  "ability.wis": {
-    en: "Wis",
-    it: "Sag",
-  },
-
-  "ability.cha": {
-    en: "Cha",
-    it: "Car",
-  },
-
   "stats": {
     en: "##Info##\n<1>",
     it: "##Info##\n<1>",
   },
-
   "stats_and_description": {
     en: "##Info##\n<1>\n\n<2>",
     it: "##Info##\n<1>\n\n<2>",
+  },
+  "treasures": {
+    en: "Treasures",
+    it: "Tesori",
+  },
+  "vulnerabilities": {
+    en: "Vulnerabilities",
+    it: "Vulnerabilità",
   },
 };

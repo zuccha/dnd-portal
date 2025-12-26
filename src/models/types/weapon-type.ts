@@ -20,6 +20,6 @@ export const {
   useTranslate: useTranslateWeaponType,
   useTranslations: useWeaponTypeTranslations,
 } = createTypeTranslationHooks(weaponTypes, {
-  martial: { en: "Martial", it: "Da Guerra" },
-  simple: { en: "Simple", it: "Semplice" },
+  martial: { en: "Martial Weapon", it: "Arma da Guerra" },
+  simple: { en: "Simple Weapon", it: "Arma Semplice" },
 });

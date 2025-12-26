@@ -1,4 +1,4 @@
-import { Span } from "@chakra-ui/react";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EldritchInvocation } from "~/models/resources/eldritch-invocations/eldritch-invocation";
 import { useIsEldritchInvocationSelected } from "~/models/resources/eldritch-invocations/eldritch-invocations-store";
 import type { LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
@@ -19,7 +19,9 @@ export default function EldritchInvocationCard({
   localizedResource,
   onOpen,
 }: EldritchInvocationCardProps) {
-  const { _raw, campaign, description, id, name, prerequisite } =
+  const { t } = useI18nLangContext(i18nContext);
+
+  const { description, id, min_warlock_level, other_prerequisite } =
     localizedResource;
 
   const [selected, { toggle }] = useIsEldritchInvocationSelected(id);
@@ -27,20 +29,48 @@ export default function EldritchInvocationCard({
   return (
     <ResourceCard
       canEdit={canEdit}
-      name={name}
-      onOpen={() => onOpen(localizedResource._raw)}
+      localizedResource={localizedResource}
+      onOpen={onOpen}
       onToggleSelected={toggle}
       selected={selected}
-      visibility={_raw.visibility}
     >
-      <ResourceCard.Caption>{prerequisite}</ResourceCard.Caption>
+      <ResourceCard.Caption>{t("eldritch_invocation")}</ResourceCard.Caption>
+
+      {(min_warlock_level || other_prerequisite) && (
+        <ResourceCard.Info>
+          {min_warlock_level && (
+            <ResourceCard.InfoCell label={t("min_warlock_level")}>
+              {min_warlock_level}
+            </ResourceCard.InfoCell>
+          )}
+          {other_prerequisite && (
+            <ResourceCard.InfoCell label={t("other_prerequisite")}>
+              {other_prerequisite}
+            </ResourceCard.InfoCell>
+          )}
+        </ResourceCard.Info>
+      )}
 
       <ResourceCard.Description description={description} />
-
-      <ResourceCard.Caption>
-        <Span></Span>
-        <Span>{campaign}</Span>
-      </ResourceCard.Caption>
     </ResourceCard>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  eldritch_invocation: {
+    en: "Warlock's Eldritch Invocation",
+    it: "Supplica Occulta del Warlock",
+  },
+  min_warlock_level: {
+    en: "Min Level",
+    it: "Livello Minimo",
+  },
+  other_prerequisite: {
+    en: "Prerequisite",
+    it: "Prerequisito",
+  },
+};

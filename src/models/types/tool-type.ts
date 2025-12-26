@@ -20,6 +20,6 @@ export const {
   useTranslate: useTranslateToolType,
   useTranslations: useToolTypeTranslations,
 } = createTypeTranslationHooks(toolTypes, {
-  artisan: { en: "Artisan", it: "Artigiano" },
-  other: { en: "Other", it: "Altro" },
+  artisan: { en: "Artisan's Tool", it: "Strumento da Artigiano" },
+  other: { en: "Other Tools", it: "Altri Strumenti" },
 });

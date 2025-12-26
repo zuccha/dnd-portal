@@ -40,34 +40,8 @@ const columns: ResourcesListTableColumn<Armor, LocalizedArmor>[] = [
     label: { en: "Armor Class", it: "Classe Armatura" },
   },
   {
-    key: "required_str",
-    label: { en: "Str", it: "For" },
-    textAlign: "right",
-  },
-  {
-    key: "required_dex",
-    label: { en: "Dex", it: "Des" },
-    textAlign: "right",
-  },
-  {
-    key: "required_con",
-    label: { en: "Con", it: "Cos" },
-    textAlign: "right",
-  },
-  {
-    key: "required_int",
-    label: { en: "Int", it: "Int" },
-    textAlign: "right",
-  },
-  {
-    key: "required_wis",
-    label: { en: "Wis", it: "Sag" },
-    textAlign: "right",
-  },
-  {
-    key: "required_cha",
-    label: { en: "Cha", it: "Car" },
-    textAlign: "right",
+    key: "requirements",
+    label: { en: "Requirements", it: "Requisiti" },
   },
   {
     key: "stealth",
@@ -175,7 +149,7 @@ const ArmorsPanel = createResourcesPanel({
   defaultResource: defaultArmor,
   form: armorEditorForm,
   listTableColumns: columns,
-  listTableDescriptionKey: "description",
+  listTableDescriptionKey: "notes",
   name: { en: "armors", it: "armi" },
   parseFormData,
   store: armorsStore,

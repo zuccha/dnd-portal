@@ -36,18 +36,17 @@ export function useLocalizeResource<R extends Resource>(): (
 
   return useCallback(
     (resource: R): LocalizedResource<R> => {
-      const page =
-        resource.page ? String(translateNumber(resource.page, lang)) : "";
+      const page = translateNumber(resource.page ?? {}, lang);
       return {
         _raw: resource,
         campaign: resource.campaign_name,
         campaign_with_page:
           page ?
-            ti("campaign_with_page", resource.campaign_name, page)
+            ti("campaign_with_page", resource.campaign_name, `${page}`)
           : resource.campaign_name,
         id: resource.id,
         name: translate(resource.name, lang) || t("name.missing"),
-        page: page ? ti("page", page) : "",
+        page: page ? ti("page", `${page}`) : "",
       };
     },
     [lang, t, ti],

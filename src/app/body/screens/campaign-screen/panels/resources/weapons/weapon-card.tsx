@@ -1,4 +1,5 @@
-import { Span } from "@chakra-ui/react";
+import { HStack, Span, VStack } from "@chakra-ui/react";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import { useIsWeaponSelected } from "~/models/resources/equipment/weapons/weapons-store";
@@ -19,31 +20,81 @@ export default function WeaponCard({
   localizedResource,
   onOpen,
 }: WeaponCardProps) {
-  const { _raw, campaign, cost, description, id, name, type, weight } =
-    localizedResource;
+  const { t } = useI18nLangContext(i18nContext);
+
+  const {
+    cost,
+    damage_extended,
+    id,
+    magic_type,
+    mastery,
+    notes,
+    properties_extended,
+    type,
+    weight,
+  } = localizedResource;
 
   const [selected, { toggle }] = useIsWeaponSelected(id);
 
   return (
     <ResourceCard
       canEdit={canEdit}
-      name={name}
-      onOpen={() => onOpen(localizedResource._raw)}
+      localizedResource={localizedResource}
+      onOpen={onOpen}
       onToggleSelected={toggle}
       selected={selected}
-      visibility={_raw.visibility}
     >
       <ResourceCard.Caption>
-        <Span>{type}</Span>
-        <Span>{weight}</Span>
+        <VStack gap={0} w="full">
+          <HStack justify="space-between" w="full">
+            <Span>{type}</Span>
+            <Span>{cost}</Span>
+          </HStack>
+          <HStack justify="space-between" w="full">
+            <Span>{magic_type}</Span>
+            <Span>{weight}</Span>
+          </HStack>
+        </VStack>
       </ResourceCard.Caption>
 
-      <ResourceCard.Description description={description} />
+      <ResourceCard.Info>
+        <ResourceCard.InfoCell label={t("damage")}>
+          {damage_extended}
+        </ResourceCard.InfoCell>
 
-      <ResourceCard.Caption>
-        <Span>{cost}</Span>
-        <Span>{campaign}</Span>
-      </ResourceCard.Caption>
+        {properties_extended && (
+          <ResourceCard.InfoCell label={t("properties")}>
+            {properties_extended}
+          </ResourceCard.InfoCell>
+        )}
+
+        {mastery && (
+          <ResourceCard.InfoCell label={t("mastery")}>
+            {mastery}
+          </ResourceCard.InfoCell>
+        )}
+      </ResourceCard.Info>
+
+      <ResourceCard.Description description={notes} />
     </ResourceCard>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  damage: {
+    en: "Damage",
+    it: "Danni",
+  },
+  mastery: {
+    en: "Mastery",
+    it: "Padronanza",
+  },
+  properties: {
+    en: "Properties",
+    it: "Proprietà",
+  },
+};

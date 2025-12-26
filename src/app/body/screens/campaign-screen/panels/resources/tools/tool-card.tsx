@@ -1,7 +1,9 @@
-import { Span } from "@chakra-ui/react";
+import { HStack, Span, VStack } from "@chakra-ui/react";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import { useIsToolSelected } from "~/models/resources/equipment/tools/tools-store";
+import RichText from "~/ui/rich-text";
 import ResourceCard from "../_base/resource-card";
 
 //------------------------------------------------------------------------------
@@ -19,7 +21,9 @@ export default function ToolCard({
   localizedResource,
   onOpen,
 }: ToolCardProps) {
-  const { _raw, ability, campaign, cost, id, name, description, type, weight } =
+  const { t } = useI18nLangContext(i18nContext);
+
+  const { ability, cost, craft, id, magic_type, notes, type, utilize, weight } =
     localizedResource;
 
   const [selected, { toggle }] = useIsToolSelected(id);
@@ -27,23 +31,62 @@ export default function ToolCard({
   return (
     <ResourceCard
       canEdit={canEdit}
-      name={name}
-      onOpen={() => onOpen(localizedResource._raw)}
+      localizedResource={localizedResource}
+      onOpen={onOpen}
       onToggleSelected={toggle}
       selected={selected}
-      visibility={_raw.visibility}
     >
       <ResourceCard.Caption>
-        <Span>{`${type} (${ability})`}</Span>
-        <Span>{weight}</Span>
+        <VStack gap={0} w="full">
+          <HStack justify="space-between" w="full">
+            <Span>{type}</Span>
+            <Span>{cost}</Span>
+          </HStack>
+          <HStack justify="space-between" w="full">
+            <Span>{magic_type}</Span>
+            <Span>{weight}</Span>
+          </HStack>
+        </VStack>
       </ResourceCard.Caption>
 
-      <ResourceCard.Description description={description} />
+      <ResourceCard.Info>
+        <ResourceCard.InfoCell label={t("ability")}>
+          {ability}
+        </ResourceCard.InfoCell>
 
-      <ResourceCard.Caption>
-        <Span>{cost}</Span>
-        <Span>{campaign}</Span>
-      </ResourceCard.Caption>
+        {utilize && (
+          <ResourceCard.InfoCell label={t("utilize")}>
+            {utilize}
+          </ResourceCard.InfoCell>
+        )}
+
+        {craft && (
+          <ResourceCard.InfoCell label={t("craft")}>
+            <RichText text={craft} />
+          </ResourceCard.InfoCell>
+        )}
+      </ResourceCard.Info>
+
+      <ResourceCard.Description description={notes} />
     </ResourceCard>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  ability: {
+    en: "Ability",
+    it: "Abilità",
+  },
+  craft: {
+    en: "Craft",
+    it: "Creazione",
+  },
+  utilize: {
+    en: "Utilize",
+    it: "Utilizzo",
+  },
+};

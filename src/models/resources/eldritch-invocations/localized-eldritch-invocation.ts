@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useI18nLang } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import {
   localizedResourceSchema,
@@ -19,8 +19,6 @@ export const localizedEldritchInvocationSchema = localizedResourceSchema(
   eldritchInvocationSchema,
 ).extend({
   description: z.string(),
-  prerequisite: z.string(),
-
   min_warlock_level: z.string(),
   other_prerequisite: z.string(),
 });
@@ -37,7 +35,7 @@ export function useLocalizeEldritchInvocation(): (
   eldritchInvocation: EldritchInvocation,
 ) => LocalizedEldritchInvocation {
   const localizeResource = useLocalizeResource<EldritchInvocation>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const [lang] = useI18nLang();
 
   return useCallback(
     (eldritchInvocation: EldritchInvocation): LocalizedEldritchInvocation => {
@@ -50,43 +48,10 @@ export function useLocalizeEldritchInvocation(): (
       return {
         ...localizeResource(eldritchInvocation),
         description: translate(eldritchInvocation.description, lang),
-        prerequisite:
-          minWarlockLevel > 0 && otherPrerequisite ?
-            ti("prerequisite.full", `${minWarlockLevel}`, otherPrerequisite)
-          : minWarlockLevel > 0 ? ti("prerequisite.level", `${minWarlockLevel}`)
-          : otherPrerequisite ? ti("prerequisite.other", otherPrerequisite)
-          : t("prerequisite.none"),
-
-        min_warlock_level: `${minWarlockLevel}`,
-        other_prerequisite: otherPrerequisite || t("prerequisite.none"),
+        min_warlock_level: minWarlockLevel ? `${minWarlockLevel}` : "",
+        other_prerequisite: otherPrerequisite || "",
       };
     },
-    [lang, localizeResource, t, ti],
+    [lang, localizeResource],
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  "prerequisite.full": {
-    en: "Prerequisite: Level <1>+ Warlock, <2>", // 1 = level, 2 = other
-    it: "Prerequisito: warlock di <1>˚ livello o superiore, <2>", // 1 = level, 2 = other
-  },
-
-  "prerequisite.level": {
-    en: "Prerequisite: Level <1>+ Warlock", // 1 = level
-    it: "Prerequisito: warlock di <1>˚ livello o superiore", // 1 = level
-  },
-
-  "prerequisite.other": {
-    en: "Prerequisite: <1>", // 1 = other
-    it: "Prerequisito: <1>", // 1 = other
-  },
-
-  "prerequisite.none": {
-    en: "no prerequisite",
-    it: "nessun prerequisito",
-  },
-};
