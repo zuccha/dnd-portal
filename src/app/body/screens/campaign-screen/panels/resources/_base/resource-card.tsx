@@ -156,7 +156,7 @@ const patterns = [
   {
     regex: /##(.+?)##/,
     render: (val: ReactNode) => (
-      <Span fontSize="lg" fontVariant="small-caps">
+      <Span fontSize="md" fontWeight="bold">
         {val}
       </Span>
     ),
