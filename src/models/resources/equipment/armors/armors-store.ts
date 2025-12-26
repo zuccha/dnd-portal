@@ -1,4 +1,4 @@
-import { createEquipmentStore } from "../equipment-store";
+import { createEquipmentsStore } from "../equipments-store";
 import { armorFiltersSchema, armorSchema, defaultArmorFilters } from "./armor";
 import { useLocalizeArmor } from "./localized-armor";
 
@@ -6,7 +6,7 @@ import { useLocalizeArmor } from "./localized-armor";
 // Armors Store
 //------------------------------------------------------------------------------
 
-export const armorsStore = createEquipmentStore(
+export const armorsStore = createEquipmentsStore(
   { p: "armors", s: "armor" },
   armorSchema,
   armorFiltersSchema,

@@ -5,10 +5,10 @@ import { type Equipment, type EquipmentFilters } from "./equipment";
 import { type LocalizedEquipment } from "./localized-equipment";
 
 //------------------------------------------------------------------------------
-// Create Equipment Store
+// Create Equipments Store
 //------------------------------------------------------------------------------
 
-export function createEquipmentStore<
+export function createEquipmentsStore<
   E extends Equipment,
   F extends EquipmentFilters,
   L extends LocalizedEquipment<E>,
