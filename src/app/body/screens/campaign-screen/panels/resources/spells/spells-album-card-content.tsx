@@ -1,32 +1,26 @@
-import { Span } from "@chakra-ui/react";
+import { Span, type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
-import type { Spell } from "~/models/resources/spells/spell";
-import { useIsSpellSelected } from "~/models/resources/spells/spells-store";
-import ResourceCard from "../_base/resource-card";
+import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Spell Card
+// Spells Album Card Content
 //------------------------------------------------------------------------------
 
-export type SpellCardProps = {
-  canEdit: boolean;
+export type SpellsAlbumCardContentProps = StackProps & {
   localizedResource: LocalizedSpell;
-  onOpen: (resource: Spell) => void;
 };
 
-export default function SpellCard({
-  canEdit,
+export default function SpellsAlbumCardContent({
   localizedResource,
-  onOpen,
-}: SpellCardProps) {
+  ...rest
+}: SpellsAlbumCardContentProps) {
   const {
     casting_time_with_ritual,
     character_classes,
     components,
     description,
     duration_with_concentration,
-    id,
     materials,
     range,
     school_with_level,
@@ -34,47 +28,37 @@ export default function SpellCard({
 
   const { t } = useI18nLangContext(i18nContext);
 
-  const [selected, { toggle }] = useIsSpellSelected(id);
-
   return (
-    <ResourceCard
-      canEdit={canEdit}
-      localizedResource={localizedResource}
-      onOpen={onOpen}
-      onToggleSelected={toggle}
-      selected={selected}
-    >
-      <ResourceCard.Caption>
+    <VStack {...rest}>
+      <AlbumCard.Caption>
         <Span whiteSpace="nowrap">{school_with_level}</Span>
         <Span textAlign="right">{character_classes}</Span>
-      </ResourceCard.Caption>
+      </AlbumCard.Caption>
 
-      <ResourceCard.Info>
-        <ResourceCard.InfoCell label={t("casting_time")}>
+      <AlbumCard.Info>
+        <AlbumCard.InfoCell label={t("casting_time")}>
           {casting_time_with_ritual}
-        </ResourceCard.InfoCell>
+        </AlbumCard.InfoCell>
 
-        <ResourceCard.InfoCell label={t("range")}>
-          {range}
-        </ResourceCard.InfoCell>
+        <AlbumCard.InfoCell label={t("range")}>{range}</AlbumCard.InfoCell>
 
-        <ResourceCard.InfoCell label={t("duration")}>
+        <AlbumCard.InfoCell label={t("duration")}>
           {duration_with_concentration}
-        </ResourceCard.InfoCell>
+        </AlbumCard.InfoCell>
 
-        <ResourceCard.InfoCell label={t("components")}>
+        <AlbumCard.InfoCell label={t("components")}>
           {components}
-        </ResourceCard.InfoCell>
+        </AlbumCard.InfoCell>
 
         {materials && (
-          <ResourceCard.InfoCell label={t("materials")}>
+          <AlbumCard.InfoCell label={t("materials")}>
             {materials}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
         )}
-      </ResourceCard.Info>
+      </AlbumCard.Info>
 
-      <ResourceCard.Description description={description} />
-    </ResourceCard>
+      <AlbumCard.Description description={description} />
+    </VStack>
   );
 }
 

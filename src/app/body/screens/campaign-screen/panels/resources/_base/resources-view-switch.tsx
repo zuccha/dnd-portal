@@ -1,5 +1,4 @@
-import { Flex } from "@chakra-ui/react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { Grid2X2Icon, ListIcon } from "lucide-react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -7,47 +6,42 @@ import type {
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource, ResourceFilters } from "~/models/resources/resource";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
-// Create Resources Counter
+// Create Resources ViewSwitch
 //------------------------------------------------------------------------------
 
-export type ResourcesCounterProps = {
+type ResourcesViewSwitchProps = {
   campaignId: string;
 };
 
-export function createResourcesCounter<
+export function createResourcesViewSwitch<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
->(store: ResourceStore<R, L, F, DBR, DBT>, _context: ResourcesContext<R>) {
-  return function ResourcesCounter({ campaignId }: ResourcesCounterProps) {
-    const { tpi } = useI18nLangContext(i18nContext);
-    const filteredResourceIds = store.useFilteredResourceIds(campaignId);
-    const count = filteredResourceIds.length;
+>(_store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
+  return function ResourcesViewSwitch(_props: ResourcesViewSwitchProps) {
+    const view = context.useView();
 
     return (
-      <Flex fontSize="sm" whiteSpace="nowrap">
-        {tpi("count", count, `${count}`)}
-      </Flex>
+      <BinaryButton
+        onValueChange={context.setView}
+        options={viewOptions}
+        value={view}
+      />
     );
   };
 }
 
 //------------------------------------------------------------------------------
-// I18n Context
+// View Options
 //------------------------------------------------------------------------------
 
-const i18nContext = {
-  "count/*": {
-    en: "<1> results",
-    it: "<1> risultati",
-  },
-  "count/1": {
-    en: "<1> result",
-    it: "<1> risultato",
-  },
-};
+const viewOptions: BinaryButtonProps<"table", "cards">["options"] = [
+  { Icon: ListIcon, value: "table" },
+  { Icon: Grid2X2Icon, value: "cards" },
+];

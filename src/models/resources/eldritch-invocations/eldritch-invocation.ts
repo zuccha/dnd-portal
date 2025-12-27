@@ -54,6 +54,7 @@ export const defaultEldritchInvocation: EldritchInvocation = {
 //------------------------------------------------------------------------------
 
 export const defaultEldritchInvocationFilters: EldritchInvocationFilters = {
+  name: "",
   order_by: "name",
   order_dir: "asc",
 };

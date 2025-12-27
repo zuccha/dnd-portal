@@ -1,32 +1,26 @@
-import { HStack, Span, VStack } from "@chakra-ui/react";
+import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { Armor } from "~/models/resources/equipment/armors/armor";
-import { useIsArmorSelected } from "~/models/resources/equipment/armors/armors-store";
 import type { LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
-import ResourceCard from "../_base/resource-card";
+import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Armor Card
+// Armors Album Card Content
 //------------------------------------------------------------------------------
 
-export type ArmorCardProps = {
-  canEdit: boolean;
+export type ArmorsAlbumCardContentProps = StackProps & {
   localizedResource: LocalizedArmor;
-  onOpen: (resource: Armor) => void;
 };
 
-export default function ArmorCard({
-  canEdit,
+export default function ArmorsAlbumCardContent({
   localizedResource,
-  onOpen,
-}: ArmorCardProps) {
+  ...rest
+}: ArmorsAlbumCardContentProps) {
   const { t } = useI18nLangContext(i18nContext);
 
   const {
     _raw,
     armor_class,
     cost,
-    id,
     notes,
     magic_type,
     requirements,
@@ -35,17 +29,9 @@ export default function ArmorCard({
     weight,
   } = localizedResource;
 
-  const [selected, { toggle }] = useIsArmorSelected(id);
-
   return (
-    <ResourceCard
-      canEdit={canEdit}
-      localizedResource={localizedResource}
-      onOpen={onOpen}
-      onToggleSelected={toggle}
-      selected={selected}
-    >
-      <ResourceCard.Caption>
+    <VStack {...rest}>
+      <AlbumCard.Caption>
         <VStack gap={0} w="full">
           <HStack justify="space-between" w="full">
             <Span>{type}</Span>
@@ -56,28 +42,28 @@ export default function ArmorCard({
             <Span>{weight}</Span>
           </HStack>
         </VStack>
-      </ResourceCard.Caption>
+      </AlbumCard.Caption>
 
-      <ResourceCard.Info>
-        <ResourceCard.InfoCell label={t("armor_class")}>
+      <AlbumCard.Info>
+        <AlbumCard.InfoCell label={t("armor_class")}>
           {armor_class}
-        </ResourceCard.InfoCell>
+        </AlbumCard.InfoCell>
 
         {_raw.disadvantage_on_stealth && (
-          <ResourceCard.InfoCell label={t("stealth")}>
+          <AlbumCard.InfoCell label={t("stealth")}>
             {stealth}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
         )}
 
         {requirements && (
-          <ResourceCard.InfoCell label={t("requirements")}>
+          <AlbumCard.InfoCell label={t("requirements")}>
             {requirements}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
         )}
-      </ResourceCard.Info>
+      </AlbumCard.Info>
 
-      <ResourceCard.Description description={notes} />
-    </ResourceCard>
+      <AlbumCard.Description description={notes} />
+    </VStack>
   );
 }
 

@@ -164,6 +164,7 @@ export const defaultCreature: Creature = {
 //------------------------------------------------------------------------------
 
 export const defaultCreatureFilters: CreatureFilters = {
+  name: "",
   order_by: "name",
   order_dir: "asc",
 

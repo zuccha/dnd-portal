@@ -81,6 +81,7 @@ export const defaultArmor: Armor = {
 //------------------------------------------------------------------------------
 
 export const defaultArmorFilters: ArmorFilters = {
+  name: "",
   order_by: "name",
   order_dir: "asc",
 };

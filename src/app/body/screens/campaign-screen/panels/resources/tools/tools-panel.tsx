@@ -6,24 +6,21 @@ import {
   dbToolTranslationSchema,
 } from "~/models/resources/equipment/tools/db-tool";
 import { type LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
-import {
-  type Tool,
-  defaultTool,
-} from "~/models/resources/equipment/tools/tool";
-import { toolsStore } from "~/models/resources/equipment/tools/tools-store";
+import { type Tool } from "~/models/resources/equipment/tools/tool";
+import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { report } from "~/utils/error";
-import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
-import ToolCard from "./tool-card";
+import type { ResourcesTableExtra } from "../_base/resources-table";
 import ToolEditor from "./tool-editor";
 import toolEditorForm, { type ToolEditorFormFields } from "./tool-editor-form";
+import ToolsAlbumCardContent from "./tools-album-card-content";
 import ToolsFilters from "./tools-filters";
 
 //------------------------------------------------------------------------------
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesListTableColumn<Tool, LocalizedTool>[] = [
+const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
   {
     key: "name",
     label: { en: "Name", it: "Nome" },
@@ -101,17 +98,11 @@ function parseFormData(
 // Tools Panel
 //------------------------------------------------------------------------------
 
-const ToolsPanel = createResourcesPanel({
-  Card: ToolCard,
-  EditorContent: ToolEditor,
-  Filters: ToolsFilters,
-  defaultResource: defaultTool,
-  form: toolEditorForm,
-  listTableColumns: columns,
-  listTableDescriptionKey: "notes",
-  name: { en: "tools", it: "armi" },
-  parseFormData,
-  store: toolsStore,
+const ToolsPanel = createResourcesPanel(toolStore, {
+  album: { pages: [ToolsAlbumCardContent] },
+  filters: { Filters: ToolsFilters },
+  form: { Editor: ToolEditor, form: toolEditorForm, parseFormData },
+  table: { columns, detailsKey: "notes" },
 });
 
 export default ToolsPanel;

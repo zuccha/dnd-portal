@@ -5,11 +5,11 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { WandIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type ItemFilters } from "~/models/resources/equipment/items/item";
-import { itemsStore } from "~/models/resources/equipment/items/items-store";
+import { itemStore } from "~/models/resources/equipment/items/item-store";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import Input from "~/ui/input";
@@ -21,12 +21,11 @@ import Select from "~/ui/select";
 
 export default function ItemsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = itemsStore.useFilters();
+  const [filters, setFilters] = itemStore.useFilters();
 
-  const [nameFilter, setNameFilter] = itemsStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
-    nameFilter,
-    setNameFilter,
+    filters.name,
+    useCallback((name) => setFilters({ name }), [setFilters]),
     200,
   );
 

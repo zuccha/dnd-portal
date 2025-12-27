@@ -5,11 +5,11 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { WandIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type ToolFilters } from "~/models/resources/equipment/tools/tool";
-import { toolsStore } from "~/models/resources/equipment/tools/tools-store";
+import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useToolTypeOptions } from "~/models/types/tool-type";
 import Icon from "~/ui/icon";
@@ -24,12 +24,11 @@ import Select from "~/ui/select";
 
 export default function ToolsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = toolsStore.useFilters();
+  const [filters, setFilters] = toolStore.useFilters();
 
-  const [nameFilter, setNameFilter] = toolsStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
-    nameFilter,
-    setNameFilter,
+    filters.name,
+    useCallback((name) => setFilters({ name }), [setFilters]),
     200,
   );
 

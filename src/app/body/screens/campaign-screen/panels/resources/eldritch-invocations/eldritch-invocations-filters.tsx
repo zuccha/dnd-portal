@@ -4,11 +4,11 @@ import {
   type StackProps,
   createListCollection,
 } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type EldritchInvocationFilters } from "~/models/resources/eldritch-invocations/eldritch-invocation";
-import { eldritchInvocationsStore } from "~/models/resources/eldritch-invocations/eldritch-invocations-store";
+import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
@@ -19,12 +19,11 @@ import Select from "~/ui/select";
 
 export default function EldritchInvocationsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = eldritchInvocationsStore.useFilters();
+  const [filters, setFilters] = eldritchInvocationStore.useFilters();
 
-  const [nameFilter, setNameFilter] = eldritchInvocationsStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
-    nameFilter,
-    setNameFilter,
+    filters.name,
+    useCallback((name) => setFilters({ name }), [setFilters]),
     200,
   );
 

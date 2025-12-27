@@ -172,8 +172,12 @@ export function createStoreSet<K, T>(
   function useValue(key: K, defaultValue: T): T {
     const [value, setValue] = useState(() => get(key, defaultValue));
     useLayoutEffect(() => {
-      setValue(get(key, defaultValue));
-      return register(key, defaultValue);
+      const unsubscribe = subscribe(key, setValue);
+      const unregister = register(key, defaultValue);
+      return () => {
+        unsubscribe();
+        unregister();
+      };
     }, [defaultValue, key]);
     useLayoutEffect(() => subscribe(key, setValue), [key]);
     return value;

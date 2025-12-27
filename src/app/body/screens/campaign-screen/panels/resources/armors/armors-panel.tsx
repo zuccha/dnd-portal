@@ -1,9 +1,6 @@
 import { WandIcon } from "lucide-react";
-import {
-  type Armor,
-  defaultArmor,
-} from "~/models/resources/equipment/armors/armor";
-import { armorsStore } from "~/models/resources/equipment/armors/armors-store";
+import { type Armor } from "~/models/resources/equipment/armors/armor";
+import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import {
   type DBArmor,
   type DBArmorTranslation,
@@ -12,20 +9,20 @@ import {
 } from "~/models/resources/equipment/armors/db-armor";
 import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import { report } from "~/utils/error";
-import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
-import ArmorCard from "./armor-card";
+import type { ResourcesTableExtra } from "../_base/resources-table";
 import ArmorEditor from "./armor-editor";
 import armorEditorForm, {
   type ArmorEditorFormFields,
 } from "./armor-editor-form";
+import ArmorsAlbumCardContent from "./armors-album-card-content";
 import ArmorsFilters from "./armors-filters";
 
 //------------------------------------------------------------------------------
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesListTableColumn<Armor, LocalizedArmor>[] = [
+const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
   {
     key: "name",
     label: { en: "Name", it: "Nome" },
@@ -142,17 +139,11 @@ function parseFormData(
 // Armors Panel
 //------------------------------------------------------------------------------
 
-const ArmorsPanel = createResourcesPanel({
-  Card: ArmorCard,
-  EditorContent: ArmorEditor,
-  Filters: ArmorsFilters,
-  defaultResource: defaultArmor,
-  form: armorEditorForm,
-  listTableColumns: columns,
-  listTableDescriptionKey: "notes",
-  name: { en: "armors", it: "armi" },
-  parseFormData,
-  store: armorsStore,
+const ArmorsPanel = createResourcesPanel(armorStore, {
+  album: { pages: [ArmorsAlbumCardContent] },
+  filters: { Filters: ArmorsFilters },
+  form: { Editor: ArmorEditor, form: armorEditorForm, parseFormData },
+  table: { columns, detailsKey: "notes" },
 });
 
 export default ArmorsPanel;

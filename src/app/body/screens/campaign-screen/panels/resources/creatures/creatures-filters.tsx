@@ -4,11 +4,11 @@ import {
   type StackProps,
   createListCollection,
 } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type CreatureFilters } from "~/models/resources/creatures/creature";
-import { creaturesStore } from "~/models/resources/creatures/creatures-store";
+import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
 import { useCreatureHabitatOptions } from "~/models/types/creature-habitat";
 import { useCreatureSizeOptions } from "~/models/types/creature-size";
@@ -25,12 +25,11 @@ import Select from "~/ui/select";
 
 export default function CreaturesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = creaturesStore.useFilters();
+  const [filters, setFilters] = creatureStore.useFilters();
 
-  const [nameFilter, setNameFilter] = creaturesStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
-    nameFilter,
-    setNameFilter,
+    filters.name,
+    useCallback((name) => setFilters({ name }), [setFilters]),
     200,
   );
 

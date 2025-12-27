@@ -1,37 +1,35 @@
-import { HStack, SimpleGrid, Span } from "@chakra-ui/react";
-import { useState } from "react";
+import {
+  HStack,
+  SimpleGrid,
+  Span,
+  type StackProps,
+  VStack,
+} from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { Creature } from "~/models/resources/creatures/creature";
-import { useIsCreatureSelected } from "~/models/resources/creatures/creatures-store";
 import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
-import ResourceCard from "../_base/resource-card";
+import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Creature Card
+// Creatures Album Card Content Page 0
 //------------------------------------------------------------------------------
 
-export type CreatureCardProps = {
-  canEdit: boolean;
+export type CreaturesAlbumCardContentPage0Props = StackProps & {
   localizedResource: LocalizedCreature;
-  onOpen: (resource: Creature) => void;
 };
 
-export default function CreatureCard({
-  canEdit,
+export function CreaturesAlbumCardContentPage0({
   localizedResource,
-  onOpen,
-}: CreatureCardProps) {
+  ...rest
+}: CreaturesAlbumCardContentPage0Props) {
   const {
     ac,
     alignment,
     cr,
-    description,
     exp,
     gear,
     habitats,
     hp,
     hp_formula,
-    id,
     immunities,
     initiative,
     initiative_passive,
@@ -49,76 +47,50 @@ export default function CreatureCard({
 
   const { t } = useI18nLangContext(i18nContext);
 
-  const [selected, { toggle }] = useIsCreatureSelected(id);
-  const [front, setFront] = useState(true);
-
-  if (!front)
-    return (
-      <ResourceCard
-        canEdit={canEdit}
-        localizedResource={localizedResource}
-        onOpen={onOpen}
-        onToggleFront={() => setFront((prev) => !prev)}
-        onToggleSelected={toggle}
-        selected={selected}
-      >
-        <ResourceCard.Description description={description} />
-      </ResourceCard>
-    );
-
   return (
-    <ResourceCard
-      canEdit={canEdit}
-      localizedResource={localizedResource}
-      onOpen={onOpen}
-      onToggleFront={() => setFront((prev) => !prev)}
-      onToggleSelected={toggle}
-      selected={selected}
-    >
-      <ResourceCard.Caption>
+    <VStack {...rest}>
+      <AlbumCard.Caption>
         <Span>{`${title_partial}, ${alignment}`}</Span>
-      </ResourceCard.Caption>
+      </AlbumCard.Caption>
 
-      <ResourceCard.Info>
-        <ResourceCard.InfoCell label={t("habitats")}>
+      <AlbumCard.Info>
+        <AlbumCard.InfoCell label={t("habitats")}>
           {habitats}
-        </ResourceCard.InfoCell>
+        </AlbumCard.InfoCell>
 
-        <ResourceCard.InfoCell label={t("treasures")}>
+        <AlbumCard.InfoCell label={t("treasures")}>
           {treasures}
-        </ResourceCard.InfoCell>
-      </ResourceCard.Info>
+        </AlbumCard.InfoCell>
+      </AlbumCard.Info>
 
       <HStack fontSize="xs" px={3} py={2} w="full">
-        <ResourceCard.Info flex={1} p={0}>
-          <ResourceCard.InfoCell label={t("armor_class")}>
-            {ac}
-          </ResourceCard.InfoCell>
+        <AlbumCard.Info flex={1} p={0}>
+          <AlbumCard.InfoCell label={t("armor_class")}>{ac}</AlbumCard.InfoCell>
 
-          <ResourceCard.InfoCell label={t("hp")}>
+          <AlbumCard.InfoCell label={t("hp")}>
             {hp_formula ? `${hp} (${hp_formula})` : hp}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
 
-          <ResourceCard.InfoCell label={t("passive_perception")}>
+          <AlbumCard.InfoCell label={t("passive_perception")}>
             {passive_perception}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
 
-          <ResourceCard.InfoCell label={t("initiative")}>
+          <AlbumCard.InfoCell label={t("initiative")}>
             {`${initiative} (${initiative_passive})`}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
 
-          <ResourceCard.InfoCell label={t("challenge_rating")}>
+          <AlbumCard.InfoCell label={t("challenge_rating")}>
             {cr}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
 
-          <ResourceCard.InfoCell label={t("proficiency_bonus")}>
+          <AlbumCard.InfoCell label={t("proficiency_bonus")}>
             {pb}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
 
-          <ResourceCard.InfoCell label={t("experience_points")}>
+          <AlbumCard.InfoCell label={t("experience_points")}>
             {exp}
-          </ResourceCard.InfoCell>
-        </ResourceCard.Info>
+          </AlbumCard.InfoCell>
+        </AlbumCard.Info>
 
         <SimpleGrid
           flex={1}
@@ -146,58 +118,75 @@ export default function CreatureCard({
         </SimpleGrid>
       </HStack>
 
-      <ResourceCard.Info>
-        <ResourceCard.InfoCell label={t("speed")}>
-          {speed}
-        </ResourceCard.InfoCell>
-      </ResourceCard.Info>
+      <AlbumCard.Info>
+        <AlbumCard.InfoCell label={t("speed")}>{speed}</AlbumCard.InfoCell>
+      </AlbumCard.Info>
 
       <HStack align="flex-start" flex={1} w="full">
-        <ResourceCard.Info>
+        <AlbumCard.Info>
           {skills && (
-            <ResourceCard.InfoCell label={t("skills")}>
+            <AlbumCard.InfoCell label={t("skills")}>
               {skills}
-            </ResourceCard.InfoCell>
+            </AlbumCard.InfoCell>
           )}
 
           {immunities && (
-            <ResourceCard.InfoCell label={t("immunities")}>
+            <AlbumCard.InfoCell label={t("immunities")}>
               {immunities}
-            </ResourceCard.InfoCell>
+            </AlbumCard.InfoCell>
           )}
 
           {resistances && (
-            <ResourceCard.InfoCell label={t("resistances")}>
+            <AlbumCard.InfoCell label={t("resistances")}>
               {resistances}
-            </ResourceCard.InfoCell>
+            </AlbumCard.InfoCell>
           )}
 
           {vulnerabilities && (
-            <ResourceCard.InfoCell label={t("vulnerabilities")}>
+            <AlbumCard.InfoCell label={t("vulnerabilities")}>
               {vulnerabilities}
-            </ResourceCard.InfoCell>
+            </AlbumCard.InfoCell>
           )}
 
           {gear && (
-            <ResourceCard.InfoCell label={t("gear")}>
-              {gear}
-            </ResourceCard.InfoCell>
+            <AlbumCard.InfoCell label={t("gear")}>{gear}</AlbumCard.InfoCell>
           )}
 
           {languages && (
-            <ResourceCard.InfoCell label={t("languages")}>
+            <AlbumCard.InfoCell label={t("languages")}>
               {languages}
-            </ResourceCard.InfoCell>
+            </AlbumCard.InfoCell>
           )}
 
           {senses && (
-            <ResourceCard.InfoCell label={t("senses")}>
+            <AlbumCard.InfoCell label={t("senses")}>
               {senses}
-            </ResourceCard.InfoCell>
+            </AlbumCard.InfoCell>
           )}
-        </ResourceCard.Info>
+        </AlbumCard.Info>
       </HStack>
-    </ResourceCard>
+    </VStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Creatures Album Card Content Page 1
+//------------------------------------------------------------------------------
+
+export type CreaturesAlbumCardContentPage1Props = StackProps & {
+  localizedResource: LocalizedCreature;
+};
+
+export function CreaturesAlbumCardContentPage1({
+  localizedResource,
+  ...rest
+}: CreaturesAlbumCardContentPage1Props) {
+  const { description } = localizedResource;
+
+  return (
+    <VStack {...rest}>
+      <AlbumCard.Description description={description} />
+    </VStack>
   );
 }
 
@@ -233,7 +222,7 @@ const i18nContext = {
     it: "M",
   },
   "ability.save": {
-    en: "TS",
+    en: "ST",
     it: "TS",
   },
   "ability.score": {

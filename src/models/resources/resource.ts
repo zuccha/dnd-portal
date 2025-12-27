@@ -27,6 +27,7 @@ export type Resource = z.infer<typeof resourceSchema>;
 //------------------------------------------------------------------------------
 
 export const resourceFiltersSchema = z.object({
+  name: z.string(),
   order_by: z.string(),
   order_dir: z.enum(["asc", "desc"]).default("asc"),
 });

@@ -117,6 +117,7 @@ export const defaultSpell: Spell = {
 //------------------------------------------------------------------------------
 
 export const defaultSpellFilters: SpellFilters = {
+  name: "",
   order_by: "name",
   order_dir: "asc",
 };

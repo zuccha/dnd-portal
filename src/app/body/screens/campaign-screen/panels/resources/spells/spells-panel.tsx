@@ -5,23 +5,23 @@ import {
   dbSpellTranslationSchema,
 } from "~/models/resources/spells/db-spell";
 import { type LocalizedSpell } from "~/models/resources/spells/localized-spell";
-import { type Spell, defaultSpell } from "~/models/resources/spells/spell";
-import { spellsStore } from "~/models/resources/spells/spells-store";
+import { type Spell } from "~/models/resources/spells/spell";
+import { spellStore } from "~/models/resources/spells/spell-store";
 import { report } from "~/utils/error";
-import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
-import SpellCard from "./spell-card";
+import type { ResourcesTableExtra } from "../_base/resources-table";
 import SpellEditor from "./spell-editor";
 import spellEditorForm, {
   type SpellEditorFormFields,
 } from "./spell-editor-form";
+import SpellsAlbumCardContent from "./spells-album-card-content";
 import SpellsFilters from "./spells-filters";
 
 //------------------------------------------------------------------------------
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesListTableColumn<Spell, LocalizedSpell>[] = [
+const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
   {
     key: "name",
     label: { en: "Name", it: "Nome" },
@@ -126,17 +126,11 @@ function parseFormData(
 // Spells Panel
 //------------------------------------------------------------------------------
 
-const SpellsPanel = createResourcesPanel({
-  Card: SpellCard,
-  EditorContent: SpellEditor,
-  Filters: SpellsFilters,
-  defaultResource: defaultSpell,
-  form: spellEditorForm,
-  listTableColumns: columns,
-  listTableDescriptionKey: "description",
-  name: { en: "spells", it: "incantesimi" },
-  parseFormData,
-  store: spellsStore,
+const SpellsPanel = createResourcesPanel(spellStore, {
+  album: { pages: [SpellsAlbumCardContent] },
+  filters: { Filters: SpellsFilters },
+  form: { Editor: SpellEditor, form: spellEditorForm, parseFormData },
+  table: { columns, detailsKey: "description" },
 });
 
 export default SpellsPanel;

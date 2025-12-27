@@ -6,26 +6,23 @@ import {
   dbWeaponTranslationSchema,
 } from "~/models/resources/equipment/weapons/db-weapon";
 import { type LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
-import {
-  type Weapon,
-  defaultWeapon,
-} from "~/models/resources/equipment/weapons/weapon";
-import { weaponsStore } from "~/models/resources/equipment/weapons/weapons-store";
+import { type Weapon } from "~/models/resources/equipment/weapons/weapon";
+import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { report } from "~/utils/error";
-import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
-import WeaponCard from "./weapon-card";
+import type { ResourcesTableExtra } from "../_base/resources-table";
 import WeaponEditor from "./weapon-editor";
 import weaponEditorForm, {
   type WeaponEditorFormFields,
 } from "./weapon-editor-form";
+import WeaponsAlbumCardContent from "./weapons-album-card-content";
 import WeaponsFilters from "./weapons-filters";
 
 //------------------------------------------------------------------------------
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesListTableColumn<Weapon, LocalizedWeapon>[] = [
+const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
   {
     key: "name",
     label: { en: "Name", it: "Nome" },
@@ -136,17 +133,11 @@ function parseFormData(
 // Weapons Panel
 //------------------------------------------------------------------------------
 
-const WeaponsPanel = createResourcesPanel({
-  Card: WeaponCard,
-  EditorContent: WeaponEditor,
-  Filters: WeaponsFilters,
-  defaultResource: defaultWeapon,
-  form: weaponEditorForm,
-  listTableColumns: columns,
-  listTableDescriptionKey: "description",
-  name: { en: "weapons", it: "armi" },
-  parseFormData,
-  store: weaponsStore,
+const WeaponsPanel = createResourcesPanel(weaponStore, {
+  album: { pages: [WeaponsAlbumCardContent] },
+  filters: { Filters: WeaponsFilters },
+  form: { Editor: WeaponEditor, form: weaponEditorForm, parseFormData },
+  table: { columns, detailsKey: "notes" },
 });
 
 export default WeaponsPanel;

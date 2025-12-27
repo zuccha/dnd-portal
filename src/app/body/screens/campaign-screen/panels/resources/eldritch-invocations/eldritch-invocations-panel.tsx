@@ -4,30 +4,27 @@ import {
   dbEldritchInvocationSchema,
   dbEldritchInvocationTranslationSchema,
 } from "~/models/resources/eldritch-invocations/db-eldritch-invocation";
-import {
-  type EldritchInvocation,
-  defaultEldritchInvocation,
-} from "~/models/resources/eldritch-invocations/eldritch-invocation";
-import { eldritchInvocationsStore } from "~/models/resources/eldritch-invocations/eldritch-invocations-store";
+import { type EldritchInvocation } from "~/models/resources/eldritch-invocations/eldritch-invocation";
+import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
 import { type LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
 import { report } from "~/utils/error";
-import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
-import EldritchInvocationCard from "./eldritch-invocation-card";
+import type { ResourcesTableExtra } from "../_base/resources-table";
 import EldritchInvocationEditor from "./eldritch-invocation-editor";
 import eldritchInvocationEditorForm, {
   type EldritchInvocationEditorFormFields,
 } from "./eldritch-invocation-editor-form";
+import EldritchInvocationsAlbumCardContent from "./eldritch-invocations-album-card-content";
 import EldritchInvocationsFilters from "./eldritch-invocations-filters";
 
 //------------------------------------------------------------------------------
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesListTableColumn<
+const columns: ResourcesTableExtra<
   EldritchInvocation,
   LocalizedEldritchInvocation
->[] = [
+>["columns"] = [
   {
     key: "name",
     label: { en: "Name", it: "Nome" },
@@ -84,17 +81,15 @@ function parseFormData(data: Partial<EldritchInvocationEditorFormFields>):
 // EldritchInvocations Panel
 //------------------------------------------------------------------------------
 
-const EldritchInvocationsPanel = createResourcesPanel({
-  Card: EldritchInvocationCard,
-  EditorContent: EldritchInvocationEditor,
-  Filters: EldritchInvocationsFilters,
-  defaultResource: defaultEldritchInvocation,
-  form: eldritchInvocationEditorForm,
-  listTableColumns: columns,
-  listTableDescriptionKey: "description",
-  name: { en: "eldritch_invocations", it: "suppliche_occulte" },
-  parseFormData,
-  store: eldritchInvocationsStore,
+const EldritchInvocationsPanel = createResourcesPanel(eldritchInvocationStore, {
+  album: { pages: [EldritchInvocationsAlbumCardContent] },
+  filters: { Filters: EldritchInvocationsFilters },
+  form: {
+    Editor: EldritchInvocationEditor,
+    form: eldritchInvocationEditorForm,
+    parseFormData,
+  },
+  table: { columns, detailsKey: "description" },
 });
 
 export default EldritchInvocationsPanel;

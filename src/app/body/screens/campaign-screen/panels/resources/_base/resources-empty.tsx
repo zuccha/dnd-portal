@@ -3,10 +3,10 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import EmptyState from "~/ui/empty-state";
 
 //----------------------------------------------------------------------------
-// Resources List Empty
+// Resources Empty
 //----------------------------------------------------------------------------
 
-export default function ResourcesListEmpty() {
+export default function ResourcesEmpty() {
   const { t } = useI18nLangContext(i18nContext);
 
   return (

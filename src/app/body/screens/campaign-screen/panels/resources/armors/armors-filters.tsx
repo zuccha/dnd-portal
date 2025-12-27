@@ -5,11 +5,11 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { WandIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type ArmorFilters } from "~/models/resources/equipment/armors/armor";
-import { armorsStore } from "~/models/resources/equipment/armors/armors-store";
+import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
@@ -23,12 +23,11 @@ import Select from "~/ui/select";
 
 export default function ArmorsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = armorsStore.useFilters();
+  const [filters, setFilters] = armorStore.useFilters();
 
-  const [nameFilter, setNameFilter] = armorsStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
-    nameFilter,
-    setNameFilter,
+    filters.name,
+    useCallback((name) => setFilters({ name }), [setFilters]),
     200,
   );
 

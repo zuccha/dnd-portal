@@ -1,8 +1,5 @@
-import {
-  type Creature,
-  defaultCreature,
-} from "~/models/resources/creatures/creature";
-import { creaturesStore } from "~/models/resources/creatures/creatures-store";
+import { type Creature } from "~/models/resources/creatures/creature";
+import { creatureStore } from "~/models/resources/creatures/creature-store";
 import {
   type DBCreature,
   type DBCreatureTranslation,
@@ -11,20 +8,23 @@ import {
 } from "~/models/resources/creatures/db-creature";
 import { type LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import { report } from "~/utils/error";
-import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
-import CreatureCard from "./creature-card";
+import type { ResourcesTableExtra } from "../_base/resources-table";
 import CreatureEditor from "./creature-editor";
 import creatureEditorForm, {
   type CreatureEditorFormFields,
 } from "./creature-editor-form";
+import {
+  CreaturesAlbumCardContentPage0,
+  CreaturesAlbumCardContentPage1,
+} from "./creatures-album-card-content";
 import CreaturesFilters from "./creatures-filters";
 
 //------------------------------------------------------------------------------
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesListTableColumn<Creature, LocalizedCreature>[] = [
+const columns: ResourcesTableExtra<Creature, LocalizedCreature>["columns"] = [
   {
     key: "name",
     label: { en: "Name", it: "Nome" },
@@ -182,17 +182,13 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
 // Creatures Panel
 //------------------------------------------------------------------------------
 
-const CreaturesPanel = createResourcesPanel({
-  Card: CreatureCard,
-  EditorContent: CreatureEditor,
-  Filters: CreaturesFilters,
-  defaultResource: defaultCreature,
-  form: creatureEditorForm,
-  listTableColumns: columns,
-  listTableDescriptionKey: "description",
-  name: { en: "creatures", it: "creature" },
-  parseFormData,
-  store: creaturesStore,
+const CreaturesPanel = createResourcesPanel(creatureStore, {
+  album: {
+    pages: [CreaturesAlbumCardContentPage0, CreaturesAlbumCardContentPage1],
+  },
+  filters: { Filters: CreaturesFilters },
+  form: { Editor: CreatureEditor, form: creatureEditorForm, parseFormData },
+  table: { columns, detailsKey: "description" },
 });
 
 export default CreaturesPanel;

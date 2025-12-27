@@ -4,11 +4,11 @@ import {
   type StackProps,
   createListCollection,
 } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type SpellFilters } from "~/models/resources/spells/spell";
-import { spellsStore } from "~/models/resources/spells/spells-store";
+import { spellStore } from "~/models/resources/spells/spell-store";
 import { useCharacterClassOptions } from "~/models/types/character-class";
 import { useSpellLevelOptions } from "~/models/types/spell-level";
 import { useSpellSchoolOptions } from "~/models/types/spell-school";
@@ -23,12 +23,11 @@ import Select from "~/ui/select";
 
 export default function SpellsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = spellsStore.useFilters();
+  const [filters, setFilters] = spellStore.useFilters();
 
-  const [nameFilter, setNameFilter] = spellsStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
-    nameFilter,
-    setNameFilter,
+    filters.name,
+    useCallback((name) => setFilters({ name }), [setFilters]),
     200,
   );
 

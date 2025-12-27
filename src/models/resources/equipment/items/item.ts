@@ -44,6 +44,7 @@ export const defaultItem: Item = {
 //------------------------------------------------------------------------------
 
 export const defaultItemFilters: ItemFilters = {
+  name: "",
   order_by: "name",
   order_dir: "asc",
 };

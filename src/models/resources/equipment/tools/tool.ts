@@ -63,6 +63,7 @@ export const defaultTool: Tool = {
 //------------------------------------------------------------------------------
 
 export const defaultToolFilters: ToolFilters = {
+  name: "",
   order_by: "name",
   order_dir: "asc",
 };

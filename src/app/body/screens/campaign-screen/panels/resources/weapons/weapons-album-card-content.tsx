@@ -1,31 +1,25 @@
-import { HStack, Span, VStack } from "@chakra-ui/react";
+import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
-import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
-import { useIsWeaponSelected } from "~/models/resources/equipment/weapons/weapons-store";
-import ResourceCard from "../_base/resource-card";
+import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Weapon Card
+// Weapons Album Card Content
 //------------------------------------------------------------------------------
 
-export type WeaponCardProps = {
-  canEdit: boolean;
+export type WeaponsAlbumCardContentProps = StackProps & {
   localizedResource: LocalizedWeapon;
-  onOpen: (resource: Weapon) => void;
 };
 
-export default function WeaponCard({
-  canEdit,
+export default function WeaponsAlbumCardContent({
   localizedResource,
-  onOpen,
-}: WeaponCardProps) {
+  ...rest
+}: WeaponsAlbumCardContentProps) {
   const { t } = useI18nLangContext(i18nContext);
 
   const {
     cost,
     damage_extended,
-    id,
     magic_type,
     mastery,
     notes,
@@ -34,17 +28,9 @@ export default function WeaponCard({
     weight,
   } = localizedResource;
 
-  const [selected, { toggle }] = useIsWeaponSelected(id);
-
   return (
-    <ResourceCard
-      canEdit={canEdit}
-      localizedResource={localizedResource}
-      onOpen={onOpen}
-      onToggleSelected={toggle}
-      selected={selected}
-    >
-      <ResourceCard.Caption>
+    <VStack {...rest}>
+      <AlbumCard.Caption>
         <VStack gap={0} w="full">
           <HStack justify="space-between" w="full">
             <Span>{type}</Span>
@@ -55,28 +41,28 @@ export default function WeaponCard({
             <Span>{weight}</Span>
           </HStack>
         </VStack>
-      </ResourceCard.Caption>
+      </AlbumCard.Caption>
 
-      <ResourceCard.Info>
-        <ResourceCard.InfoCell label={t("damage")}>
+      <AlbumCard.Info>
+        <AlbumCard.InfoCell label={t("damage")}>
           {damage_extended}
-        </ResourceCard.InfoCell>
+        </AlbumCard.InfoCell>
 
         {properties_extended && (
-          <ResourceCard.InfoCell label={t("properties")}>
+          <AlbumCard.InfoCell label={t("properties")}>
             {properties_extended}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
         )}
 
         {mastery && (
-          <ResourceCard.InfoCell label={t("mastery")}>
+          <AlbumCard.InfoCell label={t("mastery")}>
             {mastery}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
         )}
-      </ResourceCard.Info>
+      </AlbumCard.Info>
 
-      <ResourceCard.Description description={notes} />
-    </ResourceCard>
+      <AlbumCard.Description description={notes} />
+    </VStack>
   );
 }
 

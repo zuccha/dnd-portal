@@ -84,6 +84,7 @@ export const defaultWeapon: Weapon = {
 //------------------------------------------------------------------------------
 
 export const defaultWeaponFilters: WeaponFilters = {
+  name: "",
   order_by: "name",
   order_dir: "asc",
 };

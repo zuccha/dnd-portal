@@ -1,42 +1,29 @@
-import { HStack, Span, VStack } from "@chakra-ui/react";
+import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
-import type { Tool } from "~/models/resources/equipment/tools/tool";
-import { useIsToolSelected } from "~/models/resources/equipment/tools/tools-store";
+import AlbumCard from "~/ui/album-card";
 import RichText from "~/ui/rich-text";
-import ResourceCard from "../_base/resource-card";
 
 //------------------------------------------------------------------------------
-// Tool Card
+// Tools Album Card Content
 //------------------------------------------------------------------------------
 
-export type ToolCardProps = {
-  canEdit: boolean;
+export type ToolsAlbumCardContentProps = StackProps & {
   localizedResource: LocalizedTool;
-  onOpen: (resource: Tool) => void;
 };
 
-export default function ToolCard({
-  canEdit,
+export default function ToolsAlbumCardContent({
   localizedResource,
-  onOpen,
-}: ToolCardProps) {
+  ...rest
+}: ToolsAlbumCardContentProps) {
   const { t } = useI18nLangContext(i18nContext);
 
-  const { ability, cost, craft, id, magic_type, notes, type, utilize, weight } =
+  const { ability, cost, craft, magic_type, notes, type, utilize, weight } =
     localizedResource;
 
-  const [selected, { toggle }] = useIsToolSelected(id);
-
   return (
-    <ResourceCard
-      canEdit={canEdit}
-      localizedResource={localizedResource}
-      onOpen={onOpen}
-      onToggleSelected={toggle}
-      selected={selected}
-    >
-      <ResourceCard.Caption>
+    <VStack {...rest}>
+      <AlbumCard.Caption>
         <VStack gap={0} w="full">
           <HStack justify="space-between" w="full">
             <Span>{type}</Span>
@@ -47,28 +34,26 @@ export default function ToolCard({
             <Span>{weight}</Span>
           </HStack>
         </VStack>
-      </ResourceCard.Caption>
+      </AlbumCard.Caption>
 
-      <ResourceCard.Info>
-        <ResourceCard.InfoCell label={t("ability")}>
-          {ability}
-        </ResourceCard.InfoCell>
+      <AlbumCard.Info>
+        <AlbumCard.InfoCell label={t("ability")}>{ability}</AlbumCard.InfoCell>
 
         {utilize && (
-          <ResourceCard.InfoCell label={t("utilize")}>
+          <AlbumCard.InfoCell label={t("utilize")}>
             {utilize}
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
         )}
 
         {craft && (
-          <ResourceCard.InfoCell label={t("craft")}>
+          <AlbumCard.InfoCell label={t("craft")}>
             <RichText text={craft} />
-          </ResourceCard.InfoCell>
+          </AlbumCard.InfoCell>
         )}
-      </ResourceCard.Info>
+      </AlbumCard.Info>
 
-      <ResourceCard.Description description={notes} />
-    </ResourceCard>
+      <AlbumCard.Description description={notes} />
+    </VStack>
   );
 }
 

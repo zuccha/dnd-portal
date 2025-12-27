@@ -12,10 +12,10 @@ import ResourceEditor from "./resource-editor";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
-// Resource Creator Extra
+// Resource Updater Extra
 //------------------------------------------------------------------------------
 
-export type ResourceCreatorExtra<
+export type ResourceUpdaterExtra<
   R extends Resource,
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
@@ -29,14 +29,14 @@ export type ResourceCreatorExtra<
 };
 
 //------------------------------------------------------------------------------
-// Create Resource Creator
+// Create Resource Updater
 //------------------------------------------------------------------------------
 
-export type ResourceCreatorProps = {
+export type ResourceUpdaterProps = {
   campaignId: string;
 };
 
-export function createResourceCreator<
+export function createResourceUpdater<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
@@ -46,23 +46,17 @@ export function createResourceCreator<
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
-  { Editor, form, parseFormData }: ResourceCreatorExtra<R, DBR, DBT, FF>,
+  { Editor, form, parseFormData }: ResourceUpdaterExtra<R, DBR, DBT, FF>,
 ) {
   async function submitForm(
-    campaignId: string,
     data: Partial<FF>,
-    { lang }: { lang: string },
+    { id, lang }: { id: string; lang: string },
   ) {
     const errorOrData = parseFormData(data);
     if (typeof errorOrData === "string") return errorOrData;
 
     const { resource, translation } = errorOrData;
-    const error = await store.createResource(
-      campaignId,
-      lang,
-      resource,
-      translation,
-    );
+    const error = await store.updateResource(id, lang, resource, translation);
 
     if (error) {
       console.error(error);
@@ -72,51 +66,52 @@ export function createResourceCreator<
     return undefined;
   }
 
-  return function ResourcesCreator({ campaignId }: ResourceCreatorProps) {
-    const { lang, t } = useI18nLangContext(i18nContext);
+  return function ResourcesUpdater(_props: ResourceUpdaterProps) {
+    const { lang, t, ti } = useI18nLangContext(i18nContext);
 
-    const createdResource = context.useCreatedResource();
+    const editedResource = context.useEditedResource();
+    const editedResourceId = editedResource?.id ?? "";
 
     const [submit, saving] = form.useSubmit(
       useCallback(
-        (data) => submitForm(campaignId, data, { lang }),
-        [campaignId, lang],
+        (data) => submitForm(data, { id: editedResourceId, lang }),
+        [editedResourceId, lang],
       ),
     );
 
-    const unsetCreatedResource = useCallback(() => {
-      context.setCreatedResource(undefined);
+    const unsetEditedResource = useCallback(() => {
+      context.setEditedResource(undefined);
     }, []);
 
-    const createAndAddMore = useCallback(async () => {
-      const error = await submit();
-      if (!error) form.reset();
+    const save = useCallback(async () => {
+      await submit();
     }, [submit]);
 
-    const createAndClose = useCallback(async () => {
-      const error = await submit();
-      if (!error) unsetCreatedResource();
-    }, [submit, unsetCreatedResource]);
+    const saveAndClose = useCallback(async () => {
+      if (!(await submit())) unsetEditedResource();
+    }, [submit, unsetEditedResource]);
 
     const valid = form.useValid();
     const error = form.useSubmitError();
 
+    const name = editedResource?.name[lang] ?? "";
+
     return (
       <ResourceEditor
         error={error}
-        onClose={unsetCreatedResource}
+        onClose={unsetEditedResource}
         onCopyToClipboard={form.copyDataToClipboard}
         onPasteFromClipboard={form.pasteDataFromClipboard}
-        onPrimaryAction={createAndAddMore}
-        onSecondaryAction={createAndClose}
-        open={!!createdResource}
-        primaryActionText={t("create_and_add_more")}
+        onPrimaryAction={save}
+        onSecondaryAction={saveAndClose}
+        open={!!editedResource}
+        primaryActionText={t("save")}
         saving={saving}
-        secondaryActionText={t("create_and_close")}
-        title={t("title")}
+        secondaryActionText={t("save_and_close")}
+        title={name ? ti("title", name) : t("title.empty")}
         valid={valid}
       >
-        <Editor resource={createdResource ?? store.defaultResource} />
+        <Editor resource={editedResource ?? store.defaultResource} />
       </ResourceEditor>
     );
   };
@@ -127,16 +122,20 @@ export function createResourceCreator<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  create_and_add_more: {
-    en: "Save and add more",
-    it: "Salva e aggiungi altri",
+  "save": {
+    en: "Save",
+    it: "Salva",
   },
-  create_and_close: {
+  "save_and_close": {
     en: "Save and close",
     it: "Salva e chiudi",
   },
-  title: {
-    en: "Create new",
-    it: "Crea nuovo",
+  "title": {
+    en: 'Edit "<1>"',
+    it: 'Modifica "<1>"',
+  },
+  "title.empty": {
+    en: "Edit resource",
+    it: "Modifica risorsa",
   },
 };

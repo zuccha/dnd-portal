@@ -5,25 +5,22 @@ import {
   dbItemSchema,
   dbItemTranslationSchema,
 } from "~/models/resources/equipment/items/db-item";
-import {
-  type Item,
-  defaultItem,
-} from "~/models/resources/equipment/items/item";
-import { itemsStore } from "~/models/resources/equipment/items/items-store";
+import { type Item } from "~/models/resources/equipment/items/item";
+import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { type LocalizedItem } from "~/models/resources/equipment/items/localized-item";
 import { report } from "~/utils/error";
-import type { ResourcesListTableColumn } from "../_base/resources-list-table";
 import { createResourcesPanel } from "../_base/resources-panel";
-import ItemCard from "./item-card";
+import type { ResourcesTableExtra } from "../_base/resources-table";
 import ItemEditor from "./item-editor";
 import itemEditorForm, { type ItemEditorFormFields } from "./item-editor-form";
+import ItemsAlbumCardContent from "./items-album-card-content";
 import ItemsFilters from "./items-filters";
 
 //------------------------------------------------------------------------------
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesListTableColumn<Item, LocalizedItem>[] = [
+const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
   {
     key: "name",
     label: { en: "Name", it: "Nome" },
@@ -89,17 +86,11 @@ function parseFormData(
 // Items Panel
 //------------------------------------------------------------------------------
 
-const ItemsPanel = createResourcesPanel({
-  Card: ItemCard,
-  EditorContent: ItemEditor,
-  Filters: ItemsFilters,
-  defaultResource: defaultItem,
-  form: itemEditorForm,
-  listTableColumns: columns,
-  listTableDescriptionKey: "notes",
-  name: { en: "items", it: "armi" },
-  parseFormData,
-  store: itemsStore,
+const ItemsPanel = createResourcesPanel(itemStore, {
+  album: { pages: [ItemsAlbumCardContent] },
+  filters: { Filters: ItemsFilters },
+  form: { Editor: ItemEditor, form: itemEditorForm, parseFormData },
+  table: { columns, detailsKey: "notes" },
 });
 
 export default ItemsPanel;

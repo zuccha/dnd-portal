@@ -51,6 +51,7 @@ export const defaultEquipment: Equipment = {
 //------------------------------------------------------------------------------
 
 export const defaultEquipmentFilters: EquipmentFilters = {
+  name: '',
   order_by: "name",
   order_dir: "asc",
 };

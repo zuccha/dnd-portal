@@ -5,11 +5,11 @@ import {
   createListCollection,
 } from "@chakra-ui/react";
 import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type WeaponFilters } from "~/models/resources/equipment/weapons/weapon";
-import { weaponsStore } from "~/models/resources/equipment/weapons/weapons-store";
+import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
@@ -25,12 +25,11 @@ import Select from "~/ui/select";
 
 export default function WeaponsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = weaponsStore.useFilters();
+  const [filters, setFilters] = weaponStore.useFilters();
 
-  const [nameFilter, setNameFilter] = weaponsStore.useNameFilter();
   const [tempNameFilter, setTempNameFilter] = useDebouncedState(
-    nameFilter,
-    setNameFilter,
+    filters.name,
+    useCallback((name) => setFilters({ name }), [setFilters]),
     200,
   );
 
