@@ -1158,8 +1158,8 @@ const i18nContext = {
     it: "Intelligenza",
   },
   "ability_proficiencies.label": {
-    en: "Ability Proficiencies",
-    it: "Caratteristiche - Competenze",
+    en: "Saving Throws Proficiencies",
+    it: "Competenze Tiri Salvezza",
   },
   "ability_proficiencies.placeholder": {
     en: "None",
@@ -1371,7 +1371,7 @@ const i18nContext = {
   },
   "skill_expertise.label": {
     en: "Skill Expertise",
-    it: "Abilità - Maestrie",
+    it: "Maestrie nelle Abilità",
   },
   "skill_expertise.placeholder": {
     en: "None",
@@ -1379,7 +1379,7 @@ const i18nContext = {
   },
   "skill_proficiencies.label": {
     en: "Skill Proficiencies",
-    it: "Abilità - Competenze",
+    it: "Competenze nelle Abilità",
   },
   "skill_proficiencies.placeholder": {
     en: "None",

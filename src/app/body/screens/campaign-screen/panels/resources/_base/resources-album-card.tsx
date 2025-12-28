@@ -75,19 +75,21 @@ export function createResourcesAlbumCard<
 
     return (
       <AlbumCard>
-        <AlbumCard.Header>
+        <AlbumCard.Header lineHeight={1.2}>
           {editable ?
-            <HStack py={1}>
+            <HStack align="flex-start" flex={1}>
               <Icon
                 Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}
                 color="fg.muted"
+                h="1.2em"
+                mt="1px"
                 size="sm"
               />
               <Link onClick={edit}>{name}</Link>
             </HStack>
-          : <Span py={1}>{name}</Span>}
+          : <Span>{name}</Span>}
 
-          <HStack>
+          <HStack h="1.2em">
             {pages.length > 1 && (
               <IconButton
                 Icon={RefreshCwIcon}
