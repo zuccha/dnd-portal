@@ -50,9 +50,7 @@ export function CreaturesAlbumCardContentPage0({
 
   return (
     <VStack {...rest}>
-      <AlbumCard.Caption>
-        <Span>{title}</Span>
-      </AlbumCard.Caption>
+      <AlbumCard.Caption>{title}</AlbumCard.Caption>
 
       <HStack
         fontSize="xs"
@@ -194,10 +192,11 @@ export function CreaturesAlbumCardContentPage1({
   localizedResource,
   ...rest
 }: CreaturesAlbumCardContentPage1Props) {
-  const { description } = localizedResource;
+  const { description, title } = localizedResource;
 
   return (
     <VStack {...rest}>
+      <AlbumCard.Caption>{title}</AlbumCard.Caption>
       <AlbumCard.Description description={description} />
     </VStack>
   );
