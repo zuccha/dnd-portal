@@ -47,6 +47,8 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
 
   return useCallback(
     (armor: Armor): LocalizedArmor => {
+      const equipment = localizeEquipment(armor);
+
       const formatModifier = (
         ability: string,
         modifier: number | null | undefined,
@@ -77,8 +79,6 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
       ]
         .filter((modifier) => modifier)
         .join(" + ");
-
-      const equipment = localizeEquipment(armor);
 
       const requirements = [
         armor.required_cha ? ti("required[cha]", `${armor.required_cha}`) : "",

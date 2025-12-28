@@ -4,6 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCmWithUnit } from "~/measures/distance";
+import { formatSigned } from "~/utils/number";
 import type { CreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import {
@@ -42,7 +43,6 @@ export const localizedCreatureSchema = localizedResourceSchema(
   type: z.string(),
 
   title: z.string(),
-  title_partial: z.string(),
 
   cr: z.string(),
   exp: z.string(),
@@ -91,7 +91,7 @@ export const localizedCreatureSchema = localizedResourceSchema(
   vulnerabilities: z.string(),
 
   description: z.string(),
-  stats: z.string(),
+  info: z.string(),
 });
 
 export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
@@ -226,7 +226,7 @@ export function useLocalizeCreature(): (
       };
 
       // Stats section
-      const stats_parts: string[] = [];
+      const info_parts: string[] = [];
 
       // Skill proficiencies
       let skills = "";
@@ -247,7 +247,7 @@ export function useLocalizeCreature(): (
           })
           .sort()
           .join(", ");
-        stats_parts.push(ti("stats.skills", skills));
+        info_parts.push(ti("info.skills", skills));
       }
 
       // Immunities, Resistances, Vulnerabilities
@@ -275,7 +275,7 @@ export function useLocalizeCreature(): (
         creature.condition_immunities,
       );
       if (immunities.length) {
-        stats_parts.push(ti("stats.immunities", immunities));
+        info_parts.push(ti("info.immunities", immunities));
       }
 
       const resistances = formatDamagesAndConditions(
@@ -283,7 +283,7 @@ export function useLocalizeCreature(): (
         creature.condition_resistances,
       );
       if (resistances) {
-        stats_parts.push(ti("stats.resistances", resistances));
+        info_parts.push(ti("info.resistances", resistances));
       }
 
       const vulnerabilities = formatDamagesAndConditions(
@@ -291,28 +291,28 @@ export function useLocalizeCreature(): (
         creature.condition_vulnerabilities,
       );
       if (vulnerabilities) {
-        stats_parts.push(ti("stats.vulnerabilities", vulnerabilities));
+        info_parts.push(ti("info.vulnerabilities", vulnerabilities));
       }
 
       // Gear
       const gear = translate(creature.gear, lang);
       if (gear) {
-        stats_parts.push(ti("stats.gear", gear));
+        info_parts.push(ti("info.gear", gear));
       }
 
       // Languages
       const languages = translate(creature.languages, lang);
       if (languages) {
-        stats_parts.push(ti("stats.languages", languages));
+        info_parts.push(ti("info.languages", languages));
       }
 
       // Senses
       const senses = translate(creature.senses, lang);
       if (senses) {
-        stats_parts.push(ti("stats.senses", senses));
+        info_parts.push(ti("info.senses", senses));
       }
 
-      const stats = stats_parts.join("\n");
+      const info = info_parts.join("\n");
 
       // Description section
       const description_parts: string[] = [];
@@ -352,17 +352,16 @@ export function useLocalizeCreature(): (
         ...localizeResource(creature),
 
         alignment,
-        habitats: planes ? `${habitats} (${planes})` : habitats,
         size,
-        treasures,
+        title: ti("title", size, type, alignment),
         type,
 
-        title: ti("title", size, type, alignment),
-        title_partial: ti("title.partial", size, type),
+        habitats: planes ? `${habitats} (${planes})` : habitats,
+        treasures,
 
         cr,
         exp,
-        pb: `${pb}`,
+        pb: formatSigned(pb),
 
         ac: `${creature.ac}`,
         hp: `${creature.hp}`,
@@ -387,10 +386,7 @@ export function useLocalizeCreature(): (
         ability_wis_mod,
         ability_wis_save,
 
-        initiative:
-          creature.initiative < 0 ?
-            `${creature.initiative}`
-          : `+${creature.initiative}`,
+        initiative: formatSigned(creature.initiative),
         initiative_passive: `${10 + creature.initiative}`,
         passive_perception: `${creature.passive_perception}`,
 
@@ -410,7 +406,7 @@ export function useLocalizeCreature(): (
         vulnerabilities,
 
         description,
-        stats,
+        info,
       };
     },
     [
@@ -461,6 +457,34 @@ const i18nContext = {
     en: "XP <2>, PB <3>",
     it: "PE <2>, BC <3>",
   },
+  "info.gear": {
+    en: "**Gear:** <1>",
+    it: "**Equipaggiamento:** <1>",
+  },
+  "info.immunities": {
+    en: "**Immunities:** <1>",
+    it: "**Immunità:** <1>",
+  },
+  "info.languages": {
+    en: "**Languages:** <1>",
+    it: "**Lingue:** <1>",
+  },
+  "info.resistances": {
+    en: "**Resistances:** <1>",
+    it: "**Resistenze:** <1>",
+  },
+  "info.senses": {
+    en: "**Senses:** <1>",
+    it: "**Sensi:** <1>",
+  },
+  "info.skills": {
+    en: "**Skills:** <1>",
+    it: "**Abilità:** <1>",
+  },
+  "info.vulnerabilities": {
+    en: "**Vulnerabilities:** <1>",
+    it: "**Vulnerabilità:** <1>",
+  },
   "speed.burrow": {
     en: "burrow <1>",
     it: "scavo <1>",
@@ -481,41 +505,9 @@ const i18nContext = {
     en: "<1>",
     it: "<1>",
   },
-  "stats.gear": {
-    en: "**Gear:** <1>",
-    it: "**Equipaggiamento:** <1>",
-  },
-  "stats.immunities": {
-    en: "**Immunities:** <1>",
-    it: "**Immunità:** <1>",
-  },
-  "stats.languages": {
-    en: "**Languages:** <1>",
-    it: "**Lingue:** <1>",
-  },
-  "stats.resistances": {
-    en: "**Resistances:** <1>",
-    it: "**Resistenze:** <1>",
-  },
-  "stats.senses": {
-    en: "**Senses:** <1>",
-    it: "**Sensi:** <1>",
-  },
-  "stats.skills": {
-    en: "**Skills:** <1>",
-    it: "**Abilità:** <1>",
-  },
-  "stats.vulnerabilities": {
-    en: "**Vulnerabilities:** <1>",
-    it: "**Vulnerabilità:** <1>",
-  },
   "title": {
     en: "<1> <2>, <3>", // 1 = size, 2 = type, 3 = alignment
     it: "<2> <1>, <3>", // 1 = size, 2 = type, 3 = alignment
-  },
-  "title.partial": {
-    en: "<1> <2>", // 1 = size, 2 = type
-    it: "<2> <1>", // 1 = size, 2 = type
   },
 };
 

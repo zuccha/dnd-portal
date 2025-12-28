@@ -38,15 +38,12 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
     (tool: Tool): LocalizedTool => {
       const equipment = localizeEquipment(tool);
 
-      const craft = translate(tool.craft, lang);
-      const utilize = translate(tool.utilize, lang);
-
       return {
         ...equipment,
         ability: translateCreatureAbility(tool.ability).label,
-        craft,
+        craft: translate(tool.craft, lang),
         type: translateToolType(tool.type).label,
-        utilize,
+        utilize: translate(tool.utilize, lang),
       };
     },
     [lang, localizeEquipment, translateCreatureAbility, translateToolType],

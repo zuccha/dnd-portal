@@ -26,7 +26,6 @@ export const localizedWeaponSchema = localizedEquipmentSchema(
   damage_extended: z.string(),
   damage_type: z.string(),
   damage_versatile: z.string().nullish(),
-  description: z.string(),
   mastery: z.string(),
   melee: z.boolean(),
   properties: z.string(),
@@ -44,7 +43,7 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 
 export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const localizeEquipment = useLocalizeEquipment<Weapon>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const { lang, ti } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateDamageType = useTranslateDamageType(lang);
@@ -93,10 +92,6 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
         damage_extended,
         damage_type,
         damage_versatile: weapon.damage_versatile,
-        description:
-          [damage_extended, properties_extended, mastery, equipment.notes]
-            .filter((paragraph) => paragraph)
-            .join("\n") || t("description.empty"),
         mastery,
         melee: weapon.melee,
         properties: weapon.properties
@@ -114,7 +109,6 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       lang,
       localizeEquipment,
       system,
-      t,
       ti,
       translateDamageType,
       translateWeaponMastery,
@@ -132,10 +126,6 @@ const i18nContext = {
   "damage_extended": {
     en: "<1> <2>", // 1 = damage value, 2 = damage type
     it: "<1> <2>", // 1 = damage value, 2 = damage type
-  },
-  "description.empty": {
-    en: "_No notes._",
-    it: "_Nessuna nota._",
   },
   "properties.ammunition": {
     en: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
