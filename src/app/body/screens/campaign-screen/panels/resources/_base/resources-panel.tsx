@@ -26,7 +26,7 @@ import {
   type ResourcesFiltersExtra,
   createResourcesFilters,
 } from "./resources-filters";
-import { createResourcesModulesFilter } from "./resources-modules-filter";
+import { createResourcesGenericFilters } from "./resources-generic-filters";
 import {
   type ResourcesTableExtra,
   createResourcesTable,
@@ -63,7 +63,7 @@ export function createResourcesPanel<
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesCounter = createResourcesCounter(store, context);
   const ResourceFilters = createResourcesFilters(store, context, filters);
-  const ResourcesModulesFilter = createResourcesModulesFilter(store, context);
+  const ResourcesGenericFilters = createResourcesGenericFilters(store, context);
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesViewSwitch = createResourcesViewSwitch(store, context);
 
@@ -84,7 +84,7 @@ export function createResourcesPanel<
           <HStack justify="space-between" w="full">
             <HStack>
               <ResourcesActions campaignId={campaignId} />
-              <ResourcesModulesFilter campaignId={campaignId} />
+              <ResourcesGenericFilters campaignId={campaignId} />
               <Separator h="1.5em" orientation="vertical" />
               <ResourcesCounter campaignId={campaignId} />
             </HStack>

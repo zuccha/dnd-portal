@@ -1,14 +1,6 @@
-import {
-  HStack,
-  Separator,
-  type StackProps,
-  createListCollection,
-} from "@chakra-ui/react";
+import { HStack, type StackProps } from "@chakra-ui/react";
 import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
-import { useCallback, useMemo } from "react";
-import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { type WeaponFilters } from "~/models/resources/equipment/weapons/weapon";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
@@ -16,8 +8,6 @@ import { useWeaponTypeOptions } from "~/models/types/weapon-type";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
-import Input from "~/ui/input";
-import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
 // Weapons Filters
@@ -27,53 +17,12 @@ export default function WeaponsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
   const [filters, setFilters] = weaponStore.useFilters();
 
-  const [tempNameFilter, setTempNameFilter] = useDebouncedState(
-    filters.name,
-    useCallback((name) => setFilters({ name }), [setFilters]),
-    200,
-  );
-
-  const orderOptions = useMemo(
-    () =>
-      createListCollection({
-        items: orders.map((value) => ({ label: t(`order.${value}`), value })),
-      }),
-    [t],
-  );
-
   const typeOptions = useWeaponTypeOptions();
   const propertyOptions = useWeaponPropertyOptions();
   const masteryOptions = useWeaponMasteryOptions();
 
   return (
     <HStack {...props}>
-      <Select
-        minW="13.5em"
-        onValueChange={(value) => {
-          const [order_by, order_dir] = value.split(".") as [
-            WeaponFilters["order_by"],
-            WeaponFilters["order_dir"],
-          ];
-          setFilters({ order_by, order_dir });
-        }}
-        options={orderOptions}
-        size="sm"
-        value={`${filters.order_by}.${filters.order_dir}`}
-        w="13.5em"
-      />
-
-      <Separator h="1.5em" orientation="vertical" />
-
-      <Input
-        groupProps={{ w: "auto" }}
-        id="filter-weapon-name"
-        onValueChange={setTempNameFilter}
-        placeholder={t("name")}
-        size="sm"
-        value={tempNameFilter}
-        w="15em"
-      />
-
       <InclusionSelect
         includes={filters.types ?? {}}
         minW="10em"
@@ -143,55 +92,33 @@ export default function WeaponsFilters(props: StackProps) {
 // Orders
 //------------------------------------------------------------------------------
 
-const orders = ["name.asc", "name.desc"];
-
 //------------------------------------------------------------------------------
 // I18n Context
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "order.name.asc": {
-    en: "Sort by Name (A-Z)",
-    it: "Ordina per Nome (A-Z)",
-  },
-
-  "order.name.desc": {
-    en: "Sort by Name (Z-A)",
-    it: "Ordina per Nome (Z-A)",
-  },
-
-  "name": {
-    en: "Name",
-    it: "Nome",
-  },
-
-  "types": {
-    en: "Type",
-    it: "Tipo",
-  },
-
-  "properties": {
-    en: "Properties",
-    it: "Proprietà",
-  },
-
-  "masteries": {
-    en: "Masteries",
-    it: "Padronanze",
-  },
-
-  "magic": {
+  magic: {
     en: "🪄",
     it: "🪄",
   },
-
-  "melee": {
+  masteries: {
+    en: "Masteries",
+    it: "Padronanze",
+  },
+  melee: {
     en: "⚔️",
     it: "⚔️",
   },
-
-  "ranged": {
+  properties: {
+    en: "Properties",
+    it: "Proprietà",
+  },
+  ranged: {
     en: "🏹",
     it: "🏹",
+  },
+  types: {
+    en: "Type",
+    it: "Tipo",
   },
 };

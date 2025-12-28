@@ -2,7 +2,14 @@ import z from "zod";
 import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
 import { weaponTypeSchema } from "../../../types/weapon-type";
+import { resourceOrderOptions } from "../../resource-filters";
 import { equipmentFiltersSchema } from "../equipment-filters";
+
+//------------------------------------------------------------------------------
+// Weapon Order Options
+//------------------------------------------------------------------------------
+
+export const weaponOrderOptions = resourceOrderOptions;
 
 //------------------------------------------------------------------------------
 // Weapon Filters

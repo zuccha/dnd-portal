@@ -1,7 +1,11 @@
 import { createEquipmentStore } from "../equipment-store";
 import { useLocalizeTool } from "./localized-tool";
 import { defaultTool, toolSchema } from "./tool";
-import { defaultToolFilters, toolFiltersSchema } from "./tool-filters";
+import {
+  defaultToolFilters,
+  toolFiltersSchema,
+  toolOrderOptions,
+} from "./tool-filters";
 
 //------------------------------------------------------------------------------
 // Tool Store
@@ -14,6 +18,7 @@ export const toolStore = createEquipmentStore(
     defaultFilters: defaultToolFilters,
     equipmentSchema: toolSchema,
     filtersSchema: toolFiltersSchema,
+    orderOptions: toolOrderOptions,
     useLocalizeEquipment: useLocalizeTool,
   },
 );

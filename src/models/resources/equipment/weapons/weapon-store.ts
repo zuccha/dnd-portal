@@ -1,7 +1,11 @@
 import { createEquipmentStore } from "../equipment-store";
 import { useLocalizeWeapon } from "./localized-weapon";
 import { defaultWeapon, weaponSchema } from "./weapon";
-import { defaultWeaponFilters, weaponFiltersSchema } from "./weapon-filters";
+import {
+  defaultWeaponFilters,
+  weaponFiltersSchema,
+  weaponOrderOptions,
+} from "./weapon-filters";
 
 //------------------------------------------------------------------------------
 // Weapon Store
@@ -14,6 +18,7 @@ export const weaponStore = createEquipmentStore(
     defaultFilters: defaultWeaponFilters,
     equipmentSchema: weaponSchema,
     filtersSchema: weaponFiltersSchema,
+    orderOptions: weaponOrderOptions,
     useLocalizeEquipment: useLocalizeWeapon,
   },
 );

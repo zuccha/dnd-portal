@@ -1,7 +1,11 @@
 import { createResourceStore } from "../resource-store";
 import { useLocalizeSpell } from "./localized-spell";
 import { defaultSpell, spellSchema } from "./spell";
-import { defaultSpellFilters, spellFiltersSchema } from "./spell-filters";
+import {
+  defaultSpellFilters,
+  spellFiltersSchema,
+  spellOrderOptions,
+} from "./spell-filters";
 
 //------------------------------------------------------------------------------
 // Spell Store
@@ -13,6 +17,7 @@ export const spellStore = createResourceStore(
     defaultFilters: defaultSpellFilters,
     defaultResource: defaultSpell,
     filtersSchema: spellFiltersSchema,
+    orderOptions: spellOrderOptions,
     resourceSchema: spellSchema,
     useLocalizeResource: useLocalizeSpell,
   },

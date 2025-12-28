@@ -4,7 +4,16 @@ import { creatureHabitatSchema } from "../../types/creature-habitat";
 import { creatureSizeSchema } from "../../types/creature-size";
 import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
-import { resourceFiltersSchema } from "../resource-filters";
+import {
+  resourceFiltersSchema,
+  resourceOrderOptions,
+} from "../resource-filters";
+
+//------------------------------------------------------------------------------
+// Creature Order Options
+//------------------------------------------------------------------------------
+
+export const creatureOrderOptions = resourceOrderOptions;
 
 //------------------------------------------------------------------------------
 // Creature Filters

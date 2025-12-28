@@ -1,8 +1,34 @@
 import { z } from "zod";
+import type { I18nString } from "~/i18n/i18n-string";
 import { characterClassSchema } from "../../types/character-class";
 import { spellLevelStringSchema } from "../../types/spell-level";
 import { spellSchoolSchema } from "../../types/spell-school";
-import { resourceFiltersSchema } from "../resource-filters";
+import {
+  resourceFiltersSchema,
+  resourceOrderOptions,
+} from "../resource-filters";
+
+//------------------------------------------------------------------------------
+// Spell Order Options
+//------------------------------------------------------------------------------
+
+export const spellOrderOptions: { label: I18nString; value: string }[] = [
+  ...resourceOrderOptions,
+  {
+    label: {
+      en: "Sort by Level (0-9)",
+      it: "Ordina per Livello (0-9)",
+    },
+    value: "level.asc",
+  },
+  {
+    label: {
+      en: "Sort by Level (9-0)",
+      it: "Ordina per Livello (9-0)",
+    },
+    value: "level.desc",
+  },
+];
 
 //------------------------------------------------------------------------------
 // Spell Filters

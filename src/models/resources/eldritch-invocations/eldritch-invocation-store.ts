@@ -6,6 +6,7 @@ import {
 import {
   defaultEldritchInvocationFilters,
   eldritchInvocationFiltersSchema,
+  eldritchInvocationOrderOptions,
 } from "./eldritch-invocation-filters";
 import { useLocalizeEldritchInvocation } from "./localized-eldritch-invocation";
 
@@ -19,6 +20,7 @@ export const eldritchInvocationStore = createResourceStore(
     defaultFilters: defaultEldritchInvocationFilters,
     defaultResource: defaultEldritchInvocation,
     filtersSchema: eldritchInvocationFiltersSchema,
+    orderOptions: eldritchInvocationOrderOptions,
     resourceSchema: eldritchInvocationSchema,
     useLocalizeResource: useLocalizeEldritchInvocation,
   },

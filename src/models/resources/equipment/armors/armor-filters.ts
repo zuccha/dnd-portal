@@ -1,6 +1,13 @@
 import z from "zod";
 import { armorTypeSchema } from "../../../types/armor-type";
+import { resourceOrderOptions } from "../../resource-filters";
 import { equipmentFiltersSchema } from "../equipment-filters";
+
+//------------------------------------------------------------------------------
+// Armor Order Options
+//------------------------------------------------------------------------------
+
+export const armorOrderOptions = resourceOrderOptions;
 
 //------------------------------------------------------------------------------
 // Armor Filters

@@ -1,4 +1,5 @@
 import type { ZodType } from "zod";
+import type { I18nString } from "~/i18n/i18n-string";
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import type { DBEquipment, DBEquipmentTranslation } from "./db-equipment";
 import { type Equipment } from "./equipment";
@@ -22,6 +23,7 @@ export function createEquipmentStore<
     filtersSchema: ZodType<F>;
     defaultEquipment: E;
     defaultFilters: F;
+    orderOptions: { label: I18nString; value: string }[];
     useLocalizeEquipment: () => (equipment: E) => L;
   },
 ): ResourceStore<E, L, F, DBR, DBT> {
@@ -29,6 +31,7 @@ export function createEquipmentStore<
     defaultFilters: extra.defaultFilters,
     defaultResource: extra.defaultEquipment,
     filtersSchema: extra.filtersSchema,
+    orderOptions: extra.orderOptions,
     resourceSchema: extra.equipmentSchema,
     useLocalizeResource: extra.useLocalizeEquipment,
   });

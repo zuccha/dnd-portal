@@ -1,5 +1,14 @@
 import z from "zod";
-import { resourceFiltersSchema } from "../resource-filters";
+import {
+  resourceFiltersSchema,
+  resourceOrderOptions,
+} from "../resource-filters";
+
+//------------------------------------------------------------------------------
+// Eldritch Invocation Order Options
+//------------------------------------------------------------------------------
+
+export const eldritchInvocationOrderOptions = resourceOrderOptions;
 
 //------------------------------------------------------------------------------
 // Eldritch Invocation Filters

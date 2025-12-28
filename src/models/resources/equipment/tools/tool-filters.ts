@@ -1,7 +1,14 @@
 import z from "zod";
 import { creatureAbilitySchema } from "../../../types/creature-ability";
 import { toolTypeSchema } from "../../../types/tool-type";
+import { resourceOrderOptions } from "../../resource-filters";
 import { equipmentFiltersSchema } from "../equipment-filters";
+
+//------------------------------------------------------------------------------
+// Tool Order Options
+//------------------------------------------------------------------------------
+
+export const toolOrderOptions = resourceOrderOptions;
 
 //------------------------------------------------------------------------------
 // Tool Filters
