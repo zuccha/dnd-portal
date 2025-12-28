@@ -110,8 +110,8 @@ export function createResourcesAlbumCard<
         />
 
         <AlbumCard.Caption>
-          <Span flex={1}>{localizedResource.campaign}</Span>
-          <Span flex={1}>{localizedResource.page}</Span>
+          <Span>{localizedResource.campaign}</Span>
+          <Span>{localizedResource.page}</Span>
         </AlbumCard.Caption>
       </AlbumCard>
     );
