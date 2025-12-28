@@ -458,6 +458,7 @@ export function createResourceStore<
     updateResource,
     useFilteredResourceIds,
     useFilters,
+    useLocalizeResource,
     useLocalizedResource,
     useResource,
     useResourceIds,

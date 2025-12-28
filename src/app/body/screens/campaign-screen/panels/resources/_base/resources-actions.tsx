@@ -33,15 +33,19 @@ export function createResourcesActions<
     const { t, tpi } = useI18nLangContext(i18nContext);
     const canEdit = useCanEditCampaign(campaignId);
     const selectedResourcesCount = store.useResourceSelectionCount(campaignId);
+    const localizeResource = store.useLocalizeResource();
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);
     }, []);
 
     const computeSelectedAsJson = useCallback(() => {
-      const selectedResources = store.getSelectedResources(campaignId); // TODO: Use localized resource
-      return JSON.stringify(selectedResources, null, 2);
-    }, [campaignId]);
+      const selectedResources = store.getSelectedResources(campaignId);
+      const selectedLocalizedResources = selectedResources
+        .map(localizeResource)
+        .map(({ _raw, ...rest }) => rest);
+      return JSON.stringify(selectedLocalizedResources, null, 2);
+    }, [campaignId, localizeResource]);
 
     const copySelected = useCallback(async () => {
       const json = computeSelectedAsJson();
