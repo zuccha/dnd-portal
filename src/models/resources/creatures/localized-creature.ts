@@ -127,7 +127,9 @@ export function useLocalizeCreature(): (
 
       const habitats = creature.habitats
         .map(translateCreatureHabitat)
-        .map(({ label }) => label)
+        .map(({ label, value }) =>
+          value === "planar" && planes ? `${label} (${planes})` : label,
+        )
         .sort()
         .join(", ");
 
@@ -356,7 +358,7 @@ export function useLocalizeCreature(): (
         title: ti("title", size, type, alignment),
         type,
 
-        habitats: planes ? `${habitats} (${planes})` : habitats,
+        habitats,
         treasures,
 
         cr,
