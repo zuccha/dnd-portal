@@ -1,10 +1,6 @@
 import { createEquipmentStore } from "../equipment-store";
-import {
-  armorFiltersSchema,
-  armorSchema,
-  defaultArmor,
-  defaultArmorFilters,
-} from "./armor";
+import { armorSchema, defaultArmor } from "./armor";
+import { armorFiltersSchema, defaultArmorFilters } from "./armor-filters";
 import { useLocalizeArmor } from "./localized-armor";
 
 //------------------------------------------------------------------------------

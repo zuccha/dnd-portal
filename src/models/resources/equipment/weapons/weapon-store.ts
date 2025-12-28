@@ -1,11 +1,7 @@
 import { createEquipmentStore } from "../equipment-store";
 import { useLocalizeWeapon } from "./localized-weapon";
-import {
-  defaultWeapon,
-  defaultWeaponFilters,
-  weaponFiltersSchema,
-  weaponSchema,
-} from "./weapon";
+import { defaultWeapon, weaponSchema } from "./weapon";
+import { defaultWeaponFilters, weaponFiltersSchema } from "./weapon-filters";
 
 //------------------------------------------------------------------------------
 // Weapon Store

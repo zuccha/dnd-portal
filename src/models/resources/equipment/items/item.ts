@@ -1,5 +1,5 @@
 import z from "zod";
-import { equipmentFiltersSchema, equipmentSchema } from "../equipment";
+import { equipmentSchema } from "../equipment";
 
 //------------------------------------------------------------------------------
 // Item
@@ -8,14 +8,6 @@ import { equipmentFiltersSchema, equipmentSchema } from "../equipment";
 export const itemSchema = equipmentSchema.extend({});
 
 export type Item = z.infer<typeof itemSchema>;
-
-//------------------------------------------------------------------------------
-// Item Filters
-//------------------------------------------------------------------------------
-
-export const itemFiltersSchema = equipmentFiltersSchema.extend({});
-
-export type ItemFilters = z.infer<typeof itemFiltersSchema>;
 
 //------------------------------------------------------------------------------
 // Default Item
@@ -37,14 +29,4 @@ export const defaultItem: Item = {
   weight: 0,
 
   notes: {},
-};
-
-//------------------------------------------------------------------------------
-// Default Item Filters
-//------------------------------------------------------------------------------
-
-export const defaultItemFilters: ItemFilters = {
-  name: "",
-  order_by: "name",
-  order_dir: "asc",
 };

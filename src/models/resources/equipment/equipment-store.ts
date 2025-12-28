@@ -1,7 +1,8 @@
 import type { ZodType } from "zod";
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import type { DBEquipment, DBEquipmentTranslation } from "./db-equipment";
-import { type Equipment, type EquipmentFilters } from "./equipment";
+import { type Equipment } from "./equipment";
+import type { EquipmentFilters } from "./equipment-filters";
 import { type LocalizedEquipment } from "./localized-equipment";
 
 //------------------------------------------------------------------------------

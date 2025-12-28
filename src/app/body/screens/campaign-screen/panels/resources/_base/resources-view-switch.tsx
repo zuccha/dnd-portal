@@ -4,7 +4,8 @@ import type {
   DBResourceTranslation,
 } from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
-import type { Resource, ResourceFilters } from "~/models/resources/resource";
+import type { Resource } from "~/models/resources/resource";
+import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";
 import type { ResourcesContext } from "./resources-context";

@@ -8,7 +8,8 @@ import supabase, { queryClient } from "~/supabase";
 import { normalizeString } from "~/utils/string";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
-import type { Resource, ResourceFilters } from "./resource";
+import type { Resource } from "./resource";
+import type { ResourceFilters } from "./resource-filters";
 import { useResourcesModulesFilter } from "./resources-modules-filter";
 
 //------------------------------------------------------------------------------

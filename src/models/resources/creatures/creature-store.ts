@@ -1,10 +1,9 @@
 import { createResourceStore } from "../resource-store";
+import { creatureSchema, defaultCreature } from "./creature";
 import {
   creatureFiltersSchema,
-  creatureSchema,
-  defaultCreature,
   defaultCreatureFilters,
-} from "./creature";
+} from "./creature-filters";
 import { useLocalizeCreature } from "./localized-creature";
 
 //------------------------------------------------------------------------------

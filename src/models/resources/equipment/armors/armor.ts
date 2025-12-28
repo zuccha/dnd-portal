@@ -1,6 +1,6 @@
 import z from "zod";
 import { armorTypeSchema } from "../../../types/armor-type";
-import { equipmentFiltersSchema, equipmentSchema } from "../equipment";
+import { equipmentSchema } from "../equipment";
 
 //------------------------------------------------------------------------------
 // Armor
@@ -26,16 +26,6 @@ export const armorSchema = equipmentSchema.extend({
 });
 
 export type Armor = z.infer<typeof armorSchema>;
-
-//------------------------------------------------------------------------------
-// Armor Filters
-//------------------------------------------------------------------------------
-
-export const armorFiltersSchema = equipmentFiltersSchema.extend({
-  types: z.partialRecord(armorTypeSchema, z.boolean().optional()).optional(),
-});
-
-export type ArmorFilters = z.infer<typeof armorFiltersSchema>;
 
 //------------------------------------------------------------------------------
 // Default Armor
@@ -74,14 +64,4 @@ export const defaultArmor: Armor = {
   required_str: 0,
   required_wis: 0,
   type: "light",
-};
-
-//------------------------------------------------------------------------------
-// Default Armor Filters
-//------------------------------------------------------------------------------
-
-export const defaultArmorFilters: ArmorFilters = {
-  name: "",
-  order_by: "name",
-  order_dir: "asc",
 };

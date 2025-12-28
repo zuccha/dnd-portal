@@ -1,11 +1,7 @@
 import { createResourceStore } from "../resource-store";
 import { useLocalizeSpell } from "./localized-spell";
-import {
-  defaultSpell,
-  defaultSpellFilters,
-  spellFiltersSchema,
-  spellSchema,
-} from "./spell";
+import { defaultSpell, spellSchema } from "./spell";
+import { defaultSpellFilters, spellFiltersSchema } from "./spell-filters";
 
 //------------------------------------------------------------------------------
 // Spell Store

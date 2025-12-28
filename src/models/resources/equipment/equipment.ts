@@ -1,6 +1,6 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
-import { resourceFiltersSchema, resourceSchema } from "../resource";
+import { resourceSchema } from "../resource";
 
 //------------------------------------------------------------------------------
 // Equipment
@@ -14,16 +14,6 @@ export const equipmentSchema = resourceSchema.extend({
 });
 
 export type Equipment = z.infer<typeof equipmentSchema>;
-
-//------------------------------------------------------------------------------
-// Equipment Filters
-//------------------------------------------------------------------------------
-
-export const equipmentFiltersSchema = resourceFiltersSchema.extend({
-  magic: z.boolean().optional(),
-});
-
-export type EquipmentFilters = z.infer<typeof equipmentFiltersSchema>;
 
 //------------------------------------------------------------------------------
 // Default Equipment
@@ -44,14 +34,4 @@ export const defaultEquipment: Equipment = {
   magic: false,
   notes: {},
   weight: 0,
-};
-
-//------------------------------------------------------------------------------
-// Default Equipment Filters
-//------------------------------------------------------------------------------
-
-export const defaultEquipmentFilters: EquipmentFilters = {
-  name: '',
-  order_by: "name",
-  order_dir: "asc",
 };

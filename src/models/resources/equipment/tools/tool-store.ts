@@ -1,11 +1,7 @@
 import { createEquipmentStore } from "../equipment-store";
 import { useLocalizeTool } from "./localized-tool";
-import {
-  defaultTool,
-  defaultToolFilters,
-  toolFiltersSchema,
-  toolSchema,
-} from "./tool";
+import { defaultTool, toolSchema } from "./tool";
+import { defaultToolFilters, toolFiltersSchema } from "./tool-filters";
 
 //------------------------------------------------------------------------------
 // Tool Store
