@@ -38,15 +38,27 @@ export default function CreaturesFilters(props: StackProps) {
       </InclusionSelect>
 
       <InclusionSelect
-        includes={filters.habitats ?? {}}
+        includes={filters.size ?? {}}
         minW="10em"
         onValueChange={(partial) =>
-          setFilters({ habitats: { ...filters.habitats, ...partial } })
+          setFilters({ size: { ...filters.size, ...partial } })
         }
-        options={habitatOptions}
+        options={sizeOptions}
         size="sm"
       >
-        {t("habitats")}
+        {t("size")}
+      </InclusionSelect>
+
+      <InclusionSelect
+        includes={filters.alignment ?? {}}
+        minW="10em"
+        onValueChange={(partial) =>
+          setFilters({ alignment: { ...filters.alignment, ...partial } })
+        }
+        options={alignmentOptions}
+        size="sm"
+      >
+        {t("alignment")}
       </InclusionSelect>
 
       <HStack>
@@ -71,27 +83,15 @@ export default function CreaturesFilters(props: StackProps) {
       </HStack>
 
       <InclusionSelect
-        includes={filters.alignment ?? {}}
+        includes={filters.habitats ?? {}}
         minW="10em"
         onValueChange={(partial) =>
-          setFilters({ alignment: { ...filters.alignment, ...partial } })
+          setFilters({ habitats: { ...filters.habitats, ...partial } })
         }
-        options={alignmentOptions}
+        options={habitatOptions}
         size="sm"
       >
-        {t("alignment")}
-      </InclusionSelect>
-
-      <InclusionSelect
-        includes={filters.size ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ size: { ...filters.size, ...partial } })
-        }
-        options={sizeOptions}
-        size="sm"
-      >
-        {t("size")}
+        {t("habitats")}
       </InclusionSelect>
 
       <InclusionSelect
