@@ -148,6 +148,11 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     condition_immunities: data.condition_immunities,
     condition_resistances: data.condition_resistances,
     condition_vulnerabilities: data.condition_vulnerabilities,
+
+    blindsight: data.blindsight,
+    darkvision: data.darkvision,
+    tremorsense: data.tremorsense,
+    truesight: data.truesight,
   };
 
   const maybeTranslation = {

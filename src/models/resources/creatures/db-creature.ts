@@ -53,6 +53,11 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   condition_immunities: z.array(creatureConditionSchema),
   condition_resistances: z.array(creatureConditionSchema),
   condition_vulnerabilities: z.array(creatureConditionSchema),
+
+  blindsight: z.number(),
+  darkvision: z.number(),
+  tremorsense: z.number(),
+  truesight: z.number(),
 });
 
 export type DBCreature = z.infer<typeof dbCreatureSchema>;

@@ -29,6 +29,7 @@ import {
   useCreatureEditorFormAbilityWis,
   useCreatureEditorFormActions,
   useCreatureEditorFormAlignment,
+  useCreatureEditorFormBlindsight,
   useCreatureEditorFormBonusActions,
   useCreatureEditorFormCR,
   useCreatureEditorFormConditionImmunities,
@@ -37,6 +38,7 @@ import {
   useCreatureEditorFormDamageImmunities,
   useCreatureEditorFormDamageResistances,
   useCreatureEditorFormDamageVulnerabilities,
+  useCreatureEditorFormDarkvision,
   useCreatureEditorFormGear,
   useCreatureEditorFormHP,
   useCreatureEditorFormHPFormula,
@@ -60,6 +62,8 @@ import {
   useCreatureEditorFormSpeedWalk,
   useCreatureEditorFormTraits,
   useCreatureEditorFormTreasures,
+  useCreatureEditorFormTremorsense,
+  useCreatureEditorFormTruesight,
   useCreatureEditorFormType,
   useCreatureEditorFormVisibility,
 } from "./creature-editor-form";
@@ -173,14 +177,22 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
         />
       </HStack>
 
-      {/* Descriptive Fields */}
-      <CreatureEditorGear defaultGear={resource.gear[lang] ?? ""} />
+      {/* Senses */}
       <HStack align="flex-start" gap={4} w="full">
+        <CreatureEditorBlindsight defaultBlindsight={resource.blindsight} />
+        <CreatureEditorDarkvision defaultDarkvision={resource.darkvision} />
+        <CreatureEditorTremorsense defaultTremorsense={resource.tremorsense} />
+        <CreatureEditorTruesight defaultTruesight={resource.truesight} />
+      </HStack>
+
+      {/* Descriptive Fields */}
+      <HStack align="flex-start" gap={4} w="full">
+        <CreatureEditorSenses defaultSenses={resource.senses[lang] ?? ""} />
         <CreatureEditorLanguages
           defaultLanguages={resource.languages[lang] ?? ""}
         />
-        <CreatureEditorSenses defaultSenses={resource.senses[lang] ?? ""} />
       </HStack>
+      <CreatureEditorGear defaultGear={resource.gear[lang] ?? ""} />
 
       {/* Actions and Traits */}
       <CreatureEditorTraits defaultTraits={resource.traits[lang] ?? ""} />
@@ -351,6 +363,26 @@ function CreatureEditorAlignment({
   return (
     <Field error={message} label={t("alignment.label")}>
       <Select options={alignmentOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Blindsight
+//------------------------------------------------------------------------------
+
+function CreatureEditorBlindsight({
+  defaultBlindsight,
+}: {
+  defaultBlindsight: number;
+}) {
+  const { error, ...rest } = useCreatureEditorFormBlindsight(defaultBlindsight);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("senses[blindsight].label")}>
+      <DistanceInput min={0} {...rest} />
     </Field>
   );
 }
@@ -541,6 +573,26 @@ function CreatureEditorDamageVulnerabilities({
         withinDialog
         {...rest}
       />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Darkvision
+//------------------------------------------------------------------------------
+
+function CreatureEditorDarkvision({
+  defaultDarkvision,
+}: {
+  defaultDarkvision: number;
+}) {
+  const { error, ...rest } = useCreatureEditorFormDarkvision(defaultDarkvision);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("senses[darkvision].label")}>
+      <DistanceInput min={0} {...rest} />
     </Field>
   );
 }
@@ -1095,6 +1147,47 @@ function CreatureEditorTreasures({
 }
 
 //------------------------------------------------------------------------------
+// Tremorsense
+//------------------------------------------------------------------------------
+
+function CreatureEditorTremorsense({
+  defaultTremorsense,
+}: {
+  defaultTremorsense: number;
+}) {
+  const { error, ...rest } =
+    useCreatureEditorFormTremorsense(defaultTremorsense);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("senses[tremorsense].label")}>
+      <DistanceInput min={0} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Truesight
+//------------------------------------------------------------------------------
+
+function CreatureEditorTruesight({
+  defaultTruesight,
+}: {
+  defaultTruesight: number;
+}) {
+  const { error, ...rest } = useCreatureEditorFormTruesight(defaultTruesight);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("senses[truesight].label")}>
+      <DistanceInput min={0} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Type
 //------------------------------------------------------------------------------
 
@@ -1358,12 +1451,28 @@ const i18nContext = {
     it: "Nessuna",
   },
   "senses.label": {
-    en: "Senses",
-    it: "Sensi",
+    en: "Other Senses",
+    it: "Altri Sensi",
   },
   "senses.placeholder": {
     en: "None",
     it: "Nessuno",
+  },
+  "senses[blindsight].label": {
+    en: "Blindsight",
+    it: "Vista Cieca",
+  },
+  "senses[darkvision].label": {
+    en: "Darkvision",
+    it: "Scurovisione",
+  },
+  "senses[tremorsense].label": {
+    en: "Tremorsense",
+    it: "Percezione Tellurica",
+  },
+  "senses[truesight].label": {
+    en: "Truesight",
+    it: "Vista Pura",
   },
   "size.label": {
     en: "Size",

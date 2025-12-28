@@ -82,6 +82,11 @@ export const localizedCreatureSchema = localizedResourceSchema(
   speed_swim: z.string(),
   speed_walk: z.string(),
 
+  blindsight: z.string(),
+  darkvision: z.string(),
+  tremorsense: z.string(),
+  truesight: z.string(),
+
   gear: z.string(),
   immunities: z.string(),
   languages: z.string(),
@@ -309,7 +314,32 @@ export function useLocalizeCreature(): (
       }
 
       // Senses
-      const senses = translate(creature.senses, lang);
+      const blindsight =
+        creature.blindsight ?
+          ti("senses.blindsight", formatCm(creature.blindsight))
+        : "";
+      const darkvision =
+        creature.darkvision ?
+          ti("senses.darkvision", formatCm(creature.darkvision))
+        : "";
+      const tremorsense =
+        creature.tremorsense ?
+          ti("senses.tremorsense", formatCm(creature.tremorsense))
+        : "";
+      const truesight =
+        creature.truesight ?
+          ti("senses.truesight", formatCm(creature.truesight))
+        : "";
+
+      const senses = [
+        blindsight,
+        darkvision,
+        tremorsense,
+        truesight,
+        translate(creature.senses, lang),
+      ]
+        .filter((sense) => sense)
+        .join(", ");
       if (senses) {
         info_parts.push(ti("info.senses", senses));
       }
@@ -399,6 +429,11 @@ export function useLocalizeCreature(): (
         speed_swim,
         speed_walk,
 
+        blindsight,
+        darkvision,
+        tremorsense,
+        truesight,
+
         gear,
         immunities,
         languages,
@@ -486,6 +521,22 @@ const i18nContext = {
   "info.vulnerabilities": {
     en: "**Vulnerabilities:** <1>",
     it: "**Vulnerabilità:** <1>",
+  },
+  "senses.blindsight": {
+    en: "Blindsight <1>",
+    it: "Vista Cieca <1>",
+  },
+  "senses.darkvision": {
+    en: "Darkvision <1>",
+    it: "Scurovisione <1>",
+  },
+  "senses.tremorsense": {
+    en: "Tremorsense <1>",
+    it: "Percezione Tellurica <1>",
+  },
+  "senses.truesight": {
+    en: "Truesight <1>",
+    it: "Vista Pura <1>",
   },
   "speed.burrow": {
     en: "burrow <1>",

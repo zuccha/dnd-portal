@@ -26,6 +26,7 @@ export const creatureEditorFormFieldsSchema = z.object({
   ac: z.number(),
   actions: z.string(),
   alignment: creatureAlignmentSchema,
+  blindsight: z.number(),
   bonus_actions: z.string(),
   condition_immunities: z.array(creatureConditionSchema),
   condition_resistances: z.array(creatureConditionSchema),
@@ -34,6 +35,7 @@ export const creatureEditorFormFieldsSchema = z.object({
   damage_immunities: z.array(damageTypeSchema),
   damage_resistances: z.array(damageTypeSchema),
   damage_vulnerabilities: z.array(damageTypeSchema),
+  darkvision: z.number(),
   gear: z.string(),
   habitats: z.array(creatureHabitatSchema),
   hp: z.number(),
@@ -57,6 +59,8 @@ export const creatureEditorFormFieldsSchema = z.object({
   speed_walk: z.number(),
   traits: z.string(),
   treasures: z.array(creatureTreasureSchema),
+  tremorsense: z.number(),
+  truesight: z.number(),
   type: creatureTypeSchema,
   visibility: campaignRoleSchema,
 });
@@ -123,6 +127,14 @@ export const useCreatureEditorFormAlignment = (
 ) => useCreatureEditorFormField("alignment", defaultAlignment);
 
 //------------------------------------------------------------------------------
+// Blindsight
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormBlindsight = (
+  defaultBlindsight: CreatureEditorFormFields["blindsight"],
+) => useCreatureEditorFormField("blindsight", defaultBlindsight);
+
+//------------------------------------------------------------------------------
 // Condition Interactions
 //------------------------------------------------------------------------------
 
@@ -177,6 +189,14 @@ export const useCreatureEditorFormDamageVulnerabilities = (
     "damage_vulnerabilities",
     defaultDamageVulnerabilities,
   );
+
+//------------------------------------------------------------------------------
+// Darkvision
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormDarkvision = (
+  defaultDarkvision: CreatureEditorFormFields["darkvision"],
+) => useCreatureEditorFormField("darkvision", defaultDarkvision);
 
 //------------------------------------------------------------------------------
 // Features
@@ -354,6 +374,22 @@ export const useCreatureEditorFormSpeedWalk = (
 export const useCreatureEditorFormTreasures = (
   defaultTreasures: CreatureEditorFormFields["treasures"],
 ) => useCreatureEditorFormField("treasures", defaultTreasures);
+
+//------------------------------------------------------------------------------
+// Tremorsense
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormTremorsense = (
+  defaultTremorsense: CreatureEditorFormFields["tremorsense"],
+) => useCreatureEditorFormField("tremorsense", defaultTremorsense);
+
+//------------------------------------------------------------------------------
+// Truesight
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormTruesight = (
+  defaultTruesight: CreatureEditorFormFields["truesight"],
+) => useCreatureEditorFormField("truesight", defaultTruesight);
 
 //------------------------------------------------------------------------------
 // Type

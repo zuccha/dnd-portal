@@ -60,6 +60,11 @@ export const creatureSchema = resourceSchema.extend({
   planes: i18nStringSchema,
   senses: i18nStringSchema,
 
+  blindsight: z.number(),
+  darkvision: z.number(),
+  tremorsense: z.number(),
+  truesight: z.number(),
+
   actions: i18nStringSchema,
   bonus_actions: i18nStringSchema,
   legendary_actions: i18nStringSchema,
@@ -126,6 +131,11 @@ export const defaultCreature: Creature = {
   languages: {},
   planes: {},
   senses: {},
+
+  blindsight: 0,
+  darkvision: 0,
+  tremorsense: 0,
+  truesight: 0,
 
   actions: {},
   bonus_actions: {},
