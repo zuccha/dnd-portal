@@ -1,4 +1,4 @@
-import { HStack, createListCollection } from "@chakra-ui/react";
+import { createListCollection } from "@chakra-ui/react";
 import { useMemo } from "react";
 import z from "zod";
 import useDebouncedState from "~/hooks/use-debounced-value";
@@ -65,7 +65,7 @@ export function createResourcesGenericFilters<
     }, [campaign]);
 
     return (
-      <HStack>
+      <>
         <InclusionSelect
           disabled={!options.length}
           includes={modules}
@@ -104,7 +104,7 @@ export function createResourcesGenericFilters<
           value={tempFilters.name}
           w="15em"
         />
-      </HStack>
+      </>
     );
   };
 }

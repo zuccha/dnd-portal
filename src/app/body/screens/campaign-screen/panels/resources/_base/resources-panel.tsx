@@ -81,8 +81,8 @@ export function createResourcesPanel<
           py={2}
           w="full"
         >
-          <HStack justify="space-between" w="full">
-            <HStack>
+          <HStack align="flex-start" justify="space-between" w="full">
+            <HStack wrap="wrap">
               <ResourcesActions campaignId={campaignId} />
               <ResourcesGenericFilters campaignId={campaignId} />
               <Separator h="1.5em" orientation="vertical" />
