@@ -2,7 +2,7 @@ import z from "zod";
 import type { Resource } from "~/models/resources/resource";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStore } from "~/store/memory-store";
-import { createMemoryStoreSet } from "../../../../../../../store/set/memory-store-set";
+import { createMemoryStoreSet } from "~/store/set/memory-store-set";
 
 //------------------------------------------------------------------------------
 // Resources Context View
