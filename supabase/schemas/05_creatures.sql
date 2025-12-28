@@ -13,10 +13,12 @@ CREATE TABLE IF NOT EXISTS public.creatures (
   ability_wis smallint DEFAULT '10'::smallint NOT NULL,
   ac smallint DEFAULT '0'::smallint NOT NULL,
   alignment public.creature_alignment NOT NULL,
+  blindsight integer DEFAULT '0'::integer NOT NULL,
   condition_immunities public.creature_condition[] NOT NULL,
   condition_resistances public.creature_condition[] NOT NULL,
   condition_vulnerabilities public.creature_condition[] NOT NULL,
   cr numeric DEFAULT '0'::smallint NOT NULL,
+  darkvision integer DEFAULT '0'::integer NOT NULL,
   damage_immunities public.damage_type[] NOT NULL,
   damage_resistances public.damage_type[] NOT NULL,
   damage_vulnerabilities public.damage_type[] NOT NULL,
@@ -34,6 +36,8 @@ CREATE TABLE IF NOT EXISTS public.creatures (
   speed_swim integer DEFAULT '0'::integer NOT NULL,
   speed_walk integer DEFAULT '0'::integer NOT NULL,
   treasures public.creature_treasure[] NOT NULL,
+  tremorsense integer DEFAULT '0'::integer NOT NULL,
+  truesight integer DEFAULT '0'::integer NOT NULL,
   type public.creature_type NOT NULL,
   CONSTRAINT creature_pkey PRIMARY KEY (resource_id),
   CONSTRAINT creature_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.resources(id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -99,10 +103,12 @@ CREATE TYPE public.creature_row AS (
   ability_wis smallint,
   ability_proficiencies public.creature_ability[],
   alignment public.creature_alignment,
+  blindsight integer,
   condition_immunities public.creature_condition[],
   condition_resistances public.creature_condition[],
   condition_vulnerabilities public.creature_condition[],
   cr numeric,
+  darkvision integer,
   damage_immunities public.damage_type[],
   damage_resistances public.damage_type[],
   damage_vulnerabilities public.damage_type[],
@@ -120,6 +126,8 @@ CREATE TYPE public.creature_row AS (
   speed_swim integer,
   speed_walk integer,
   treasures public.creature_treasure[],
+  tremorsense integer,
+  truesight integer,
   type public.creature_type,
   -- Creature Translation
   actions jsonb,
@@ -252,14 +260,16 @@ BEGIN
     ability_str, ability_dex, ability_con, ability_int, ability_wis, ability_cha,
     initiative, passive_perception, ability_proficiencies, skill_proficiencies, skill_expertise,
     damage_immunities, damage_resistances, damage_vulnerabilities,
-    condition_immunities, condition_resistances, condition_vulnerabilities
+    condition_immunities, condition_resistances, condition_vulnerabilities,
+    blindsight, darkvision, tremorsense, truesight
   ) VALUES (
     v_id, r.type, r.alignment, r.size, r.habitats, r.treasures, r.cr, r.ac, r.hp, r.hp_formula,
     r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow,
     r.ability_str, r.ability_dex, r.ability_con, r.ability_int, r.ability_wis, r.ability_cha,
     r.initiative, r.passive_perception, r.ability_proficiencies, r.skill_proficiencies, r.skill_expertise,
     r.damage_immunities, r.damage_resistances, r.damage_vulnerabilities,
-    r.condition_immunities, r.condition_resistances, r.condition_vulnerabilities
+    r.condition_immunities, r.condition_resistances, r.condition_vulnerabilities,
+    r.blindsight, r.darkvision, r.tremorsense, r.truesight
   );
 
   perform public.upsert_creature_translation(v_id, p_lang, p_creature_translation);
@@ -301,10 +311,12 @@ AS $$
     c.ability_wis,
     c.ability_proficiencies,
     c.alignment,
+    c.blindsight,
     c.condition_immunities,
     c.condition_resistances,
     c.condition_vulnerabilities,
     c.cr,
+    c.darkvision,
     c.damage_immunities,
     c.damage_resistances,
     c.damage_vulnerabilities,
@@ -322,6 +334,8 @@ AS $$
     c.speed_swim,
     c.speed_walk,
     c.treasures,
+    c.tremorsense,
+    c.truesight,
     c.type,
     coalesce(tt.actions, '{}'::jsonb) AS actions,
     coalesce(tt.bonus_actions, '{}'::jsonb) AS bonus_actions,
@@ -483,12 +497,16 @@ src AS (
     c.ability_proficiencies,
     c.skill_proficiencies,
     c.skill_expertise,
+    c.blindsight,
+    c.darkvision,
     c.damage_immunities,
     c.damage_resistances,
     c.damage_vulnerabilities,
     c.condition_immunities,
     c.condition_resistances,
-    c.condition_vulnerabilities
+    c.condition_vulnerabilities,
+    c.tremorsense,
+    c.truesight
   FROM base b
   JOIN public.creatures c ON c.resource_id = b.id
 ),
@@ -554,10 +572,12 @@ SELECT
   f.ability_wis,
   f.ability_proficiencies,
   f.alignment,
+  f.blindsight,
   f.condition_immunities,
   f.condition_resistances,
   f.condition_vulnerabilities,
   f.cr,
+  f.darkvision,
   f.damage_immunities,
   f.damage_resistances,
   f.damage_vulnerabilities,
@@ -575,6 +595,8 @@ SELECT
   f.speed_swim,
   f.speed_walk,
   f.treasures,
+  f.tremorsense,
+  f.truesight,
   f.type,
   coalesce(tt.actions, '{}'::jsonb) AS actions,
   coalesce(tt.bonus_actions, '{}'::jsonb) AS bonus_actions,
@@ -680,14 +702,16 @@ BEGIN
     ability_str, ability_dex, ability_con, ability_int, ability_wis, ability_cha,
     initiative, passive_perception, ability_proficiencies, skill_proficiencies, skill_expertise,
     damage_immunities, damage_resistances, damage_vulnerabilities,
-    condition_immunities, condition_resistances, condition_vulnerabilities
+    condition_immunities, condition_resistances, condition_vulnerabilities,
+    blindsight, darkvision, tremorsense, truesight
   ) = (
     SELECT r.type, r.alignment, r.size, r.habitats, r.treasures, r.cr, r.ac, r.hp, r.hp_formula,
       r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow,
       r.ability_str, r.ability_dex, r.ability_con, r.ability_int, r.ability_wis, r.ability_cha,
       r.initiative, r.passive_perception, r.ability_proficiencies, r.skill_proficiencies, r.skill_expertise,
       r.damage_immunities, r.damage_resistances, r.damage_vulnerabilities,
-      r.condition_immunities, r.condition_resistances, r.condition_vulnerabilities
+      r.condition_immunities, r.condition_resistances, r.condition_vulnerabilities,
+      r.blindsight, r.darkvision, r.tremorsense, r.truesight
     FROM jsonb_populate_record(null::public.creatures, to_jsonb(c) || p_creature) as r
   )
   WHERE c.resource_id = p_id;
