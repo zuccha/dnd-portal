@@ -5,7 +5,6 @@ import { useI18nLang } from "~/i18n/i18n-lang";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStoreSet } from "~/store/set/memory-store-set";
 import supabase, { queryClient } from "~/supabase";
-import type { StateSetter } from "~/utils/state";
 import { normalizeString } from "~/utils/string";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
@@ -176,13 +175,9 @@ export function createResourceStore<
 
   function deselectResource(campaignId: string, resourceId: string): void {
     resourceSelectionStore.set(resourceId, false, (prev) => {
-      const variation = prev ? -1 : 0;
-      resourceSelectionCountStore.set(
-        campaignId,
-        0,
-        (count) => count + variation,
-      );
-      return prev;
+      if (!prev) return prev;
+      resourceSelectionCountStore.set(campaignId, 0, (count) => count - 1);
+      return false;
     });
   }
 
@@ -263,13 +258,26 @@ export function createResourceStore<
 
   function selectResource(campaignId: string, resourceId: string): void {
     resourceSelectionStore.set(resourceId, false, (prev) => {
-      const variation = prev ? 0 : 1;
-      resourceSelectionCountStore.set(
-        campaignId,
-        0,
-        (count) => count + variation,
-      );
-      return prev;
+      if (prev) return prev;
+      resourceSelectionCountStore.set(campaignId, 0, (count) => count + 1);
+      return true;
+    });
+  }
+
+  //----------------------------------------------------------------------------
+  // Set Resource Selection
+  //----------------------------------------------------------------------------
+
+  function setResourceSelection(
+    campaignId: string,
+    resourceId: string,
+    selected: boolean,
+  ): void {
+    resourceSelectionStore.set(resourceId, false, (prev) => {
+      if (prev === selected) return prev;
+      const variation = selected ? 1 : -1;
+      resourceSelectionCountStore.set(campaignId, 0, (c) => c + variation);
+      return selected;
     });
   }
 
@@ -283,11 +291,7 @@ export function createResourceStore<
   ): void {
     resourceSelectionStore.set(resourceId, false, (prev) => {
       const variation = prev ? -1 : 1;
-      resourceSelectionCountStore.set(
-        campaignId,
-        0,
-        (count) => count + variation,
-      );
+      resourceSelectionCountStore.set(campaignId, 0, (c) => c + variation);
       return !prev;
     });
   }
@@ -420,10 +424,8 @@ export function createResourceStore<
   // Use Resource Selection
   //----------------------------------------------------------------------------
 
-  function useResourceSelection(
-    resourceId: string,
-  ): [boolean, StateSetter<boolean>] {
-    return resourceSelectionStore.use(resourceId, false);
+  function useResourceSelection(resourceId: string): boolean {
+    return resourceSelectionStore.useValue(resourceId, false);
   }
 
   //----------------------------------------------------------------------------
@@ -451,6 +453,7 @@ export function createResourceStore<
     getSelectedResources,
     selectAllResources,
     selectResource,
+    setResourceSelection,
     toggleResourceSelection,
     updateResource,
     useFilteredResourceIds,

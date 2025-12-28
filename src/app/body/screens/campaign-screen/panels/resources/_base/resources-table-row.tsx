@@ -58,7 +58,7 @@ export function createResourcesTableRow<
     resourceId,
   }: ResourcesTableRowProps) {
     const localizedResource = store.useLocalizedResource(resourceId);
-    const [selected] = store.useResourceSelection(resourceId);
+    const selected = store.useResourceSelection(resourceId);
     const expanded = context.useResourceExpansion(resourceId, false);
 
     const edit = useCallback(

@@ -31,6 +31,7 @@ export type ResourcesAlbumCardExtra<
 //------------------------------------------------------------------------------
 
 export type ResourcesAlbumCardProps = {
+  campaignId: string;
   editable: boolean;
   resourceId: string;
 };
@@ -47,20 +48,24 @@ export function createResourcesAlbumCard<
   { pages }: ResourcesAlbumCardExtra<R, L>,
 ) {
   return function ResourcesAlbumCard({
+    campaignId,
     editable,
     resourceId,
-  }: {
-    editable: boolean;
-    resourceId: string;
-  }) {
+  }: ResourcesAlbumCardProps) {
     const localizedResource = store.useLocalizedResource(resourceId);
-    const [selected, setSelected] = store.useResourceSelection(resourceId);
+    const selected = store.useResourceSelection(resourceId);
 
     const [pageNumber, setPageNumber] = useState(0);
 
     const cyclePage = useCallback(() => {
       setPageNumber((prev) => (prev + 1) % pages.length);
     }, []);
+
+    const setSelected = useCallback(
+      (nextSelected: boolean) =>
+        store.setResourceSelection(campaignId, resourceId, nextSelected),
+      [campaignId, resourceId],
+    );
 
     const edit = useCallback(() => {
       if (localizedResource) context.setEditedResource(localizedResource._raw);
