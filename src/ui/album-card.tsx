@@ -1,9 +1,10 @@
 import {
+  GridItem,
+  type GridItemProps,
   HStack,
   Separator,
   SimpleGrid,
   type SimpleGridProps,
-  Span,
   type StackProps,
   VStack,
 } from "@chakra-ui/react";
@@ -43,6 +44,7 @@ AlbumCard.Description = AlbumCardDescription;
 AlbumCard.Header = AlbumCardHeader;
 AlbumCard.Info = AlbumCardInfo;
 AlbumCard.InfoCell = AlbumCardInfoCell;
+AlbumCard.InfoSeparator = AlbumCardInfoSeparator;
 
 //------------------------------------------------------------------------------
 // Album Card Caption
@@ -149,8 +151,21 @@ type AlbumCardInfoCellProps = {
 function AlbumCardInfoCell({ children, label }: AlbumCardInfoCellProps) {
   return (
     <>
-      <Span color="fg.muted">{label}</Span>
+      <GridItem color="fg.muted">{label}</GridItem>
+
       {children}
     </>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Album Card Info Separator
+//------------------------------------------------------------------------------
+
+type AlbumCardInfoSeparatorProps = GridItemProps;
+
+function AlbumCardInfoSeparator(props: AlbumCardInfoSeparatorProps) {
+  return (
+    <GridItem bgColor="border" colSpan={2} h="1px" mx={-3} my={1} {...props} />
   );
 }

@@ -81,7 +81,7 @@ export function CreaturesAlbumCardContentPage0({
 
           <AlbumCard.InfoCell label={t("initiative")}>
             <GridItem>{initiative}</GridItem>
-            <GridItem>&gt;</GridItem>
+            <GridItem>{">"}</GridItem>
             <GridItem>{initiative_passive}</GridItem>
           </AlbumCard.InfoCell>
 
@@ -121,9 +121,51 @@ export function CreaturesAlbumCardContentPage0({
 
       <AlbumCard.Info>
         <AlbumCard.InfoCell label={t("speed")}>{speed}</AlbumCard.InfoCell>
-      </AlbumCard.Info>
 
-      <AlbumCard.Info>
+        {(skills || immunities || resistances || vulnerabilities) && (
+          <AlbumCard.InfoSeparator />
+        )}
+
+        {skills && (
+          <AlbumCard.InfoCell label={t("skills")}>{skills}</AlbumCard.InfoCell>
+        )}
+
+        {immunities && (
+          <AlbumCard.InfoCell label={t("immunities")}>
+            {immunities}
+          </AlbumCard.InfoCell>
+        )}
+
+        {resistances && (
+          <AlbumCard.InfoCell label={t("resistances")}>
+            {resistances}
+          </AlbumCard.InfoCell>
+        )}
+
+        {vulnerabilities && (
+          <AlbumCard.InfoCell label={t("vulnerabilities")}>
+            {vulnerabilities}
+          </AlbumCard.InfoCell>
+        )}
+
+        {(gear || languages || senses) && <AlbumCard.InfoSeparator />}
+
+        {gear && (
+          <AlbumCard.InfoCell label={t("gear")}>{gear}</AlbumCard.InfoCell>
+        )}
+
+        {languages && (
+          <AlbumCard.InfoCell label={t("languages")}>
+            {languages}
+          </AlbumCard.InfoCell>
+        )}
+
+        {senses && (
+          <AlbumCard.InfoCell label={t("senses")}>{senses}</AlbumCard.InfoCell>
+        )}
+
+        <AlbumCard.InfoSeparator />
+
         <AlbumCard.InfoCell label={t("habitats")}>
           {habitats}
         </AlbumCard.InfoCell>
@@ -132,50 +174,6 @@ export function CreaturesAlbumCardContentPage0({
           {treasures}
         </AlbumCard.InfoCell>
       </AlbumCard.Info>
-
-      <HStack align="flex-start" flex={1} w="full">
-        <AlbumCard.Info>
-          {skills && (
-            <AlbumCard.InfoCell label={t("skills")}>
-              {skills}
-            </AlbumCard.InfoCell>
-          )}
-
-          {immunities && (
-            <AlbumCard.InfoCell label={t("immunities")}>
-              {immunities}
-            </AlbumCard.InfoCell>
-          )}
-
-          {resistances && (
-            <AlbumCard.InfoCell label={t("resistances")}>
-              {resistances}
-            </AlbumCard.InfoCell>
-          )}
-
-          {vulnerabilities && (
-            <AlbumCard.InfoCell label={t("vulnerabilities")}>
-              {vulnerabilities}
-            </AlbumCard.InfoCell>
-          )}
-
-          {gear && (
-            <AlbumCard.InfoCell label={t("gear")}>{gear}</AlbumCard.InfoCell>
-          )}
-
-          {languages && (
-            <AlbumCard.InfoCell label={t("languages")}>
-              {languages}
-            </AlbumCard.InfoCell>
-          )}
-
-          {senses && (
-            <AlbumCard.InfoCell label={t("senses")}>
-              {senses}
-            </AlbumCard.InfoCell>
-          )}
-        </AlbumCard.Info>
-      </HStack>
     </VStack>
   );
 }
@@ -230,16 +228,16 @@ function AbilityBody({
 
 const i18nContext = {
   "ability.modifier": {
-    en: "M",
-    it: "M",
+    en: "Mod",
+    it: "Mod",
   },
   "ability.save": {
-    en: "ST",
-    it: "TS",
+    en: "Save",
+    it: "Salv",
   },
   "ability.score": {
-    en: "S",
-    it: "P",
+    en: "",
+    it: "",
   },
   "ability[cha]": {
     en: "Cha",
@@ -314,8 +312,8 @@ const i18nContext = {
     it: "BC",
   },
   "resistances": {
-    en: "Resistances",
-    it: "Resistenze",
+    en: "Resist.",
+    it: "Resist.",
   },
   "senses": {
     en: "Senses",
@@ -342,7 +340,7 @@ const i18nContext = {
     it: "Tesori",
   },
   "vulnerabilities": {
-    en: "Vulnerabilities",
-    it: "Vulnerabilità",
+    en: "Vuln.",
+    it: "Vuln.",
   },
 };
