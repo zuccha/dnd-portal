@@ -1,5 +1,4 @@
 import {
-  Box,
   HStack,
   Separator,
   SimpleGrid,
@@ -121,11 +120,9 @@ function AlbumCardHeader(props: AlbumCardHeaderProps) {
 // Album Card Info
 //------------------------------------------------------------------------------
 
-type AlbumCardInfoProps = Omit<SimpleGridProps, "columns"> & {
-  columns?: number;
-};
+type AlbumCardInfoProps = SimpleGridProps;
 
-function AlbumCardInfo({ columns = 1, ...rest }: AlbumCardInfoProps) {
+function AlbumCardInfo(props: AlbumCardInfoProps) {
   return (
     <SimpleGrid
       fontSize="xs"
@@ -133,9 +130,9 @@ function AlbumCardInfo({ columns = 1, ...rest }: AlbumCardInfoProps) {
       gapY={1}
       px={3}
       py={2}
+      templateColumns="max-content 1fr"
       w="full"
-      {...rest}
-      templateColumns={`repeat(${columns}, max-content 1fr)`}
+      {...props}
     />
   );
 }
@@ -153,7 +150,7 @@ function AlbumCardInfoCell({ children, label }: AlbumCardInfoCellProps) {
   return (
     <>
       <Span color="fg.muted">{label}</Span>
-      <Box>{children}</Box>
+      {children}
     </>
   );
 }

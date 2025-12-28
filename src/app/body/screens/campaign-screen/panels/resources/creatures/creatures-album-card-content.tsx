@@ -1,5 +1,7 @@
 import {
+  GridItem,
   HStack,
+  Separator,
   SimpleGrid,
   Span,
   type StackProps,
@@ -23,7 +25,6 @@ export function CreaturesAlbumCardContentPage0({
 }: CreaturesAlbumCardContentPage0Props) {
   const {
     ac,
-    alignment,
     cr,
     exp,
     gear,
@@ -40,7 +41,7 @@ export function CreaturesAlbumCardContentPage0({
     senses,
     skills,
     speed,
-    title_partial,
+    title,
     treasures,
     vulnerabilities,
   } = localizedResource;
@@ -50,54 +51,56 @@ export function CreaturesAlbumCardContentPage0({
   return (
     <VStack {...rest}>
       <AlbumCard.Caption>
-        <Span>{`${title_partial}, ${alignment}`}</Span>
+        <Span>{title}</Span>
       </AlbumCard.Caption>
 
-      <AlbumCard.Info>
-        <AlbumCard.InfoCell label={t("habitats")}>
-          {habitats}
-        </AlbumCard.InfoCell>
-
-        <AlbumCard.InfoCell label={t("treasures")}>
-          {treasures}
-        </AlbumCard.InfoCell>
-      </AlbumCard.Info>
-
-      <HStack fontSize="xs" px={3} py={2} w="full">
-        <AlbumCard.Info flex={1} p={0}>
-          <AlbumCard.InfoCell label={t("armor_class")}>{ac}</AlbumCard.InfoCell>
+      <HStack
+        fontSize="xs"
+        gap={3}
+        px={3}
+        py={2}
+        separator={<Separator h="full" />}
+        w="full"
+      >
+        <AlbumCard.Info
+          flex={1}
+          p={0}
+          templateColumns="repeat(3, max-content) 1fr"
+        >
+          <AlbumCard.InfoCell label={t("armor_class")}>
+            <GridItem colSpan={3}>{ac}</GridItem>
+          </AlbumCard.InfoCell>
 
           <AlbumCard.InfoCell label={t("hp")}>
-            {hp_formula ? `${hp} (${hp_formula})` : hp}
+            <GridItem>{hp}</GridItem>
+            <GridItem>{hp_formula ? ">" : ""}</GridItem>
+            <GridItem>{hp_formula}</GridItem>
           </AlbumCard.InfoCell>
 
           <AlbumCard.InfoCell label={t("passive_perception")}>
-            {passive_perception}
+            <GridItem colSpan={3}>{passive_perception}</GridItem>
           </AlbumCard.InfoCell>
 
           <AlbumCard.InfoCell label={t("initiative")}>
-            {`${initiative} (${initiative_passive})`}
+            <GridItem>{initiative}</GridItem>
+            <GridItem>&gt;</GridItem>
+            <GridItem>{initiative_passive}</GridItem>
           </AlbumCard.InfoCell>
 
           <AlbumCard.InfoCell label={t("challenge_rating")}>
-            {cr}
+            <GridItem colSpan={3}>{cr}</GridItem>
           </AlbumCard.InfoCell>
 
           <AlbumCard.InfoCell label={t("proficiency_bonus")}>
-            {pb}
+            <GridItem colSpan={3}>{pb}</GridItem>
           </AlbumCard.InfoCell>
 
           <AlbumCard.InfoCell label={t("experience_points")}>
-            {exp}
+            <GridItem colSpan={3}>{exp}</GridItem>
           </AlbumCard.InfoCell>
         </AlbumCard.Info>
 
-        <SimpleGrid
-          flex={1}
-          gap={1}
-          justifyContent="flex-end"
-          templateColumns="1.8em repeat(3, 2.2em)"
-        >
+        <SimpleGrid flex={1} gap={1} templateColumns="1.8em repeat(3, 1fr)">
           <Span />
           <Span color="fg.muted" textAlign="right">
             {t("ability.score")}
@@ -120,6 +123,16 @@ export function CreaturesAlbumCardContentPage0({
 
       <AlbumCard.Info>
         <AlbumCard.InfoCell label={t("speed")}>{speed}</AlbumCard.InfoCell>
+      </AlbumCard.Info>
+
+      <AlbumCard.Info>
+        <AlbumCard.InfoCell label={t("habitats")}>
+          {habitats}
+        </AlbumCard.InfoCell>
+
+        <AlbumCard.InfoCell label={t("treasures")}>
+          {treasures}
+        </AlbumCard.InfoCell>
       </AlbumCard.Info>
 
       <HStack align="flex-start" flex={1} w="full">
