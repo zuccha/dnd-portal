@@ -35,6 +35,8 @@ export function createResourcesContext<R extends Resource>(id: string) {
     undefined,
   );
 
+  const printModeStore = createMemoryStore<boolean>(`${id}.print_mode`, false);
+
   const resourceExpansionStore = createMemoryStoreSet<string, boolean>(
     `${id}.resource_expansion`,
   );
@@ -48,10 +50,12 @@ export function createResourcesContext<R extends Resource>(id: string) {
   return {
     setCreatedResource: createdResourceStore.set,
     setEditedResource: editedResourceStore.set,
+    setPrintMode: printModeStore.set,
     setResourceExpansion: resourceExpansionStore.set,
     setView: viewStore.set,
     useCreatedResource: createdResourceStore.useValue,
     useEditedResource: editedResourceStore.useValue,
+    usePrintMode: printModeStore.useValue,
     useResourceExpansion: resourceExpansionStore.useValue,
     useView: viewStore.useValue,
   };

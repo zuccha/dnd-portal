@@ -59,6 +59,10 @@ export function createResourcesActions<
       downloadFile(json, `${store.name.p}.json`, "json"); // TODO: Localize filename
     }, [computeSelectedAsJson]);
 
+    const printSelected = useCallback(async () => {
+      context.setPrintMode(true);
+    }, []);
+
     const removeSelected = useCallback(async () => {
       try {
         const selectedResources = store.getSelectedResources(campaignId);
@@ -106,6 +110,14 @@ export function createResourcesActions<
                 {t("download")}
               </Menu.Item>
 
+              <Menu.Item
+                disabled={disabled}
+                onClick={printSelected}
+                value="print"
+              >
+                {t("print")}
+              </Menu.Item>
+
               {canEdit && (
                 <Menu.Item
                   _hover={{ bg: "bg.error", color: "fg.error" }}
@@ -141,6 +153,10 @@ const i18nContext = {
   "download": {
     en: "Download selected",
     it: "Scarica selezionati",
+  },
+  "print": {
+    en: "Print selected",
+    it: "Stampa selezionati",
   },
   "remove": {
     en: "Delete selected",

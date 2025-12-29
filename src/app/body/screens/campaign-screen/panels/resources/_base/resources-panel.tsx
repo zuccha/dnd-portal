@@ -27,6 +27,7 @@ import {
   createResourcesFilters,
 } from "./resources-filters";
 import { createResourcesGenericFilters } from "./resources-generic-filters";
+import { createResourcesPrintMode } from "./resources-print-mode";
 import {
   type ResourcesTableExtra,
   createResourcesTable,
@@ -67,8 +68,17 @@ export function createResourcesPanel<
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesViewSwitch = createResourcesViewSwitch(store, context);
 
+  const ResourcesPrintMode = createResourcesPrintMode(store, context, {
+    AlbumCard: ResourcesAlbum.Card,
+    pageCount: album.pages.length,
+  });
+
   return function ResourcesPanel({ campaignId }: { campaignId: string }) {
     const view = context.useView();
+    const printMode = context.usePrintMode();
+
+    if (printMode)
+      return <ResourcesPrintMode campaignId={campaignId} h="full" w="full" />;
 
     return (
       <VStack flex={1} gap={0} h="full" overflow="auto" w="full">

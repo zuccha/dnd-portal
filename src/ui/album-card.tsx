@@ -223,6 +223,12 @@ AlbumCard.InfoSeparator = AlbumCardInfoSeparator;
 AlbumCard.SeparatorH = AlbumCardSeparatorH;
 AlbumCard.SeparatorV = AlbumCardSeparatorV;
 
+AlbumCard.height = 3.5;
+AlbumCard.width = 2.5;
+
+AlbumCard.cardH = cardH;
+AlbumCard.cardW = cardW;
+
 AlbumCard.size0 = size0;
 AlbumCard.size1 = size1;
 AlbumCard.size2 = size2;

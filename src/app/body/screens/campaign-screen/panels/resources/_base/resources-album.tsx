@@ -45,14 +45,21 @@ export function createResourcesAlbum<
 ) {
   const ResourcesAlbumCard = createResourcesAlbumCard(store, context, extra);
 
-  return function ResourcesAlbum({ campaignId }: ResourcesAlbumProps) {
+  function ResourcesAlbum({ campaignId }: ResourcesAlbumProps) {
     const editable = useCanEditCampaign(campaignId);
     const filteredResourceIds = store.useFilteredResourceIds(campaignId);
 
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
-      <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
+      <Wrap
+        bgColor="bg.subtle"
+        className="print-only"
+        gap={4}
+        justify="center"
+        p={4}
+        w="full"
+      >
         {filteredResourceIds.map((id) => (
           <ResourcesAlbumCard
             campaignId={campaignId}
@@ -64,5 +71,9 @@ export function createResourcesAlbum<
         ))}
       </Wrap>
     );
-  };
+  }
+
+  ResourcesAlbum.Card = ResourcesAlbumCard;
+
+  return ResourcesAlbum;
 }
