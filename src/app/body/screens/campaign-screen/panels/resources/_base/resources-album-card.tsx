@@ -36,6 +36,7 @@ export type ResourcesAlbumCardProps = {
   campaignId: string;
   editable: boolean;
   resourceId: string;
+  zoom?: number;
 };
 
 export function createResourcesAlbumCard<
@@ -61,6 +62,7 @@ export function createResourcesAlbumCard<
     campaignId,
     editable,
     resourceId,
+    zoom,
   }: ResourcesAlbumCardProps) {
     const localizedResource = store.useLocalizedResource(resourceId);
     const selected = store.useResourceSelection(resourceId);
@@ -89,7 +91,7 @@ export function createResourcesAlbumCard<
     const AlbumCardContent = pages[pageNumber]!;
 
     return (
-      <AlbumCard bgImage={bgImage} style={{ zoom: 1.3 }}>
+      <AlbumCard bgImage={bgImage} style={{ zoom }}>
         <AlbumCard.Header>
           {editable ?
             <>

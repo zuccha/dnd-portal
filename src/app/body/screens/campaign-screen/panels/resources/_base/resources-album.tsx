@@ -59,6 +59,7 @@ export function createResourcesAlbum<
             editable={editable}
             key={id}
             resourceId={id}
+            zoom={1.3}
           />
         ))}
       </Wrap>
