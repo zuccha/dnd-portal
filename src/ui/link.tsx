@@ -1,14 +1,19 @@
-import {
-  Link as ChakraLink,
-  type LinkProps as ChakraLinkProps,
-} from "@chakra-ui/react";
+import { Button, type ButtonProps } from "@chakra-ui/react";
 
 //------------------------------------------------------------------------------
 // Link
 //------------------------------------------------------------------------------
 
-export type LinkProps = ChakraLinkProps;
+export type LinkProps = ButtonProps;
 
 export default function Link(props: LinkProps) {
-  return <ChakraLink _hover={{ textDecoration: "underline" }} {...props} />;
+  return (
+    <Button
+      _hover={{ textDecoration: "underline" }}
+      cursor="pointer"
+      textAlign="left"
+      unstyled
+      {...props}
+    />
+  );
 }
