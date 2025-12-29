@@ -20,10 +20,9 @@ import RichText from "~/ui/rich-text";
 
 export type AlbumCardProps = StackProps;
 
-export default function AlbumCard(props: AlbumCardProps) {
+export default function AlbumCard({ children, ...props }: AlbumCardProps) {
   return (
     <VStack
-      bgColor="bg"
       borderRadius={5}
       className="light"
       color="fg"
@@ -35,14 +34,9 @@ export default function AlbumCard(props: AlbumCardProps) {
       w="20em"
       {...props}
     >
-      <VStack
-        flex={1}
-        fontSize="xs"
-        gap={0}
-        overflow="hidden"
-        w="full"
-        {...props}
-      />
+      <VStack flex={1} fontSize="xs" gap={0} overflow="hidden" w="full">
+        {children}
+      </VStack>
     </VStack>
   );
 }
