@@ -18,8 +18,11 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { range } from "~/ui/array";
 import Button from "~/ui/button";
+import Checkbox from "~/ui/checkbox";
 import Field from "~/ui/field";
+import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import type { ResourcesAlbumCardProps } from "./resources-album-card";
 import type { ResourcesContext } from "./resources-context";
@@ -74,9 +77,14 @@ export function createResourcesPrintMode<
     const cardsPerPaper = columns * rows;
 
     const paperPadding = {
-      px: `${(paperWidth - columns * AlbumCard.width) / 2}in`,
-      py: `${(paperHeight - rows * AlbumCard.height) / 2}in`,
+      px: (paperWidth - columns * AlbumCard.width) / 2,
+      py: (paperHeight - rows * AlbumCard.height) / 2,
     };
+
+    const [cropMarksVisible, setCropMarksVisible] = useState(true);
+    const [cropMarksLength, setCropMarksLength] = useState(0.2);
+    const cropMarkW = Math.min(cropMarksLength, paperPadding.px);
+    const cropMarkH = Math.min(cropMarksLength, paperPadding.py);
 
     const paperLayoutOptions = useMemo(() => {
       return createListCollection({
@@ -148,9 +156,11 @@ export function createResourcesPrintMode<
                 height={`${paperHeight}in`}
                 justify="flex-start"
                 key={paperNumber}
+                position="relative"
+                px={`${paperPadding.px}in`}
+                py={`${paperPadding.py}in`}
                 width={`${paperWidth}in`}
                 wrap="wrap"
-                {...paperPadding}
               >
                 {paper.map(({ pageNumber, resourceId }) => (
                   <AlbumCard
@@ -163,6 +173,42 @@ export function createResourcesPrintMode<
                     shadow="none"
                   />
                 ))}
+
+                {cropMarksVisible && (
+                  <>
+                    <CropMarksH
+                      gap={AlbumCard.height}
+                      offsetX={paperPadding.px - cropMarkW}
+                      offsetY={paperPadding.py}
+                      rows={rows}
+                      w={cropMarkW}
+                    />
+
+                    <CropMarksH
+                      gap={AlbumCard.height}
+                      offsetX={paperPadding.px + columns * AlbumCard.width}
+                      offsetY={paperPadding.py}
+                      rows={rows}
+                      w={cropMarkW}
+                    />
+
+                    <CropMarksV
+                      columns={columns}
+                      gap={AlbumCard.width}
+                      h={cropMarkH}
+                      offsetX={paperPadding.px}
+                      offsetY={paperPadding.py - cropMarkH}
+                    />
+
+                    <CropMarksV
+                      columns={columns}
+                      gap={AlbumCard.width}
+                      h={cropMarkH}
+                      offsetX={paperPadding.px}
+                      offsetY={paperPadding.py + rows * AlbumCard.height}
+                    />
+                  </>
+                )}
               </Flex>
             ))}
           </VStack>
@@ -193,6 +239,23 @@ export function createResourcesPrintMode<
                 value={paperType}
               />
             </Field>
+
+            <Field label={t("crop_marks.label")}>
+              <HStack>
+                <Checkbox
+                  onValueChange={setCropMarksVisible}
+                  size="sm"
+                  value={cropMarksVisible}
+                />
+                <NumberInput
+                  disabled={!cropMarksVisible}
+                  onValueChange={setCropMarksLength}
+                  size="xs"
+                  step={0.05}
+                  value={cropMarksLength}
+                />
+              </HStack>
+            </Field>
           </VStack>
 
           <HStack justify="flex-end" w="full">
@@ -212,6 +275,70 @@ export function createResourcesPrintMode<
       </HStack>
     );
   };
+}
+
+//------------------------------------------------------------------------------
+// Crop Marks H
+//------------------------------------------------------------------------------
+
+type CropMarksHProps = {
+  gap: number;
+  offsetX: number;
+  offsetY: number;
+  rows: number;
+  w: number;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+function CropMarksH({ gap, offsetX, offsetY, rows, w }: CropMarksHProps) {
+  return (
+    <>
+      {range(rows + 1).map((c) => (
+        <Box
+          bgColor="black"
+          h="1px"
+          key={c}
+          left={`${offsetX}in`}
+          position="absolute"
+          top={`${offsetY + gap * c}in`}
+          transform="translateY(-50%)"
+          w={`${w}in`}
+        />
+      ))}
+    </>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Crop Marks V
+//------------------------------------------------------------------------------
+
+type CropMarksVProps = {
+  columns: number;
+  gap: number;
+  h: number;
+  offsetX: number;
+  offsetY: number;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+function CropMarksV({ columns, gap, h, offsetX, offsetY }: CropMarksVProps) {
+  return (
+    <>
+      {range(columns + 1).map((c) => (
+        <Box
+          bgColor="black"
+          h={`${h}in`}
+          key={c}
+          left={`${offsetX + gap * c}in`}
+          position="absolute"
+          top={`${offsetY}in`}
+          transform="translateX(-50%)"
+          w="1px"
+        />
+      ))}
+    </>
+  );
 }
 
 //------------------------------------------------------------------------------
@@ -262,6 +389,10 @@ const i18nContext = {
   "close": {
     en: "Close",
     it: "Chiudi",
+  },
+  "crop_marks.label": {
+    en: "Crop Marks",
+    it: "Marchi di Taglio",
   },
   "paper_layout.label": {
     en: "Layout",
