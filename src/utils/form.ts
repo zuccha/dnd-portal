@@ -1,6 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from "react";
 import { createMemoryStore } from "~/store/memory-store";
 import { createMemoryStoreSet } from "~/store/set/memory-store-set";
+import type { StoreSet } from "~/store/set/store-set";
 import { createObservable } from "./observable";
 
 //------------------------------------------------------------------------------
@@ -44,26 +45,27 @@ export function createForm<Fields extends Record<string, unknown>>(
   // Values Store
   //----------------------------------------------------------------------------
 
-  const {
-    registered: valueFields,
-    get: getValue,
-    use: useValue,
-  } = createMemoryStoreSet<keyof Fields, Fields[keyof Fields]>(
+  const valuesStore = createMemoryStoreSet<keyof Fields, Fields[keyof Fields]>(
     `form[${id}].fields`,
   );
+
+  const { get: getValue } = valuesStore;
+
+  const { keys: valueFields, useAndRegister: useAndRegisterValue } =
+    createStoreSetRegister(valuesStore);
 
   //----------------------------------------------------------------------------
   // Errors Store
   //----------------------------------------------------------------------------
 
-  const {
-    registered: errorFields,
-    get: getError,
-    use: useError,
-    subscribeAny: subscribeAnyError,
-  } = createMemoryStoreSet<keyof Fields, string | undefined>(
+  const errorsStore = createMemoryStoreSet<keyof Fields, string | undefined>(
     `form[${id}].errors`,
   );
+
+  const { get: getError, subscribeAny: subscribeAnyError } = errorsStore;
+
+  const { keys: errorFields, useAndRegister: useAndRegisterError } =
+    createStoreSetRegister(errorsStore);
 
   //----------------------------------------------------------------------------
   // Submit Error Store
@@ -99,7 +101,9 @@ export function createForm<Fields extends Record<string, unknown>>(
   function buildData(): Partial<Fields> {
     const data: Partial<Fields> = {};
     const empty = undefined as Fields[keyof Fields];
-    valueFields().forEach((field) => (data[field] = getValue(field, empty)));
+    [...valueFields.keys()].forEach(
+      (field) => (data[field] = getValue(field, empty)),
+    );
     return data;
   }
 
@@ -118,9 +122,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   async function pasteDataFromClipboard(): Promise<void> {
     const text = await navigator.clipboard.readText();
     const data = parseData(JSON.parse(text));
-    const fields = valueFields();
-
-    for (const field of fields) {
+    for (const field of valueFields.keys()) {
       const onValueChange = valueChangers[field];
       const value = data[field];
       onValueChange?.(value);
@@ -144,8 +146,8 @@ export function createForm<Fields extends Record<string, unknown>>(
     "onValueChange": (value: Fields[Name]) => void;
     "value": Fields[Name];
   } {
-    const [value, setValue] = useValue(name, defaultValue);
-    const [error, setError] = useError(name, undefined);
+    const [value, setValue] = useAndRegisterValue(name, defaultValue);
+    const [error, setError] = useAndRegisterError(name, undefined);
     const [disabled] = useSubmitting();
 
     const onBlur = useCallback(() => {
@@ -192,7 +194,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   //----------------------------------------------------------------------------
 
   function useFieldError(name: keyof Fields): string | undefined {
-    const [error] = useError(name, undefined);
+    const [error] = useAndRegisterError(name, undefined);
     return error;
   }
 
@@ -201,7 +203,9 @@ export function createForm<Fields extends Record<string, unknown>>(
   //----------------------------------------------------------------------------
 
   function isValid(): boolean {
-    return errorFields().every((field) => !getError(field, undefined));
+    return [...errorFields.keys()].every(
+      (field) => !getError(field, undefined),
+    );
   }
 
   function useValid(): boolean {
@@ -262,4 +266,41 @@ export function createForm<Fields extends Record<string, unknown>>(
     useSubmitError,
     useValid,
   };
+}
+
+//------------------------------------------------------------------------------
+// Return
+//------------------------------------------------------------------------------
+
+function createStoreSetRegister<K extends PropertyKey, T>(
+  store: StoreSet<K, T>,
+) {
+  const keys = new Map<K, number>();
+
+  function useAndRegister(...args: Parameters<typeof store.useValue>) {
+    const key = args[0];
+    const defaultValue = args[1];
+
+    useLayoutEffect(() => {
+      if (!keys.has(key)) {
+        keys.set(key, 1);
+        store.set(key, defaultValue, defaultValue);
+      } else {
+        keys.set(key, keys.get(key)! + 1);
+      }
+      return () => {
+        const count = keys.get(key);
+        if (!count || count <= 1) {
+          keys.delete(key);
+          store.clear(key);
+        } else {
+          keys.set(key, count - 1);
+        }
+      };
+    }, [defaultValue, key]);
+
+    return store.use(...args);
+  }
+
+  return { keys, useAndRegister };
 }
