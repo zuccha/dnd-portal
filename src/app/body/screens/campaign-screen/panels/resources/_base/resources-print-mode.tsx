@@ -25,6 +25,7 @@ import Checkbox from "~/ui/checkbox";
 import Field from "~/ui/field";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
+import { compareObjects } from "~/utils/object";
 import type { ResourcesAlbumCardProps } from "./resources-album-card";
 import type { ResourcesContext } from "./resources-context";
 
@@ -86,6 +87,22 @@ export function createResourcesPrintMode<
     const [cropMarksLength, setCropMarksLength] = useCropMarksLength();
     const cropMarkW = Math.min(cropMarksLength, paperPadding.px);
     const cropMarkH = Math.min(cropMarksLength, paperPadding.py);
+
+    const [gradientIntensity, setGradientIntensity] = useGradientIntensity();
+
+    const [paletteName, setPaletteName] = usePaletteName();
+    const palette = palettes[paletteName];
+
+    const paletteNameOptions = useMemo(() => {
+      return createListCollection({
+        items: paletteNames
+          .map((paletteName) => ({
+            label: t(`palette_name[${paletteName}]`),
+            value: paletteName,
+          }))
+          .sort(compareObjects("label")),
+      });
+    }, [t]);
 
     const paperLayoutOptions = useMemo(() => {
       return createListCollection({
@@ -167,8 +184,10 @@ export function createResourcesPrintMode<
                   <AlbumCard
                     borderRadius={0}
                     campaignId={campaignId}
+                    gradientIntensity={100 - gradientIntensity}
                     initialPageNumber={pageNumber}
                     key={`${resourceId}-${pageNumber}`}
+                    palette={palette}
                     printMode
                     resourceId={resourceId}
                     shadow="none"
@@ -257,6 +276,26 @@ export function createResourcesPrintMode<
                 />
               </HStack>
             </Field>
+
+            <Field label={t("palette_name.label")}>
+              <Select
+                onValueChange={setPaletteName}
+                options={paletteNameOptions}
+                size="xs"
+                value={paletteName}
+              />
+            </Field>
+
+            <Field label={t("gradient_intensity.label")}>
+              <NumberInput
+                max={100}
+                min={0}
+                onValueChange={setGradientIntensity}
+                size="xs"
+                step={1}
+                value={gradientIntensity}
+              />
+            </Field>
           </VStack>
 
           <HStack justify="flex-end" w="full">
@@ -343,6 +382,47 @@ function CropMarksV({ columns, gap, h, offsetX, offsetY }: CropMarksVProps) {
 }
 
 //------------------------------------------------------------------------------
+// Palette Name
+//------------------------------------------------------------------------------
+
+const paletteNameSchema = z.enum([
+  "blue",
+  "cyan",
+  "gray",
+  "green",
+  "orange",
+  "pink",
+  "purple",
+  "red",
+  "teal",
+  "yellow",
+]);
+
+type PaletteName = z.infer<typeof paletteNameSchema>;
+
+const paletteNames = paletteNameSchema.options;
+
+//------------------------------------------------------------------------------
+// Palette
+//------------------------------------------------------------------------------
+
+const palettes: Record<
+  PaletteName,
+  { footerBg: string; footerFg: string; gradientBg: string }
+> = {
+  blue: { footerBg: "#2563eb", footerFg: "#eff6ff", gradientBg: "#eff6ff" },
+  cyan: { footerBg: "#0891b2", footerFg: "#ecfeff", gradientBg: "#ecfeff" },
+  gray: { footerBg: "#3f3f46", footerFg: "#fafafa", gradientBg: "#f4f4f5" },
+  green: { footerBg: "#16a34a", footerFg: "#f0fdf4", gradientBg: "#f0fdf4" },
+  orange: { footerBg: "#ea580c", footerFg: "#fff7ed", gradientBg: "#fff7ed" },
+  pink: { footerBg: "#db2777", footerFg: "#fdf2f8", gradientBg: "#fdf2f8" },
+  purple: { footerBg: "#9333ea", footerFg: "#faf5ff", gradientBg: "#faf5ff" },
+  red: { footerBg: "#dc2626", footerFg: "#fef2f2", gradientBg: "#fef2f2" },
+  teal: { footerBg: "#0d9488", footerFg: "#f0fdfa", gradientBg: "#f0fdfa" },
+  yellow: { footerBg: "#ca8a04", footerFg: "#fefce8", gradientBg: "#fefce8" },
+};
+
+//------------------------------------------------------------------------------
 // Paper Type
 //------------------------------------------------------------------------------
 
@@ -396,6 +476,18 @@ const useCropMarksVisible = createLocalStore(
   z.boolean().parse,
 ).use;
 
+const useGradientIntensity = createLocalStore(
+  "print_mode.gradient_intensity",
+  40,
+  z.number().parse,
+).use;
+
+const usePaletteName = createLocalStore(
+  "print_mode.palette_name",
+  "gray",
+  paletteNameSchema.parse,
+).use;
+
 const usePaperType = createLocalStore(
   "print_mode.paper_type",
   "a4",
@@ -420,6 +512,58 @@ const i18nContext = {
   "crop_marks.label": {
     en: "Crop Marks",
     it: "Marchi di Taglio",
+  },
+  "gradient_intensity.label": {
+    en: "Gradient Intensity",
+    it: "Intensità Gradiente",
+  },
+  "palette_name.label": {
+    en: "Color",
+    it: "Colore",
+  },
+  "palette_name[blue]": {
+    en: "Blue",
+    it: "Blue",
+  },
+  "palette_name[cyan]": {
+    en: "Cyan",
+    it: "Ciano",
+  },
+  "palette_name[gray]": {
+    en: "Gray",
+    it: "Grigio",
+  },
+  "palette_name[green]": {
+    en: "Green",
+    it: "Verde",
+  },
+  "palette_name[magenta]": {
+    en: "Magenta",
+    it: "Magenta",
+  },
+  "palette_name[orange]": {
+    en: "Orange",
+    it: "Arancione",
+  },
+  "palette_name[pink]": {
+    en: "Pink",
+    it: "Rosa",
+  },
+  "palette_name[purple]": {
+    en: "Purple",
+    it: "Viola",
+  },
+  "palette_name[red]": {
+    en: "Red",
+    it: "Rosso",
+  },
+  "palette_name[teal]": {
+    en: "Teal",
+    it: "Verde Mare",
+  },
+  "palette_name[yellow]": {
+    en: "Yellow",
+    it: "Giallo",
   },
   "paper_layout.label": {
     en: "Layout",

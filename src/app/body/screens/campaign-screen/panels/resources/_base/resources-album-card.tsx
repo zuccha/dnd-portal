@@ -25,7 +25,6 @@ export type ResourcesAlbumCardExtra<
   L extends LocalizedResource<R>,
 > = {
   pages: React.FC<StackProps & { localizedResource: L }>[];
-  palette?: { footerBg: string; footerFg: string; gradientBg: string };
 };
 
 //------------------------------------------------------------------------------
@@ -35,7 +34,9 @@ export type ResourcesAlbumCardExtra<
 export type ResourcesAlbumCardProps = AlbumCardProps & {
   campaignId: string;
   editable?: boolean;
+  gradientIntensity?: number;
   initialPageNumber?: number;
+  palette?: { footerBg: string; footerFg: string; gradientBg: string };
   printMode?: boolean;
   resourceId: string;
   zoom?: number;
@@ -50,14 +51,14 @@ export function createResourcesAlbumCard<
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
-  { pages, palette = defaultPalette }: ResourcesAlbumCardExtra<R, L>,
+  { pages }: ResourcesAlbumCardExtra<R, L>,
 ) {
-  const bgImage = `radial-gradient(circle, {colors.bg} 0%, {colors.bg} 40%, ${palette.gradientBg} 100%)`;
-
   function ResourcesAlbumCard({
     campaignId,
     editable = false,
+    gradientIntensity = 40,
     initialPageNumber = 0,
+    palette = defaultPalette,
     printMode = false,
     resourceId,
     zoom,
@@ -67,6 +68,8 @@ export function createResourcesAlbumCard<
     const selected = store.useResourceSelection(resourceId);
 
     const [pageNumber, setPageNumber] = useState(initialPageNumber);
+
+    const bgImage = `radial-gradient(circle, {colors.bg} 0%, {colors.bg} ${gradientIntensity}%, ${palette.gradientBg} 100%)`;
 
     const cyclePage = useCallback(() => {
       setPageNumber((prev) => (prev + 1) % pages.length);
