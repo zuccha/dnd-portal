@@ -441,6 +441,22 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
+  // Use Selected Filtered Resources Ids
+  //----------------------------------------------------------------------------
+
+  function useSelectedFilteredResourceIds(campaignId: string): string[] {
+    const filteredResourceIds = useFilteredResourceIds(campaignId);
+
+    const selectedFilteredResourceIds = useMemo(() => {
+      return filteredResourceIds.filter((id) =>
+        resourceSelectionStore.get(id, false),
+      );
+    }, [filteredResourceIds]);
+
+    return selectedFilteredResourceIds;
+  }
+
+  //----------------------------------------------------------------------------
   // Return
   //----------------------------------------------------------------------------
 
@@ -469,5 +485,6 @@ export function createResourceStore<
     useResourceIds,
     useResourceSelection,
     useResourceSelectionCount,
+    useSelectedFilteredResourceIds,
   };
 }

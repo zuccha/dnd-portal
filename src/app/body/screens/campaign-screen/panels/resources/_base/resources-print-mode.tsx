@@ -65,7 +65,7 @@ export function createResourcesPrintMode<
     ...rest
   }: ResourcesPrintModeProps) {
     const { t } = useI18nLangContext(i18nContext);
-    const filteredResourceIds = store.useFilteredResourceIds(campaignId);
+    const resourceIds = store.useSelectedFilteredResourceIds(campaignId);
 
     const [paperLayout, setPaperLayout] = usePaperLayout();
     const [paperType, setPaperType] = usePaperType();
@@ -127,7 +127,7 @@ export function createResourcesPrintMode<
       let paper: { pageNumber: number; resourceId: string }[] = [];
       let paperResourceCount = 0;
 
-      for (const resourceId of filteredResourceIds) {
+      for (const resourceId of resourceIds) {
         for (let pageNumber = 0; pageNumber < pageCount; ++pageNumber) {
           paper.push({ pageNumber, resourceId });
           paperResourceCount++;
@@ -146,7 +146,7 @@ export function createResourcesPrintMode<
       }
 
       return papers;
-    }, [cardsPerPaper, filteredResourceIds]);
+    }, [cardsPerPaper, resourceIds]);
 
     return (
       <HStack gap={0} overflow="hidden" {...rest}>
