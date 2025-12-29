@@ -4,17 +4,17 @@ import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Spells Album Card Content
+// Spells Album Card Page 0
 //------------------------------------------------------------------------------
 
-export type SpellsAlbumCardContentProps = StackProps & {
+export type SpellsAlbumCardPage0Props = StackProps & {
   localizedResource: LocalizedSpell;
 };
 
-export default function SpellsAlbumCardContent({
+export function SpellsAlbumCardPage0({
   localizedResource,
   ...rest
-}: SpellsAlbumCardContentProps) {
+}: SpellsAlbumCardPage0Props) {
   const {
     casting_time_with_ritual,
     character_classes,
@@ -69,7 +69,7 @@ export default function SpellsAlbumCardContent({
 const i18nContext = {
   casting_time: {
     en: "Casting Time",
-    it: "Tempo di Lancio",
+    it: "Lancio",
   },
   components: {
     en: "Components",

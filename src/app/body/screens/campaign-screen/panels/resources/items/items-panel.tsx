@@ -13,7 +13,7 @@ import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
 import ItemEditor from "./item-editor";
 import itemEditorForm, { type ItemEditorFormFields } from "./item-editor-form";
-import ItemsAlbumCardContent from "./items-album-card-content";
+import { ItemsAlbumCardPage0 } from "./items-album-card";
 import ItemsFilters from "./items-filters";
 
 //------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const ItemsPanel = createResourcesPanel(itemStore, {
-  album: { pages: [ItemsAlbumCardContent] },
+  album: { pages: [ItemsAlbumCardPage0] },
   filters: { Filters: ItemsFilters },
   form: { Editor: ItemEditor, form: itemEditorForm, parseFormData },
   table: { columns, detailsKey: "notes" },

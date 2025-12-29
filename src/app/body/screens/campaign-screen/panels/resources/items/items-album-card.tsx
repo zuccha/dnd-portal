@@ -3,19 +3,18 @@ import type { LocalizedItem } from "~/models/resources/equipment/items/localized
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Items Album Card Content
+// Items Album Card Page 0
 //------------------------------------------------------------------------------
 
-export type ItemsAlbumCardContentProps = StackProps & {
+export type ItemsAlbumCardPage0Props = StackProps & {
   localizedResource: LocalizedItem;
 };
 
-export default function ItemsAlbumCardContent({
+export function ItemsAlbumCardPage0({
   localizedResource,
   ...rest
-}: ItemsAlbumCardContentProps) {
+}: ItemsAlbumCardPage0Props) {
   const { cost, magic_type, notes, weight } = localizedResource;
-
   return (
     <VStack {...rest}>
       <AlbumCard.Caption>

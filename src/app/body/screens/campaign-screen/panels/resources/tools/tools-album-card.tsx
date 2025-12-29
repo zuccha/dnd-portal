@@ -5,22 +5,20 @@ import AlbumCard from "~/ui/album-card";
 import RichText from "~/ui/rich-text";
 
 //------------------------------------------------------------------------------
-// Tools Album Card Content
+// Tools Album Card Page 0
 //------------------------------------------------------------------------------
 
-export type ToolsAlbumCardContentProps = StackProps & {
+export type ToolsAlbumCardPage0Props = StackProps & {
   localizedResource: LocalizedTool;
 };
 
-export default function ToolsAlbumCardContent({
+export function ToolsAlbumCardPage0({
   localizedResource,
   ...rest
-}: ToolsAlbumCardContentProps) {
+}: ToolsAlbumCardPage0Props) {
   const { t } = useI18nLangContext(i18nContext);
-
   const { ability, cost, craft, magic_type, notes, type, utilize, weight } =
     localizedResource;
-
   return (
     <VStack {...rest}>
       <AlbumCard.Caption>

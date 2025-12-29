@@ -4,17 +4,17 @@ import type { LocalizedEldritchInvocation } from "~/models/resources/eldritch-in
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Eldritch Invocations Album Card Content
+// Eldritch Invocations Album Card Page 0
 //------------------------------------------------------------------------------
 
-export type EldritchInvocationsAlbumCardContentProps = StackProps & {
+export type EldritchInvocationsAlbumCardPage0Props = StackProps & {
   localizedResource: LocalizedEldritchInvocation;
 };
 
-export default function EldritchInvocationsAlbumCardContent({
+export function EldritchInvocationsAlbumCardPage0({
   localizedResource,
   ...rest
-}: EldritchInvocationsAlbumCardContentProps) {
+}: EldritchInvocationsAlbumCardPage0Props) {
   const { t } = useI18nLangContext(i18nContext);
 
   const { description, min_warlock_level, other_prerequisite } =

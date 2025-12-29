@@ -4,24 +4,24 @@ import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/local
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Weapons Album Card Content
+// Weapons Album Card Page 0
 //------------------------------------------------------------------------------
 
-export type WeaponsAlbumCardContentProps = StackProps & {
+export type WeaponsAlbumCardPage0Props = StackProps & {
   localizedResource: LocalizedWeapon;
 };
 
-export default function WeaponsAlbumCardContent({
+export function WeaponsAlbumCardPage0({
   localizedResource,
   ...rest
-}: WeaponsAlbumCardContentProps) {
+}: WeaponsAlbumCardPage0Props) {
   const { t } = useI18nLangContext(i18nContext);
 
   const {
     cost,
     damage_extended,
-    magic_type,
     mastery,
+    magic_type,
     notes,
     properties_extended,
     type,

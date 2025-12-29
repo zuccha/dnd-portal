@@ -1,4 +1,4 @@
-import { HStack, Separator, Span, type StackProps } from "@chakra-ui/react";
+import { HStack, Span, type StackProps } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, RefreshCwIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import type {
@@ -25,6 +25,7 @@ export type ResourcesAlbumCardExtra<
   L extends LocalizedResource<R>,
 > = {
   pages: React.FC<StackProps & { localizedResource: L }>[];
+  palette?: { footerBg: string; footerFg: string; titleFg: string };
 };
 
 //------------------------------------------------------------------------------
@@ -46,8 +47,10 @@ export function createResourcesAlbumCard<
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
-  { pages }: ResourcesAlbumCardExtra<R, L>,
+  { pages, palette }: ResourcesAlbumCardExtra<R, L>,
 ) {
+  palette ??= { footerBg: "bg.muted", footerFg: "fg", titleFg: "fg" };
+
   return function ResourcesAlbumCard({
     campaignId,
     editable,
@@ -81,19 +84,21 @@ export function createResourcesAlbumCard<
 
     return (
       <AlbumCard>
-        <AlbumCard.Header lineHeight={1.2}>
+        <AlbumCard.Header borderBottomWidth={1} lineHeight={1.2}>
           {editable ?
-            <HStack align="flex-start" flex={1}>
+            <HStack align="flex-start" color={palette.titleFg} flex={1}>
               <Icon
                 Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}
-                color="fg.muted"
                 h="1.2em"
                 mt="1px"
+                opacity={0.8}
                 size="sm"
               />
-              <Link onClick={edit}>{name}</Link>
+              <Link color="inherit" onClick={edit}>
+                {name}
+              </Link>
             </HStack>
-          : <Span>{name}</Span>}
+          : <Span color="inherit">{name}</Span>}
 
           <HStack h="1.2em">
             {pages.length > 1 && (
@@ -113,13 +118,13 @@ export function createResourcesAlbumCard<
           gap={0}
           localizedResource={localizedResource}
           overflow="auto"
-          separator={<Separator w="full" />}
+          separator={<AlbumCard.Separator w="full" />}
           w="full"
         />
 
-        <AlbumCard.Caption>
+        <AlbumCard.Caption bgColor={palette.footerBg} color={palette.footerFg}>
           <Span>{localizedResource.campaign}</Span>
-          <Span>{localizedResource.page}</Span>
+          <Span textTransform="uppercase">{localizedResource.page}</Span>
         </AlbumCard.Caption>
       </AlbumCard>
     );

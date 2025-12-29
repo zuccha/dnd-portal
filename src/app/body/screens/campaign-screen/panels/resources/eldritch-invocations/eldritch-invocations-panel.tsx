@@ -14,7 +14,7 @@ import EldritchInvocationEditor from "./eldritch-invocation-editor";
 import eldritchInvocationEditorForm, {
   type EldritchInvocationEditorFormFields,
 } from "./eldritch-invocation-editor-form";
-import EldritchInvocationsAlbumCardContent from "./eldritch-invocations-album-card-content";
+import { EldritchInvocationsAlbumCardPage0 } from "./eldritch-invocations-album-card";
 import EldritchInvocationsFilters from "./eldritch-invocations-filters";
 
 //------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ function parseFormData(data: Partial<EldritchInvocationEditorFormFields>):
 //------------------------------------------------------------------------------
 
 const EldritchInvocationsPanel = createResourcesPanel(eldritchInvocationStore, {
-  album: { pages: [EldritchInvocationsAlbumCardContent] },
+  album: { pages: [EldritchInvocationsAlbumCardPage0] },
   filters: { Filters: EldritchInvocationsFilters },
   form: {
     Editor: EldritchInvocationEditor,

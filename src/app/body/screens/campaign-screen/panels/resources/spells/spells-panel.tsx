@@ -14,7 +14,7 @@ import SpellEditor from "./spell-editor";
 import spellEditorForm, {
   type SpellEditorFormFields,
 } from "./spell-editor-form";
-import SpellsAlbumCardContent from "./spells-album-card-content";
+import { SpellsAlbumCardPage0 } from "./spells-album-card";
 import SpellsFilters from "./spells-filters";
 
 //------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const SpellsPanel = createResourcesPanel(spellStore, {
-  album: { pages: [SpellsAlbumCardContent] },
+  album: { pages: [SpellsAlbumCardPage0] },
   filters: { Filters: SpellsFilters },
   form: { Editor: SpellEditor, form: spellEditorForm, parseFormData },
   table: { columns, detailsKey: "description" },

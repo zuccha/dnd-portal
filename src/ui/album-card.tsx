@@ -1,10 +1,13 @@
 import {
+  Em,
   GridItem,
   type GridItemProps,
   HStack,
   Separator,
+  type SeparatorProps,
   SimpleGrid,
   type SimpleGridProps,
+  Span,
   type StackProps,
   VStack,
 } from "@chakra-ui/react";
@@ -21,21 +24,26 @@ export default function AlbumCard(props: AlbumCardProps) {
   return (
     <VStack
       bgColor="bg"
-      borderBottomColor="bg.inverted"
-      borderLeftColor="border.emphasized"
       borderRadius={5}
-      borderRightColor="border.emphasized"
-      borderTopColor="bg.inverted"
-      borderXWidth={1}
-      borderYWidth={2}
+      className="light"
+      color="fg"
       fontFamily="Lato"
-      gap={0}
       h="28em"
       lineHeight={1.2}
-      separator={<Separator w="full" />}
+      overflow="hidden"
+      shadow="sm"
       w="20em"
       {...props}
-    />
+    >
+      <VStack
+        flex={1}
+        fontSize="xs"
+        gap={0}
+        overflow="hidden"
+        w="full"
+        {...props}
+      />
+    </VStack>
   );
 }
 
@@ -45,6 +53,7 @@ AlbumCard.Header = AlbumCardHeader;
 AlbumCard.Info = AlbumCardInfo;
 AlbumCard.InfoCell = AlbumCardInfoCell;
 AlbumCard.InfoSeparator = AlbumCardInfoSeparator;
+AlbumCard.Separator = AlbumCardSeparator;
 
 //------------------------------------------------------------------------------
 // Album Card Caption
@@ -56,11 +65,9 @@ function AlbumCardCaption(props: AlbumCardCaptionProps) {
   return (
     <HStack
       align="flex-start"
-      bgColor="bg.subtle"
-      fontSize="xs"
       justify="space-between"
       px={3}
-      py={1}
+      py={1.5}
       w="full"
       {...props}
     />
@@ -83,7 +90,6 @@ function AlbumCardDescription({
     <VStack
       align="flex-start"
       flex={1}
-      fontSize="sm"
       gap={1}
       overflow="auto"
       px={3}
@@ -92,11 +98,26 @@ function AlbumCardDescription({
       {...rest}
     >
       {description.split("\n").map((paragraph, i) => (
-        <RichText key={i} text={paragraph} />
+        <RichText key={i} patterns={patterns} text={paragraph} />
       ))}
     </VStack>
   );
 }
+
+const patterns = [
+  {
+    regex: /##(.+?)##/,
+    render: (val: ReactNode) => <Span fontSize="sm">{val}</Span>,
+  },
+  {
+    regex: /\*\*(.+?)\*\*/,
+    render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
+  },
+  {
+    regex: /_(.+?)_/,
+    render: (val: ReactNode) => <Em>{val}</Em>,
+  },
+];
 
 //------------------------------------------------------------------------------
 // Album Card Header
@@ -108,6 +129,7 @@ function AlbumCardHeader(props: AlbumCardHeaderProps) {
   return (
     <HStack
       align="flex-start"
+      fontSize="md"
       fontWeight="bold"
       position="relative"
       px={3}
@@ -127,7 +149,6 @@ type AlbumCardInfoProps = SimpleGridProps;
 function AlbumCardInfo(props: AlbumCardInfoProps) {
   return (
     <SimpleGrid
-      fontSize="xs"
       gapX={2}
       gapY={1}
       px={3}
@@ -152,7 +173,6 @@ function AlbumCardInfoCell({ children, label }: AlbumCardInfoCellProps) {
   return (
     <>
       <GridItem color="fg.muted">{label}</GridItem>
-
       {children}
     </>
   );
@@ -168,4 +188,14 @@ function AlbumCardInfoSeparator(props: AlbumCardInfoSeparatorProps) {
   return (
     <GridItem bgColor="border" colSpan={2} h="1px" mx={-3} my={1} {...props} />
   );
+}
+
+//------------------------------------------------------------------------------
+// Album Card Separator
+//------------------------------------------------------------------------------
+
+type AlbumCardSeparatorProps = SeparatorProps;
+
+function AlbumCardSeparator(props: AlbumCardSeparatorProps) {
+  return <Separator {...props} />;
 }

@@ -1,7 +1,6 @@
 import {
   GridItem,
   HStack,
-  Separator,
   SimpleGrid,
   Span,
   type StackProps,
@@ -12,17 +11,21 @@ import type { LocalizedCreature } from "~/models/resources/creatures/localized-c
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Creatures Album Card Content Page 0
+// Creatures Album Card Props
 //------------------------------------------------------------------------------
 
-export type CreaturesAlbumCardContentPage0Props = StackProps & {
+export type CreaturesAlbumCardProps = StackProps & {
   localizedResource: LocalizedCreature;
 };
 
-export function CreaturesAlbumCardContentPage0({
+//------------------------------------------------------------------------------
+// Creatures Album Card Page 0
+//------------------------------------------------------------------------------
+
+export function CreaturesAlbumCardPage0({
   localizedResource,
   ...rest
-}: CreaturesAlbumCardContentPage0Props) {
+}: CreaturesAlbumCardProps) {
   const {
     ac,
     cr,
@@ -53,11 +56,10 @@ export function CreaturesAlbumCardContentPage0({
       <AlbumCard.Caption>{title}</AlbumCard.Caption>
 
       <HStack
-        fontSize="xs"
         gap={3}
         px={3}
         py={2}
-        separator={<Separator h="full" />}
+        separator={<AlbumCard.Separator h="full" />}
         w="full"
       >
         <AlbumCard.Info
@@ -71,7 +73,7 @@ export function CreaturesAlbumCardContentPage0({
 
           <AlbumCard.InfoCell label={t("hp")}>
             <GridItem>{hp}</GridItem>
-            <GridItem>{hp_formula ? ">" : ""}</GridItem>
+            <GridItem color="fg.muted">{hp_formula ? ">" : ""}</GridItem>
             <GridItem>{hp_formula}</GridItem>
           </AlbumCard.InfoCell>
 
@@ -81,7 +83,7 @@ export function CreaturesAlbumCardContentPage0({
 
           <AlbumCard.InfoCell label={t("initiative")}>
             <GridItem>{initiative}</GridItem>
-            <GridItem>{">"}</GridItem>
+            <GridItem color="fg.muted">{">"}</GridItem>
             <GridItem>{initiative_passive}</GridItem>
           </AlbumCard.InfoCell>
 
@@ -179,22 +181,16 @@ export function CreaturesAlbumCardContentPage0({
 }
 
 //------------------------------------------------------------------------------
-// Creatures Album Card Content Page 1
+// Creatures Album Card Page 1
 //------------------------------------------------------------------------------
 
-export type CreaturesAlbumCardContentPage1Props = StackProps & {
-  localizedResource: LocalizedCreature;
-};
-
-export function CreaturesAlbumCardContentPage1({
+export function CreaturesAlbumCardPage1({
   localizedResource,
   ...rest
-}: CreaturesAlbumCardContentPage1Props) {
-  const { description, title } = localizedResource;
-
+}: CreaturesAlbumCardProps) {
+  const { description } = localizedResource;
   return (
     <VStack {...rest}>
-      <AlbumCard.Caption>{title}</AlbumCard.Caption>
       <AlbumCard.Description description={description} />
     </VStack>
   );

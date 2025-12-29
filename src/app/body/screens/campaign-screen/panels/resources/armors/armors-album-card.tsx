@@ -4,25 +4,25 @@ import type { LocalizedArmor } from "~/models/resources/equipment/armors/localiz
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Armors Album Card Content
+// Armors Album Card Page 0
 //------------------------------------------------------------------------------
 
-export type ArmorsAlbumCardContentProps = StackProps & {
+export type ArmorsAlbumCardPage0Props = StackProps & {
   localizedResource: LocalizedArmor;
 };
 
-export default function ArmorsAlbumCardContent({
+export function ArmorsAlbumCardPage0({
   localizedResource,
   ...rest
-}: ArmorsAlbumCardContentProps) {
+}: ArmorsAlbumCardPage0Props) {
   const { t } = useI18nLangContext(i18nContext);
 
   const {
     _raw,
     armor_class,
     cost,
-    notes,
     magic_type,
+    notes,
     requirements,
     stealth,
     type,
