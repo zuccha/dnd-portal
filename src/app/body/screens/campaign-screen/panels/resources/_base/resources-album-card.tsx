@@ -1,4 +1,4 @@
-import { HStack, Span, type StackProps } from "@chakra-ui/react";
+import { Span, type StackProps } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, RefreshCwIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import type {
@@ -25,7 +25,7 @@ export type ResourcesAlbumCardExtra<
   L extends LocalizedResource<R>,
 > = {
   pages: React.FC<StackProps & { localizedResource: L }>[];
-  palette?: { footerBg: string; footerFg: string; titleFg: string };
+  palette?: { footerBg: string; footerFg: string; gradientBg: string };
 };
 
 //------------------------------------------------------------------------------
@@ -49,7 +49,13 @@ export function createResourcesAlbumCard<
   context: ResourcesContext<R>,
   { pages, palette }: ResourcesAlbumCardExtra<R, L>,
 ) {
-  palette ??= { footerBg: "bg.muted", footerFg: "fg", titleFg: "fg" };
+  palette ??= {
+    footerBg: "gray.700",
+    footerFg: "gray.50",
+    gradientBg: "{colors.gray.100}",
+  };
+
+  const bgImage = `radial-gradient(circle, {colors.bg} 0%, {colors.bg} 40%, ${palette.gradientBg} 100%)`;
 
   return function ResourcesAlbumCard({
     campaignId,
@@ -83,34 +89,34 @@ export function createResourcesAlbumCard<
     const AlbumCardContent = pages[pageNumber]!;
 
     return (
-      <AlbumCard>
-        <AlbumCard.Header borderBottomWidth={1} lineHeight={1.2}>
+      <AlbumCard bgImage={bgImage} style={{ zoom: 1.3 }}>
+        <AlbumCard.Header>
           {editable ?
-            <HStack align="flex-start" color={palette.titleFg} flex={1}>
+            <>
               <Icon
                 Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}
-                h="1.2em"
-                mt="1px"
+                h="full"
                 opacity={0.8}
-                size="sm"
+                size="xs"
               />
               <Link color="inherit" onClick={edit}>
                 {name}
               </Link>
-            </HStack>
+            </>
           : <Span color="inherit">{name}</Span>}
 
-          <HStack h="1.2em">
-            {pages.length > 1 && (
-              <IconButton
-                Icon={RefreshCwIcon}
-                onClick={cyclePage}
-                size="2xs"
-                variant="ghost"
-              />
-            )}
-            <Checkbox onValueChange={setSelected} size="sm" value={selected} />
-          </HStack>
+          <Span flex={1} />
+
+          {pages.length > 1 && (
+            <IconButton
+              Icon={RefreshCwIcon}
+              h="full"
+              onClick={cyclePage}
+              size="2xs"
+              variant="ghost"
+            />
+          )}
+          <Checkbox onValueChange={setSelected} size="sm" value={selected} />
         </AlbumCard.Header>
 
         <AlbumCardContent
@@ -118,11 +124,15 @@ export function createResourcesAlbumCard<
           gap={0}
           localizedResource={localizedResource}
           overflow="auto"
-          separator={<AlbumCard.Separator w="full" />}
+          separator={<AlbumCard.SeparatorH />}
           w="full"
         />
 
-        <AlbumCard.Caption bgColor={palette.footerBg} color={palette.footerFg}>
+        <AlbumCard.Caption
+          bgColor={palette.footerBg}
+          color={palette.footerFg}
+          fontWeight="bold"
+        >
           <Span>{localizedResource.campaign}</Span>
           <Span textTransform="uppercase">{localizedResource.page}</Span>
         </AlbumCard.Caption>

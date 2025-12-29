@@ -56,10 +56,9 @@ export function CreaturesAlbumCardPage0({
       <AlbumCard.Caption>{title}</AlbumCard.Caption>
 
       <HStack
-        gap={3}
-        px={3}
-        py={2}
-        separator={<AlbumCard.Separator h="full" />}
+        gap={AlbumCard.size4}
+        px={AlbumCard.size4}
+        py={AlbumCard.size3}
         w="full"
       >
         <AlbumCard.Info
@@ -99,6 +98,8 @@ export function CreaturesAlbumCardPage0({
             <GridItem colSpan={3}>{exp}</GridItem>
           </AlbumCard.InfoCell>
         </AlbumCard.Info>
+
+        <AlbumCard.SeparatorV />
 
         <SimpleGrid flex={1} gap={1} templateColumns="1.8em repeat(3, 1fr)">
           <Span />

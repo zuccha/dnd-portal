@@ -1,10 +1,9 @@
 import {
+  Box,
   Em,
   GridItem,
   type GridItemProps,
   HStack,
-  Separator,
-  type SeparatorProps,
   SimpleGrid,
   type SimpleGridProps,
   Span,
@@ -27,27 +26,19 @@ export default function AlbumCard({ children, ...props }: AlbumCardProps) {
       className="light"
       color="fg"
       fontFamily="Lato"
-      h="28em"
+      fontSize={size4}
+      gap={0}
+      h={cardH}
       lineHeight={1.2}
       overflow="hidden"
       shadow="sm"
-      w="20em"
+      w={cardW}
       {...props}
     >
-      <VStack flex={1} fontSize="xs" gap={0} overflow="hidden" w="full">
-        {children}
-      </VStack>
+      {children}
     </VStack>
   );
 }
-
-AlbumCard.Caption = AlbumCardCaption;
-AlbumCard.Description = AlbumCardDescription;
-AlbumCard.Header = AlbumCardHeader;
-AlbumCard.Info = AlbumCardInfo;
-AlbumCard.InfoCell = AlbumCardInfoCell;
-AlbumCard.InfoSeparator = AlbumCardInfoSeparator;
-AlbumCard.Separator = AlbumCardSeparator;
 
 //------------------------------------------------------------------------------
 // Album Card Caption
@@ -60,8 +51,8 @@ function AlbumCardCaption(props: AlbumCardCaptionProps) {
     <HStack
       align="flex-start"
       justify="space-between"
-      px={3}
-      py={1.5}
+      px={size4}
+      py={size2}
       w="full"
       {...props}
     />
@@ -84,10 +75,10 @@ function AlbumCardDescription({
     <VStack
       align="flex-start"
       flex={1}
-      gap={1}
+      gap={size1}
       overflow="auto"
-      px={3}
-      py={2}
+      px={size4}
+      py={size3}
       w="full"
       {...rest}
     >
@@ -101,7 +92,7 @@ function AlbumCardDescription({
 const patterns = [
   {
     regex: /##(.+?)##/,
-    render: (val: ReactNode) => <Span fontSize="sm">{val}</Span>,
+    render: (val: ReactNode) => <Span fontSize={size5}>{val}</Span>,
   },
   {
     regex: /\*\*(.+?)\*\*/,
@@ -123,11 +114,12 @@ function AlbumCardHeader(props: AlbumCardHeaderProps) {
   return (
     <HStack
       align="flex-start"
-      fontSize="md"
+      borderBottomWidth={size0}
+      fontSize={size6}
       fontWeight="bold"
       position="relative"
-      px={3}
-      py={2}
+      px={size4}
+      py={size3}
       w="full"
       {...props}
     />
@@ -143,10 +135,10 @@ type AlbumCardInfoProps = SimpleGridProps;
 function AlbumCardInfo(props: AlbumCardInfoProps) {
   return (
     <SimpleGrid
-      gapX={2}
-      gapY={1}
-      px={3}
-      py={2}
+      gapX={size3}
+      gapY={size1}
+      px={size4}
+      py={size3}
       templateColumns="max-content 1fr"
       w="full"
       {...props}
@@ -180,16 +172,61 @@ type AlbumCardInfoSeparatorProps = GridItemProps;
 
 function AlbumCardInfoSeparator(props: AlbumCardInfoSeparatorProps) {
   return (
-    <GridItem bgColor="border" colSpan={2} h="1px" mx={-3} my={1} {...props} />
+    <GridItem
+      bgColor="border"
+      colSpan={2}
+      h={size0}
+      mx={`-${size4}`}
+      my={size1}
+      {...props}
+    />
   );
 }
 
 //------------------------------------------------------------------------------
-// Album Card Separator
+// Album Card Separator H
 //------------------------------------------------------------------------------
 
-type AlbumCardSeparatorProps = SeparatorProps;
-
-function AlbumCardSeparator(props: AlbumCardSeparatorProps) {
-  return <Separator {...props} />;
+function AlbumCardSeparatorH() {
+  return <Box bgColor="border" h={size0} w="full" />;
 }
+
+//------------------------------------------------------------------------------
+// Album Card Separator V
+//------------------------------------------------------------------------------
+
+function AlbumCardSeparatorV() {
+  return <Box bgColor="border" h="full" w={size0} />;
+}
+
+//------------------------------------------------------------------------------
+// Constants
+//------------------------------------------------------------------------------
+
+const cardH = "3.5in";
+const cardW = "2.5in";
+
+const size0 = `${(3.5 * 0.0625) / 28}in`;
+const size1 = `${(3.5 * 0.25) / 28}in`;
+const size2 = `${(3.5 * 0.375) / 28}in`;
+const size3 = `${(3.5 * 0.5) / 28}in`;
+const size4 = `${(3.5 * 0.75) / 28}in`;
+const size5 = `${(3.5 * 0.875) / 28}in`;
+const size6 = `${(3.5 * 1) / 28}in`;
+
+AlbumCard.Caption = AlbumCardCaption;
+AlbumCard.Description = AlbumCardDescription;
+AlbumCard.Header = AlbumCardHeader;
+AlbumCard.Info = AlbumCardInfo;
+AlbumCard.InfoCell = AlbumCardInfoCell;
+AlbumCard.InfoSeparator = AlbumCardInfoSeparator;
+AlbumCard.SeparatorH = AlbumCardSeparatorH;
+AlbumCard.SeparatorV = AlbumCardSeparatorV;
+
+AlbumCard.size0 = size0;
+AlbumCard.size1 = size1;
+AlbumCard.size2 = size2;
+AlbumCard.size3 = size3;
+AlbumCard.size4 = size4;
+AlbumCard.size5 = size5;
+AlbumCard.size6 = size6;
