@@ -7,7 +7,7 @@ import {
   VStack,
   createListCollection,
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
@@ -18,6 +18,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { createLocalStore } from "~/store/local-store";
 import { range } from "~/ui/array";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
@@ -65,8 +66,8 @@ export function createResourcesPrintMode<
     const { t } = useI18nLangContext(i18nContext);
     const filteredResourceIds = store.useFilteredResourceIds(campaignId);
 
-    const [paperLayout, setPaperLayout] = useState<PaperLayout>("portrait");
-    const [paperType, setPaperType] = useState<PaperType>("a4");
+    const [paperLayout, setPaperLayout] = usePaperLayout();
+    const [paperType, setPaperType] = usePaperType();
     const [paperHeight, paperWidth] =
       paperLayout === "portrait" ?
         [paperSizes[paperType].height, paperSizes[paperType].width]
@@ -81,8 +82,8 @@ export function createResourcesPrintMode<
       py: (paperHeight - rows * AlbumCard.height) / 2,
     };
 
-    const [cropMarksVisible, setCropMarksVisible] = useState(true);
-    const [cropMarksLength, setCropMarksLength] = useState(0.2);
+    const [cropMarksVisible, setCropMarksVisible] = useCropMarksVisible();
+    const [cropMarksLength, setCropMarksLength] = useCropMarksLength();
     const cropMarkW = Math.min(cropMarksLength, paperPadding.px);
     const cropMarkH = Math.min(cropMarksLength, paperPadding.py);
 
@@ -364,8 +365,6 @@ const paperTypes = paperTypeSchema.options;
 
 const paperLayoutSchema = z.enum(["landscape", "portrait"]);
 
-type PaperLayout = z.infer<typeof paperLayoutSchema>;
-
 const paperLayouts = paperLayoutSchema.options;
 
 //------------------------------------------------------------------------------
@@ -380,6 +379,34 @@ const paperSizes: Record<PaperType, { height: number; width: number }> = {
   letter: { height: 11, width: 8.5 },
   tabloid: { height: 17, width: 11 },
 };
+
+//------------------------------------------------------------------------------
+// Store
+//------------------------------------------------------------------------------
+
+const useCropMarksLength = createLocalStore(
+  "print_mode.crop_marks_length",
+  0.2,
+  z.number().parse,
+).use;
+
+const useCropMarksVisible = createLocalStore(
+  "print_mode.crop_marks_visible",
+  true,
+  z.boolean().parse,
+).use;
+
+const usePaperType = createLocalStore(
+  "print_mode.paper_type",
+  "a4",
+  paperTypeSchema.parse,
+).use;
+
+const usePaperLayout = createLocalStore(
+  "print_mode.paper_layout",
+  "portrait",
+  paperLayoutSchema.parse,
+).use;
 
 //------------------------------------------------------------------------------
 // I18n Context
