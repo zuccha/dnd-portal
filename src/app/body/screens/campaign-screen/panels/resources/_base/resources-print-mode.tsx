@@ -62,17 +62,30 @@ export function createResourcesPrintMode<
     const { t } = useI18nLangContext(i18nContext);
     const filteredResourceIds = store.useFilteredResourceIds(campaignId);
 
+    const [paperLayout, setPaperLayout] = useState<PaperLayout>("portrait");
     const [paperType, setPaperType] = useState<PaperType>("a4");
-    const paperSize = paperSizes[paperType];
+    const [paperHeight, paperWidth] =
+      paperLayout === "portrait" ?
+        [paperSizes[paperType].height, paperSizes[paperType].width]
+      : [paperSizes[paperType].width, paperSizes[paperType].height];
 
-    const columns = Math.floor(paperSize.width / AlbumCard.width);
-    const rows = Math.floor(paperSize.height / AlbumCard.height);
+    const columns = Math.floor(paperWidth / AlbumCard.width);
+    const rows = Math.floor(paperHeight / AlbumCard.height);
     const cardsPerPaper = columns * rows;
 
     const paperPadding = {
-      px: `${(paperSize.width - columns * AlbumCard.width) / 2}in`,
-      py: `${(paperSize.height - rows * AlbumCard.height) / 2}in`,
+      px: `${(paperWidth - columns * AlbumCard.width) / 2}in`,
+      py: `${(paperHeight - rows * AlbumCard.height) / 2}in`,
     };
+
+    const paperLayoutOptions = useMemo(() => {
+      return createListCollection({
+        items: paperLayouts.map((paperLayout) => ({
+          label: t(`paper_layout[${paperLayout}]`),
+          value: paperLayout,
+        })),
+      });
+    }, [t]);
 
     const paperTypeOptions = useMemo(() => {
       return createListCollection({
@@ -124,7 +137,7 @@ export function createResourcesPrintMode<
                 borderStyle="dashed"
                 borderTopWidth={2}
                 className="not-printable"
-                w={`${paperSize.width}in`}
+                w={`${paperWidth}in`}
               />
             }
           >
@@ -132,10 +145,10 @@ export function createResourcesPrintMode<
               <Flex
                 alignContent="flex-start"
                 bgColor="white"
-                height={`${paperSize.height}in`}
+                height={`${paperHeight}in`}
                 justify="flex-start"
                 key={paperNumber}
-                width={`${paperSize.width}in`}
+                width={`${paperWidth}in`}
                 wrap="wrap"
                 {...paperPadding}
               >
@@ -163,6 +176,15 @@ export function createResourcesPrintMode<
           </HStack>
 
           <VStack w="full">
+            <Field label={t("paper_layout.label")}>
+              <Select
+                onValueChange={setPaperLayout}
+                options={paperLayoutOptions}
+                size="xs"
+                value={paperLayout}
+              />
+            </Field>
+
             <Field label={t("paper_type.label")}>
               <Select
                 onValueChange={setPaperType}
@@ -193,7 +215,7 @@ export function createResourcesPrintMode<
 }
 
 //------------------------------------------------------------------------------
-// Paper Sizes
+// Paper Type
 //------------------------------------------------------------------------------
 
 const paperTypeSchema = z.enum([
@@ -208,6 +230,20 @@ const paperTypeSchema = z.enum([
 type PaperType = z.infer<typeof paperTypeSchema>;
 
 const paperTypes = paperTypeSchema.options;
+
+//------------------------------------------------------------------------------
+// Paper Layout
+//------------------------------------------------------------------------------
+
+const paperLayoutSchema = z.enum(["landscape", "portrait"]);
+
+type PaperLayout = z.infer<typeof paperLayoutSchema>;
+
+const paperLayouts = paperLayoutSchema.options;
+
+//------------------------------------------------------------------------------
+// Paper Sizes
+//------------------------------------------------------------------------------
 
 const paperSizes: Record<PaperType, { height: number; width: number }> = {
   a3: { height: 16.54, width: 11.69 },
@@ -226,6 +262,18 @@ const i18nContext = {
   "close": {
     en: "Close",
     it: "Chiudi",
+  },
+  "paper_layout.label": {
+    en: "Layout",
+    it: "Layout",
+  },
+  "paper_layout[landscape]": {
+    en: "Landscape",
+    it: "Orizzontale",
+  },
+  "paper_layout[portrait]": {
+    en: "Portrait",
+    it: "Verticale",
   },
   "paper_type.label": {
     en: "Paper Size",
