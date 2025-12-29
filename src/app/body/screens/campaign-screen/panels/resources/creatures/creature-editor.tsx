@@ -608,7 +608,12 @@ function CreatureEditorActions({ defaultActions }: { defaultActions: string }) {
 
   return (
     <Field error={message} label={t("actions.label")}>
-      <Textarea placeholder={t("actions.placeholder")} rows={5} {...rest} />
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("actions.placeholder")}
+        rows={5}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -630,6 +635,7 @@ function CreatureEditorBonusActions({
   return (
     <Field error={message} label={t("bonus_actions.label")}>
       <Textarea
+        bgColor="bg.info"
         placeholder={t("bonus_actions.placeholder")}
         rows={5}
         {...rest}
@@ -656,6 +662,7 @@ function CreatureEditorLegendaryActions({
   return (
     <Field error={message} label={t("legendary_actions.label")}>
       <Textarea
+        bgColor="bg.info"
         placeholder={t("legendary_actions.placeholder")}
         rows={5}
         {...rest}
@@ -679,7 +686,12 @@ function CreatureEditorReactions({
 
   return (
     <Field error={message} label={t("reactions.label")}>
-      <Textarea placeholder={t("reactions.placeholder")} rows={5} {...rest} />
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("reactions.placeholder")}
+        rows={5}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -695,7 +707,12 @@ function CreatureEditorTraits({ defaultTraits }: { defaultTraits: string }) {
 
   return (
     <Field error={message} label={t("traits.label")}>
-      <Textarea placeholder={t("traits.placeholder")} rows={5} {...rest} />
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("traits.placeholder")}
+        rows={5}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -711,7 +728,7 @@ function CreatureEditorGear({ defaultGear }: { defaultGear: string }) {
 
   return (
     <Field error={message} label={t("gear.label")}>
-      <Input placeholder={t("gear.placeholder")} {...rest} />
+      <Input bgColor="bg.info" placeholder={t("gear.placeholder")} {...rest} />
     </Field>
   );
 }
@@ -818,7 +835,11 @@ function CreatureEditorLanguages({
 
   return (
     <Field error={message} label={t("languages.label")}>
-      <Input placeholder={t("languages.placeholder")} {...rest} />
+      <Input
+        bgColor="bg.info"
+        placeholder={t("languages.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -834,7 +855,12 @@ function CreatureEditorName({ defaultName }: { defaultName: string }) {
 
   return (
     <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+      <Input
+        autoComplete="off"
+        bgColor="bg.info"
+        placeholder={t("name.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -850,7 +876,7 @@ function CreatureEditorPage({ defaultPage }: { defaultPage: number }) {
 
   return (
     <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
+      <NumberInput bgColor="bg.info" {...rest} w="6em" />
     </Field>
   );
 }
@@ -991,7 +1017,11 @@ function CreatureEditorSenses({ defaultSenses }: { defaultSenses: string }) {
 
   return (
     <Field error={message} label={t("senses.label")}>
-      <Input placeholder={t("senses.placeholder")} {...rest} />
+      <Input
+        bgColor="bg.info"
+        placeholder={t("senses.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }

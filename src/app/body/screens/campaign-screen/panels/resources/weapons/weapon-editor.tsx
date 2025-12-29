@@ -236,7 +236,12 @@ function WeaponEditorName({ defaultName }: { defaultName: string }) {
 
   return (
     <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+      <Input
+        autoComplete="off"
+        bgColor="bg.info"
+        placeholder={t("name.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -252,7 +257,12 @@ function WeaponEditorNotes({ defaultNotes }: { defaultNotes: string }) {
 
   return (
     <Field error={message} label={t("notes.label")}>
-      <Textarea placeholder={t("notes.placeholder")} rows={5} {...rest} />
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("notes.placeholder")}
+        rows={5}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -268,7 +278,7 @@ function WeaponEditorPage({ defaultPage }: { defaultPage: number }) {
 
   return (
     <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
+      <NumberInput bgColor="bg.info" {...rest} w="6em" />
     </Field>
   );
 }
@@ -480,8 +490,8 @@ const i18nContext = {
     it: "Note",
   },
   "notes.placeholder": {
-    en: "E.g.: Inflicts double damage to dragons.",
-    it: "Es: Infligge il doppio dei danni ai draghi.",
+    en: "None",
+    it: "Nessuna",
   },
   "page.label": {
     en: "Page",

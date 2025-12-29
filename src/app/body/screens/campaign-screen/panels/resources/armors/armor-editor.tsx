@@ -444,7 +444,12 @@ function ArmorEditorName({ defaultName }: { defaultName: string }) {
 
   return (
     <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+      <Input
+        autoComplete="off"
+        bgColor="bg.info"
+        placeholder={t("name.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -460,7 +465,12 @@ function ArmorEditorNotes({ defaultNotes }: { defaultNotes: string }) {
 
   return (
     <Field error={message} label={t("notes.label")}>
-      <Textarea placeholder={t("notes.placeholder")} rows={5} {...rest} />
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("notes.placeholder")}
+        rows={5}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -476,7 +486,7 @@ function ArmorEditorPage({ defaultPage }: { defaultPage: number }) {
 
   return (
     <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
+      <NumberInput bgColor="bg.info" {...rest} w="6em" />
     </Field>
   );
 }
@@ -717,8 +727,8 @@ const i18nContext = {
     it: "Note",
   },
   "notes.placeholder": {
-    en: "E.g.: Grants resistance to fire damage.",
-    it: "Es: Fornisce resistenza ai danni da fuoco.",
+    en: "None",
+    it: "Nessuna",
   },
   "page.label": {
     en: "Page",

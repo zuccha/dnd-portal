@@ -75,7 +75,12 @@ function EldritchInvocationEditorDescription({
 
   return (
     <Field error={message} label={t("description.label")}>
-      <Textarea placeholder={t("description.placeholder")} rows={5} {...rest} />
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("description.placeholder")}
+        rows={5}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -125,7 +130,12 @@ function EldritchInvocationEditorName({
 
   return (
     <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+      <Input
+        autoComplete="off"
+        bgColor="bg.info"
+        placeholder={t("name.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -145,7 +155,7 @@ function EldritchInvocationEditorPage({
 
   return (
     <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
+      <NumberInput bgColor="bg.info" {...rest} w="6em" />
     </Field>
   );
 }
@@ -168,6 +178,7 @@ function EldritchInvocationEditorPrerequisite({
     <Field error={message} label={t("prerequisite.label")}>
       <Input
         autoComplete="off"
+        bgColor="bg.info"
         placeholder={t("prerequisite.placeholder")}
         {...rest}
       />

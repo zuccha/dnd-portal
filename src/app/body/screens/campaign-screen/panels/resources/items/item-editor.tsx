@@ -90,7 +90,12 @@ function ItemEditorName({ defaultName }: { defaultName: string }) {
 
   return (
     <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+      <Input
+        autoComplete="off"
+        bgColor="bg.info"
+        placeholder={t("name.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -106,7 +111,12 @@ function ItemEditorNotes({ defaultNotes }: { defaultNotes: string }) {
 
   return (
     <Field error={message} label={t("notes.label")}>
-      <Textarea placeholder={t("notes.placeholder")} rows={5} {...rest} />
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("notes.placeholder")}
+        rows={5}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -122,7 +132,7 @@ function ItemEditorPage({ defaultPage }: { defaultPage: number }) {
 
   return (
     <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
+      <NumberInput bgColor="bg.info" {...rest} w="6em" />
     </Field>
   );
 }

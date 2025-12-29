@@ -225,7 +225,12 @@ function SpellEditorDescription({
 
   return (
     <Field error={message} label={t("description.label")}>
-      <Textarea {...rest} h="12em" placeholder={t("description.placeholder")} />
+      <Textarea
+        bgColor="bg.info"
+        {...rest}
+        h="12em"
+        placeholder={t("description.placeholder")}
+      />
     </Field>
   );
 }
@@ -314,7 +319,11 @@ function SpellEditorMaterials({
 
   return (
     <Field error={message} label={t("materials.label")}>
-      <Input placeholder={t("materials.placeholder")} {...rest} />
+      <Input
+        bgColor="bg.info"
+        placeholder={t("materials.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -330,7 +339,12 @@ function SpellEditorName({ defaultName }: { defaultName: string }) {
 
   return (
     <Field error={message} label={t("name.label")}>
-      <Input autoComplete="off" placeholder={t("name.placeholder")} {...rest} />
+      <Input
+        autoComplete="off"
+        bgColor="bg.info"
+        placeholder={t("name.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -346,7 +360,7 @@ function SpellEditorPage({ defaultPage }: { defaultPage: number }) {
 
   return (
     <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput {...rest} w="6em" />
+      <NumberInput bgColor="bg.info" {...rest} w="6em" />
     </Field>
   );
 }
@@ -457,7 +471,11 @@ function SpellEditorUpgrade({
 
   return (
     <Field error={message} label={tp("upgrade.label", level)}>
-      <Textarea placeholder={tp("upgrade.placeholder", level)} {...rest} />
+      <Textarea
+        bgColor="bg.info"
+        placeholder={tp("upgrade.placeholder", level)}
+        {...rest}
+      />
     </Field>
   );
 }
