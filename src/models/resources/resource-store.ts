@@ -194,7 +194,7 @@ export function createResourceStore<
       p_id: resourceId,
     });
     try {
-      return resourceSchema.parse(data);
+      return resourceSchema.optional().parse(data);
     } catch (e) {
       console.error(e);
       return undefined;
