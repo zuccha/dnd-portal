@@ -1,4 +1,4 @@
-import { Span, type StackProps, VStack } from "@chakra-ui/react";
+import { type StackProps } from "@chakra-ui/react";
 import { useCallback } from "react";
 import type {
   DBResource,
@@ -9,7 +9,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import AlbumCard, { type AlbumCardProps } from "~/ui/album-card";
-import ResourcesAlbumCardHeader from "./resources-album-card-header";
+import ResourcesAlbumCardFrame from "./resources-album-card-frame";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ export type ResourcesAlbumCardExtra<
 // Create Resources Album Card
 //------------------------------------------------------------------------------
 
-export type ResourcesAlbumCardProps = AlbumCardProps & {
+export type ResourcesAlbumCardProps = Omit<AlbumCardProps, "children"> & {
   campaignId: string;
   editable?: boolean;
   gradientIntensity?: number;
@@ -52,18 +52,16 @@ export function createResourcesAlbumCard<
 ) {
   function ResourcesAlbumCard({
     campaignId,
-    editable = false,
+    editable,
     gradientIntensity = 40,
-    palette = defaultPalette,
-    printMode = false,
+    palette,
+    printMode,
     resourceId,
     zoom,
     ...rest
   }: ResourcesAlbumCardProps) {
     const localizedResource = store.useLocalizedResource(resourceId);
     const selected = store.useResourceSelection(resourceId);
-
-    const bgImage = `radial-gradient(circle, {colors.bg} 0%, {colors.bg} ${gradientIntensity}%, ${palette.gradientBg} 100%)`;
 
     const setSelected = useCallback(
       (nextSelected: boolean) =>
@@ -80,39 +78,32 @@ export function createResourcesAlbumCard<
     const details = getDetails(localizedResource);
 
     return (
-      <AlbumCard bgImage={bgImage} style={{ zoom }} {...rest}>
-        <ResourcesAlbumCardHeader
-          editable={editable}
-          name={localizedResource.name}
-          onEdit={edit}
-          onSelectionChange={setSelected}
-          printMode={printMode}
-          selected={selected}
-          visibility={localizedResource._raw.visibility}
+      <ResourcesAlbumCardFrame
+        campaignName={localizedResource.campaign}
+        campaignPage={localizedResource.page}
+        campaignRole={localizedResource._raw.visibility}
+        editable={editable}
+        gradientIntensity={gradientIntensity}
+        name={localizedResource.name}
+        onEdit={edit}
+        onSelectionChange={setSelected}
+        palette={palette}
+        printMode={printMode}
+        selected={selected}
+        zoom={zoom}
+        {...rest}
+      >
+        <AlbumCardContent
+          borderBottomWidth={AlbumCard.size0}
+          borderColor="border.emphasized"
+          gap={0}
+          localizedResource={localizedResource}
+          separator={<AlbumCard.SeparatorH />}
+          w="full"
         />
 
-        <VStack flex={1} gap={0} overflow="auto" w="full">
-          <AlbumCardContent
-            borderBottomWidth={AlbumCard.size0}
-            borderColor="border.emphasized"
-            gap={0}
-            localizedResource={localizedResource}
-            separator={<AlbumCard.SeparatorH />}
-            w="full"
-          />
-
-          {details && <AlbumCard.Description description={details} />}
-        </VStack>
-
-        <AlbumCard.Caption
-          bgColor={palette.footerBg}
-          color={palette.footerFg}
-          fontWeight="bold"
-        >
-          <Span>{localizedResource.campaign}</Span>
-          <Span textTransform="uppercase">{localizedResource.page}</Span>
-        </AlbumCard.Caption>
-      </AlbumCard>
+        {details && <AlbumCard.Description description={details} />}
+      </ResourcesAlbumCardFrame>
     );
   }
 
@@ -121,13 +112,3 @@ export function createResourcesAlbumCard<
 
   return ResourcesAlbumCard;
 }
-
-//------------------------------------------------------------------------------
-// Default Palette
-//------------------------------------------------------------------------------
-
-const defaultPalette = {
-  footerBg: "gray.700",
-  footerFg: "gray.50",
-  gradientBg: "{colors.gray.100}",
-};

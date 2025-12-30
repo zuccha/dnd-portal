@@ -11,23 +11,23 @@ import Link from "~/ui/link";
 //------------------------------------------------------------------------------
 
 export type ResourcesAlbumCardHeaderProps = {
+  campaignRole: CampaignRole;
   editable?: boolean;
   name: string;
   onEdit: () => void;
   onSelectionChange: (selected: boolean) => void;
   printMode?: boolean;
   selected?: boolean;
-  visibility: CampaignRole;
 };
 
 export default function ResourcesAlbumCardHeader({
+  campaignRole,
   editable = false,
   name,
   onEdit,
   onSelectionChange,
   printMode = false,
   selected = false,
-  visibility,
 }: ResourcesAlbumCardHeaderProps) {
   if (printMode)
     return (
@@ -41,7 +41,7 @@ export default function ResourcesAlbumCardHeader({
       {editable ?
         <>
           <Icon
-            Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}
+            Icon={campaignRole === "player" ? EyeIcon : EyeClosedIcon}
             h="full"
             opacity={0.8}
             size="xs"
