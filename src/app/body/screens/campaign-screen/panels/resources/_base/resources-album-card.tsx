@@ -1,5 +1,4 @@
 import { Span, type StackProps, VStack } from "@chakra-ui/react";
-import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { useCallback } from "react";
 import type {
   DBResource,
@@ -10,9 +9,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import AlbumCard, { type AlbumCardProps } from "~/ui/album-card";
-import Checkbox from "~/ui/checkbox";
-import Icon from "~/ui/icon";
-import Link from "~/ui/link";
+import ResourcesAlbumCardHeader from "./resources-album-card-header";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -80,37 +77,19 @@ export function createResourcesAlbumCard<
 
     if (!localizedResource) return null;
 
-    const { name } = localizedResource;
-    const { visibility } = localizedResource._raw;
-
     const details = getDetails(localizedResource);
 
     return (
       <AlbumCard bgImage={bgImage} style={{ zoom }} {...rest}>
-        {printMode ?
-          <AlbumCard.Header justifyContent="center" textAlign="center">
-            {name}
-          </AlbumCard.Header>
-        : <AlbumCard.Header>
-            {editable ?
-              <>
-                <Icon
-                  Icon={visibility === "player" ? EyeIcon : EyeClosedIcon}
-                  h="full"
-                  opacity={0.8}
-                  size="xs"
-                />
-                <Link color="inherit" onClick={edit}>
-                  {name}
-                </Link>
-              </>
-            : <Span color="inherit">{name}</Span>}
-
-            <Span flex={1} />
-
-            <Checkbox onValueChange={setSelected} size="sm" value={selected} />
-          </AlbumCard.Header>
-        }
+        <ResourcesAlbumCardHeader
+          editable={editable}
+          name={localizedResource.name}
+          onEdit={edit}
+          onSelectionChange={setSelected}
+          printMode={printMode}
+          selected={selected}
+          visibility={localizedResource._raw.visibility}
+        />
 
         <VStack flex={1} gap={0} overflow="auto" w="full">
           <AlbumCardContent
