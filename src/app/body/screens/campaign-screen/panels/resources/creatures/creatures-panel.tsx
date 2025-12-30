@@ -14,10 +14,7 @@ import CreatureEditor from "./creature-editor";
 import creatureEditorForm, {
   type CreatureEditorFormFields,
 } from "./creature-editor-form";
-import {
-  CreaturesAlbumCardPage0,
-  CreaturesAlbumCardPage1,
-} from "./creatures-album-card";
+import CreaturesAlbumCardContent from "./creatures-album-card-content";
 import CreaturesFilters from "./creatures-filters";
 
 //------------------------------------------------------------------------------
@@ -188,7 +185,10 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
 //------------------------------------------------------------------------------
 
 const CreaturesPanel = createResourcesPanel(creatureStore, {
-  album: { pages: [CreaturesAlbumCardPage0, CreaturesAlbumCardPage1] },
+  album: {
+    AlbumCardContent: CreaturesAlbumCardContent,
+    getDetails: (localizedCreature) => localizedCreature.description,
+  },
   filters: { Filters: CreaturesFilters },
   form: { Editor: CreatureEditor, form: creatureEditorForm, parseFormData },
   table: { columns, detailsKey: "description" },

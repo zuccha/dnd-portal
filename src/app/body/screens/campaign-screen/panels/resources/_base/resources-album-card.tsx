@@ -1,6 +1,6 @@
-import { Span, type StackProps } from "@chakra-ui/react";
-import { EyeClosedIcon, EyeIcon, RefreshCwIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { Span, type StackProps, VStack } from "@chakra-ui/react";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
+import { useCallback } from "react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -12,7 +12,6 @@ import type { ResourceStore } from "~/models/resources/resource-store";
 import AlbumCard, { type AlbumCardProps } from "~/ui/album-card";
 import Checkbox from "~/ui/checkbox";
 import Icon from "~/ui/icon";
-import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import type { ResourcesContext } from "./resources-context";
 
@@ -24,7 +23,8 @@ export type ResourcesAlbumCardExtra<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
-  pages: React.FC<StackProps & { localizedResource: L }>[];
+  AlbumCardContent: React.FC<StackProps & { localizedResource: L }>;
+  getDetails: (localizedResource: L) => string;
 };
 
 //------------------------------------------------------------------------------
@@ -51,13 +51,12 @@ export function createResourcesAlbumCard<
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
-  { pages }: ResourcesAlbumCardExtra<R, L>,
+  { AlbumCardContent, getDetails }: ResourcesAlbumCardExtra<R, L>,
 ) {
   function ResourcesAlbumCard({
     campaignId,
     editable = false,
     gradientIntensity = 40,
-    initialPageNumber = 0,
     palette = defaultPalette,
     printMode = false,
     resourceId,
@@ -67,13 +66,7 @@ export function createResourcesAlbumCard<
     const localizedResource = store.useLocalizedResource(resourceId);
     const selected = store.useResourceSelection(resourceId);
 
-    const [pageNumber, setPageNumber] = useState(initialPageNumber);
-
     const bgImage = `radial-gradient(circle, {colors.bg} 0%, {colors.bg} ${gradientIntensity}%, ${palette.gradientBg} 100%)`;
-
-    const cyclePage = useCallback(() => {
-      setPageNumber((prev) => (prev + 1) % pages.length);
-    }, []);
 
     const setSelected = useCallback(
       (nextSelected: boolean) =>
@@ -90,7 +83,7 @@ export function createResourcesAlbumCard<
     const { name } = localizedResource;
     const { visibility } = localizedResource._raw;
 
-    const AlbumCardContent = pages[pageNumber]!;
+    const details = getDetails(localizedResource);
 
     return (
       <AlbumCard bgImage={bgImage} style={{ zoom }} {...rest}>
@@ -115,27 +108,22 @@ export function createResourcesAlbumCard<
 
             <Span flex={1} />
 
-            {pages.length > 1 && (
-              <IconButton
-                Icon={RefreshCwIcon}
-                h="full"
-                onClick={cyclePage}
-                size="2xs"
-                variant="ghost"
-              />
-            )}
             <Checkbox onValueChange={setSelected} size="sm" value={selected} />
           </AlbumCard.Header>
         }
 
-        <AlbumCardContent
-          flex={1}
-          gap={0}
-          localizedResource={localizedResource}
-          overflow="auto"
-          separator={<AlbumCard.SeparatorH />}
-          w="full"
-        />
+        <VStack flex={1} gap={0} overflow="auto" w="full">
+          <AlbumCardContent
+            borderBottomWidth={AlbumCard.size0}
+            borderColor="border.emphasized"
+            gap={0}
+            localizedResource={localizedResource}
+            separator={<AlbumCard.SeparatorH />}
+            w="full"
+          />
+
+          {details && <AlbumCard.Description description={details} />}
+        </VStack>
 
         <AlbumCard.Caption
           bgColor={palette.footerBg}

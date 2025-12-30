@@ -4,17 +4,17 @@ import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/local
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Weapons Album Card Page 0
+// Weapons Album Card Content
 //------------------------------------------------------------------------------
 
-export type WeaponsAlbumCardPage0Props = StackProps & {
+export type WeaponsAlbumCardContentProps = StackProps & {
   localizedResource: LocalizedWeapon;
 };
 
-export function WeaponsAlbumCardPage0({
+export default function WeaponsAlbumCardContent({
   localizedResource,
   ...rest
-}: WeaponsAlbumCardPage0Props) {
+}: WeaponsAlbumCardContentProps) {
   const { t } = useI18nLangContext(i18nContext);
 
   const {
@@ -22,7 +22,6 @@ export function WeaponsAlbumCardPage0({
     damage_extended,
     mastery,
     magic_type,
-    notes,
     properties_extended,
     type,
     weight,
@@ -60,8 +59,6 @@ export function WeaponsAlbumCardPage0({
           </AlbumCard.InfoCell>
         )}
       </AlbumCard.Info>
-
-      <AlbumCard.Description description={notes} />
     </VStack>
   );
 }

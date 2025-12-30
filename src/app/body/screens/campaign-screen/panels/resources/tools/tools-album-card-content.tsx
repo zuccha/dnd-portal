@@ -1,34 +1,24 @@
 import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
+import type { LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import AlbumCard from "~/ui/album-card";
+import RichText from "~/ui/rich-text";
 
 //------------------------------------------------------------------------------
-// Armors Album Card Page 0
+// Tools Album Card Content
 //------------------------------------------------------------------------------
 
-export type ArmorsAlbumCardPage0Props = StackProps & {
-  localizedResource: LocalizedArmor;
+export type ToolsAlbumCardContentProps = StackProps & {
+  localizedResource: LocalizedTool;
 };
 
-export function ArmorsAlbumCardPage0({
+export default function ToolsAlbumCardContent({
   localizedResource,
   ...rest
-}: ArmorsAlbumCardPage0Props) {
+}: ToolsAlbumCardContentProps) {
   const { t } = useI18nLangContext(i18nContext);
-
-  const {
-    _raw,
-    armor_class,
-    cost,
-    magic_type,
-    notes,
-    requirements,
-    stealth,
-    type,
-    weight,
-  } = localizedResource;
-
+  const { ability, cost, craft, magic_type, type, utilize, weight } =
+    localizedResource;
   return (
     <VStack {...rest}>
       <AlbumCard.Caption>
@@ -45,24 +35,20 @@ export function ArmorsAlbumCardPage0({
       </AlbumCard.Caption>
 
       <AlbumCard.Info>
-        <AlbumCard.InfoCell label={t("armor_class")}>
-          {armor_class}
-        </AlbumCard.InfoCell>
+        <AlbumCard.InfoCell label={t("ability")}>{ability}</AlbumCard.InfoCell>
 
-        {_raw.disadvantage_on_stealth && (
-          <AlbumCard.InfoCell label={t("stealth")}>
-            {stealth}
+        {utilize && (
+          <AlbumCard.InfoCell label={t("utilize")}>
+            {utilize}
           </AlbumCard.InfoCell>
         )}
 
-        {requirements && (
-          <AlbumCard.InfoCell label={t("requirements")}>
-            {requirements}
+        {craft && (
+          <AlbumCard.InfoCell label={t("craft")}>
+            <RichText text={craft} />
           </AlbumCard.InfoCell>
         )}
       </AlbumCard.Info>
-
-      <AlbumCard.Description description={notes} />
     </VStack>
   );
 }
@@ -72,16 +58,16 @@ export function ArmorsAlbumCardPage0({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  armor_class: {
-    en: "Armor Class",
-    it: "Classe Armatura",
+  ability: {
+    en: "Ability",
+    it: "Abilità",
   },
-  requirements: {
-    en: "Requirements",
-    it: "Requisiti",
+  craft: {
+    en: "Craft",
+    it: "Creazione",
   },
-  stealth: {
-    en: "Stealth",
-    it: "Furtività",
+  utilize: {
+    en: "Utilize",
+    it: "Utilizzo",
   },
 };

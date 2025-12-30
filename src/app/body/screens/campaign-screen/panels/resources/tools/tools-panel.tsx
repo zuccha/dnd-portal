@@ -13,7 +13,7 @@ import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
 import ToolEditor from "./tool-editor";
 import toolEditorForm, { type ToolEditorFormFields } from "./tool-editor-form";
-import { ToolsAlbumCardPage0 } from "./tools-album-card";
+import ToolsAlbumCardContent from "./tools-album-card-content";
 import ToolsFilters from "./tools-filters";
 
 //------------------------------------------------------------------------------
@@ -99,7 +99,10 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const ToolsPanel = createResourcesPanel(toolStore, {
-  album: { pages: [ToolsAlbumCardPage0] },
+  album: {
+    AlbumCardContent: ToolsAlbumCardContent,
+    getDetails: (localizedTool) => localizedTool.notes,
+  },
   filters: { Filters: ToolsFilters },
   form: { Editor: ToolEditor, form: toolEditorForm, parseFormData },
   table: { columns, detailsKey: "notes" },

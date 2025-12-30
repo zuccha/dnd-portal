@@ -15,7 +15,7 @@ import ArmorEditor from "./armor-editor";
 import armorEditorForm, {
   type ArmorEditorFormFields,
 } from "./armor-editor-form";
-import { ArmorsAlbumCardPage0 } from "./armors-album-card";
+import ArmorsAlbumCardContent from "./armors-album-card-content";
 import ArmorsFilters from "./armors-filters";
 
 //------------------------------------------------------------------------------
@@ -140,7 +140,10 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const ArmorsPanel = createResourcesPanel(armorStore, {
-  album: { pages: [ArmorsAlbumCardPage0] },
+  album: {
+    AlbumCardContent: ArmorsAlbumCardContent,
+    getDetails: (localizedArmor) => localizedArmor.notes,
+  },
   filters: { Filters: ArmorsFilters },
   form: { Editor: ArmorEditor, form: armorEditorForm, parseFormData },
   table: { columns, detailsKey: "notes" },

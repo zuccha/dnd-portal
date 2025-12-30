@@ -74,9 +74,7 @@ function AlbumCardDescription({
   return (
     <VStack
       align="flex-start"
-      flex={1}
       gap={size1}
-      overflow="auto"
       px={size4}
       py={size3}
       w="full"
@@ -115,6 +113,7 @@ function AlbumCardHeader(props: AlbumCardHeaderProps) {
     <HStack
       align="flex-start"
       borderBottomWidth={size0}
+      borderColor="border.emphasized"
       fontSize={size6}
       fontWeight="bold"
       position="relative"
@@ -173,9 +172,9 @@ type AlbumCardInfoSeparatorProps = GridItemProps;
 function AlbumCardInfoSeparator(props: AlbumCardInfoSeparatorProps) {
   return (
     <GridItem
-      bgColor="border"
+      borderColor="border.emphasized"
+      borderTopWidth={size0}
       colSpan={2}
-      h={size0}
       mx={`-${size4}`}
       my={size1}
       {...props}
@@ -188,7 +187,9 @@ function AlbumCardInfoSeparator(props: AlbumCardInfoSeparatorProps) {
 //------------------------------------------------------------------------------
 
 function AlbumCardSeparatorH() {
-  return <Box bgColor="border" h={size0} w="full" />;
+  return (
+    <Box borderColor="border.emphasized" borderTopWidth={size0} w="full" />
+  );
 }
 
 //------------------------------------------------------------------------------
@@ -196,7 +197,9 @@ function AlbumCardSeparatorH() {
 //------------------------------------------------------------------------------
 
 function AlbumCardSeparatorV() {
-  return <Box bgColor="border" h="full" w={size0} />;
+  return (
+    <Box borderColor="border.emphasized" borderRightWidth={size0} h="full" />
+  );
 }
 
 //------------------------------------------------------------------------------

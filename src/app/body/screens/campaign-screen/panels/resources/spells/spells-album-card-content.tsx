@@ -4,22 +4,21 @@ import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Spells Album Card Page 0
+// Spells Album Card Content
 //------------------------------------------------------------------------------
 
-export type SpellsAlbumCardPage0Props = StackProps & {
+export type SpellsAlbumCardContentProps = StackProps & {
   localizedResource: LocalizedSpell;
 };
 
-export function SpellsAlbumCardPage0({
+export default function SpellsAlbumCardContent({
   localizedResource,
   ...rest
-}: SpellsAlbumCardPage0Props) {
+}: SpellsAlbumCardContentProps) {
   const {
     casting_time_with_ritual,
     character_classes,
     components,
-    description,
     duration_with_concentration,
     materials,
     range,
@@ -56,8 +55,6 @@ export function SpellsAlbumCardPage0({
           </AlbumCard.InfoCell>
         )}
       </AlbumCard.Info>
-
-      <AlbumCard.Description description={description} />
     </VStack>
   );
 }

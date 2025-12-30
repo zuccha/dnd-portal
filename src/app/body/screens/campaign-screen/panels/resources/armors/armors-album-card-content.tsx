@@ -1,24 +1,33 @@
 import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
+import type { LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import AlbumCard from "~/ui/album-card";
-import RichText from "~/ui/rich-text";
 
 //------------------------------------------------------------------------------
-// Tools Album Card Page 0
+// Armors Album Card Content
 //------------------------------------------------------------------------------
 
-export type ToolsAlbumCardPage0Props = StackProps & {
-  localizedResource: LocalizedTool;
+export type ArmorsAlbumCardContent = StackProps & {
+  localizedResource: LocalizedArmor;
 };
 
-export function ToolsAlbumCardPage0({
+export default function ArmorsAlbumCardContent({
   localizedResource,
   ...rest
-}: ToolsAlbumCardPage0Props) {
+}: ArmorsAlbumCardContent) {
   const { t } = useI18nLangContext(i18nContext);
-  const { ability, cost, craft, magic_type, notes, type, utilize, weight } =
-    localizedResource;
+
+  const {
+    _raw,
+    armor_class,
+    cost,
+    magic_type,
+    requirements,
+    stealth,
+    type,
+    weight,
+  } = localizedResource;
+
   return (
     <VStack {...rest}>
       <AlbumCard.Caption>
@@ -35,22 +44,22 @@ export function ToolsAlbumCardPage0({
       </AlbumCard.Caption>
 
       <AlbumCard.Info>
-        <AlbumCard.InfoCell label={t("ability")}>{ability}</AlbumCard.InfoCell>
+        <AlbumCard.InfoCell label={t("armor_class")}>
+          {armor_class}
+        </AlbumCard.InfoCell>
 
-        {utilize && (
-          <AlbumCard.InfoCell label={t("utilize")}>
-            {utilize}
+        {_raw.disadvantage_on_stealth && (
+          <AlbumCard.InfoCell label={t("stealth")}>
+            {stealth}
           </AlbumCard.InfoCell>
         )}
 
-        {craft && (
-          <AlbumCard.InfoCell label={t("craft")}>
-            <RichText text={craft} />
+        {requirements && (
+          <AlbumCard.InfoCell label={t("requirements")}>
+            {requirements}
           </AlbumCard.InfoCell>
         )}
       </AlbumCard.Info>
-
-      <AlbumCard.Description description={notes} />
     </VStack>
   );
 }
@@ -60,16 +69,16 @@ export function ToolsAlbumCardPage0({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  ability: {
-    en: "Ability",
-    it: "Abilità",
+  armor_class: {
+    en: "Armor Class",
+    it: "Classe Armatura",
   },
-  craft: {
-    en: "Craft",
-    it: "Creazione",
+  requirements: {
+    en: "Requirements",
+    it: "Requisiti",
   },
-  utilize: {
-    en: "Utilize",
-    it: "Utilizzo",
+  stealth: {
+    en: "Stealth",
+    it: "Furtività",
   },
 };

@@ -15,7 +15,7 @@ import WeaponEditor from "./weapon-editor";
 import weaponEditorForm, {
   type WeaponEditorFormFields,
 } from "./weapon-editor-form";
-import { WeaponsAlbumCardPage0 } from "./weapons-album-card";
+import WeaponsAlbumCardContent from "./weapons-album-card-content";
 import WeaponsFilters from "./weapons-filters";
 
 //------------------------------------------------------------------------------
@@ -134,7 +134,10 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const WeaponsPanel = createResourcesPanel(weaponStore, {
-  album: { pages: [WeaponsAlbumCardPage0] },
+  album: {
+    AlbumCardContent: WeaponsAlbumCardContent,
+    getDetails: (localizedWeapon) => localizedWeapon.notes,
+  },
   filters: { Filters: WeaponsFilters },
   form: { Editor: WeaponEditor, form: weaponEditorForm, parseFormData },
   table: { columns, detailsKey: "notes" },

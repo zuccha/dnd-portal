@@ -11,21 +11,17 @@ import type { LocalizedCreature } from "~/models/resources/creatures/localized-c
 import AlbumCard from "~/ui/album-card";
 
 //------------------------------------------------------------------------------
-// Creatures Album Card Props
+// Creatures Album Card Content
 //------------------------------------------------------------------------------
 
-export type CreaturesAlbumCardProps = StackProps & {
+export type CreaturesAlbumCardContentProps = StackProps & {
   localizedResource: LocalizedCreature;
 };
 
-//------------------------------------------------------------------------------
-// Creatures Album Card Page 0
-//------------------------------------------------------------------------------
-
-export function CreaturesAlbumCardPage0({
+export default function CreaturesAlbumCardContent({
   localizedResource,
   ...rest
-}: CreaturesAlbumCardProps) {
+}: CreaturesAlbumCardContentProps) {
   const {
     ac,
     cr,
@@ -177,22 +173,6 @@ export function CreaturesAlbumCardPage0({
           {treasures}
         </AlbumCard.InfoCell>
       </AlbumCard.Info>
-    </VStack>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Creatures Album Card Page 1
-//------------------------------------------------------------------------------
-
-export function CreaturesAlbumCardPage1({
-  localizedResource,
-  ...rest
-}: CreaturesAlbumCardProps) {
-  const { description } = localizedResource;
-  return (
-    <VStack {...rest}>
-      <AlbumCard.Description description={description} />
     </VStack>
   );
 }
