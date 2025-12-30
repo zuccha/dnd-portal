@@ -64,11 +64,11 @@ function AlbumCardCaption(props: AlbumCardCaptionProps) {
 //------------------------------------------------------------------------------
 
 type AlbumCardDescriptionProps = Omit<StackProps, "children"> & {
-  description: string;
+  paragraphs: string[];
 };
 
 function AlbumCardDescription({
-  description,
+  paragraphs,
   ...rest
 }: AlbumCardDescriptionProps) {
   return (
@@ -80,7 +80,7 @@ function AlbumCardDescription({
       w="full"
       {...rest}
     >
-      {description.split("\n").map((paragraph, i) => (
+      {paragraphs.map((paragraph, i) => (
         <RichText key={i} patterns={patterns} text={paragraph} />
       ))}
     </VStack>

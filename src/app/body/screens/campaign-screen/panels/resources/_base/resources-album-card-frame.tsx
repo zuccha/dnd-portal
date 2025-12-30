@@ -11,6 +11,7 @@ export type ResourcesAlbumCardFrameProps = AlbumCardProps & {
   campaignName: string;
   campaignPage: string;
   campaignRole: CampaignRole;
+  contentRef?: React.Ref<HTMLDivElement>;
   editable?: boolean;
   gradientIntensity?: number;
   name: string;
@@ -27,6 +28,7 @@ export default function ResourcesAlbumCardFrame({
   campaignPage,
   campaignRole,
   children,
+  contentRef,
   editable = false,
   gradientIntensity,
   name,
@@ -52,7 +54,7 @@ export default function ResourcesAlbumCardFrame({
         selected={selected}
       />
 
-      <VStack flex={1} gap={0} overflow="auto" w="full">
+      <VStack flex={1} gap={0} overflow="auto" ref={contentRef} w="full">
         {children}
       </VStack>
 

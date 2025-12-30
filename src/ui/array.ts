@@ -5,3 +5,11 @@
 export function range(n: number): number[] {
   return Array.from({ length: n }, (_, i) => i);
 }
+
+//------------------------------------------------------------------------------
+// Drop Last
+//------------------------------------------------------------------------------
+
+export function dropLast<T>(items: T[]): T[] {
+  return items.slice(0, items.length - 1);
+}

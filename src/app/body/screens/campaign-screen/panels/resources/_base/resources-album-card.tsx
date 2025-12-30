@@ -9,7 +9,8 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import AlbumCard, { type AlbumCardProps } from "~/ui/album-card";
-import ResourcesAlbumCardFrame from "./resources-album-card-frame";
+import createResourcesAlbumCardPaginated from "./resources-album-card-paginated";
+import createResourcesAlbumCardScrollable from "./resources-album-card-scrollable";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -48,8 +49,20 @@ export function createResourcesAlbumCard<
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
-  { AlbumCardContent, getDetails }: ResourcesAlbumCardExtra<R, L>,
+  extra: ResourcesAlbumCardExtra<R, L>,
 ) {
+  const ResourcesAlbumCardPaginated = createResourcesAlbumCardPaginated(
+    store,
+    context,
+    extra,
+  );
+
+  const ResourcesAlbumCardScrollable = createResourcesAlbumCardScrollable(
+    store,
+    context,
+    extra,
+  );
+
   function ResourcesAlbumCard({
     campaignId,
     editable,
@@ -75,36 +88,31 @@ export function createResourcesAlbumCard<
 
     if (!localizedResource) return null;
 
-    const details = getDetails(localizedResource);
-
-    return (
-      <ResourcesAlbumCardFrame
-        campaignName={localizedResource.campaign}
-        campaignPage={localizedResource.page}
-        campaignRole={localizedResource._raw.visibility}
-        editable={editable}
-        gradientIntensity={gradientIntensity}
-        name={localizedResource.name}
-        onEdit={edit}
-        onSelectionChange={setSelected}
-        palette={palette}
-        printMode={printMode}
-        selected={selected}
-        zoom={zoom}
-        {...rest}
-      >
-        <AlbumCardContent
-          borderBottomWidth={AlbumCard.size0}
-          borderColor="border.emphasized"
-          gap={0}
+    return printMode ?
+        <ResourcesAlbumCardPaginated
+          editable={editable}
+          gradientIntensity={gradientIntensity}
           localizedResource={localizedResource}
-          separator={<AlbumCard.SeparatorH />}
-          w="full"
+          onEdit={edit}
+          onSelectionChange={setSelected}
+          palette={palette}
+          printMode={printMode}
+          selected={selected}
+          zoom={zoom}
+          {...rest}
         />
-
-        {details && <AlbumCard.Description description={details} />}
-      </ResourcesAlbumCardFrame>
-    );
+      : <ResourcesAlbumCardScrollable
+          editable={editable}
+          gradientIntensity={gradientIntensity}
+          localizedResource={localizedResource}
+          onEdit={edit}
+          onSelectionChange={setSelected}
+          palette={palette}
+          printMode={printMode}
+          selected={selected}
+          zoom={zoom}
+          {...rest}
+        />;
   }
 
   ResourcesAlbumCard.height = AlbumCard.height;
