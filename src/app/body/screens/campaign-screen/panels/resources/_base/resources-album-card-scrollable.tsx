@@ -57,7 +57,7 @@ export default function createResourcesAlbumCardScrollable<
     ...rest
   }: ResourcesAlbumCardScrollableProps<R, L>) {
     const paragraphs = useMemo(() => {
-      return getDetails(localizedResource).split("\n");
+      return getDetails(localizedResource).split(/[\n\r]/);
     }, [localizedResource]);
 
     return (

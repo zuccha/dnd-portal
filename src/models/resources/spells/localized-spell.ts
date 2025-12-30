@@ -103,7 +103,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
         concentration: spell.concentration,
         description:
           description && upgrade ?
-            `${description}\n\n${tp("upgrade", spell.level)}\n${upgrade}`
+            `${description}\n\n${tp("upgrade", spell.level)}\r${upgrade}`
           : description,
         duration,
         duration_with_concentration:

@@ -351,30 +351,30 @@ export function useLocalizeCreature(): (
 
       const traits = translate(creature.traits, lang);
       if (traits) {
-        description_parts.push(t("description.traits") + "\n" + traits);
+        description_parts.push(t("description.traits") + "\r" + traits);
       }
 
       const actions = translate(creature.actions, lang);
       if (actions) {
-        description_parts.push(t("description.actions") + "\n" + actions);
+        description_parts.push(t("description.actions") + "\r" + actions);
       }
 
       const bonus_actions = translate(creature.bonus_actions, lang);
       if (bonus_actions) {
         description_parts.push(
-          t("description.bonus_actions") + "\n" + bonus_actions,
+          t("description.bonus_actions") + "\r" + bonus_actions,
         );
       }
 
       const reactions = translate(creature.reactions, lang);
       if (reactions) {
-        description_parts.push(t("description.reactions") + "\n" + reactions);
+        description_parts.push(t("description.reactions") + "\r" + reactions);
       }
 
       const legendary_actions = translate(creature.legendary_actions, lang);
       if (legendary_actions) {
         description_parts.push(
-          t("description.legendary_actions") + "\n" + legendary_actions,
+          t("description.legendary_actions") + "\r" + legendary_actions,
         );
       }
 

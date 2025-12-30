@@ -132,7 +132,11 @@ export default function createResourcesAlbumCardPaginated<
               />
             )}
 
-            <AlbumCard.Description paragraphs={page.paragraphs} />
+            <AlbumCard.Description
+              paragraphs={page.paragraphs.flatMap((paragraph) =>
+                paragraph.split("\r"),
+              )}
+            />
           </ResourcesAlbumCardFrame>
         ))}
       </>
