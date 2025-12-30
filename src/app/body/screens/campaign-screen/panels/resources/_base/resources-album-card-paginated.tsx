@@ -82,32 +82,30 @@ export default function createResourcesAlbumCardPaginated<
       const lastPage = pages[pages.length - 1]!;
       const lastPageEl = lastPage.ref.current;
       const overflow =
-        !!lastPageEl &&
+        lastPageEl &&
         lastPageEl.scrollHeight * (zoom ?? 1) >
           lastPageEl.clientHeight * (zoom ?? 1) + 1;
 
-      if (overflow) {
-        if (lastPage.paragraphs.length > 1) {
-          const lastParagraph = lastPage.paragraphs.at(-1)!;
-          setPages([
-            ...dropLast(pages),
-            { ...lastPage, paragraphs: dropLast(lastPage.paragraphs) },
-            { paragraphs: [lastParagraph], ref: createRef() },
-          ]);
-          return;
-        }
 
-        setPages([...pages, { paragraphs: [], ref: createRef() }]);
-        return;
+      if (!overflow) {
+        const paragraph = paragraphs[paragraphToProcessIndexRef.current]!;
+        setPages([
+          ...dropLast(pages),
+          { ...lastPage, paragraphs: [...lastPage.paragraphs, paragraph] },
+        ]);
+        paragraphToProcessIndexRef.current++;
+      } else if (pages.length === 1 || lastPage.paragraphs.length > 1) {
+        const paragraph = lastPage.paragraphs.at(-1);
+        setPages([
+          ...dropLast(pages),
+          { ...lastPage, paragraphs: dropLast(lastPage.paragraphs) },
+          { paragraphs: paragraph ? [paragraph] : [], ref: createRef() },
+        ]);
+      } else {
+        const paragraph = paragraphs[paragraphToProcessIndexRef.current]!;
+        setPages([...pages, { paragraphs: [paragraph], ref: createRef() }]);
+        paragraphToProcessIndexRef.current++;
       }
-
-      const paragraph = paragraphs[paragraphToProcessIndexRef.current]!;
-      setPages([
-        ...dropLast(pages),
-        { ...lastPage, paragraphs: [...lastPage.paragraphs, paragraph] },
-      ]);
-
-      paragraphToProcessIndexRef.current++;
     }, [pages, paragraphs, zoom]);
 
     return (
