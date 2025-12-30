@@ -52,14 +52,7 @@ export function createResourcesAlbum<
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
-      <Wrap
-        bgColor="bg.subtle"
-        className="print-only"
-        gap={4}
-        justify="center"
-        p={4}
-        w="full"
-      >
+      <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
         {filteredResourceIds.map((id) => (
           <ResourcesAlbumCard
             campaignId={campaignId}
