@@ -7,7 +7,7 @@ import {
   VStack,
   createListCollection,
 } from "@chakra-ui/react";
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
@@ -64,7 +64,7 @@ export function createResourcesPrintMode<
     ...rest
   }: ResourcesPrintModeProps) {
     const { t } = useI18nLangContext(i18nContext);
-    const resourceIds = store.useFilteredResourceIds(campaignId);
+    const resourceIds = store.useSelectedFilteredResourceIds(campaignId);
 
     const [paperLayout, setPaperLayout] = usePaperLayout();
     const [paperType, setPaperType] = usePaperType();
@@ -82,10 +82,16 @@ export function createResourcesPrintMode<
       py: (paperHeight - rows * AlbumCard.height) / 2,
     };
 
+    const [pagesCounts, setPagesCounts] = useState<Record<string, number>>({});
+    const papersCount = Math.ceil(
+      Object.values(pagesCounts).reduce(
+        (papersCount, pagesCount) => papersCount + pagesCount,
+        0,
+      ) / cardsPerPaper,
+    );
+
     const [cropMarksVisible, setCropMarksVisible] = useCropMarksVisible();
     const [cropMarksLength, setCropMarksLength] = useCropMarksLength();
-    const cropMarkW = Math.min(cropMarksLength, paperPadding.px);
-    const cropMarkH = Math.min(cropMarksLength, paperPadding.py);
 
     const [gradientIntensity, setGradientIntensity] = useGradientIntensity();
 
@@ -121,18 +127,83 @@ export function createResourcesPrintMode<
       });
     }, [t]);
 
-    const css = useMemo(() => {
-      return makeCss(columns, rows, paperPadding.py);
-    }, [columns, paperPadding.py, rows]);
+    const albumCardCss = useMemo(() => {
+      return {
+        ...Object.fromEntries(
+          range(columns).map((c) => [
+            `&:nth-of-type(${cardsPerPaper}n+${c + 1})`,
+            { marginTop: `${paperPadding.py}in` },
+          ]),
+        ),
+        ...Object.fromEntries(
+          range(columns).map((c) => [
+            `&:nth-of-type(${cardsPerPaper}n-${c})`,
+            { marginBottom: `${paperPadding.py}in` },
+          ]),
+        ),
+      };
+    }, [cardsPerPaper, columns, paperPadding.py]);
+
+    console.log(papersCount, paperHeight);
 
     return (
       <HStack gap={0} overflow="hidden" {...rest}>
         <VStack bg="bg.subtle" flex={1} h="full" overflow="auto" p={4}>
-          <VStack align="center" className="printable" pointerEvents="none">
+          <VStack
+            bgColor="green"
+            className="printable"
+            h={`${paperHeight * papersCount}in`}
+            pointerEvents="none"
+            position="relative"
+            w={`${paperWidth}in`}
+          >
+            <VStack gap={0} position="absolute">
+              {range(papersCount).map((paperNumber) => (
+                <Box
+                  bgColor="white"
+                  height={`${paperHeight}in`}
+                  key={paperNumber}
+                  position="relative"
+                  width={`${paperWidth}in`}
+                >
+                  {cropMarksVisible && (
+                    <CropMarks
+                      columns={columns}
+                      gapX={AlbumCard.width}
+                      gapY={AlbumCard.height}
+                      length={cropMarksLength}
+                      offsetX={paperPadding.px}
+                      offsetY={paperPadding.py}
+                      rows={rows}
+                    />
+                  )}
+
+                  {paperNumber > 0 && (
+                    <Box
+                      borderColor="border.emphasized"
+                      borderStyle="dashed"
+                      borderTopWidth={1}
+                      className="not-printable"
+                      position="absolute"
+                      w={`${paperWidth}in`}
+                    />
+                  )}
+                </Box>
+              ))}
+            </VStack>
+
+            <Box
+              className="not-printable"
+              h={4}
+              position="absolute"
+              top={`${paperHeight * papersCount}in`}
+              w="1in"
+            />
+
             <Flex
               alignContent="flex-start"
               justify="flex-start"
-              position="relative"
+              position="absolute"
               px={`${paperPadding.px}in`}
               width={`${paperWidth}in`}
               wrap="wrap"
@@ -141,9 +212,17 @@ export function createResourcesPrintMode<
                 <AlbumCard
                   borderRadius={0}
                   campaignId={campaignId}
-                  css={css}
+                  css={albumCardCss}
                   gradientIntensity={100 - gradientIntensity}
                   key={resourceId}
+                  onPageCountChange={(count) => {
+                    setPagesCounts((prev) => {
+                      const next = { ...prev };
+                      if (count) next[resourceId] = count;
+                      else delete next[resourceId];
+                      return next;
+                    });
+                  }}
                   palette={palette}
                   printMode
                   resourceId={resourceId}
@@ -238,25 +317,64 @@ export function createResourcesPrintMode<
 }
 
 //------------------------------------------------------------------------------
-// CSS
+// Crop Marks
 //------------------------------------------------------------------------------
 
-function makeCss(columns: number, rows: number, paperPaddingY: number) {
-  const cardsPerPaper = columns * rows;
-  return {
-    ...Object.fromEntries(
-      range(columns).map((c) => [
-        `&:nth-of-type(${cardsPerPaper}n+${c + 1})`,
-        { marginTop: `${paperPaddingY}in` },
-      ]),
-    ),
-    ...Object.fromEntries(
-      range(columns).map((c) => [
-        `&:nth-of-type(${cardsPerPaper}n-${c})`,
-        { marginBottom: `${paperPaddingY}in` },
-      ]),
-    ),
-  };
+type CropMarksProps = {
+  columns: number;
+  length: number;
+  gapX: number;
+  gapY: number;
+  offsetX: number;
+  offsetY: number;
+  rows: number;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+function CropMarks({
+  columns,
+  gapX,
+  gapY,
+  length,
+  offsetX,
+  offsetY,
+  rows,
+}: CropMarksProps) {
+  return (
+    <>
+      <CropMarksH
+        gap={gapY}
+        offsetX={offsetX - length}
+        offsetY={offsetY}
+        rows={rows}
+        w={length}
+      />
+
+      <CropMarksH
+        gap={gapY}
+        offsetX={offsetX + columns * gapX}
+        offsetY={offsetY}
+        rows={rows}
+        w={length}
+      />
+
+      <CropMarksV
+        columns={columns}
+        gap={gapX}
+        h={length}
+        offsetX={offsetX}
+        offsetY={offsetY - length}
+      />
+
+      <CropMarksV
+        columns={columns}
+        gap={gapX}
+        h={length}
+        offsetX={offsetX}
+        offsetY={offsetY + rows * gapY}
+      />
+    </>
+  );
 }
 
 //------------------------------------------------------------------------------

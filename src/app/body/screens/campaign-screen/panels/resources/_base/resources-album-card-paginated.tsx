@@ -39,6 +39,7 @@ export type ResourcesAlbumCardPaginatedProps<
   "campaignName" | "campaignPage" | "campaignRole" | "contentRef" | "name"
 > & {
   localizedResource: L;
+  onPageCountChange: (count: number | undefined) => void;
 };
 
 export default function createResourcesAlbumCardPaginated<
@@ -54,9 +55,12 @@ export default function createResourcesAlbumCardPaginated<
 ) {
   return function ResourcesAlbumCardPaginated({
     localizedResource,
+    onPageCountChange,
     zoom,
     ...rest
   }: ResourcesAlbumCardPaginatedProps<R, L>) {
+    const changePageCountRef = useRef(onPageCountChange);
+
     const paragraphs = useMemo(() => {
       return localizedResource ? getDetails(localizedResource).split("\n") : [];
     }, [localizedResource]);
@@ -71,16 +75,21 @@ export default function createResourcesAlbumCardPaginated<
     >([{ paragraphs: [], ref: createRef<HTMLDivElement>() }]);
 
     useLayoutEffect(() => {
+      changePageCountRef.current = onPageCountChange;
+    }, [onPageCountChange]);
+
+    useLayoutEffect(() => {
+      changePageCountRef.current(undefined);
       paragraphToProcessIndexRef.current = 0;
       setPages([{ paragraphs: [], ref: createRef<HTMLDivElement>() }]);
     }, [paragraphs]);
 
     useLayoutEffect(() => {
-      if (paragraphs.length === 0) return;
+      if (paragraphs.length === 0) return changePageCountRef.current(0);
 
       const lastPage = pages[pages.length - 1]!;
       const element = lastPage.ref.current;
-      if (!element) return;
+      if (!element) return changePageCountRef.current(0);
 
       const overflow = element.scrollHeight > element.clientHeight;
 
@@ -94,7 +103,8 @@ export default function createResourcesAlbumCardPaginated<
         return;
       }
 
-      if (paragraphToProcessIndexRef.current >= paragraphs.length) return;
+      if (paragraphToProcessIndexRef.current >= paragraphs.length)
+        return changePageCountRef.current(pages.length);
 
       if (overflow) {
         const paragraph = paragraphs[paragraphToProcessIndexRef.current]!;

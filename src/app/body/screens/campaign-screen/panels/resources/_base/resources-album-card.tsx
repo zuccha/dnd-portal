@@ -33,6 +33,7 @@ export type ResourcesAlbumCardProps = Omit<AlbumCardProps, "children"> & {
   campaignId: string;
   editable?: boolean;
   gradientIntensity?: number;
+  onPageCountChange?: (count: number | undefined) => void;
   palette?: { footerBg: string; footerFg: string; gradientBg: string };
   printMode?: boolean;
   resourceId: string;
@@ -66,6 +67,7 @@ export function createResourcesAlbumCard<
     campaignId,
     editable,
     gradientIntensity = 40,
+    onPageCountChange = () => {},
     palette,
     printMode,
     resourceId,
@@ -93,6 +95,7 @@ export function createResourcesAlbumCard<
           gradientIntensity={gradientIntensity}
           localizedResource={localizedResource}
           onEdit={edit}
+          onPageCountChange={onPageCountChange}
           onSelectionChange={setSelected}
           palette={palette}
           printMode={printMode}
