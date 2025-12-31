@@ -1,7 +1,8 @@
 import { Table, VStack } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
 import { useCallback } from "react";
-import { type I18nString } from "~/i18n/i18n-string";
+import { useI18nLang } from "~/i18n/i18n-lang";
+import { type I18nString, translate } from "~/i18n/i18n-string";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -56,6 +57,8 @@ export function createResourcesTableRow<
     editable,
     resourceId,
   }: ResourcesTableRowProps) {
+    const [lang] = useI18nLang();
+
     const localizedResource = store.useLocalizedResource(resourceId);
     const selected = store.useResourceSelection(resourceId);
     const expanded = context.useResourceExpansion(resourceId, false);
@@ -118,7 +121,7 @@ export function createResourcesTableRow<
                   <Link onClick={edit}>{String(value)}</Link>
                 : typeof value === "boolean" ?
                   <Checkbox disabled size="sm" value={value} />
-                : String(value)}
+                : String(value) || "-"}
               </Table.Cell>
             );
           })}
@@ -128,11 +131,19 @@ export function createResourcesTableRow<
           <Table.Row bgColor="bg.muted" w="full">
             <Table.Cell colSpan={columnCount}>
               <VStack align="flex-start" gap={1} w="full">
-                {String(localizedResource[extra.detailsKey])
-                  .split(/[\n\r]/)
-                  .map((paragraph, i) => (
-                    <RichText key={i} text={paragraph} />
-                  ))}
+                {localizedResource[extra.detailsKey] ?
+                  String(localizedResource[extra.detailsKey])
+                    .split(/[\n\r]/)
+                    .map((paragraph, i) => (
+                      <RichText key={i} text={paragraph} />
+                    ))
+                : <RichText
+                    text={translate(
+                      { en: "_No details._", it: "_Nessuna descrizione._" },
+                      lang,
+                    )}
+                  />
+                }
               </VStack>
             </Table.Cell>
           </Table.Row>
