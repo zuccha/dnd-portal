@@ -52,11 +52,12 @@ export function createResourcesTableHead<
   return function ResourcesTableHead({ campaignId }: ResourcesTableHeadProps) {
     const [lang] = useI18nLang();
     const filteredResourceIds = store.useFilteredResourceIds(campaignId);
-    const selectedResourcesCount = store.useResourceSelectionCount(campaignId);
+    const selectedFilteredResourceIds =
+      store.useSelectedFilteredResourceIds(campaignId);
 
     const selected =
-      selectedResourcesCount === filteredResourceIds.length ? true
-      : selectedResourcesCount > 0 ? "-"
+      selectedFilteredResourceIds.length === filteredResourceIds.length ? true
+      : selectedFilteredResourceIds.length > 0 ? "-"
       : false;
 
     const toggleSelected = useCallback(() => {

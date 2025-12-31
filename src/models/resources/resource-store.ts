@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useLayoutEffect, useMemo } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { type ZodType, z } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { I18nString } from "~/i18n/i18n-string";
@@ -96,11 +96,6 @@ export function createResourceStore<
     `${storeId}.resource_selection`,
   );
 
-  // campaign id -> number
-  const resourceSelectionCountStore = createMemoryStoreSet<string, number>(
-    `${storeId}.resource_selection_count`,
-  );
-
   //----------------------------------------------------------------------------
   // Filters Store
   //----------------------------------------------------------------------------
@@ -140,7 +135,6 @@ export function createResourceStore<
   //----------------------------------------------------------------------------
 
   async function deleteResources(
-    campaignId: string,
     resourceIds: string[],
   ): Promise<string | undefined> {
     const { error } = await supabase
@@ -154,7 +148,7 @@ export function createResourceStore<
     for (const resourceId of resourceIds) {
       const queryKey = [fetchResourceId, resourceId];
       queryClient.invalidateQueries({ queryKey });
-      deselectResource(campaignId, resourceId);
+      deselectResource(resourceId);
     }
 
     return undefined;
@@ -170,19 +164,14 @@ export function createResourceStore<
       emptyResourceIds,
     );
     resourceIds.forEach((id) => resourceSelectionStore.set(id, false, false));
-    resourceSelectionCountStore.set(campaignId, 0, 0);
   }
 
   //----------------------------------------------------------------------------
   // Deselect Resource
   //----------------------------------------------------------------------------
 
-  function deselectResource(campaignId: string, resourceId: string): void {
-    resourceSelectionStore.set(resourceId, false, (prev) => {
-      if (!prev) return prev;
-      resourceSelectionCountStore.set(campaignId, 0, (count) => count - 1);
-      return false;
-    });
+  function deselectResource(resourceId: string): void {
+    resourceSelectionStore.set(resourceId, false, false);
   }
 
   //----------------------------------------------------------------------------
@@ -253,51 +242,30 @@ export function createResourceStore<
       emptyResourceIds,
     );
     resourceIds.forEach((id) => resourceSelectionStore.set(id, true, true));
-    resourceSelectionCountStore.set(campaignId, 0, resourceIds.length);
   }
 
   //----------------------------------------------------------------------------
   // Select Resource
   //----------------------------------------------------------------------------
 
-  function selectResource(campaignId: string, resourceId: string): void {
-    resourceSelectionStore.set(resourceId, false, (prev) => {
-      if (prev) return prev;
-      resourceSelectionCountStore.set(campaignId, 0, (count) => count + 1);
-      return true;
-    });
+  function selectResource(resourceId: string): void {
+    resourceSelectionStore.set(resourceId, false, true);
   }
 
   //----------------------------------------------------------------------------
   // Set Resource Selection
   //----------------------------------------------------------------------------
 
-  function setResourceSelection(
-    campaignId: string,
-    resourceId: string,
-    selected: boolean,
-  ): void {
-    resourceSelectionStore.set(resourceId, false, (prev) => {
-      if (prev === selected) return prev;
-      const variation = selected ? 1 : -1;
-      resourceSelectionCountStore.set(campaignId, 0, (c) => c + variation);
-      return selected;
-    });
+  function setResourceSelection(resourceId: string, selected: boolean): void {
+    resourceSelectionStore.set(resourceId, false, selected);
   }
 
   //----------------------------------------------------------------------------
   // Toggle Resource Selection
   //----------------------------------------------------------------------------
 
-  function toggleResourceSelection(
-    campaignId: string,
-    resourceId: string,
-  ): void {
-    resourceSelectionStore.set(resourceId, false, (prev) => {
-      const variation = prev ? -1 : 1;
-      resourceSelectionCountStore.set(campaignId, 0, (c) => c + variation);
-      return !prev;
-    });
+  function toggleResourceSelection(resourceId: string): void {
+    resourceSelectionStore.set(resourceId, false, (prev) => !prev);
   }
 
   //----------------------------------------------------------------------------
@@ -433,24 +401,24 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
-  // Use Resource Selection Count
-  //----------------------------------------------------------------------------
-
-  function useResourceSelectionCount(campaignId: string): number {
-    return resourceSelectionCountStore.useValue(campaignId, 0);
-  }
-
-  //----------------------------------------------------------------------------
   // Use Selected Filtered Resources Ids
   //----------------------------------------------------------------------------
 
   function useSelectedFilteredResourceIds(campaignId: string): string[] {
     const filteredResourceIds = useFilteredResourceIds(campaignId);
+    const [selectedFilteredResourceIds, setSelectedFilteredResourceIds] =
+      useState<string[]>([]);
 
-    const selectedFilteredResourceIds = useMemo(() => {
-      return filteredResourceIds.filter((id) =>
-        resourceSelectionStore.get(id, false),
-      );
+    useLayoutEffect(() => {
+      const update = () => {
+        setSelectedFilteredResourceIds(
+          filteredResourceIds.filter((id) =>
+            resourceSelectionStore.get(id, false),
+          ),
+        );
+      };
+      update();
+      return resourceSelectionStore.subscribeAny(update);
     }, [filteredResourceIds]);
 
     return selectedFilteredResourceIds;
@@ -484,7 +452,6 @@ export function createResourceStore<
     useResource,
     useResourceIds,
     useResourceSelection,
-    useResourceSelectionCount,
     useSelectedFilteredResourceIds,
   };
 }

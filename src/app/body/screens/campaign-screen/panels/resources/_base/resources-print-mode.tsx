@@ -209,7 +209,6 @@ export function createResourcesPrintMode<
               {resourceIds.map((resourceId) => (
                 <AlbumCard
                   borderRadius={0}
-                  campaignId={campaignId}
                   css={albumCardCss}
                   gradientIntensity={100 - gradientIntensity}
                   key={resourceId}

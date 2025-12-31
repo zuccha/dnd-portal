@@ -33,7 +33,8 @@ export function createResourcesActions<
   return function ResourcesActions({ campaignId }: ResourcesActionsProps) {
     const { t, tpi } = useI18nLangContext(i18nContext);
     const canEdit = useCanEditCampaign(campaignId);
-    const selectedResourcesCount = store.useResourceSelectionCount(campaignId);
+    const selectedFilteredResourceIds =
+      store.useSelectedFilteredResourceIds(campaignId);
     const localizeResource = store.useLocalizeResource();
 
     const addNew = useCallback(() => {
@@ -70,7 +71,7 @@ export function createResourcesActions<
         const ok = confirm(tpi("remove.confirm", count, `${count}`));
         if (ok) {
           const selectedResourceIds = selectedResources.map(({ id }) => id);
-          store.deleteResources(campaignId, selectedResourceIds);
+          store.deleteResources(selectedResourceIds);
         }
       } catch (e) {
         console.error(e);
@@ -78,7 +79,7 @@ export function createResourcesActions<
       }
     }, [campaignId, tpi]);
 
-    const disabled = !selectedResourcesCount;
+    const disabled = !selectedFilteredResourceIds.length;
 
     return (
       <Menu.Root>

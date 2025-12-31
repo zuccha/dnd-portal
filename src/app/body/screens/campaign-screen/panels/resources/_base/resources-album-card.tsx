@@ -30,7 +30,6 @@ export type ResourcesAlbumCardExtra<
 //------------------------------------------------------------------------------
 
 export type ResourcesAlbumCardProps = Omit<AlbumCardProps, "children"> & {
-  campaignId: string;
   editable?: boolean;
   gradientIntensity?: number;
   onPageCountChange?: (count: number | undefined) => void;
@@ -64,7 +63,6 @@ export function createResourcesAlbumCard<
   );
 
   function ResourcesAlbumCard({
-    campaignId,
     editable,
     gradientIntensity = 40,
     onPageCountChange = () => {},
@@ -79,8 +77,8 @@ export function createResourcesAlbumCard<
 
     const setSelected = useCallback(
       (nextSelected: boolean) =>
-        store.setResourceSelection(campaignId, resourceId, nextSelected),
-      [campaignId, resourceId],
+        store.setResourceSelection(resourceId, nextSelected),
+      [resourceId],
     );
 
     const edit = useCallback(() => {

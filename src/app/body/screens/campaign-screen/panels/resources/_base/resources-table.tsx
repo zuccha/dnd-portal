@@ -70,12 +70,7 @@ export function createResourcesTable<
 
         <Table.Body>
           {filteredResourceIds.map((id) => (
-            <ResourcesTableRow
-              campaignId={campaignId}
-              editable={editable}
-              key={id}
-              resourceId={id}
-            />
+            <ResourcesTableRow editable={editable} key={id} resourceId={id} />
           ))}
         </Table.Body>
       </Table.Root>

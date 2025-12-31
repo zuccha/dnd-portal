@@ -37,7 +37,6 @@ export type ResourcesTableRowExtra<
 //------------------------------------------------------------------------------
 
 type ResourcesTableRowProps = {
-  campaignId: string;
   editable: boolean;
   resourceId: string;
 };
@@ -54,7 +53,6 @@ export function createResourcesTableRow<
   extra: ResourcesTableRowExtra<R, L>,
 ) {
   return function ResourcesTableRow({
-    campaignId,
     editable,
     resourceId,
   }: ResourcesTableRowProps) {
@@ -74,9 +72,9 @@ export function createResourcesTableRow<
     const toggleSelection = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
-        store.toggleResourceSelection(campaignId, resourceId);
+        store.toggleResourceSelection(resourceId);
       },
-      [campaignId, resourceId],
+      [resourceId],
     );
 
     if (!localizedResource) return null;
