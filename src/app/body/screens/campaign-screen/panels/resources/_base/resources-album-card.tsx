@@ -33,7 +33,6 @@ export type ResourcesAlbumCardProps = Omit<AlbumCardProps, "children"> & {
   campaignId: string;
   editable?: boolean;
   gradientIntensity?: number;
-  initialPageNumber?: number;
   palette?: { footerBg: string; footerFg: string; gradientBg: string };
   printMode?: boolean;
   resourceId: string;
