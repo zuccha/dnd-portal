@@ -14,7 +14,7 @@ import Select from "~/ui/select";
 export default function SidebarCampaignSelector() {
   const [selectedCampaignId, setSelectedCampaignId] = useSelectedCampaignId();
 
-  const { all, campaigns, modules } = useCampaignsAndCreatedModules();
+  const { all, campaigns, fetched, modules } = useCampaignsAndCreatedModules();
 
   const { t } = useI18nLangContext(i18nContext);
 
@@ -55,11 +55,11 @@ export default function SidebarCampaignSelector() {
   }, [modules, t, campaigns]);
 
   useLayoutEffect(() => {
-    if (all.length)
+    if (fetched && all.length)
       setSelectedCampaignId((prev) =>
         all.every(({ id }) => id !== prev) ? all[0]?.id : prev,
       );
-  }, [all, setSelectedCampaignId]);
+  }, [all, fetched, setSelectedCampaignId]);
 
   return (
     <VStack align="flex-start" px={4} w="full">

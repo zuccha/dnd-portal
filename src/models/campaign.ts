@@ -92,12 +92,13 @@ export function useOwnedModules() {
 //------------------------------------------------------------------------------
 
 export function useCampaignsAndCreatedModules() {
-  const { data: modules = [] } = useCreatedModules();
-  const { data: campaigns = [] } = useCampaigns();
+  const { data: modules = [], isFetched: fetchedModules } = useCreatedModules();
+  const { data: campaigns = [], isFetched: fetchedCampaigns } = useCampaigns();
 
   const all = useMemo(() => [...campaigns, ...modules], [campaigns, modules]);
+  const fetched = fetchedModules && fetchedCampaigns;
 
-  return { all, campaigns, modules };
+  return { all, campaigns, fetched, modules };
 }
 
 //------------------------------------------------------------------------------
