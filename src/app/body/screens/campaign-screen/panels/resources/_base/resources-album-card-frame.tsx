@@ -43,7 +43,7 @@ export default function ResourcesAlbumCardFrame({
   const bgImage = `radial-gradient(circle, {colors.bg} 0%, {colors.bg} ${gradientIntensity}%, ${palette.gradientBg} 100%)`;
 
   return (
-    <AlbumCard bgImage={bgImage} style={{ zoom }} {...rest}>
+    <AlbumCard bgImage={bgImage} overflow="hidden" style={{ zoom }} {...rest}>
       <ResourcesAlbumCardHeader
         campaignRole={campaignRole}
         editable={editable}
