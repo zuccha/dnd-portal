@@ -144,8 +144,6 @@ export function createResourcesPrintMode<
       };
     }, [cardsPerPaper, columns, paperPadding.py]);
 
-    console.log(papersCount, paperHeight);
-
     return (
       <HStack gap={0} overflow="hidden" {...rest}>
         <VStack bg="bg.subtle" flex={1} h="full" overflow="auto" p={4}>
