@@ -110,38 +110,34 @@ export default function createResourcesAlbumCardPaginated<
       }
     }, [pages, paragraphs, zoom]);
 
-    return (
-      <>
-        {pages.map((page, pageIndex) => (
-          <ResourcesAlbumCardFrame
-            campaignName={localizedResource.campaign}
-            campaignPage={localizedResource.page}
-            campaignRole={localizedResource._raw.visibility}
-            contentRef={page.ref}
-            key={pageIndex}
-            name={localizedResource.name}
-            zoom={zoom}
-            {...rest}
-          >
-            {pageIndex === 0 && (
-              <AlbumCardContent
-                borderBottomWidth={AlbumCard.size0}
-                borderColor="border.emphasized"
-                gap={0}
-                localizedResource={localizedResource}
-                separator={<AlbumCard.SeparatorH />}
-                w="full"
-              />
-            )}
+    return pages.map((page, pageIndex) => (
+      <ResourcesAlbumCardFrame
+        campaignName={localizedResource.campaign}
+        campaignPage={localizedResource.page}
+        campaignRole={localizedResource._raw.visibility}
+        contentRef={page.ref}
+        key={pageIndex}
+        name={localizedResource.name}
+        zoom={zoom}
+        {...rest}
+      >
+        {pageIndex === 0 && (
+          <AlbumCardContent
+            borderBottomWidth={AlbumCard.size0}
+            borderColor="border.emphasized"
+            gap={0}
+            localizedResource={localizedResource}
+            separator={<AlbumCard.SeparatorH />}
+            w="full"
+          />
+        )}
 
-            <AlbumCard.Description
-              paragraphs={page.paragraphs.flatMap((paragraph) =>
-                paragraph.split("\r"),
-              )}
-            />
-          </ResourcesAlbumCardFrame>
-        ))}
-      </>
-    );
+        <AlbumCard.Description
+          paragraphs={page.paragraphs.flatMap((paragraph) =>
+            paragraph.split("\r"),
+          )}
+        />
+      </ResourcesAlbumCardFrame>
+    ));
   };
 }
