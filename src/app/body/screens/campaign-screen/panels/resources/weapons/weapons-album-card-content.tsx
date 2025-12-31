@@ -32,11 +32,11 @@ export default function WeaponsAlbumCardContent({
       <AlbumCard.Caption>
         <VStack gap={0} w="full">
           <HStack justify="space-between" w="full">
-            <Span>{type}</Span>
+            <Span>{magic_type}</Span>
             <Span>{cost}</Span>
           </HStack>
           <HStack justify="space-between" w="full">
-            <Span>{magic_type}</Span>
+            <Span>{type}</Span>
             <Span>{weight}</Span>
           </HStack>
         </VStack>
