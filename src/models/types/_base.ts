@@ -64,15 +64,37 @@ export function createTypeTranslationHooks<Type extends string>(
   }
 
   //----------------------------------------------------------------------------
+  // Use Short Options
+  //----------------------------------------------------------------------------
+
+  function useShortOptions(): { label: string; value: Type }[] {
+    const translations = useTranslations();
+    return useMemo(
+      () =>
+        translations.map(({ label_short, value }) => ({
+          label: label_short,
+          value,
+        })),
+      [translations],
+    );
+  }
+
+  //----------------------------------------------------------------------------
   // Use Sorted Options
   //----------------------------------------------------------------------------
 
   function useSortedOptions(): { label: string; value: Type }[] {
-    const translations = useTranslations();
-    return useMemo(
-      () => translations.sort(compareObjects("label")),
-      [translations],
-    );
+    const options = useTranslations();
+    return useMemo(() => options.sort(compareObjects("label")), [options]);
+  }
+
+  //----------------------------------------------------------------------------
+  // Use Sorted Short Options
+  //----------------------------------------------------------------------------
+
+  function useSortedShortOptions(): { label: string; value: Type }[] {
+    const options = useShortOptions();
+    return useMemo(() => options.sort(compareObjects("label")), [options]);
   }
 
   //----------------------------------------------------------------------------
@@ -81,7 +103,9 @@ export function createTypeTranslationHooks<Type extends string>(
 
   return {
     useOptions,
+    useShortOptions,
     useSortedOptions,
+    useSortedShortOptions,
     useTranslate,
     useTranslations,
   };
