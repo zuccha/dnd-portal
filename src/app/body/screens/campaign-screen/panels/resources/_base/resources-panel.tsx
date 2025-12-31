@@ -70,7 +70,6 @@ export function createResourcesPanel<
 
   const ResourcesPrintMode = createResourcesPrintMode(store, context, {
     AlbumCard: ResourcesAlbum.Card,
-    pageCount: 1,
   });
 
   return function ResourcesPanel({ campaignId }: { campaignId: string }) {

@@ -7,7 +7,7 @@ import {
   VStack,
   createListCollection,
 } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
@@ -38,7 +38,6 @@ export type ResourcesPrintModeExtra = {
     height: number;
     width: number;
   };
-  pageCount: number;
 };
 
 //------------------------------------------------------------------------------
@@ -58,14 +57,14 @@ export function createResourcesPrintMode<
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
-  { AlbumCard, pageCount }: ResourcesPrintModeExtra,
+  { AlbumCard }: ResourcesPrintModeExtra,
 ) {
   return function ResourcesPrintMode({
     campaignId,
     ...rest
   }: ResourcesPrintModeProps) {
     const { t } = useI18nLangContext(i18nContext);
-    const resourceIds = store.useSelectedFilteredResourceIds(campaignId);
+    const resourceIds = store.useFilteredResourceIds(campaignId);
 
     const [paperLayout, setPaperLayout] = usePaperLayout();
     const [paperType, setPaperType] = usePaperType();
@@ -122,115 +121,36 @@ export function createResourcesPrintMode<
       });
     }, [t]);
 
-    const papers = useMemo(() => {
-      const papers: { pageNumber: number; resourceId: string }[][] = [];
-      let paper: { pageNumber: number; resourceId: string }[] = [];
-      let paperResourceCount = 0;
-
-      for (const resourceId of resourceIds) {
-        for (let pageNumber = 0; pageNumber < pageCount; ++pageNumber) {
-          paper.push({ pageNumber, resourceId });
-          paperResourceCount++;
-          if (paperResourceCount >= cardsPerPaper) {
-            papers.push(paper);
-            paper = [];
-            paperResourceCount = 0;
-          }
-        }
-      }
-
-      if (paperResourceCount > 0) {
-        papers.push(paper);
-        paper = [];
-        paperResourceCount = 0;
-      }
-
-      return papers;
-    }, [cardsPerPaper, resourceIds]);
+    const css = useMemo(() => {
+      return makeCss(columns, rows, paperPadding.py);
+    }, [columns, paperPadding.py, rows]);
 
     return (
       <HStack gap={0} overflow="hidden" {...rest}>
         <VStack bg="bg.subtle" flex={1} h="full" overflow="auto" p={4}>
-          <VStack
-            align="center"
-            className="printable"
-            gap={0}
-            m="auto"
-            pointerEvents="none"
-            separator={
-              <Box
-                borderColor="black"
-                borderStyle="dashed"
-                borderTopWidth={2}
-                className="not-printable"
-                w={`${paperWidth}in`}
-              />
-            }
-          >
-            {papers.map((paper, paperNumber) => (
-              <Flex
-                alignContent="flex-start"
-                bgColor="white"
-                height={`${paperHeight}in`}
-                justify="flex-start"
-                key={paperNumber}
-                position="relative"
-                px={`${paperPadding.px}in`}
-                py={`${paperPadding.py}in`}
-                width={`${paperWidth}in`}
-                wrap="wrap"
-              >
-                {paper.map(({ pageNumber, resourceId }) => (
-                  <AlbumCard
-                    borderRadius={0}
-                    campaignId={campaignId}
-                    gradientIntensity={100 - gradientIntensity}
-                    initialPageNumber={pageNumber}
-                    key={`${resourceId}-${pageNumber}`}
-                    palette={palette}
-                    printMode
-                    resourceId={resourceId}
-                    shadow="none"
-                  />
-                ))}
-
-                {cropMarksVisible && (
-                  <>
-                    <CropMarksH
-                      gap={AlbumCard.height}
-                      offsetX={paperPadding.px - cropMarkW}
-                      offsetY={paperPadding.py}
-                      rows={rows}
-                      w={cropMarkW}
-                    />
-
-                    <CropMarksH
-                      gap={AlbumCard.height}
-                      offsetX={paperPadding.px + columns * AlbumCard.width}
-                      offsetY={paperPadding.py}
-                      rows={rows}
-                      w={cropMarkW}
-                    />
-
-                    <CropMarksV
-                      columns={columns}
-                      gap={AlbumCard.width}
-                      h={cropMarkH}
-                      offsetX={paperPadding.px}
-                      offsetY={paperPadding.py - cropMarkH}
-                    />
-
-                    <CropMarksV
-                      columns={columns}
-                      gap={AlbumCard.width}
-                      h={cropMarkH}
-                      offsetX={paperPadding.px}
-                      offsetY={paperPadding.py + rows * AlbumCard.height}
-                    />
-                  </>
-                )}
-              </Flex>
-            ))}
+          <VStack align="center" className="printable" pointerEvents="none">
+            <Flex
+              alignContent="flex-start"
+              justify="flex-start"
+              position="relative"
+              px={`${paperPadding.px}in`}
+              width={`${paperWidth}in`}
+              wrap="wrap"
+            >
+              {resourceIds.map((resourceId) => (
+                <AlbumCard
+                  borderRadius={0}
+                  campaignId={campaignId}
+                  css={css}
+                  gradientIntensity={100 - gradientIntensity}
+                  key={resourceId}
+                  palette={palette}
+                  printMode
+                  resourceId={resourceId}
+                  shadow="none"
+                />
+              ))}
+            </Flex>
           </VStack>
         </VStack>
 
@@ -314,6 +234,28 @@ export function createResourcesPrintMode<
         </VStack>
       </HStack>
     );
+  };
+}
+
+//------------------------------------------------------------------------------
+// CSS
+//------------------------------------------------------------------------------
+
+function makeCss(columns: number, rows: number, paperPaddingY: number) {
+  const cardsPerPaper = columns * rows;
+  return {
+    ...Object.fromEntries(
+      range(columns).map((c) => [
+        `&:nth-of-type(${cardsPerPaper}n+${c + 1})`,
+        { marginTop: `${paperPaddingY}in` },
+      ]),
+    ),
+    ...Object.fromEntries(
+      range(columns).map((c) => [
+        `&:nth-of-type(${cardsPerPaper}n-${c})`,
+        { marginBottom: `${paperPaddingY}in` },
+      ]),
+    ),
   };
 }
 
