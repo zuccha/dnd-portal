@@ -30,7 +30,6 @@ export default function AlbumCard({ children, ...props }: AlbumCardProps) {
       gap={0}
       h={cardH}
       lineHeight={1.2}
-      overflow="hidden"
       shadow="sm"
       w={cardW}
       {...props}
@@ -71,6 +70,8 @@ function AlbumCardDescription({
   paragraphs,
   ...rest
 }: AlbumCardDescriptionProps) {
+  if (!paragraphs.length) return null;
+
   return (
     <VStack
       align="flex-start"
