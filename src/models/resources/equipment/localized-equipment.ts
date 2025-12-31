@@ -65,11 +65,11 @@ export function useLocalizeEquipment<E extends Equipment>(): (
 
 const i18nContext = {
   "magic_type.magic": {
-    en: "Magic",
-    it: "Magico",
+    en: "Magic Item",
+    it: "Oggetto Magico",
   },
   "magic_type.non_magic": {
-    en: "Nonmagic",
-    it: "Non Magico",
+    en: "Nonmagic Item",
+    it: "Oggetto Non Magico",
   },
 };
