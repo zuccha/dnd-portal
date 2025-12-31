@@ -131,7 +131,7 @@ export function createResourcesTableRow<
             <Table.Cell colSpan={columnCount}>
               <VStack align="flex-start" gap={1} w="full">
                 {String(localizedResource[extra.detailsKey])
-                  .split("\n")
+                  .split(/[\n\r]/)
                   .map((paragraph, i) => (
                     <RichText key={i} text={paragraph} />
                   ))}
