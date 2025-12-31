@@ -18,5 +18,5 @@ export function translate(
   lang: I18nLang,
   fallback: string = "",
 ): string {
-  return i18nString[lang] ?? i18nString["en"] ?? fallback;
+  return i18nString[lang] ?? fallback;
 }

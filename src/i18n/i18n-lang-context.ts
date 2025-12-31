@@ -19,7 +19,7 @@ export function useI18nLangContext(context: I18nLangContext) {
   const t = useCallback(
     (key: string) => {
       const base = context[key] ?? {};
-      return base[lang] ?? base["en"] ?? key;
+      return base[lang] ?? key;
     },
     [context, lang],
   );
@@ -27,7 +27,7 @@ export function useI18nLangContext(context: I18nLangContext) {
   const tp = useCallback(
     (key: string, count: number) => {
       const base = context[`${key}/${count}`] ?? context[`${key}/*`] ?? {};
-      return base[lang] ?? base["en"] ?? key;
+      return base[lang] ?? key;
     },
     [context, lang],
   );
@@ -35,7 +35,7 @@ export function useI18nLangContext(context: I18nLangContext) {
   const ti = useCallback(
     (key: string, ...args: string[]) => {
       const base = context[key] ?? {};
-      return interpolate(base[lang] ?? base["en"] ?? key, ...args);
+      return interpolate(base[lang] ?? key, ...args);
     },
     [context, lang],
   );
@@ -43,7 +43,7 @@ export function useI18nLangContext(context: I18nLangContext) {
   const tpi = useCallback(
     (key: string, count: number, ...args: string[]) => {
       const base = context[`${key}/${count}`] ?? context[`${key}/*`] ?? {};
-      return interpolate(base[lang] ?? base["en"] ?? key, ...args);
+      return interpolate(base[lang] ?? key, ...args);
     },
     [context, lang],
   );
