@@ -102,8 +102,8 @@ GRANT ALL ON FUNCTION public.validate_equipment_resource_kind() TO service_role;
 
 CREATE POLICY "Users can read equipments"
 ON public.equipments
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new equipments"
 ON public.equipments
@@ -128,8 +128,8 @@ USING (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Users can read equipment translations"
 ON public.equipment_translations
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new equipment translations"
 ON public.equipment_translations

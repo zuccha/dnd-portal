@@ -97,8 +97,8 @@ CREATE TYPE public.armor_row AS (
 
 CREATE POLICY "Users can read armors"
 ON public.armors
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new armors"
 ON public.armors
@@ -123,8 +123,8 @@ USING (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Users can read armor translations"
 ON public.armor_translations
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new armor translations"
 ON public.armor_translations

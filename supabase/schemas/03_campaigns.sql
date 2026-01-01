@@ -125,6 +125,16 @@ CREATE POLICY "Campaign creators can edit" ON public.campaigns
 TO authenticated
 USING (creator_id = (SELECT auth.uid() AS uid));
 
+CREATE POLICY "Anon can read public/purchasable modules" ON public.campaigns
+FOR SELECT TO anon
+USING (
+  is_module = true
+  AND visibility IN (
+    'public'::public.campaign_visibility,
+    'purchasable'::public.campaign_visibility
+  )
+);
+
 
 --------------------------------------------------------------------------------
 -- CAMPAIGN MODULES POLICIES

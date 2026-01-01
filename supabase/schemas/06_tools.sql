@@ -73,8 +73,8 @@ CREATE TYPE public.tool_row AS (
 
 CREATE POLICY "Users can read tools"
 ON public.tools
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new tools"
 ON public.tools
@@ -99,8 +99,8 @@ USING (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Users can read tool translations"
 ON public.tool_translations
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new tool translations"
 ON public.tool_translations

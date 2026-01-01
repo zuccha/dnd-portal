@@ -182,8 +182,8 @@ GRANT ALL ON FUNCTION public.validate_creature_resource_kind() TO service_role;
 
 CREATE POLICY "Users can read creatures"
 ON public.creatures
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new creatures"
 ON public.creatures
@@ -208,8 +208,8 @@ USING (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Users can read creature translations"
 ON public.creature_translations
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new creature translations"
 ON public.creature_translations

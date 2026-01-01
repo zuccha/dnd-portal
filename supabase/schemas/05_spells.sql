@@ -134,8 +134,8 @@ GRANT ALL ON FUNCTION public.validate_spell_resource_kind() TO service_role;
 
 CREATE POLICY "Users can read spells"
 ON public.spells
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new spells"
 ON public.spells
@@ -160,8 +160,8 @@ USING (public.can_edit_resource(resource_id));
 
 CREATE POLICY "Users can read spell translations"
 ON public.spell_translations
-FOR SELECT TO authenticated
-USING (public.can_read_resource(resource_id) OR public.can_edit_resource(resource_id));
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
 
 CREATE POLICY "Creators and GMs can create new spell translations"
 ON public.spell_translations
