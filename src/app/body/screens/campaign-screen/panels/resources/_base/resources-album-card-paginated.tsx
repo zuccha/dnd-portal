@@ -97,21 +97,27 @@ export default function createResourcesAlbumCardPaginated<
       const overflow = element.scrollHeight > element.clientHeight;
 
       if (overflow) {
-        let [left, right] = split(lastPage.textTemp);
+        // We need to split the text we are trying to fit in the page in two.
+        // If the page already has some text that fits, we don't need to do a
+        // hard split. Otherwise, a big, unbreakable word needs to be split even
+        // if it doesn't contain any spaces. On the first page, never hard split
+        // as there is other stuff that can cause an overflow.
+        const hardSplit = !lastPage.text && pages.length > 1;
+        let [left, right] = split(lastPage.textTemp, hardSplit);
         if (!left) [left, right] = [right, ""];
 
-        if (right.length > 1) {
+        if (!left && !detailsRef.current)
+          return changePageCountRef.current(pages.length);
+
+        if (right) {
           setPages([...dropLast(pages), { ...lastPage, textTemp: left }]);
           detailsRef.current = right + detailsRef.current;
         } else {
+          const textTemp = lastPage.textTemp + detailsRef.current;
           setPages([
             ...dropLast(pages),
             { ...lastPage, textTemp: "" },
-            {
-              ref: createRef(),
-              text: "",
-              textTemp: lastPage.textTemp + detailsRef.current,
-            },
+            { ref: createRef(), text: "", textTemp },
           ]);
           detailsRef.current = "";
         }
@@ -162,7 +168,7 @@ export default function createResourcesAlbumCardPaginated<
   };
 }
 
-function split(text: string): [string, string] {
+function split(text: string, hardSplit: boolean): [string, string] {
   const center = Math.ceil(text.length / 2);
   let left = center - 1;
   let right = center;
@@ -174,5 +180,5 @@ function split(text: string): [string, string] {
     left--;
     right++;
   }
-  return [text.slice(0, center), text.slice(center)];
+  return hardSplit ? [text.slice(0, center), text.slice(center)] : [text, ""];
 }
