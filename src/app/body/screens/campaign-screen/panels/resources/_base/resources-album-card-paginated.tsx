@@ -1,5 +1,5 @@
 import { type StackProps } from "@chakra-ui/react";
-import { createRef, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createRef, useLayoutEffect, useRef, useState } from "react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -61,18 +61,16 @@ export default function createResourcesAlbumCardPaginated<
   }: ResourcesAlbumCardPaginatedProps<R, L>) {
     const changePageCountRef = useRef(onPageCountChange);
 
-    const paragraphs = useMemo(() => {
-      return localizedResource ? getDetails(localizedResource).split("\n") : [];
-    }, [localizedResource]);
-
-    const paragraphToProcessIndexRef = useRef(paragraphs.length);
+    const detailsRef = useRef("");
+    const renderCountRef = useRef(0);
 
     const [pages, setPages] = useState<
       {
         ref: React.RefObject<HTMLDivElement | null>;
-        paragraphs: string[];
+        text: string;
+        textTemp: string;
       }[]
-    >([{ paragraphs: [], ref: createRef<HTMLDivElement>() }]);
+    >([{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }]);
 
     useLayoutEffect(() => {
       changePageCountRef.current = onPageCountChange;
@@ -80,45 +78,57 @@ export default function createResourcesAlbumCardPaginated<
 
     useLayoutEffect(() => {
       changePageCountRef.current(undefined);
-      paragraphToProcessIndexRef.current = 0;
-      setPages([{ paragraphs: [], ref: createRef<HTMLDivElement>() }]);
-    }, [paragraphs]);
+      detailsRef.current = getDetails(localizedResource);
+      setPages([{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }]);
+    }, [localizedResource]);
 
     useLayoutEffect(() => {
-      if (paragraphs.length === 0) return changePageCountRef.current(0);
-
-      const lastPage = pages[pages.length - 1]!;
-      const element = lastPage.ref.current;
-      if (!element) return changePageCountRef.current(0);
-
-      const overflow = element.scrollHeight > element.clientHeight;
-
-      if (overflow && (pages.length === 1 || lastPage.paragraphs.length > 1)) {
-        const paragraph = lastPage.paragraphs.at(-1);
-        setPages([
-          ...dropLast(pages),
-          { ...lastPage, paragraphs: dropLast(lastPage.paragraphs) },
-          { paragraphs: paragraph ? [paragraph] : [], ref: createRef() },
-        ]);
+      if (renderCountRef.current > 50) {
+        renderCountRef.current = 0;
+        requestAnimationFrame(() => setPages([...pages]));
         return;
       }
 
-      if (paragraphToProcessIndexRef.current >= paragraphs.length)
-        return changePageCountRef.current(pages.length);
+      renderCountRef.current++;
+
+      const lastPage = pages[pages.length - 1]!;
+      const element = lastPage.ref.current;
+      if (!element) return changePageCountRef.current(undefined);
+      const overflow = element.scrollHeight > element.clientHeight;
 
       if (overflow) {
-        const paragraph = paragraphs[paragraphToProcessIndexRef.current]!;
-        setPages([...pages, { paragraphs: [paragraph], ref: createRef() }]);
-        paragraphToProcessIndexRef.current++;
-      } else {
-        const paragraph = paragraphs[paragraphToProcessIndexRef.current]!;
+        let [left, right] = split(lastPage.textTemp);
+        if (!left) [left, right] = [right, ""];
+
+        if (right.length > 1) {
+          setPages([...dropLast(pages), { ...lastPage, textTemp: left }]);
+          detailsRef.current = right + detailsRef.current;
+        } else {
+          setPages([
+            ...dropLast(pages),
+            { ...lastPage, textTemp: "" },
+            {
+              ref: createRef(),
+              text: "",
+              textTemp: lastPage.textTemp + detailsRef.current,
+            },
+          ]);
+          detailsRef.current = "";
+        }
+      } else if (detailsRef.current.length) {
         setPages([
           ...dropLast(pages),
-          { ...lastPage, paragraphs: [...lastPage.paragraphs, paragraph] },
+          {
+            ...lastPage,
+            text: lastPage.text + lastPage.textTemp,
+            textTemp: detailsRef.current,
+          },
         ]);
-        paragraphToProcessIndexRef.current++;
+        detailsRef.current = "";
+      } else {
+        changePageCountRef.current(pages.length);
       }
-    }, [pages, paragraphs, zoom]);
+    }, [pages]);
 
     return pages.map((page, pageIndex) => (
       <ResourcesAlbumCardFrame
@@ -143,11 +153,26 @@ export default function createResourcesAlbumCardPaginated<
         )}
 
         <AlbumCard.Description
-          paragraphs={page.paragraphs.flatMap((paragraph) =>
-            paragraph.split("\r"),
-          )}
+          paragraphs={(page.text + page.textTemp)
+            .split(/[\r\n]/)
+            .map((paragraph) => paragraph.trim())}
         />
       </ResourcesAlbumCardFrame>
     ));
   };
+}
+
+function split(text: string): [string, string] {
+  const center = Math.ceil(text.length / 2);
+  let left = center - 1;
+  let right = center;
+  while (0 <= left || right < text.length) {
+    if (/\s/.test(text[right] ?? ""))
+      return [text.slice(0, right), text.slice(right)];
+    if (/\s/.test(text[left] ?? ""))
+      return [text.slice(0, left), text.slice(left)];
+    left--;
+    right++;
+  }
+  return [text.slice(0, center), text.slice(center)];
 }
