@@ -32,31 +32,43 @@ export default function CharacterClassesAlbumCardContent({
       <AlbumCard.Caption>{t("title")}</AlbumCard.Caption>
 
       <AlbumCard.Info>
-        <AlbumCard.InfoCell label={t("primary_abilities")}>
-          {primary_abilities}
-        </AlbumCard.InfoCell>
+        {primary_abilities && (
+          <AlbumCard.InfoCell label={t("primary_abilities")}>
+            {primary_abilities}
+          </AlbumCard.InfoCell>
+        )}
 
         <AlbumCard.InfoCell label={t("hp_die")}>{hp_die}</AlbumCard.InfoCell>
 
-        <AlbumCard.InfoCell label={t("saving_throw_proficiencies")}>
-          {saving_throw_proficiencies}
-        </AlbumCard.InfoCell>
+        {saving_throw_proficiencies && (
+          <AlbumCard.InfoCell label={t("saving_throw_proficiencies")}>
+            {saving_throw_proficiencies}
+          </AlbumCard.InfoCell>
+        )}
 
-        <AlbumCard.InfoCell label={t("skill_proficiencies_pool")}>
-          <RichText text={skill_proficiencies_pool} />
-        </AlbumCard.InfoCell>
+        {skill_proficiencies_pool && (
+          <AlbumCard.InfoCell label={t("skill_proficiencies_pool")}>
+            <RichText text={skill_proficiencies_pool} />
+          </AlbumCard.InfoCell>
+        )}
 
-        <AlbumCard.InfoCell label={t("weapon_proficiencies")}>
-          {weapon_proficiencies}
-        </AlbumCard.InfoCell>
+        {weapon_proficiencies && (
+          <AlbumCard.InfoCell label={t("weapon_proficiencies")}>
+            {weapon_proficiencies}
+          </AlbumCard.InfoCell>
+        )}
 
-        <AlbumCard.InfoCell label={t("armor_proficiencies")}>
-          {armor_proficiencies}
-        </AlbumCard.InfoCell>
+        {armor_proficiencies && (
+          <AlbumCard.InfoCell label={t("armor_proficiencies")}>
+            {armor_proficiencies}
+          </AlbumCard.InfoCell>
+        )}
 
-        <AlbumCard.InfoCell label={t("starting_equipment")}>
-          <RichText text={starting_equipment} />
-        </AlbumCard.InfoCell>
+        {starting_equipment && (
+          <AlbumCard.InfoCell label={t("starting_equipment")}>
+            <RichText text={starting_equipment} />
+          </AlbumCard.InfoCell>
+        )}
       </AlbumCard.Info>
     </VStack>
   );
