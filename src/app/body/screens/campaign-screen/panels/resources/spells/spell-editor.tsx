@@ -61,7 +61,7 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <SpellEditorName defaultName={resource.name[lang] ?? ""} />
-        <SpellEditorPage defaultPage={resource.page?.[lang] ?? 0} />
+        <SpellEditorPage defaultPage={resource.page[lang] ?? 0} />
         <SpellEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 

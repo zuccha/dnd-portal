@@ -24,7 +24,7 @@ export const dbResourceTranslationSchema = z.object({
   resource_id: z.uuid(),
 
   name: z.string(),
-  page: z.number().nullish(),
+  page: z.number(),
 });
 
 export type DBResourceTranslation = z.infer<typeof dbResourceTranslationSchema>;

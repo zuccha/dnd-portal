@@ -46,7 +46,7 @@ export default function CharacterClassEditor({
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <CharacterClassEditorName defaultName={resource.name[lang] ?? ""} />
-        <CharacterClassEditorPage defaultPage={resource.page?.[lang] ?? 0} />
+        <CharacterClassEditorPage defaultPage={resource.page[lang] ?? 0} />
         <CharacterClassEditorVisibility
           defaultVisibility={resource.visibility}
         />

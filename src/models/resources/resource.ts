@@ -13,11 +13,10 @@ export const resourceSchema = z.object({
   campaign_id: z.string(),
   campaign_name: z.string(),
 
-  name: i18nStringSchema,
-
-  page: i18nNumberSchema.nullish(),
-
   visibility: campaignRoleSchema,
+
+  name: i18nStringSchema,
+  page: i18nNumberSchema,
 });
 
 export type Resource = z.infer<typeof resourceSchema>;
