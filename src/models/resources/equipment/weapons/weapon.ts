@@ -1,10 +1,12 @@
 import z from "zod";
-import { i18nStringSchema } from "~/i18n/i18n-string";
+import type { I18nNumber } from "~/i18n/i18n-number";
+import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
+import type { KeysOfType } from "~/types";
 import { damageTypeSchema } from "../../../types/damage-type";
 import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
 import { weaponTypeSchema } from "../../../types/weapon-type";
-import { equipmentSchema } from "../equipment";
+import { equipmentSchema, equipmentTranslationFields } from "../equipment";
 
 //------------------------------------------------------------------------------
 // Weapon
@@ -59,3 +61,12 @@ export const defaultWeapon: Weapon = {
   ranged: false,
   type: "simple",
 };
+
+//------------------------------------------------------------------------------
+// Weapon Translation Fields
+//------------------------------------------------------------------------------
+
+export const weaponTranslationFields: KeysOfType<
+  Weapon,
+  I18nNumber | I18nString
+>[] = [...equipmentTranslationFields, "ammunition"];

@@ -1,5 +1,5 @@
 import { createEquipmentStore } from "../equipment-store";
-import { armorSchema, defaultArmor } from "./armor";
+import { armorSchema, armorTranslationFields, defaultArmor } from "./armor";
 import {
   armorFiltersSchema,
   armorOrderOptions,
@@ -19,6 +19,7 @@ export const armorStore = createEquipmentStore(
     equipmentSchema: armorSchema,
     filtersSchema: armorFiltersSchema,
     orderOptions: armorOrderOptions,
+    translationFields: armorTranslationFields,
     useLocalizeEquipment: useLocalizeArmor,
   },
 );

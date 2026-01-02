@@ -1,5 +1,8 @@
 import z from "zod";
-import { equipmentSchema } from "../equipment";
+import type { I18nNumber } from "~/i18n/i18n-number";
+import type { I18nString } from "~/i18n/i18n-string";
+import type { KeysOfType } from "~/types";
+import { equipmentSchema, equipmentTranslationFields } from "../equipment";
 
 //------------------------------------------------------------------------------
 // Item
@@ -30,3 +33,12 @@ export const defaultItem: Item = {
 
   notes: {},
 };
+
+//------------------------------------------------------------------------------
+// Item Translation Fields
+//------------------------------------------------------------------------------
+
+export const itemTranslationFields: KeysOfType<
+  Item,
+  I18nNumber | I18nString
+>[] = [...equipmentTranslationFields];

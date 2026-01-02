@@ -2,6 +2,7 @@ import { createResourceStore } from "../resource-store";
 import {
   defaultEldritchInvocation,
   eldritchInvocationSchema,
+  eldritchInvocationTranslationFields,
 } from "./eldritch-invocation";
 import {
   defaultEldritchInvocationFilters,
@@ -22,6 +23,7 @@ export const eldritchInvocationStore = createResourceStore(
     filtersSchema: eldritchInvocationFiltersSchema,
     orderOptions: eldritchInvocationOrderOptions,
     resourceSchema: eldritchInvocationSchema,
+    translationFields: eldritchInvocationTranslationFields,
     useLocalizeResource: useLocalizeEldritchInvocation,
   },
 );

@@ -1,5 +1,5 @@
 import { createEquipmentStore } from "../equipment-store";
-import { defaultItem, itemSchema } from "./item";
+import { defaultItem, itemSchema, itemTranslationFields } from "./item";
 import {
   defaultItemFilters,
   itemFiltersSchema,
@@ -19,6 +19,7 @@ export const itemStore = createEquipmentStore(
     equipmentSchema: itemSchema,
     filtersSchema: itemFiltersSchema,
     orderOptions: itemOrderOptions,
+    translationFields: itemTranslationFields,
     useLocalizeEquipment: useLocalizeItem,
   },
 );

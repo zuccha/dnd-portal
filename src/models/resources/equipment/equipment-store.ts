@@ -1,5 +1,7 @@
 import type { ZodType } from "zod";
+import type { I18nNumber } from "~/i18n/i18n-number";
 import type { I18nString } from "~/i18n/i18n-string";
+import type { KeysOfType } from "~/types";
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import type { DBEquipment, DBEquipmentTranslation } from "./db-equipment";
 import { type Equipment } from "./equipment";
@@ -24,6 +26,7 @@ export function createEquipmentStore<
     defaultEquipment: E;
     defaultFilters: F;
     orderOptions: { label: I18nString; value: string }[];
+    translationFields: KeysOfType<E, I18nNumber | I18nString>[];
     useLocalizeEquipment: () => (equipment: E) => L;
   },
 ): ResourceStore<E, L, F, DBR, DBT> {
@@ -33,6 +36,7 @@ export function createEquipmentStore<
     filtersSchema: extra.filtersSchema,
     orderOptions: extra.orderOptions,
     resourceSchema: extra.equipmentSchema,
+    translationFields: extra.translationFields,
     useLocalizeResource: extra.useLocalizeEquipment,
   });
 }

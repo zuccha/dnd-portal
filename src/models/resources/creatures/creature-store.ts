@@ -1,5 +1,9 @@
 import { createResourceStore } from "../resource-store";
-import { creatureSchema, defaultCreature } from "./creature";
+import {
+  creatureSchema,
+  creatureTranslationFields,
+  defaultCreature,
+} from "./creature";
 import {
   creatureFiltersSchema,
   creatureOrderOptions,
@@ -19,6 +23,7 @@ export const creatureStore = createResourceStore(
     filtersSchema: creatureFiltersSchema,
     orderOptions: creatureOrderOptions,
     resourceSchema: creatureSchema,
+    translationFields: creatureTranslationFields,
     useLocalizeResource: useLocalizeCreature,
   },
 );

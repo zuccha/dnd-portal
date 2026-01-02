@@ -1,11 +1,13 @@
 import z from "zod";
-import { i18nStringSchema } from "~/i18n/i18n-string";
+import type { I18nNumber } from "~/i18n/i18n-number";
+import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
+import type { KeysOfType } from "~/types";
 import { armorTypeSchema } from "../../types/armor-type";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
 import { dieTypeSchema } from "../../types/die_type";
 import { weaponTypeSchema } from "../../types/weapon-type";
-import { resourceSchema } from "../resource";
+import { resourceSchema, resourceTranslationFields } from "../resource";
 
 //------------------------------------------------------------------------------
 // Character Class
@@ -52,3 +54,17 @@ export const defaultCharacterClass: CharacterClass = {
   weapon_proficiencies: [],
   weapon_proficiencies_extra: {},
 };
+
+//------------------------------------------------------------------------------
+// Character Class Translation Fields
+//------------------------------------------------------------------------------
+
+export const characterClassTranslationFields: KeysOfType<
+  CharacterClass,
+  I18nNumber | I18nString
+>[] = [
+  ...resourceTranslationFields,
+  "armor_proficiencies_extra",
+  "starting_equipment",
+  "weapon_proficiencies_extra",
+];

@@ -1,5 +1,7 @@
 import z from "zod";
-import { i18nStringSchema } from "~/i18n/i18n-string";
+import type { I18nNumber } from "~/i18n/i18n-number";
+import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
+import type { KeysOfType } from "~/types";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
 import { creatureConditionSchema } from "../../types/creature-condition";
@@ -9,7 +11,7 @@ import { creatureSkillSchema } from "../../types/creature-skill";
 import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { damageTypeSchema } from "../../types/damage-type";
-import { resourceSchema } from "../resource";
+import { resourceSchema, resourceTranslationFields } from "../resource";
 
 //------------------------------------------------------------------------------
 // Creature
@@ -145,3 +147,23 @@ export const defaultCreature: Creature = {
 
   visibility: "game_master",
 };
+
+//------------------------------------------------------------------------------
+// Creature Translation Fields
+//------------------------------------------------------------------------------
+
+export const creatureTranslationFields: KeysOfType<
+  Creature,
+  I18nNumber | I18nString
+>[] = [
+  ...resourceTranslationFields,
+  "actions",
+  "bonus_actions",
+  "gear",
+  "languages",
+  "legendary_actions",
+  "planes",
+  "reactions",
+  "senses",
+  "traits",
+];

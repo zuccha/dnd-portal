@@ -1,12 +1,14 @@
 import { z } from "zod";
-import { i18nStringSchema } from "~/i18n/i18n-string";
+import type { I18nNumber } from "~/i18n/i18n-number";
+import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
+import type { KeysOfType } from "~/types";
 import { characterClassSchema } from "../../types/character-class";
 import { spellCastingTimeSchema } from "../../types/spell-casting-time";
 import { spellDurationSchema } from "../../types/spell-duration";
 import { spellLevelSchema } from "../../types/spell-level";
 import { spellRangeSchema } from "../../types/spell-range";
 import { spellSchoolSchema } from "../../types/spell-school";
-import { resourceSchema } from "../resource";
+import { resourceSchema, resourceTranslationFields } from "../resource";
 
 //------------------------------------------------------------------------------
 // Spell
@@ -83,3 +85,12 @@ export const defaultSpell: Spell = {
 
   visibility: "game_master",
 };
+
+//------------------------------------------------------------------------------
+// Spell Translation Fields
+//------------------------------------------------------------------------------
+
+export const spellTranslationFields: KeysOfType<
+  Spell,
+  I18nNumber | I18nString
+>[] = [...resourceTranslationFields, "description"];

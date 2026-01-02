@@ -1,6 +1,8 @@
 import z from "zod";
-import { i18nStringSchema } from "~/i18n/i18n-string";
-import { resourceSchema } from "../resource";
+import type { I18nNumber } from "~/i18n/i18n-number";
+import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
+import type { KeysOfType } from "~/types";
+import { resourceSchema, resourceTranslationFields } from "../resource";
 
 //------------------------------------------------------------------------------
 // Equipment
@@ -35,3 +37,12 @@ export const defaultEquipment: Equipment = {
   notes: {},
   weight: 0,
 };
+
+//------------------------------------------------------------------------------
+// Equipment Translation Fields
+//------------------------------------------------------------------------------
+
+export const equipmentTranslationFields: KeysOfType<
+  Equipment,
+  I18nNumber | I18nString
+>[] = [...resourceTranslationFields, "notes"];

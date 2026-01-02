@@ -2,10 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { type ZodType, z } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
+import type { I18nNumber } from "~/i18n/i18n-number";
 import type { I18nString } from "~/i18n/i18n-string";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStoreSet } from "~/store/set/memory-store-set";
 import supabase, { queryClient } from "~/supabase";
+import type { KeysOfType } from "~/types";
 import { normalizeString } from "~/utils/string";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
@@ -43,6 +45,7 @@ export function createResourceStore<
     filtersSchema,
     resourceSchema,
     orderOptions,
+    translationFields,
     useLocalizeResource,
   }: {
     defaultFilters: F;
@@ -50,6 +53,7 @@ export function createResourceStore<
     filtersSchema: ZodType<F>;
     orderOptions: { label: I18nString; value: string }[];
     resourceSchema: ZodType<R>;
+    translationFields: KeysOfType<R, I18nString | I18nNumber>[];
     useLocalizeResource: () => (resource: R) => L;
   },
 ) {
@@ -149,6 +153,7 @@ export function createResourceStore<
       const queryKey = [fetchResourceId, resourceId];
       queryClient.invalidateQueries({ queryKey });
       deselectResource(resourceId);
+      resourcesStore.clear(resourceId);
     }
 
     return undefined;
@@ -183,7 +188,9 @@ export function createResourceStore<
       p_id: resourceId,
     });
     try {
-      return resourceSchema.optional().parse(data);
+      const resource = resourceSchema.optional().parse(data);
+      if (resource) setResource(resource);
+      return resource;
     } catch (e) {
       console.error(e);
       return undefined;
@@ -209,8 +216,10 @@ export function createResourceStore<
     });
     try {
       const resources = z.array(resourceSchema).parse(data);
-      for (const resource of resources)
+      for (const resource of resources) {
         queryClient.setQueryData([fetchResourceId, resource.id], resource);
+        setResource(resource);
+      }
       return resources;
     } catch (e) {
       console.error(e);
@@ -250,6 +259,23 @@ export function createResourceStore<
 
   function selectResource(resourceId: string): void {
     resourceSelectionStore.set(resourceId, false, true);
+  }
+
+  //----------------------------------------------------------------------------
+  // Set Resource
+  //----------------------------------------------------------------------------
+
+  function setResource(resource: R): void {
+    resourcesStore.set(resource.id, defaultResource, (prev) => {
+      const merged = { ...prev, ...resource };
+      for (const translationField of translationFields) {
+        merged[translationField] = {
+          ...prev[translationField],
+          ...resource[translationField],
+        };
+      }
+      return merged;
+    });
   }
 
   //----------------------------------------------------------------------------
@@ -354,7 +380,9 @@ export function createResourceStore<
   //----------------------------------------------------------------------------
 
   function useResource(resourceId: string): R | undefined {
-    const { data: resource } = useQuery<R | undefined>({
+    const resource = resourcesStore.useValue(resourceId, defaultResource);
+
+    useQuery<R | undefined>({
       queryFn: () => fetchResource(resourceId),
       queryKey: [fetchResourceId, resourceId],
     });
@@ -383,9 +411,6 @@ export function createResourceStore<
           emptyResourceIds,
           resources.map(({ id }) => id),
         );
-        resources.forEach((resource) => {
-          resourcesStore.set(resource.id, defaultResource, resource);
-        });
       }
     }, [campaignId, resources]);
 

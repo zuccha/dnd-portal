@@ -1,5 +1,9 @@
 import { createResourceStore } from "../resource-store";
-import { characterClassSchema, defaultCharacterClass } from "./character-class";
+import {
+  characterClassSchema,
+  characterClassTranslationFields,
+  defaultCharacterClass,
+} from "./character-class";
 import {
   characterClassFiltersSchema,
   characterClassOrderOptions,
@@ -19,6 +23,7 @@ export const characterClassStore = createResourceStore(
     filtersSchema: characterClassFiltersSchema,
     orderOptions: characterClassOrderOptions,
     resourceSchema: characterClassSchema,
+    translationFields: characterClassTranslationFields,
     useLocalizeResource: useLocalizeCharacterClass,
   },
 );
