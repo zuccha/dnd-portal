@@ -225,22 +225,6 @@ const i18nContext = {
     en: "E.g.: You have Truesight with a range of 30 feet.",
     it: "Es: Il warlock ottiene vista pure con un raggio di 9 metri.",
   },
-  "form.error.creation_failure": {
-    en: "Failed to create the eldritch invocation.",
-    it: "Errore durante la creazione.",
-  },
-  "form.error.invalid": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-  "form.error.invalid_translation": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-  "form.error.update_failure": {
-    en: "Failed to update the eldritch invocation.",
-    it: "Errore durante il salvataggio.",
-  },
   "min_warlock_level.label": {
     en: "Min. Lvl.",
     it: "Lvl. Min.",

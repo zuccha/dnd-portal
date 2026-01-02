@@ -129,7 +129,7 @@ export default function ResourceEditor({
 }
 
 //----------------------------------------------------------------------------
-// I18nContext
+// I18n Context
 //----------------------------------------------------------------------------
 
 const i18nContext = {
@@ -146,7 +146,7 @@ const i18nContext = {
     it: "Incolla dati",
   },
   "form.error.creation_failure": {
-    en: "Failed to create the spell.",
+    en: "Failed to create the resource.",
     it: "Errore durante la creazione.",
   },
   "form.error.invalid": {
@@ -158,7 +158,7 @@ const i18nContext = {
     it: "I dati inseriti non sono validi.",
   },
   "form.error.update_failure": {
-    en: "Failed to update the spell.",
+    en: "Failed to update the resource.",
     it: "Errore durante il salvataggio.",
   },
   "save": {

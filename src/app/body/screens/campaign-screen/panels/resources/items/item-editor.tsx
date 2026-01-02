@@ -183,22 +183,6 @@ const i18nContext = {
     en: "Cost",
     it: "Costo",
   },
-  "form.error.creation_failure": {
-    en: "Failed to create the item.",
-    it: "Errore durante la creazione.",
-  },
-  "form.error.invalid": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-  "form.error.invalid_translation": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-  "form.error.update_failure": {
-    en: "Failed to update the item.",
-    it: "Errore durante il salvataggio.",
-  },
   "magic.label": {
     en: "Magic",
     it: "Magico",
