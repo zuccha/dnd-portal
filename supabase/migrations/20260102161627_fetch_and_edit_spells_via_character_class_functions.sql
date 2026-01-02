@@ -1,45 +1,17 @@
---------------------------------------------------------------------------------
--- CHARACTER CLASS ROW
---------------------------------------------------------------------------------
+DROP FUNCTION public.fetch_character_class(uuid);
+DROP FUNCTION public.fetch_character_classes(uuid, text[], jsonb, text, text);
 
-CREATE TYPE public.character_class_row AS (
-  -- Resource
-  campaign_id uuid,
-  campaign_name text,
-  id uuid,
-  kind public.resource_kind,
-  visibility public.campaign_role,
-  name jsonb,
-  page jsonb,
-  -- Character Class
-  armor_proficiencies public.armor_type[],
-  hp_die public.die_type,
-  primary_abilities public.creature_ability[],
-  saving_throw_proficiencies public.creature_ability[],
-  skill_proficiencies_pool public.creature_skill[],
-  skill_proficiencies_pool_quantity smallint,
-  weapon_proficiencies public.weapon_type[],
-  spell_ids uuid[],
-  -- Character Class Translation
-  armor_proficiencies_extra jsonb,
-  starting_equipment jsonb,
-  weapon_proficiencies_extra jsonb
-);
+drop type "public"."character_class_row";
 
+set check_function_bodies = off;
 
---------------------------------------------------------------------------------
--- CREATE CHARACTER CLASS
---------------------------------------------------------------------------------
+create type "public"."character_class_row" as ("campaign_id" uuid, "campaign_name" text, "id" uuid, "kind" public.resource_kind, "visibility" public.campaign_role, "name" jsonb, "page" jsonb, "armor_proficiencies" public.armor_type[], "hp_die" public.die_type, "primary_abilities" public.creature_ability[], "saving_throw_proficiencies" public.creature_ability[], "skill_proficiencies_pool" public.creature_skill[], "skill_proficiencies_pool_quantity" smallint, "weapon_proficiencies" public.weapon_type[], "spell_ids" uuid[], "armor_proficiencies_extra" jsonb, "starting_equipment" jsonb, "weapon_proficiencies_extra" jsonb);
 
-CREATE OR REPLACE FUNCTION public.create_character_class(
-  p_campaign_id uuid,
-  p_lang text,
-  p_character_class jsonb,
-  p_character_class_translation jsonb)
-RETURNS uuid
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_id uuid;
   r public.character_classes%ROWTYPE;
@@ -89,24 +61,14 @@ BEGIN
 
   RETURN v_id;
 END;
-$$;
-
-ALTER FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH CHARACTER CLASS
---------------------------------------------------------------------------------
+$function$
+;
 
 CREATE OR REPLACE FUNCTION public.fetch_character_class(p_id uuid)
-RETURNS public.character_class_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+ RETURNS public.character_class_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
   SELECT
     r.campaign_id,
     r.campaign_name,
@@ -148,29 +110,14 @@ AS $$
     GROUP BY c.resource_id
   ) tt ON tt.id = r.id
   WHERE r.id = p_id;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_character_class(p_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_character_class(p_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.fetch_character_class(p_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_character_class(p_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH CHARACTER CLASSES
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.fetch_character_classes(
-  p_campaign_id uuid,
-  p_langs text[],
-  p_filters jsonb DEFAULT '{}'::jsonb,
-  p_order_by text DEFAULT 'name'::text,
-  p_order_dir text DEFAULT 'asc'::text)
-RETURNS SETOF public.character_class_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text)
+ RETURNS SETOF public.character_class_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 WITH base AS (
   SELECT r.*
   FROM public.fetch_resources(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
@@ -244,73 +191,14 @@ ORDER BY
     WHEN p_order_by = 'name' AND p_order_dir = 'desc'
       THEN (s.name->>coalesce(p_langs[1],'en'))
   END DESC NULLS LAST;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPSERT CHARACTER CLASS TRANSLATION
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.upsert_character_class_translation(
-  p_id uuid,
-  p_lang text,
-  p_character_class_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
-DECLARE
-  r public.character_class_translations%ROWTYPE;
-BEGIN
-  r := jsonb_populate_record(null::public.character_class_translations, p_character_class_translation);
-
-  INSERT INTO public.character_class_translations AS ct (
-    resource_id,
-    lang,
-    weapon_proficiencies_extra,
-    armor_proficiencies_extra,
-    starting_equipment
-  ) VALUES (
-    p_id,
-    p_lang,
-    r.weapon_proficiencies_extra,
-    r.armor_proficiencies_extra,
-    r.starting_equipment
-  )
-  ON conflict (resource_id, lang) DO UPDATE
-  SET
-    weapon_proficiencies_extra = excluded.weapon_proficiencies_extra,
-    armor_proficiencies_extra = excluded.armor_proficiencies_extra,
-    starting_equipment = excluded.starting_equipment;
-END;
-$$;
-
-ALTER FUNCTION public.upsert_character_class_translation(p_id uuid, p_lang text, p_character_class_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.upsert_character_class_translation(p_id uuid, p_lang text, p_character_class_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.upsert_character_class_translation(p_id uuid, p_lang text, p_character_class_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.upsert_character_class_translation(p_id uuid, p_lang text, p_character_class_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPDATE CHARACTER CLASS
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.update_character_class(
-  p_id uuid,
-  p_lang text,
-  p_character_class jsonb,
-  p_character_class_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.update_character_class(p_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_rows int;
 BEGIN
@@ -376,10 +264,7 @@ BEGIN
 
   perform public.upsert_character_class_translation(p_id, p_lang, p_character_class_translation);
 END;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.update_character_class(p_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.update_character_class(p_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_character_class(p_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_character_class(p_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO service_role;
