@@ -74,6 +74,10 @@ const i18nContext = {
     en: "Armors",
     it: "Armature",
   },
+  "section.resource/character-classes": {
+    en: "Classes",
+    it: "Classi",
+  },
   "section.resource/creatures": {
     en: "Creatures",
     it: "Creature",

@@ -1,0 +1,38 @@
+import z from "zod";
+import { armorTypeSchema } from "../../types/armor-type";
+import { creatureAbilitySchema } from "../../types/creature-ability";
+import { creatureSkillSchema } from "../../types/creature-skill";
+import { dieTypeSchema } from "../../types/die_type";
+import { weaponTypeSchema } from "../../types/weapon-type";
+import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
+
+//------------------------------------------------------------------------------
+// DB Character Class
+//------------------------------------------------------------------------------
+
+export const dbCharacterClassSchema = dbResourceSchema.extend({
+  armor_proficiencies: z.array(armorTypeSchema),
+  hp_die: dieTypeSchema,
+  primary_abilities: z.array(creatureAbilitySchema),
+  saving_throw_proficiencies: z.array(creatureAbilitySchema),
+  skill_proficiencies_pool: z.array(creatureSkillSchema),
+  skill_proficiencies_pool_quantity: z.number(),
+  weapon_proficiencies: z.array(weaponTypeSchema),
+});
+
+export type DBCharacterClass = z.infer<typeof dbCharacterClassSchema>;
+
+//------------------------------------------------------------------------------
+// DB Character Class Translation
+//------------------------------------------------------------------------------
+
+export const dbCharacterClassTranslationSchema =
+  dbResourceTranslationSchema.extend({
+    armor_proficiencies_extra: z.string(),
+    starting_equipment: z.string(),
+    weapon_proficiencies_extra: z.string(),
+  });
+
+export type DBCharacterClassTranslation = z.infer<
+  typeof dbCharacterClassTranslationSchema
+>;

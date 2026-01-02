@@ -1,0 +1,543 @@
+import { HStack, VStack } from "@chakra-ui/react";
+import useListCollection from "~/hooks/use-list-collection";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import type { CharacterClass } from "~/models/resources/character-classes/character-class";
+import { useArmorTypeOptions } from "~/models/types/armor-type";
+import { useCampaignRoleOptions } from "~/models/types/campaign-role";
+import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
+import { useCreatureSkillOptions } from "~/models/types/creature-skill";
+import { useDieTypeOptions } from "~/models/types/die_type";
+import { useWeaponTypeOptions } from "~/models/types/weapon-type";
+import Field from "~/ui/field";
+import Input from "~/ui/input";
+import NumberInput from "~/ui/number-input";
+import Select from "~/ui/select";
+import Textarea from "~/ui/textarea";
+import {
+  useCharacterClassEditorFormArmorProficiencies,
+  useCharacterClassEditorFormArmorProficienciesExtra,
+  useCharacterClassEditorFormHpDie,
+  useCharacterClassEditorFormName,
+  useCharacterClassEditorFormPage,
+  useCharacterClassEditorFormPrimaryAbilities,
+  useCharacterClassEditorFormSavingThrowProficiencies,
+  useCharacterClassEditorFormSkillProficienciesPool,
+  useCharacterClassEditorFormSkillProficienciesPoolQuantity,
+  useCharacterClassEditorFormStartingEquipment,
+  useCharacterClassEditorFormVisibility,
+  useCharacterClassEditorFormWeaponProficiencies,
+  useCharacterClassEditorFormWeaponProficienciesExtra,
+} from "./character-class-editor-form";
+
+//------------------------------------------------------------------------------
+// Character Class Editor
+//------------------------------------------------------------------------------
+
+export type CharacterClassEditorProps = {
+  resource: CharacterClass;
+};
+
+export default function CharacterClassEditor({
+  resource,
+}: CharacterClassEditorProps) {
+  const { lang } = useI18nLangContext(i18nContext);
+
+  return (
+    <VStack align="stretch" gap={4}>
+      <HStack align="flex-start" gap={4}>
+        <CharacterClassEditorName defaultName={resource.name[lang] ?? ""} />
+        <CharacterClassEditorPage defaultPage={resource.page?.[lang] ?? 0} />
+        <CharacterClassEditorVisibility
+          defaultVisibility={resource.visibility}
+        />
+      </HStack>
+
+      <HStack gap={4} w="full">
+        <CharacterClassEditorPrimaryAbilities
+          defaultPrimaryAbilities={resource.primary_abilities}
+        />
+
+        <CharacterClassEditorHpDie defaultHpDie={resource.hp_die} />
+      </HStack>
+
+      <CharacterClassEditorSavingThrowProficiencies
+        defaultSavingThrowProficiencies={resource.saving_throw_proficiencies}
+      />
+
+      <HStack gap={4} w="full">
+        <CharacterClassEditorSkillProficienciesPool
+          defaultSkillProficienciesPool={resource.skill_proficiencies_pool}
+        />
+
+        <CharacterClassEditorSkillProficienciesPoolQuantity
+          defaultSkillProficienciesPoolQuantity={
+            resource.skill_proficiencies_pool_quantity
+          }
+        />
+      </HStack>
+
+      <CharacterClassEditorWeaponProficiencies
+        defaultWeaponProficiencies={resource.weapon_proficiencies}
+      />
+
+      <CharacterClassEditorWeaponProficienciesExtra
+        defaultWeaponProficienciesExtra={
+          resource.weapon_proficiencies_extra[lang] ?? ""
+        }
+      />
+
+      <CharacterClassEditorArmorProficiencies
+        defaultArmorProficiencies={resource.armor_proficiencies}
+      />
+
+      <CharacterClassEditorArmorProficienciesExtra
+        defaultArmorProficienciesExtra={
+          resource.armor_proficiencies_extra[lang] ?? ""
+        }
+      />
+
+      <CharacterClassEditorStartingEquipment
+        defaultStartingEquipment={resource.starting_equipment[lang] ?? ""}
+      />
+    </VStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Armor Proficiencies
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorArmorProficiencies({
+  defaultArmorProficiencies,
+}: {
+  defaultArmorProficiencies: CharacterClass["armor_proficiencies"];
+}) {
+  const armorTypeOptions = useListCollection(useArmorTypeOptions());
+  const { error, ...rest } = useCharacterClassEditorFormArmorProficiencies(
+    defaultArmorProficiencies,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("armor_proficiencies.label")}>
+      <Select
+        multiple
+        options={armorTypeOptions}
+        placeholder={t("armor_proficiencies.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Armor Proficiencies Extra
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorArmorProficienciesExtra({
+  defaultArmorProficienciesExtra,
+}: {
+  defaultArmorProficienciesExtra: string;
+}) {
+  const { error, ...rest } = useCharacterClassEditorFormArmorProficienciesExtra(
+    defaultArmorProficienciesExtra,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("armor_proficiencies_extra.label")}>
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("armor_proficiencies_extra.placeholder")}
+        rows={5}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// HP Die
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorHpDie({
+  defaultHpDie,
+}: {
+  defaultHpDie: CharacterClass["hp_die"];
+}) {
+  const dieTypeOptions = useListCollection(useDieTypeOptions());
+  const { error, ...rest } = useCharacterClassEditorFormHpDie(defaultHpDie);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("hp_die.label")}>
+      <Select
+        options={dieTypeOptions}
+        placeholder={t("hp_die.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Name
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorName({ defaultName }: { defaultName: string }) {
+  const { error, ...rest } = useCharacterClassEditorFormName(defaultName);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("name.label")}>
+      <Input
+        autoComplete="off"
+        bgColor="bg.info"
+        placeholder={t("name.placeholder")}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Page
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorPage({ defaultPage }: { defaultPage: number }) {
+  const { error, ...rest } = useCharacterClassEditorFormPage(defaultPage);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("page.label")} maxW="6em">
+      <NumberInput bgColor="bg.info" {...rest} w="6em" />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Primary Abilities
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorPrimaryAbilities({
+  defaultPrimaryAbilities,
+}: {
+  defaultPrimaryAbilities: CharacterClass["primary_abilities"];
+}) {
+  const abilityOptions = useListCollection(useCreatureAbilityOptions());
+  const { error, ...rest } = useCharacterClassEditorFormPrimaryAbilities(
+    defaultPrimaryAbilities,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("primary_abilities.label")}>
+      <Select
+        multiple
+        options={abilityOptions}
+        placeholder={t("primary_abilities.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Saving Throw Proficiencies
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorSavingThrowProficiencies({
+  defaultSavingThrowProficiencies,
+}: {
+  defaultSavingThrowProficiencies: CharacterClass["saving_throw_proficiencies"];
+}) {
+  const abilityOptions = useListCollection(useCreatureAbilityOptions());
+  const { error, ...rest } =
+    useCharacterClassEditorFormSavingThrowProficiencies(
+      defaultSavingThrowProficiencies,
+    );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("saving_throw_proficiencies.label")}>
+      <Select
+        multiple
+        options={abilityOptions}
+        placeholder={t("saving_throw_proficiencies.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Skill Proficiencies Pool
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorSkillProficienciesPool({
+  defaultSkillProficienciesPool,
+}: {
+  defaultSkillProficienciesPool: CharacterClass["skill_proficiencies_pool"];
+}) {
+  const skillOptions = useListCollection(useCreatureSkillOptions());
+  const { error, ...rest } = useCharacterClassEditorFormSkillProficienciesPool(
+    defaultSkillProficienciesPool,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("skill_proficiencies_pool.label")}>
+      <Select
+        multiple
+        options={skillOptions}
+        placeholder={t("skill_proficiencies_pool.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Skill Proficiencies Pool Quantity
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorSkillProficienciesPoolQuantity({
+  defaultSkillProficienciesPoolQuantity,
+}: {
+  defaultSkillProficienciesPoolQuantity: number;
+}) {
+  const { error, ...rest } =
+    useCharacterClassEditorFormSkillProficienciesPoolQuantity(
+      defaultSkillProficienciesPoolQuantity,
+    );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("skill_proficiencies_pool_quantity.label")}>
+      <NumberInput {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Starting Equipment Extra
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorStartingEquipment({
+  defaultStartingEquipment,
+}: {
+  defaultStartingEquipment: string;
+}) {
+  const { error, ...rest } = useCharacterClassEditorFormStartingEquipment(
+    defaultStartingEquipment,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("starting_equipment.label")}>
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("starting_equipment.placeholder")}
+        rows={5}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Visibility
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorVisibility({
+  defaultVisibility,
+}: {
+  defaultVisibility: CharacterClass["visibility"];
+}) {
+  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const { error, ...rest } =
+    useCharacterClassEditorFormVisibility(defaultVisibility);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("visibility.label")} maxW="10em">
+      <Select options={visibilityOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Weapon Proficiencies
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorWeaponProficiencies({
+  defaultWeaponProficiencies,
+}: {
+  defaultWeaponProficiencies: CharacterClass["weapon_proficiencies"];
+}) {
+  const weaponTypeOptions = useListCollection(useWeaponTypeOptions());
+  const { error, ...rest } = useCharacterClassEditorFormWeaponProficiencies(
+    defaultWeaponProficiencies,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("weapon_proficiencies.label")}>
+      <Select
+        multiple
+        options={weaponTypeOptions}
+        placeholder={t("weapon_proficiencies.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Weapon Proficiencies Extra
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorWeaponProficienciesExtra({
+  defaultWeaponProficienciesExtra,
+}: {
+  defaultWeaponProficienciesExtra: string;
+}) {
+  const { error, ...rest } =
+    useCharacterClassEditorFormWeaponProficienciesExtra(
+      defaultWeaponProficienciesExtra,
+    );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("weapon_proficiencies_extra.label")}>
+      <Textarea
+        bgColor="bg.info"
+        placeholder={t("weapon_proficiencies_extra.placeholder")}
+        rows={5}
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//----------------------------------------------------------------------------
+// I18n Context
+//----------------------------------------------------------------------------
+
+const i18nContext = {
+  "armor_proficiencies.label": {
+    en: "Armor Training",
+    it: "Competenze nelle Armature",
+  },
+  "armor_proficiencies.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
+  "armor_proficiencies_extra.label": {
+    en: "Additional Armor Training",
+    it: "Ulteriori Competenze nelle Armature",
+  },
+  "armor_proficiencies_extra.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
+  "hp_die.label": {
+    en: "Hit Point Die",
+    it: "Dado Vita",
+  },
+  "hp_die.placeholder": {
+    en: "None",
+    it: "Nessuno",
+  },
+  "name.error.empty": {
+    en: "The name cannot be empty",
+    it: "Il nome non può essere vuoto",
+  },
+  "name.label": {
+    en: "Name",
+    it: "Nome",
+  },
+  "name.placeholder": {
+    en: "E.g.: Barbarian",
+    it: "Es: Barbaro",
+  },
+  "page.label": {
+    en: "Page",
+    it: "Pagina",
+  },
+  "primary_abilities.label": {
+    en: "Primary Abilities",
+    it: "Abilità Primarie",
+  },
+  "primary_abilities.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
+  "saving_throw_proficiencies.label": {
+    en: "Saving Throw Proficiencies",
+    it: "Competenze nei Tiri Salvezza",
+  },
+  "saving_throw_proficiencies.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
+  "skill_proficiencies_pool.label": {
+    en: "Skill Proficiencies",
+    it: "Competenze nelle Abilità",
+  },
+  "skill_proficiencies_pool.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
+  "skill_proficiencies_pool_quantity.label": {
+    en: "Quantity",
+    it: "Quantità",
+  },
+  "starting_equipment.label": {
+    en: "Starting Equipment",
+    it: "Equipaggiamento Iniziale",
+  },
+  "starting_equipment.placeholder": {
+    en: "None",
+    it: "Nessuno",
+  },
+  "visibility.label": {
+    en: "Visibility",
+    it: "Visibilità",
+  },
+  "weapon_proficiencies.label": {
+    en: "Weapon Proficiencies",
+    it: "Competenze nelle Armi",
+  },
+  "weapon_proficiencies.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
+  "weapon_proficiencies_extra.label": {
+    en: "Additional Weapon Proficiencies",
+    it: "Ulteriori Competenze nelle Armi",
+  },
+  "weapon_proficiencies_extra.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
+};

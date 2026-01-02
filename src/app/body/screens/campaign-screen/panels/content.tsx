@@ -9,6 +9,7 @@ import {
   useSelectedPanelId,
 } from "./panels";
 import ArmorsPanel from "./resources/armors/armors-panel";
+import CharacterClassesPanel from "./resources/character-classes/character-class-panel";
 import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
 import ItemsPanel from "./resources/items/items-panel";
@@ -51,6 +52,7 @@ export default function Content() {
 
 const resourcePanels: Record<ResourcePanelId, FC<{ campaignId: string }>> = {
   "resource/armors": ArmorsPanel,
+  "resource/character-classes": CharacterClassesPanel,
   "resource/creatures": CreaturesPanel,
   "resource/eldritch-invocations": EldritchInvocationsPanel,
   "resource/items": ItemsPanel,
