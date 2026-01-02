@@ -173,7 +173,11 @@ GRANT ALL ON FUNCTION public.can_create_resource(p_campaign_id uuid) TO service_
 CREATE POLICY "Users can read resources"
 ON public.resources
 FOR SELECT TO anon, authenticated
-USING (public.can_read_resource(id));
+USING (
+  public.can_read_resource(id)
+  OR public.can_edit_resource(id)
+  OR public.can_create_resource(campaign_id)
+);
 
 CREATE POLICY "Creators and GMs can create new resources"
 ON public.resources
