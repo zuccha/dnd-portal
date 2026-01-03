@@ -343,6 +343,11 @@ BEGIN
   )
   WHERE c.resource_id = p_id;
 
+  GET diagnostics v_rows = ROW_COUNT;
+  IF v_rows = 0 THEN
+    raise exception 'No row with id %', p_id;
+  END IF;
+
   DELETE FROM public.character_class_spells cs
   WHERE cs.character_class_id = p_id
     AND NOT (cs.spell_id = any(
@@ -368,11 +373,6 @@ BEGIN
     WHERE cs.character_class_id = p_id
       AND cs.spell_id = (v.value)::uuid
   );
-
-  GET diagnostics v_rows = ROW_COUNT;
-  IF v_rows = 0 THEN
-    raise exception 'No row with id %', p_id;
-  END IF;
 
   perform public.upsert_character_class_translation(p_id, p_lang, p_character_class_translation);
 END;
