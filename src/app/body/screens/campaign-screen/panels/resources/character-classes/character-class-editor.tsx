@@ -36,10 +36,12 @@ import {
 //------------------------------------------------------------------------------
 
 export type CharacterClassEditorProps = {
+  campaignId: string;
   resource: CharacterClass;
 };
 
 export default function CharacterClassEditor({
+  campaignId,
   resource,
 }: CharacterClassEditorProps) {
   const { lang } = useI18nLangContext(i18nContext);
@@ -103,7 +105,7 @@ export default function CharacterClassEditor({
       />
 
       <CharacterClassEditorSpellIds
-        campaignId={resource.campaign_id}
+        campaignId={campaignId}
         defaultSpellIds={resource.spell_ids}
       />
     </VStack>

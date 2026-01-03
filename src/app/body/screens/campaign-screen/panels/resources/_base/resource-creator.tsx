@@ -22,7 +22,7 @@ export type ResourceCreatorExtra<
   DBT extends DBResourceTranslation,
   FF extends Record<string, unknown>,
 > = {
-  Editor: React.FC<{ resource: R }>;
+  Editor: React.FC<{ campaignId: string; resource: R }>;
   form: Form<FF>;
   parseFormData: (
     data: Partial<FF>,
@@ -117,7 +117,10 @@ export function createResourceCreator<
         title={t("title")}
         valid={valid}
       >
-        <Editor resource={createdResource ?? store.defaultResource} />
+        <Editor
+          campaignId={campaignId}
+          resource={createdResource ?? store.defaultResource}
+        />
       </ResourceEditor>
     );
   };

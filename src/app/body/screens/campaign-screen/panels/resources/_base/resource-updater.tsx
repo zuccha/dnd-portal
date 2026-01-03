@@ -22,7 +22,7 @@ export type ResourceUpdaterExtra<
   DBT extends DBResourceTranslation,
   FF extends Record<string, unknown>,
 > = {
-  Editor: React.FC<{ resource: R }>;
+  Editor: React.FC<{ campaignId: string; resource: R }>;
   form: Form<FF>;
   parseFormData: (
     data: Partial<FF>,
@@ -67,7 +67,7 @@ export function createResourceUpdater<
     return undefined;
   }
 
-  return function ResourcesUpdater(_props: ResourceUpdaterProps) {
+  return function ResourcesUpdater({ campaignId }: ResourceUpdaterProps) {
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
     const editedResource = context.useEditedResource();
@@ -112,7 +112,10 @@ export function createResourceUpdater<
         title={name ? ti("title", name) : t("title.empty")}
         valid={valid}
       >
-        <Editor resource={editedResource ?? store.defaultResource} />
+        <Editor
+          campaignId={campaignId}
+          resource={editedResource ?? store.defaultResource}
+        />
       </ResourceEditor>
     );
   };
