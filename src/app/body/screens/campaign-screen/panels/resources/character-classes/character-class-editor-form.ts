@@ -23,6 +23,7 @@ export const characterClassEditorFormFieldsSchema = z.object({
   saving_throw_proficiencies: z.array(creatureAbilitySchema),
   skill_proficiencies_pool: z.array(creatureSkillSchema),
   skill_proficiencies_pool_quantity: z.number(),
+  spell_ids: z.array(z.uuid()),
   starting_equipment: z.string(),
   weapon_proficiencies: z.array(weaponTypeSchema),
   weapon_proficiencies_extra: z.string(),
@@ -145,6 +146,14 @@ export const useCharacterClassEditorFormSkillProficienciesPoolQuantity = (
     "skill_proficiencies_pool_quantity",
     defaultSkillProficienciesPoolQuantity,
   );
+
+//------------------------------------------------------------------------------
+// Spell Ids
+//------------------------------------------------------------------------------
+
+export const useCharacterClassEditorFormSpellIds = (
+  defaultSpellIds: CharacterClassEditorFormFields["spell_ids"],
+) => useCharacterClassEditorFormField("spell_ids", defaultSpellIds);
 
 //------------------------------------------------------------------------------
 // Starting Equipment

@@ -58,6 +58,7 @@ function parseFormData(data: Partial<CharacterClassEditorFormFields>):
     saving_throw_proficiencies: data.saving_throw_proficiencies,
     skill_proficiencies_pool: data.skill_proficiencies_pool,
     skill_proficiencies_pool_quantity: data.skill_proficiencies_pool_quantity,
+    spell_ids: data.spell_ids,
     weapon_proficiencies: data.weapon_proficiencies,
   };
 

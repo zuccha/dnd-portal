@@ -2,6 +2,7 @@ import { HStack, VStack } from "@chakra-ui/react";
 import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
+import { spellStore } from "~/models/resources/spells/spell-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
@@ -13,6 +14,7 @@ import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Textarea from "~/ui/textarea";
+import ResourceListbox from "../_base/resource-listbox";
 import {
   useCharacterClassEditorFormArmorProficiencies,
   useCharacterClassEditorFormArmorProficienciesExtra,
@@ -23,6 +25,7 @@ import {
   useCharacterClassEditorFormSavingThrowProficiencies,
   useCharacterClassEditorFormSkillProficienciesPool,
   useCharacterClassEditorFormSkillProficienciesPoolQuantity,
+  useCharacterClassEditorFormSpellIds,
   useCharacterClassEditorFormStartingEquipment,
   useCharacterClassEditorFormVisibility,
   useCharacterClassEditorFormWeaponProficiencies,
@@ -98,6 +101,11 @@ export default function CharacterClassEditor({
 
       <CharacterClassEditorStartingEquipment
         defaultStartingEquipment={resource.starting_equipment[lang] ?? ""}
+      />
+
+      <CharacterClassEditorSpellIds
+        campaignId={resource.campaign_id}
+        defaultSpellIds={resource.spell_ids}
       />
     </VStack>
   );
@@ -334,6 +342,31 @@ function CharacterClassEditorSkillProficienciesPoolQuantity({
 }
 
 //------------------------------------------------------------------------------
+// Spell Ids
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorSpellIds({
+  campaignId,
+  defaultSpellIds,
+}: {
+  campaignId: string;
+  defaultSpellIds: CharacterClass["spell_ids"];
+}) {
+  const spellOptions = spellStore.useLocalizedResourceOptions(campaignId);
+
+  const { error, ...rest } =
+    useCharacterClassEditorFormSpellIds(defaultSpellIds);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("spell_ids.label")}>
+      <ResourceListbox options={spellOptions} {...rest} w="full" withinDialog />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Starting Equipment Extra
 //------------------------------------------------------------------------------
 
@@ -511,6 +544,14 @@ const i18nContext = {
   "skill_proficiencies_pool_quantity.label": {
     en: "Quantity",
     it: "Quantità",
+  },
+  "spell_ids.label": {
+    en: "Spells",
+    it: "Incantesimi",
+  },
+  "spell_ids.placeholder": {
+    en: "Search spell",
+    it: "Cerca incantesimo",
   },
   "starting_equipment.label": {
     en: "Starting Equipment",
