@@ -1,4 +1,4 @@
-import { Text, VStack, createListCollection } from "@chakra-ui/react";
+import { Text, VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import {
@@ -51,7 +51,7 @@ export default function SidebarCampaignSelector() {
         title: t("select.campaigns"),
       });
 
-    return [createListCollection({ items }), categories];
+    return [items, categories];
   }, [modules, t, campaigns]);
 
   useLayoutEffect(() => {
@@ -69,7 +69,7 @@ export default function SidebarCampaignSelector() {
 
       <Select
         categories={campaignCategories}
-        disabled={!campaignOptions.items.length}
+        disabled={!campaignOptions.length}
         onValueChange={setSelectedCampaignId}
         options={campaignOptions}
         value={selectedCampaignId ?? ""}

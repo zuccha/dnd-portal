@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Armor } from "~/models/resources/equipment/armors/armor";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
@@ -596,7 +595,7 @@ function ArmorEditorRequiredWis({
 //------------------------------------------------------------------------------
 
 function ArmorEditorType({ defaultType }: { defaultType: Armor["type"] }) {
-  const typeOptions = useListCollection(useArmorTypeOptions());
+  const typeOptions = useArmorTypeOptions();
   const { error, ...rest } = useArmorEditorFormType(defaultType);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -617,7 +616,7 @@ function ArmorEditorVisibility({
 }: {
   defaultVisibility: Armor["visibility"];
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const visibilityOptions = useCampaignRoleOptions();
   const { error, ...rest } = useArmorEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;

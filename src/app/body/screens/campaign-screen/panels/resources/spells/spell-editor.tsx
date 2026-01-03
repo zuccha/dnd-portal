@@ -1,5 +1,4 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type Spell } from "~/models/resources/spells/spell";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
@@ -142,7 +141,7 @@ function SpellEditorCastingTime({
   defaultCastingTime: Spell["casting_time"];
   defaultCastingTimeValue: number;
 }) {
-  const castingTimeOptions = useListCollection(useSpellCastingTimeOptions());
+  const castingTimeOptions = useSpellCastingTimeOptions();
   const { error, ...rest } = useSpellEditorFormCastingTime(defaultCastingTime);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -190,7 +189,7 @@ function SpellEditorCharacterClasses({
 }: {
   defaultCharacterClasses: Spell["character_classes"];
 }) {
-  const characterClassOptions = useListCollection(useCharacterClassOptions());
+  const characterClassOptions = useCharacterClassOptions();
   const { error, ...rest } = useSpellEditorFormCharacterClasses(
     defaultCharacterClasses,
   );
@@ -246,7 +245,7 @@ function SpellEditorDuration({
   defaultDuration: Spell["duration"];
   defaultDurationValue: number;
 }) {
-  const durationOptions = useListCollection(useSpellDurationOptions());
+  const durationOptions = useSpellDurationOptions();
   const { error, ...rest } = useSpellEditorFormDuration(defaultDuration);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -287,7 +286,7 @@ function SpellEditorDurationValue({
 //------------------------------------------------------------------------------
 
 function SpellEditorLevel({ defaultLevel }: { defaultLevel: Spell["level"] }) {
-  const levelOptions = useListCollection(useSpellLevelOptions());
+  const levelOptions = useSpellLevelOptions();
   const level = useSpellEditorFormLevel(defaultLevel);
   const { t } = useI18nLangContext(i18nContext);
 
@@ -376,7 +375,7 @@ function SpellEditorRange({
   defaultRange: Spell["range"];
   defaultRangeValue: number;
 }) {
-  const rangeOptions = useListCollection(useSpellRangeOptions());
+  const rangeOptions = useSpellRangeOptions();
   const { error, ...rest } = useSpellEditorFormRange(defaultRange);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -420,7 +419,7 @@ function SpellEditorSchool({
 }: {
   defaultSchool: Spell["school"];
 }) {
-  const schoolOptions = useListCollection(useSpellSchoolOptions());
+  const schoolOptions = useSpellSchoolOptions();
   const { error, ...rest } = useSpellEditorFormSchool(defaultSchool);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -441,7 +440,7 @@ function SpellEditorVisibility({
 }: {
   defaultVisibility: Spell["visibility"];
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const visibilityOptions = useCampaignRoleOptions();
   const { error, ...rest } = useSpellEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;

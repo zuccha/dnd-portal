@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
@@ -75,7 +74,7 @@ function ToolEditorAbility({
 }: {
   defaultAbility: Tool["ability"];
 }) {
-  const abilityOptions = useListCollection(useCreatureAbilityOptions());
+  const abilityOptions = useCreatureAbilityOptions();
   const { error, ...rest } = useToolEditorFormAbility(defaultAbility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -198,7 +197,7 @@ function ToolEditorPage({ defaultPage }: { defaultPage: number }) {
 //------------------------------------------------------------------------------
 
 function ToolEditorType({ defaultType }: { defaultType: Tool["type"] }) {
-  const typeOptions = useListCollection(useToolTypeOptions());
+  const typeOptions = useToolTypeOptions();
   const { error, ...rest } = useToolEditorFormType(defaultType);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -240,7 +239,7 @@ function ToolEditorVisibility({
 }: {
   defaultVisibility: Tool["visibility"];
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const visibilityOptions = useCampaignRoleOptions();
   const { error, ...rest } = useToolEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;

@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
 import { spellStore } from "~/models/resources/spells/spell-store";
@@ -120,7 +119,7 @@ function CharacterClassEditorArmorProficiencies({
 }: {
   defaultArmorProficiencies: CharacterClass["armor_proficiencies"];
 }) {
-  const armorTypeOptions = useListCollection(useArmorTypeOptions());
+  const armorTypeOptions = useArmorTypeOptions();
   const { error, ...rest } = useCharacterClassEditorFormArmorProficiencies(
     defaultArmorProficiencies,
   );
@@ -176,7 +175,7 @@ function CharacterClassEditorHpDie({
 }: {
   defaultHpDie: CharacterClass["hp_die"];
 }) {
-  const dieTypeOptions = useListCollection(useDieTypeOptions());
+  const dieTypeOptions = useDieTypeOptions();
   const { error, ...rest } = useCharacterClassEditorFormHpDie(defaultHpDie);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -239,7 +238,7 @@ function CharacterClassEditorPrimaryAbilities({
 }: {
   defaultPrimaryAbilities: CharacterClass["primary_abilities"];
 }) {
-  const abilityOptions = useListCollection(useCreatureAbilityOptions());
+  const abilityOptions = useCreatureAbilityOptions();
   const { error, ...rest } = useCharacterClassEditorFormPrimaryAbilities(
     defaultPrimaryAbilities,
   );
@@ -268,7 +267,7 @@ function CharacterClassEditorSavingThrowProficiencies({
 }: {
   defaultSavingThrowProficiencies: CharacterClass["saving_throw_proficiencies"];
 }) {
-  const abilityOptions = useListCollection(useCreatureAbilityOptions());
+  const abilityOptions = useCreatureAbilityOptions();
   const { error, ...rest } =
     useCharacterClassEditorFormSavingThrowProficiencies(
       defaultSavingThrowProficiencies,
@@ -298,7 +297,7 @@ function CharacterClassEditorSkillProficienciesPool({
 }: {
   defaultSkillProficienciesPool: CharacterClass["skill_proficiencies_pool"];
 }) {
-  const skillOptions = useListCollection(useCreatureSkillOptions());
+  const skillOptions = useCreatureSkillOptions();
   const { error, ...rest } = useCharacterClassEditorFormSkillProficienciesPool(
     defaultSkillProficienciesPool,
   );
@@ -402,7 +401,7 @@ function CharacterClassEditorVisibility({
 }: {
   defaultVisibility: CharacterClass["visibility"];
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const visibilityOptions = useCampaignRoleOptions();
   const { error, ...rest } =
     useCharacterClassEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
@@ -424,7 +423,7 @@ function CharacterClassEditorWeaponProficiencies({
 }: {
   defaultWeaponProficiencies: CharacterClass["weapon_proficiencies"];
 }) {
-  const weaponTypeOptions = useListCollection(useWeaponTypeOptions());
+  const weaponTypeOptions = useWeaponTypeOptions();
   const { error, ...rest } = useCharacterClassEditorFormWeaponProficiencies(
     defaultWeaponProficiencies,
   );

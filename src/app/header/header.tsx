@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  HStack,
-  Heading,
-  Menu,
-  Portal,
-  createListCollection,
-} from "@chakra-ui/react";
+import { Avatar, HStack, Heading, Menu, Portal } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { type AuthUser, signOut } from "~/auth/auth";
 import useAuth from "~/auth/use-auth";
@@ -57,12 +50,10 @@ function LanguageSelect() {
   const languages = useLanguages();
   const languageOptions = useMemo(
     () =>
-      createListCollection({
-        items: languages.data?.map(({ code }) => ({
-          label: code.toUpperCase(),
-          value: code,
-        })) ?? [{ label: "EN", value: "en" }],
-      }),
+      languages.data?.map(({ code }) => ({
+        label: code.toUpperCase(),
+        value: code,
+      })) ?? [{ label: "EN", value: "en" }],
     [languages.data],
   );
 
@@ -87,14 +78,12 @@ function SystemSelect() {
 
   const systemOptions = useMemo(
     () =>
-      createListCollection({
-        items: i18nSystems
-          .map((system) => ({
-            label: t(`system.${system}`),
-            value: system,
-          }))
-          .sort(compareObjects("label")),
-      }),
+      i18nSystems
+        .map((system) => ({
+          label: t(`system.${system}`),
+          value: system,
+        }))
+        .sort(compareObjects("label")),
     [t],
   );
 

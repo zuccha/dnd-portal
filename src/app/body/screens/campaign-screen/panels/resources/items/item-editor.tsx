@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Item } from "~/models/resources/equipment/items/item";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
@@ -146,7 +145,7 @@ function ItemEditorVisibility({
 }: {
   defaultVisibility: Item["visibility"];
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const visibilityOptions = useCampaignRoleOptions();
   const { error, ...rest } = useItemEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;

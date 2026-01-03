@@ -1,4 +1,3 @@
-import { createListCollection } from "@chakra-ui/react";
 import { useMemo } from "react";
 import z from "zod";
 import useDebouncedState from "~/hooks/use-debounced-value";
@@ -47,12 +46,10 @@ export function createResourcesGenericFilters<
 
     const orderOptions = useMemo(
       () =>
-        createListCollection({
-          items: store.orderOptions.map(({ label, value }) => ({
-            label: translate(label, lang),
-            value,
-          })),
-        }),
+        store.orderOptions.map(({ label, value }) => ({
+          label: translate(label, lang),
+          value,
+        })),
       [lang],
     );
 

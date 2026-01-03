@@ -1,9 +1,10 @@
 import {
-  type ListCollection,
   Portal,
   Select as ChakraSelect,
   type SelectRootProps as ChakraSelectRootProps,
+  useListCollection,
 } from "@chakra-ui/react";
+import { useLayoutEffect } from "react";
 
 //------------------------------------------------------------------------------
 // Select
@@ -16,7 +17,7 @@ export type SelectProps<T extends string> = Omit<
   "collection" | "defaultValue" | "multiple" | "onValueChange" | "value"
 > & {
   categories?: { id: string; items: SelectOption<T>[]; title: string }[];
-  options: ListCollection<SelectOption<T>>;
+  options: SelectOption<T>[];
   placeholder?: string;
   withinDialog?: boolean;
 } & (
@@ -45,6 +46,10 @@ export default function Select<T extends string>({
   withinDialog,
   ...rest
 }: SelectProps<T>) {
+  const { collection, set } = useListCollection({ initialItems: options });
+
+  useLayoutEffect(() => set(options), [options, set]);
+
   const content = (
     <ChakraSelect.Positioner>
       <ChakraSelect.Content>
@@ -60,7 +65,7 @@ export default function Select<T extends string>({
               ))}
             </ChakraSelect.ItemGroup>
           ))
-        : options.items.map((option) => (
+        : collection.items.map((option) => (
             <ChakraSelect.Item item={option} key={option.value}>
               {option.label}
               <ChakraSelect.ItemIndicator />
@@ -73,7 +78,7 @@ export default function Select<T extends string>({
 
   return (
     <ChakraSelect.Root
-      collection={options}
+      collection={collection}
       defaultValue={
         defaultValue ?
           multiple ?

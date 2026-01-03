@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type Creature } from "~/models/resources/creatures/creature";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
@@ -355,7 +354,7 @@ function CreatureEditorAlignment({
 }: {
   defaultAlignment: Creature["alignment"];
 }) {
-  const alignmentOptions = useListCollection(useCreatureAlignmentOptions());
+  const alignmentOptions = useCreatureAlignmentOptions();
   const { error, ...rest } = useCreatureEditorFormAlignment(defaultAlignment);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -396,7 +395,7 @@ function CreatureEditorConditionImmunities({
 }: {
   defaultConditionImmunities: Creature["condition_immunities"];
 }) {
-  const conditionOptions = useListCollection(useCreatureConditionOptions());
+  const conditionOptions = useCreatureConditionOptions();
   const { error, ...rest } = useCreatureEditorFormConditionImmunities(
     defaultConditionImmunities,
   );
@@ -425,7 +424,7 @@ function CreatureEditorConditionResistances({
 }: {
   defaultConditionResistances: Creature["condition_resistances"];
 }) {
-  const conditionOptions = useListCollection(useCreatureConditionOptions());
+  const conditionOptions = useCreatureConditionOptions();
   const { error, ...rest } = useCreatureEditorFormConditionResistances(
     defaultConditionResistances,
   );
@@ -454,7 +453,7 @@ function CreatureEditorConditionVulnerabilities({
 }: {
   defaultConditionVulnerabilities: Creature["condition_vulnerabilities"];
 }) {
-  const conditionOptions = useListCollection(useCreatureConditionOptions());
+  const conditionOptions = useCreatureConditionOptions();
   const { error, ...rest } = useCreatureEditorFormConditionVulnerabilities(
     defaultConditionVulnerabilities,
   );
@@ -499,7 +498,7 @@ function CreatureEditorDamageImmunities({
 }: {
   defaultDamageImmunities: Creature["damage_immunities"];
 }) {
-  const damageTypeOptions = useListCollection(useDamageTypeOptions());
+  const damageTypeOptions = useDamageTypeOptions();
   const { error, ...rest } = useCreatureEditorFormDamageImmunities(
     defaultDamageImmunities,
   );
@@ -528,7 +527,7 @@ function CreatureEditorDamageResistances({
 }: {
   defaultDamageResistances: Creature["damage_resistances"];
 }) {
-  const damageTypeOptions = useListCollection(useDamageTypeOptions());
+  const damageTypeOptions = useDamageTypeOptions();
   const { error, ...rest } = useCreatureEditorFormDamageResistances(
     defaultDamageResistances,
   );
@@ -557,7 +556,7 @@ function CreatureEditorDamageVulnerabilities({
 }: {
   defaultDamageVulnerabilities: Creature["damage_vulnerabilities"];
 }) {
-  const damageTypeOptions = useListCollection(useDamageTypeOptions());
+  const damageTypeOptions = useDamageTypeOptions();
   const { error, ...rest } = useCreatureEditorFormDamageVulnerabilities(
     defaultDamageVulnerabilities,
   );
@@ -742,7 +741,7 @@ function CreatureEditorHabitats({
 }: {
   defaultHabitat: Creature["habitats"];
 }) {
-  const habitatOptions = useListCollection(useCreatureHabitatOptions());
+  const habitatOptions = useCreatureHabitatOptions();
   const { error, ...rest } = useCreatureEditorFormHabitats(defaultHabitat);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -928,7 +927,7 @@ function CreatureEditorAbilityProficiencies({
 }: {
   defaultAbilityProficiencies: Creature["ability_proficiencies"];
 }) {
-  const abilityOptions = useListCollection(useCreatureAbilityOptions());
+  const abilityOptions = useCreatureAbilityOptions();
   const { error, ...rest } = useCreatureEditorFormAbilityProficiencies(
     defaultAbilityProficiencies,
   );
@@ -957,7 +956,7 @@ function CreatureEditorSkillExpertise({
 }: {
   defaultSkillExpertise: Creature["skill_expertise"];
 }) {
-  const skillOptions = useListCollection(useCreatureSkillOptions());
+  const skillOptions = useCreatureSkillOptions();
   const { error, ...rest } = useCreatureEditorFormSkillExpertise(
     defaultSkillExpertise,
   );
@@ -986,7 +985,7 @@ function CreatureEditorSkillProficiencies({
 }: {
   defaultSkillProficiencies: Creature["skill_proficiencies"];
 }) {
-  const skillOptions = useListCollection(useCreatureSkillOptions());
+  const skillOptions = useCreatureSkillOptions();
   const { error, ...rest } = useCreatureEditorFormSkillProficiencies(
     defaultSkillProficiencies,
   );
@@ -1035,7 +1034,7 @@ function CreatureEditorSize({
 }: {
   defaultSize: Creature["size"];
 }) {
-  const sizeOptions = useListCollection(useCreatureSizeOptions());
+  const sizeOptions = useCreatureSizeOptions();
   const { error, ...rest } = useCreatureEditorFormSize(defaultSize);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -1157,7 +1156,7 @@ function CreatureEditorTreasures({
 }: {
   defaultTreasures: Creature["treasures"];
 }) {
-  const treasureOptions = useListCollection(useCreatureTreasureOptions());
+  const treasureOptions = useCreatureTreasureOptions();
 
   const { error, ...rest } = useCreatureEditorFormTreasures(defaultTreasures);
   const { t } = useI18nLangContext(i18nContext);
@@ -1226,7 +1225,7 @@ function CreatureEditorType({
 }: {
   defaultType: Creature["type"];
 }) {
-  const typeOptions = useListCollection(useCreatureTypeOptions());
+  const typeOptions = useCreatureTypeOptions();
   const { error, ...rest } = useCreatureEditorFormType(defaultType);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -1247,7 +1246,7 @@ function CreatureEditorVisibility({
 }: {
   defaultVisibility: Creature["visibility"];
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const visibilityOptions = useCampaignRoleOptions();
   const { error, ...rest } = useCreatureEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;

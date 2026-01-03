@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import useListCollection from "~/hooks/use-list-collection";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
@@ -192,7 +191,7 @@ function WeaponEditorDamageType({
 }: {
   defaultDamageType: Weapon["damage_type"];
 }) {
-  const damageTypeOptions = useListCollection(useDamageTypeOptions());
+  const damageTypeOptions = useDamageTypeOptions();
   const { error, ...rest } = useWeaponEditorFormDamageType(defaultDamageType);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -213,7 +212,7 @@ function WeaponEditorMastery({
 }: {
   defaultMastery: Weapon["mastery"];
 }) {
-  const masteryOptions = useListCollection(useWeaponMasteryOptions());
+  const masteryOptions = useWeaponMasteryOptions();
   const { error, ...rest } = useWeaponEditorFormMastery(defaultMastery);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -292,7 +291,7 @@ function WeaponEditorProperties({
 }: {
   defaultProperties: Weapon["properties"];
 }) {
-  const propertyOptions = useListCollection(useWeaponPropertyOptions());
+  const propertyOptions = useWeaponPropertyOptions();
   const { error, ...rest } = useWeaponEditorFormProperties(defaultProperties);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -355,7 +354,7 @@ function WeaponEditorRangeShort({
 //------------------------------------------------------------------------------
 
 function WeaponEditorType({ defaultType }: { defaultType: Weapon["type"] }) {
-  const typeOptions = useListCollection(useWeaponTypeOptions());
+  const typeOptions = useWeaponTypeOptions();
   const { error, ...rest } = useWeaponEditorFormType(defaultType);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
@@ -376,7 +375,7 @@ function WeaponEditorVisibility({
 }: {
   defaultVisibility: Weapon["visibility"];
 }) {
-  const visibilityOptions = useListCollection(useCampaignRoleOptions());
+  const visibilityOptions = useCampaignRoleOptions();
   const { error, ...rest } = useWeaponEditorFormVisibility(defaultVisibility);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;

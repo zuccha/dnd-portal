@@ -5,7 +5,6 @@ import {
   Span,
   type StackProps,
   VStack,
-  createListCollection,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import z from "zod";
@@ -99,32 +98,26 @@ export function createResourcesPrintMode<
     const palette = palettes[paletteName];
 
     const paletteNameOptions = useMemo(() => {
-      return createListCollection({
-        items: paletteNames
-          .map((paletteName) => ({
-            label: t(`palette_name[${paletteName}]`),
-            value: paletteName,
-          }))
-          .sort(compareObjects("label")),
-      });
+      return paletteNames
+        .map((paletteName) => ({
+          label: t(`palette_name[${paletteName}]`),
+          value: paletteName,
+        }))
+        .sort(compareObjects("label"));
     }, [t]);
 
     const paperLayoutOptions = useMemo(() => {
-      return createListCollection({
-        items: paperLayouts.map((paperLayout) => ({
-          label: t(`paper_layout[${paperLayout}]`),
-          value: paperLayout,
-        })),
-      });
+      return paperLayouts.map((paperLayout) => ({
+        label: t(`paper_layout[${paperLayout}]`),
+        value: paperLayout,
+      }));
     }, [t]);
 
     const paperTypeOptions = useMemo(() => {
-      return createListCollection({
-        items: paperTypes.map((paperType) => ({
-          label: t(`paper_type[${paperType}]`),
-          value: paperType,
-        })),
-      });
+      return paperTypes.map((paperType) => ({
+        label: t(`paper_type[${paperType}]`),
+        value: paperType,
+      }));
     }, [t]);
 
     const albumCardCss = useMemo(() => {
