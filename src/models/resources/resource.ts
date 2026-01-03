@@ -30,3 +30,27 @@ export const resourceTranslationFields: KeysOfType<
   Resource,
   I18nNumber | I18nString
 >[] = ["name", "page"];
+
+//------------------------------------------------------------------------------
+// Resource Option
+//------------------------------------------------------------------------------
+
+export const resourceOptionSchema = z.object({
+  id: z.uuid(),
+  name: i18nStringSchema,
+});
+
+export type ResourceOption = z.infer<typeof resourceOptionSchema>;
+
+//------------------------------------------------------------------------------
+// Localized Resource Option
+//------------------------------------------------------------------------------
+
+export const localizedResourceOptionSchema = resourceOptionSchema.extend({
+  label: z.string(),
+  value: z.uuid(),
+});
+
+export type LocalizedResourceOption = z.infer<
+  typeof localizedResourceOptionSchema
+>;

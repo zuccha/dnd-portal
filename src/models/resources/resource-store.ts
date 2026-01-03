@@ -3,15 +3,21 @@ import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { type ZodType, z } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { I18nNumber } from "~/i18n/i18n-number";
-import type { I18nString } from "~/i18n/i18n-string";
+import { type I18nString, translate } from "~/i18n/i18n-string";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStoreSet } from "~/store/set/memory-store-set";
 import supabase, { queryClient } from "~/supabase";
 import type { KeysOfType } from "~/types";
+import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
-import type { Resource } from "./resource";
+import {
+  type LocalizedResourceOption,
+  type Resource,
+  type ResourceOption,
+  resourceOptionSchema,
+} from "./resource";
 import type { ResourceFilters } from "./resource-filters";
 import { useResourcesModulesFilter } from "./resources-modules-filter";
 
@@ -59,9 +65,11 @@ export function createResourceStore<
 ) {
   const storeId = `resources[${storeName.p}]`;
   const fetchResourceId = `${storeId}.fetch_resource`;
+  const fetchResourceOptionsId = `${storeId}.fetch_resource_options`;
   const fetchResourcesId = `${storeId}.fetch_resources`;
 
   const emptyResourceIds: string[] = [];
+  const emptyLocalizedResourceOptions: ResourceOption[] = [];
   const emptyResources: R[] = [];
 
   //----------------------------------------------------------------------------
@@ -130,6 +138,7 @@ export function createResourceStore<
     if (error) return error.message;
 
     queryClient.invalidateQueries({ queryKey: [fetchResourcesId] });
+    queryClient.invalidateQueries({ queryKey: [fetchResourceOptionsId] });
 
     return undefined;
   }
@@ -152,6 +161,7 @@ export function createResourceStore<
     for (const resourceId of resourceIds) {
       const queryKey = [fetchResourceId, resourceId];
       queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: [fetchResourceOptionsId] });
       deselectResource(resourceId);
       resourcesStore.clear(resourceId);
     }
@@ -194,6 +204,25 @@ export function createResourceStore<
     } catch (e) {
       console.error(e);
       return undefined;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Fetch Resource Options
+  //----------------------------------------------------------------------------
+
+  async function fetchResourceOptions(
+    campaignId: string,
+  ): Promise<ResourceOption[]> {
+    const { data } = await supabase.rpc(`fetch_resource_options`, {
+      p_campaign_id: campaignId,
+      p_resource_kind: storeName.s,
+    });
+    try {
+      return z.array(resourceOptionSchema).parse(data);
+    } catch (e) {
+      console.error(e);
+      return [];
     }
   }
 
@@ -314,6 +343,7 @@ export function createResourceStore<
     if (error) return error.message;
 
     queryClient.invalidateQueries({ queryKey: [fetchResourceId, id] });
+    queryClient.invalidateQueries({ queryKey: [fetchResourceOptionsId] });
 
     return undefined;
   }
@@ -373,6 +403,35 @@ export function createResourceStore<
     return useMemo(() => {
       return resource ? localizeResource(resource) : undefined;
     }, [localizeResource, resource]);
+  }
+
+  //----------------------------------------------------------------------------
+  // Use Localized Resource Options
+  //----------------------------------------------------------------------------
+
+  function useLocalizedResourceOptions(
+    campaignId: string,
+  ): LocalizedResourceOption[] {
+    const [lang] = useI18nLang();
+
+    const { data: options } = useQuery<ResourceOption[]>({
+      queryFn: () =>
+        campaignId ?
+          fetchResourceOptions(campaignId)
+        : emptyLocalizedResourceOptions,
+      queryKey: [fetchResourceOptionsId, campaignId],
+    });
+
+    return useMemo(() => {
+      if (!options) return [];
+      return options
+        .map((option) => ({
+          ...option,
+          label: translate(option.name, lang),
+          value: option.id,
+        }))
+        .sort(compareObjects("label"));
+    }, [lang, options]);
   }
 
   //----------------------------------------------------------------------------
@@ -474,6 +533,7 @@ export function createResourceStore<
     useFilters,
     useLocalizeResource,
     useLocalizedResource,
+    useLocalizedResourceOptions,
     useResource,
     useResourceIds,
     useResourceSelection,
