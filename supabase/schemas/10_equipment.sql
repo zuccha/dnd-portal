@@ -54,7 +54,13 @@ BEGIN
     SELECT 1
     FROM public.resources r
     WHERE r.id = NEW.resource_id
-      AND r.kind = 'equipment'::public.resource_kind
+      AND r.kind = any(ARRAY[
+        'equipment'::public.resource_kind,
+        'armor'::public.resource_kind,
+        'weapon'::public.resource_kind,
+        'tool'::public.resource_kind,
+        'item'::public.resource_kind
+      ])
   ) THEN
     RAISE EXCEPTION 'Referenced resource % is not an equipment', NEW.resource_id;
   END IF;
@@ -124,5 +130,4 @@ CREATE POLICY "Creators and GMs can delete equipment translations"
 ON public.equipment_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
 
