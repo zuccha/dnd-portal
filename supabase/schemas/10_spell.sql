@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS public.spells (
   resource_id uuid NOT NULL,
   level smallint NOT NULL,
   school public.spell_school NOT NULL,
-  character_classes public.character_class[] NOT NULL,
   concentration boolean NOT NULL,
   ritual boolean NOT NULL,
   somatic boolean NOT NULL,
@@ -143,5 +142,4 @@ CREATE POLICY "Creators and GMs can delete spell translations"
 ON public.spell_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
 
