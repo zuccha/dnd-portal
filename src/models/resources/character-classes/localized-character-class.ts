@@ -72,14 +72,18 @@ export function useLocalizeCharacterClass(
           .map(translateCreatureAbility)
           .map(({ label }) => label)
           .join(", "),
-        skill_proficiencies_pool: ti(
-          "skill_proficiencies_pool",
-          `${characterClass.skill_proficiencies_pool_quantity}`,
-          characterClass.skill_proficiencies_pool
-            .map(translateCreatureSkill)
-            .map(({ label }) => label)
-            .join(", "),
-        ),
+        skill_proficiencies_pool:
+          characterClass.skill_proficiencies_pool.length ?
+            ti(
+              "skill_proficiencies_pool",
+              `${characterClass.skill_proficiencies_pool_quantity}`,
+              characterClass.skill_proficiencies_pool
+                .map(translateCreatureSkill)
+                .map(({ label }) => label)
+                .sort()
+                .join(", "),
+            )
+          : "",
         starting_equipment: translate(characterClass.starting_equipment, lang),
         tool_proficiencies: characterClass.tool_proficiency_ids
           .map(localizeToolName)
