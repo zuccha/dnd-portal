@@ -135,7 +135,13 @@ WITH prefs AS (
 base AS (
   SELECT r.*
   FROM public.fetch_resources(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
-  WHERE r.kind = 'equipment'::public.resource_kind
+  WHERE r.kind = any(ARRAY[
+    'equipment'::public.resource_kind,
+    'armor'::public.resource_kind,
+    'weapon'::public.resource_kind,
+    'tool'::public.resource_kind,
+    'item'::public.resource_kind
+  ])
 ),
 src AS (
   SELECT
