@@ -99,7 +99,7 @@ export function createResourcesPanel<
             </HStack>
             <ResourcesViewSwitch campaignId={campaignId} />
           </HStack>
-          <ResourceFilters w="full" wrap="wrap" />
+          <ResourceFilters campaignId={campaignId} w="full" wrap="wrap" />
         </VStack>
 
         <Flex flex={1} overflow="auto" w="full">
