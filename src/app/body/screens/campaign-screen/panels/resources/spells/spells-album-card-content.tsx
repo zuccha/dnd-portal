@@ -17,12 +17,12 @@ export default function SpellsAlbumCardContent({
 }: SpellsAlbumCardContentProps) {
   const {
     casting_time_with_ritual,
-    character_classes,
     components,
     duration_with_concentration,
+    level_long,
     materials,
     range,
-    school_with_level,
+    school,
   } = localizedResource;
 
   const { t } = useI18nLangContext(i18nContext);
@@ -30,8 +30,8 @@ export default function SpellsAlbumCardContent({
   return (
     <VStack {...rest}>
       <AlbumCard.Caption>
-        <Span whiteSpace="nowrap">{school_with_level}</Span>
-        <Span textAlign="right">{character_classes}</Span>
+        <Span whiteSpace="nowrap">{school}</Span>
+        <Span textAlign="right">{level_long}</Span>
       </AlbumCard.Caption>
 
       <AlbumCard.Info>

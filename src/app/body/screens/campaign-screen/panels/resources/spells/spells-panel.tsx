@@ -33,11 +33,6 @@ const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
     textAlign: "center",
   },
   {
-    key: "character_classes",
-    label: { en: "Classes", it: "Classi" },
-    maxW: "8em",
-  },
-  {
     key: "school",
     label: { en: "School", it: "Scuola" },
     maxW: "8em",
@@ -87,7 +82,7 @@ function parseFormData(
   const maybeSpell = {
     casting_time: data.casting_time,
     casting_time_value: data.casting_time_value,
-    character_classes: data.character_classes,
+    character_class_ids: data.character_class_ids,
     concentration: data.concentration,
     duration: data.duration,
     duration_value: data.duration_value,

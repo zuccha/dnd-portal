@@ -4,7 +4,6 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCm } from "~/measures/distance";
 import { useFormatSeconds } from "~/measures/time";
-import { useTranslateCharacterClass } from "../../types/character-class";
 import { useTranslateSpellCastingTime } from "../../types/spell-casting-time";
 import { useTranslateSpellDuration } from "../../types/spell-duration";
 import { useTranslateSpellRange } from "../../types/spell-range";
@@ -23,7 +22,6 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema).extend(
   {
     casting_time: z.string(),
     casting_time_with_ritual: z.string(),
-    character_classes: z.string(),
     components: z.string(),
     concentration: z.boolean(),
     description: z.string(),
@@ -49,7 +47,6 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const localizeResource = useLocalizeResource<Spell>();
   const { lang, ti, tp, tpi } = useI18nLangContext(i18nContext);
 
-  const translateCharacterClass = useTranslateCharacterClass(lang);
   const translateSpellSchool = useTranslateSpellSchool(lang);
   const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
   const translateSpellDuration = useTranslateSpellDuration(lang);
@@ -88,11 +85,6 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
           spell.ritual ?
             ti("casting_time_with_ritual", casting_time)
           : casting_time,
-        character_classes: spell.character_classes
-          .map(translateCharacterClass)
-          .map(({ label_short }) => label_short)
-          .sort()
-          .join(" "),
         components: [
           spell.verbal ? "V" : "",
           spell.somatic ? "S" : "",
@@ -111,7 +103,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
             ti("duration_with_concentration", duration)
           : duration,
         level: `${spell.level}`,
-        level_long: ti("level_long", `${spell.level}`),
+        level_long: tpi("level_long", spell.level, `${spell.level}`),
         materials,
         range,
         ritual: spell.ritual,
@@ -132,7 +124,6 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       ti,
       tp,
       tpi,
-      translateCharacterClass,
       translateSpellCastingTime,
       translateSpellDuration,
       translateSpellRange,
@@ -154,9 +145,13 @@ const i18nContext = {
     en: "Up to <1> (C)", // <1> = duration
     it: "Fino a <1> (C)", // <1> = duration
   },
-  "level_long": {
+  "level_long/*": {
     en: "Level <1>", // 1 = level
     it: "Livello <1>", // 1 = level
+  },
+  "level_long/0": {
+    en: "Cantrip", // 1 = level
+    it: "Trucchetto", // 1 = level
   },
   "school_with_level/*": {
     en: "Level <2> <1>", // 1 = school, 2 = level

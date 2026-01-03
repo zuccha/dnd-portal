@@ -1,6 +1,5 @@
 import { z } from "zod";
 import type { I18nString } from "~/i18n/i18n-string";
-import { characterClassSchema } from "../../types/character-class";
 import { spellLevelStringSchema } from "../../types/spell-level";
 import { spellSchoolSchema } from "../../types/spell-school";
 import {
@@ -35,8 +34,8 @@ export const spellOrderOptions: { label: I18nString; value: string }[] = [
 //------------------------------------------------------------------------------
 
 export const spellFiltersSchema = resourceFiltersSchema.extend({
-  character_classes: z
-    .partialRecord(characterClassSchema, z.boolean().optional())
+  character_class_ids: z
+    .partialRecord(z.uuid(), z.boolean().optional())
     .optional(),
   levels: z
     .partialRecord(spellLevelStringSchema, z.boolean().optional())

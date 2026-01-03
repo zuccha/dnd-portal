@@ -1,5 +1,4 @@
 import z from "zod";
-import { characterClassSchema } from "../../types/character-class";
 import { spellCastingTimeSchema } from "../../types/spell-casting-time";
 import { spellDurationSchema } from "../../types/spell-duration";
 import { spellLevelSchema } from "../../types/spell-level";
@@ -14,7 +13,7 @@ import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 export const dbSpellSchema = dbResourceSchema.extend({
   casting_time: spellCastingTimeSchema,
   casting_time_value_temp: z.number().nullish(),
-  character_classes: z.array(characterClassSchema),
+  character_class_ids: z.array(z.uuid()),
   concentration: z.boolean(),
   duration: spellDurationSchema,
   duration_value_temp: z.number().nullish(),

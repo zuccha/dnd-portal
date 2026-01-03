@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { characterClassSchema } from "../../types/character-class";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { spellCastingTimeSchema } from "../../types/spell-casting-time";
 import { spellDurationSchema } from "../../types/spell-duration";
@@ -19,7 +18,7 @@ import {
 export const spellSchema = resourceSchema.extend({
   casting_time: spellCastingTimeSchema,
   casting_time_value: z.number().nullish(),
-  character_classes: z.array(characterClassSchema),
+  character_class_ids: z.array(z.uuid()),
   concentration: z.boolean(),
   description: i18nStringSchema,
   duration: spellDurationSchema,
@@ -55,7 +54,7 @@ export const defaultSpell: Spell = {
 
   casting_time: "action",
   casting_time_value: undefined,
-  character_classes: [],
+  character_class_ids: [],
   concentration: false,
   description: {},
   duration: "instantaneous",

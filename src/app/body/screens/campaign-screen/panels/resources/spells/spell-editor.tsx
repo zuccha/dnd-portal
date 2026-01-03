@@ -1,8 +1,8 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { type Spell } from "~/models/resources/spells/spell";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
-import { useCharacterClassOptions } from "~/models/types/character-class";
 import { useSpellCastingTimeOptions } from "~/models/types/spell-casting-time";
 import { useSpellDurationOptions } from "~/models/types/spell-duration";
 import { useSpellLevelOptions } from "~/models/types/spell-level";
@@ -19,7 +19,7 @@ import TimeInput from "~/ui/time-input";
 import {
   useSpellEditorFormCastingTime,
   useSpellEditorFormCastingTimeValue,
-  useSpellEditorFormCharacterClasses,
+  useSpellEditorFormCharacterClassIds,
   useSpellEditorFormDescription,
   useSpellEditorFormDuration,
   useSpellEditorFormDurationValue,
@@ -40,10 +40,14 @@ import {
 //------------------------------------------------------------------------------
 
 export type SpellEditorProps = {
+  campaignId: string;
   resource: Spell;
 };
 
-export default function SpellEditor({ resource }: SpellEditorProps) {
+export default function SpellEditor({
+  campaignId,
+  resource,
+}: SpellEditorProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
 
   const ritual = useSpellEditorFormField("ritual", resource.ritual);
@@ -66,7 +70,8 @@ export default function SpellEditor({ resource }: SpellEditorProps) {
 
       <HStack align="flex-start" gap={4}>
         <SpellEditorCharacterClasses
-          defaultCharacterClasses={resource.character_classes}
+          campaignId={campaignId}
+          defaultCharacterClassIds={resource.character_class_ids}
         />
         <SpellEditorSchool defaultSchool={resource.school} />
         <SpellEditorLevel defaultLevel={resource.level} />
@@ -185,23 +190,26 @@ function SpellEditorCastingTimeValue({
 //------------------------------------------------------------------------------
 
 function SpellEditorCharacterClasses({
-  defaultCharacterClasses,
+  campaignId,
+  defaultCharacterClassIds,
 }: {
-  defaultCharacterClasses: Spell["character_classes"];
+  campaignId: string;
+  defaultCharacterClassIds: Spell["character_class_ids"];
 }) {
-  const characterClassOptions = useCharacterClassOptions();
-  const { error, ...rest } = useSpellEditorFormCharacterClasses(
-    defaultCharacterClasses,
+  const characterClassOptions =
+    characterClassStore.useLocalizedResourceOptions(campaignId);
+  const { error, ...rest } = useSpellEditorFormCharacterClassIds(
+    defaultCharacterClassIds,
   );
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("character_classes.label")}>
+    <Field error={message} label={t("character_class_ids.label")}>
       <Select
         multiple
         options={characterClassOptions}
-        placeholder={t("character_classes.placeholder")}
+        placeholder={t("character_class_ids.placeholder")}
         withinDialog
         {...rest}
       />
@@ -488,11 +496,11 @@ const i18nContext = {
     en: "Casting Time",
     it: "Tempo di Lancio",
   },
-  "character_classes.label": {
+  "character_class_ids.label": {
     en: "Classes",
     it: "Classi",
   },
-  "character_classes.placeholder": {
+  "character_class_ids.placeholder": {
     en: "None",
     it: "Nessuna",
   },

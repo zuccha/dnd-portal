@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { campaignRoleSchema } from "~/models/types/campaign-role";
-import { characterClassSchema } from "~/models/types/character-class";
 import { spellCastingTimeSchema } from "~/models/types/spell-casting-time";
 import { spellDurationSchema } from "~/models/types/spell-duration";
 import { spellRangeSchema } from "~/models/types/spell-range";
@@ -14,7 +13,7 @@ import { createForm } from "~/utils/form";
 export const spellEditorFormFieldsSchema = z.object({
   casting_time: spellCastingTimeSchema,
   casting_time_value: z.number(),
-  character_classes: z.array(characterClassSchema),
+  character_class_ids: z.array(z.uuid()),
   concentration: z.boolean(),
   description: z.string(),
   duration: spellDurationSchema,
@@ -66,12 +65,12 @@ export const useSpellEditorFormCastingTimeValue = (
 ) => useSpellEditorFormField("casting_time_value", defaultCastingTimeValue);
 
 //------------------------------------------------------------------------------
-// Character Classes
+// Character ClassIds
 //------------------------------------------------------------------------------
 
-export const useSpellEditorFormCharacterClasses = (
-  defaultCharacterClasses: SpellEditorFormFields["character_classes"],
-) => useSpellEditorFormField("character_classes", defaultCharacterClasses);
+export const useSpellEditorFormCharacterClassIds = (
+  defaultCharacterClassIds: SpellEditorFormFields["character_class_ids"],
+) => useSpellEditorFormField("character_class_ids", defaultCharacterClassIds);
 
 //------------------------------------------------------------------------------
 // Description

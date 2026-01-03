@@ -1,7 +1,7 @@
 import { HStack, type StackProps } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
-import { useCharacterClassOptions } from "~/models/types/character-class";
 import { useSpellLevelOptions } from "~/models/types/spell-level";
 import { useSpellSchoolOptions } from "~/models/types/spell-school";
 import InclusionButton from "~/ui/inclusion-button";
@@ -11,16 +11,24 @@ import InclusionSelect from "~/ui/inclusion-select";
 // Spells Filters
 //------------------------------------------------------------------------------
 
-export default function SpellsFilters(props: StackProps) {
+export type SpellsFiltersProps = StackProps & {
+  campaignId: string;
+};
+
+export default function SpellsFilters({
+  campaignId,
+  ...rest
+}: SpellsFiltersProps) {
   const { t } = useI18nLangContext(i18nContext);
   const [filters, setFilters] = spellStore.useFilters();
 
   const levelOptions = useSpellLevelOptions();
-  const characterClassOptions = useCharacterClassOptions();
+  const characterClassOptions =
+    characterClassStore.useLocalizedResourceOptions(campaignId);
   const schoolOptions = useSpellSchoolOptions();
 
   return (
-    <HStack {...props}>
+    <HStack {...rest}>
       <InclusionSelect
         includes={filters.levels ?? {}}
         minW="10em"
@@ -34,11 +42,11 @@ export default function SpellsFilters(props: StackProps) {
       </InclusionSelect>
 
       <InclusionSelect
-        includes={filters.character_classes ?? {}}
+        includes={filters.character_class_ids ?? {}}
         minW="10em"
         onValueChange={(partial) =>
           setFilters({
-            character_classes: { ...filters.character_classes, ...partial },
+            character_class_ids: { ...filters.character_class_ids, ...partial },
           })
         }
         options={characterClassOptions}
