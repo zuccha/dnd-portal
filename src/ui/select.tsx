@@ -45,7 +45,7 @@ export default function Select<T extends string>({
   withinDialog,
   ...rest
 }: SelectProps<T>) {
-  const Content = () => (
+  const content = (
     <ChakraSelect.Positioner>
       <ChakraSelect.Content>
         {categories ?
@@ -108,12 +108,7 @@ export default function Select<T extends string>({
           <ChakraSelect.Indicator />
         </ChakraSelect.IndicatorGroup>
       </ChakraSelect.Control>
-      {withinDialog ?
-        <Content />
-      : <Portal>
-          <Content />
-        </Portal>
-      }
+      {withinDialog ? content : <Portal>{content}</Portal>}
     </ChakraSelect.Root>
   );
 }
