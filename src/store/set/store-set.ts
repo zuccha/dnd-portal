@@ -151,6 +151,10 @@ export function createStoreSet<K, T>(
   function useValue(key: K, defaultValue: T): T {
     const [value, setValue] = useState(() => get(key, defaultValue));
     useLayoutEffect(() => subscribe(key, setValue), [key]);
+    useLayoutEffect(
+      () => setValue(get(key, defaultValue)),
+      [key, defaultValue],
+    );
     return value;
   }
 
