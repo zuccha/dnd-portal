@@ -1,52 +1,16 @@
---------------------------------------------------------------------------------
--- SPELL ROW
---------------------------------------------------------------------------------
+DROP FUNCTION public.fetch_spell(uuid);
+DROP FUNCTION public.fetch_spells(uuid, text[], jsonb, text, text);
 
-CREATE TYPE public.spell_row AS (
-  -- Resource
-  campaign_id uuid,
-  campaign_name text,
-  id uuid,
-  kind public.resource_kind,
-  visibility public.campaign_role,
-  name jsonb,
-  page jsonb,
-  -- Spell
-  casting_time public.spell_casting_time,
-  casting_time_value integer,
-  character_class_ids uuid[],
-  character_classes public.character_class[],
-  concentration boolean,
-  duration public.spell_duration,
-  duration_value integer,
-  level smallint,
-  material boolean,
-  range public.spell_range,
-  range_value integer,
-  ritual boolean,
-  school public.spell_school,
-  somatic boolean,
-  verbal boolean,
-  -- Spell Translation
-  description jsonb,
-  materials jsonb,
-  upgrade jsonb
-);
+drop type "public"."spell_row";
+create type "public"."spell_row" as ("campaign_id" uuid, "campaign_name" text, "id" uuid, "kind" public.resource_kind, "visibility" public.campaign_role, "name" jsonb, "page" jsonb, "casting_time" public.spell_casting_time, "casting_time_value" integer, "character_class_ids" uuid[], "character_classes" public.character_class[], "concentration" boolean, "duration" public.spell_duration, "duration_value" integer, "level" smallint, "material" boolean, "range" public.spell_range, "range_value" integer, "ritual" boolean, "school" public.spell_school, "somatic" boolean, "verbal" boolean, "description" jsonb, "materials" jsonb, "upgrade" jsonb);
 
+set check_function_bodies = off;
 
---------------------------------------------------------------------------------
--- CREATE SPELL
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.create_spell(
-  p_campaign_id uuid,
-  p_lang text,
-  p_spell jsonb,
-  p_spell_translation jsonb)
-RETURNS uuid
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_id uuid;
   r public.spells%ROWTYPE;
@@ -90,24 +54,14 @@ BEGIN
 
   RETURN v_id;
 end;
-$$;
-
-ALTER FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_spell(p_campaign_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH SPELL
---------------------------------------------------------------------------------
+$function$
+;
 
 CREATE OR REPLACE FUNCTION public.fetch_spell(p_id uuid)
-RETURNS public.spell_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+ RETURNS public.spell_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
   SELECT
     r.campaign_id,
     r.campaign_name,
@@ -156,28 +110,14 @@ AS $$
     GROUP BY s.resource_id
   ) tt ON tt.id = r.id
   WHERE r.id = p_id;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_spell(p_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_spell(p_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.fetch_spell(p_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_spell(p_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH SPELLS
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.fetch_spells(
-  p_campaign_id uuid, p_langs text[],
-  p_filters jsonb DEFAULT '{}'::jsonb,
-  p_order_by text DEFAULT 'name'::text,
-  p_order_dir text DEFAULT 'asc'::text)
-RETURNS SETOF public.spell_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text)
+ RETURNS SETOF public.spell_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 WITH prefs AS (
   SELECT
     -- campaign/modules include/exclude filter (keys are campaign or module ids)
@@ -367,65 +307,14 @@ ORDER BY
     WHEN p_order_by = 'level' AND p_order_dir = 'desc'
       THEN f.level
   END DESC NULLS LAST;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_spells(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPSERT SPELL TRANSLATION
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.upsert_spell_translation(
-  p_id uuid,
-  p_lang text,
-  p_spell_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
-DECLARE
-  r public.spell_translations%ROWTYPE;
-BEGIN
-  r := jsonb_populate_record(null::public.spell_translations, p_spell_translation);
-
-  INSERT INTO public.spell_translations AS st (
-    resource_id, lang, materials, description, upgrade
-  ) VALUES (
-    p_id, p_lang, r.materials, r.description, r.upgrade
-  )
-  ON conflict (resource_id, lang) DO UPDATE
-  SET
-    materials = excluded.materials,
-    description = excluded.description,
-    upgrade = excluded.upgrade;
-END;
-$$;
-
-ALTER FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.upsert_spell_translation(p_id uuid, p_lang text, p_spell_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPDATE SPELL
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.update_spell(
-  p_id uuid,
-  p_lang text,
-  p_spell jsonb,
-  p_spell_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_rows int;
 BEGIN
@@ -482,10 +371,7 @@ BEGIN
 
   perform public.upsert_spell_translation(p_id, p_lang, p_spell_translation);
 END;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_spell(p_id uuid, p_lang text, p_spell jsonb, p_spell_translation jsonb) TO service_role;
