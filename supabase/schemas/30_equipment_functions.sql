@@ -42,7 +42,13 @@ BEGIN
   v_id := public.create_resource(
     p_campaign_id,
     p_lang,
-    p_equipment || jsonb_build_object('kind', 'equipment'::public.resource_kind),
+    p_equipment || jsonb_build_object(
+      'kind',
+      coalesce(
+        (p_equipment->>'kind')::public.resource_kind,
+        'equipment'::public.resource_kind
+      )
+    ),
     p_equipment_translation
   );
 
@@ -246,7 +252,13 @@ BEGIN
   perform public.update_resource(
     p_id,
     p_lang,
-    p_equipment || jsonb_build_object('kind', 'equipment'::public.resource_kind),
+    p_equipment || jsonb_build_object(
+      'kind',
+      coalesce(
+        (p_equipment->>'kind')::public.resource_kind,
+        'equipment'::public.resource_kind
+      )
+    ),
     p_equipment_translation
   );
 

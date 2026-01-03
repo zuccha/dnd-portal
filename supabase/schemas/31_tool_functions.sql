@@ -47,7 +47,7 @@ BEGIN
   v_id := public.create_equipment(
     p_campaign_id,
     p_lang,
-    p_tool,
+    p_tool || jsonb_build_object('kind', 'tool'::public.resource_kind),
     p_tool_translation
   );
 
@@ -292,7 +292,7 @@ BEGIN
   perform public.update_equipment(
     p_id,
     p_lang,
-    p_tool,
+    p_tool || jsonb_build_object('kind', 'tool'::public.resource_kind),
     p_tool_translation
   );
 
