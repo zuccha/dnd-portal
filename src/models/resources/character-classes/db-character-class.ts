@@ -18,6 +18,7 @@ export const dbCharacterClassSchema = dbResourceSchema.extend({
   skill_proficiencies_pool: z.array(creatureSkillSchema),
   skill_proficiencies_pool_quantity: z.number(),
   spell_ids: z.array(z.uuid()),
+  tool_proficiency_ids: z.array(z.uuid()),
   weapon_proficiencies: z.array(weaponTypeSchema),
 });
 

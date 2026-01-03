@@ -13,8 +13,8 @@ import type { LocalizedResource } from "./localized-resource";
 import {
   type LocalizedResourceOption,
   type Resource,
-  type ResourceOption,
   type TranslationFields,
+  defaultLocalizedResourceOption,
   resourceOptionSchema,
 } from "./resource";
 import type { ResourceFilters } from "./resource-filters";
@@ -59,7 +59,7 @@ export function createResourceStore<
     orderOptions: { label: I18nString; value: string }[];
     resourceSchema: ZodType<R>;
     translationFields: TranslationFields<R>[];
-    useLocalizeResource: () => (resource: R) => L;
+    useLocalizeResource: (campaignId: string) => (resource: R) => L;
   },
 ) {
   const storeId = `resources[${storeName.p}]`;
@@ -68,7 +68,7 @@ export function createResourceStore<
   const fetchResourcesId = `${storeId}.fetch_resources`;
 
   const emptyResourceIds: string[] = [];
-  const emptyLocalizedResourceOptions: ResourceOption[] = [];
+  const emptyLocalizedResourceOptions: LocalizedResourceOption[] = [];
   const emptyResources: R[] = [];
 
   //----------------------------------------------------------------------------
@@ -97,6 +97,16 @@ export function createResourceStore<
   const resourcesStore = createMemoryStoreSet<string, R>(
     `${storeId}.resources`,
   );
+
+  //----------------------------------------------------------------------------
+  // Resource Options Store
+  //----------------------------------------------------------------------------
+
+  // resource id -> resource option
+  const resourceOptionsStore = createMemoryStoreSet<
+    string,
+    LocalizedResourceOption
+  >(`${storeId}.resource_options`);
 
   //----------------------------------------------------------------------------
   // Resource Selection Store
@@ -157,10 +167,10 @@ export function createResourceStore<
     if (error) return error.message;
 
     queryClient.invalidateQueries({ queryKey: [fetchResourcesId] });
+    queryClient.invalidateQueries({ queryKey: [fetchResourceOptionsId] });
     for (const resourceId of resourceIds) {
       const queryKey = [fetchResourceId, resourceId];
       queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: [fetchResourceOptionsId] });
       deselectResource(resourceId);
       resourcesStore.clear(resourceId);
     }
@@ -193,10 +203,9 @@ export function createResourceStore<
   //----------------------------------------------------------------------------
 
   async function fetchResource(resourceId: string): Promise<R | undefined> {
-    const { data } = await supabase.rpc(`fetch_${storeName.s}`, {
-      p_id: resourceId,
-    });
     try {
+      const p_id = resourceId;
+      const { data } = await supabase.rpc(`fetch_${storeName.s}`, { p_id });
       const resource = resourceSchema.optional().parse(data);
       if (resource) setResource(resource);
       return resource;
@@ -212,13 +221,23 @@ export function createResourceStore<
 
   async function fetchResourceOptions(
     campaignId: string,
-  ): Promise<ResourceOption[]> {
-    const { data } = await supabase.rpc(`fetch_resource_options`, {
-      p_campaign_id: campaignId,
-      p_resource_kind: storeName.s,
-    });
+    lang: string,
+  ): Promise<LocalizedResourceOption[]> {
     try {
-      return z.array(resourceOptionSchema).parse(data);
+      if (!campaignId) return emptyLocalizedResourceOptions;
+      const p_campaign_id = campaignId;
+      const p_resource_kind = storeName.s;
+      const params = { p_campaign_id, p_resource_kind };
+      const { data } = await supabase.rpc(`fetch_resource_options`, params);
+      const resourceOptions = z.array(resourceOptionSchema).parse(data);
+      return resourceOptions
+        .map((option) => {
+          const label = translate(option.name, lang);
+          const localizedOption = { ...option, label, value: option.id };
+          resourceOptionsStore.set(option.id, localizedOption, localizedOption);
+          return localizedOption;
+        })
+        .sort(compareObjects("label"));
     } catch (e) {
       console.error(e);
       return [];
@@ -235,19 +254,20 @@ export function createResourceStore<
     { order_by, order_dir, ...filters }: Omit<F, "name">,
     lang: string,
   ): Promise<R[]> {
-    const { data } = await supabase.rpc(`fetch_${storeName.p}`, {
-      p_campaign_id: campaignId,
-      p_filters: { ...filters, campaigns: modules },
-      p_langs: [lang],
-      p_order_by: order_by,
-      p_order_dir: order_dir,
-    });
     try {
+      const p_campaign_id = campaignId;
+      const p_filters = { ...filters, campaigns: modules };
+      const p_langs = [lang];
+      const p_order = { p_order_by: order_by, p_order_dir: order_dir };
+      const params = { p_campaign_id, p_filters, p_langs, ...p_order };
+      const { data } = await supabase.rpc(`fetch_${storeName.p}`, params);
       const resources = z.array(resourceSchema).parse(data);
       for (const resource of resources) {
         queryClient.setQueryData([fetchResourceId, resource.id], resource);
         setResource(resource);
       }
+      const resourceIds = resources.map(({ id }) => id);
+      resourceIdsStore.set(campaignId, emptyResourceIds, resourceIds);
       return resources;
     } catch (e) {
       console.error(e);
@@ -392,12 +412,34 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
+  // Use Localize Resource Name
+  //----------------------------------------------------------------------------
+
+  function useLocalizeResourceName(
+    campaignId: string,
+  ): (resourceId: string) => void {
+    useLocalizedResourceOptions(campaignId);
+    const [lang] = useI18nLang();
+
+    return useCallback(
+      (resourceId: string) => {
+        const name = resourceOptionsStore.get(
+          resourceId,
+          defaultLocalizedResourceOption,
+        ).name;
+        return translate(name, lang);
+      },
+      [lang],
+    );
+  }
+
+  //----------------------------------------------------------------------------
   // Use Localized Resource
   //----------------------------------------------------------------------------
 
   function useLocalizedResource(resourceId: string): L | undefined {
     const resource = useResource(resourceId);
-    const localizeResource = useLocalizeResource();
+    const localizeResource = useLocalizeResource(resource?.id ?? "");
 
     return useMemo(() => {
       return resource ? localizeResource(resource) : undefined;
@@ -413,24 +455,12 @@ export function createResourceStore<
   ): LocalizedResourceOption[] {
     const [lang] = useI18nLang();
 
-    const { data: options } = useQuery<ResourceOption[]>({
-      queryFn: () =>
-        campaignId ?
-          fetchResourceOptions(campaignId)
-        : emptyLocalizedResourceOptions,
-      queryKey: [fetchResourceOptionsId, campaignId],
+    const { data: options } = useQuery<LocalizedResourceOption[]>({
+      queryFn: async () => fetchResourceOptions(campaignId, lang),
+      queryKey: [fetchResourceOptionsId, campaignId, lang],
     });
 
-    return useMemo(() => {
-      if (!options) return [];
-      return options
-        .map((option) => ({
-          ...option,
-          label: translate(option.name, lang),
-          value: option.id,
-        }))
-        .sort(compareObjects("label"));
-    }, [lang, options]);
+    return options ?? emptyLocalizedResourceOptions;
   }
 
   //----------------------------------------------------------------------------
@@ -457,20 +487,10 @@ export function createResourceStore<
     const [modules] = useResourcesModulesFilter(campaignId);
     const { name: _, ...filters } = filtersStore.useValue();
 
-    const { data: resources } = useQuery<R[]>({
+    useQuery<R[]>({
       queryFn: () => fetchResources(campaignId, modules, filters, lang),
       queryKey: [fetchResourcesId, campaignId, modules, filters, lang],
     });
-
-    useLayoutEffect(() => {
-      if (resources) {
-        resourceIdsStore.set(
-          campaignId,
-          emptyResourceIds,
-          resources.map(({ id }) => id),
-        );
-      }
-    }, [campaignId, resources]);
 
     return resourceIdsStore.useValue(campaignId, emptyResourceIds);
   }
@@ -531,6 +551,7 @@ export function createResourceStore<
     useFilteredResourceIds,
     useFilters,
     useLocalizeResource,
+    useLocalizeResourceName,
     useLocalizedResource,
     useLocalizedResourceOptions,
     useResource,

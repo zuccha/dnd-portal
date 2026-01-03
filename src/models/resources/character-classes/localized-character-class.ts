@@ -7,6 +7,7 @@ import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
 import { useTranslateDieType } from "../../types/die_type";
 import { useTranslateWeaponType } from "../../types/weapon-type";
+import { toolStore } from "../equipment/tools/tool-store";
 import {
   localizedResourceSchema,
   useLocalizeResource,
@@ -26,6 +27,7 @@ export const localizedCharacterClassSchema = localizedResourceSchema(
   saving_throw_proficiencies: z.string(),
   skill_proficiencies_pool: z.string(),
   starting_equipment: z.string(),
+  tool_proficiencies: z.string(),
   weapon_proficiencies: z.string(),
 });
 
@@ -37,9 +39,9 @@ export type LocalizedCharacterClass = z.infer<
 // Use Localized Character Class
 //------------------------------------------------------------------------------
 
-export function useLocalizeCharacterClass(): (
-  characterClass: CharacterClass,
-) => LocalizedCharacterClass {
+export function useLocalizeCharacterClass(
+  campaignId: string,
+): (characterClass: CharacterClass) => LocalizedCharacterClass {
   const { lang, ti } = useI18nLangContext(i18nContext);
   const localizeResource = useLocalizeResource<CharacterClass>();
   const translateArmorType = useTranslateArmorType(lang);
@@ -47,6 +49,7 @@ export function useLocalizeCharacterClass(): (
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateDieType = useTranslateDieType(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
+  const localizeToolName = toolStore.useLocalizeResourceName(campaignId);
 
   return useCallback(
     (characterClass: CharacterClass): LocalizedCharacterClass => {
@@ -78,6 +81,10 @@ export function useLocalizeCharacterClass(): (
             .join(", "),
         ),
         starting_equipment: translate(characterClass.starting_equipment, lang),
+        tool_proficiencies: characterClass.tool_proficiency_ids
+          .map(localizeToolName)
+          .sort()
+          .join(", "),
         weapon_proficiencies: [
           ...characterClass.weapon_proficiencies
             .map(translateWeaponType)
@@ -91,6 +98,7 @@ export function useLocalizeCharacterClass(): (
     [
       lang,
       localizeResource,
+      localizeToolName,
       ti,
       translateArmorType,
       translateCreatureAbility,

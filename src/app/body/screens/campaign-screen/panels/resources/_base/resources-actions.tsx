@@ -35,7 +35,7 @@ export function createResourcesActions<
     const canEdit = useCanEditCampaign(campaignId);
     const selectedFilteredResourceIds =
       store.useSelectedFilteredResourceIds(campaignId);
-    const localizeResource = store.useLocalizeResource();
+    const localizeResource = store.useLocalizeResource(campaignId);
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);

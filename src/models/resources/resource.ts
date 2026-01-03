@@ -59,3 +59,10 @@ export const localizedResourceOptionSchema = resourceOptionSchema.extend({
 export type LocalizedResourceOption = z.infer<
   typeof localizedResourceOptionSchema
 >;
+
+export const defaultLocalizedResourceOption = {
+  id: "",
+  label: "",
+  name: {},
+  value: "",
+};

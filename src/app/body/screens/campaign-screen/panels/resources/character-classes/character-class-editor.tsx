@@ -1,6 +1,7 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
+import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
@@ -26,6 +27,7 @@ import {
   useCharacterClassEditorFormSkillProficienciesPoolQuantity,
   useCharacterClassEditorFormSpellIds,
   useCharacterClassEditorFormStartingEquipment,
+  useCharacterClassEditorFormToolProficiencyIds,
   useCharacterClassEditorFormVisibility,
   useCharacterClassEditorFormWeaponProficiencies,
   useCharacterClassEditorFormWeaponProficienciesExtra,
@@ -80,25 +82,32 @@ export default function CharacterClassEditor({
         />
       </HStack>
 
-      <CharacterClassEditorWeaponProficiencies
-        defaultWeaponProficiencies={resource.weapon_proficiencies}
+      <HStack gap={2} w="full">
+        <CharacterClassEditorWeaponProficiencies
+          defaultWeaponProficiencies={resource.weapon_proficiencies}
+        />
+        <CharacterClassEditorWeaponProficienciesExtra
+          defaultWeaponProficienciesExtra={
+            resource.weapon_proficiencies_extra[lang] ?? ""
+          }
+        />
+      </HStack>
+
+      <CharacterClassEditorToolProficiencyIds
+        campaignId={campaignId}
+        defaultToolProficiencyIds={resource.tool_proficiency_ids}
       />
 
-      <CharacterClassEditorWeaponProficienciesExtra
-        defaultWeaponProficienciesExtra={
-          resource.weapon_proficiencies_extra[lang] ?? ""
-        }
-      />
-
-      <CharacterClassEditorArmorProficiencies
-        defaultArmorProficiencies={resource.armor_proficiencies}
-      />
-
-      <CharacterClassEditorArmorProficienciesExtra
-        defaultArmorProficienciesExtra={
-          resource.armor_proficiencies_extra[lang] ?? ""
-        }
-      />
+      <HStack gap={2} w="full">
+        <CharacterClassEditorArmorProficiencies
+          defaultArmorProficiencies={resource.armor_proficiencies}
+        />
+        <CharacterClassEditorArmorProficienciesExtra
+          defaultArmorProficienciesExtra={
+            resource.armor_proficiencies_extra[lang] ?? ""
+          }
+        />
+      </HStack>
 
       <CharacterClassEditorStartingEquipment
         defaultStartingEquipment={resource.starting_equipment[lang] ?? ""}
@@ -158,10 +167,9 @@ function CharacterClassEditorArmorProficienciesExtra({
 
   return (
     <Field error={message} label={t("armor_proficiencies_extra.label")}>
-      <Textarea
+      <Input
         bgColor="bg.info"
         placeholder={t("armor_proficiencies_extra.placeholder")}
-        rows={5}
         {...rest}
       />
     </Field>
@@ -395,6 +403,37 @@ function CharacterClassEditorStartingEquipment({
 }
 
 //------------------------------------------------------------------------------
+// Tool Proficiency Ids
+//------------------------------------------------------------------------------
+
+function CharacterClassEditorToolProficiencyIds({
+  campaignId,
+  defaultToolProficiencyIds,
+}: {
+  campaignId: string;
+  defaultToolProficiencyIds: CharacterClass["tool_proficiency_ids"];
+}) {
+  const toolOptions = toolStore.useLocalizedResourceOptions(campaignId);
+  const { error, ...rest } = useCharacterClassEditorFormToolProficiencyIds(
+    defaultToolProficiencyIds,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("tool_proficiency_ids.label")}>
+      <Select
+        multiple
+        options={toolOptions}
+        placeholder={t("tool_proficiency_ids.placeholder")}
+        withinDialog
+        {...rest}
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Visibility
 //------------------------------------------------------------------------------
 
@@ -463,10 +502,9 @@ function CharacterClassEditorWeaponProficienciesExtra({
 
   return (
     <Field error={message} label={t("weapon_proficiencies_extra.label")}>
-      <Textarea
+      <Input
         bgColor="bg.info"
         placeholder={t("weapon_proficiencies_extra.placeholder")}
-        rows={5}
         {...rest}
       />
     </Field>
@@ -487,8 +525,8 @@ const i18nContext = {
     it: "Nessuna",
   },
   "armor_proficiencies_extra.label": {
-    en: "Additional Armor Training",
-    it: "Ulteriori Competenze nelle Armature",
+    en: "Other",
+    it: "Altro",
   },
   "armor_proficiencies_extra.placeholder": {
     en: "None",
@@ -562,6 +600,14 @@ const i18nContext = {
     en: "None",
     it: "Nessuno",
   },
+  "tool_proficiency_ids.label": {
+    en: "Tool Proficiencies",
+    it: "Competenza negli Strumenti",
+  },
+  "tool_proficiency_ids.placeholder": {
+    en: "None",
+    it: "Nessuna",
+  },
   "visibility.label": {
     en: "Visibility",
     it: "Visibilità",
@@ -575,8 +621,8 @@ const i18nContext = {
     it: "Nessuna",
   },
   "weapon_proficiencies_extra.label": {
-    en: "Additional Weapon Proficiencies",
-    it: "Ulteriori Competenze nelle Armi",
+    en: "Other",
+    it: "Altro",
   },
   "weapon_proficiencies_extra.placeholder": {
     en: "None",

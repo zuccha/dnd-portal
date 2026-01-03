@@ -25,6 +25,7 @@ export const characterClassSchema = resourceSchema.extend({
   skill_proficiencies_pool_quantity: z.number(),
   spell_ids: z.array(z.uuid()),
   starting_equipment: i18nStringSchema,
+  tool_proficiency_ids: z.array(z.uuid()),
   weapon_proficiencies: z.array(weaponTypeSchema),
   weapon_proficiencies_extra: i18nStringSchema,
 });
@@ -55,6 +56,7 @@ export const defaultCharacterClass: CharacterClass = {
   skill_proficiencies_pool_quantity: 2,
   spell_ids: [],
   starting_equipment: {},
+  tool_proficiency_ids: [],
   weapon_proficiencies: [],
   weapon_proficiencies_extra: {},
 };

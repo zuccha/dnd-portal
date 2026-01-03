@@ -24,6 +24,7 @@ export default function CharacterClassesAlbumCardContent({
     saving_throw_proficiencies,
     skill_proficiencies_pool,
     starting_equipment,
+    tool_proficiencies,
     weapon_proficiencies,
   } = localizedResource;
 
@@ -55,6 +56,12 @@ export default function CharacterClassesAlbumCardContent({
         {weapon_proficiencies && (
           <AlbumCard.InfoCell label={t("weapon_proficiencies")}>
             {weapon_proficiencies}
+          </AlbumCard.InfoCell>
+        )}
+
+        {tool_proficiencies && (
+          <AlbumCard.InfoCell label={t("tool_proficiencies")}>
+            {tool_proficiencies}
           </AlbumCard.InfoCell>
         )}
 
@@ -106,6 +113,10 @@ const i18nContext = {
   title: {
     en: "Character Class",
     it: "Classe Personaggio",
+  },
+  tool_proficiencies: {
+    en: "Tools",
+    it: "Strumenti",
   },
   weapon_proficiencies: {
     en: "Weapons",
