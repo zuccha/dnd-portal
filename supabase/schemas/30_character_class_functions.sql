@@ -61,7 +61,6 @@ BEGIN
     saving_throw_proficiencies,
     skill_proficiencies_pool,
     skill_proficiencies_pool_quantity,
-    tool_proficiencies,
     weapon_proficiencies,
     armor_proficiencies
   ) VALUES (
@@ -71,7 +70,6 @@ BEGIN
     r.saving_throw_proficiencies,
     r.skill_proficiencies_pool,
     r.skill_proficiencies_pool_quantity,
-    '{}'::uuid[],
     r.weapon_proficiencies,
     r.armor_proficiencies
   );
@@ -211,7 +209,6 @@ src AS (
     c.saving_throw_proficiencies,
     c.skill_proficiencies_pool,
     c.skill_proficiencies_pool_quantity,
-    c.tool_proficiencies,
     c.weapon_proficiencies
   FROM base b
   JOIN public.character_classes c ON c.resource_id = b.id
@@ -358,7 +355,6 @@ BEGIN
     saving_throw_proficiencies,
     skill_proficiencies_pool,
     skill_proficiencies_pool_quantity,
-    tool_proficiencies,
     weapon_proficiencies,
     armor_proficiencies
   ) = (
@@ -368,7 +364,6 @@ BEGIN
       r.saving_throw_proficiencies,
       r.skill_proficiencies_pool,
       r.skill_proficiencies_pool_quantity,
-      r.tool_proficiencies,
       r.weapon_proficiencies,
       r.armor_proficiencies
     FROM jsonb_populate_record(null::public.character_classes, to_jsonb(c) || p_character_class) AS r
