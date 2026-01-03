@@ -12,24 +12,18 @@ import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 //------------------------------------------------------------------------------
 
 export const dbSpellSchema = dbResourceSchema.extend({
-  level: spellLevelSchema,
-
-  character_classes: z.array(characterClassSchema),
-  school: spellSchoolSchema,
-
   casting_time: spellCastingTimeSchema,
   casting_time_value_temp: z.number().nullish(),
-
+  character_classes: z.array(characterClassSchema),
+  concentration: z.boolean(),
   duration: spellDurationSchema,
   duration_value_temp: z.number().nullish(),
-
+  level: spellLevelSchema,
+  material: z.boolean(),
   range: spellRangeSchema,
   range_value: z.number().nullish(),
-
-  concentration: z.boolean(),
   ritual: z.boolean(),
-
-  material: z.boolean(),
+  school: spellSchoolSchema,
   somatic: z.boolean(),
   verbal: z.boolean(),
 });

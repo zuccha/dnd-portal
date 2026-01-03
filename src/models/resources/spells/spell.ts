@@ -15,31 +15,23 @@ import { resourceSchema, resourceTranslationFields } from "../resource";
 //------------------------------------------------------------------------------
 
 export const spellSchema = resourceSchema.extend({
-  level: spellLevelSchema,
-
-  character_classes: z.array(characterClassSchema),
-  school: spellSchoolSchema,
-
   casting_time: spellCastingTimeSchema,
   casting_time_value: z.number().nullish(),
-
+  character_classes: z.array(characterClassSchema),
+  concentration: z.boolean(),
+  description: i18nStringSchema,
   duration: spellDurationSchema,
   duration_value: z.number().nullish(),
-
+  level: spellLevelSchema,
+  material: z.boolean(),
+  materials: i18nStringSchema.nullish(),
   range: spellRangeSchema,
   range_value: z.number().nullish(),
-
-  concentration: z.boolean(),
   ritual: z.boolean(),
-
-  material: z.boolean(),
+  school: spellSchoolSchema,
   somatic: z.boolean(),
-  verbal: z.boolean(),
-
-  materials: i18nStringSchema.nullish(),
-
-  description: i18nStringSchema,
   upgrade: i18nStringSchema.nullish(),
+  verbal: z.boolean(),
 });
 
 export type Spell = z.infer<typeof spellSchema>;
@@ -54,36 +46,28 @@ export const defaultSpell: Spell = {
   campaign_id: "",
   campaign_name: "",
 
+  visibility: "game_master",
+
   name: {},
   page: {},
 
-  level: 0,
-
-  character_classes: [],
-  school: "abjuration",
-
   casting_time: "action",
   casting_time_value: undefined,
-
+  character_classes: [],
+  concentration: false,
+  description: {},
   duration: "instantaneous",
   duration_value: undefined,
-
+  level: 0,
+  material: false,
+  materials: undefined,
   range: "self",
   range_value: undefined,
-
-  concentration: false,
   ritual: false,
-
-  material: false,
+  school: "abjuration",
   somatic: false,
-  verbal: false,
-
-  materials: undefined,
-
-  description: {},
   upgrade: {},
-
-  visibility: "game_master",
+  verbal: false,
 };
 
 //------------------------------------------------------------------------------
