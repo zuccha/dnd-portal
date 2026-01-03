@@ -64,7 +64,11 @@ export default function ResourceListbox({
         <Search
           emptyLabel={t("no_result")}
           onFilter={filterResourceOptions}
-          onSubmit={add}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            add();
+          }}
           onValueChange={setSelectedId}
           options={options}
           placeholder={t("search")}
@@ -83,13 +87,17 @@ export default function ResourceListbox({
         gap={0}
         h="10em"
         overflow="auto"
-        px={2}
-        py={1}
         w="full"
       >
         {selectedOptions.length ?
           selectedOptions.map(({ id, label }) => (
-            <HStack justify="space-between" key={id} w="full">
+            <HStack
+              _hover={{ bgColor: "bg.muted" }}
+              justify="space-between"
+              key={id}
+              px={2}
+              w="full"
+            >
               <Span flex={1}>{label}</Span>
               <IconButton
                 Icon={XIcon}
