@@ -2,12 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { type ZodType, z } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
-import type { I18nNumber } from "~/i18n/i18n-number";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStoreSet } from "~/store/set/memory-store-set";
 import supabase, { queryClient } from "~/supabase";
-import type { KeysOfType } from "~/types";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
@@ -16,6 +14,7 @@ import {
   type LocalizedResourceOption,
   type Resource,
   type ResourceOption,
+  type TranslationFields,
   resourceOptionSchema,
 } from "./resource";
 import type { ResourceFilters } from "./resource-filters";
@@ -59,7 +58,7 @@ export function createResourceStore<
     filtersSchema: ZodType<F>;
     orderOptions: { label: I18nString; value: string }[];
     resourceSchema: ZodType<R>;
-    translationFields: KeysOfType<R, I18nString | I18nNumber>[];
+    translationFields: TranslationFields<R>[];
     useLocalizeResource: () => (resource: R) => L;
   },
 ) {

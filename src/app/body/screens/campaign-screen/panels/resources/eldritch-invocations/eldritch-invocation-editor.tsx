@@ -34,7 +34,9 @@ export default function EldritchInvocationEditor({
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <EldritchInvocationEditorName defaultName={resource.name[lang] ?? ""} />
-        <EldritchInvocationEditorPage defaultPage={resource.page[lang] ?? 0} />
+        <EldritchInvocationEditorPage
+          defaultPage={resource.page?.[lang] ?? 0}
+        />
         <EldritchInvocationEditorVisibility
           defaultVisibility={resource.visibility}
         />

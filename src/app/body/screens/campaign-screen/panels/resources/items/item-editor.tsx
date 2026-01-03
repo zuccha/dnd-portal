@@ -35,7 +35,7 @@ export default function ItemEditor({ resource }: ItemEditorProps) {
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <ItemEditorName defaultName={resource.name[lang] ?? ""} />
-        <ItemEditorPage defaultPage={resource.page[lang] ?? 0} />
+        <ItemEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <ItemEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 

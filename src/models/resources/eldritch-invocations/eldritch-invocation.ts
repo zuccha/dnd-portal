@@ -1,9 +1,11 @@
 import z from "zod";
-import type { I18nNumber } from "~/i18n/i18n-number";
-import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
-import type { KeysOfType } from "~/types";
+import { i18nStringSchema } from "~/i18n/i18n-string";
 import { characterLevelSchema } from "../../types/character-level";
-import { resourceSchema, resourceTranslationFields } from "../resource";
+import {
+  type TranslationFields,
+  resourceSchema,
+  resourceTranslationFields,
+} from "../resource";
 
 //------------------------------------------------------------------------------
 // Eldritch Invocation
@@ -43,7 +45,5 @@ export const defaultEldritchInvocation: EldritchInvocation = {
 // Eldritch Invocation Translation Fields
 //------------------------------------------------------------------------------
 
-export const eldritchInvocationTranslationFields: KeysOfType<
-  EldritchInvocation,
-  I18nNumber | I18nString
->[] = [...resourceTranslationFields, "description", "prerequisite"];
+export const eldritchInvocationTranslationFields: TranslationFields<EldritchInvocation>[] =
+  [...resourceTranslationFields, "description", "prerequisite"];

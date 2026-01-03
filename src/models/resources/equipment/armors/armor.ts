@@ -1,8 +1,6 @@
 import z from "zod";
-import type { I18nNumber } from "~/i18n/i18n-number";
-import type { I18nString } from "~/i18n/i18n-string";
-import type { KeysOfType } from "~/types";
 import { armorTypeSchema } from "../../../types/armor-type";
+import type { TranslationFields } from "../../resource";
 import { equipmentSchema, equipmentTranslationFields } from "../equipment";
 
 //------------------------------------------------------------------------------
@@ -73,7 +71,6 @@ export const defaultArmor: Armor = {
 // Armor Translation Fields
 //------------------------------------------------------------------------------
 
-export const armorTranslationFields: KeysOfType<
-  Armor,
-  I18nNumber | I18nString
->[] = [...equipmentTranslationFields];
+export const armorTranslationFields: TranslationFields<Armor>[] = [
+  ...equipmentTranslationFields,
+];

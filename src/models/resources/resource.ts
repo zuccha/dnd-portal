@@ -17,7 +17,7 @@ export const resourceSchema = z.object({
   visibility: campaignRoleSchema,
 
   name: i18nStringSchema,
-  page: i18nNumberSchema,
+  page: i18nNumberSchema.nullish(),
 });
 
 export type Resource = z.infer<typeof resourceSchema>;
@@ -26,10 +26,15 @@ export type Resource = z.infer<typeof resourceSchema>;
 // Resource Translation Fields
 //------------------------------------------------------------------------------
 
-export const resourceTranslationFields: KeysOfType<
-  Resource,
-  I18nNumber | I18nString
->[] = ["name", "page"];
+export type TranslationFields<R extends Resource> = KeysOfType<
+  R,
+  I18nNumber | I18nString | undefined | null
+>;
+
+export const resourceTranslationFields: TranslationFields<Resource>[] = [
+  "name",
+  "page",
+];
 
 //------------------------------------------------------------------------------
 // Resource Option

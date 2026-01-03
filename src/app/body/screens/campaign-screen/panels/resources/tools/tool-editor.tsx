@@ -41,7 +41,7 @@ export default function ToolEditor({ resource }: ToolEditorProps) {
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <ToolEditorName defaultName={resource.name[lang] ?? ""} />
-        <ToolEditorPage defaultPage={resource.page[lang] ?? 0} />
+        <ToolEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <ToolEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 

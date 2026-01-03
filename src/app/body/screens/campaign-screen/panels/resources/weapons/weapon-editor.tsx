@@ -55,7 +55,7 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
     <VStack align="stretch" gap={4}>
       <HStack align="flex-start" gap={4}>
         <WeaponEditorName defaultName={resource.name[lang] ?? ""} />
-        <WeaponEditorPage defaultPage={resource.page[lang] ?? 0} />
+        <WeaponEditorPage defaultPage={resource.page?.[lang] ?? 0} />
         <WeaponEditorVisibility defaultVisibility={resource.visibility} />
       </HStack>
 
