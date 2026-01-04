@@ -24,7 +24,6 @@ CREATE TYPE public.character_class_row AS (
   spell_ids uuid[],
   -- Character Class Translation
   armor_proficiencies_extra jsonb,
-  starting_equipment jsonb,
   weapon_proficiencies_extra jsonb
 );
 
@@ -169,7 +168,6 @@ AS $$
     c.weapon_proficiencies,
     coalesce(s.spell_ids, '{}'::uuid[]) AS spell_ids,
     coalesce(tt.armor_proficiencies_extra, '{}'::jsonb) AS armor_proficiencies_extra,
-    coalesce(tt.starting_equipment, '{}'::jsonb) AS starting_equipment,
     coalesce(tt.weapon_proficiencies_extra, '{}'::jsonb) AS weapon_proficiencies_extra
   FROM public.fetch_resource(p_id) AS r
   JOIN public.character_classes c ON c.resource_id = r.id
@@ -209,7 +207,6 @@ AS $$
     SELECT
       c.resource_id AS id,
       jsonb_object_agg(t.lang, t.armor_proficiencies_extra) AS armor_proficiencies_extra,
-      jsonb_object_agg(t.lang, t.starting_equipment) AS starting_equipment,
       jsonb_object_agg(t.lang, t.weapon_proficiencies_extra) AS weapon_proficiencies_extra
     FROM public.character_classes c
     LEFT JOIN public.character_class_translations t ON t.resource_id = c.resource_id
@@ -297,7 +294,6 @@ t AS (
   SELECT
     s.id,
     jsonb_object_agg(t.lang, t.armor_proficiencies_extra) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS armor_proficiencies_extra,
-    jsonb_object_agg(t.lang, t.starting_equipment)        FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS starting_equipment,
     jsonb_object_agg(t.lang, t.weapon_proficiencies_extra) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS weapon_proficiencies_extra
   FROM src s
   LEFT JOIN public.character_class_translations t ON t.resource_id = s.id
@@ -323,7 +319,6 @@ SELECT
   s.weapon_proficiencies,
   coalesce(sp.spell_ids, '{}'::uuid[]) AS spell_ids,
   coalesce(tt.armor_proficiencies_extra, '{}'::jsonb) AS armor_proficiencies_extra,
-  coalesce(tt.starting_equipment, '{}'::jsonb) AS starting_equipment,
   coalesce(tt.weapon_proficiencies_extra, '{}'::jsonb) AS weapon_proficiencies_extra
 FROM src s
 LEFT JOIN spells sp ON sp.id = s.id
@@ -369,20 +364,17 @@ BEGIN
     resource_id,
     lang,
     weapon_proficiencies_extra,
-    armor_proficiencies_extra,
-    starting_equipment
+    armor_proficiencies_extra
   ) VALUES (
     p_id,
     p_lang,
     r.weapon_proficiencies_extra,
-    r.armor_proficiencies_extra,
-    r.starting_equipment
+    r.armor_proficiencies_extra
   )
   ON conflict (resource_id, lang) DO UPDATE
   SET
     weapon_proficiencies_extra = excluded.weapon_proficiencies_extra,
-    armor_proficiencies_extra = excluded.armor_proficiencies_extra,
-    starting_equipment = excluded.starting_equipment;
+    armor_proficiencies_extra = excluded.armor_proficiencies_extra;
 END;
 $$;
 

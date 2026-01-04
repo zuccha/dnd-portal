@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS public.character_class_translations (
   resource_id uuid NOT NULL,
   lang text NOT NULL,
   armor_proficiencies_extra text,
-  starting_equipment text,
   weapon_proficiencies_extra text,
   CONSTRAINT character_class_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT character_class_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.character_classes(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
