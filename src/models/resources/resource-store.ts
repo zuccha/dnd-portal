@@ -226,8 +226,8 @@ export function createResourceStore<
     try {
       if (!campaignId) return emptyLocalizedResourceOptions;
       const p_campaign_id = campaignId;
-      const p_resource_kind = storeName.s;
-      const params = { p_campaign_id, p_resource_kind };
+      const p_resource_kinds = [storeName.s];
+      const params = { p_campaign_id, p_resource_kinds };
       const { data } = await supabase.rpc(`fetch_resource_options`, params);
       const resourceOptions = z.array(resourceOptionSchema).parse(data);
       return resourceOptions
