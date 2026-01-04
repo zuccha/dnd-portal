@@ -5,6 +5,7 @@ import { creatureSkillSchema } from "../../types/creature-skill";
 import { dieTypeSchema } from "../../types/die_type";
 import { weaponTypeSchema } from "../../types/weapon-type";
 import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
+import { startingEquipmentEntrySchema } from "./starting-equipment";
 
 //------------------------------------------------------------------------------
 // DB Character Class
@@ -18,6 +19,7 @@ export const dbCharacterClassSchema = dbResourceSchema.extend({
   skill_proficiencies_pool: z.array(creatureSkillSchema),
   skill_proficiencies_pool_quantity: z.number(),
   spell_ids: z.array(z.uuid()),
+  starting_equipment_entries: z.array(startingEquipmentEntrySchema),
   tool_proficiency_ids: z.array(z.uuid()),
   weapon_proficiencies: z.array(weaponTypeSchema),
 });
@@ -31,7 +33,6 @@ export type DBCharacterClass = z.infer<typeof dbCharacterClassSchema>;
 export const dbCharacterClassTranslationSchema =
   dbResourceTranslationSchema.extend({
     armor_proficiencies_extra: z.string(),
-    starting_equipment: z.string(),
     weapon_proficiencies_extra: z.string(),
   });
 

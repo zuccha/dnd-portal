@@ -10,25 +10,36 @@ import {
   resourceSchema,
   resourceTranslationFields,
 } from "../resource";
+import {
+  startingEquipmentEntrySchema,
+  startingEquipmentFromEntries,
+} from "./starting-equipment";
 
 //------------------------------------------------------------------------------
 // Character Class
 //------------------------------------------------------------------------------
 
-export const characterClassSchema = resourceSchema.extend({
-  armor_proficiencies: z.array(armorTypeSchema),
-  armor_proficiencies_extra: i18nStringSchema,
-  hp_die: dieTypeSchema,
-  primary_abilities: z.array(creatureAbilitySchema),
-  saving_throw_proficiencies: z.array(creatureAbilitySchema),
-  skill_proficiencies_pool: z.array(creatureSkillSchema),
-  skill_proficiencies_pool_quantity: z.number(),
-  spell_ids: z.array(z.uuid()),
-  starting_equipment: i18nStringSchema,
-  tool_proficiency_ids: z.array(z.uuid()),
-  weapon_proficiencies: z.array(weaponTypeSchema),
-  weapon_proficiencies_extra: i18nStringSchema,
-});
+export const characterClassSchema = resourceSchema
+  .extend({
+    armor_proficiencies: z.array(armorTypeSchema),
+    armor_proficiencies_extra: i18nStringSchema,
+    hp_die: dieTypeSchema,
+    primary_abilities: z.array(creatureAbilitySchema),
+    saving_throw_proficiencies: z.array(creatureAbilitySchema),
+    skill_proficiencies_pool: z.array(creatureSkillSchema),
+    skill_proficiencies_pool_quantity: z.number(),
+    spell_ids: z.array(z.uuid()),
+    starting_equipment_entries: z.array(startingEquipmentEntrySchema),
+    tool_proficiency_ids: z.array(z.uuid()),
+    weapon_proficiencies: z.array(weaponTypeSchema),
+    weapon_proficiencies_extra: i18nStringSchema,
+  })
+  .transform(({ starting_equipment_entries, ...rest }) => ({
+    ...rest,
+    starting_equipment: startingEquipmentFromEntries(
+      starting_equipment_entries,
+    ),
+  }));
 
 export type CharacterClass = z.infer<typeof characterClassSchema>;
 
@@ -55,7 +66,7 @@ export const defaultCharacterClass: CharacterClass = {
   skill_proficiencies_pool: [],
   skill_proficiencies_pool_quantity: 2,
   spell_ids: [],
-  starting_equipment: {},
+  starting_equipment: [],
   tool_proficiency_ids: [],
   weapon_proficiencies: [],
   weapon_proficiencies_extra: {},
@@ -69,6 +80,5 @@ export const characterClassTranslationFields: TranslationFields<CharacterClass>[
   [
     ...resourceTranslationFields,
     "armor_proficiencies_extra",
-    "starting_equipment",
     "weapon_proficiencies_extra",
   ];

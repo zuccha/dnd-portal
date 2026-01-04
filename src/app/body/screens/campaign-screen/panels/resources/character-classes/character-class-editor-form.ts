@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { startingEquipmentGroupSchema } from "~/models/resources/character-classes/starting-equipment";
 import { armorTypeSchema } from "~/models/types/armor-type";
 import { campaignRoleSchema } from "~/models/types/campaign-role";
 import { creatureAbilitySchema } from "~/models/types/creature-ability";
@@ -24,7 +25,7 @@ export const characterClassEditorFormFieldsSchema = z.object({
   skill_proficiencies_pool: z.array(creatureSkillSchema),
   skill_proficiencies_pool_quantity: z.number(),
   spell_ids: z.array(z.uuid()),
-  starting_equipment: z.string(),
+  starting_equipment: z.array(startingEquipmentGroupSchema),
   tool_proficiency_ids: z.array(z.uuid()),
   weapon_proficiencies: z.array(weaponTypeSchema),
   weapon_proficiencies_extra: z.string(),

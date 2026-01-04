@@ -1,6 +1,7 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
+import type { StartingEquipmentGroup } from "~/models/resources/character-classes/starting-equipment";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
@@ -13,7 +14,6 @@ import Field from "~/ui/field";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
-import Textarea from "~/ui/textarea";
 import ResourceSearch from "../_base/resource-search";
 import {
   useCharacterClassEditorFormArmorProficiencies,
@@ -32,6 +32,7 @@ import {
   useCharacterClassEditorFormWeaponProficiencies,
   useCharacterClassEditorFormWeaponProficienciesExtra,
 } from "./character-class-editor-form";
+import StartingEquipmentEditor from "./starting-equipment-editor";
 
 //------------------------------------------------------------------------------
 // Character Class Editor
@@ -110,7 +111,8 @@ export default function CharacterClassEditor({
       </HStack>
 
       <CharacterClassEditorStartingEquipment
-        defaultStartingEquipment={resource.starting_equipment[lang] ?? ""}
+        campaignId={campaignId}
+        defaultStartingEquipment={resource.starting_equipment}
       />
 
       <CharacterClassEditorSpellIds
@@ -380,9 +382,11 @@ function CharacterClassEditorSpellIds({
 //------------------------------------------------------------------------------
 
 function CharacterClassEditorStartingEquipment({
+  campaignId,
   defaultStartingEquipment,
 }: {
-  defaultStartingEquipment: string;
+  campaignId: string;
+  defaultStartingEquipment: StartingEquipmentGroup[];
 }) {
   const { error, ...rest } = useCharacterClassEditorFormStartingEquipment(
     defaultStartingEquipment,
@@ -392,12 +396,7 @@ function CharacterClassEditorStartingEquipment({
 
   return (
     <Field error={message} label={t("starting_equipment.label")}>
-      <Textarea
-        bgColor="bg.info"
-        placeholder={t("starting_equipment.placeholder")}
-        rows={5}
-        {...rest}
-      />
+      <StartingEquipmentEditor campaignId={campaignId} w="full" {...rest} />
     </Field>
   );
 }

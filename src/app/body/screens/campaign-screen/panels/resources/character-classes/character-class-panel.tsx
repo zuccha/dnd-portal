@@ -7,6 +7,7 @@ import {
   dbCharacterClassTranslationSchema,
 } from "~/models/resources/character-classes/db-character-class";
 import { type LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
+import { startingEquipmentToEntries } from "~/models/resources/character-classes/starting-equipment";
 import { report } from "~/utils/error";
 import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
@@ -59,6 +60,10 @@ function parseFormData(data: Partial<CharacterClassEditorFormFields>):
     skill_proficiencies_pool: data.skill_proficiencies_pool,
     skill_proficiencies_pool_quantity: data.skill_proficiencies_pool_quantity,
     spell_ids: data.spell_ids,
+    starting_equipment_entries:
+      data.starting_equipment ?
+        startingEquipmentToEntries(data.starting_equipment)
+      : undefined,
     tool_proficiency_ids: data.tool_proficiency_ids,
     weapon_proficiencies: data.weapon_proficiencies,
   };
@@ -68,7 +73,6 @@ function parseFormData(data: Partial<CharacterClassEditorFormFields>):
     page: data.page || null,
 
     armor_proficiencies_extra: data.armor_proficiencies_extra,
-    starting_equipment: data.starting_equipment,
     weapon_proficiencies_extra: data.weapon_proficiencies_extra,
   };
 

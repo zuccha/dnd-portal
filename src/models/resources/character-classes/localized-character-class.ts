@@ -1,12 +1,16 @@
 import { useCallback } from "react";
 import z from "zod";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import { useI18nLangContext } from "../../../i18n/i18n-lang-context";
+import { useFormatCp } from "~/measures/cost";
+import { joinWith } from "~/ui/array";
+import { numberToLetter } from "~/utils/number";
 import { useTranslateArmorType } from "../../types/armor-type";
 import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
 import { useTranslateDieType } from "../../types/die_type";
 import { useTranslateWeaponType } from "../../types/weapon-type";
+import { equipmentStore } from "../equipment/equipment-store";
 import { toolStore } from "../equipment/tools/tool-store";
 import {
   localizedResourceSchema,
@@ -42,7 +46,7 @@ export type LocalizedCharacterClass = z.infer<
 export function useLocalizeCharacterClass(
   campaignId: string,
 ): (characterClass: CharacterClass) => LocalizedCharacterClass {
-  const { lang, ti } = useI18nLangContext(i18nContext);
+  const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
   const localizeResource = useLocalizeResource<CharacterClass>();
   const translateArmorType = useTranslateArmorType(lang);
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
@@ -50,9 +54,15 @@ export function useLocalizeCharacterClass(
   const translateDieType = useTranslateDieType(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
   const localizeToolName = toolStore.useLocalizeResourceName(campaignId);
+  const localizeEquipmentName =
+    equipmentStore.useLocalizeResourceName(campaignId);
+  const formatCp = useFormatCp();
 
   return useCallback(
     (characterClass: CharacterClass): LocalizedCharacterClass => {
+      const equipmentGroupChoose = t("equipment.group.choose");
+      const equipmentOptionOr = t("equipment.option.or");
+
       return {
         ...localizeResource(characterClass),
         armor_proficiencies: [
@@ -84,7 +94,40 @@ export function useLocalizeCharacterClass(
                 .join(", "),
             )
           : "",
-        starting_equipment: translate(characterClass.starting_equipment, lang),
+        starting_equipment: characterClass.starting_equipment
+          .map((group) => {
+            const groupText = joinWith(
+              group.options.map((option, index) => {
+                const optionText = [
+                  ...option.bundle.equipments.map(({ id, quantity }) =>
+                    tpi(
+                      "equipment",
+                      quantity,
+                      localizeEquipmentName(id),
+                      `${quantity}`,
+                    ),
+                  ),
+                  option.bundle.currency ?
+                    formatCp(option.bundle.currency)
+                  : "",
+                ]
+                  .filter((entry) => entry)
+                  .join(", ");
+                return group.options.length > 1 ?
+                    `(${numberToLetter(index)}) ${optionText}`
+                  : optionText;
+              }),
+              "; ",
+              equipmentOptionOr,
+            );
+
+            const parts: string[] = [];
+            if (characterClass.starting_equipment.length > 1) parts.push("• ");
+            if (group.options.length > 1) parts.push(equipmentGroupChoose);
+            parts.push(groupText);
+            return parts.join("");
+          })
+          .join("\n"),
         tool_proficiencies: characterClass.tool_proficiency_ids
           .map(localizeToolName)
           .sort()
@@ -100,10 +143,14 @@ export function useLocalizeCharacterClass(
       };
     },
     [
+      formatCp,
       lang,
+      localizeEquipmentName,
       localizeResource,
       localizeToolName,
+      t,
       ti,
+      tpi,
       translateArmorType,
       translateCreatureAbility,
       translateCreatureSkill,
@@ -118,7 +165,23 @@ export function useLocalizeCharacterClass(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  skill_proficiencies_pool: {
+  "equipment.group.choose": {
+    en: "_Choose:_ ",
+    it: "_Scegli:_ ",
+  },
+  "equipment.option.or": {
+    en: "; or ",
+    it: "; o ",
+  },
+  "equipment/*": {
+    en: "<2> <1>", // 1 = name, 2 = quantity
+    it: "<2> <1>", // 1 = name, 2 = quantity
+  },
+  "equipment/1": {
+    en: "<1>", // 1 = name
+    it: "<1>", // 1 = name
+  },
+  "skill_proficiencies_pool": {
     en: "_Choose <1>:_ <2>",
     it: "_Scegli <1>:_ <2>",
   },

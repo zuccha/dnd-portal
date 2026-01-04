@@ -73,7 +73,11 @@ export default function CharacterClassesAlbumCardContent({
 
         {starting_equipment && (
           <AlbumCard.InfoCell label={t("starting_equipment")}>
-            <RichText text={starting_equipment} />
+            <VStack align="flex-start" gap={0}>
+              {starting_equipment.split("\n").map((group, i) => (
+                <RichText key={i} text={group} />
+              ))}
+            </VStack>
           </AlbumCard.InfoCell>
         )}
       </AlbumCard.Info>
