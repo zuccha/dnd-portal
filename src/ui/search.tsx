@@ -2,9 +2,9 @@ import {
   Combobox,
   type ComboboxRootProps,
   Portal,
-  useListCollection,
+  createListCollection,
 } from "@chakra-ui/react";
-import { useLayoutEffect } from "react";
+import { useMemo, useState } from "react";
 
 //------------------------------------------------------------------------------
 // Search
@@ -20,16 +20,29 @@ export type SearchProps<T extends string, O extends SearchOption<T>> = Omit<
   "collection" | "onInputValueChange" | "onValueChange" | "value"
 > & {
   emptyLabel?: string;
-  onFilter: (label: string, search: string, option: O) => boolean;
-  onValueChange: (value: T | undefined) => void;
+  onFilter: (option: O, search: string) => boolean;
   options: O[];
   placeholder?: string;
-  value: T | undefined;
   withinDialog?: boolean;
-};
+} & (
+    | {
+        defaultValue?: T;
+        multiple?: false;
+        onValueChange?: (value: T) => void;
+        value?: T;
+      }
+    | {
+        defaultValue?: T[];
+        multiple: true;
+        onValueChange?: (value: T[]) => void;
+        value?: T[];
+      }
+  );
 
 export default function Search<T extends string, O extends SearchOption<T>>({
+  defaultValue,
   emptyLabel,
+  multiple,
   onFilter,
   onValueChange,
   options,
@@ -38,12 +51,17 @@ export default function Search<T extends string, O extends SearchOption<T>>({
   withinDialog,
   ...rest
 }: SearchProps<T, O>) {
-  const { collection, filter, set } = useListCollection({
-    filter: onFilter,
-    initialItems: options,
-  });
+  const [search, setSearch] = useState("");
 
-  useLayoutEffect(() => set(options), [options, set]);
+  const filteredOptions = useMemo(
+    () => options.filter((option) => onFilter(option, search)),
+    [onFilter, options, search],
+  );
+
+  const collection = useMemo(
+    () => createListCollection({ items: filteredOptions }),
+    [filteredOptions],
+  );
 
   const content = (
     <Combobox.Positioner>
@@ -62,9 +80,30 @@ export default function Search<T extends string, O extends SearchOption<T>>({
   return (
     <Combobox.Root
       collection={collection}
-      onInputValueChange={(e) => filter(e.inputValue)}
-      onValueChange={(e) => onValueChange(e.value[0] as T | undefined)}
-      value={value ? [value] : []}
+      defaultValue={
+        defaultValue ?
+          multiple ?
+            defaultValue
+          : [defaultValue]
+        : undefined
+      }
+      multiple={multiple}
+      onInputValueChange={(e) => setSearch(e.inputValue)}
+      onValueChange={
+        onValueChange ?
+          (e) =>
+            multiple ?
+              onValueChange(e.value as T[])
+            : onValueChange(e.value[0] as T)
+        : undefined
+      }
+      value={
+        value ?
+          multiple ?
+            value
+          : [value]
+        : undefined
+      }
       {...rest}
     >
       <Combobox.Control>
