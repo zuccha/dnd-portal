@@ -4,7 +4,13 @@ import {
   Portal,
   createListCollection,
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import {
+  type Ref,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 //------------------------------------------------------------------------------
 // Search
@@ -15,24 +21,32 @@ export type SearchOption<T> = {
   value: T;
 };
 
+export type SearchRefObject = {
+  clear: () => void;
+  focus: () => void;
+};
+
 export type SearchProps<T extends string, O extends SearchOption<T>> = Omit<
   ComboboxRootProps,
-  "collection" | "onInputValueChange" | "onValueChange" | "value"
+  | "collection"
+  | "defaultValue"
+  | "onInputValueChange"
+  | "onValueChange"
+  | "value"
 > & {
   emptyLabel?: string;
   onFilter: (option: O, search: string) => boolean;
   options: O[];
   placeholder?: string;
+  ref?: Ref<SearchRefObject>;
   withinDialog?: boolean;
 } & (
     | {
-        defaultValue?: T;
         multiple?: false;
         onValueChange?: (value: T) => void;
         value?: T;
       }
     | {
-        defaultValue?: T[];
         multiple: true;
         onValueChange?: (value: T[]) => void;
         value?: T[];
@@ -40,18 +54,19 @@ export type SearchProps<T extends string, O extends SearchOption<T>> = Omit<
   );
 
 export default function Search<T extends string, O extends SearchOption<T>>({
-  defaultValue,
   emptyLabel,
   multiple,
   onFilter,
   onValueChange,
   options,
   placeholder,
+  ref,
   value,
   withinDialog,
   ...rest
 }: SearchProps<T, O>) {
   const [search, setSearch] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const filteredOptions = useMemo(
     () => options.filter((option) => onFilter(option, search)),
@@ -62,6 +77,11 @@ export default function Search<T extends string, O extends SearchOption<T>>({
     () => createListCollection({ items: filteredOptions }),
     [filteredOptions],
   );
+
+  useImperativeHandle(ref, () => ({
+    clear: () => setSearch(""),
+    focus: () => inputRef.current?.focus(),
+  }));
 
   const content = (
     <Combobox.Positioner>
@@ -80,13 +100,6 @@ export default function Search<T extends string, O extends SearchOption<T>>({
   return (
     <Combobox.Root
       collection={collection}
-      defaultValue={
-        defaultValue ?
-          multiple ?
-            defaultValue
-          : [defaultValue]
-        : undefined
-      }
       multiple={multiple}
       onInputValueChange={(e) => setSearch(e.inputValue)}
       onValueChange={
@@ -102,12 +115,12 @@ export default function Search<T extends string, O extends SearchOption<T>>({
           multiple ?
             value
           : [value]
-        : undefined
+        : []
       }
       {...rest}
     >
       <Combobox.Control>
-        <Combobox.Input placeholder={placeholder} />
+        <Combobox.Input placeholder={placeholder} ref={inputRef} />
         <Combobox.IndicatorGroup>
           <Combobox.ClearTrigger />
           <Combobox.Trigger />
