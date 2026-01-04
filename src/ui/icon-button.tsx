@@ -1,6 +1,7 @@
 import {
   IconButton as ChakraIconButton,
   type IconButtonProps as ChakraIconButtonProps,
+  createIcon,
 } from "@chakra-ui/react";
 import type { LucideIcon } from "lucide-react";
 
@@ -9,7 +10,7 @@ import type { LucideIcon } from "lucide-react";
 //------------------------------------------------------------------------------
 
 export type IconButtonProps = Omit<ChakraIconButtonProps, "children"> & {
-  Icon: LucideIcon;
+  Icon: LucideIcon | ReturnType<typeof createIcon>;
 };
 
 export default function IconButton({ Icon, ...rest }: IconButtonProps) {
