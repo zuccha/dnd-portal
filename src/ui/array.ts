@@ -1,4 +1,18 @@
 //------------------------------------------------------------------------------
+// Join With
+//------------------------------------------------------------------------------
+
+export function joinWith(
+  items: string[],
+  separator: string,
+  lastSeparator: string,
+): string {
+  if (items.length <= 1) return items.join("");
+  if (items.length === 2) return `${items[0]}${lastSeparator}${items[1]}`;
+  return `${items.slice(0, -1).join(separator)}${lastSeparator}${items.at(-1)}`;
+}
+
+//------------------------------------------------------------------------------
 // Range
 //------------------------------------------------------------------------------
 
