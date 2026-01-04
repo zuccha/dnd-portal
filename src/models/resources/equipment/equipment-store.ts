@@ -1,6 +1,7 @@
 import type { ZodType } from "zod";
 import type { I18nString } from "~/i18n/i18n-string";
 import type { TranslationFields } from "../resource";
+import type { ResourceKind } from "../../types/resource-kind";
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import type { DBEquipment, DBEquipmentTranslation } from "./db-equipment";
 import { type Equipment } from "./equipment";
@@ -24,6 +25,7 @@ export function createEquipmentStore<
     filtersSchema: ZodType<F>;
     defaultEquipment: E;
     defaultFilters: F;
+    kinds: ResourceKind[];
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<E>[];
     useLocalizeEquipment: () => (equipment: E) => L;
@@ -33,6 +35,7 @@ export function createEquipmentStore<
     defaultFilters: extra.defaultFilters,
     defaultResource: extra.defaultEquipment,
     filtersSchema: extra.filtersSchema,
+    kinds: extra.kinds,
     orderOptions: extra.orderOptions,
     resourceSchema: extra.equipmentSchema,
     translationFields: extra.translationFields,

@@ -18,6 +18,7 @@ export const itemStore = createEquipmentStore(
     defaultFilters: defaultItemFilters,
     equipmentSchema: itemSchema,
     filtersSchema: itemFiltersSchema,
+    kinds: ["item"],
     orderOptions: itemOrderOptions,
     translationFields: itemTranslationFields,
     useLocalizeEquipment: useLocalizeItem,

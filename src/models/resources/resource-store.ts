@@ -8,6 +8,7 @@ import { createMemoryStoreSet } from "~/store/set/memory-store-set";
 import supabase, { queryClient } from "~/supabase";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
+import type { ResourceKind } from "../types/resource-kind";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
 import {
@@ -48,6 +49,7 @@ export function createResourceStore<
     defaultFilters,
     defaultResource,
     filtersSchema,
+    kinds,
     resourceSchema,
     orderOptions,
     translationFields,
@@ -56,6 +58,7 @@ export function createResourceStore<
     defaultFilters: F;
     defaultResource: R;
     filtersSchema: ZodType<F>;
+    kinds: ResourceKind[];
     orderOptions: { label: I18nString; value: string }[];
     resourceSchema: ZodType<R>;
     translationFields: TranslationFields<R>[];
@@ -226,7 +229,7 @@ export function createResourceStore<
     try {
       if (!campaignId) return emptyLocalizedResourceOptions;
       const p_campaign_id = campaignId;
-      const p_resource_kinds = [storeName.s];
+      const p_resource_kinds = kinds;
       const params = { p_campaign_id, p_resource_kinds };
       const { data } = await supabase.rpc(`fetch_resource_options`, params);
       const resourceOptions = z.array(resourceOptionSchema).parse(data);

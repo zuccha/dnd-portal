@@ -18,6 +18,7 @@ export const armorStore = createEquipmentStore(
     defaultFilters: defaultArmorFilters,
     equipmentSchema: armorSchema,
     filtersSchema: armorFiltersSchema,
+    kinds: ["armor"],
     orderOptions: armorOrderOptions,
     translationFields: armorTranslationFields,
     useLocalizeEquipment: useLocalizeArmor,

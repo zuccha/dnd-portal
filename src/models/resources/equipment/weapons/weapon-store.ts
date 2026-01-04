@@ -18,6 +18,7 @@ export const weaponStore = createEquipmentStore(
     defaultFilters: defaultWeaponFilters,
     equipmentSchema: weaponSchema,
     filtersSchema: weaponFiltersSchema,
+    kinds: ["weapon"],
     orderOptions: weaponOrderOptions,
     translationFields: weaponTranslationFields,
     useLocalizeEquipment: useLocalizeWeapon,

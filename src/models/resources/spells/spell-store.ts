@@ -17,6 +17,7 @@ export const spellStore = createResourceStore(
     defaultFilters: defaultSpellFilters,
     defaultResource: defaultSpell,
     filtersSchema: spellFiltersSchema,
+    kinds: ["spell"],
     orderOptions: spellOrderOptions,
     resourceSchema: spellSchema,
     translationFields: spellTranslationFields,

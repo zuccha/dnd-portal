@@ -18,6 +18,7 @@ export const toolStore = createEquipmentStore(
     defaultFilters: defaultToolFilters,
     equipmentSchema: toolSchema,
     filtersSchema: toolFiltersSchema,
+    kinds: ["tool"],
     orderOptions: toolOrderOptions,
     translationFields: toolTranslationFields,
     useLocalizeEquipment: useLocalizeTool,

@@ -21,6 +21,7 @@ export const eldritchInvocationStore = createResourceStore(
     defaultFilters: defaultEldritchInvocationFilters,
     defaultResource: defaultEldritchInvocation,
     filtersSchema: eldritchInvocationFiltersSchema,
+    kinds: ["eldritch_invocation"],
     orderOptions: eldritchInvocationOrderOptions,
     resourceSchema: eldritchInvocationSchema,
     translationFields: eldritchInvocationTranslationFields,
