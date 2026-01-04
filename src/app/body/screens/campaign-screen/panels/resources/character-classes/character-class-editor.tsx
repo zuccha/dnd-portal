@@ -14,7 +14,7 @@ import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Textarea from "~/ui/textarea";
-import ResourceListbox from "../_base/resource-listbox";
+import ResourceSearch from "../_base/resource-search";
 import {
   useCharacterClassEditorFormArmorProficiencies,
   useCharacterClassEditorFormArmorProficienciesExtra,
@@ -370,7 +370,7 @@ function CharacterClassEditorSpellIds({
 
   return (
     <Field error={message} label={t("spell_ids.label")}>
-      <ResourceListbox options={spellOptions} {...rest} w="full" withinDialog />
+      <ResourceSearch options={spellOptions} {...rest} w="full" withinDialog />
     </Field>
   );
 }
