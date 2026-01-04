@@ -390,7 +390,7 @@ GRANT ALL ON FUNCTION public.fetch_resources(p_campaign_id uuid, p_langs text[],
 
 CREATE OR REPLACE FUNCTION public.fetch_resource_options(
   p_campaign_id uuid,
-  p_resource_kind public.resource_kind)
+  p_resource_kinds public.resource_kind[])
 RETURNS TABLE(id uuid, name jsonb)
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
@@ -414,15 +414,15 @@ AS $$
     FROM public.resource_translations rt
     GROUP BY rt.resource_id
   ) tt ON tt.id = r.id
-  WHERE r.kind = p_resource_kind
+  WHERE r.kind = any(p_resource_kinds)
   ORDER BY r.id;
 $$;
 
-ALTER FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kind public.resource_kind) OWNER TO postgres;
+ALTER FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kind public.resource_kind) TO anon;
-GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kind public.resource_kind) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kind public.resource_kind) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO anon;
+GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO service_role;
 
 
 --------------------------------------------------------------------------------
