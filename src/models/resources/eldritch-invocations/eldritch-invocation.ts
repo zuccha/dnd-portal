@@ -3,6 +3,7 @@ import { i18nStringSchema } from "~/i18n/i18n-string";
 import { characterLevelSchema } from "../../types/character-level";
 import {
   type TranslationFields,
+  defaultResource,
   resourceSchema,
   resourceTranslationFields,
 } from "../resource";
@@ -12,9 +13,8 @@ import {
 //------------------------------------------------------------------------------
 
 export const eldritchInvocationSchema = resourceSchema.extend({
-  min_warlock_level: characterLevelSchema,
-
   description: i18nStringSchema,
+  min_warlock_level: characterLevelSchema,
   prerequisite: i18nStringSchema,
 });
 
@@ -25,20 +25,10 @@ export type EldritchInvocation = z.infer<typeof eldritchInvocationSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultEldritchInvocation: EldritchInvocation = {
-  id: "",
-
-  campaign_id: "",
-  campaign_name: "",
-
-  min_warlock_level: 0,
-
-  page: {},
-
+  ...defaultResource,
   description: {},
-  name: {},
+  min_warlock_level: 0,
   prerequisite: {},
-
-  visibility: "game_master",
 };
 
 //------------------------------------------------------------------------------

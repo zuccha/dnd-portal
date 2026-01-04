@@ -3,7 +3,11 @@ import { i18nStringSchema } from "~/i18n/i18n-string";
 import { creatureAbilitySchema } from "../../../types/creature-ability";
 import { toolTypeSchema } from "../../../types/tool-type";
 import type { TranslationFields } from "../../resource";
-import { equipmentSchema, equipmentTranslationFields } from "../equipment";
+import {
+  defaultEquipment,
+  equipmentSchema,
+  equipmentTranslationFields,
+} from "../equipment";
 
 //------------------------------------------------------------------------------
 // Tool
@@ -23,26 +27,10 @@ export type Tool = z.infer<typeof toolSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultTool: Tool = {
-  id: "",
-
-  campaign_id: "",
-  campaign_name: "",
-
-  visibility: "game_master",
-
-  name: {},
-  page: {},
-
-  cost: 0,
-  magic: false,
-  weight: 0,
-
-  notes: {},
-
+  ...defaultEquipment,
   ability: "strength",
-  type: "other",
-
   craft: {},
+  type: "other",
   utilize: {},
 };
 

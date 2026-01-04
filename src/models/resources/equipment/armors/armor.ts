@@ -1,7 +1,11 @@
 import z from "zod";
 import { armorTypeSchema } from "../../../types/armor-type";
 import type { TranslationFields } from "../../resource";
-import { equipmentSchema, equipmentTranslationFields } from "../equipment";
+import {
+  defaultEquipment,
+  equipmentSchema,
+  equipmentTranslationFields,
+} from "../equipment";
 
 //------------------------------------------------------------------------------
 // Armor
@@ -33,22 +37,7 @@ export type Armor = z.infer<typeof armorSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultArmor: Armor = {
-  id: "",
-
-  campaign_id: "",
-  campaign_name: "",
-
-  visibility: "game_master",
-
-  name: {},
-  page: {},
-
-  cost: 0,
-  magic: false,
-  weight: 0,
-
-  notes: {},
-
+  ...defaultEquipment,
   armor_class_max_cha_modifier: 0,
   armor_class_max_con_modifier: 0,
   armor_class_max_dex_modifier: 0,

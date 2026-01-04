@@ -5,7 +5,11 @@ import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
 import { weaponTypeSchema } from "../../../types/weapon-type";
 import type { TranslationFields } from "../../resource";
-import { equipmentSchema, equipmentTranslationFields } from "../equipment";
+import {
+  defaultEquipment,
+  equipmentSchema,
+  equipmentTranslationFields,
+} from "../equipment";
 
 //------------------------------------------------------------------------------
 // Weapon
@@ -32,26 +36,11 @@ export type Weapon = z.infer<typeof weaponSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultWeapon: Weapon = {
-  id: "",
-
-  campaign_id: "",
-  campaign_name: "",
-
-  visibility: "game_master",
-
-  name: {},
-  page: {},
-
-  cost: 0,
-  weight: 0,
-
-  notes: {},
-
+  ...defaultEquipment,
   ammunition: {},
   damage: "",
   damage_type: "slashing",
   damage_versatile: undefined,
-  magic: false,
   mastery: "cleave",
   melee: true,
   properties: [],

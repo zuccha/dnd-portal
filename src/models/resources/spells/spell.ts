@@ -7,6 +7,7 @@ import { spellRangeSchema } from "../../types/spell-range";
 import { spellSchoolSchema } from "../../types/spell-school";
 import {
   type TranslationFields,
+  defaultResource,
   resourceSchema,
   resourceTranslationFields,
 } from "../resource";
@@ -42,16 +43,7 @@ export type Spell = z.infer<typeof spellSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultSpell: Spell = {
-  id: "",
-
-  campaign_id: "",
-  campaign_name: "",
-
-  visibility: "game_master",
-
-  name: {},
-  page: {},
-
+  ...defaultResource,
   casting_time: "action",
   casting_time_value: undefined,
   character_class_ids: [],

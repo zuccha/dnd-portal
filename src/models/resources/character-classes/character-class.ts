@@ -7,6 +7,7 @@ import { dieTypeSchema } from "../../types/die_type";
 import { weaponTypeSchema } from "../../types/weapon-type";
 import {
   type TranslationFields,
+  defaultResource,
   resourceSchema,
   resourceTranslationFields,
 } from "../resource";
@@ -48,16 +49,7 @@ export type CharacterClass = z.infer<typeof characterClassSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultCharacterClass: CharacterClass = {
-  id: "",
-
-  campaign_id: "",
-  campaign_name: "",
-
-  visibility: "game_master",
-
-  name: {},
-  page: {},
-
+  ...defaultResource,
   armor_proficiencies: [],
   armor_proficiencies_extra: {},
   hp_die: "d8",

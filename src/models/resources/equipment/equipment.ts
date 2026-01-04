@@ -2,6 +2,7 @@ import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import {
   type TranslationFields,
+  defaultResource,
   resourceSchema,
   resourceTranslationFields,
 } from "../resource";
@@ -24,16 +25,7 @@ export type Equipment = z.infer<typeof equipmentSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultEquipment: Equipment = {
-  id: "",
-
-  campaign_id: "",
-  campaign_name: "",
-
-  visibility: "game_master",
-
-  name: {},
-  page: {},
-
+  ...defaultResource,
   cost: 0,
   magic: false,
   notes: {},

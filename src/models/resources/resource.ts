@@ -23,6 +23,19 @@ export const resourceSchema = z.object({
 export type Resource = z.infer<typeof resourceSchema>;
 
 //------------------------------------------------------------------------------
+// Default Resource
+//------------------------------------------------------------------------------
+
+export const defaultResource: Resource = {
+  campaign_id: "",
+  campaign_name: "",
+  id: "",
+  name: {},
+  page: {},
+  visibility: "game_master",
+};
+
+//------------------------------------------------------------------------------
 // Resource Translation Fields
 //------------------------------------------------------------------------------
 
