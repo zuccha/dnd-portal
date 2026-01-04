@@ -417,7 +417,7 @@ export function createResourceStore<
 
   function useLocalizeResourceName(
     campaignId: string,
-  ): (resourceId: string) => void {
+  ): (resourceId: string) => string {
     useLocalizedResourceOptions(campaignId);
     const [lang] = useI18nLang();
 
