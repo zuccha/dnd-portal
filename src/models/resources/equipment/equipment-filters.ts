@@ -1,5 +1,14 @@
 import z from "zod";
-import { resourceFiltersSchema } from "../resource-filters";
+import {
+  resourceFiltersSchema,
+  resourceOrderOptions,
+} from "../resource-filters";
+
+//------------------------------------------------------------------------------
+// Equipment Order Options
+//------------------------------------------------------------------------------
+
+export const equipmentOrderOptions = resourceOrderOptions;
 
 //------------------------------------------------------------------------------
 // Equipment Filters
