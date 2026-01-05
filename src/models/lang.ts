@@ -3,7 +3,7 @@ import z from "zod";
 import supabase from "~/supabase";
 
 //------------------------------------------------------------------------------
-// Language
+// Lang
 //------------------------------------------------------------------------------
 
 export const languageSchema = z.object({
@@ -11,24 +11,24 @@ export const languageSchema = z.object({
   label: z.string(),
 });
 
-export type Language = z.infer<typeof languageSchema>;
+export type Lang = z.infer<typeof languageSchema>;
 
 //------------------------------------------------------------------------------
-// Fetch Languages
+// Fetch Langs
 //------------------------------------------------------------------------------
 
-export async function fetchLanguages(): Promise<Language[]> {
-  const { data } = await supabase.from("languages").select();
+export async function fetchLangs(): Promise<Lang[]> {
+  const { data } = await supabase.from("langs").select();
   return z.array(languageSchema).parse(data);
 }
 
 //------------------------------------------------------------------------------
-// Use Languages
+// Use Langs
 //------------------------------------------------------------------------------
 
-export function useLanguages() {
-  return useQuery<Language[]>({
-    queryFn: fetchLanguages,
-    queryKey: ["languages"],
+export function useLangs() {
+  return useQuery<Lang[]>({
+    queryFn: fetchLangs,
+    queryKey: ["langs"],
   });
 }

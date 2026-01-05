@@ -5,7 +5,7 @@ import useAuth from "~/auth/use-auth";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { i18nSystems, useI18nSystem } from "~/i18n/i18n-system";
-import { useLanguages } from "~/models/language";
+import { useLangs } from "~/models/lang";
 import ThemeButton from "~/theme/theme-button";
 import Select from "~/ui/select";
 import { compareObjects } from "~/utils/object";
@@ -47,7 +47,7 @@ export const headerHeight = "3.5rem";
 function LanguageSelect() {
   const [language, setLanguage] = useI18nLang();
 
-  const languages = useLanguages();
+  const languages = useLangs();
   const languageOptions = useMemo(
     () =>
       languages.data?.map(({ code }) => ({
