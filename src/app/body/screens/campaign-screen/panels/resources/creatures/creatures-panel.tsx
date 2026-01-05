@@ -131,6 +131,7 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     hp: data.hp,
     hp_formula: data.hp_formula,
     initiative: data.initiative,
+    language_ids: data.language_ids,
     passive_perception: data.passive_perception,
     size: data.size,
     skill_expertise: data.skill_expertise,
@@ -152,7 +153,6 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
 
     actions: data.actions,
     bonus_actions: data.bonus_actions,
-    languages: data.languages,
     legendary_actions: data.legendary_actions,
     planes: data.planes,
     reactions: data.reactions,

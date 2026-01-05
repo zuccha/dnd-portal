@@ -42,7 +42,7 @@ export const creatureEditorFormFieldsSchema = z.object({
   hp: z.number(),
   hp_formula: z.string(),
   initiative: z.number(),
-  languages: z.string(),
+  language_ids: z.array(z.uuid()),
   legendary_actions: z.string(),
   name: z.string(),
   page: z.number(),
@@ -263,12 +263,12 @@ export const useCreatureEditorFormInitiative = (
 ) => useCreatureEditorFormField("initiative", defaultInitiative);
 
 //------------------------------------------------------------------------------
-// Languages
+// LanguageIds
 //------------------------------------------------------------------------------
 
-export const useCreatureEditorFormLanguages = (
-  defaultLanguages: CreatureEditorFormFields["languages"],
-) => useCreatureEditorFormField("languages", defaultLanguages);
+export const useCreatureEditorFormLanguageIds = (
+  defaultLanguageIds: CreatureEditorFormFields["language_ids"],
+) => useCreatureEditorFormField("language_ids", defaultLanguageIds);
 
 //------------------------------------------------------------------------------
 // Name

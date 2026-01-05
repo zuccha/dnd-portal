@@ -39,6 +39,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   hp: z.number(),
   hp_formula: z.string(),
   initiative: z.number(),
+  language_ids: z.array(z.uuid()),
   passive_perception: z.number(),
   size: creatureSizeSchema,
   skill_expertise: z.array(creatureSkillSchema),
@@ -63,7 +64,6 @@ export type DBCreature = z.infer<typeof dbCreatureSchema>;
 export const dbCreatureTranslationSchema = dbResourceTranslationSchema.extend({
   actions: z.string().nullish(),
   bonus_actions: z.string().nullish(),
-  languages: z.string().nullish(),
   legendary_actions: z.string().nullish(),
   planes: z.string().nullish(),
   reactions: z.string().nullish(),

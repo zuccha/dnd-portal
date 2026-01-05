@@ -2,6 +2,7 @@ import { HStack, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import { type Creature } from "~/models/resources/creatures/creature";
+import { languageStore } from "~/models/resources/languages/language-store";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
@@ -19,6 +20,7 @@ import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Textarea from "~/ui/textarea";
 import EquipmentBundleEditor from "../_base/equipment-bundle-editor";
+import ResourceSearch from "../_base/resource-search";
 import {
   useCreatureEditorFormAC,
   useCreatureEditorFormAbilityCha,
@@ -45,7 +47,7 @@ import {
   useCreatureEditorFormHPFormula,
   useCreatureEditorFormHabitats,
   useCreatureEditorFormInitiative,
-  useCreatureEditorFormLanguages,
+  useCreatureEditorFormLanguageIds,
   useCreatureEditorFormLegendaryActions,
   useCreatureEditorFormName,
   useCreatureEditorFormPage,
@@ -190,8 +192,9 @@ export default function CreatureEditor({
       </HStack>
 
       {/* Descriptive Fields */}
-      <CreatureEditorLanguages
-        defaultLanguages={resource.languages[lang] ?? ""}
+      <CreatureEditorLanguageIds
+        campaignId={campaignId}
+        defaultLanguageIds={resource.language_ids}
       />
       <CreatureEditorGear campaignId={campaignId} defaultGear={resource.gear} />
 
@@ -828,24 +831,30 @@ function CreatureEditorInitiative({
 }
 
 //------------------------------------------------------------------------------
-// Languages
+// Language Ids
 //------------------------------------------------------------------------------
 
-function CreatureEditorLanguages({
-  defaultLanguages,
+function CreatureEditorLanguageIds({
+  campaignId,
+  defaultLanguageIds,
 }: {
-  defaultLanguages: string;
+  campaignId: string;
+  defaultLanguageIds: string[];
 }) {
-  const { error, ...rest } = useCreatureEditorFormLanguages(defaultLanguages);
+  const languageOptions = languageStore.useLocalizedResourceOptions(campaignId);
+
+  const { error, ...rest } =
+    useCreatureEditorFormLanguageIds(defaultLanguageIds);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("languages.label")}>
-      <Input
-        bgColor="bg.info"
-        placeholder={t("languages.placeholder")}
+    <Field error={message} label={t("language_ids.label")}>
+      <ResourceSearch
         {...rest}
+        options={languageOptions}
+        w="full"
+        withinDialog
       />
     </Field>
   );
@@ -1415,11 +1424,11 @@ const i18nContext = {
     en: "E.g.: 11",
     it: "Es: 11",
   },
-  "languages.label": {
+  "language_ids.label": {
     en: "Languages",
     it: "Lingue",
   },
-  "languages.placeholder": {
+  "language_ids.placeholder": {
     en: "None",
     it: "Nessuna",
   },

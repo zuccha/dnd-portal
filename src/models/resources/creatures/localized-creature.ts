@@ -25,6 +25,7 @@ import {
   useTranslateDamageType,
 } from "../../types/damage-type";
 import { equipmentStore } from "../equipment/equipment-store";
+import { languageStore } from "../languages/language-store";
 import {
   localizedResourceSchema,
   useLocalizeResource,
@@ -124,6 +125,8 @@ export function useLocalizeCreature(
   const translateDamageType = useTranslateDamageType(lang);
   const localizeEquipmentName =
     equipmentStore.useLocalizeResourceName(campaignId);
+  const localizeLanguageName =
+    languageStore.useLocalizeResourceName(campaignId);
   const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 
@@ -320,7 +323,10 @@ export function useLocalizeCreature(
       }
 
       // Languages
-      const languages = translate(creature.languages, lang);
+      const languages = creature.language_ids
+        .map(localizeLanguageName)
+        .sort()
+        .join(", ");
       if (languages) {
         info_parts.push(ti("info.languages", languages));
       }
@@ -457,6 +463,7 @@ export function useLocalizeCreature(
       formatCp,
       lang,
       localizeEquipmentName,
+      localizeLanguageName,
       localizeResource,
       system,
       t,
