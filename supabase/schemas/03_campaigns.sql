@@ -46,6 +46,28 @@ GRANT ALL ON TABLE public.campaign_modules TO anon;
 GRANT ALL ON TABLE public.campaign_modules TO authenticated;
 GRANT ALL ON TABLE public.campaign_modules TO service_role;
 
+--------------------------------------------------------------------------------
+-- MODULE DEPENDENCIES
+--------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS public.module_dependencies (
+    module_id uuid NOT NULL REFERENCES public.campaigns(id) ON DELETE CASCADE,
+    dependency_id uuid NOT NULL REFERENCES public.campaigns(id) ON DELETE CASCADE,
+    added_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT module_dependencies_pkey PRIMARY KEY (module_id, dependency_id)
+);
+
+ALTER TABLE public.module_dependencies OWNER TO postgres;
+
+CREATE INDEX idx_module_dependencies_module_id ON public.module_dependencies USING btree (module_id);
+CREATE INDEX idx_module_dependencies_dependency_id ON public.module_dependencies USING btree (dependency_id);
+
+ALTER TABLE public.module_dependencies ENABLE ROW LEVEL SECURITY;
+
+GRANT ALL ON TABLE public.module_dependencies TO anon;
+GRANT ALL ON TABLE public.module_dependencies TO authenticated;
+GRANT ALL ON TABLE public.module_dependencies TO service_role;
+
 
 --------------------------------------------------------------------------------
 -- CAMPAIGN PLAYERS
@@ -172,6 +194,69 @@ USING (
   )
 );
 
+--------------------------------------------------------------------------------
+-- MODULE DEPENDENCIES POLICIES
+--------------------------------------------------------------------------------
+
+CREATE POLICY "Users can read module dependencies" ON public.module_dependencies
+FOR SELECT TO anon, authenticated
+USING (
+  -- must be able to read both the module and its dependency
+  (
+    EXISTS (
+      SELECT 1
+      FROM public.campaigns c
+      WHERE c.id = module_dependencies.module_id
+        AND c.is_module = true
+        AND (
+          c.visibility IN ('public'::public.campaign_visibility, 'purchasable'::public.campaign_visibility)
+          OR EXISTS (
+            SELECT 1 FROM public.user_modules um
+            WHERE um.module_id = c.id
+              AND um.user_id = (SELECT auth.uid() AS uid)
+          )
+        )
+    )
+    AND
+    EXISTS (
+      SELECT 1
+      FROM public.campaigns c
+      WHERE c.id = module_dependencies.dependency_id
+        AND c.is_module = true
+        AND (
+          c.visibility IN ('public'::public.campaign_visibility, 'purchasable'::public.campaign_visibility)
+          OR EXISTS (
+            SELECT 1 FROM public.user_modules um
+            WHERE um.module_id = c.id
+              AND um.user_id = (SELECT auth.uid() AS uid)
+          )
+        )
+    )
+  )
+);
+
+CREATE POLICY "Module creators can add dependencies" ON public.module_dependencies
+FOR INSERT TO authenticated
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM public.campaigns c
+    WHERE c.id = module_dependencies.module_id
+      AND c.creator_id = (SELECT auth.uid() AS uid)
+      AND c.is_module = true
+  )
+);
+
+CREATE POLICY "Module creators can remove dependencies" ON public.module_dependencies
+FOR DELETE TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.campaigns c
+    WHERE c.id = module_dependencies.module_id
+      AND c.creator_id = (SELECT auth.uid() AS uid)
+      AND c.is_module = true
+  )
+);
+
 
 --------------------------------------------------------------------------------
 -- CAMPAIGN PLAYERS POLICIES
@@ -294,6 +379,49 @@ GRANT ALL ON FUNCTION public.validate_campaign_module_is_module() TO anon;
 GRANT ALL ON FUNCTION public.validate_campaign_module_is_module() TO authenticated;
 GRANT ALL ON FUNCTION public.validate_campaign_module_is_module() TO service_role;
 
+--------------------------------------------------------------------------------
+-- MODULE DEPENDENCIES VALIDATION TRIGGER
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.validate_module_dependency_is_module()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM public.campaigns
+    WHERE id = NEW.module_id AND is_module = true
+  ) THEN
+    RAISE EXCEPTION 'Referenced module % is not a module', NEW.module_id;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM public.campaigns
+    WHERE id = NEW.dependency_id AND is_module = true
+  ) THEN
+    RAISE EXCEPTION 'Referenced dependency % is not a module', NEW.dependency_id;
+  END IF;
+
+  IF NEW.module_id = NEW.dependency_id THEN
+    RAISE EXCEPTION 'Module % cannot depend on itself', NEW.module_id;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION public.validate_module_dependency_is_module() OWNER TO postgres;
+
+CREATE TRIGGER enforce_module_dependency_is_module
+  BEFORE INSERT OR UPDATE ON public.module_dependencies
+  FOR EACH ROW
+  EXECUTE FUNCTION public.validate_module_dependency_is_module();
+
+GRANT ALL ON FUNCTION public.validate_module_dependency_is_module() TO anon;
+GRANT ALL ON FUNCTION public.validate_module_dependency_is_module() TO authenticated;
+GRANT ALL ON FUNCTION public.validate_module_dependency_is_module() TO service_role;
+
 
 --------------------------------------------------------------------------------
 -- USER MODULES VALIDATION TRIGGER
@@ -339,7 +467,7 @@ RETURNS TABLE(id uuid)
 LANGUAGE sql STABLE
 SET search_path TO 'public', 'pg_temp'
 AS $$
-  WITH prefs AS (
+  WITH RECURSIVE prefs AS (
     SELECT
       -- include these ids
       (
@@ -360,11 +488,23 @@ AS $$
     SELECT cm.module_id
     FROM public.campaign_modules cm
     WHERE cm.campaign_id = p_campaign_id
+  ),
+  module_tree AS (
+    SELECT b.id, ARRAY[b.id] AS path
+    FROM base_ids b
+    UNION ALL
+    SELECT md.dependency_id, mt.path || md.dependency_id
+    FROM public.module_dependencies md
+    JOIN module_tree mt ON md.module_id = mt.id
+    WHERE NOT md.dependency_id = ANY(mt.path)
+  ),
+  all_ids AS (
+    SELECT DISTINCT id FROM module_tree
   )
-  SELECT b.id
-  FROM base_ids b, prefs p
-  WHERE (p.ids_inc IS NULL OR b.id = ANY(p.ids_inc))
-    AND (p.ids_exc IS NULL OR NOT (b.id = ANY(p.ids_exc)));
+  SELECT a.id
+  FROM all_ids a, prefs p
+  WHERE (p.ids_inc IS NULL OR a.id = ANY(p.ids_inc))
+    AND (p.ids_exc IS NULL OR NOT (a.id = ANY(p.ids_exc)));
 $$;
 
 ALTER FUNCTION public.campaign_resource_ids(p_campaign_id uuid, p_campaign_filter jsonb) OWNER TO postgres;

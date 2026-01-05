@@ -396,11 +396,8 @@ LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
   WITH campaign_ids AS (
-    SELECT p_campaign_id AS id
-    UNION
-    SELECT cm.module_id
-    FROM public.campaign_modules cm
-    WHERE cm.campaign_id = p_campaign_id
+    SELECT id
+    FROM public.campaign_resource_ids(p_campaign_id, '{}'::jsonb)
   )
   SELECT
     r.id,
