@@ -14,6 +14,7 @@ import type { LocalizedResource } from "./localized-resource";
 import {
   type LocalizedResourceOption,
   type Resource,
+  type ResourceOption,
   type TranslationFields,
   defaultLocalizedResourceOption,
   resourceOptionSchema,
@@ -72,16 +73,6 @@ export function createResourceStore<
 
   const emptyResourceIds: string[] = [];
   const emptyLocalizedResourceOptions: LocalizedResourceOption[] = [];
-  const emptyResources: R[] = [];
-
-  //----------------------------------------------------------------------------
-  // Resources Ids Store
-  //----------------------------------------------------------------------------
-
-  // campaign id -> resource id[]
-  const resourceIdsStore = createMemoryStoreSet<string, string[]>(
-    `${storeId}.resource_ids`,
-  );
 
   //----------------------------------------------------------------------------
   // Filtered Resources Ids Store
@@ -106,10 +97,9 @@ export function createResourceStore<
   //----------------------------------------------------------------------------
 
   // resource id -> resource option
-  const resourceOptionsStore = createMemoryStoreSet<
-    string,
-    LocalizedResourceOption
-  >(`${storeId}.resource_options`);
+  const resourceOptionsStore = createMemoryStoreSet<string, ResourceOption>(
+    `${storeId}.resource_options`,
+  );
 
   //----------------------------------------------------------------------------
   // Resource Selection Store
@@ -235,10 +225,9 @@ export function createResourceStore<
       const resourceOptions = z.array(resourceOptionSchema).parse(data);
       return resourceOptions
         .map((option) => {
+          resourceOptionsStore.set(option.id, option, option);
           const label = translate(option.name, lang);
-          const localizedOption = { ...option, label, value: option.id };
-          resourceOptionsStore.set(option.id, localizedOption, localizedOption);
-          return localizedOption;
+          return { ...option, label, value: option.id };
         })
         .sort(compareObjects("label"));
     } catch (e) {
@@ -248,15 +237,15 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
-  // Fetch Resources
+  // Fetch Resource Ids
   //----------------------------------------------------------------------------
 
-  async function fetchResources(
+  async function fetchResourceIds(
     campaignId: string,
     modules: Record<string, boolean | undefined>,
     { order_by, order_dir, ...filters }: Omit<F, "name">,
     lang: string,
-  ): Promise<R[]> {
+  ): Promise<string[]> {
     try {
       const p_campaign_id = campaignId;
       const p_filters = { ...filters, campaigns: modules };
@@ -269,12 +258,10 @@ export function createResourceStore<
         queryClient.setQueryData([fetchResourceId, resource.id], resource);
         setResource(resource);
       }
-      const resourceIds = resources.map(({ id }) => id);
-      resourceIdsStore.set(campaignId, emptyResourceIds, resourceIds);
-      return resources;
+      return resources.map(({ id }) => id);
     } catch (e) {
       console.error(e);
-      return emptyResources;
+      return emptyResourceIds;
     }
   }
 
@@ -490,12 +477,12 @@ export function createResourceStore<
     const [modules] = useResourcesModulesFilter(campaignId);
     const { name: _, ...filters } = filtersStore.useValue();
 
-    useQuery<R[]>({
-      queryFn: () => fetchResources(campaignId, modules, filters, lang),
+    const { data: resourceIds } = useQuery<string[]>({
+      queryFn: () => fetchResourceIds(campaignId, modules, filters, lang),
       queryKey: [fetchResourcesId, campaignId, modules, filters, lang],
     });
 
-    return resourceIdsStore.useValue(campaignId, emptyResourceIds);
+    return resourceIds ?? emptyResourceIds;
   }
 
   //----------------------------------------------------------------------------
