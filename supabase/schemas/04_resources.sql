@@ -397,7 +397,7 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
   WITH campaign_ids AS (
     SELECT id
-    FROM public.campaign_resource_ids(p_campaign_id, '{}'::jsonb)
+    FROM public.campaign_resource_ids_with_deps(p_campaign_id, '{}'::jsonb)
   )
   SELECT
     r.id,
