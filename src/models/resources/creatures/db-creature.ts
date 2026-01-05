@@ -67,7 +67,6 @@ export const dbCreatureTranslationSchema = dbResourceTranslationSchema.extend({
   legendary_actions: z.string().nullish(),
   planes: z.string().nullish(),
   reactions: z.string().nullish(),
-  senses: z.string().nullish(),
   traits: z.string().nullish(),
 });
 

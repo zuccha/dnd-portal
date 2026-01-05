@@ -57,7 +57,6 @@ export const creatureSchema = resourceSchema
     passive_perception: z.number(),
     planes: i18nStringSchema,
     reactions: i18nStringSchema,
-    senses: i18nStringSchema,
     size: creatureSizeSchema,
     skill_expertise: z.array(creatureSkillSchema),
     skill_proficiencies: z.array(creatureSkillSchema),
@@ -115,7 +114,6 @@ export const defaultCreature: Creature = {
   passive_perception: 10,
   planes: {},
   reactions: {},
-  senses: {},
   size: "medium",
   skill_expertise: [],
   skill_proficiencies: [],
@@ -143,6 +141,5 @@ export const creatureTranslationFields: TranslationFields<Creature>[] = [
   "legendary_actions",
   "planes",
   "reactions",
-  "senses",
   "traits",
 ];

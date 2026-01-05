@@ -49,7 +49,6 @@ export const creatureEditorFormFieldsSchema = z.object({
   passive_perception: z.number(),
   planes: z.string(),
   reactions: z.string(),
-  senses: z.string(),
   size: creatureSizeSchema,
   skill_expertise: z.array(creatureSkillSchema),
   skill_proficiencies: z.array(creatureSkillSchema),
@@ -327,14 +326,6 @@ export const useCreatureEditorFormSkillProficiencies = (
   defaultSkillProficiencies: CreatureEditorFormFields["skill_proficiencies"],
 ) =>
   useCreatureEditorFormField("skill_proficiencies", defaultSkillProficiencies);
-
-//------------------------------------------------------------------------------
-// Senses
-//------------------------------------------------------------------------------
-
-export const useCreatureEditorFormSenses = (
-  defaultSenses: CreatureEditorFormFields["senses"],
-) => useCreatureEditorFormField("senses", defaultSenses);
 
 //------------------------------------------------------------------------------
 // Size

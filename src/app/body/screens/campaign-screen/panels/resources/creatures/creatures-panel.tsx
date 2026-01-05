@@ -156,7 +156,6 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     legendary_actions: data.legendary_actions,
     planes: data.planes,
     reactions: data.reactions,
-    senses: data.senses,
     traits: data.traits,
   };
 

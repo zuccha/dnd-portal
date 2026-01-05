@@ -343,13 +343,7 @@ export function useLocalizeCreature(
           ti("senses.truesight", formatCm(creature.truesight))
         : "";
 
-      const senses = [
-        blindsight,
-        darkvision,
-        tremorsense,
-        truesight,
-        translate(creature.senses, lang),
-      ]
+      const senses = [blindsight, darkvision, tremorsense, truesight]
         .filter((sense) => sense)
         .join(", ");
       if (senses) {

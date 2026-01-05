@@ -52,7 +52,6 @@ import {
   useCreatureEditorFormPassivePerception,
   useCreatureEditorFormPlanes,
   useCreatureEditorFormReactions,
-  useCreatureEditorFormSenses,
   useCreatureEditorFormSize,
   useCreatureEditorFormSkillExpertise,
   useCreatureEditorFormSkillProficiencies,
@@ -191,12 +190,9 @@ export default function CreatureEditor({
       </HStack>
 
       {/* Descriptive Fields */}
-      <HStack align="flex-start" gap={4} w="full">
-        <CreatureEditorSenses defaultSenses={resource.senses[lang] ?? ""} />
-        <CreatureEditorLanguages
-          defaultLanguages={resource.languages[lang] ?? ""}
-        />
-      </HStack>
+      <CreatureEditorLanguages
+        defaultLanguages={resource.languages[lang] ?? ""}
+      />
       <CreatureEditorGear campaignId={campaignId} defaultGear={resource.gear} />
 
       {/* Actions and Traits */}
@@ -925,7 +921,11 @@ function CreatureEditorPlanes({ defaultPlanes }: { defaultPlanes: string }) {
 
   return (
     <Field error={message} label={t("planes.label")}>
-      <Input placeholder={t("planes.placeholder")} {...rest} />
+      <Input
+        bgColor="bg.info"
+        placeholder={t("planes.placeholder")}
+        {...rest}
+      />
     </Field>
   );
 }
@@ -1011,26 +1011,6 @@ function CreatureEditorSkillProficiencies({
         options={skillOptions}
         placeholder={t("skill_proficiencies.placeholder")}
         withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Senses
-//------------------------------------------------------------------------------
-
-function CreatureEditorSenses({ defaultSenses }: { defaultSenses: string }) {
-  const { error, ...rest } = useCreatureEditorFormSenses(defaultSenses);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("senses.label")}>
-      <Input
-        bgColor="bg.info"
-        placeholder={t("senses.placeholder")}
         {...rest}
       />
     </Field>
@@ -1490,14 +1470,6 @@ const i18nContext = {
   "reactions.placeholder": {
     en: "None",
     it: "Nessuna",
-  },
-  "senses.label": {
-    en: "Other Senses",
-    it: "Altri Sensi",
-  },
-  "senses.placeholder": {
-    en: "None",
-    it: "Nessuno",
   },
   "senses[blindsight].label": {
     en: "Blindsight",
