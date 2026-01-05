@@ -90,6 +90,10 @@ const i18nContext = {
     en: "Gear",
     it: "Oggetti",
   },
+  "section.resource/languages": {
+    en: "Languages",
+    it: "Lingue",
+  },
   "section.resource/spells": {
     en: "Spells",
     it: "Incantesimi",

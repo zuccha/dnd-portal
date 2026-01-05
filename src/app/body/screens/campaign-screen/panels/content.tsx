@@ -13,6 +13,7 @@ import CharacterClassesPanel from "./resources/character-classes/character-class
 import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
 import ItemsPanel from "./resources/items/items-panel";
+import LanguagesPanel from "./resources/languages/languages-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
 import ToolsPanel from "./resources/tools/tools-panel";
 import WeaponsPanel from "./resources/weapons/weapons-panel";
@@ -56,6 +57,7 @@ const resourcePanels: Record<ResourcePanelId, FC<{ campaignId: string }>> = {
   "resource/creatures": CreaturesPanel,
   "resource/eldritch-invocations": EldritchInvocationsPanel,
   "resource/items": ItemsPanel,
+  "resource/languages": LanguagesPanel,
   "resource/spells": SpellsPanel,
   "resource/tools": ToolsPanel,
   "resource/weapons": WeaponsPanel,

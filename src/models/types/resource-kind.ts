@@ -11,6 +11,7 @@ export const resourceKindSchema = z.enum([
   "eldritch_invocation",
   "equipment",
   "item",
+  "language",
   "spell",
   "tool",
   "weapon",
