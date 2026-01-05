@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS public.spell_translations (
   upgrade text,
   CONSTRAINT spell_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT spell_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.spells(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT spell_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT spell_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.spell_translations OWNER TO postgres;
@@ -142,4 +142,3 @@ CREATE POLICY "Creators and GMs can delete spell translations"
 ON public.spell_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-

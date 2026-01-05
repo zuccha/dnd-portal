@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS public.armor_translations (
   lang text NOT NULL,
   CONSTRAINT armor_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT armor_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.armors(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT armor_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT armor_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.armor_translations OWNER TO postgres;
@@ -102,5 +102,4 @@ CREATE POLICY "Creators and GMs can delete armor translations"
 ON public.armor_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
 

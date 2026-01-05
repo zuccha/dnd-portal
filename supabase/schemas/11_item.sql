@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.item_translations (
   lang text NOT NULL,
   CONSTRAINT item_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT item_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.items(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT item_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT item_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.item_translations OWNER TO postgres;
@@ -86,5 +86,4 @@ CREATE POLICY "Creators and GMs can delete item translations"
 ON public.item_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
 

@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.character_class_translations (
   weapon_proficiencies_extra text,
   CONSTRAINT character_class_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT character_class_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.character_classes(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT character_class_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT character_class_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.character_class_translations OWNER TO postgres;

@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS public.equipment_translations (
   notes text,
   CONSTRAINT equipment_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT equipment_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.equipments(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT equipment_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT equipment_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.equipment_translations OWNER TO postgres;
@@ -130,4 +130,3 @@ CREATE POLICY "Creators and GMs can delete equipment translations"
 ON public.equipment_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-

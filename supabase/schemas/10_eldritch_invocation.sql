@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS public.eldritch_invocation_translations (
   lang text DEFAULT ''::text NOT NULL,
   prerequisite text,
   description text DEFAULT ''::text NOT NULL,
-  CONSTRAINT eldritch_invocation_translations_r_pkey PRIMARY KEY (resource_id, lang),
+  CONSTRAINT eldritch_invocation_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT eldritch_invocation_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.eldritch_invocations(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT eldritch_invocation_translations_r_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT eldritch_invocation_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.eldritch_invocation_translations OWNER TO postgres;
@@ -124,5 +124,4 @@ CREATE POLICY "Creators and GMs can delete eldritch invocation translations"
 ON public.eldritch_invocation_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
 

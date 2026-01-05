@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS public.tool_translations (
   utilize text NOT NULL,
   CONSTRAINT tool_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT tool_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.tools(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT tool_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT tool_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.tool_translations OWNER TO postgres;
@@ -90,5 +90,4 @@ CREATE POLICY "Creators and GMs can delete tool translations"
 ON public.tool_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
 

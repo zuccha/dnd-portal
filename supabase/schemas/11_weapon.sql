@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS public.weapon_translations (
   ammunition text,
   CONSTRAINT weapon_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT weapon_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.weapons(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT weapon_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.languages(code) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT weapon_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.weapon_translations OWNER TO postgres;
@@ -99,5 +99,4 @@ CREATE POLICY "Creators and GMs can delete weapon translations"
 ON public.weapon_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
 
