@@ -705,6 +705,13 @@ BEGIN
       WHERE e.language_id = cl.language_id
     );
 
+  WITH entries AS (
+    SELECT
+      (value)::uuid AS language_id
+    FROM jsonb_array_elements_text(
+      coalesce(p_creature->'language_ids', '[]'::jsonb)
+    )
+  )
   INSERT INTO public.creature_languages (creature_id, language_id)
   SELECT
     p_id,
