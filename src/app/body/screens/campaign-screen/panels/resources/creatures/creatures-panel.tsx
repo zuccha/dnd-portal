@@ -107,64 +107,54 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
   const maybeCreature = {
     visibility: data.visibility,
 
-    alignment: data.alignment,
-    habitats: data.habitats,
-    size: data.size,
-    treasures: data.treasures,
-    type: data.type,
-
+    ability_cha: data.ability_cha,
+    ability_con: data.ability_con,
+    ability_dex: data.ability_dex,
+    ability_int: data.ability_int,
+    ability_proficiencies: data.ability_proficiencies,
+    ability_str: data.ability_str,
+    ability_wis: data.ability_wis,
     ac: data.ac,
+    alignment: data.alignment,
+    blindsight: data.blindsight,
+    condition_immunities: data.condition_immunities,
+    condition_resistances: data.condition_resistances,
+    condition_vulnerabilities: data.condition_vulnerabilities,
     cr: data.cr,
+    damage_immunities: data.damage_immunities,
+    damage_resistances: data.damage_resistances,
+    damage_vulnerabilities: data.damage_vulnerabilities,
+    darkvision: data.darkvision,
+    habitats: data.habitats,
     hp: data.hp,
     hp_formula: data.hp_formula,
-
+    initiative: data.initiative,
+    passive_perception: data.passive_perception,
+    size: data.size,
+    skill_expertise: data.skill_expertise,
+    skill_proficiencies: data.skill_proficiencies,
     speed_burrow: data.speed_burrow,
     speed_climb: data.speed_climb,
     speed_fly: data.speed_fly,
     speed_swim: data.speed_swim,
     speed_walk: data.speed_walk,
-
-    ability_cha: data.ability_cha,
-    ability_con: data.ability_con,
-    ability_dex: data.ability_dex,
-    ability_int: data.ability_int,
-    ability_str: data.ability_str,
-    ability_wis: data.ability_wis,
-
-    initiative: data.initiative,
-    passive_perception: data.passive_perception,
-
-    ability_proficiencies: data.ability_proficiencies,
-    skill_expertise: data.skill_expertise,
-    skill_proficiencies: data.skill_proficiencies,
-
-    damage_immunities: data.damage_immunities,
-    damage_resistances: data.damage_resistances,
-    damage_vulnerabilities: data.damage_vulnerabilities,
-
-    condition_immunities: data.condition_immunities,
-    condition_resistances: data.condition_resistances,
-    condition_vulnerabilities: data.condition_vulnerabilities,
-
-    blindsight: data.blindsight,
-    darkvision: data.darkvision,
+    treasures: data.treasures,
     tremorsense: data.tremorsense,
     truesight: data.truesight,
+    type: data.type,
   };
 
   const maybeTranslation = {
     name: data.name,
     page: data.page || null,
 
-    gear: data.gear,
-    languages: data.languages,
-    planes: data.planes,
-    senses: data.senses,
-
     actions: data.actions,
     bonus_actions: data.bonus_actions,
+    languages: data.languages,
     legendary_actions: data.legendary_actions,
+    planes: data.planes,
     reactions: data.reactions,
+    senses: data.senses,
     traits: data.traits,
   };
 

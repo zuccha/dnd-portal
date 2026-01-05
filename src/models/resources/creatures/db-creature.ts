@@ -15,49 +15,41 @@ import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 //------------------------------------------------------------------------------
 
 export const dbCreatureSchema = dbResourceSchema.extend({
-  alignment: creatureAlignmentSchema,
-  habitats: z.array(creatureHabitatSchema),
-  size: creatureSizeSchema,
-  treasures: z.array(creatureTreasureSchema),
-  type: creatureTypeSchema,
-
+  ability_cha: z.number(),
+  ability_con: z.number(),
+  ability_dex: z.number(),
+  ability_int: z.number(),
+  ability_proficiencies: z.array(creatureAbilitySchema),
+  ability_str: z.number(),
+  ability_wis: z.number(),
   ac: z.number(),
+  alignment: creatureAlignmentSchema,
+  blindsight: z.number(),
+  condition_immunities: z.array(creatureConditionSchema),
+  condition_resistances: z.array(creatureConditionSchema),
+  condition_vulnerabilities: z.array(creatureConditionSchema),
   cr: z.number(),
+  damage_immunities: z.array(damageTypeSchema),
+  damage_resistances: z.array(damageTypeSchema),
+  damage_vulnerabilities: z.array(damageTypeSchema),
+  darkvision: z.number(),
+  habitats: z.array(creatureHabitatSchema),
   hp: z.number(),
   hp_formula: z.string(),
-
+  initiative: z.number(),
+  passive_perception: z.number(),
+  size: creatureSizeSchema,
+  skill_expertise: z.array(creatureSkillSchema),
+  skill_proficiencies: z.array(creatureSkillSchema),
   speed_burrow: z.number(),
   speed_climb: z.number(),
   speed_fly: z.number(),
   speed_swim: z.number(),
   speed_walk: z.number(),
-
-  ability_cha: z.number(),
-  ability_con: z.number(),
-  ability_dex: z.number(),
-  ability_int: z.number(),
-  ability_str: z.number(),
-  ability_wis: z.number(),
-
-  initiative: z.number(),
-  passive_perception: z.number(),
-
-  ability_proficiencies: z.array(creatureAbilitySchema),
-  skill_expertise: z.array(creatureSkillSchema),
-  skill_proficiencies: z.array(creatureSkillSchema),
-
-  damage_immunities: z.array(damageTypeSchema),
-  damage_resistances: z.array(damageTypeSchema),
-  damage_vulnerabilities: z.array(damageTypeSchema),
-
-  condition_immunities: z.array(creatureConditionSchema),
-  condition_resistances: z.array(creatureConditionSchema),
-  condition_vulnerabilities: z.array(creatureConditionSchema),
-
-  blindsight: z.number(),
-  darkvision: z.number(),
+  treasures: z.array(creatureTreasureSchema),
   tremorsense: z.number(),
   truesight: z.number(),
+  type: creatureTypeSchema,
 });
 
 export type DBCreature = z.infer<typeof dbCreatureSchema>;
@@ -67,15 +59,13 @@ export type DBCreature = z.infer<typeof dbCreatureSchema>;
 //------------------------------------------------------------------------------
 
 export const dbCreatureTranslationSchema = dbResourceTranslationSchema.extend({
-  gear: z.string().nullish(),
-  languages: z.string().nullish(),
-  planes: z.string().nullish(),
-  senses: z.string().nullish(),
-
   actions: z.string().nullish(),
   bonus_actions: z.string().nullish(),
+  languages: z.string().nullish(),
   legendary_actions: z.string().nullish(),
+  planes: z.string().nullish(),
   reactions: z.string().nullish(),
+  senses: z.string().nullish(),
   traits: z.string().nullish(),
 });
 
