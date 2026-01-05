@@ -3,6 +3,7 @@ import { z } from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
+import { useFormatCp } from "~/measures/cost";
 import { useFormatCmWithUnit } from "~/measures/distance";
 import { formatSigned } from "~/utils/number";
 import type { CreatureAbility } from "../../types/creature-ability";
@@ -23,6 +24,7 @@ import {
   type DamageType,
   useTranslateDamageType,
 } from "../../types/damage-type";
+import { equipmentStore } from "../equipment/equipment-store";
 import {
   localizedResourceSchema,
   useLocalizeResource,
@@ -105,11 +107,11 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 // Use Localize Creature
 //------------------------------------------------------------------------------
 
-export function useLocalizeCreature(): (
-  creature: Creature,
-) => LocalizedCreature {
+export function useLocalizeCreature(
+  campaignId: string,
+): (creature: Creature) => LocalizedCreature {
   const localizeResource = useLocalizeResource<Creature>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateCreatureType = useTranslateCreatureType(lang);
@@ -120,6 +122,9 @@ export function useLocalizeCreature(): (
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateCreatureCondition = useTranslateCreatureCondition(lang);
   const translateDamageType = useTranslateDamageType(lang);
+  const localizeEquipmentName =
+    equipmentStore.useLocalizeResourceName(campaignId);
+  const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 
   return useCallback(
@@ -302,7 +307,14 @@ export function useLocalizeCreature(): (
       }
 
       // Gear
-      const gear = translate(creature.gear, lang);
+      const gear = [
+        ...creature.gear.equipments.map(({ id, quantity }) =>
+          tpi("equipment", quantity, localizeEquipmentName(id), `${quantity}`),
+        ),
+        creature.gear.currency ? formatCp(creature.gear.currency) : "",
+      ]
+        .filter((entry) => entry)
+        .join(", ");
       if (gear) {
         info_parts.push(ti("info.gear", gear));
       }
@@ -448,11 +460,14 @@ export function useLocalizeCreature(): (
     },
     [
       formatCm,
+      formatCp,
       lang,
+      localizeEquipmentName,
       localizeResource,
       system,
       t,
       ti,
+      tpi,
       translateCreatureAlignment,
       translateCreatureCondition,
       translateCreatureHabitat,
@@ -489,6 +504,14 @@ const i18nContext = {
   "description.traits": {
     en: "##Traits##",
     it: "##Tratti##",
+  },
+  "equipment/*": {
+    en: "<2> <1>", // 1 = name, 2 = quantity
+    it: "<2> <1>", // 1 = name, 2 = quantity
+  },
+  "equipment/1": {
+    en: "<1>", // 1 = name
+    it: "<1>", // 1 = name
   },
   "exp_pb": {
     en: "XP <2>, PB <3>",

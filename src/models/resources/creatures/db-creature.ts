@@ -1,4 +1,5 @@
 import z from "zod";
+import { equipmentEntrySchema } from "../../other/equipment-bundle";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
 import { creatureConditionSchema } from "../../types/creature-condition";
@@ -33,6 +34,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   damage_resistances: z.array(damageTypeSchema),
   damage_vulnerabilities: z.array(damageTypeSchema),
   darkvision: z.number(),
+  equipment_entries: z.array(equipmentEntrySchema),
   habitats: z.array(creatureHabitatSchema),
   hp: z.number(),
   hp_formula: z.string(),

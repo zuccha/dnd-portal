@@ -1,5 +1,6 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import { type Creature } from "~/models/resources/creatures/creature";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
@@ -17,6 +18,7 @@ import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Textarea from "~/ui/textarea";
+import EquipmentBundleEditor from "../_base/equipment-bundle-editor";
 import {
   useCreatureEditorFormAC,
   useCreatureEditorFormAbilityCha,
@@ -72,10 +74,14 @@ import {
 //------------------------------------------------------------------------------
 
 export type CreatureEditorProps = {
+  campaignId: string;
   resource: Creature;
 };
 
-export default function CreatureEditor({ resource }: CreatureEditorProps) {
+export default function CreatureEditor({
+  campaignId,
+  resource,
+}: CreatureEditorProps) {
   const { lang } = useI18nLangContext(i18nContext);
 
   return (
@@ -191,7 +197,7 @@ export default function CreatureEditor({ resource }: CreatureEditorProps) {
           defaultLanguages={resource.languages[lang] ?? ""}
         />
       </HStack>
-      <CreatureEditorGear defaultGear={resource.gear[lang] ?? ""} />
+      <CreatureEditorGear campaignId={campaignId} defaultGear={resource.gear} />
 
       {/* Actions and Traits */}
       <CreatureEditorTraits defaultTraits={resource.traits[lang] ?? ""} />
@@ -720,14 +726,20 @@ function CreatureEditorTraits({ defaultTraits }: { defaultTraits: string }) {
 // Gear
 //------------------------------------------------------------------------------
 
-function CreatureEditorGear({ defaultGear }: { defaultGear: string }) {
+function CreatureEditorGear({
+  campaignId,
+  defaultGear,
+}: {
+  campaignId: string;
+  defaultGear: EquipmentBundle;
+}) {
   const { error, ...rest } = useCreatureEditorFormGear(defaultGear);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
     <Field error={message} label={t("gear.label")}>
-      <Input bgColor="bg.info" placeholder={t("gear.placeholder")} {...rest} />
+      <EquipmentBundleEditor campaignId={campaignId} withinDialog {...rest} />
     </Field>
   );
 }

@@ -1,3 +1,4 @@
+import { equipmentBundleToEntries } from "~/models/other/equipment-bundle";
 import { type Creature } from "~/models/resources/creatures/creature";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import {
@@ -125,6 +126,7 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     damage_resistances: data.damage_resistances,
     damage_vulnerabilities: data.damage_vulnerabilities,
     darkvision: data.darkvision,
+    equipment_entries: data.gear && equipmentBundleToEntries(data.gear),
     habitats: data.habitats,
     hp: data.hp,
     hp_formula: data.hp_formula,

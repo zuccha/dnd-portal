@@ -1,4 +1,5 @@
 import z from "zod";
+import { equipmentBundleSchema } from "~/models/other/equipment-bundle";
 import { campaignRoleSchema } from "~/models/types/campaign-role";
 import { creatureAbilitySchema } from "~/models/types/creature-ability";
 import { creatureAlignmentSchema } from "~/models/types/creature-alignment";
@@ -36,7 +37,7 @@ export const creatureEditorFormFieldsSchema = z.object({
   damage_resistances: z.array(damageTypeSchema),
   damage_vulnerabilities: z.array(damageTypeSchema),
   darkvision: z.number(),
-  gear: z.string(),
+  gear: equipmentBundleSchema,
   habitats: z.array(creatureHabitatSchema),
   hp: z.number(),
   hp_formula: z.string(),
