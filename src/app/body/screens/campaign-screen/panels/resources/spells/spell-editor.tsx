@@ -197,7 +197,7 @@ function SpellEditorCharacterClasses({
   defaultCharacterClassIds: Spell["character_class_ids"];
 }) {
   const characterClassOptions =
-    characterClassStore.useLocalizedResourceOptions(campaignId);
+    characterClassStore.useResourceOptions(campaignId);
   const { error, ...rest } = useSpellEditorFormCharacterClassIds(
     defaultCharacterClassIds,
   );

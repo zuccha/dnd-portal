@@ -363,7 +363,7 @@ function CharacterClassEditorSpellIds({
   campaignId: string;
   defaultSpellIds: CharacterClass["spell_ids"];
 }) {
-  const spellOptions = spellStore.useLocalizedResourceOptions(campaignId);
+  const spellOptions = spellStore.useResourceOptions(campaignId);
 
   const { error, ...rest } =
     useCharacterClassEditorFormSpellIds(defaultSpellIds);
@@ -412,7 +412,7 @@ function CharacterClassEditorToolProficiencyIds({
   campaignId: string;
   defaultToolProficiencyIds: CharacterClass["tool_proficiency_ids"];
 }) {
-  const toolOptions = toolStore.useLocalizedResourceOptions(campaignId);
+  const toolOptions = toolStore.useResourceOptions(campaignId);
   const { error, ...rest } = useCharacterClassEditorFormToolProficiencyIds(
     defaultToolProficiencyIds,
   );

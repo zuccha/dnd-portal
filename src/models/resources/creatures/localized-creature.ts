@@ -123,10 +123,14 @@ export function useLocalizeCreature(
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateCreatureCondition = useTranslateCreatureCondition(lang);
   const translateDamageType = useTranslateDamageType(lang);
-  const localizeEquipmentName =
-    equipmentStore.useLocalizeResourceName(campaignId);
-  const localizeLanguageName =
-    languageStore.useLocalizeResourceName(campaignId);
+  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+    campaignId,
+    lang,
+  );
+  const localizeLanguageName = languageStore.useLocalizeResourceName(
+    campaignId,
+    lang,
+  );
   const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 

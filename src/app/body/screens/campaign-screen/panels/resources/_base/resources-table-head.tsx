@@ -49,11 +49,21 @@ export function createResourcesTableHead<
   _context: ResourcesContext<R>,
   extra: ResourcesTableHeadExtra<R, L>,
 ) {
+  const {
+    useFilteredResourceIds,
+    useResourcesSelectionMethods,
+    useSelectedFilteredResourceIds,
+  } = store;
+
   return function ResourcesTableHead({ campaignId }: ResourcesTableHeadProps) {
     const [lang] = useI18nLang();
-    const filteredResourceIds = store.useFilteredResourceIds(campaignId);
+
+    const { deselectAllResources, selectAllResources } =
+      useResourcesSelectionMethods(campaignId);
+
+    const filteredResourceIds = useFilteredResourceIds(campaignId);
     const selectedFilteredResourceIds =
-      store.useSelectedFilteredResourceIds(campaignId);
+      useSelectedFilteredResourceIds(campaignId);
 
     const selected =
       selectedFilteredResourceIds.length === filteredResourceIds.length ? true
@@ -61,9 +71,9 @@ export function createResourcesTableHead<
       : false;
 
     const toggleSelected = useCallback(() => {
-      if (selected === true) store.deselectAllResources(campaignId);
-      else store.selectAllResources(campaignId);
-    }, [campaignId, selected]);
+      if (selected === true) deselectAllResources();
+      else selectAllResources();
+    }, [deselectAllResources, selectAllResources, selected]);
 
     return (
       <Table.Row>

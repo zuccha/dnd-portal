@@ -841,7 +841,7 @@ function CreatureEditorLanguageIds({
   campaignId: string;
   defaultLanguageIds: string[];
 }) {
-  const languageOptions = languageStore.useLocalizedResourceOptions(campaignId);
+  const languageOptions = languageStore.useResourceOptions(campaignId);
 
   const { error, ...rest } =
     useCreatureEditorFormLanguageIds(defaultLanguageIds);

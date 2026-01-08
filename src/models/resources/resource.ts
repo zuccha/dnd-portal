@@ -50,31 +50,31 @@ export const resourceTranslationFields: TranslationFields<Resource>[] = [
 ];
 
 //------------------------------------------------------------------------------
-// Resource Option
+// Resource Lookup
 //------------------------------------------------------------------------------
 
-export const resourceOptionSchema = z.object({
+export const resourceLookupSchema = z.object({
   id: z.uuid(),
   name: i18nStringSchema,
 });
 
-export type ResourceOption = z.infer<typeof resourceOptionSchema>;
+export type ResourceLookup = z.infer<typeof resourceLookupSchema>;
+
+export const defaultResourceLookup: ResourceLookup = { id: "", name: {} };
 
 //------------------------------------------------------------------------------
-// Localized Resource Option
+// Resource Option
 //------------------------------------------------------------------------------
 
-export const localizedResourceOptionSchema = resourceOptionSchema.extend({
+export const localizedResourceOptionSchema = z.object({
   label: z.string(),
+  name: i18nStringSchema,
   value: z.uuid(),
 });
 
-export type LocalizedResourceOption = z.infer<
-  typeof localizedResourceOptionSchema
->;
+export type ResourceOption = z.infer<typeof localizedResourceOptionSchema>;
 
-export const defaultLocalizedResourceOption = {
-  id: "",
+export const defaultResourceOption: ResourceOption = {
   label: "",
   name: {},
   value: "",

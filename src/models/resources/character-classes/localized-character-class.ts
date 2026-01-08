@@ -53,9 +53,11 @@ export function useLocalizeCharacterClass(
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateDieType = useTranslateDieType(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeToolName = toolStore.useLocalizeResourceName(campaignId);
-  const localizeEquipmentName =
-    equipmentStore.useLocalizeResourceName(campaignId);
+  const localizeToolName = toolStore.useLocalizeResourceName(campaignId, lang);
+  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+    campaignId,
+    lang,
+  );
   const formatCp = useFormatCp();
 
   return useCallback(

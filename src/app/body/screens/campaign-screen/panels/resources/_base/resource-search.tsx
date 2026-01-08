@@ -1,10 +1,10 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { HStack, type StackProps, Tag, VStack } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import ListCheckIcon from "~/icons/list-check-icon";
 import ListIcon from "~/icons/list-icon";
 import ListXIcon from "~/icons/list-x-icon";
-import type { LocalizedResourceOption } from "~/models/resources/resource";
+import type { ResourceOption } from "~/models/resources/resource";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import Search from "~/ui/search";
@@ -16,7 +16,7 @@ import { normalizeString } from "~/utils/string";
 
 export type ResourceSearchProps = StackProps & {
   onValueChange: (value: string[]) => void;
-  options: LocalizedResourceOption[];
+  options: ResourceOption[];
   value: string[];
   withinDialog?: boolean;
 };
@@ -33,12 +33,16 @@ export default function ResourceSearch({
   const [showSelected, setShowSelected] = useState<boolean | undefined>();
 
   const valueSet = useMemo(() => new Set(value), [value]);
+  const optionsMap = useMemo(
+    () => new Map(options.map((option) => [option.value, option])),
+    [options],
+  );
 
   const filterResourceOptions = useCallback(
-    (option: LocalizedResourceOption, search: string): boolean => {
+    (option: ResourceOption, search: string): boolean => {
       const normalizedFilter = normalizeString(search);
-      if (showSelected === true && !valueSet.has(option.id)) return false;
-      if (showSelected === false && valueSet.has(option.id)) return false;
+      if (showSelected === true && !valueSet.has(option.value)) return false;
+      if (showSelected === false && valueSet.has(option.value)) return false;
       return Object.values(option.name)
         .filter((name) => name)
         .some((name) => normalizeString(name!).includes(normalizedFilter));
@@ -47,22 +51,41 @@ export default function ResourceSearch({
   );
 
   return (
-    <HStack gap={2} {...rest}>
-      <Search
-        emptyLabel={t("no_result")}
-        multiple
-        onFilter={filterResourceOptions}
-        onValueChange={onValueChange}
-        options={options}
-        placeholder={t("search")}
-        value={value}
-        withinDialog={withinDialog}
-      />
+    <VStack gap={1} {...rest}>
+      <HStack gap={1} w="full">
+        <Search
+          emptyLabel={t("no_result")}
+          multiple
+          onFilter={filterResourceOptions}
+          onValueChange={onValueChange}
+          options={options}
+          placeholder={t("search")}
+          value={value}
+          withinDialog={withinDialog}
+        />
 
-      <InclusionButton include={showSelected} onValueChange={setShowSelected}>
-        <Icon Icon={icons[`${showSelected}`]} />
-      </InclusionButton>
-    </HStack>
+        <InclusionButton include={showSelected} onValueChange={setShowSelected}>
+          <Icon Icon={icons[`${showSelected}`]} />
+        </InclusionButton>
+      </HStack>
+
+      {value.length > 0 && (
+        <HStack gap={1} w="full" wrap="wrap">
+          {value.map((id) => (
+            <Tag.Root key={id}>
+              <Tag.Label>{optionsMap.get(id)?.label ?? t("unknown")}</Tag.Label>
+              <Tag.EndElement>
+                <Tag.CloseTrigger
+                  onClick={() =>
+                    onValueChange(value.filter((other) => other !== id))
+                  }
+                />
+              </Tag.EndElement>
+            </Tag.Root>
+          ))}
+        </HStack>
+      )}
+    </VStack>
   );
 }
 
@@ -92,5 +115,9 @@ const i18nContext = {
   search: {
     en: "Search",
     it: "Cerca",
+  },
+  unknown: {
+    en: "Unknown",
+    it: "Sconosciuto",
   },
 };

@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import { equipmentStore } from "~/models/resources/equipment/equipment-store";
-import type { LocalizedResourceOption } from "~/models/resources/resource";
+import type { ResourceOption } from "~/models/resources/resource";
 import Button from "~/ui/button";
 import CostInput from "~/ui/cost-input";
 import NumberInput from "~/ui/number-input";
@@ -28,18 +28,18 @@ export default function EquipmentBundleEditor({
   withinDialog,
   ...rest
 }: EquipmentBundleEditorProps) {
-  const { t, tpi } = useI18nLangContext(i18nContext);
+  const { lang, t, tpi } = useI18nLangContext(i18nContext);
 
   const searchRef = useRef<SearchRefObject>(null);
 
   const [equipmentQuantity, setEquipmentQuantity] = useState(1);
   const [equipmentId, setEquipmentId] = useState("");
 
-  const options = equipmentStore.useLocalizedResourceOptions(campaignId);
-  const localize = equipmentStore.useLocalizeResourceName(campaignId);
+  const options = equipmentStore.useResourceOptions(campaignId);
+  const localize = equipmentStore.useLocalizeResourceName(campaignId, lang);
 
   const filterResourceOptions = useCallback(
-    (option: LocalizedResourceOption, search: string): boolean => {
+    (option: ResourceOption, search: string): boolean => {
       const normalizedFilter = normalizeString(search);
       return Object.values(option.name)
         .filter((name) => name)

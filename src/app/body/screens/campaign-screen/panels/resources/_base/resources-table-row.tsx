@@ -53,15 +53,24 @@ export function createResourcesTableRow<
   context: ResourcesContext<R>,
   extra: ResourcesTableRowExtra<R, L>,
 ) {
+  const {
+    useLocalizedResource,
+    useResourceSelection,
+    useResourceSelectionMethods,
+  } = store;
+
+  const { useResourceExpansion } = context;
+
   return function ResourcesTableRow({
     editable,
     resourceId,
   }: ResourcesTableRowProps) {
     const [lang] = useI18nLang();
 
-    const localizedResource = store.useLocalizedResource(resourceId);
-    const selected = store.useResourceSelection(resourceId);
-    const expanded = context.useResourceExpansion(resourceId, false);
+    const localizedResource = useLocalizedResource(resourceId);
+    const selected = useResourceSelection(resourceId);
+    const { toggleResourceSelection } = useResourceSelectionMethods(resourceId);
+    const expanded = useResourceExpansion(resourceId, false);
 
     const edit = useCallback(
       (e: React.MouseEvent) => {
@@ -75,9 +84,9 @@ export function createResourcesTableRow<
     const toggleSelection = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
-        store.toggleResourceSelection(resourceId);
+        toggleResourceSelection();
       },
-      [resourceId],
+      [toggleResourceSelection],
     );
 
     if (!localizedResource) return null;

@@ -24,7 +24,7 @@ export default function SpellsFilters({
 
   const levelOptions = useSpellLevelOptions();
   const characterClassOptions =
-    characterClassStore.useLocalizedResourceOptions(campaignId);
+    characterClassStore.useResourceOptions(campaignId);
   const schoolOptions = useSpellSchoolOptions();
 
   return (

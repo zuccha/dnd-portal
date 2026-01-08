@@ -30,12 +30,14 @@ export function createResourcesActions<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
+  const { useSelectedFilteredResourceIds, useLocalizeResource } = store;
+
   return function ResourcesActions({ campaignId }: ResourcesActionsProps) {
     const { t, tpi } = useI18nLangContext(i18nContext);
     const canEdit = useCanEditCampaign(campaignId);
     const selectedFilteredResourceIds =
-      store.useSelectedFilteredResourceIds(campaignId);
-    const localizeResource = store.useLocalizeResource(campaignId);
+      useSelectedFilteredResourceIds(campaignId);
+    const localizeResource = useLocalizeResource(campaignId);
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);

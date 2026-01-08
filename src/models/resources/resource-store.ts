@@ -1,23 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { type ZodType, z } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { createLocalStore } from "~/store/local-store";
-import { createMemoryStoreSet } from "~/store/set/memory-store-set";
-import supabase, { queryClient } from "~/supabase";
+import supabase from "~/supabase";
+import { createCache } from "~/utils/cache";
+import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
+import { createUseProcessedData } from "~/utils/processed-data";
+import { createCachedRequest, createLockedRequest } from "~/utils/request";
 import { normalizeString } from "~/utils/string";
 import type { ResourceKind } from "../types/resource-kind";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
 import {
-  type LocalizedResourceOption,
   type Resource,
+  type ResourceLookup,
   type ResourceOption,
   type TranslationFields,
-  defaultLocalizedResourceOption,
-  resourceOptionSchema,
+  defaultResourceLookup,
+  resourceLookupSchema,
 } from "./resource";
 import type { ResourceFilters } from "./resource-filters";
 import { useResourcesModulesFilter } from "./resources-modules-filter";
@@ -67,51 +69,10 @@ export function createResourceStore<
   },
 ) {
   const storeId = `resources[${storeName.p}]`;
-  const fetchResourceId = `${storeId}.fetch_resource`;
-  const fetchResourceOptionsId = `${storeId}.fetch_resource_options`;
-  const fetchResourcesId = `${storeId}.fetch_resources`;
-
-  const emptyResourceIds: string[] = [];
-  const emptyLocalizedResourceOptions: LocalizedResourceOption[] = [];
+  const emptyIds: string[] = [];
 
   //----------------------------------------------------------------------------
-  // Filtered Resources Ids Store
-  //----------------------------------------------------------------------------
-
-  // campaign id -> resource id[]
-  const filteredResourceIdsStore = createMemoryStoreSet<string, string[]>(
-    `${storeId}.filtered_resource_ids`,
-  );
-
-  //----------------------------------------------------------------------------
-  // Resources Store
-  //----------------------------------------------------------------------------
-
-  // resource id -> resource
-  const resourcesStore = createMemoryStoreSet<string, R>(
-    `${storeId}.resources`,
-  );
-
-  //----------------------------------------------------------------------------
-  // Resource Options Store
-  //----------------------------------------------------------------------------
-
-  // resource id -> resource option
-  const resourceOptionsStore = createMemoryStoreSet<string, ResourceOption>(
-    `${storeId}.resource_options`,
-  );
-
-  //----------------------------------------------------------------------------
-  // Resource Selection Store
-  //----------------------------------------------------------------------------
-
-  // resource id -> boolean
-  const resourceSelectionStore = createMemoryStoreSet<string, boolean>(
-    `${storeId}.resource_selection`,
-  );
-
-  //----------------------------------------------------------------------------
-  // Filters Store
+  // Filters
   //----------------------------------------------------------------------------
 
   const filtersStore = createLocalStore<F>(
@@ -120,275 +81,9 @@ export function createResourceStore<
     filtersSchema.parse,
   );
 
-  //----------------------------------------------------------------------------
-  // Create Resource
-  //----------------------------------------------------------------------------
-
-  async function createResource(
-    campaignId: string,
-    lang: string,
-    resource: Partial<DBR>,
-    translation: Partial<DBT>,
-  ): Promise<string | undefined> {
-    const { error } = await supabase.rpc(`create_${storeName.s}`, {
-      p_campaign_id: campaignId,
-      p_lang: lang,
-      [`p_${storeName.s}`]: resource,
-      [`p_${storeName.s}_translation`]: translation,
-    });
-
-    if (error) return error.message;
-
-    queryClient.invalidateQueries({ queryKey: [fetchResourcesId] });
-    queryClient.invalidateQueries({ queryKey: [fetchResourceOptionsId] });
-
-    return undefined;
-  }
-
-  //----------------------------------------------------------------------------
-  // Delete Resources
-  //----------------------------------------------------------------------------
-
-  async function deleteResources(
-    resourceIds: string[],
-  ): Promise<string | undefined> {
-    const { error } = await supabase
-      .from("resources")
-      .delete()
-      .in("id", resourceIds);
-
-    if (error) return error.message;
-
-    queryClient.invalidateQueries({ queryKey: [fetchResourcesId] });
-    queryClient.invalidateQueries({ queryKey: [fetchResourceOptionsId] });
-    for (const resourceId of resourceIds) {
-      const queryKey = [fetchResourceId, resourceId];
-      queryClient.invalidateQueries({ queryKey });
-      deselectResource(resourceId);
-      resourcesStore.clear(resourceId);
-    }
-
-    return undefined;
-  }
-
-  //----------------------------------------------------------------------------
-  // Deselect All Resources
-  //----------------------------------------------------------------------------
-
-  function deselectAllResources(campaignId: string): void {
-    const resourceIds = filteredResourceIdsStore.get(
-      campaignId,
-      emptyResourceIds,
-    );
-    resourceIds.forEach((id) => resourceSelectionStore.set(id, false, false));
-  }
-
-  //----------------------------------------------------------------------------
-  // Deselect Resource
-  //----------------------------------------------------------------------------
-
-  function deselectResource(resourceId: string): void {
-    resourceSelectionStore.set(resourceId, false, false);
-  }
-
-  //----------------------------------------------------------------------------
-  // Fetch Resource
-  //----------------------------------------------------------------------------
-
-  async function fetchResource(resourceId: string): Promise<R | undefined> {
-    try {
-      const p_id = resourceId;
-      const { data } = await supabase.rpc(`fetch_${storeName.s}`, { p_id });
-      const resource = resourceSchema.optional().parse(data);
-      if (resource) setResource(resource);
-      return resource;
-    } catch (e) {
-      console.error(e);
-      return undefined;
-    }
-  }
-
-  //----------------------------------------------------------------------------
-  // Fetch Resource Options
-  //----------------------------------------------------------------------------
-
-  async function fetchResourceOptions(
-    campaignId: string,
-    lang: string,
-  ): Promise<LocalizedResourceOption[]> {
-    try {
-      if (!campaignId) return emptyLocalizedResourceOptions;
-      const p_campaign_id = campaignId;
-      const p_resource_kinds = kinds;
-      const params = { p_campaign_id, p_resource_kinds };
-      const { data } = await supabase.rpc(`fetch_resource_options`, params);
-      const resourceOptions = z.array(resourceOptionSchema).parse(data);
-      return resourceOptions
-        .map((option) => {
-          resourceOptionsStore.set(option.id, option, option);
-          const label = translate(option.name, lang);
-          return { ...option, label, value: option.id };
-        })
-        .sort(compareObjects("label"));
-    } catch (e) {
-      console.error(e);
-      return [];
-    }
-  }
-
-  //----------------------------------------------------------------------------
-  // Fetch Resource Ids
-  //----------------------------------------------------------------------------
-
-  async function fetchResourceIds(
-    campaignId: string,
-    modules: Record<string, boolean | undefined>,
-    { order_by, order_dir, ...filters }: Omit<F, "name">,
-    lang: string,
-  ): Promise<string[]> {
-    try {
-      const p_campaign_id = campaignId;
-      const p_filters = { ...filters, campaigns: modules };
-      const p_langs = [lang];
-      const p_order = { p_order_by: order_by, p_order_dir: order_dir };
-      const params = { p_campaign_id, p_filters, p_langs, ...p_order };
-      const { data } = await supabase.rpc(`fetch_${storeName.p}`, params);
-      const resources = z.array(resourceSchema).parse(data);
-      for (const resource of resources) {
-        queryClient.setQueryData([fetchResourceId, resource.id], resource);
-        setResource(resource);
-      }
-      return resources.map(({ id }) => id);
-    } catch (e) {
-      console.error(e);
-      return emptyResourceIds;
-    }
-  }
-
-  //----------------------------------------------------------------------------
-  // Get Selected Resources
-  //----------------------------------------------------------------------------
-
-  function getSelectedResources(campaignId: string): R[] {
-    const resourceIds = filteredResourceIdsStore.get(
-      campaignId,
-      emptyResourceIds,
-    );
-    return resourceIds
-      .filter((id) => resourceSelectionStore.get(id, false))
-      .map((id) => resourcesStore.get(id, defaultResource));
-  }
-
-  //----------------------------------------------------------------------------
-  // Select All Resources
-  //----------------------------------------------------------------------------
-
-  function selectAllResources(campaignId: string): void {
-    const resourceIds = filteredResourceIdsStore.get(
-      campaignId,
-      emptyResourceIds,
-    );
-    resourceIds.forEach((id) => resourceSelectionStore.set(id, true, true));
-  }
-
-  //----------------------------------------------------------------------------
-  // Select Resource
-  //----------------------------------------------------------------------------
-
-  function selectResource(resourceId: string): void {
-    resourceSelectionStore.set(resourceId, false, true);
-  }
-
-  //----------------------------------------------------------------------------
-  // Set Resource
-  //----------------------------------------------------------------------------
-
-  function setResource(resource: R): void {
-    resourcesStore.set(resource.id, defaultResource, (prev) => {
-      const merged = { ...prev, ...resource };
-      for (const translationField of translationFields) {
-        merged[translationField] = {
-          ...prev[translationField],
-          ...resource[translationField],
-        };
-      }
-      return merged;
-    });
-  }
-
-  //----------------------------------------------------------------------------
-  // Set Resource Selection
-  //----------------------------------------------------------------------------
-
-  function setResourceSelection(resourceId: string, selected: boolean): void {
-    resourceSelectionStore.set(resourceId, false, selected);
-  }
-
-  //----------------------------------------------------------------------------
-  // Toggle Resource Selection
-  //----------------------------------------------------------------------------
-
-  function toggleResourceSelection(resourceId: string): void {
-    resourceSelectionStore.set(resourceId, false, (prev) => !prev);
-  }
-
-  //----------------------------------------------------------------------------
-  // Update Resource
-  //----------------------------------------------------------------------------
-
-  async function updateResource(
-    id: string,
-    lang: string,
-    resource: Partial<DBR>,
-    translation: Partial<DBT>,
-  ): Promise<string | undefined> {
-    const { error } = await supabase.rpc(`update_${storeName.s}`, {
-      p_id: id,
-      p_lang: lang,
-      [`p_${storeName.s}`]: resource,
-      [`p_${storeName.s}_translation`]: translation,
-    });
-
-    if (error) return error.message;
-
-    queryClient.invalidateQueries({ queryKey: [fetchResourceId, id] });
-    queryClient.invalidateQueries({ queryKey: [fetchResourceOptionsId] });
-
-    return undefined;
-  }
-
-  //----------------------------------------------------------------------------
-  // Use Filtered Resources Ids
-  //----------------------------------------------------------------------------
-
-  function useFilteredResourceIds(campaignId: string): string[] {
-    const filters = filtersStore.useValue();
-    const resourceIds = useResourceIds(campaignId);
-    const filteredResourceIds = filteredResourceIdsStore.useValue(
-      campaignId,
-      emptyResourceIds,
-    );
-
-    useLayoutEffect(() => {
-      const filtersName = normalizeString(filters.name);
-      filteredResourceIdsStore.set(
-        campaignId,
-        emptyResourceIds,
-        resourceIds.filter((id) => {
-          const resource = resourcesStore.get(id, defaultResource);
-          return Object.values(resource.name)
-            .filter((name) => name)
-            .some((name) => normalizeString(name!).includes(filtersName));
-        }),
-      );
-    }, [campaignId, filters.name, resourceIds]);
-
-    return filteredResourceIds;
-  }
-
-  //----------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Filters
-  //----------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useFilters(): [F, (partial: Partial<F>) => void] {
     const [filters, setFilters] = filtersStore.use();
@@ -402,33 +97,461 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
-  // Use Localize Resource Name
+  // Resources
   //----------------------------------------------------------------------------
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Create Resource
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [createResource] = createLockedRequest(
+    `${storeId}.create_resource`,
+    undefined,
+    async (
+      campaignId: string,
+      lang: string,
+      resource: Partial<DBR>,
+      translation: Partial<DBT>,
+    ): Promise<string | undefined> => {
+      const { error } = await supabase.rpc(`create_${storeName.s}`, {
+        p_campaign_id: campaignId,
+        p_lang: lang,
+        [`p_${storeName.s}`]: resource,
+        [`p_${storeName.s}_translation`]: translation,
+      });
+
+      if (error) throw error;
+
+      resourceIdsCache.clear();
+      resourceLookupIdsCache.clear();
+
+      return undefined;
+    },
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Delete Resources
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [deleteResources] = createLockedRequest(
+    `${storeId}.delete_resources`,
+    undefined,
+    async (resourceIds: string[]): Promise<string | undefined> => {
+      const { error } = await supabase
+        .from("resources")
+        .delete()
+        .in("id", resourceIds);
+
+      if (error) throw error;
+
+      resourceIdsCache.clear();
+      resourceLookupIdsCache.clear();
+
+      for (const resourceId of resourceIds) {
+        resourceCache.remove(resourceId);
+        resourceLookupCache.remove(resourceId);
+      }
+
+      return undefined;
+    },
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Fetch Resource
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  // TODO: Fetch resource by lang, and check if the given lang exists.
+  const [fetchResource, resourceCache] = createCachedRequest(
+    `${storeId}.resource`,
+    defaultResource,
+    async (resourceId: string): Promise<R> => {
+      const { data, error } = await supabase.rpc(`fetch_${storeName.s}`, {
+        p_id: resourceId,
+      });
+
+      if (error) throw error;
+
+      const resource = resourceSchema.optional().parse(data);
+      if (!resource)
+        throw new Error(`${storeName.s} (${resourceId}) not found`);
+
+      return resource;
+    },
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Fetch Resource Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [fetchResourceIds, resourceIdsCache] = createCachedRequest(
+    `${storeId}.resource_ids`,
+    [],
+    async (
+      campaignId: string,
+      modules: Record<string, boolean | undefined>,
+      filters: Omit<F, "name">,
+      lang: string,
+    ): Promise<string[]> => {
+      const { order_by, order_dir, ...other } = filters;
+      const { data, error } = await supabase.rpc(`fetch_${storeName.p}`, {
+        p_campaign_id: campaignId,
+        p_filters: { ...other, campaigns: modules },
+        p_langs: [lang],
+        p_order_by: order_by,
+        p_order_dir: order_dir,
+      });
+
+      if (error) throw error;
+
+      const resources = z.array(resourceSchema).parse(data);
+      const resourceIds = resources.map(({ id }) => id);
+
+      for (const resource of resources) {
+        const prev = resourceCache.get(resource.id) ?? defaultResource;
+        const merged = { ...prev, ...resource };
+        for (const translationField of translationFields) {
+          merged[translationField] = {
+            ...prev[translationField],
+            ...resource[translationField],
+          };
+        }
+        resourceCache.set(resource.id, merged);
+      }
+
+      return resourceIds;
+    },
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Fetch Resource Lookup
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [fetchResourceLookup, resourceLookupCache] = createCachedRequest(
+    `${storeId}.resource_lookup`,
+    defaultResourceLookup,
+    async (resourceId: string): Promise<ResourceLookup> => {
+      const { data, error } = await supabase.rpc(
+        `fetch_${storeName.s}_option`,
+        { p_id: resourceId },
+      );
+
+      if (error) throw error;
+
+      const lookup = resourceLookupSchema.optional().parse(data);
+      if (!lookup)
+        throw new Error(`${storeName.s} lookup (${resourceId}) not found`);
+
+      return lookup;
+    },
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Fetch Resource Lookup Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [fetchResourceLookupIds, resourceLookupIdsCache] = createCachedRequest(
+    `${storeId}.lookup_ids`,
+    [],
+    async (campaignId: string): Promise<string[]> => {
+      if (!campaignId) return [];
+
+      const { data, error } = await supabase.rpc(`fetch_resource_options`, {
+        p_campaign_id: campaignId,
+        p_resource_kinds: kinds,
+      });
+
+      if (error) throw error;
+
+      const lookups = z.array(resourceLookupSchema).parse(data);
+      const lookupIds = lookups.map((lookup) => lookup.id);
+      for (const lookup of lookups) resourceLookupCache.set(lookup.id, lookup);
+
+      return lookupIds;
+    },
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Update Resource
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [updateResource] = createLockedRequest(
+    `${storeId}.update_resource`,
+    undefined,
+    async (
+      resourceId: string,
+      lang: string,
+      resource: Partial<DBR>,
+      translation: Partial<DBT>,
+    ): Promise<string | undefined> => {
+      const { error } = await supabase.rpc(`update_${storeName.s}`, {
+        p_id: resourceId,
+        p_lang: lang,
+        [`p_${storeName.s}`]: resource,
+        [`p_${storeName.s}_translation`]: translation,
+      });
+
+      if (error) throw error;
+
+      resourceCache.remove(resourceId);
+      resourceIdsCache.clear();
+      resourceLookupCache.remove(resourceId);
+      resourceLookupIdsCache.clear();
+
+      return undefined;
+    },
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useResource(resourceId: string): [R, string] {
+    const { key } = fetchResource(resourceId);
+    return [resourceCache.useValue(key, defaultResource), key];
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useResourceIdsByParams(
+    campaignId: string,
+    modules: Record<string, boolean | undefined>,
+    filters: Omit<F, "name">,
+    lang: string,
+  ): [string[], string] {
+    const { key } = fetchResourceIds(campaignId, modules, filters, lang);
+    return [resourceIdsCache.useValue(key, emptyIds), key];
+  }
+
+  function useResourceIds(campaignId: string): string[] {
+    const [modules] = useResourcesModulesFilter(campaignId);
+    const [{ name: _name, ...filters }] = useFilters();
+    const [lang] = useI18nLang();
+    const params = [campaignId, modules, filters, lang] as const;
+    return useResourceIdsByParams(...params)[0];
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource Lookup
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useResourceLookup(resourceId: string): [ResourceLookup, string] {
+    const { key } = fetchResourceLookup(resourceId);
+    return [resourceLookupCache.useValue(key, defaultResourceLookup), key];
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource Lookup Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useResourceLookupIds(campaignId: string): [string[], string] {
+    const { key } = fetchResourceLookupIds(campaignId);
+    return [resourceLookupIdsCache.useValue(key, emptyIds), key];
+  }
+
+  //----------------------------------------------------------------------------
+  // Filtered Resources
+  //----------------------------------------------------------------------------
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Filtered Resource Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [useFilteredResourceIdsWithKey] = createUseProcessedData(
+    (resourceIds: string[], partialName: string) => {
+      return resourceIds.filter((resourceId) => {
+        const resource = resourceCache.get(resourceId);
+        if (!resource) return false;
+        return Object.values(resource.name)
+          .filter((name) => name)
+          .some((name) => normalizeString(name!).includes(partialName));
+      });
+    },
+    resourceCache.subscribe,
+  );
+
+  function useFilteredResourceIdsByParams(
+    campaignId: string,
+    modules: Record<string, boolean | undefined>,
+    { name, ...filters }: F,
+    lang: string,
+  ): string[] {
+    const normalizedName = normalizeString(name);
+    const params = [campaignId, modules, filters, lang] as const;
+    const [resourceIds] = useResourceIdsByParams(...params);
+    const key = campaignId;
+    return useFilteredResourceIdsWithKey(key, resourceIds, normalizedName)[0];
+  }
+
+  function useFilteredResourceIds(campaignId: string): string[] {
+    const [modules] = useResourcesModulesFilter(campaignId);
+    const [filters] = useFilters();
+    const [lang] = useI18nLang();
+    const params = [campaignId, modules, filters, lang] as const;
+    return useFilteredResourceIdsByParams(...params);
+  }
+
+  //----------------------------------------------------------------------------
+  // Selection
+  //----------------------------------------------------------------------------
+
+  // resource id -> boolean
+  const resourceSelectionCache = createCache<string, boolean>(
+    `${storeId}.resource_selection`,
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get Selected Resources
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function getSelectedResources(campaignId: string): R[] {
+    const resources: R[] = [];
+
+    for (const [resourceId, selected] of resourceSelectionCache.entries()) {
+      const resource = resourceCache.get(resourceId) ?? defaultResource;
+      if (selected && resource.campaign_id === campaignId)
+        resources.push(resource);
+    }
+
+    return resources;
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource Selection
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useResourceSelection(resourceId: string): boolean {
+    return resourceSelectionCache.useValue(resourceId, false);
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource Selection Methods
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useResourceSelectionMethods(resourceId: string) {
+    const deselectResource = useCallback(() => {
+      resourceSelectionCache.remove(resourceId);
+    }, [resourceId]);
+
+    const selectResource = useCallback(() => {
+      resourceSelectionCache.set(resourceId, true);
+    }, [resourceId]);
+
+    const setResourceSelection = useCallback(
+      (selection: boolean) => {
+        resourceSelectionCache.set(resourceId, selection);
+      },
+      [resourceId],
+    );
+
+    const toggleResourceSelection = useCallback(() => {
+      const prev = resourceSelectionCache.get(resourceId);
+      resourceSelectionCache.set(resourceId, !prev);
+    }, [resourceId]);
+
+    return {
+      deselectResource,
+      selectResource,
+      setResourceSelection,
+      toggleResourceSelection,
+    };
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resources Selection Methods
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useResourcesSelectionMethodsByParams(
+    campaignId: string,
+    modules: Record<string, boolean | undefined>,
+    filters: F,
+    lang: string,
+  ) {
+    const params = [campaignId, modules, filters, lang] as const;
+    const filteredResourceIds = useFilteredResourceIdsByParams(...params);
+
+    const deselectAllResources = useCallback(() => {
+      filteredResourceIds.forEach(resourceSelectionCache.remove);
+    }, [filteredResourceIds]);
+
+    const selectAllResources = useCallback(() => {
+      filteredResourceIds.forEach((id) => resourceSelectionCache.set(id, true));
+    }, [filteredResourceIds]);
+
+    return {
+      deselectAllResources,
+      selectAllResources,
+    };
+  }
+
+  function useResourcesSelectionMethods(campaignId: string) {
+    const [modules] = useResourcesModulesFilter(campaignId);
+    const [filters] = useFilters();
+    const [lang] = useI18nLang();
+    const params = [campaignId, modules, filters, lang] as const;
+    return useResourcesSelectionMethodsByParams(...params);
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Selected Filtered Resources Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [useSelectedFilteredResourceIdsWithKey] = createUseProcessedData(
+    (resourceIds: string[]) => resourceIds.filter(resourceSelectionCache.get),
+    resourceSelectionCache.subscribe,
+  );
+
+  function useSelectedFilteredResourceIdsByParams(
+    campaignId: string,
+    modules: Record<string, boolean | undefined>,
+    filters: F,
+    lang: string,
+  ): string[] {
+    const params = [campaignId, modules, filters, lang] as const;
+    const filteredResourceIds = useFilteredResourceIdsByParams(...params);
+    const key = campaignId;
+    return useSelectedFilteredResourceIdsWithKey(key, filteredResourceIds)[0];
+  }
+
+  function useSelectedFilteredResourceIds(campaignId: string): string[] {
+    const [modules] = useResourcesModulesFilter(campaignId);
+    const [filters] = useFilters();
+    const [lang] = useI18nLang();
+    const params = [campaignId, modules, filters, lang] as const;
+    return useSelectedFilteredResourceIdsByParams(...params);
+  }
+
+  //----------------------------------------------------------------------------
+  // Localization
+  //----------------------------------------------------------------------------
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Localize Resource Name
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizeResourceName(
     campaignId: string,
+    lang: string,
   ): (resourceId: string) => string {
-    useLocalizedResourceOptions(campaignId);
-    const [lang] = useI18nLang();
+    useResourceLookupIds(campaignId);
 
     return useCallback(
       (resourceId: string) => {
-        const name = resourceOptionsStore.get(
-          resourceId,
-          defaultLocalizedResourceOption,
-        ).name;
-        return translate(name, lang);
+        const lookup =
+          resourceLookupCache.get(resourceId) ?? defaultResourceLookup;
+        return translate(lookup.name, lang);
       },
       [lang],
     );
   }
 
-  //----------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Localized Resource
-  //----------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizedResource(resourceId: string): L | undefined {
-    const resource = useResource(resourceId);
+    const [resource] = useResource(resourceId);
     const localizeResource = useLocalizeResource(resource?.campaign_id ?? "");
 
     return useMemo(() => {
@@ -436,85 +559,35 @@ export function createResourceStore<
     }, [localizeResource, resource]);
   }
 
-  //----------------------------------------------------------------------------
-  // Use Localized Resource Options
-  //----------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource Options
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useLocalizedResourceOptions(
+  const [useCachedResourceOptions] = createUseProcessedData(
+    (lookupIds: string[], lang: string) =>
+      lookupIds
+        .map((id) => {
+          const lookup = resourceLookupCache.get(id) ?? defaultResourceLookup;
+          const label = translate(lookup.name, lang);
+          return { label, name: lookup.name, value: lookup.id };
+        })
+        .sort(compareObjects("label")),
+    resourceLookupCache.subscribe,
+  );
+
+  function useResourceOptionsByLang(
     campaignId: string,
-  ): LocalizedResourceOption[] {
+    lang: string,
+  ): [ResourceOption[], string] {
+    const [lookupIds, lookupIdsKey] = useResourceLookupIds(campaignId);
+    const key = hash([lookupIdsKey, lang]);
+
+    return useCachedResourceOptions(key, lookupIds, lang);
+  }
+
+  function useResourceOptions(campaignId: string): ResourceOption[] {
     const [lang] = useI18nLang();
-
-    const { data: options } = useQuery<LocalizedResourceOption[]>({
-      queryFn: async () => fetchResourceOptions(campaignId, lang),
-      queryKey: [fetchResourceOptionsId, campaignId, lang],
-    });
-
-    return options ?? emptyLocalizedResourceOptions;
-  }
-
-  //----------------------------------------------------------------------------
-  // Use Resource
-  //----------------------------------------------------------------------------
-
-  function useResource(resourceId: string): R | undefined {
-    const resource = resourcesStore.useValue(resourceId, defaultResource);
-
-    useQuery<R | undefined>({
-      queryFn: () => fetchResource(resourceId),
-      queryKey: [fetchResourceId, resourceId],
-    });
-
-    return resource;
-  }
-
-  //----------------------------------------------------------------------------
-  // Use Resources Ids
-  //----------------------------------------------------------------------------
-
-  function useResourceIds(campaignId: string): string[] {
-    const [lang] = useI18nLang();
-    const [modules] = useResourcesModulesFilter(campaignId);
-    const { name: _, ...filters } = filtersStore.useValue();
-
-    const { data: resourceIds } = useQuery<string[]>({
-      queryFn: () => fetchResourceIds(campaignId, modules, filters, lang),
-      queryKey: [fetchResourcesId, campaignId, modules, filters, lang],
-    });
-
-    return resourceIds ?? emptyResourceIds;
-  }
-
-  //----------------------------------------------------------------------------
-  // Use Resource Selection
-  //----------------------------------------------------------------------------
-
-  function useResourceSelection(resourceId: string): boolean {
-    return resourceSelectionStore.useValue(resourceId, false);
-  }
-
-  //----------------------------------------------------------------------------
-  // Use Selected Filtered Resources Ids
-  //----------------------------------------------------------------------------
-
-  function useSelectedFilteredResourceIds(campaignId: string): string[] {
-    const filteredResourceIds = useFilteredResourceIds(campaignId);
-    const [selectedFilteredResourceIds, setSelectedFilteredResourceIds] =
-      useState<string[]>([]);
-
-    useLayoutEffect(() => {
-      const update = () => {
-        setSelectedFilteredResourceIds(
-          filteredResourceIds.filter((id) =>
-            resourceSelectionStore.get(id, false),
-          ),
-        );
-      };
-      update();
-      return resourceSelectionStore.subscribeAny(update);
-    }, [filteredResourceIds]);
-
-    return selectedFilteredResourceIds;
+    return useResourceOptionsByLang(campaignId, lang)[0];
   }
 
   //----------------------------------------------------------------------------
@@ -528,25 +601,31 @@ export function createResourceStore<
     defaultResource,
     orderOptions,
 
+    useFilters,
+
     createResource,
     deleteResources,
-    deselectAllResources,
-    deselectResource,
-    getSelectedResources,
-    selectAllResources,
-    selectResource,
-    setResourceSelection,
-    toggleResourceSelection,
+    fetchResource,
+    fetchResourceIds,
+    fetchResourceLookup,
+    fetchResourceLookupIds,
     updateResource,
+    useResource,
+    useResourceIds,
+    useResourceLookup,
+    useResourceLookupIds,
+
     useFilteredResourceIds,
-    useFilters,
+
+    getSelectedResources,
+    useResourceSelection,
+    useResourceSelectionMethods,
+    useResourcesSelectionMethods,
+    useSelectedFilteredResourceIds,
+
     useLocalizeResource,
     useLocalizeResourceName,
     useLocalizedResource,
-    useLocalizedResourceOptions,
-    useResource,
-    useResourceIds,
-    useResourceSelection,
-    useSelectedFilteredResourceIds,
+    useResourceOptions,
   };
 }

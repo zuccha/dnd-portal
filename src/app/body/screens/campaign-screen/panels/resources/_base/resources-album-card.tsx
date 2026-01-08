@@ -62,6 +62,12 @@ export function createResourcesAlbumCard<
     extra,
   );
 
+  const {
+    useLocalizedResource,
+    useResourceSelection,
+    useResourceSelectionMethods,
+  } = store;
+
   function ResourcesAlbumCard({
     editable,
     gradientIntensity = 40,
@@ -72,14 +78,9 @@ export function createResourcesAlbumCard<
     zoom,
     ...rest
   }: ResourcesAlbumCardProps) {
-    const localizedResource = store.useLocalizedResource(resourceId);
-    const selected = store.useResourceSelection(resourceId);
-
-    const setSelected = useCallback(
-      (nextSelected: boolean) =>
-        store.setResourceSelection(resourceId, nextSelected),
-      [resourceId],
-    );
+    const localizedResource = useLocalizedResource(resourceId);
+    const selected = useResourceSelection(resourceId);
+    const { setResourceSelection } = useResourceSelectionMethods(resourceId);
 
     const edit = useCallback(() => {
       if (localizedResource) context.setEditedResource(localizedResource._raw);
@@ -94,7 +95,7 @@ export function createResourcesAlbumCard<
           localizedResource={localizedResource}
           onEdit={edit}
           onPageCountChange={onPageCountChange}
-          onSelectionChange={setSelected}
+          onSelectionChange={setResourceSelection}
           palette={palette}
           printMode={printMode}
           selected={selected}
@@ -106,7 +107,7 @@ export function createResourcesAlbumCard<
           gradientIntensity={gradientIntensity}
           localizedResource={localizedResource}
           onEdit={edit}
-          onSelectionChange={setSelected}
+          onSelectionChange={setResourceSelection}
           palette={palette}
           printMode={printMode}
           selected={selected}
