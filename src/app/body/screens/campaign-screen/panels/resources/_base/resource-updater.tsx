@@ -57,11 +57,11 @@ export function createResourceUpdater<
     if (typeof errorOrData === "string") return errorOrData;
 
     const { resource, translation } = errorOrData;
-    const error = await store.updateResource(id, lang, resource, translation)
+    const response = await store.updateResource(id, lang, resource, translation)
       .promise;
 
-    if (error) {
-      console.error(error);
+    if (response.status === "failure") {
+      console.error(response.error);
       return "form.error.update_failure";
     }
 

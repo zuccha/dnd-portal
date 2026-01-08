@@ -58,15 +58,15 @@ export function createResourceCreator<
     if (typeof errorOrData === "string") return errorOrData;
 
     const { resource, translation } = errorOrData;
-    const error = await store.createResource(
+    const response = await store.createResource(
       campaignId,
       lang,
       resource,
       translation,
     ).promise;
 
-    if (error) {
-      console.error(error);
+    if (response.status === "failure") {
+      console.error(response.error);
       return "form.error.update_failure";
     }
 
