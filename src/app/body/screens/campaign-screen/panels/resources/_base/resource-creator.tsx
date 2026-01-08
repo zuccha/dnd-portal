@@ -63,7 +63,7 @@ export function createResourceCreator<
       lang,
       resource,
       translation,
-    );
+    ).promise;
 
     if (error) {
       console.error(error);
