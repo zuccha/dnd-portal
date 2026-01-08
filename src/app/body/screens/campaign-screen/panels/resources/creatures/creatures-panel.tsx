@@ -133,6 +133,7 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     initiative: data.initiative,
     language_ids: data.language_ids,
     passive_perception: data.passive_perception,
+    plane_ids: data.plane_ids,
     size: data.size,
     skill_expertise: data.skill_expertise,
     skill_proficiencies: data.skill_proficiencies,
@@ -154,7 +155,6 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
     actions: data.actions,
     bonus_actions: data.bonus_actions,
     legendary_actions: data.legendary_actions,
-    planes: data.planes,
     reactions: data.reactions,
     traits: data.traits,
   };

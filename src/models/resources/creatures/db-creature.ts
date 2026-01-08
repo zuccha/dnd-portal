@@ -41,6 +41,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   initiative: z.number(),
   language_ids: z.array(z.uuid()),
   passive_perception: z.number(),
+  plane_ids: z.array(z.uuid()),
   size: creatureSizeSchema,
   skill_expertise: z.array(creatureSkillSchema),
   skill_proficiencies: z.array(creatureSkillSchema),
@@ -65,7 +66,6 @@ export const dbCreatureTranslationSchema = dbResourceTranslationSchema.extend({
   actions: z.string().nullish(),
   bonus_actions: z.string().nullish(),
   legendary_actions: z.string().nullish(),
-  planes: z.string().nullish(),
   reactions: z.string().nullish(),
   traits: z.string().nullish(),
 });

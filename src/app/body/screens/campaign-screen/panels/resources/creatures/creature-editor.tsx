@@ -3,6 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import { type Creature } from "~/models/resources/creatures/creature";
 import { languageStore } from "~/models/resources/languages/language-store";
+import { planeStore } from "~/models/resources/planes/plane-store";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
@@ -52,7 +53,7 @@ import {
   useCreatureEditorFormName,
   useCreatureEditorFormPage,
   useCreatureEditorFormPassivePerception,
-  useCreatureEditorFormPlanes,
+  useCreatureEditorFormPlaneIds,
   useCreatureEditorFormReactions,
   useCreatureEditorFormSize,
   useCreatureEditorFormSkillExpertise,
@@ -104,7 +105,10 @@ export default function CreatureEditor({
       <HStack align="flex-start" gap={4} w="full">
         <CreatureEditorTreasures defaultTreasures={resource.treasures} />
         <CreatureEditorHabitats defaultHabitat={resource.habitats} />
-        <CreatureEditorPlanes defaultPlanes={resource.planes[lang] ?? ""} />
+        <CreatureEditorPlaneIds
+          campaignId={campaignId}
+          defaultPlaneIds={resource.plane_ids}
+        />
       </HStack>
 
       <HStack align="flex-start" gap={4} w="full">
@@ -920,19 +924,28 @@ function CreatureEditorPassivePerception({
 }
 
 //------------------------------------------------------------------------------
-// Planes
+// PlaneIds
 //------------------------------------------------------------------------------
 
-function CreatureEditorPlanes({ defaultPlanes }: { defaultPlanes: string }) {
-  const { error, ...rest } = useCreatureEditorFormPlanes(defaultPlanes);
+function CreatureEditorPlaneIds({
+  campaignId,
+  defaultPlaneIds,
+}: {
+  campaignId: string;
+  defaultPlaneIds: Creature["plane_ids"];
+}) {
+  const planeOptions = planeStore.useResourceOptions(campaignId);
+  const { error, ...rest } = useCreatureEditorFormPlaneIds(defaultPlaneIds);
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
   return (
-    <Field error={message} label={t("planes.label")}>
-      <Input
-        bgColor="bg.info"
-        placeholder={t("planes.placeholder")}
+    <Field error={message} label={t("plane_ids.label")}>
+      <Select
+        multiple
+        options={planeOptions}
+        placeholder={t("plane_ids.placeholder")}
+        withinDialog
         {...rest}
       />
     </Field>
@@ -1464,11 +1477,11 @@ const i18nContext = {
     en: "E.g.: 12",
     it: "Es: 12",
   },
-  "planes.label": {
+  "plane_ids.label": {
     en: "Planes",
     it: "Piani",
   },
-  "planes.placeholder": {
+  "plane_ids.placeholder": {
     en: "None",
     it: "Nessuno",
   },

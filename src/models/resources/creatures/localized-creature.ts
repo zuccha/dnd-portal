@@ -30,6 +30,7 @@ import {
   localizedResourceSchema,
   useLocalizeResource,
 } from "../localized-resource";
+import { planeStore } from "../planes/plane-store";
 import { type Creature, creatureSchema } from "./creature";
 
 //------------------------------------------------------------------------------
@@ -131,6 +132,10 @@ export function useLocalizeCreature(
     campaignId,
     lang,
   );
+  const localizePlaneName = planeStore.useLocalizeResourceName(
+    campaignId,
+    lang,
+  );
   const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 
@@ -140,7 +145,7 @@ export function useLocalizeCreature(
       const type = translateCreatureType(creature.type).label;
       const alignment = translateCreatureAlignment(creature.alignment).label;
 
-      const planes = translate(creature.planes, lang);
+      const planes = creature.plane_ids.map(localizePlaneName).join(", ");
 
       const habitats = creature.habitats
         .map(translateCreatureHabitat)
@@ -468,6 +473,7 @@ export function useLocalizeCreature(
       lang,
       localizeEquipmentName,
       localizeLanguageName,
+      localizePlaneName,
       localizeResource,
       system,
       t,

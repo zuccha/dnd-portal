@@ -47,7 +47,7 @@ export const creatureEditorFormFieldsSchema = z.object({
   name: z.string(),
   page: z.number(),
   passive_perception: z.number(),
-  planes: z.string(),
+  plane_ids: z.array(z.uuid()),
   reactions: z.string(),
   size: creatureSizeSchema,
   skill_expertise: z.array(creatureSkillSchema),
@@ -263,7 +263,7 @@ export const useCreatureEditorFormInitiative = (
 ) => useCreatureEditorFormField("initiative", defaultInitiative);
 
 //------------------------------------------------------------------------------
-// LanguageIds
+// Language Ids
 //------------------------------------------------------------------------------
 
 export const useCreatureEditorFormLanguageIds = (
@@ -299,12 +299,12 @@ export const useCreatureEditorFormPassivePerception = (
 ) => useCreatureEditorFormField("passive_perception", defaultPassivePerception);
 
 //------------------------------------------------------------------------------
-// Planes
+// PlaneIds
 //------------------------------------------------------------------------------
 
-export const useCreatureEditorFormPlanes = (
-  defaultPlanes: CreatureEditorFormFields["planes"],
-) => useCreatureEditorFormField("planes", defaultPlanes);
+export const useCreatureEditorFormPlaneIds = (
+  defaultPlaneIds: CreatureEditorFormFields["plane_ids"],
+) => useCreatureEditorFormField("plane_ids", defaultPlaneIds);
 
 //------------------------------------------------------------------------------
 // Proficiencies
