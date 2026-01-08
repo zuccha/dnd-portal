@@ -8,7 +8,8 @@ CREATE TYPE public.resource_kind AS ENUM (
   'item',
   'tool',
   'weapon',
-  'language'
+  'language',
+  'plane'
 );
 
 ALTER TYPE public.resource_kind OWNER TO postgres;
