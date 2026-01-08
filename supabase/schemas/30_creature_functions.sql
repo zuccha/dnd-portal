@@ -54,11 +54,8 @@ CREATE TYPE public.creature_row AS (
   actions jsonb,
   bonus_actions jsonb,
   gear jsonb,
-  languages jsonb,
   legendary_actions jsonb,
-  planes jsonb,
   reactions jsonb,
-  senses jsonb,
   traits jsonb
 );
 
@@ -228,11 +225,8 @@ AS $$
     coalesce(tt.actions, '{}'::jsonb) AS actions,
     coalesce(tt.bonus_actions, '{}'::jsonb) AS bonus_actions,
     coalesce(tt.gear, '{}'::jsonb) AS gear,
-    coalesce(tt.languages, '{}'::jsonb) AS languages,
     coalesce(tt.legendary_actions, '{}'::jsonb) AS legendary_actions,
-    coalesce(tt.planes, '{}'::jsonb) AS planes,
     coalesce(tt.reactions, '{}'::jsonb) AS reactions,
-    coalesce(tt.senses, '{}'::jsonb) AS senses,
     coalesce(tt.traits, '{}'::jsonb) AS traits
   FROM public.fetch_resource(p_id) AS r
   JOIN public.creatures c ON c.resource_id = r.id
@@ -240,9 +234,6 @@ AS $$
     SELECT
       c.resource_id AS id,
       jsonb_object_agg(t.lang, t.gear)              AS gear,
-      jsonb_object_agg(t.lang, t.languages)         AS languages,
-      jsonb_object_agg(t.lang, t.planes)            AS planes,
-      jsonb_object_agg(t.lang, t.senses)            AS senses,
       jsonb_object_agg(t.lang, t.traits)            AS traits,
       jsonb_object_agg(t.lang, t.actions)           AS actions,
       jsonb_object_agg(t.lang, t.bonus_actions)     AS bonus_actions,
@@ -460,9 +451,6 @@ t AS (
   SELECT
     f.id,
     jsonb_object_agg(t.lang, t.gear)              FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS gear,
-    jsonb_object_agg(t.lang, t.languages)         FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS languages,
-    jsonb_object_agg(t.lang, t.planes)            FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS planes,
-    jsonb_object_agg(t.lang, t.senses)            FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS senses,
     jsonb_object_agg(t.lang, t.traits)            FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS traits,
     jsonb_object_agg(t.lang, t.actions)           FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS actions,
     jsonb_object_agg(t.lang, t.bonus_actions)     FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS bonus_actions,
@@ -549,11 +537,8 @@ SELECT
   coalesce(tt.actions, '{}'::jsonb) AS actions,
   coalesce(tt.bonus_actions, '{}'::jsonb) AS bonus_actions,
   coalesce(tt.gear, '{}'::jsonb) AS gear,
-  coalesce(tt.languages, '{}'::jsonb) AS languages,
   coalesce(tt.legendary_actions, '{}'::jsonb) AS legendary_actions,
-  coalesce(tt.planes, '{}'::jsonb) AS planes,
   coalesce(tt.reactions, '{}'::jsonb) AS reactions,
-  coalesce(tt.senses, '{}'::jsonb) AS senses,
   coalesce(tt.traits, '{}'::jsonb) AS traits
 FROM filtered f
 LEFT JOIN t tt ON tt.id = f.id
@@ -596,18 +581,15 @@ BEGIN
   r := jsonb_populate_record(null::public.creature_translations, p_creature_translation);
 
   INSERT INTO public.creature_translations AS ct (
-    resource_id, lang, gear, languages, planes, senses,
+    resource_id, lang, gear,
     traits, actions, bonus_actions, reactions, legendary_actions
   ) VALUES (
-    p_id, p_lang, r.gear, r.languages, r.planes, r.senses,
+    p_id, p_lang, r.gear,
     r.traits, r.actions, r.bonus_actions, r.reactions, r.legendary_actions
   )
   ON conflict (resource_id, lang) DO UPDATE
   SET
     gear = excluded.gear,
-    languages = excluded.languages,
-    planes = excluded.planes,
-    senses = excluded.senses,
     traits = excluded.traits,
     actions = excluded.actions,
     bonus_actions = excluded.bonus_actions,

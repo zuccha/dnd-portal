@@ -61,11 +61,8 @@ CREATE TABLE IF NOT EXISTS public.creature_translations (
   actions text,
   bonus_actions text,
   gear text,
-  languages text,
   legendary_actions text,
-  planes text,
   reactions text,
-  senses text,
   traits text,
   CONSTRAINT creature_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT creature_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.creatures(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -164,4 +161,3 @@ CREATE POLICY "Creators and GMs can delete creature translations"
 ON public.creature_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
