@@ -1,8 +1,8 @@
 import { HStack, type StackProps } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { languageStore } from "~/models/resources/languages/language-store";
+import { useLanguageRarityOptions } from "~/models/types/language-rarity";
 import InclusionSelect from "~/ui/inclusion-select";
-import { useLanguageRarityOptions } from "../../../../../../../models/types/language-rarity";
 
 //------------------------------------------------------------------------------
 // Languages Filters

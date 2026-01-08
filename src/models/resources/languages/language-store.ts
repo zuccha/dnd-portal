@@ -12,7 +12,7 @@ import {
 import { useLocalizeLanguage } from "./localized-language";
 
 //------------------------------------------------------------------------------
-// Eldritch Invocation Store
+// Language Store
 //------------------------------------------------------------------------------
 
 export const languageStore = createResourceStore(

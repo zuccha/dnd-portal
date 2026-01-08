@@ -94,6 +94,10 @@ const i18nContext = {
     en: "Languages",
     it: "Lingue",
   },
+  "section.resource/planes": {
+    en: "Planes",
+    it: "Piani",
+  },
   "section.resource/spells": {
     en: "Spells",
     it: "Incantesimi",
