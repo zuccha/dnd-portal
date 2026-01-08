@@ -230,10 +230,9 @@ export function createResourceStore<
     `${storeId}.resource_lookup`,
     defaultResourceLookup,
     async (resourceId: string): Promise<ResourceLookup> => {
-      const { data, error } = await supabase.rpc(
-        `fetch_${storeName.s}_option`,
-        { p_id: resourceId },
-      );
+      const { data, error } = await supabase.rpc(`fetch_resource_lookup`, {
+        p_id: resourceId,
+      });
 
       if (error) throw error;
 
@@ -255,7 +254,7 @@ export function createResourceStore<
     async (campaignId: string): Promise<string[]> => {
       if (!campaignId) return [];
 
-      const { data, error } = await supabase.rpc(`fetch_resource_options`, {
+      const { data, error } = await supabase.rpc(`fetch_resource_lookups`, {
         p_campaign_id: campaignId,
         p_resource_kinds: kinds,
       });
