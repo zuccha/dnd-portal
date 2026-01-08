@@ -38,12 +38,10 @@ export function createCache<K, V>(id: string) {
     return value;
   }
 
-  function useValue(key: K): V | undefined;
-  function useValue(key: K, initial: V): V;
-  function useValue(key: K, initial?: V): V | undefined {
-    const [value, setValue] = useState(() => get(key) ?? initial);
+  function useValue(key: K): V | undefined {
+    const [value, setValue] = useState(() => get(key));
     useLayoutEffect(() => subscribe(key, setValue), [key]);
-    useLayoutEffect(() => setValue(get(key) ?? initial), [key, initial]);
+    useLayoutEffect(() => setValue(get(key)), [key]);
     return value;
   }
 
@@ -51,10 +49,8 @@ export function createCache<K, V>(id: string) {
     return useCallback((value: V) => set(key, value), [key]);
   }
 
-  function use(key: K): [V | undefined, (value: V) => void];
-  function use(key: K, initial: V): [V, (value: V) => void];
-  function use(key: K, initial?: V): [V | undefined, (value: V) => void] {
-    const value = useValue(key, initial as V);
+  function use(key: K): [V | undefined, (value: V) => void] {
+    const value = useValue(key);
     const setValue = useSetValue(key);
     return [value, setValue];
   }

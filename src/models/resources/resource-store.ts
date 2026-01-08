@@ -306,7 +306,7 @@ export function createResourceStore<
 
   function useResource(resourceId: string): [R, string] {
     const { key } = fetchResource(resourceId);
-    return [resourceCache.responseCache.useValue(key, defaultResource), key];
+    return [resourceCache.responseCache.useValue(key) ?? defaultResource, key];
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -320,7 +320,7 @@ export function createResourceStore<
     lang: string,
   ): [string[], string] {
     const { key } = fetchResourceIds(campaignId, modules, filters, lang);
-    return [resourceIdsCache.responseCache.useValue(key, emptyIds), key];
+    return [resourceIdsCache.responseCache.useValue(key) ?? emptyIds, key];
   }
 
   function useResourceIds(campaignId: string): string[] {
@@ -338,7 +338,7 @@ export function createResourceStore<
   function useResourceLookup(resourceId: string): [ResourceLookup, string] {
     const { key } = fetchResourceLookup(resourceId);
     return [
-      resourceLookupCache.responseCache.useValue(key, defaultResourceLookup),
+      resourceLookupCache.responseCache.useValue(key) ?? defaultResourceLookup,
       key,
     ];
   }
@@ -349,7 +349,10 @@ export function createResourceStore<
 
   function useResourceLookupIds(campaignId: string): [string[], string] {
     const { key } = fetchResourceLookupIds(campaignId);
-    return [resourceLookupIdsCache.responseCache.useValue(key, emptyIds), key];
+    return [
+      resourceLookupIdsCache.responseCache.useValue(key) ?? emptyIds,
+      key,
+    ];
   }
 
   //----------------------------------------------------------------------------
@@ -424,7 +427,7 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourceSelection(resourceId: string): boolean {
-    return resourceSelectionCache.useValue(resourceId, false);
+    return resourceSelectionCache.useValue(resourceId) ?? false;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
