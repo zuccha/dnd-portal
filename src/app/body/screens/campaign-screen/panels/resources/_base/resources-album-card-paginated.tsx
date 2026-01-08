@@ -173,9 +173,9 @@ function split(text: string, hardSplit: boolean): [string, string] {
   let left = center - 1;
   let right = center;
   while (0 <= left || right < text.length) {
-    if (/\s/.test(text[right] ?? ""))
+    if (/ \t\n/.test(text[right] ?? ""))
       return [text.slice(0, right), text.slice(right)];
-    if (/\s/.test(text[left] ?? ""))
+    if (/ \t\n/.test(text[left] ?? ""))
       return [text.slice(0, left), text.slice(left)];
     left--;
     right++;
