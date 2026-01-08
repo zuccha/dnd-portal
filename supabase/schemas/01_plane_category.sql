@@ -3,7 +3,9 @@ CREATE TYPE public.plane_category AS ENUM (
   'transitive',
   'inner',
   'outer',
-  'other'
+  'other',
+  'negative',
+  'positive'
 );
 
 ALTER TYPE public.plane_category OWNER TO postgres;
