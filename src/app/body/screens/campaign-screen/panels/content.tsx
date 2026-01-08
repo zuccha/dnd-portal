@@ -4,8 +4,11 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedCampaignId } from "~/models/campaign";
 import EmptyState from "~/ui/empty-state";
 import {
-  type ResourcePanelId,
+  type BestiaryPanelId,
+  type CharacterPanelId,
+  type EquipmentPanelId,
   type SettingPanelId,
+  type WorldPanelId,
   useSelectedPanelId,
 } from "./panels";
 import ArmorsPanel from "./resources/armors/armors-panel";
@@ -21,7 +24,7 @@ import WeaponsPanel from "./resources/weapons/weapons-panel";
 import CampaignPanel from "./settings/campaign-panel";
 
 //------------------------------------------------------------------------------
-// Panels
+// Content
 //------------------------------------------------------------------------------
 
 export default function Content() {
@@ -32,8 +35,17 @@ export default function Content() {
 
   if (!selectedCampaignId) return null;
 
-  const ResourcePage = resourcePanels[selectedPanelId as ResourcePanelId];
-  if (ResourcePage) return <ResourcePage campaignId={selectedCampaignId} />;
+  const BestiaryPage = bestiaryPanels[selectedPanelId as BestiaryPanelId];
+  if (BestiaryPage) return <BestiaryPage campaignId={selectedCampaignId} />;
+
+  const CharacterPage = characterPanels[selectedPanelId as CharacterPanelId];
+  if (CharacterPage) return <CharacterPage campaignId={selectedCampaignId} />;
+
+  const EquipmentPage = equipmentPanels[selectedPanelId as EquipmentPanelId];
+  if (EquipmentPage) return <EquipmentPage campaignId={selectedCampaignId} />;
+
+  const WorldPage = worldPanels[selectedPanelId as WorldPanelId];
+  if (WorldPage) return <WorldPage campaignId={selectedCampaignId} />;
 
   const SettingPage = settingPanels[selectedPanelId as SettingPanelId];
   if (SettingPage) return <SettingPage campaignId={selectedCampaignId} />;
@@ -49,25 +61,36 @@ export default function Content() {
 }
 
 //------------------------------------------------------------------------------
-// Constants
+// Panels
 //------------------------------------------------------------------------------
 
-const resourcePanels: Record<ResourcePanelId, FC<{ campaignId: string }>> = {
-  "resource/armors": ArmorsPanel,
-  "resource/character-classes": CharacterClassesPanel,
-  "resource/creatures": CreaturesPanel,
-  "resource/eldritch-invocations": EldritchInvocationsPanel,
-  "resource/items": ItemsPanel,
-  "resource/languages": LanguagesPanel,
-  "resource/planes": PlanesPanel,
-  "resource/spells": SpellsPanel,
-  "resource/tools": ToolsPanel,
-  "resource/weapons": WeaponsPanel,
+const bestiaryPanels: Record<BestiaryPanelId, FC<{ campaignId: string }>> = {
+  "resource.bestiary.monsters": CreaturesPanel,
+};
+const characterPanels: Record<CharacterPanelId, FC<{ campaignId: string }>> = {
+  "resource.character.character_classes": CharacterClassesPanel,
+  "resource.character.eldritch_invocations": EldritchInvocationsPanel,
+  "resource.character.spells": SpellsPanel,
+};
+const equipmentPanels: Record<EquipmentPanelId, FC<{ campaignId: string }>> = {
+  "resource.equipment.armors": ArmorsPanel,
+  "resource.equipment.items": ItemsPanel,
+  "resource.equipment.tools": ToolsPanel,
+  "resource.equipment.weapons": WeaponsPanel,
+};
+
+const worldPanels: Record<WorldPanelId, FC<{ campaignId: string }>> = {
+  "resource.world.languages": LanguagesPanel,
+  "resource.world.planes": PlanesPanel,
 };
 
 const settingPanels: Record<SettingPanelId, FC<{ campaignId: string }>> = {
-  "setting/campaign": CampaignPanel,
+  "settings.campaign": CampaignPanel,
 };
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
 
 const i18nContext = {
   "welcome.title": {

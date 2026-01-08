@@ -4,7 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useCanEditCampaign } from "~/models/campaign";
 import { compareObjects } from "~/utils/object";
 import {
-  resourcePanelIds,
+  resourcePanels,
   settingPanelIds,
   useSelectedPanelId,
 } from "../panels/panels";
@@ -23,16 +23,19 @@ export default function SidebarCampaign({ campaignId }: SidebarCampaignProps) {
   const [selectedPageId, setSelectedPageId] = useSelectedPanelId();
   const canEdit = useCanEditCampaign(campaignId);
 
-  const resourceItems = useMemo(
+  const localizedResourcePanels = useMemo(
     () =>
-      resourcePanelIds
-        .map((value) => ({
-          label: t(`section.${value}`),
-          onClick: () => setSelectedPageId(value),
-          selected: selectedPageId === value,
-          value,
-        }))
-        .sort(compareObjects("label")),
+      resourcePanels.map(({ id, items }) => ({
+        id,
+        items: items
+          .map((value) => ({
+            label: t(`section.${value}`),
+            onClick: () => setSelectedPageId(value),
+            selected: selectedPageId === value,
+            value,
+          }))
+          .sort(compareObjects("label")),
+      })),
     [selectedPageId, setSelectedPageId, t],
   );
 
@@ -50,16 +53,12 @@ export default function SidebarCampaign({ campaignId }: SidebarCampaignProps) {
   );
 
   return (
-    <VStack gap={10} w="full">
-      <SidebarSection
-        items={resourceItems}
-        title={t("section.resources.title")}
-      />
+    <VStack gap={4} w="full">
+      {localizedResourcePanels.map(({ id, items }) => (
+        <SidebarSection items={items} key={id} title={t(`section.${id}`)} />
+      ))}
       {canEdit && (
-        <SidebarSection
-          items={settingsItems}
-          title={t("section.settings.title")}
-        />
+        <SidebarSection items={settingsItems} title={t("section.settings")} />
       )}
     </VStack>
   );
@@ -70,56 +69,72 @@ export default function SidebarCampaign({ campaignId }: SidebarCampaignProps) {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "section.resource/armors": {
-    en: "Armors",
-    it: "Armature",
-  },
-  "section.resource/character-classes": {
-    en: "Classes",
-    it: "Classi",
-  },
-  "section.resource/creatures": {
+  "section.resource.bestiary": {
     en: "Creatures",
     it: "Creature",
   },
-  "section.resource/eldritch-invocations": {
+  "section.resource.bestiary.monsters": {
+    en: "Monsters",
+    it: "Mostri",
+  },
+  "section.resource.character": {
+    en: "Character",
+    it: "Personaggio",
+  },
+  "section.resource.character.character_classes": {
+    en: "Classes",
+    it: "Classi",
+  },
+  "section.resource.character.eldritch_invocations": {
     en: "Eldritch Invocations",
     it: "Suppliche Occulte",
   },
-  "section.resource/items": {
-    en: "Gear",
-    it: "Oggetti",
-  },
-  "section.resource/languages": {
-    en: "Languages",
-    it: "Lingue",
-  },
-  "section.resource/planes": {
-    en: "Planes",
-    it: "Piani",
-  },
-  "section.resource/spells": {
+  "section.resource.character.spells": {
     en: "Spells",
     it: "Incantesimi",
   },
-  "section.resource/tools": {
+  "section.resource.equipment": {
+    en: "Equipment",
+    it: "Equipaggiamento",
+  },
+  "section.resource.equipment.armors": {
+    en: "Armors",
+    it: "Armature",
+  },
+  "section.resource.equipment.items": {
+    en: "Gear",
+    it: "Oggetti",
+  },
+  "section.resource.equipment.tools": {
     en: "Tools",
     it: "Strumenti",
   },
-  "section.resource/weapons": {
+  "section.resource.equipment.weapons": {
     en: "Weapons",
     it: "Armi",
+  },
+  "section.resource.world": {
+    en: "World",
+    it: "Mondo",
+  },
+  "section.resource.world.languages": {
+    en: "Languages",
+    it: "Lingue",
+  },
+  "section.resource.world.planes": {
+    en: "Planes",
+    it: "Piani",
   },
   "section.resources.title": {
     en: "Resources",
     it: "Risorse",
   },
-  "section.setting/campaign": {
-    en: "Campaign",
-    it: "Campagna",
-  },
-  "section.settings.title": {
+  "section.settings": {
     en: "Settings",
     it: "Impostazioni",
+  },
+  "section.settings.campaign": {
+    en: "Campaign",
+    it: "Campagna",
   },
 };

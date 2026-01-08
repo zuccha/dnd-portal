@@ -2,29 +2,65 @@ import z from "zod";
 import { createLocalStore } from "~/store/local-store";
 
 //------------------------------------------------------------------------------
-// Resource Panel Ids
+// Bestiary Panel Ids
 //------------------------------------------------------------------------------
 
-export const resourcePanelIds = [
-  "resource/armors",
-  "resource/character-classes",
-  "resource/creatures",
-  "resource/eldritch-invocations",
-  "resource/items",
-  "resource/languages",
-  "resource/planes",
-  "resource/spells",
-  "resource/tools",
-  "resource/weapons",
+export const bestiaryPanelIds = ["resource.bestiary.monsters"] as const;
+
+export type BestiaryPanelId = (typeof bestiaryPanelIds)[number];
+
+//------------------------------------------------------------------------------
+// Character Panel Ids
+//------------------------------------------------------------------------------
+
+export const characterPanelIds = [
+  "resource.character.character_classes",
+  "resource.character.eldritch_invocations",
+  "resource.character.spells",
 ] as const;
 
-export type ResourcePanelId = (typeof resourcePanelIds)[number];
+export type CharacterPanelId = (typeof characterPanelIds)[number];
+
+//------------------------------------------------------------------------------
+// Equipment Panel Ids
+//------------------------------------------------------------------------------
+
+export const equipmentPanelIds = [
+  "resource.equipment.armors",
+  "resource.equipment.items",
+  "resource.equipment.tools",
+  "resource.equipment.weapons",
+] as const;
+
+export type EquipmentPanelId = (typeof equipmentPanelIds)[number];
+
+//------------------------------------------------------------------------------
+// World Panel Ids
+//------------------------------------------------------------------------------
+
+export const worldPanelIds = [
+  "resource.world.languages",
+  "resource.world.planes",
+] as const;
+
+export type WorldPanelId = (typeof worldPanelIds)[number];
+
+//------------------------------------------------------------------------------
+// Resource Panels
+//------------------------------------------------------------------------------
+
+export const resourcePanels = [
+  { id: "resource.character", items: characterPanelIds },
+  { id: "resource.bestiary", items: bestiaryPanelIds },
+  { id: "resource.equipment", items: equipmentPanelIds },
+  { id: "resource.world", items: worldPanelIds },
+] as const;
 
 //------------------------------------------------------------------------------
 // Setting Panel Ids
 //------------------------------------------------------------------------------
 
-export const settingPanelIds = ["setting/campaign"] as const;
+export const settingPanelIds = ["settings.campaign"] as const;
 
 export type SettingPanelId = (typeof settingPanelIds)[number];
 
