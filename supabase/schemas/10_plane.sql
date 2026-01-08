@@ -4,6 +4,7 @@
 
 CREATE TABLE IF NOT EXISTS public.planes (
   resource_id uuid NOT NULL,
+  category public.plane_category NOT NULL,
   alignments public.creature_alignment[] NOT NULL,
   CONSTRAINT planes_pkey PRIMARY KEY (resource_id),
   CONSTRAINT planes_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.resources(id) ON UPDATE CASCADE ON DELETE CASCADE

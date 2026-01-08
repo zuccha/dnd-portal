@@ -12,6 +12,7 @@ CREATE TYPE public.plane_row AS (
   name jsonb,
   page jsonb,
   -- Plane
+  category public.plane_category,
   alignments public.creature_alignment[]
 );
 
@@ -43,9 +44,9 @@ BEGIN
   );
 
   INSERT INTO public.planes (
-    resource_id, alignments
+    resource_id, category, alignments
   ) VALUES (
-    v_id, r.alignments
+    v_id, r.category, r.alignments
   );
 
   perform public.upsert_plane_translation(v_id, p_lang, p_plane_translation);
@@ -78,6 +79,7 @@ AS $$
     r.visibility,
     r.name,
     r.page,
+    p.category,
     p.alignments
   FROM public.fetch_resource(p_id) AS r
   JOIN public.planes p ON p.resource_id = r.id
@@ -119,6 +121,7 @@ src AS (
     b.visibility,
     b.name,
     b.page,
+    p.category,
     p.alignments
   FROM base b
   JOIN public.planes p ON p.resource_id = b.id
@@ -131,6 +134,7 @@ SELECT
   s.visibility,
   s.name,
   s.page,
+  s.category,
   s.alignments
 FROM src s
 ORDER BY
@@ -209,9 +213,10 @@ BEGIN
 
   UPDATE public.planes p
   SET (
+    category,
     alignments
   ) = (
-    SELECT r.alignments
+    SELECT r.category, r.alignments
     FROM jsonb_populate_record(null::public.planes, to_jsonb(p) || p_plane) AS r
   )
   WHERE p.resource_id = p_id;
