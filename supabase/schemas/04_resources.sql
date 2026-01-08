@@ -385,10 +385,10 @@ GRANT ALL ON FUNCTION public.fetch_resources(p_campaign_id uuid, p_langs text[],
 
 
 --------------------------------------------------------------------------------
--- FETCH RESOURCE OPTIONS
+-- FETCH RESOURCE LOOKUPS
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_resource_options(
+CREATE OR REPLACE FUNCTION public.fetch_resource_lookups(
   p_campaign_id uuid,
   p_resource_kinds public.resource_kind[])
 RETURNS TABLE(id uuid, name jsonb)
@@ -415,11 +415,42 @@ AS $$
   ORDER BY r.id;
 $$;
 
-ALTER FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) OWNER TO postgres;
+ALTER FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO anon;
-GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_resource_options(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO anon;
+GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- FETCH RESOURCE LOOKUP
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.fetch_resource_lookup(p_id uuid)
+RETURNS TABLE(id uuid, name jsonb)
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT
+    r.id,
+    coalesce(tt.name, '{}'::jsonb) AS name
+  FROM public.resources r
+  LEFT JOIN (
+    SELECT
+      rt.resource_id AS id,
+      jsonb_object_agg(rt.lang, rt.name) AS name
+    FROM public.resource_translations rt
+    WHERE rt.resource_id = p_id
+    GROUP BY rt.resource_id
+  ) tt ON tt.id = r.id
+  WHERE r.id = p_id;
+$$;
+
+ALTER FUNCTION public.fetch_resource_lookup(p_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.fetch_resource_lookup(p_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.fetch_resource_lookup(p_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_resource_lookup(p_id uuid) TO service_role;
 
 
 --------------------------------------------------------------------------------
