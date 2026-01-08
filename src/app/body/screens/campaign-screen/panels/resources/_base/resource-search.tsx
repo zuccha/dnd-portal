@@ -1,4 +1,4 @@
-import { HStack, type StackProps, Tag, VStack } from "@chakra-ui/react";
+import { HStack, type StackProps, VStack } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import ListCheckIcon from "~/icons/list-check-icon";
@@ -8,6 +8,7 @@ import type { ResourceOption } from "~/models/resources/resource";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import Search from "~/ui/search";
+import Tag from "~/ui/tag";
 import { normalizeString } from "~/utils/string";
 
 //------------------------------------------------------------------------------
@@ -72,16 +73,13 @@ export default function ResourceSearch({
       {value.length > 0 && (
         <HStack gap={1} w="full" wrap="wrap">
           {value.map((id) => (
-            <Tag.Root key={id}>
-              <Tag.Label>{optionsMap.get(id)?.label ?? t("unknown")}</Tag.Label>
-              <Tag.EndElement>
-                <Tag.CloseTrigger
-                  onClick={() =>
-                    onValueChange(value.filter((other) => other !== id))
-                  }
-                />
-              </Tag.EndElement>
-            </Tag.Root>
+            <Tag
+              key={id}
+              label={optionsMap.get(id)?.label ?? t("unknown")}
+              onClose={() =>
+                onValueChange(value.filter((other) => other !== id))
+              }
+            />
           ))}
         </HStack>
       )}

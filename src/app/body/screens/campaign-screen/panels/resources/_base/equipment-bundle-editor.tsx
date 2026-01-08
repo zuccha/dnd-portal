@@ -1,4 +1,4 @@
-import { HStack, type StackProps, Tag, VStack } from "@chakra-ui/react";
+import { HStack, type StackProps, VStack } from "@chakra-ui/react";
 import { useCallback, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
@@ -8,6 +8,7 @@ import Button from "~/ui/button";
 import CostInput from "~/ui/cost-input";
 import NumberInput from "~/ui/number-input";
 import Search, { type SearchRefObject } from "~/ui/search";
+import Tag from "~/ui/tag";
 import { normalizeString } from "~/utils/string";
 
 //------------------------------------------------------------------------------
@@ -96,21 +97,16 @@ export default function EquipmentBundleEditor({
       {value.equipments.length > 0 && (
         <HStack gap={1} w="full" wrap="wrap">
           {value.equipments.map(({ id, quantity }) => (
-            <Tag.Root key={id}>
-              <Tag.Label>
-                {tpi("equipment", quantity, localize(id), `${quantity}`)}
-              </Tag.Label>
-              <Tag.EndElement>
-                <Tag.CloseTrigger
-                  onClick={() =>
-                    onValueChange({
-                      ...value,
-                      equipments: value.equipments.filter((e) => e.id !== id),
-                    })
-                  }
-                />
-              </Tag.EndElement>
-            </Tag.Root>
+            <Tag
+              key={id}
+              label={tpi("equipment", quantity, localize(id), `${quantity}`)}
+              onClose={() =>
+                onValueChange({
+                  ...value,
+                  equipments: value.equipments.filter((e) => e.id !== id),
+                })
+              }
+            />
           ))}
         </HStack>
       )}
