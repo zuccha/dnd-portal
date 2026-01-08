@@ -215,7 +215,7 @@ export function createResourceStore<
             ...resource[translationField],
           };
         }
-        resourceCache.set(resource.id, merged);
+        resourceCache.set(merged, resource.id);
       }
 
       return resourceIds;
@@ -264,7 +264,7 @@ export function createResourceStore<
 
       const lookups = z.array(resourceLookupSchema).parse(data);
       const lookupIds = lookups.map((lookup) => lookup.id);
-      for (const lookup of lookups) resourceLookupCache.set(lookup.id, lookup);
+      for (const lookup of lookups) resourceLookupCache.set(lookup, lookup.id);
 
       return lookupIds;
     },
@@ -307,7 +307,7 @@ export function createResourceStore<
 
   function useResource(resourceId: string): [R, string] {
     const { key } = fetchResource(resourceId);
-    return [resourceCache.useValue(key, defaultResource), key];
+    return [resourceCache.responseCache.useValue(key, defaultResource), key];
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -321,7 +321,7 @@ export function createResourceStore<
     lang: string,
   ): [string[], string] {
     const { key } = fetchResourceIds(campaignId, modules, filters, lang);
-    return [resourceIdsCache.useValue(key, emptyIds), key];
+    return [resourceIdsCache.responseCache.useValue(key, emptyIds), key];
   }
 
   function useResourceIds(campaignId: string): string[] {
@@ -338,7 +338,10 @@ export function createResourceStore<
 
   function useResourceLookup(resourceId: string): [ResourceLookup, string] {
     const { key } = fetchResourceLookup(resourceId);
-    return [resourceLookupCache.useValue(key, defaultResourceLookup), key];
+    return [
+      resourceLookupCache.responseCache.useValue(key, defaultResourceLookup),
+      key,
+    ];
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -347,7 +350,7 @@ export function createResourceStore<
 
   function useResourceLookupIds(campaignId: string): [string[], string] {
     const { key } = fetchResourceLookupIds(campaignId);
-    return [resourceLookupIdsCache.useValue(key, emptyIds), key];
+    return [resourceLookupIdsCache.responseCache.useValue(key, emptyIds), key];
   }
 
   //----------------------------------------------------------------------------
@@ -368,7 +371,7 @@ export function createResourceStore<
           .some((name) => normalizeString(name!).includes(partialName));
       });
     },
-    resourceCache.subscribe,
+    resourceCache.responseCache.subscribe,
   );
 
   function useFilteredResourceIdsByParams(
@@ -572,7 +575,7 @@ export function createResourceStore<
           return { label, name: lookup.name, value: lookup.id };
         })
         .sort(compareObjects("label")),
-    resourceLookupCache.subscribe,
+    resourceLookupCache.responseCache.subscribe,
   );
 
   function useResourceOptionsByLang(

@@ -20,11 +20,11 @@ export function createLockedRequest<R, Args extends unknown[]>(
   request: (...args: Args) => Promise<R>,
 ): [
   (...args: Args) => { key: string; promise: Promise<RequestResponse<R>> },
-  Cache<string, boolean>,
+  { fetchingCache: Cache<string, boolean> },
 ] {
   const fetchingCache = createCache<string, boolean>(`${id}.fetching`);
 
-  async function lockedRequest(
+  async function lockedRequestByKey(
     key: string,
     ...args: Args
   ): Promise<RequestResponse<R>> {
@@ -42,13 +42,18 @@ export function createLockedRequest<R, Args extends unknown[]>(
     }
   }
 
-  function lockedRequestWithKey(...args: Args) {
+  function lockedRequest(...args: Args) {
     const key = hash(args);
-    const promise = lockedRequest(key, ...args);
+    const promise = lockedRequestByKey(key, ...args);
     return { key, promise };
   }
 
-  return [lockedRequestWithKey, fetchingCache];
+  return [
+    lockedRequest,
+    {
+      fetchingCache,
+    },
+  ];
 }
 
 //------------------------------------------------------------------------------
@@ -61,13 +66,20 @@ export function createCachedRequest<R, Args extends unknown[]>(
   request: (...args: Args) => Promise<R>,
 ): [
   (...args: Args) => { key: string; promise: Promise<RequestResponse<R>> },
-  Cache<string, R>,
-  Cache<string, boolean>,
+  {
+    clear: () => void;
+    get: (...args: Args) => R | undefined;
+    remove: (...args: Args) => void;
+    set: (response: R, ...args: Args) => void;
+
+    responseCache: Cache<string, R>;
+    fetchingCache: Cache<string, boolean>;
+  },
 ] {
   const responseCache = createCache<string, R>(`${id}.response`);
   const fetchingCache = createCache<string, boolean>(`${id}.fetching`);
 
-  async function cachedRequest(
+  async function cachedRequestByKey(
     key: string,
     ...args: Args
   ): Promise<RequestResponse<R>> {
@@ -87,13 +99,46 @@ export function createCachedRequest<R, Args extends unknown[]>(
     }
   }
 
-  function cachedRequestWithKey(...args: Args) {
+  function cachedRequest(...args: Args) {
     const key = hash(args);
-    const promise = cachedRequest(key, ...args);
+    const promise = cachedRequestByKey(key, ...args);
     return { key, promise };
   }
 
-  return [cachedRequestWithKey, responseCache, fetchingCache];
+  function clear(): void {
+    responseCache.clear();
+    fetchingCache.clear();
+  }
+
+  function get(...args: Args): R | undefined {
+    const key = hash(args);
+    return responseCache.get(key);
+  }
+
+  function remove(...args: Args): void {
+    const key = hash(args);
+    responseCache.remove(key);
+    fetchingCache.remove(key);
+  }
+
+  function set(response: R, ...args: Args): void {
+    const key = hash(args);
+    responseCache.set(key, response);
+    fetchingCache.set(key, false);
+  }
+
+  return [
+    cachedRequest,
+    {
+      clear,
+      get,
+      remove,
+      set,
+
+      fetchingCache,
+      responseCache,
+    },
+  ];
 }
 
 //------------------------------------------------------------------------------
