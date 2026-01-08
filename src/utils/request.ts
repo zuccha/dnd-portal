@@ -18,10 +18,7 @@ export function createLockedRequest<R, Args extends unknown[]>(
   id: string,
   defaultValue: R,
   request: (...args: Args) => Promise<R>,
-): [
-  (...args: Args) => { key: string; promise: Promise<RequestResponse<R>> },
-  { fetchingCache: Cache<string, boolean> },
-] {
+): [(...args: Args) => { key: string; promise: Promise<RequestResponse<R>> }] {
   const fetchingCache = createCache<string, boolean>(`${id}.fetching`);
 
   async function lockedRequestByKey(
@@ -48,12 +45,7 @@ export function createLockedRequest<R, Args extends unknown[]>(
     return { key, promise };
   }
 
-  return [
-    lockedRequest,
-    {
-      fetchingCache,
-    },
-  ];
+  return [lockedRequest];
 }
 
 //------------------------------------------------------------------------------
@@ -67,30 +59,34 @@ export function createCachedRequest<R, Args extends unknown[]>(
 ): [
   (...args: Args) => { key: string; promise: Promise<RequestResponse<R>> },
   {
-    clear: () => void;
     get: (...args: Args) => R | undefined;
-    remove: (...args: Args) => void;
+    invalidate: (...args: Args) => void;
+    invalidateAll: () => void;
     set: (response: R, ...args: Args) => void;
 
-    responseCache: Cache<string, R>;
-    fetchingCache: Cache<string, boolean>;
+    cache: Cache<string, R>;
   },
 ] {
+  const cached = new Set<string>();
+  const argsCache = new Map<string, Args>();
+  const fetchingCache = new Map<string, boolean>();
   const responseCache = createCache<string, R>(`${id}.response`);
-  const fetchingCache = createCache<string, boolean>(`${id}.fetching`);
 
   async function cachedRequestByKey(
     key: string,
     ...args: Args
   ): Promise<RequestResponse<R>> {
-    if (responseCache.has(key)) return success(responseCache.get(key)!);
-    if (fetchingCache.get(key)) return loading(defaultValue);
+    if (cached.has(key)) return success(responseCache.get(key)!);
+    if (fetchingCache.get(key))
+      return loading(responseCache.get(key) ?? defaultValue);
 
     try {
+      argsCache.set(key, args);
       fetchingCache.set(key, true);
       const response = await request(...args);
-      responseCache.set(key, response);
+      cached.add(key);
       fetchingCache.set(key, false);
+      responseCache.set(key, response);
       return updated(response);
     } catch (e) {
       console.error(id, e);
@@ -105,38 +101,42 @@ export function createCachedRequest<R, Args extends unknown[]>(
     return { key, promise };
   }
 
-  function clear(): void {
-    responseCache.clear();
-    fetchingCache.clear();
-  }
-
   function get(...args: Args): R | undefined {
     const key = hash(args);
     return responseCache.get(key);
   }
 
-  function remove(...args: Args): void {
+  function invalidate(...args: Args): void {
     const key = hash(args);
-    responseCache.remove(key);
-    fetchingCache.remove(key);
+    if (cached.has(key)) {
+      cached.delete(key);
+      cachedRequestByKey(key, ...args);
+    }
+  }
+
+  function invalidateAll(): void {
+    cached.clear();
+    for (const [key, args] of argsCache.entries())
+      cachedRequestByKey(key, ...args);
   }
 
   function set(response: R, ...args: Args): void {
     const key = hash(args);
-    responseCache.set(key, response);
+    cached.add(key);
+    argsCache.set(key, args);
     fetchingCache.set(key, false);
+    responseCache.set(key, response);
   }
 
   return [
     cachedRequest,
     {
-      clear,
       get,
-      remove,
+      invalidate,
+      invalidateAll,
       set,
 
-      fetchingCache,
-      responseCache,
+      cache: responseCache,
     },
   ];
 }

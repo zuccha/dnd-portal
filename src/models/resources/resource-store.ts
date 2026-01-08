@@ -122,8 +122,8 @@ export function createResourceStore<
 
       if (error) throw error;
 
-      resourceIdsCache.clear();
-      resourceLookupIdsCache.clear();
+      resourceIdsCache.invalidateAll();
+      resourceLookupIdsCache.invalidateAll();
 
       return undefined;
     },
@@ -144,12 +144,12 @@ export function createResourceStore<
 
       if (error) throw error;
 
-      resourceIdsCache.clear();
-      resourceLookupIdsCache.clear();
+      resourceIdsCache.invalidateAll();
+      resourceLookupIdsCache.invalidateAll();
 
       for (const resourceId of resourceIds) {
-        resourceCache.remove(resourceId);
-        resourceLookupCache.remove(resourceId);
+        resourceCache.invalidate(resourceId);
+        resourceLookupCache.invalidate(resourceId);
       }
 
       return undefined;
@@ -236,11 +236,11 @@ export function createResourceStore<
 
       if (error) throw error;
 
-      const lookup = resourceLookupSchema.optional().parse(data);
-      if (!lookup)
+      const lookup = z.array(resourceLookupSchema).parse(data);
+      if (!lookup.length)
         throw new Error(`${storeName.s} lookup (${resourceId}) not found`);
 
-      return lookup;
+      return lookup[0]!;
     },
   );
 
@@ -291,10 +291,10 @@ export function createResourceStore<
 
       if (error) throw error;
 
-      resourceCache.remove(resourceId);
-      resourceIdsCache.clear();
-      resourceLookupCache.remove(resourceId);
-      resourceLookupIdsCache.clear();
+      resourceCache.invalidate(resourceId);
+      resourceIdsCache.invalidateAll();
+      resourceLookupCache.invalidate(resourceId);
+      resourceLookupIdsCache.invalidateAll();
 
       return undefined;
     },
@@ -306,7 +306,7 @@ export function createResourceStore<
 
   function useResource(resourceId: string): [R, string] {
     const { key } = fetchResource(resourceId);
-    return [resourceCache.responseCache.useValue(key) ?? defaultResource, key];
+    return [resourceCache.cache.useValue(key) ?? defaultResource, key];
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -320,7 +320,7 @@ export function createResourceStore<
     lang: string,
   ): [string[], string] {
     const { key } = fetchResourceIds(campaignId, modules, filters, lang);
-    return [resourceIdsCache.responseCache.useValue(key) ?? emptyIds, key];
+    return [resourceIdsCache.cache.useValue(key) ?? emptyIds, key];
   }
 
   function useResourceIds(campaignId: string): string[] {
@@ -338,7 +338,7 @@ export function createResourceStore<
   function useResourceLookup(resourceId: string): [ResourceLookup, string] {
     const { key } = fetchResourceLookup(resourceId);
     return [
-      resourceLookupCache.responseCache.useValue(key) ?? defaultResourceLookup,
+      resourceLookupCache.cache.useValue(key) ?? defaultResourceLookup,
       key,
     ];
   }
@@ -349,10 +349,7 @@ export function createResourceStore<
 
   function useResourceLookupIds(campaignId: string): [string[], string] {
     const { key } = fetchResourceLookupIds(campaignId);
-    return [
-      resourceLookupIdsCache.responseCache.useValue(key) ?? emptyIds,
-      key,
-    ];
+    return [resourceLookupIdsCache.cache.useValue(key) ?? emptyIds, key];
   }
 
   //----------------------------------------------------------------------------
@@ -373,7 +370,7 @@ export function createResourceStore<
           .some((name) => normalizeString(name!).includes(partialName));
       });
     },
-    resourceCache.responseCache.subscribe,
+    resourceCache.cache.subscribe,
   );
 
   function useFilteredResourceIdsByParams(
@@ -577,7 +574,7 @@ export function createResourceStore<
           return { label, name: lookup.name, value: lookup.id };
         })
         .sort(compareObjects("label")),
-    resourceLookupCache.responseCache.subscribe,
+    resourceLookupCache.cache.subscribe,
   );
 
   function useResourceOptionsByLang(
