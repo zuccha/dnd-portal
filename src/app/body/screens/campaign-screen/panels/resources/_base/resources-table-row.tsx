@@ -38,6 +38,7 @@ export type ResourcesTableRowExtra<
 //------------------------------------------------------------------------------
 
 type ResourcesTableRowProps = {
+  campaignId: string;
   editable: boolean;
   resourceId: string;
 };
@@ -62,12 +63,13 @@ export function createResourcesTableRow<
   const { useResourceExpansion } = context;
 
   return function ResourcesTableRow({
+    campaignId,
     editable,
     resourceId,
   }: ResourcesTableRowProps) {
     const [lang] = useI18nLang();
 
-    const localizedResource = useLocalizedResource(resourceId);
+    const localizedResource = useLocalizedResource(campaignId, resourceId);
     const selected = useResourceSelection(resourceId);
     const { toggleResourceSelection } = useResourceSelectionMethods(resourceId);
     const expanded = useResourceExpansion(resourceId, false);

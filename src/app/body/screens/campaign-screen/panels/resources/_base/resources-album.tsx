@@ -55,6 +55,7 @@ export function createResourcesAlbum<
       <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
         {filteredResourceIds.map((id) => (
           <ResourcesAlbumCard
+            campaignId={campaignId}
             editable={editable}
             key={id}
             resourceId={id}

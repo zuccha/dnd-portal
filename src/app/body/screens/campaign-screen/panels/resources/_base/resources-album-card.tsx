@@ -30,6 +30,7 @@ export type ResourcesAlbumCardExtra<
 //------------------------------------------------------------------------------
 
 export type ResourcesAlbumCardProps = Omit<AlbumCardProps, "children"> & {
+  campaignId: string;
   editable?: boolean;
   gradientIntensity?: number;
   onPageCountChange?: (count: number | undefined) => void;
@@ -69,6 +70,7 @@ export function createResourcesAlbumCard<
   } = store;
 
   function ResourcesAlbumCard({
+    campaignId,
     editable,
     gradientIntensity = 40,
     onPageCountChange = () => {},
@@ -78,7 +80,7 @@ export function createResourcesAlbumCard<
     zoom,
     ...rest
   }: ResourcesAlbumCardProps) {
-    const localizedResource = useLocalizedResource(resourceId);
+    const localizedResource = useLocalizedResource(campaignId, resourceId);
     const selected = useResourceSelection(resourceId);
     const { setResourceSelection } = useResourceSelectionMethods(resourceId);
 

@@ -552,9 +552,12 @@ export function createResourceStore<
   // Use Localized Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useLocalizedResource(resourceId: string): L | undefined {
+  function useLocalizedResource(
+    campaignId: string,
+    resourceId: string,
+  ): L | undefined {
     const [resource] = useResource(resourceId);
-    const localizeResource = useLocalizeResource(resource?.campaign_id ?? "");
+    const localizeResource = useLocalizeResource(campaignId);
 
     return useMemo(() => {
       return resource ? localizeResource(resource) : undefined;
