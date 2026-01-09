@@ -44,12 +44,14 @@ export function createResourcesActions<
     }, []);
 
     const computeSelectedAsJson = useCallback(() => {
-      const selectedResources = store.getSelectedResources(campaignId);
+      const selectedResources = selectedFilteredResourceIds
+        .map(store.getResource)
+        .filter((resource) => resource !== undefined);
       const selectedLocalizedResources = selectedResources
         .map(localizeResource)
         .map(({ _raw, ...rest }) => rest);
       return JSON.stringify(selectedLocalizedResources, null, 2);
-    }, [campaignId, localizeResource]);
+    }, [localizeResource, selectedFilteredResourceIds]);
 
     const copySelected = useCallback(async () => {
       const json = computeSelectedAsJson();
@@ -68,7 +70,9 @@ export function createResourcesActions<
 
     const removeSelected = useCallback(async () => {
       try {
-        const selectedResources = store.getSelectedResources(campaignId);
+        const selectedResources = selectedFilteredResourceIds
+          .map(store.getResource)
+          .filter((resource) => resource !== undefined);
         const count = selectedResources.length;
         const ok = confirm(tpi("remove.confirm", count, `${count}`));
         if (ok) {
@@ -79,7 +83,7 @@ export function createResourcesActions<
         console.error(e);
         // TODO: Show toast.
       }
-    }, [campaignId, tpi]);
+    }, [selectedFilteredResourceIds, tpi]);
 
     const disabled = !selectedFilteredResourceIds.length;
 

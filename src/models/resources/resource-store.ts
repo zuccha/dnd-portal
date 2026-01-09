@@ -270,6 +270,22 @@ export function createResourceStore<
   );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get Resource
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function getResource(resourceId: string): R | undefined {
+    return resourceCache.get(resourceId);
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get Resource Lookup
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function getResourceLookup(resourceId: string): ResourceLookup | undefined {
+    return resourceLookupCache.get(resourceId);
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Update Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -402,22 +418,6 @@ export function createResourceStore<
   const resourceSelectionCache = createCache<string, boolean>(
     `${storeId}.resource_selection`,
   );
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Get Selected Resources
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function getSelectedResources(campaignId: string): R[] {
-    const resources: R[] = [];
-
-    for (const [resourceId, selected] of resourceSelectionCache.entries()) {
-      const resource = resourceCache.get(resourceId) ?? defaultResource;
-      if (selected && resource.campaign_id === campaignId)
-        resources.push(resource);
-    }
-
-    return resources;
-  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resource Selection
@@ -614,6 +614,8 @@ export function createResourceStore<
     fetchResourceIds,
     fetchResourceLookup,
     fetchResourceLookupIds,
+    getResource,
+    getResourceLookup,
     updateResource,
     useResource,
     useResourceIds,
@@ -622,7 +624,6 @@ export function createResourceStore<
 
     useFilteredResourceIds,
 
-    getSelectedResources,
     useResourceSelection,
     useResourceSelectionMethods,
     useResourcesSelectionMethods,
