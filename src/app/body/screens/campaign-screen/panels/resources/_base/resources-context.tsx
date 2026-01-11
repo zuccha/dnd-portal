@@ -47,16 +47,20 @@ export function createResourcesContext<R extends Resource>(id: string) {
     resourcesContextViewSchema.parse,
   );
 
+  const zoomStore = createLocalStore(`${id}.zoom`, 1.3, z.number().parse);
+
   return {
     setCreatedResource: createdResourceStore.set,
     setEditedResource: editedResourceStore.set,
     setPrintMode: printModeStore.set,
     setResourceExpansion: resourceExpansionStore.set,
     setView: viewStore.set,
+    setZoom: zoomStore.set,
     useCreatedResource: createdResourceStore.useValue,
     useEditedResource: editedResourceStore.useValue,
     usePrintMode: printModeStore.useValue,
     useResourceExpansion: resourceExpansionStore.useValue,
     useView: viewStore.useValue,
+    useZoom: zoomStore.useValue,
   };
 }

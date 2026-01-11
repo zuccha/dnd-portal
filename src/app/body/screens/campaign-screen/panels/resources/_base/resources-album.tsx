@@ -48,6 +48,7 @@ export function createResourcesAlbum<
   function ResourcesAlbum({ campaignId }: ResourcesAlbumProps) {
     const editable = useCanEditCampaign(campaignId);
     const filteredResourceIds = store.useFilteredResourceIds(campaignId);
+    const zoom = context.useZoom();
 
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
@@ -59,7 +60,7 @@ export function createResourcesAlbum<
             editable={editable}
             key={id}
             resourceId={id}
-            zoom={1.3}
+            zoom={zoom}
           />
         ))}
       </Wrap>

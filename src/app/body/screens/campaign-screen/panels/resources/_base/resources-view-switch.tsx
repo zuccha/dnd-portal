@@ -1,3 +1,4 @@
+import { HStack } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
 import type {
   DBResource,
@@ -8,6 +9,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";
+import NumberInput from "~/ui/number-input";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -27,13 +29,29 @@ export function createResourcesViewSwitch<
 >(_store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
   return function ResourcesViewSwitch(_props: ResourcesViewSwitchProps) {
     const view = context.useView();
+    const zoom = context.useZoom();
 
     return (
-      <BinaryButton
-        onValueChange={context.setView}
-        options={viewOptions}
-        value={view}
-      />
+      <HStack>
+        {view === "cards" && (
+          <NumberInput
+            formatOptions={{ style: "percent" }}
+            max={2}
+            min={0.2}
+            onValueChange={context.setZoom}
+            size="xs"
+            step={0.1}
+            value={zoom * 100}
+            w="5em"
+          />
+        )}
+
+        <BinaryButton
+          onValueChange={context.setView}
+          options={viewOptions}
+          value={view}
+        />
+      </HStack>
     );
   };
 }
