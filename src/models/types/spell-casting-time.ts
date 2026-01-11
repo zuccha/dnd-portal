@@ -26,7 +26,7 @@ export const {
   useTranslations: useSpellCastingTimeTranslations,
 } = createTypeTranslationHooks(spellCastingTimes, {
   action: { en: "Action", it: "Azione" },
-  bonus_action: { en: "Azione Bonus", it: "Azione Bonus" },
+  bonus_action: { en: "Bonus Action", it: "Azione Bonus" },
   reaction: { en: "Reaction", it: "Reazione" },
   value: { en: "Value", it: "Valore" },
 });
