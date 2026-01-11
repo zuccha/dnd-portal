@@ -217,6 +217,18 @@ WITH prefs AS (
       WHERE e.value = 'false'
     ) AS schools_exc,
 
+    -- casting time
+    (
+      SELECT coalesce(array_agg(lower(e.key)::public.spell_casting_time), null)
+      FROM jsonb_each_text(p_filters->'casting_time') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS casting_time_inc,
+    (
+      SELECT coalesce(array_agg(lower(e.key)::public.spell_casting_time), null)
+      FROM jsonb_each_text(p_filters->'casting_time') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS casting_time_exc,
+
     -- boolean flags; null = not relevant
     (p_filters ? 'concentration')::int::boolean AS has_conc_filter,
     (p_filters->>'concentration')::boolean      AS conc_val,
@@ -286,6 +298,10 @@ filtered AS (
     -- schools
     AND (p.schools_inc IS NULL OR s.school = any(p.schools_inc))
     AND (p.schools_exc IS NULL OR NOT (s.school = any(p.schools_exc)))
+
+    -- casting time
+    AND (p.casting_time_inc IS NULL OR s.casting_time = any(p.casting_time_inc))
+    AND (p.casting_time_exc IS NULL OR NOT (s.casting_time = any(p.casting_time_exc)))
 
     -- flags
     AND (not p.has_conc_filter OR s.concentration = p.conc_val)
