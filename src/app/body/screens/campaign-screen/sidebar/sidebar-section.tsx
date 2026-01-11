@@ -20,9 +20,16 @@ export type SidebarSectionProps = {
 export default function SidebarSection({ items, title }: SidebarSectionProps) {
   return (
     <VStack align="flex-start" gap={0.5} w="full">
-      <Text fontSize="sm" fontWeight="semibold" mb={2} pl={4}>
-        {title}
-      </Text>
+      <VStack mb={2} px={4} w="full">
+        <Text
+          borderBottomWidth={1}
+          fontSize="sm"
+          fontWeight="semibold"
+          w="full"
+        >
+          {title}
+        </Text>
+      </VStack>
 
       {items.map((item) => (
         <Button
