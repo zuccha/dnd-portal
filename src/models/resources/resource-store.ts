@@ -536,7 +536,7 @@ export function createResourceStore<
     campaignId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const lookupIds = useResourceLookupIds(campaignId);
+    const [lookupIds] = useResourceLookupIds(campaignId);
 
     return useCallback(
       (resourceId: string) => {
