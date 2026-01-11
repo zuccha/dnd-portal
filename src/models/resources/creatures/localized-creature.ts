@@ -334,6 +334,7 @@ export function useLocalizeCreature(
       // Languages
       const languages = creature.language_ids
         .map(localizeLanguageName)
+        .filter((language) => language)
         .sort()
         .join(", ");
       if (languages) {
