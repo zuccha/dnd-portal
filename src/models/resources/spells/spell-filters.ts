@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { I18nString } from "~/i18n/i18n-string";
+import { spellCastingTimeSchema } from "../../types/spell-casting-time";
 import { spellLevelStringSchema } from "../../types/spell-level";
 import { spellSchoolSchema } from "../../types/spell-school";
 import {
@@ -34,6 +35,9 @@ export const spellOrderOptions: { label: I18nString; value: string }[] = [
 //------------------------------------------------------------------------------
 
 export const spellFiltersSchema = resourceFiltersSchema.extend({
+  casting_time: z
+    .partialRecord(spellCastingTimeSchema, z.boolean().optional())
+    .optional(),
   character_class_ids: z
     .partialRecord(z.uuid(), z.boolean().optional())
     .optional(),

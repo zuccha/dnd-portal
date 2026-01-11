@@ -6,6 +6,7 @@ import { useSpellLevelOptions } from "~/models/types/spell-level";
 import { useSpellSchoolOptions } from "~/models/types/spell-school";
 import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
+import { useSpellCastingTimeOptions } from "../../../../../../../models/types/spell-casting-time";
 
 //------------------------------------------------------------------------------
 // Spells Filters
@@ -26,6 +27,7 @@ export default function SpellsFilters({
   const characterClassOptions =
     characterClassStore.useResourceOptions(campaignId);
   const schoolOptions = useSpellSchoolOptions();
+  const castingTimeOptions = useSpellCastingTimeOptions();
 
   return (
     <HStack {...rest}>
@@ -67,6 +69,18 @@ export default function SpellsFilters({
         {t("schools")}
       </InclusionSelect>
 
+      <InclusionSelect
+        includes={filters.casting_time ?? {}}
+        minW="10em"
+        onValueChange={(partial) =>
+          setFilters({ casting_time: { ...filters.casting_time, ...partial } })
+        }
+        options={castingTimeOptions}
+        size="sm"
+      >
+        {t("casting_time")}
+      </InclusionSelect>
+
       <InclusionButton
         include={filters.ritual}
         onValueChange={(ritual) => setFilters({ ritual })}
@@ -91,6 +105,10 @@ export default function SpellsFilters({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  casting_time: {
+    en: "Casting Time",
+    it: "Tempo di Lancio",
+  },
   character_classes: {
     en: "Classes",
     it: "Classi",
