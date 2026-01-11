@@ -536,7 +536,7 @@ export function createResourceStore<
     campaignId: string,
     lang: string,
   ): (resourceId: string) => string {
-    useResourceLookupIds(campaignId);
+    const lookupIds = useResourceLookupIds(campaignId);
 
     return useCallback(
       (resourceId: string) => {
@@ -544,7 +544,7 @@ export function createResourceStore<
           resourceLookupCache.get(resourceId) ?? defaultResourceLookup;
         return translate(lookup.name, lang);
       },
-      [lang],
+      [lang, lookupIds], // eslint-disable-line react-hooks/exhaustive-deps
     );
   }
 
