@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.equipments (
   resource_id uuid NOT NULL,
   cost integer DEFAULT '0'::integer NOT NULL,
   magic boolean DEFAULT 'false'::boolean NOT NULL,
+  rarity public.equipment_rarity DEFAULT 'common'::public.equipment_rarity NOT NULL,
   weight integer DEFAULT '0'::integer NOT NULL,
   CONSTRAINT equipments_pkey PRIMARY KEY (resource_id),
   CONSTRAINT equipments_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.resources(id) ON UPDATE CASCADE ON DELETE CASCADE

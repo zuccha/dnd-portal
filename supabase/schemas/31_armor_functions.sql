@@ -14,6 +14,7 @@ CREATE TYPE public.armor_row AS (
   -- Equipment
   cost integer,
   magic boolean,
+  rarity public.equipment_rarity,
   weight integer,
   -- Armor
   armor_class_max_cha_modifier smallint,
@@ -117,6 +118,7 @@ AS $$
     e.page,
     e.cost,
     e.magic,
+    e.rarity,
     e.weight,
     a.armor_class_max_cha_modifier,
     a.armor_class_max_con_modifier,
@@ -210,6 +212,7 @@ src AS (
     a.type,
     e.cost,
     e.magic,
+    e.rarity,
     e.weight
   FROM base b
   JOIN public.armors a ON a.resource_id = b.id

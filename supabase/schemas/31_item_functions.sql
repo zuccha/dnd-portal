@@ -14,6 +14,7 @@ CREATE TYPE public.item_row AS (
   -- Equipment
   cost integer,
   magic boolean,
+  rarity public.equipment_rarity,
   weight integer,
   -- Item Translation
   notes jsonb
@@ -78,6 +79,7 @@ AS $$
     e.page,
     e.cost,
     e.magic,
+    e.rarity,
     e.weight,
     e.notes
   FROM public.fetch_equipment(p_id) AS e
@@ -121,6 +123,7 @@ src AS (
     b.page,
     b.cost,
     b.magic,
+    b.rarity,
     b.weight,
     b.notes
   FROM base b
@@ -136,6 +139,7 @@ SELECT
   s.page,
   s.cost,
   s.magic,
+  s.rarity,
   s.weight,
   s.notes
 FROM src s

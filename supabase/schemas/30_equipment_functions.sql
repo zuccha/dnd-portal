@@ -14,6 +14,7 @@ CREATE TYPE public.equipment_row AS (
   -- Equipment
   cost integer,
   magic boolean,
+  rarity public.equipment_rarity,
   weight integer,
   -- Equipment Translation
   notes jsonb
@@ -53,9 +54,9 @@ BEGIN
   );
 
   INSERT INTO public.equipments (
-    resource_id, cost, magic, weight
+    resource_id, cost, magic, rarity, weight
   ) VALUES (
-    v_id, r.cost, r.magic, r.weight
+    v_id, r.cost, r.magic, r.rarity, r.weight
   );
 
   perform public.upsert_equipment_translation(v_id, p_lang, p_equipment_translation);
@@ -90,6 +91,7 @@ AS $$
     r.page,
     e.cost,
     e.magic,
+    e.rarity,
     e.weight,
     coalesce(tt.notes, '{}'::jsonb) AS notes
   FROM public.fetch_resource(p_id) AS r
@@ -130,7 +132,17 @@ AS $$
 WITH prefs AS (
   SELECT
     (p_filters ? 'magic')::int::boolean   AS has_magic_filter,
-    (p_filters->>'magic')::boolean        AS magic_val
+    (p_filters->>'magic')::boolean        AS magic_val,
+    (
+      SELECT coalesce(array_agg(lower(e.key)::public.equipment_rarity), null)
+      FROM jsonb_each_text(p_filters->'rarity') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS rarity_inc,
+    (
+      SELECT coalesce(array_agg(lower(e.key)::public.equipment_rarity), null)
+      FROM jsonb_each_text(p_filters->'rarity') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS rarity_exc
 ),
 base AS (
   SELECT r.*
@@ -154,6 +166,7 @@ src AS (
     b.page,
     e.cost,
     e.magic,
+    e.rarity,
     e.weight
   FROM base b
   JOIN public.equipments e ON e.resource_id = b.id
@@ -161,7 +174,10 @@ src AS (
 filtered AS (
   SELECT s.*
   FROM src s, prefs p
-  WHERE NOT p.has_magic_filter OR s.magic  = p.magic_val
+  WHERE
+        (not p.has_magic_filter OR s.magic = p.magic_val)
+    AND (p.rarity_inc IS NULL OR s.rarity = any(p.rarity_inc))
+    AND (p.rarity_exc IS NULL OR NOT (s.rarity = any(p.rarity_exc)))
 ),
 t AS (
   SELECT
@@ -182,6 +198,7 @@ SELECT
   f.page,
   f.cost,
   f.magic,
+  f.rarity,
   f.weight,
   coalesce(tt.notes, '{}'::jsonb) AS notes
 FROM filtered f
@@ -270,9 +287,9 @@ BEGIN
 
   UPDATE public.equipments e
   SET (
-    cost, magic, weight
+    cost, magic, rarity, weight
   ) = (
-    SELECT r.cost, r.magic, r.weight
+    SELECT r.cost, r.magic, r.rarity, r.weight
     FROM jsonb_populate_record(null::public.equipments, to_jsonb(e) || p_equipment) AS r
   )
   WHERE e.resource_id = p_id;

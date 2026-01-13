@@ -14,6 +14,7 @@ CREATE TYPE public.weapon_row AS (
   -- Equipment
   cost integer,
   magic boolean,
+  rarity public.equipment_rarity,
   weight integer,
   -- Weapon
   damage text,
@@ -100,6 +101,7 @@ AS $$
     e.page,
     e.cost,
     e.magic,
+    e.rarity,
     e.weight,
     w.damage,
     w.damage_type,
@@ -211,6 +213,7 @@ src AS (
     b.page,
     b.cost,
     b.magic,
+    b.rarity,
     b.weight,
     b.notes,
     w.type,
@@ -266,6 +269,7 @@ SELECT
   f.page                          AS page,
   f.cost,
   f.magic,
+  f.rarity,
   f.weight,
   f.damage,
   f.damage_type,

@@ -14,6 +14,7 @@ CREATE TYPE public.tool_row AS (
   -- Equipment
   cost integer,
   magic boolean,
+  rarity public.equipment_rarity,
   weight integer,
   notes jsonb,
   -- Tool
@@ -89,6 +90,7 @@ AS $$
     e.page,
     e.cost,
     e.magic,
+    e.rarity,
     e.weight,
     e.notes,
     t.ability,
@@ -172,6 +174,7 @@ src AS (
     b.page,
     b.cost,
     b.magic,
+    b.rarity,
     b.weight,
     b.notes,
     t.ability,
@@ -208,6 +211,7 @@ SELECT
   f.page,
   f.cost,
   f.magic,
+  f.rarity,
   f.weight,
   f.notes,
   f.ability,
