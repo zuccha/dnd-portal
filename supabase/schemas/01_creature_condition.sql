@@ -12,7 +12,7 @@ CREATE TYPE public.creature_condition AS ENUM (
   'prone',
   'restrained',
   'stunned',
-  'unconcious',
+  'unconscious',
   'exhaustion'
 );
 
