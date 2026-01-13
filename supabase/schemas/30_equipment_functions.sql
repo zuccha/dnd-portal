@@ -135,12 +135,12 @@ WITH prefs AS (
     (p_filters->>'magic')::boolean        AS magic_val,
     (
       SELECT coalesce(array_agg(lower(e.key)::public.equipment_rarity), null)
-      FROM jsonb_each_text(p_filters->'rarity') AS e(key, value)
+      FROM jsonb_each_text(p_filters->'rarities') AS e(key, value)
       WHERE e.value = 'true'
     ) AS rarity_inc,
     (
       SELECT coalesce(array_agg(lower(e.key)::public.equipment_rarity), null)
-      FROM jsonb_each_text(p_filters->'rarity') AS e(key, value)
+      FROM jsonb_each_text(p_filters->'rarities') AS e(key, value)
       WHERE e.value = 'false'
     ) AS rarity_exc
 ),
