@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { campaignRoleSchema } from "~/models/types/campaign-role";
+import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
 import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
@@ -12,6 +13,7 @@ export const itemEditorFormFieldsSchema = z.object({
   name: z.string(),
   notes: z.string(),
   page: z.number(),
+  rarity: equipmentRaritySchema,
   visibility: campaignRoleSchema,
   weight: z.number(),
 });
@@ -74,6 +76,14 @@ export const useItemEditorFormNotes = (
 export const useItemEditorFormPage = (
   defaultPage: ItemEditorFormFields["page"],
 ) => useItemEditorFormField("page", defaultPage);
+
+//------------------------------------------------------------------------------
+// Rarity
+//------------------------------------------------------------------------------
+
+export const useItemEditorFormRarity = (
+  defaultRarity: ItemEditorFormFields["rarity"],
+) => useItemEditorFormField("rarity", defaultRarity);
 
 //------------------------------------------------------------------------------
 // Visibility

@@ -3,6 +3,7 @@ import { WandIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
+import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import { useToolTypeOptions } from "~/models/types/tool-type";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
@@ -18,6 +19,7 @@ export default function ToolsFilters(props: StackProps) {
 
   const abilityOptions = useCreatureAbilityOptions();
   const typeOptions = useToolTypeOptions();
+  const rarityOptions = useEquipmentRarityOptions();
 
   return (
     <HStack {...props}>
@@ -45,6 +47,18 @@ export default function ToolsFilters(props: StackProps) {
         {t("abilities")}
       </InclusionSelect>
 
+      <InclusionSelect
+        includes={filters.rarities ?? {}}
+        minW="10em"
+        onValueChange={(partial) =>
+          setFilters({ rarities: { ...filters.rarities, ...partial } })
+        }
+        options={rarityOptions}
+        size="sm"
+      >
+        {t("rarity")}
+      </InclusionSelect>
+
       <InclusionButton
         include={filters.magic}
         onValueChange={(magic) => setFilters({ magic })}
@@ -64,6 +78,10 @@ const i18nContext = {
   abilities: {
     en: "Abilities",
     it: "Abilità",
+  },
+  rarity: {
+    en: "Rarity",
+    it: "Rarità",
   },
   types: {
     en: "Types",

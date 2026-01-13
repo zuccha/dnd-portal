@@ -2,6 +2,7 @@ import { HStack, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Item } from "~/models/resources/equipment/items/item";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
+import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import CostInput from "~/ui/cost-input";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
@@ -16,6 +17,7 @@ import {
   useItemEditorFormName,
   useItemEditorFormNotes,
   useItemEditorFormPage,
+  useItemEditorFormRarity,
   useItemEditorFormVisibility,
   useItemEditorFormWeight,
 } from "./item-editor-form";
@@ -42,6 +44,7 @@ export default function ItemEditor({ resource }: ItemEditorProps) {
       <HStack align="flex-start" gap={4}>
         <ItemEditorWeight defaultWeight={resource.weight} />
         <ItemEditorCost defaultCost={resource.cost} />
+        <ItemEditorRarity defaultRarity={resource.rarity} />
       </HStack>
 
       <ItemEditorMagic defaultMagic={resource.magic} />
@@ -137,6 +140,27 @@ function ItemEditorPage({ defaultPage }: { defaultPage: number }) {
 }
 
 //------------------------------------------------------------------------------
+// Rarity
+//------------------------------------------------------------------------------
+
+function ItemEditorRarity({
+  defaultRarity,
+}: {
+  defaultRarity: Item["rarity"];
+}) {
+  const rarityOptions = useEquipmentRarityOptions();
+  const { error, ...rest } = useItemEditorFormRarity(defaultRarity);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("rarity.label")}>
+      <Select options={rarityOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Visibility
 //------------------------------------------------------------------------------
 
@@ -209,6 +233,10 @@ const i18nContext = {
   "page.label": {
     en: "Page",
     it: "Pagina",
+  },
+  "rarity.label": {
+    en: "Rarity",
+    it: "Rarità",
   },
   "visibility.label": {
     en: "Visibility",

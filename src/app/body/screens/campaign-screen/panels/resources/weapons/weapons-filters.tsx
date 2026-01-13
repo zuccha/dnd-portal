@@ -2,6 +2,7 @@ import { HStack, type StackProps } from "@chakra-ui/react";
 import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
+import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
@@ -20,6 +21,7 @@ export default function WeaponsFilters(props: StackProps) {
   const typeOptions = useWeaponTypeOptions();
   const propertyOptions = useWeaponPropertyOptions();
   const masteryOptions = useWeaponMasteryOptions();
+  const rarityOptions = useEquipmentRarityOptions();
 
   return (
     <HStack {...props}>
@@ -61,6 +63,18 @@ export default function WeaponsFilters(props: StackProps) {
         {t("masteries")}
       </InclusionSelect>
 
+      <InclusionSelect
+        includes={filters.rarities ?? {}}
+        minW="10em"
+        onValueChange={(partial) =>
+          setFilters({ rarities: { ...filters.rarities, ...partial } })
+        }
+        options={rarityOptions}
+        size="sm"
+      >
+        {t("rarity")}
+      </InclusionSelect>
+
       <InclusionButton
         include={filters.magic}
         onValueChange={(magic) => setFilters({ magic })}
@@ -89,10 +103,6 @@ export default function WeaponsFilters(props: StackProps) {
 }
 
 //------------------------------------------------------------------------------
-// Orders
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
 // I18n Context
 //------------------------------------------------------------------------------
 
@@ -116,6 +126,10 @@ const i18nContext = {
   ranged: {
     en: "🏹",
     it: "🏹",
+  },
+  rarity: {
+    en: "Rarity",
+    it: "Rarità",
   },
   types: {
     en: "Type",

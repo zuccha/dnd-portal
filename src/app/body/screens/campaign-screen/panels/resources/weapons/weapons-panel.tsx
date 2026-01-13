@@ -105,6 +105,7 @@ function parseFormData(
     range_long: data.range_long,
     range_short: data.range_short,
     ranged: data.ranged,
+    rarity: data.rarity,
     type: data.type,
     visibility: data.visibility,
     weight: data.weight,

@@ -1,4 +1,5 @@
 import z from "zod";
+import { equipmentRaritySchema } from "../../types/equipment-rarity";
 import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 
 //------------------------------------------------------------------------------
@@ -8,6 +9,7 @@ import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 export const dbEquipmentSchema = dbResourceSchema.extend({
   cost: z.number(),
   magic: z.boolean(),
+  rarity: equipmentRaritySchema,
   weight: z.number(),
 });
 

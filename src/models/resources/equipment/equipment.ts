@@ -1,5 +1,6 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
+import { equipmentRaritySchema } from "../../types/equipment-rarity";
 import {
   type TranslationFields,
   defaultResource,
@@ -15,6 +16,7 @@ export const equipmentSchema = resourceSchema.extend({
   cost: z.number(),
   magic: z.boolean(),
   notes: i18nStringSchema,
+  rarity: equipmentRaritySchema,
   weight: z.number(),
 });
 
@@ -29,6 +31,7 @@ export const defaultEquipment: Equipment = {
   cost: 0,
   magic: false,
   notes: {},
+  rarity: "common",
   weight: 0,
 };
 

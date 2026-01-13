@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { campaignRoleSchema } from "~/models/types/campaign-role";
 import { damageTypeSchema } from "~/models/types/damage-type";
+import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
 import { weaponMasterySchema } from "~/models/types/weapon-mastery";
 import { weaponPropertySchema } from "~/models/types/weapon-property";
 import { weaponTypeSchema } from "~/models/types/weapon-type";
@@ -26,6 +27,7 @@ export const weaponEditorFormFieldsSchema = z.object({
   range_long: z.number(),
   range_short: z.number(),
   ranged: z.boolean(),
+  rarity: equipmentRaritySchema,
   type: weaponTypeSchema,
   visibility: campaignRoleSchema,
   weight: z.number(),
@@ -176,6 +178,14 @@ export const useWeaponEditorFormRangeShort = (
 export const useWeaponEditorFormRanged = (
   defaultRanged: WeaponEditorFormFields["ranged"],
 ) => useWeaponEditorFormField("ranged", defaultRanged);
+
+//------------------------------------------------------------------------------
+// Rarity
+//------------------------------------------------------------------------------
+
+export const useWeaponEditorFormRarity = (
+  defaultRarity: WeaponEditorFormFields["rarity"],
+) => useWeaponEditorFormField("rarity", defaultRarity);
 
 //------------------------------------------------------------------------------
 // Type

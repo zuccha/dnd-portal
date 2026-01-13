@@ -69,6 +69,7 @@ function parseFormData(
     ability: data.ability,
     cost: data.cost,
     magic: data.magic,
+    rarity: data.rarity,
     type: data.type,
     visibility: data.visibility,
     weight: data.weight,

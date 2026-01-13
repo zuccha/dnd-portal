@@ -3,6 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Armor } from "~/models/resources/equipment/armors/armor";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
+import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import Checkbox from "~/ui/checkbox";
 import CostInput from "~/ui/cost-input";
 import Field from "~/ui/field";
@@ -33,6 +34,7 @@ import {
   useArmorEditorFormName,
   useArmorEditorFormNotes,
   useArmorEditorFormPage,
+  useArmorEditorFormRarity,
   useArmorEditorFormRequiredCha,
   useArmorEditorFormRequiredCon,
   useArmorEditorFormRequiredDex,
@@ -149,6 +151,7 @@ export default function ArmorEditor({ resource }: ArmorEditorProps) {
       <HStack align="flex-start" gap={4}>
         <ArmorEditorWeight defaultWeight={resource.weight} />
         <ArmorEditorCost defaultCost={resource.cost} />
+        <ArmorEditorRarity defaultRarity={resource.rarity} />
       </HStack>
 
       <ArmorEditorNotes defaultNotes={resource.notes[lang] ?? ""} />
@@ -491,6 +494,27 @@ function ArmorEditorPage({ defaultPage }: { defaultPage: number }) {
 }
 
 //------------------------------------------------------------------------------
+// Rarity
+//------------------------------------------------------------------------------
+
+function ArmorEditorRarity({
+  defaultRarity,
+}: {
+  defaultRarity: Armor["rarity"];
+}) {
+  const rarityOptions = useEquipmentRarityOptions();
+  const { error, ...rest } = useArmorEditorFormRarity(defaultRarity);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("rarity.label")}>
+      <Select options={rarityOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Required <Ability>
 //------------------------------------------------------------------------------
 
@@ -732,6 +756,10 @@ const i18nContext = {
   "page.label": {
     en: "Page",
     it: "Pagina",
+  },
+  "rarity.label": {
+    en: "Rarity",
+    it: "Rarità",
   },
   "required[cha].label": {
     en: "Min Charisma",

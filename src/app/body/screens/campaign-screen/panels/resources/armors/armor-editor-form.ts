@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { armorTypeSchema } from "~/models/types/armor-type";
 import { campaignRoleSchema } from "~/models/types/campaign-role";
+import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
 import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
@@ -28,6 +29,7 @@ export const armorEditorFormFieldsSchema = z.object({
   name: z.string(),
   notes: z.string(),
   page: z.number(),
+  rarity: equipmentRaritySchema,
   required_cha: z.number(),
   required_con: z.number(),
   required_dex: z.number(),
@@ -229,6 +231,14 @@ export const useArmorEditorFormNotes = (
 export const useArmorEditorFormPage = (
   defaultPage: ArmorEditorFormFields["page"],
 ) => useArmorEditorFormField("page", defaultPage);
+
+//------------------------------------------------------------------------------
+// Rarity
+//------------------------------------------------------------------------------
+
+export const useArmorEditorFormRarity = (
+  defaultRarity: ArmorEditorFormFields["rarity"],
+) => useArmorEditorFormField("rarity", defaultRarity);
 
 //------------------------------------------------------------------------------
 // Required <Ability>

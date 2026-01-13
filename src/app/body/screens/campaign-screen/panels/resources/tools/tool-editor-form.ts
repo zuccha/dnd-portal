@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { campaignRoleSchema } from "~/models/types/campaign-role";
 import { creatureAbilitySchema } from "~/models/types/creature-ability";
+import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
 import { toolTypeSchema } from "~/models/types/tool-type";
 import { createForm } from "~/utils/form";
 
@@ -16,6 +17,7 @@ export const toolEditorFormFieldsSchema = z.object({
   name: z.string(),
   notes: z.string(),
   page: z.number(),
+  rarity: equipmentRaritySchema,
   type: toolTypeSchema,
   utilize: z.string(),
   visibility: campaignRoleSchema,
@@ -96,6 +98,14 @@ export const useToolEditorFormNotes = (
 export const useToolEditorFormPage = (
   defaultPage: ToolEditorFormFields["page"],
 ) => useToolEditorFormField("page", defaultPage);
+
+//------------------------------------------------------------------------------
+// Rarity
+//------------------------------------------------------------------------------
+
+export const useToolEditorFormRarity = (
+  defaultRarity: ToolEditorFormFields["rarity"],
+) => useToolEditorFormField("rarity", defaultRarity);
 
 //------------------------------------------------------------------------------
 // Type

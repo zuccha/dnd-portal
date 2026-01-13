@@ -60,6 +60,7 @@ function parseFormData(
   const maybeItem = {
     cost: data.cost,
     magic: data.magic,
+    rarity: data.rarity,
     visibility: data.visibility,
     weight: data.weight,
   };

@@ -3,6 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
+import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
@@ -29,6 +30,7 @@ import {
   useWeaponEditorFormProperties,
   useWeaponEditorFormRangeLong,
   useWeaponEditorFormRangeShort,
+  useWeaponEditorFormRarity,
   useWeaponEditorFormType,
   useWeaponEditorFormVisibility,
   useWeaponEditorFormWeight,
@@ -88,8 +90,8 @@ export default function WeaponEditor({ resource }: WeaponEditorProps) {
 
       <HStack align="flex-start" gap={4}>
         <WeaponEditorWeight defaultWeight={resource.weight} />
-
         <WeaponEditorCost defaultCost={resource.cost} />
+        <WeaponEditorRarity defaultRarity={resource.rarity} />
 
         {ranged.value && (
           <>
@@ -350,6 +352,27 @@ function WeaponEditorRangeShort({
 }
 
 //------------------------------------------------------------------------------
+// Rarity
+//------------------------------------------------------------------------------
+
+function WeaponEditorRarity({
+  defaultRarity,
+}: {
+  defaultRarity: Weapon["rarity"];
+}) {
+  const rarityOptions = useEquipmentRarityOptions();
+  const { error, ...rest } = useWeaponEditorFormRarity(defaultRarity);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("rarity.label")}>
+      <Select options={rarityOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Type
 //------------------------------------------------------------------------------
 
@@ -499,6 +522,10 @@ const i18nContext = {
   "ranged.label": {
     en: "Ranged",
     it: "A distanza",
+  },
+  "rarity.label": {
+    en: "Rarity",
+    it: "Rarità",
   },
   "type.label": {
     en: "Type",

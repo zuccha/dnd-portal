@@ -4,6 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
+import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import {
   localizedResourceSchema,
   useLocalizeResource,
@@ -37,10 +38,11 @@ export function useLocalizeEquipment<E extends Equipment>(): (
   equipment: E,
 ) => LocalizedEquipment<E> {
   const localizeResource = useLocalizeResource<E>();
-  const { lang, t } = useI18nLangContext(i18nContext);
+  const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
+  const translateRarity = useTranslateEquipmentRarity(lang);
 
   return useCallback(
     (equipment: E): LocalizedEquipment<E> => {
@@ -50,12 +52,16 @@ export function useLocalizeEquipment<E extends Equipment>(): (
         cost: formatCost(equipment.cost).toUpperCase(),
         magic: equipment.magic,
         magic_type:
-          equipment.magic ? t("magic_type.magic") : t("magic_type.non_magic"),
+          equipment.magic ?
+            equipment.rarity === "artifact" ?
+              t("magic_type.magic.artifact")
+            : ti("magic_type.magic", translateRarity(equipment.rarity).label)
+          : t("magic_type.non_magic"),
         notes: translate(equipment.notes, lang),
         weight: formatWeight(equipment.weight),
       };
     },
-    [formatCost, formatWeight, lang, localizeResource, t],
+    [formatCost, formatWeight, lang, localizeResource, t, ti, translateRarity],
   );
 }
 
@@ -65,8 +71,12 @@ export function useLocalizeEquipment<E extends Equipment>(): (
 
 const i18nContext = {
   "magic_type.magic": {
-    en: "Magic Item",
-    it: "Oggetto Magico",
+    en: "<1> Magic Item",
+    it: "Oggetto Magico <1>",
+  },
+  "magic_type.magic.artifact": {
+    en: "Magic Artifact",
+    it: "Artefatto Magico",
   },
   "magic_type.non_magic": {
     en: "Nonmagic Item",

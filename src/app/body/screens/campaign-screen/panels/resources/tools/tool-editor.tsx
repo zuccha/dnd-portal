@@ -3,6 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
+import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import { useToolTypeOptions } from "~/models/types/tool-type";
 import CostInput from "~/ui/cost-input";
 import Field from "~/ui/field";
@@ -20,6 +21,7 @@ import {
   useToolEditorFormName,
   useToolEditorFormNotes,
   useToolEditorFormPage,
+  useToolEditorFormRarity,
   useToolEditorFormType,
   useToolEditorFormUtilize,
   useToolEditorFormVisibility,
@@ -53,6 +55,7 @@ export default function ToolEditor({ resource }: ToolEditorProps) {
       <HStack align="flex-start" gap={4}>
         <ToolEditorWeight defaultWeight={resource.weight} />
         <ToolEditorCost defaultCost={resource.cost} />
+        <ToolEditorRarity defaultRarity={resource.rarity} />
       </HStack>
 
       <ToolEditorMagic defaultMagic={resource.magic} />
@@ -193,6 +196,27 @@ function ToolEditorPage({ defaultPage }: { defaultPage: number }) {
 }
 
 //------------------------------------------------------------------------------
+// Rarity
+//------------------------------------------------------------------------------
+
+function ToolEditorRarity({
+  defaultRarity,
+}: {
+  defaultRarity: Tool["rarity"];
+}) {
+  const rarityOptions = useEquipmentRarityOptions();
+  const { error, ...rest } = useToolEditorFormRarity(defaultRarity);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("rarity.label")}>
+      <Select options={rarityOptions} withinDialog {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Type
 //------------------------------------------------------------------------------
 
@@ -315,6 +339,10 @@ const i18nContext = {
   "page.label": {
     en: "Page",
     it: "Pagina",
+  },
+  "rarity.label": {
+    en: "Rarity",
+    it: "Rarità",
   },
   "type.label": {
     en: "Type",

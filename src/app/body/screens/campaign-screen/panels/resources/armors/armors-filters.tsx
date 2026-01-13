@@ -3,6 +3,7 @@ import { WandIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
+import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
@@ -16,6 +17,7 @@ export default function ArmorsFilters(props: StackProps) {
   const [filters, setFilters] = armorStore.useFilters();
 
   const typeOptions = useArmorTypeOptions();
+  const rarityOptions = useEquipmentRarityOptions();
 
   return (
     <HStack {...props}>
@@ -29,6 +31,18 @@ export default function ArmorsFilters(props: StackProps) {
         size="sm"
       >
         {t("types")}
+      </InclusionSelect>
+
+      <InclusionSelect
+        includes={filters.rarities ?? {}}
+        minW="10em"
+        onValueChange={(partial) =>
+          setFilters({ rarities: { ...filters.rarities, ...partial } })
+        }
+        options={rarityOptions}
+        size="sm"
+      >
+        {t("rarity")}
       </InclusionSelect>
 
       <InclusionButton
@@ -47,6 +61,10 @@ export default function ArmorsFilters(props: StackProps) {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  rarity: {
+    en: "Rarity",
+    it: "Rarità",
+  },
   types: {
     en: "Type",
     it: "Tipo",
