@@ -11,16 +11,16 @@ import {
   type WorldPanelId,
   useSelectedPanelId,
 } from "./panels";
-import ArmorsPanel from "./resources/armors/armors-panel";
 import CharacterClassesPanel from "./resources/character-classes/character-class-panel";
 import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
-import ItemsPanel from "./resources/items/items-panel";
+import ArmorsPanel from "./resources/equipment/armors/armors-panel";
+import ItemsPanel from "./resources/equipment/items/items-panel";
+import ToolsPanel from "./resources/equipment/tools/tools-panel";
+import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
 import LanguagesPanel from "./resources/languages/languages-panel";
 import PlanesPanel from "./resources/planes/planes-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
-import ToolsPanel from "./resources/tools/tools-panel";
-import WeaponsPanel from "./resources/weapons/weapons-panel";
 import CampaignPanel from "./settings/campaign-panel";
 
 //------------------------------------------------------------------------------
