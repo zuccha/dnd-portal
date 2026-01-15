@@ -170,12 +170,16 @@ WITH prefs AS (
     -- properties
     (
       SELECT coalesce(array_agg(lower(e.key)::public.weapon_property), null)
-      FROM jsonb_each_text(p_filters->'weapon_properties') AS e(key, value)
+      FROM jsonb_each_text(
+        coalesce(p_filters->'weapon_properties', p_filters->'properties')
+      ) AS e(key, value)
       WHERE e.value = 'true'
     ) AS properties_inc,
     (
       SELECT coalesce(array_agg(lower(e.key)::public.weapon_property), null)
-      FROM jsonb_each_text(p_filters->'weapon_properties') AS e(key, value)
+      FROM jsonb_each_text(
+        coalesce(p_filters->'weapon_properties', p_filters->'properties')
+      ) AS e(key, value)
       WHERE e.value = 'false'
     ) AS properties_exc,
 
