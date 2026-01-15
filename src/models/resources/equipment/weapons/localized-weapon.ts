@@ -86,8 +86,13 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
       const equipment = localizeEquipment(weapon);
 
+      const type = translateWeaponType(weapon.type).label;
+
       return {
         ...equipment,
+        subtitle:
+          weapon.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+
         damage: weapon.damage,
         damage_extended,
         damage_type,
@@ -102,7 +107,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
         properties_extended,
         range,
         ranged: weapon.ranged,
-        type: translateWeaponType(weapon.type).label,
+        type,
       };
     },
     [
@@ -146,5 +151,9 @@ const i18nContext = {
   "range.m": {
     en: "<1> m", // 1 = range
     it: "<1> m", // 1 = range
+  },
+  "subtitle.magic": {
+    en: "<1>, Magic, <2>", // 1 = type, 2 = rarity
+    it: "<1> Magica, <2>", // 1 = type, 2 = rarity
   },
 };

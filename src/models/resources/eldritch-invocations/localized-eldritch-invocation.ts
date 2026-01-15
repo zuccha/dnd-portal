@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import z from "zod";
-import { useI18nLang } from "~/i18n/i18n-lang";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import {
   localizedResourceSchema,
@@ -35,7 +35,7 @@ export function useLocalizeEldritchInvocation(): (
   eldritchInvocation: EldritchInvocation,
 ) => LocalizedEldritchInvocation {
   const localizeResource = useLocalizeResource<EldritchInvocation>();
-  const [lang] = useI18nLang();
+  const { lang, t } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (eldritchInvocation: EldritchInvocation): LocalizedEldritchInvocation => {
@@ -47,11 +47,24 @@ export function useLocalizeEldritchInvocation(): (
 
       return {
         ...localizeResource(eldritchInvocation),
+        subtitle: t("subtitle"),
+
         description: translate(eldritchInvocation.description, lang),
         min_warlock_level: minWarlockLevel ? `${minWarlockLevel}` : "",
         other_prerequisite: otherPrerequisite || "",
       };
     },
-    [lang, localizeResource],
+    [lang, localizeResource, t],
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  subtitle: {
+    en: "Warlock's Eldritch Invocation",
+    it: "Supplica Occulta del Warlock",
+  },
+};

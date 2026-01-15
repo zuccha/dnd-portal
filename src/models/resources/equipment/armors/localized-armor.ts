@@ -91,8 +91,13 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
         .filter((requirement) => requirement)
         .join(", ");
 
+      const type = translateArmorType(armor.type).label;
+
       return {
         ...equipment,
+        subtitle:
+          armor.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+
         armor_class: armorClass,
         armor_class_max_cha_modifier: armor.armor_class_max_cha_modifier,
         armor_class_max_con_modifier: armor.armor_class_max_con_modifier,
@@ -108,7 +113,7 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
           armor.disadvantage_on_stealth ?
             t("stealth.disadvantage")
           : t("stealth.normal"),
-        type: translateArmorType(armor.type).label,
+        type,
       };
     },
     [localizeEquipment, t, ti, translateArmorType],
@@ -203,5 +208,9 @@ const i18nContext = {
   "stealth.normal": {
     en: "-",
     it: "-",
+  },
+  "subtitle.magic": {
+    en: "<1>, Magic, <2>", // 1 = type, 2 = rarity
+    it: "<1> Magica, <2>", // 1 = type, 2 = rarity
   },
 };

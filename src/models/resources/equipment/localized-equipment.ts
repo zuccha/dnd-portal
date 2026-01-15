@@ -23,6 +23,7 @@ export const localizedEquipmentSchema = <E extends Equipment>(
     magic: z.boolean(),
     magic_type: z.string(),
     notes: z.string(),
+    rarity: z.string(),
     weight: z.string(),
   });
 
@@ -46,6 +47,8 @@ export function useLocalizeEquipment<E extends Equipment>(): (
 
   return useCallback(
     (equipment: E): LocalizedEquipment<E> => {
+      const rarity = translateRarity(equipment.rarity).label;
+
       return {
         ...localizeResource(equipment),
 
@@ -55,9 +58,10 @@ export function useLocalizeEquipment<E extends Equipment>(): (
           equipment.magic ?
             equipment.rarity === "artifact" ?
               t("magic_type.magic.artifact")
-            : ti("magic_type.magic", translateRarity(equipment.rarity).label)
+            : ti("magic_type.magic", rarity)
           : t("magic_type.non_magic"),
         notes: translate(equipment.notes, lang),
+        rarity,
         weight: formatWeight(equipment.weight),
       };
     },

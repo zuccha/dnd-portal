@@ -19,6 +19,7 @@ export const localizedResourceSchema = <R extends Resource>(
     id: z.uuid(),
     name: z.string(),
     page: z.string(),
+    subtitle: z.string(),
   });
 
 export type LocalizedResource<R extends Resource> = z.infer<
@@ -47,6 +48,7 @@ export function useLocalizeResource<R extends Resource>(): (
         id: resource.id,
         name: translate(resource.name, lang) || t("name.missing"),
         page: page ? ti("page", `${page}`) : "",
+        subtitle: "",
       };
     },
     [lang, t, ti],

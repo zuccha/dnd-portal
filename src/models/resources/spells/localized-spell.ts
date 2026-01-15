@@ -33,7 +33,6 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema).extend(
     range: z.string(),
     ritual: z.boolean(),
     school: z.string(),
-    school_with_level: z.string(),
   },
 );
 
@@ -80,6 +79,8 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
 
       return {
         ...localizeResource(spell),
+        subtitle: tpi("subtitle", spell.level, school, `${spell.level}`),
+
         casting_time,
         casting_time_with_ritual:
           spell.ritual ?
@@ -108,12 +109,6 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
         range,
         ritual: spell.ritual,
         school,
-        school_with_level: tpi(
-          "school_with_level",
-          spell.level,
-          school,
-          `${spell.level}`,
-        ),
       };
     },
     [
@@ -153,11 +148,11 @@ const i18nContext = {
     en: "Cantrip", // 1 = level
     it: "Trucchetto", // 1 = level
   },
-  "school_with_level/*": {
+  "subtitle/*": {
     en: "Level <2> <1>", // 1 = school, 2 = level
     it: "<1> di <2>˚ livello", // 1 = school, 2 = level
   },
-  "school_with_level/0": {
+  "subtitle/0": {
     en: "<1> Cantrip", // 1 = school
     it: "Trucchetto di <1>", // 1 = school
   },

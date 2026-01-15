@@ -29,7 +29,7 @@ export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 
 export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
   const localizeEquipment = useLocalizeEquipment<Tool>();
-  const { lang } = useI18nLangContext(i18nContext);
+  const { lang, ti } = useI18nLangContext(i18nContext);
 
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateToolType = useTranslateToolType(lang);
@@ -37,16 +37,20 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
   return useCallback(
     (tool: Tool): LocalizedTool => {
       const equipment = localizeEquipment(tool);
+      const type = translateToolType(tool.type).label;
 
       return {
         ...equipment,
+        subtitle:
+          tool.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+
         ability: translateCreatureAbility(tool.ability).label,
         craft: translate(tool.craft, lang),
-        type: translateToolType(tool.type).label,
+        type,
         utilize: translate(tool.utilize, lang),
       };
     },
-    [lang, localizeEquipment, translateCreatureAbility, translateToolType],
+    [lang, localizeEquipment, ti, translateCreatureAbility, translateToolType],
   );
 }
 
@@ -55,11 +59,15 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  craft: {
+  "craft": {
     en: "**Craft:** <1>",
     it: "**Creazione:** <1>",
   },
-  utilize: {
+  "subtitle.magic": {
+    en: "<1>, Magic, <2>", // 1 = type, 2 = rarity
+    it: "<1> Magico, <2>", // 1 = type, 2 = rarity
+  },
+  "utilize": {
     en: "**Utilize:** <1>",
     it: "**Utilizzo:** <1>",
   },

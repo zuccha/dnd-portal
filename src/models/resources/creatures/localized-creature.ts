@@ -46,8 +46,6 @@ export const localizedCreatureSchema = localizedResourceSchema(
   treasures: z.string(),
   type: z.string(),
 
-  title: z.string(),
-
   cr: z.string(),
   exp: z.string(),
   pb: z.string(),
@@ -404,10 +402,10 @@ export function useLocalizeCreature(
 
       return {
         ...localizeResource(creature),
+        subtitle: ti("subtitle", size, type, alignment),
 
         alignment,
         size,
-        title: ti("title", size, type, alignment),
         type,
 
         habitats,
@@ -593,7 +591,7 @@ const i18nContext = {
     en: "<1>",
     it: "<1>",
   },
-  "title": {
+  "subtitle": {
     en: "<1> <2>, <3>", // 1 = size, 2 = type, 3 = alignment
     it: "<2> <1>, <3>", // 1 = size, 2 = type, 3 = alignment
   },

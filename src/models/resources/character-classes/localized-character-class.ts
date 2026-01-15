@@ -67,6 +67,8 @@ export function useLocalizeCharacterClass(
 
       return {
         ...localizeResource(characterClass),
+        subtitle: t("subtitle"),
+
         armor_proficiencies: [
           ...characterClass.armor_proficiencies
             .map(translateArmorType)
@@ -186,5 +188,9 @@ const i18nContext = {
   "skill_proficiencies_pool": {
     en: "_Choose <1>:_ <2>",
     it: "_Scegli <1>:_ <2>",
+  },
+  "subtitle": {
+    en: "Character Class",
+    it: "Classe Personaggio",
   },
 };

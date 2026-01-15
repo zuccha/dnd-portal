@@ -35,13 +35,17 @@ export function useLocalizePlane(): (plane: Plane) => LocalizedPlane {
 
   return useCallback(
     (plane: Plane): LocalizedPlane => {
+      const category = translatePlaneCategory(plane.category).label;
+
       return {
         ...localizeResource(plane),
+        subtitle: category,
+
         alignments: plane.alignments
           .map(translateCreatureAlignment)
           .map(({ label }) => label)
           .join(", "),
-        category: translatePlaneCategory(plane.category).label,
+        category,
       };
     },
     [localizeResource, translateCreatureAlignment, translatePlaneCategory],
