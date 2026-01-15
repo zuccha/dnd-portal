@@ -237,6 +237,7 @@ SELECT
   f.page                          AS page,
   f.cost,
   f.magic,
+  f.rarity,
   f.weight,
   f.armor_class_max_cha_modifier,
   f.armor_class_max_con_modifier,
