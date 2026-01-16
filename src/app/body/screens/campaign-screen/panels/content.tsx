@@ -11,7 +11,7 @@ import {
   type WorldPanelId,
   useSelectedPanelId,
 } from "./panels";
-import CharacterClassesPanel from "./resources/character-classes/character-class-panel";
+import CharacterClassesPanel from "./resources/character-classes/character-classes-panel";
 import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
 import ArmorsPanel from "./resources/equipment/armors/armors-panel";
