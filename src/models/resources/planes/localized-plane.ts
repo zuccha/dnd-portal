@@ -39,7 +39,7 @@ export function useLocalizePlane(): (plane: Plane) => LocalizedPlane {
 
       return {
         ...localizeResource(plane),
-        subtitle: category,
+        descriptor: category,
 
         alignments: plane.alignments
           .map(translateCreatureAlignment)

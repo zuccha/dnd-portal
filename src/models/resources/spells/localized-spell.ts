@@ -79,7 +79,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
 
       return {
         ...localizeResource(spell),
-        subtitle: tpi("subtitle", spell.level, school, `${spell.level}`),
+        descriptor: tpi("subtitle", spell.level, school, `${spell.level}`),
 
         casting_time,
         casting_time_with_ritual:

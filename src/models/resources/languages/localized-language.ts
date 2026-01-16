@@ -40,7 +40,7 @@ export function useLocalizeLanguage(): (
 
       return {
         ...localizeResource(language),
-        subtitle: ti("subtitle", rarity),
+        descriptor: ti("subtitle", rarity),
 
         origin: translate(language.origin, lang),
         rarity,

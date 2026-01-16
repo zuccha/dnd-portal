@@ -90,7 +90,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
       return {
         ...equipment,
-        subtitle:
+        descriptor:
           weapon.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
 
         damage: weapon.damage,

@@ -67,7 +67,7 @@ export function useLocalizeCharacterClass(
 
       return {
         ...localizeResource(characterClass),
-        subtitle: t("subtitle"),
+        descriptor: t("subtitle"),
 
         armor_proficiencies: [
           ...characterClass.armor_proficiencies

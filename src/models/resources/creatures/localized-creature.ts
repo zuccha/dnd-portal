@@ -402,7 +402,7 @@ export function useLocalizeCreature(
 
       return {
         ...localizeResource(creature),
-        subtitle: ti("subtitle", size, type, alignment),
+        descriptor: ti("subtitle", size, type, alignment),
 
         alignment,
         size,

@@ -47,7 +47,7 @@ export function useLocalizeEldritchInvocation(): (
 
       return {
         ...localizeResource(eldritchInvocation),
-        subtitle: t("subtitle"),
+        descriptor: t("subtitle"),
 
         description: translate(eldritchInvocation.description, lang),
         min_warlock_level: minWarlockLevel ? `${minWarlockLevel}` : "",

@@ -95,7 +95,7 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
 
       return {
         ...equipment,
-        subtitle:
+        descriptor:
           armor.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
 
         armor_class: armorClass,

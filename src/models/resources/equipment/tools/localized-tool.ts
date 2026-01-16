@@ -41,7 +41,7 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
 
       return {
         ...equipment,
-        subtitle:
+        descriptor:
           tool.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
 
         ability: translateCreatureAbility(tool.ability).label,

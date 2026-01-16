@@ -31,7 +31,7 @@ export function useLocalizeItem(): (item: Item) => LocalizedItem {
 
       return {
         ...equipment,
-        subtitle:
+        descriptor:
           item.magic ?
             ti("subtitle.magic", equipment.rarity)
           : t("subtitle.mundane"),
