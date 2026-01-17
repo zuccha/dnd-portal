@@ -91,16 +91,16 @@ export function useWeightUnitOptions(format: "long" | "short" = "short") {
 //------------------------------------------------------------------------------
 
 export function useFormatGrams() {
-  const { tpi } = useI18nLangContext(i18nContext);
+  const { lang, tpi } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   return useCallback(
     (grams: number, format: "long" | "short" = "short") => {
       const { unit, value } =
         system === "metric" ? gramsToWeightMet(grams) : gramsToWeightImp(grams);
-      return tpi(`${unit}.${format}`, value, formatNumber(value));
+      return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
-    [system, tpi],
+    [lang, system, tpi],
   );
 }
 
@@ -109,14 +109,14 @@ export function useFormatGrams() {
 //------------------------------------------------------------------------------
 
 export function useFormatGramsWithUnit(unit: WeightUnit) {
-  const { tpi } = useI18nLangContext(i18nContext);
+  const { lang, tpi } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (grams: number, format: "long" | "short" = "short") => {
       const value = grams / gIn[unit];
-      return tpi(`${unit}.${format}`, value, formatNumber(value));
+      return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
-    [tpi, unit],
+    [lang, tpi, unit],
   );
 }
 

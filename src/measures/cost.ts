@@ -90,14 +90,14 @@ export function useCostUnitOptions(format: "long" | "short" = "short") {
 //------------------------------------------------------------------------------
 
 export function useFormatCp() {
-  const { tpi } = useI18nLangContext(i18nContext);
+  const { lang, tpi } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (cp: number, format: "long" | "short" = "short") => {
       const { unit, value } = cpToCost(cp);
-      return tpi(`${unit}.${format}`, value, formatNumber(value));
+      return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
-    [tpi],
+    [lang, tpi],
   );
 }
 
@@ -106,14 +106,14 @@ export function useFormatCp() {
 //------------------------------------------------------------------------------
 
 export function useFormatCpWithUnit(unit: CostUnit) {
-  const { tpi } = useI18nLangContext(i18nContext);
+  const { lang, tpi } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (cp: number, format: "long" | "short" = "short") => {
       const value = cp / cpIn[unit];
-      return tpi(`${unit}.${format}`, value, formatNumber(value));
+      return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
-    [tpi, unit],
+    [lang, tpi, unit],
   );
 }
 

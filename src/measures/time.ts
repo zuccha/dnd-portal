@@ -89,14 +89,14 @@ export function useTimeUnitOptions(format: "long" | "short" = "short") {
 //------------------------------------------------------------------------------
 
 export function useFormatSeconds() {
-  const { tpi } = useI18nLangContext(i18nContext);
+  const { lang, tpi } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (s: number, format: "long" | "short" = "short") => {
       const { unit, value } = secondsToTime(s);
-      return tpi(`${unit}.${format}`, value, formatNumber(value));
+      return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
-    [tpi],
+    [lang, tpi],
   );
 }
 
@@ -105,14 +105,14 @@ export function useFormatSeconds() {
 //------------------------------------------------------------------------------
 
 export function useFormatSecondsWithUnit(unit: TimeUnit) {
-  const { tpi } = useI18nLangContext(i18nContext);
+  const { lang, tpi } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (s: number, format: "long" | "short" = "short") => {
       const value = s / secondsIn[unit];
-      return tpi(`${unit}.${format}`, value, formatNumber(value));
+      return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
-    [tpi, unit],
+    [lang, tpi, unit],
   );
 }
 

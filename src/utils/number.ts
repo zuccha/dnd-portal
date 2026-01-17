@@ -2,12 +2,25 @@
 // Format Number
 //------------------------------------------------------------------------------
 
-const fmt = new Intl.NumberFormat("en-US", {
+const formatNumberOptions = {
   maximumFractionDigits: 3,
   minimumFractionDigits: 0,
-});
+};
 
-export const formatNumber = fmt.format;
+const formatNumberFormats: Record<string, (value: number) => string> = {
+  en: new Intl.NumberFormat("en-US", formatNumberOptions).format,
+  it: new Intl.NumberFormat("it-CH", formatNumberOptions).format,
+};
+
+const defaultFormatNumberFormat = new Intl.NumberFormat(
+  "en-US",
+  formatNumberOptions,
+).format;
+
+export function formatNumber(value: number, lang: string): string {
+  const format = formatNumberFormats[lang] ?? defaultFormatNumberFormat;
+  return format(value);
+}
 
 //------------------------------------------------------------------------------
 // Format Signed

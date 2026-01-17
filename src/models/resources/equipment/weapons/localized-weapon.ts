@@ -57,10 +57,11 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       const damage_versatile = weapon.damage_versatile ?? "0";
       const damage_extended = ti("damage_extended", weapon.damage, damage_type);
 
-      const rms = cmToDistanceValue(weapon.range_short ?? 0, "m");
-      const rml = cmToDistanceValue(weapon.range_long ?? 0, "m");
-      const ris = cmToDistanceValue(weapon.range_short ?? 0, "ft");
-      const ril = cmToDistanceValue(weapon.range_long ?? 0, "ft");
+      const has_range = !!(weapon.range_long || weapon.range_short);
+      const ms = cmToDistanceValue(weapon.range_short ?? 0, "m");
+      const ml = cmToDistanceValue(weapon.range_long ?? 0, "m");
+      const is = cmToDistanceValue(weapon.range_short ?? 0, "ft");
+      const il = cmToDistanceValue(weapon.range_long ?? 0, "ft");
 
       const range =
         system === "metric" ?

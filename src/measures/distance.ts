@@ -99,16 +99,16 @@ export function useDistanceUnitOptions(format: "long" | "short" = "short") {
 //------------------------------------------------------------------------------
 
 export function useFormatCm() {
-  const { tpi } = useI18nLangContext(i18nContext);
+  const { lang, tpi } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   return useCallback(
     (cm: number, format: "long" | "short" = "short") => {
       const { unit, value } =
         system === "metric" ? cmToDistanceMet(cm) : cmToDistanceImp(cm);
-      return tpi(`${unit}.${format}`, value, formatNumber(value));
+      return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
-    [system, tpi],
+    [lang, system, tpi],
   );
 }
 
@@ -117,14 +117,14 @@ export function useFormatCm() {
 //------------------------------------------------------------------------------
 
 export function useFormatCmWithUnit(unit: DistanceUnit) {
-  const { tpi } = useI18nLangContext(i18nContext);
+  const { lang, tpi } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (cm: number, format: "long" | "short" = "short") => {
       const value = cm / cmIn[unit];
-      return tpi(`${unit}.${format}`, value, formatNumber(value));
+      return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
-    [tpi, unit],
+    [lang, tpi, unit],
   );
 }
 
