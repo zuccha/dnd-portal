@@ -9,13 +9,13 @@ import { type LocalizedWeapon } from "~/models/resources/equipment/weapons/local
 import { type Weapon } from "~/models/resources/equipment/weapons/weapon";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../../_base/resources-panel";
+import type { ResourcesTableExtra } from "../../_base/resources-table";
+import { WeaponCard } from "./weapon-card";
 import WeaponEditor from "./weapon-editor";
 import weaponEditorForm, {
   type WeaponEditorFormFields,
 } from "./weapon-editor-form";
-import WeaponsAlbumCardContent from "./weapons-album-card-content";
 import WeaponsFilters from "./weapons-filters";
 
 //------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
     maxW: "5em",
   },
   {
-    key: "properties_extended",
+    key: "properties",
     label: { en: "Properties", it: "Proprietà" },
     maxW: "14em",
   },
@@ -135,13 +135,10 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const WeaponsPanel = createResourcesPanel(weaponStore, {
-  album: {
-    AlbumCardContent: WeaponsAlbumCardContent,
-    getDetails: (localizedWeapon) => localizedWeapon.notes,
-  },
+  album: { AlbumCard: WeaponCard },
   filters: { Filters: WeaponsFilters },
   form: { Editor: WeaponEditor, form: weaponEditorForm, parseFormData },
-  table: { columns, detailsKey: "notes" },
+  table: { columns, detailsKey: "details" },
 });
 
 export default WeaponsPanel;

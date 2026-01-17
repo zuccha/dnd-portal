@@ -10,11 +10,11 @@ import { type LocalizedLanguage } from "~/models/resources/languages/localized-l
 import { report } from "~/utils/error";
 import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
+import { LanguageCard } from "./language-card";
 import LanguageEditor from "./language-editor";
 import languageEditorForm, {
   type LanguageEditorFormFields,
 } from "./language-editor-form";
-import LanguagesAlbumCardContent from "./languages-album-card-content";
 import LanguagesFilters from "./languages-filters";
 
 //------------------------------------------------------------------------------
@@ -75,10 +75,7 @@ function parseFormData(data: Partial<LanguageEditorFormFields>):
 //------------------------------------------------------------------------------
 
 const LanguagesPanel = createResourcesPanel(languageStore, {
-  album: {
-    AlbumCardContent: LanguagesAlbumCardContent,
-    getDetails: () => "",
-  },
+  album: { AlbumCard: LanguageCard },
   filters: { Filters: LanguagesFilters },
   form: {
     Editor: LanguageEditor,

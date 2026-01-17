@@ -10,11 +10,11 @@ import { spellStore } from "~/models/resources/spells/spell-store";
 import { report } from "~/utils/error";
 import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
+import { SpellCard } from "./spell-card";
 import SpellEditor from "./spell-editor";
 import spellEditorForm, {
   type SpellEditorFormFields,
 } from "./spell-editor-form";
-import SpellsAlbumCardContent from "./spells-album-card-content";
 import SpellsFilters from "./spells-filters";
 
 //------------------------------------------------------------------------------
@@ -122,13 +122,10 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const SpellsPanel = createResourcesPanel(spellStore, {
-  album: {
-    AlbumCardContent: SpellsAlbumCardContent,
-    getDetails: (localizedSpell) => localizedSpell.description,
-  },
+  album: { AlbumCard: SpellCard },
   filters: { Filters: SpellsFilters },
   form: { Editor: SpellEditor, form: spellEditorForm, parseFormData },
-  table: { columns, detailsKey: "description" },
+  table: { columns, detailsKey: "details" },
 });
 
 export default SpellsPanel;

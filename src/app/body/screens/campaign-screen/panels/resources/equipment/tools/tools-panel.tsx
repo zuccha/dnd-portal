@@ -9,11 +9,11 @@ import { type LocalizedTool } from "~/models/resources/equipment/tools/localized
 import { type Tool } from "~/models/resources/equipment/tools/tool";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../../_base/resources-panel";
+import type { ResourcesTableExtra } from "../../_base/resources-table";
+import { ToolCard } from "./tool-card";
 import ToolEditor from "./tool-editor";
 import toolEditorForm, { type ToolEditorFormFields } from "./tool-editor-form";
-import ToolsAlbumCardContent from "./tools-album-card-content";
 import ToolsFilters from "./tools-filters";
 
 //------------------------------------------------------------------------------
@@ -100,13 +100,10 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const ToolsPanel = createResourcesPanel(toolStore, {
-  album: {
-    AlbumCardContent: ToolsAlbumCardContent,
-    getDetails: (localizedTool) => localizedTool.notes,
-  },
+  album: { AlbumCard: ToolCard },
   filters: { Filters: ToolsFilters },
   form: { Editor: ToolEditor, form: toolEditorForm, parseFormData },
-  table: { columns, detailsKey: "notes" },
+  table: { columns, detailsKey: "details" },
 });
 
 export default ToolsPanel;

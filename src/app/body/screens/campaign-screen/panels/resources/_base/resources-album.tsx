@@ -9,9 +9,9 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import {
-  type ResourcesAlbumCardExtra,
-  createResourcesAlbumCard,
-} from "./resources-album-card";
+  type ResourceCardInteractiveExtra,
+  createResourceCardInteractive,
+} from "./resource-card-interactive";
 import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
 
@@ -22,7 +22,7 @@ import ResourcesEmpty from "./resources-empty";
 export type ResourcesAlbumExtra<
   R extends Resource,
   L extends LocalizedResource<R>,
-> = ResourcesAlbumCardExtra<R, L>;
+> = ResourceCardInteractiveExtra<R, L>;
 
 //------------------------------------------------------------------------------
 // Create Resources Album
@@ -43,7 +43,11 @@ export function createResourcesAlbum<
   context: ResourcesContext<R>,
   extra: ResourcesAlbumExtra<R, L>,
 ) {
-  const ResourcesAlbumCard = createResourcesAlbumCard(store, context, extra);
+  const ResourceCardInteractive = createResourceCardInteractive(
+    store,
+    context,
+    extra,
+  );
 
   function ResourcesAlbum({ campaignId }: ResourcesAlbumProps) {
     const editable = useCanEditCampaign(campaignId);
@@ -55,7 +59,7 @@ export function createResourcesAlbum<
     return (
       <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
         {filteredResourceIds.map((id) => (
-          <ResourcesAlbumCard
+          <ResourceCardInteractive
             campaignId={campaignId}
             editable={editable}
             key={id}
@@ -67,7 +71,7 @@ export function createResourcesAlbum<
     );
   }
 
-  ResourcesAlbum.Card = ResourcesAlbumCard;
+  ResourcesAlbum.Card = ResourceCardInteractive;
 
   return ResourcesAlbum;
 }

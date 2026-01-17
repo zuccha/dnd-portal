@@ -17,6 +17,7 @@ export const localizedResourceSchema = <R extends Resource>(
     campaign: z.string(),
     campaign_with_page: z.string(),
     descriptor: z.string(),
+    details: z.string(),
     id: z.uuid(),
     name: z.string(),
     page: z.string(),
@@ -46,6 +47,7 @@ export function useLocalizeResource<R extends Resource>(): (
             ti("campaign_with_page", resource.campaign_name, `${page}`)
           : resource.campaign_name,
         descriptor: "",
+        details: "",
         id: resource.id,
         name: translate(resource.name, lang) || t("name.missing"),
         page: page ? ti("page", `${page}`) : "",
@@ -71,7 +73,7 @@ const i18nContext = {
   },
 
   "page": {
-    en: "p. <1>", // 1 = page
-    it: "p. <1>", // 1 = page
+    en: "<1>", // 1 = page
+    it: "<1>", // 1 = page
   },
 };

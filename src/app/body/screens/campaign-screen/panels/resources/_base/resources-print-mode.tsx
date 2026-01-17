@@ -25,19 +25,21 @@ import Field from "~/ui/field";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import { compareObjects } from "~/utils/object";
-import type { ResourcesAlbumCardProps } from "./resources-album-card";
+import type { Palette } from "~/utils/palette";
+import {
+  type ResourceCardPrintableExtra,
+  createResourceCardPrintable,
+} from "./resource-card-printable";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
 // Resources Print Mode Extra
 //------------------------------------------------------------------------------
 
-export type ResourcesPrintModeExtra = {
-  AlbumCard: React.FC<ResourcesAlbumCardProps> & {
-    height: number;
-    width: number;
-  };
-};
+export type ResourcesPrintModeExtra<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+> = ResourceCardPrintableExtra<R, L>;
 
 //------------------------------------------------------------------------------
 // Create Resources Print Mode
@@ -56,8 +58,14 @@ export function createResourcesPrintMode<
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
-  { AlbumCard }: ResourcesPrintModeExtra,
+  extra: ResourcesPrintModeExtra<R, L>,
 ) {
+  const ResourceCardPrintable = createResourceCardPrintable(
+    store,
+    context,
+    extra,
+  );
+
   return function ResourcesPrintMode({
     campaignId,
     ...rest
@@ -72,13 +80,13 @@ export function createResourcesPrintMode<
         [paperSizes[paperType].height, paperSizes[paperType].width]
       : [paperSizes[paperType].width, paperSizes[paperType].height];
 
-    const columns = Math.floor(paperWidth / AlbumCard.width);
-    const rows = Math.floor(paperHeight / AlbumCard.height);
+    const columns = Math.floor(paperWidth / ResourceCardPrintable.w);
+    const rows = Math.floor(paperHeight / ResourceCardPrintable.h);
     const cardsPerPaper = columns * rows;
 
     const paperPadding = {
-      px: (paperWidth - columns * AlbumCard.width) / 2,
-      py: (paperHeight - rows * AlbumCard.height) / 2,
+      px: (paperWidth - columns * ResourceCardPrintable.w) / 2,
+      py: (paperHeight - rows * ResourceCardPrintable.h) / 2,
     };
 
     const [pagesCounts, setPagesCounts] = useState<Record<string, number>>({});
@@ -160,8 +168,8 @@ export function createResourcesPrintMode<
                   {cropMarksVisible && (
                     <CropMarks
                       columns={columns}
-                      gapX={AlbumCard.width}
-                      gapY={AlbumCard.height}
+                      gapX={ResourceCardPrintable.w}
+                      gapY={ResourceCardPrintable.h}
                       length={cropMarksLength}
                       offsetX={paperPadding.px}
                       offsetY={paperPadding.py}
@@ -200,11 +208,9 @@ export function createResourcesPrintMode<
               wrap="wrap"
             >
               {resourceIds.map((resourceId) => (
-                <AlbumCard
-                  borderRadius={0}
+                <ResourceCardPrintable
                   campaignId={campaignId}
                   css={albumCardCss}
-                  gradientIntensity={100 - gradientIntensity}
                   key={resourceId}
                   onPageCountChange={(count) => {
                     setPagesCounts((prev) => {
@@ -215,9 +221,7 @@ export function createResourcesPrintMode<
                     });
                   }}
                   palette={palette}
-                  printMode
                   resourceId={resourceId}
-                  shadow="none"
                 />
               ))}
             </Flex>
@@ -457,20 +461,17 @@ const paletteNames = paletteNameSchema.options;
 // Palette
 //------------------------------------------------------------------------------
 
-const palettes: Record<
-  PaletteName,
-  { footerBg: string; footerFg: string; gradientBg: string }
-> = {
-  blue: { footerBg: "#2563eb", footerFg: "#eff6ff", gradientBg: "#eff6ff" },
-  cyan: { footerBg: "#0891b2", footerFg: "#ecfeff", gradientBg: "#ecfeff" },
-  gray: { footerBg: "#3f3f46", footerFg: "#fafafa", gradientBg: "#f4f4f5" },
-  green: { footerBg: "#16a34a", footerFg: "#f0fdf4", gradientBg: "#f0fdf4" },
-  orange: { footerBg: "#ea580c", footerFg: "#fff7ed", gradientBg: "#fff7ed" },
-  pink: { footerBg: "#db2777", footerFg: "#fdf2f8", gradientBg: "#fdf2f8" },
-  purple: { footerBg: "#9333ea", footerFg: "#faf5ff", gradientBg: "#faf5ff" },
-  red: { footerBg: "#dc2626", footerFg: "#fef2f2", gradientBg: "#fef2f2" },
-  teal: { footerBg: "#0d9488", footerFg: "#f0fdfa", gradientBg: "#f0fdfa" },
-  yellow: { footerBg: "#ca8a04", footerFg: "#fefce8", gradientBg: "#fefce8" },
+const palettes: Record<PaletteName, Palette> = {
+  blue: { 50: "#eff6ff", 100: "#dbeafe", 700: "#173da6", 800: "#1a3478" },
+  cyan: { 50: "#ecfeff", 100: "#cffafe", 700: "#0c5c72", 800: "#134152" },
+  gray: { 50: "#fafafa", 100: "#f4f4f5", 700: "#3f3f46", 800: "#27272a" },
+  green: { 50: "#f0fdf4", 100: "#dcfce7", 700: "#116932", 800: "#124a28" },
+  orange: { 50: "#fff7ed", 100: "#ffedd5", 700: "#92310a", 800: "#6c2710" },
+  pink: { 50: "#fdf2f8", 100: "#fce7f3", 700: "#a41752", 800: "#6d0e34" },
+  purple: { 50: "#faf5ff", 100: "#f3e8ff", 700: "#641ba3", 800: "#4a1772" },
+  red: { 50: "#fef2f2", 100: "#fee2e2", 700: "#991919", 800: "#511111" },
+  teal: { 50: "#f0fdfa", 100: "#ccfbf1", 700: "#0c5d56", 800: "#114240" },
+  yellow: { 50: "#fefce8", 100: "#fef9c3", 700: "#845209", 800: "#713f12" },
 };
 
 //------------------------------------------------------------------------------

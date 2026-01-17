@@ -9,13 +9,13 @@ import {
 } from "~/models/resources/equipment/armors/db-armor";
 import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../../_base/resources-panel";
+import type { ResourcesTableExtra } from "../../_base/resources-table";
+import { ArmorCard } from "./armor-card";
 import ArmorEditor from "./armor-editor";
 import armorEditorForm, {
   type ArmorEditorFormFields,
 } from "./armor-editor-form";
-import ArmorsAlbumCardContent from "./armors-album-card-content";
 import ArmorsFilters from "./armors-filters";
 
 //------------------------------------------------------------------------------
@@ -141,13 +141,10 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const ArmorsPanel = createResourcesPanel(armorStore, {
-  album: {
-    AlbumCardContent: ArmorsAlbumCardContent,
-    getDetails: (localizedArmor) => localizedArmor.notes,
-  },
+  album: { AlbumCard: ArmorCard },
   filters: { Filters: ArmorsFilters },
   form: { Editor: ArmorEditor, form: armorEditorForm, parseFormData },
-  table: { columns, detailsKey: "notes" },
+  table: { columns, detailsKey: "details" },
 });
 
 export default ArmorsPanel;

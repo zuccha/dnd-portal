@@ -6,7 +6,10 @@ import { useI18nSystem } from "~/i18n/i18n-system";
 import { cmToDistanceValue } from "~/measures/distance";
 import { formatNumber } from "~/utils/number";
 import { useTranslateDamageType } from "../../../types/damage-type";
-import { useTranslateWeaponMastery } from "../../../types/weapon-mastery";
+import {
+  useTranslateWeaponMastery,
+  useTranslateWeaponMasteryRuling,
+} from "../../../types/weapon-mastery";
 import { useTranslateWeaponProperty } from "../../../types/weapon-property";
 import { useTranslateWeaponType } from "../../../types/weapon-type";
 import {
@@ -26,10 +29,10 @@ export const localizedWeaponSchema = localizedEquipmentSchema(
   damage_extended: z.string(),
   damage_type: z.string(),
   damage_versatile: z.string().nullish(),
+  info: z.string(),
   mastery: z.string(),
   melee: z.boolean(),
   properties: z.string(),
-  properties_extended: z.string(),
   range: z.string().nullish(),
   ranged: z.boolean(),
   type: z.string(),
@@ -43,18 +46,18 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 
 export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const localizeEquipment = useLocalizeEquipment<Weapon>();
-  const { lang, ti } = useI18nLangContext(i18nContext);
+  const { lang, ti, tpi } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateDamageType = useTranslateDamageType(lang);
   const translateWeaponMastery = useTranslateWeaponMastery(lang);
+  const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(lang);
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
       const damage_type = translateDamageType(weapon.damage_type).label;
-      const damage_versatile = weapon.damage_versatile ?? "0";
       const damage_extended = ti("damage_extended", weapon.damage, damage_type);
 
       const has_range = !!(weapon.range_long || weapon.range_short);
@@ -65,23 +68,24 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
       const range =
         system === "metric" ?
-          ti("range.m", `${formatNumber(rms)}/${formatNumber(rml)}`)
-        : ti("range.ft", `${formatNumber(ris)}/${formatNumber(ril)}`);
+          ti("range.m", `${formatNumber(ms, lang)}/${formatNumber(ml, lang)}`)
+        : ti("range.ft", `${formatNumber(is, lang)}/${formatNumber(il, lang)}`);
 
       const ammunition = translate(weapon.ammunition, lang);
 
-      const properties_extended = weapon.properties
-        .map((property) => {
-          const label = translateWeaponProperty(property).label;
-          if (property === "ammunition")
-            return ti("properties.ammunition", label, range, ammunition);
-          if (property === "throw") return ti("properties.throw", label, range);
-          if (property === "versatile")
-            return ti("properties.versatile", label, damage_versatile);
-          return label;
-        })
+      const properties = weapon.properties
+        .map(translateWeaponProperty)
+        .map(({ label }) => label)
         .sort()
         .join(", ");
+
+      const info = [
+        tpi("properties", weapon.properties.length, properties),
+        has_range ? ti("range", range) : "",
+        ammunition ? ti("ammunition", ammunition) : "",
+      ]
+        .filter((text) => text)
+        .join("\n");
 
       const mastery = translateWeaponMastery(weapon.mastery).label;
 
@@ -93,19 +97,21 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
         ...equipment,
         descriptor:
           weapon.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+        details: [
+          equipment.details,
+          ti("mastery", mastery, translateWeaponMasteryRuling(weapon.mastery)),
+        ]
+          .map((text) => text)
+          .join("\n\n"),
 
         damage: weapon.damage,
         damage_extended,
         damage_type,
         damage_versatile: weapon.damage_versatile,
+        info,
         mastery,
         melee: weapon.melee,
-        properties: weapon.properties
-          .map(translateWeaponProperty)
-          .map(({ label }) => label)
-          .sort()
-          .join(", "),
-        properties_extended,
+        properties,
         range,
         ranged: weapon.ranged,
         type,
@@ -116,9 +122,11 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       localizeEquipment,
       system,
       ti,
+      tpi,
       translateDamageType,
       translateWeaponMastery,
       translateWeaponProperty,
+      translateWeaponMasteryRuling,
       translateWeaponType,
     ],
   );
@@ -129,9 +137,17 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "ammunition": {
+    en: "**Ammunition:** <1>", // 1 = ammunition
+    it: "**Munizioni:** <1>", // 1 = ammunition
+  },
   "damage_extended": {
     en: "<1> <2>", // 1 = damage value, 2 = damage type
     it: "<1> <2>", // 1 = damage value, 2 = damage type
+  },
+  "mastery": {
+    en: "##Weapon Mastery: <1>##\r<2>", // 1 = mastery, 2 = ruling
+    it: "##Padronanza: <1>##\r<2>", // 1 = mastery, 2 = ruling
   },
   "properties.ammunition": {
     en: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
@@ -144,6 +160,22 @@ const i18nContext = {
   "properties.versatile": {
     en: "<1> (<2>)", // 1 = property label, 2 = value
     it: "<1> (<2>)", // 1 = property label, 2 = value
+  },
+  "properties/*": {
+    en: "**Properties:** <1>", // 1 = properties
+    it: "**Proprietà:** <1>", // 1 = properties
+  },
+  "properties/0": {
+    en: "",
+    it: "",
+  },
+  "properties/1": {
+    en: "**Property:** <1>", // 1 = properties
+    it: "**Proprietà:** <1>", // 1 = properties
+  },
+  "range": {
+    en: "**Range:** <1>", // 1 = range
+    it: "**Gittata:** <1>", // 1 = range
   },
   "range.ft": {
     en: "<1> ft", // 1 = range

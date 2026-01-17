@@ -68,9 +68,7 @@ export function createResourcesPanel<
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesViewSwitch = createResourcesViewSwitch(store, context);
 
-  const ResourcesPrintMode = createResourcesPrintMode(store, context, {
-    AlbumCard: ResourcesAlbum.Card,
-  });
+  const ResourcesPrintMode = createResourcesPrintMode(store, context, album);
 
   return function ResourcesPanel({ campaignId }: { campaignId: string }) {
     const view = context.useView();

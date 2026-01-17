@@ -10,11 +10,11 @@ import { planeStore } from "~/models/resources/planes/plane-store";
 import { report } from "~/utils/error";
 import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
+import { PlaneCard } from "./plane-card";
 import PlaneEditor from "./plane-editor";
 import planeEditorForm, {
   type PlaneEditorFormFields,
 } from "./plane-editor-form";
-import PlanesAlbumCardContent from "./planes-album-card-content";
 import PlanesFilters from "./planes-filters";
 
 //------------------------------------------------------------------------------
@@ -74,10 +74,7 @@ function parseFormData(data: Partial<PlaneEditorFormFields>):
 //------------------------------------------------------------------------------
 
 const PlanesPanel = createResourcesPanel(planeStore, {
-  album: {
-    AlbumCardContent: PlanesAlbumCardContent,
-    getDetails: () => "",
-  },
+  album: { AlbumCard: PlaneCard },
   filters: { Filters: PlanesFilters },
   form: {
     Editor: PlaneEditor,

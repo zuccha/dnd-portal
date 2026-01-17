@@ -16,9 +16,7 @@ import { type Tool, toolSchema } from "./tool";
 
 export const localizedToolSchema = localizedEquipmentSchema(toolSchema).extend({
   ability: z.string(),
-  craft: z.string(),
   type: z.string(),
-  utilize: z.string(),
 });
 
 export type LocalizedTool = z.infer<typeof localizedToolSchema>;
@@ -29,7 +27,7 @@ export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 
 export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
   const localizeEquipment = useLocalizeEquipment<Tool>();
-  const { lang, ti } = useI18nLangContext(i18nContext);
+  const { lang, ti, tpi } = useI18nLangContext(i18nContext);
 
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateToolType = useTranslateToolType(lang);
@@ -39,18 +37,46 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
       const equipment = localizeEquipment(tool);
       const type = translateToolType(tool.type).label;
 
+      const craft = translate(tool.craft, lang);
+      const craftCount =
+        craft ?
+          craft.includes(",") ?
+            2
+          : 1
+        : 0;
+
+      const utilize = translate(tool.utilize, lang);
+      const utilizeCount =
+        utilize ?
+          utilize.includes(",") ?
+            2
+          : 1
+        : 0;
+
       return {
         ...equipment,
         descriptor:
           tool.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+        details: [
+          equipment.details,
+          tpi("craft", craftCount, craft),
+          tpi("utilize", utilizeCount, utilize),
+        ]
+          .filter((text) => text)
+          .join("\n\n"),
 
         ability: translateCreatureAbility(tool.ability).label,
-        craft: translate(tool.craft, lang),
         type,
-        utilize: translate(tool.utilize, lang),
       };
     },
-    [lang, localizeEquipment, ti, translateCreatureAbility, translateToolType],
+    [
+      lang,
+      localizeEquipment,
+      ti,
+      tpi,
+      translateCreatureAbility,
+      translateToolType,
+    ],
   );
 }
 
@@ -59,16 +85,32 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "craft": {
-    en: "**Craft:** <1>",
-    it: "**Creazione:** <1>",
+  "craft/*": {
+    en: "##Craft##\r<1>",
+    it: "##Creazioni##\r<1>",
+  },
+  "craft/0": {
+    en: "",
+    it: "",
+  },
+  "craft/1": {
+    en: "##Craft##\r<1>",
+    it: "##Creazione##\r<1>",
   },
   "subtitle.magic": {
     en: "<1>, Magic, <2>", // 1 = type, 2 = rarity
     it: "<1> Magico, <2>", // 1 = type, 2 = rarity
   },
-  "utilize": {
-    en: "**Utilize:** <1>",
-    it: "**Utilizzo:** <1>",
+  "utilize/*": {
+    en: "##Utilize##\r<1>",
+    it: "##Utilizzi##\r<1>",
+  },
+  "utilize/0": {
+    en: "",
+    it: "",
+  },
+  "utilize/1": {
+    en: "##Utilize##\r<1>",
+    it: "##Utilizzo##\r<1>",
   },
 };

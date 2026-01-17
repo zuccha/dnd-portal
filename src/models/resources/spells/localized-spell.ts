@@ -24,9 +24,10 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema).extend(
     casting_time_with_ritual: z.string(),
     components: z.string(),
     concentration: z.boolean(),
-    description: z.string(),
+    details: z.string(),
     duration: z.string(),
     duration_with_concentration: z.string(),
+    info: z.string(),
     level: z.string(),
     level_long: z.string(),
     materials: z.string(),
@@ -71,7 +72,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
           formatRange(spell.range_value)
         : translateSpellRange(spell.range).label;
 
-      const description = translate(spell.description, lang);
+      const details = translate(spell.description, lang);
       const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
       const materials = spell.materials ? translate(spell.materials, lang) : "";
 
@@ -94,15 +95,16 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
           .filter((component) => component)
           .join(", "),
         concentration: spell.concentration,
-        description:
-          description && upgrade ?
-            `${description}\n\n${tp("upgrade", spell.level)}\r${upgrade}`
-          : description,
+        details:
+          details && upgrade ?
+            `${details}\n\n${tp("upgrade", spell.level)}\r${upgrade}`
+          : details,
         duration,
         duration_with_concentration:
           spell.concentration ?
             ti("duration_with_concentration", duration)
           : duration,
+        info: materials ? ti("materials", materials) : "",
         level: `${spell.level}`,
         level_long: tpi("level_long", spell.level, `${spell.level}`),
         materials,
@@ -148,6 +150,10 @@ const i18nContext = {
     en: "Cantrip", // 1 = level
     it: "Trucchetto", // 1 = level
   },
+  "materials": {
+    en: "**Materials:** <1>",
+    it: "**Materiali:** <1>",
+  },
   "subtitle/*": {
     en: "Level <2> <1>", // 1 = school, 2 = level
     it: "<1> di <2>˚ livello", // 1 = school, 2 = level
@@ -157,11 +163,11 @@ const i18nContext = {
     it: "Trucchetto di <1>", // 1 = school
   },
   "upgrade/*": {
-    en: "##At Higher Levels##",
-    it: "##A Livelli Superiori##",
+    en: "##At Higher Levels##",
+    it: "##A Livelli Superiori##",
   },
   "upgrade/0": {
-    en: "##Cantrip Upgrade##",
-    it: "##Potenziamento del Trucchetto##",
+    en: "##Cantrip Upgrade##",
+    it: "##Potenziamento del Trucchetto##",
   },
 };

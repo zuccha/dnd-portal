@@ -11,11 +11,11 @@ import { type LocalizedCreature } from "~/models/resources/creatures/localized-c
 import { report } from "~/utils/error";
 import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
+import { CreatureCard } from "./creature-card";
 import CreatureEditor from "./creature-editor";
 import creatureEditorForm, {
   type CreatureEditorFormFields,
 } from "./creature-editor-form";
-import CreaturesAlbumCardContent from "./creatures-album-card-content";
 import CreaturesFilters from "./creatures-filters";
 
 //------------------------------------------------------------------------------
@@ -176,10 +176,7 @@ function parseFormData(data: Partial<CreatureEditorFormFields>):
 //------------------------------------------------------------------------------
 
 const CreaturesPanel = createResourcesPanel(creatureStore, {
-  album: {
-    AlbumCardContent: CreaturesAlbumCardContent,
-    getDetails: (localizedCreature) => localizedCreature.description,
-  },
+  album: { AlbumCard: CreatureCard },
   filters: { Filters: CreaturesFilters },
   form: { Editor: CreatureEditor, form: creatureEditorForm, parseFormData },
   table: { columns, detailsKey: "description" },

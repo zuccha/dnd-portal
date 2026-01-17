@@ -9,11 +9,11 @@ import { type Item } from "~/models/resources/equipment/items/item";
 import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { type LocalizedItem } from "~/models/resources/equipment/items/localized-item";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../../_base/resources-panel";
+import type { ResourcesTableExtra } from "../../_base/resources-table";
+import { ItemCard } from "./item-card";
 import ItemEditor from "./item-editor";
 import itemEditorForm, { type ItemEditorFormFields } from "./item-editor-form";
-import ItemsAlbumCardContent from "./items-album-card-content";
 import ItemsFilters from "./items-filters";
 
 //------------------------------------------------------------------------------
@@ -88,13 +88,10 @@ function parseFormData(
 //------------------------------------------------------------------------------
 
 const ItemsPanel = createResourcesPanel(itemStore, {
-  album: {
-    AlbumCardContent: ItemsAlbumCardContent,
-    getDetails: (localizedItem) => localizedItem.notes,
-  },
+  album: { AlbumCard: ItemCard },
   filters: { Filters: ItemsFilters },
   form: { Editor: ItemEditor, form: itemEditorForm, parseFormData },
-  table: { columns, detailsKey: "notes" },
+  table: { columns, detailsKey: "details" },
 });
 
 export default ItemsPanel;

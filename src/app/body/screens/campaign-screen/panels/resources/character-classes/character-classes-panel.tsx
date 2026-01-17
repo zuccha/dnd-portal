@@ -11,11 +11,11 @@ import { startingEquipmentToEntries } from "~/models/resources/character-classes
 import { report } from "~/utils/error";
 import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
+import { CharacterClassCard } from "./character-class-card";
 import CharacterClassEditor from "./character-class-editor";
 import itemEditorForm, {
   type CharacterClassEditorFormFields,
 } from "./character-class-editor-form";
-import CharacterClassesAlbumCardContent from "./character-classes-album-card-content";
 import CharacterClassesFilters from "./character-classes-filters";
 
 //------------------------------------------------------------------------------
@@ -96,10 +96,7 @@ function parseFormData(data: Partial<CharacterClassEditorFormFields>):
 //------------------------------------------------------------------------------
 
 const CharacterClassesPanel = createResourcesPanel(characterClassStore, {
-  album: {
-    AlbumCardContent: CharacterClassesAlbumCardContent,
-    getDetails: () => "",
-  },
+  album: { AlbumCard: CharacterClassCard },
   filters: { Filters: CharacterClassesFilters },
   form: { Editor: CharacterClassEditor, form: itemEditorForm, parseFormData },
   table: { columns },

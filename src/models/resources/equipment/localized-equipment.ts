@@ -22,7 +22,6 @@ export const localizedEquipmentSchema = <E extends Equipment>(
     cost: z.string(),
     magic: z.boolean(),
     magic_type: z.string(),
-    notes: z.string(),
     rarity: z.string(),
     weight: z.string(),
   });
@@ -51,8 +50,9 @@ export function useLocalizeEquipment<E extends Equipment>(): (
 
       return {
         ...localizeResource(equipment),
+        details: translate(equipment.notes, lang),
 
-        cost: formatCost(equipment.cost).toUpperCase(),
+        cost: formatCost(equipment.cost),
         magic: equipment.magic,
         magic_type:
           equipment.magic ?
@@ -60,7 +60,6 @@ export function useLocalizeEquipment<E extends Equipment>(): (
               t("magic_type.magic.artifact")
             : ti("magic_type.magic", rarity)
           : t("magic_type.non_magic"),
-        notes: translate(equipment.notes, lang),
         rarity,
         weight: formatWeight(equipment.weight),
       };

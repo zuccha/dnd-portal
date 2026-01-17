@@ -18,7 +18,7 @@ import {
 export const localizedEldritchInvocationSchema = localizedResourceSchema(
   eldritchInvocationSchema,
 ).extend({
-  description: z.string(),
+  info: z.string(),
   min_warlock_level: z.string(),
   other_prerequisite: z.string(),
 });
@@ -35,7 +35,7 @@ export function useLocalizeEldritchInvocation(): (
   eldritchInvocation: EldritchInvocation,
 ) => LocalizedEldritchInvocation {
   const localizeResource = useLocalizeResource<EldritchInvocation>();
-  const { lang, t } = useI18nLangContext(i18nContext);
+  const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (eldritchInvocation: EldritchInvocation): LocalizedEldritchInvocation => {
@@ -48,13 +48,14 @@ export function useLocalizeEldritchInvocation(): (
       return {
         ...localizeResource(eldritchInvocation),
         descriptor: t("subtitle"),
+        details: translate(eldritchInvocation.description, lang),
 
-        description: translate(eldritchInvocation.description, lang),
+        info: otherPrerequisite ? ti("requisite", otherPrerequisite) : "",
         min_warlock_level: minWarlockLevel ? `${minWarlockLevel}` : "",
         other_prerequisite: otherPrerequisite || "",
       };
     },
-    [lang, localizeResource, t],
+    [lang, localizeResource, t, ti],
   );
 }
 
@@ -63,6 +64,10 @@ export function useLocalizeEldritchInvocation(): (
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  requisite: {
+    en: "**Requisite:** <1>",
+    it: "**Requisito:** <1>",
+  },
   subtitle: {
     en: "Warlock's Eldritch Invocation",
     it: "Supplica Occulta del Warlock",

@@ -10,11 +10,11 @@ import { type LocalizedEldritchInvocation } from "~/models/resources/eldritch-in
 import { report } from "~/utils/error";
 import { createResourcesPanel } from "../_base/resources-panel";
 import type { ResourcesTableExtra } from "../_base/resources-table";
+import { EldritchInvocationCard } from "./eldritch-invocation-card";
 import EldritchInvocationEditor from "./eldritch-invocation-editor";
 import eldritchInvocationEditorForm, {
   type EldritchInvocationEditorFormFields,
 } from "./eldritch-invocation-editor-form";
-import EldritchInvocationsAlbumCardContent from "./eldritch-invocations-album-card-content";
 import EldritchInvocationsFilters from "./eldritch-invocations-filters";
 
 //------------------------------------------------------------------------------
@@ -82,18 +82,14 @@ function parseFormData(data: Partial<EldritchInvocationEditorFormFields>):
 //------------------------------------------------------------------------------
 
 const EldritchInvocationsPanel = createResourcesPanel(eldritchInvocationStore, {
-  album: {
-    AlbumCardContent: EldritchInvocationsAlbumCardContent,
-    getDetails: (localizedEldritchInvocation) =>
-      localizedEldritchInvocation.description,
-  },
+  album: { AlbumCard: EldritchInvocationCard },
   filters: { Filters: EldritchInvocationsFilters },
   form: {
     Editor: EldritchInvocationEditor,
     form: eldritchInvocationEditorForm,
     parseFormData,
   },
-  table: { columns, detailsKey: "description" },
+  table: { columns, detailsKey: "details" },
 });
 
 export default EldritchInvocationsPanel;

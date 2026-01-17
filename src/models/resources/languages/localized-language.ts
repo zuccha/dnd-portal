@@ -16,6 +16,7 @@ import { type Language, languageSchema } from "./language";
 export const localizedLanguageSchema = localizedResourceSchema(
   languageSchema,
 ).extend({
+  info: z.string(),
   origin: z.string(),
   rarity: z.string(),
 });
@@ -37,12 +38,14 @@ export function useLocalizeLanguage(): (
   return useCallback(
     (language: Language): LocalizedLanguage => {
       const rarity = translateLanguageRarity(language.rarity).label;
+      const origin = translate(language.origin, lang);
 
       return {
         ...localizeResource(language),
         descriptor: ti("subtitle", rarity),
 
-        origin: translate(language.origin, lang),
+        info: ti("origin", origin),
+        origin,
         rarity,
       };
     },
@@ -55,6 +58,10 @@ export function useLocalizeLanguage(): (
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  origin: {
+    en: "**Origin:** <1>", // 1 = rarity
+    it: "**Origine:** <1>", // 1 = rarity
+  },
   subtitle: {
     en: "<1> Language", // 1 = rarity
     it: "Lingua <1>", // 1 = rarity
