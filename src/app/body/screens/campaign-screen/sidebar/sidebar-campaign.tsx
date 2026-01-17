@@ -53,7 +53,7 @@ export default function SidebarCampaign({ campaignId }: SidebarCampaignProps) {
   );
 
   return (
-    <VStack gap={4} w="full">
+    <VStack gap={6} w="full">
       {localizedResourcePanels.map(({ id, items }) => (
         <SidebarSection items={items} key={id} title={t(`section.${id}`)} />
       ))}

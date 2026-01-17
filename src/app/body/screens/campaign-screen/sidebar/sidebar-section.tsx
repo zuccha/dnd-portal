@@ -1,5 +1,12 @@
-import { Text, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  CircleSmallIcon,
+} from "lucide-react";
+import { useState } from "react";
 import Button from "~/ui/button";
+import Icon from "~/ui/icon";
 
 //------------------------------------------------------------------------------
 // Sidebar Section
@@ -18,33 +25,54 @@ export type SidebarSectionProps = {
 };
 
 export default function SidebarSection({ items, title }: SidebarSectionProps) {
-  return (
-    <VStack align="flex-start" gap={0.5} w="full">
-      <VStack mb={2} px={4} w="full">
-        <Text
-          borderBottomWidth={1}
-          fontSize="sm"
-          fontWeight="semibold"
-          w="full"
-        >
-          {title}
-        </Text>
-      </VStack>
+  const [visible, setVisible] = useState(true);
 
-      {items.map((item) => (
-        <Button
-          _hover={{ color: "fg" }}
-          color={item.selected ? "fg" : "fg.muted"}
-          justifyContent="flex-start"
-          key={item.value}
-          onClick={item.onClick}
-          size="sm"
-          variant={item.selected ? "subtle" : "ghost"}
-          w="full"
-        >
-          {item.label}
-        </Button>
-      ))}
+  return (
+    <VStack align="flex-start" gap={2} w="full">
+      <Button
+        alignItems="center"
+        cursor="pointer"
+        display="flex"
+        fontSize="sm"
+        fontWeight="semibold"
+        gap={1}
+        onClick={() => setVisible((prev) => !prev)}
+        px={6}
+        unstyled
+        w="full"
+      >
+        {visible ?
+          <Icon Icon={ChevronDownIcon} size="xs" />
+        : <Icon Icon={ChevronRightIcon} size="xs" />}
+        {title}
+      </Button>
+
+      {visible && (
+        <VStack gap={0} px={2} w="full">
+          {items.map((item) => (
+            <Button
+              _hover={{ bgColor: "bg.subtle", color: "fg" }}
+              bgColor={item.selected ? "bg.muted" : "transparent"}
+              color={item.selected ? "fg" : "fg.muted"}
+              gap={0}
+              justifyContent="flex-start"
+              key={item.value}
+              m={0}
+              onClick={item.onClick}
+              size="sm"
+              w="full"
+            >
+              <Icon
+                Icon={CircleSmallIcon}
+                fill={item.selected ? "fg" : undefined}
+                mr={1}
+                size="xs"
+              />
+              {item.label}
+            </Button>
+          ))}
+        </VStack>
+      )}
     </VStack>
   );
 }

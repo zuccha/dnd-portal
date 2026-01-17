@@ -62,7 +62,7 @@ export default function SidebarCampaignSelector() {
   }, [all, fetched, setSelectedCampaignId]);
 
   return (
-    <VStack align="flex-start" px={4} w="full">
+    <VStack align="flex-start" gap={2} px={5} w="full">
       <Text fontSize="sm" fontWeight="semibold">
         {t("title")}
       </Text>
