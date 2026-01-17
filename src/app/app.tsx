@@ -10,6 +10,20 @@ import Header, { headerHeight } from "./header/header";
 
 export default function App() {
   const auth = useAuth();
+  const [ready, setReady] = useState(false);
+
+  useLayoutEffect(() => {
+    Promise.all([
+      document.fonts.load('16px "Bookinsanity"'),
+      document.fonts.load('italic 16px "Bookinsanity"'),
+      document.fonts.load('bold 16px "Bookinsanity"'),
+      document.fonts.load('bold italic 16px "Bookinsanity"'),
+      document.fonts.load('16px "Mr Eaves"'),
+      document.fonts.load('16px "Mr Eaves Alt"'),
+    ]).then(() => setReady(true));
+  }, []);
+
+  if (!ready) return null;
 
   return (
     <VStack gap={0} h="100vh" w="full">
