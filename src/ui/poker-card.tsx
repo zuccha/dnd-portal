@@ -1,12 +1,4 @@
-import {
-  Box,
-  Em,
-  HStack,
-  Span,
-  type StackProps,
-  VStack,
-} from "@chakra-ui/react";
-import { type ReactNode, useMemo } from "react";
+import { Box, HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import RichText from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
 
@@ -16,25 +8,28 @@ const separatorColor = "#3F3F46";
 // Sizes
 //------------------------------------------------------------------------------
 
-const cardH = "3.5in";
-const cardW = "2.5in";
+const cardH = 3.5;
+const cardW = 2.5;
 
-const px1 = `${(3.5 * 0.0625) / 28}in`;
-const px2 = `${(3.5 * 0.125) / 28}in`;
-const px3 = `${(3.5 * 0.1875) / 28}in`;
-const rem0125 = `${(3.5 * 0.125) / 28}in`;
-const rem0250 = `${(3.5 * 0.25) / 28}in`;
-const rem0375 = `${(3.5 * 0.375) / 28}in`;
-const rem0500 = `${(3.5 * 0.5) / 28}in`;
-const rem0625 = `${(3.5 * 0.625) / 28}in`;
-const rem0750 = `${(3.5 * 0.75) / 28}in`;
-const rem0875 = `${(3.5 * 0.875) / 28}in`;
-const rem1000 = `${(3.5 * 1.0) / 28}in`;
-const rem1125 = `${(3.5 * 1.125) / 28}in`;
-const rem1250 = `${(3.5 * 1.25) / 28}in`;
-const rem1375 = `${(3.5 * 1.375) / 28}in`;
-const rem1500 = `${(3.5 * 1.5) / 28}in`;
-const rem1625 = `${(3.5 * 1.625) / 28}in`;
+const remToIn = (rem: number) => (cardH * rem) / 28;
+
+const px1 = `${remToIn(0.0625)}in`;
+const px2 = `${remToIn(0.125)}in`;
+const px3 = `${remToIn(0.1875)}in`;
+const rem0125 = `${remToIn(0.125)}in`;
+const rem0250 = `${remToIn(0.25)}in`;
+const rem0375 = `${remToIn(0.375)}in`;
+const rem0500 = `${remToIn(0.5)}in`;
+const rem0625 = `${remToIn(0.625)}in`;
+const rem0750 = `${remToIn(0.75)}in`;
+const rem0875 = `${remToIn(0.875)}in`;
+const rem1000 = `${remToIn(1.0)}in`;
+const rem1125 = `${remToIn(1.125)}in`;
+const rem1250 = `${remToIn(1.25)}in`;
+const rem1375 = `${remToIn(1.375)}in`;
+const rem1500 = `${remToIn(1.5)}in`;
+const rem1625 = `${remToIn(1.625)}in`;
+const rem2000 = `${remToIn(1.2)}in`;
 
 //------------------------------------------------------------------------------
 // Frame
@@ -73,11 +68,11 @@ function Frame({
       fontFamily="Bookinsanity"
       fontSize={rem0875}
       gap={rem0750}
-      h={cardH}
+      h={`${cardH}in`}
       lineHeight={1.2}
       overflow="hidden"
       shadow="sm"
-      w={cardW}
+      w={`${cardW}in`}
       {...rest}
     >
       <VStack gap={0} lineHeight={0.9} px={rem0750} textAlign="center">
@@ -192,28 +187,6 @@ type DetailsProps = {
 };
 
 function Details({ children, palette }: DetailsProps) {
-  const patterns = useMemo(
-    () => [
-      {
-        regex: /##(.+?)##/,
-        render: (val: ReactNode) => (
-          <Span color={palette["800"]} fontWeight="bold">
-            {val}
-          </Span>
-        ),
-      },
-      {
-        regex: /\*\*(.+?)\*\*/,
-        render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
-      },
-      {
-        regex: /_(.+?)_/,
-        render: (val: ReactNode) => <Em>{val}</Em>,
-      },
-    ],
-    [palette],
-  );
-
   return (
     <VStack
       align="flex-start"
@@ -223,9 +196,22 @@ function Details({ children, palette }: DetailsProps) {
       px={rem1000}
       w="full"
     >
-      {children.split(/[\n\r]/).map((paragraph, paragraphIndex) => (
-        <RichText key={paragraphIndex} patterns={patterns} text={paragraph} />
-      ))}
+      {children.split(/[\n\r]/).map((paragraph, paragraphIndex) =>
+        paragraph.startsWith("##") ?
+          <Span
+            borderBottomColor={palette[800]}
+            borderBottomWidth={px2}
+            color={palette[800]}
+            fontFamily="Mr Eaves Alt"
+            fontSize={rem1125}
+            fontWeight="bold"
+            mb={rem0125}
+            w="full"
+          >
+            {paragraph.substring(2, paragraph.length - 2)}
+          </Span>
+        : <RichText key={paragraphIndex} text={paragraph} />,
+      )}
     </VStack>
   );
 }
@@ -241,20 +227,6 @@ type EntryProps = {
 };
 
 function Entry({ children, label, palette }: EntryProps) {
-  const patterns = useMemo(
-    () => [
-      {
-        regex: /\*\*(.+?)\*\*/,
-        render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
-      },
-      {
-        regex: /_(.+?)_/,
-        render: (val: ReactNode) => <Em>{val}</Em>,
-      },
-    ],
-    [],
-  );
-
   return (
     <VStack align="flex-start" lineHeight={1} px={rem1000} w="full">
       <VStack
@@ -269,7 +241,7 @@ function Entry({ children, label, palette }: EntryProps) {
           {label}
         </Span>
         {children.split("\n").map((paragraph, paragraphIndex) => (
-          <RichText key={paragraphIndex} patterns={patterns} text={paragraph} />
+          <RichText key={paragraphIndex} text={paragraph} />
         ))}
       </VStack>
     </VStack>
@@ -286,24 +258,12 @@ type InfoProps = {
 };
 
 function Info({ children, palette }: InfoProps) {
-  const patterns = useMemo(
-    () => [
-      {
-        regex: /\*\*(.+?)\*\*/,
-        render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
-      },
-      {
-        regex: /_(.+?)_/,
-        render: (val: ReactNode) => <Em>{val}</Em>,
-      },
-    ],
-    [],
-  );
-
   return (
     <VStack
       align="flex-start"
-      bgColor={palette[50]}
+      bgColor={`${palette[50]}99`}
+      borderColor={palette[800]}
+      borderYWidth={px1}
       fontStyle="italic"
       gap={0}
       lineHeight={1}
@@ -312,7 +272,7 @@ function Info({ children, palette }: InfoProps) {
       w="full"
     >
       {children.split("\n").map((paragraph, paragraphIndex) => (
-        <RichText key={paragraphIndex} patterns={patterns} text={paragraph} />
+        <RichText key={paragraphIndex} text={paragraph} />
       ))}
     </VStack>
   );
@@ -348,8 +308,8 @@ const PokerCard = {
   Info,
   Separator,
 
-  cardH: 3.5,
-  cardW: 2.5,
+  cardH,
+  cardW,
   px1,
   px2,
   px3,
@@ -366,6 +326,8 @@ const PokerCard = {
   rem1375,
   rem1500,
   rem1625,
+  rem2000,
+  remToIn,
   separatorColor,
 };
 
