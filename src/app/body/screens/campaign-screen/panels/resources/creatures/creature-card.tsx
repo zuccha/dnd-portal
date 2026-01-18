@@ -92,6 +92,7 @@ export function CreatureCard({
           <VStack
             align="flex-start"
             gap={PokerCard.rem0250}
+            lineHeight={1}
             px={PokerCard.rem1000}
             w="full"
           >
@@ -110,6 +111,7 @@ export function CreatureCard({
             </HStack>
 
             <HStack
+              align="flex-start"
               borderBottomWidth={PokerCard.px1}
               borderColor="black"
               borderStyle="dashed"
