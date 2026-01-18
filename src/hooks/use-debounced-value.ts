@@ -5,16 +5,20 @@ import { useLayoutEffect, useState } from "react";
 //------------------------------------------------------------------------------
 
 export default function useDebouncedState<T>(
-  initialState: T,
+  state: T,
   onDebounceEnd: (state: T) => void,
   delay: number,
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
-  const [tempState, setTempState] = useState(initialState);
+  const [tempState, setTempState] = useState(state);
 
   useLayoutEffect(() => {
     const id = setTimeout(() => onDebounceEnd(tempState), delay);
     return () => clearTimeout(id);
   }, [delay, onDebounceEnd, tempState]);
+
+  useLayoutEffect(() => {
+    setTempState(state);
+  }, [state]);
 
   return [tempState, setTempState];
 }
