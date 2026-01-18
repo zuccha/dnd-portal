@@ -3,6 +3,7 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import {
+  formatInfo,
   localizedResourceSchema,
   useLocalizeResource,
 } from "../localized-resource";
@@ -35,7 +36,7 @@ export function useLocalizeEldritchInvocation(): (
   eldritchInvocation: EldritchInvocation,
 ) => LocalizedEldritchInvocation {
   const localizeResource = useLocalizeResource<EldritchInvocation>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const { lang, t, tp } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (eldritchInvocation: EldritchInvocation): LocalizedEldritchInvocation => {
@@ -45,17 +46,24 @@ export function useLocalizeEldritchInvocation(): (
           translate(eldritchInvocation.prerequisite, lang)
         : undefined;
 
+      const info = formatInfo([
+        [
+          tp("requisites", otherPrerequisite?.includes(",") ? 2 : 1),
+          otherPrerequisite ?? "",
+        ],
+      ]);
+
       return {
         ...localizeResource(eldritchInvocation),
         descriptor: t("subtitle"),
         details: translate(eldritchInvocation.description, lang),
 
-        info: otherPrerequisite ? ti("requisite", otherPrerequisite) : "",
+        info,
         min_warlock_level: minWarlockLevel ? `${minWarlockLevel}` : "",
         other_prerequisite: otherPrerequisite || "",
       };
     },
-    [lang, localizeResource, t, ti],
+    [lang, localizeResource, t, tp],
   );
 }
 
@@ -64,11 +72,15 @@ export function useLocalizeEldritchInvocation(): (
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  requisite: {
-    en: "**Requisite:** <1>",
-    it: "**Requisito:** <1>",
+  "requisites/*": {
+    en: "Requisites",
+    it: "Requisiti",
   },
-  subtitle: {
+  "requisites/1": {
+    en: "Requisite",
+    it: "Requisito",
+  },
+  "subtitle": {
     en: "Warlock's Eldritch Invocation",
     it: "Supplica Occulta del Warlock",
   },

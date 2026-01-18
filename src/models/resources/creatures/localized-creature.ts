@@ -27,6 +27,7 @@ import {
 import { equipmentStore } from "../equipment/equipment-store";
 import { languageStore } from "../languages/language-store";
 import {
+  formatInfo,
   localizedResourceSchema,
   useLocalizeResource,
 } from "../localized-resource";
@@ -111,7 +112,7 @@ export function useLocalizeCreature(
   campaignId: string,
 ): (creature: Creature) => LocalizedCreature {
   const localizeResource = useLocalizeResource<Creature>();
-  const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
+  const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateCreatureType = useTranslateCreatureType(lang);
@@ -255,7 +256,7 @@ export function useLocalizeCreature(
         : 0);
 
       // Stats section
-      const info_parts: string[] = [];
+      const info_parts: [string, string][] = [];
 
       // Skill proficiencies
       let skills = "";
@@ -266,7 +267,8 @@ export function useLocalizeCreature(
         const pbsBySkill: Partial<Record<CreatureSkill, number>> = {};
         creature.skill_proficiencies.forEach((s) => (pbsBySkill[s] = pb));
         creature.skill_expertise.forEach((s) => (pbsBySkill[s] = 2 * pb));
-        skills = Object.entries(pbsBySkill)
+        const skillEntries = Object.entries(pbsBySkill);
+        skills = skillEntries
           .map(([skill, pb]) => {
             const label = translateCreatureSkill(skill as CreatureSkill).label;
             const ability = skillToAbility[skill as CreatureSkill];
@@ -276,7 +278,7 @@ export function useLocalizeCreature(
           })
           .sort()
           .join(", ");
-        info_parts.push(ti("info.skills", skills));
+        info_parts.push([tp("info.skills", skillEntries.length), skills]);
       }
 
       // Immunities, Resistances, Vulnerabilities
@@ -287,7 +289,7 @@ export function useLocalizeCreature(
         [
           damages
             .map(translateDamageType)
-            .map(({ label }) => label)
+            .map(({ label_short }) => label_short)
             .sort()
             .join(", "),
           conditions
@@ -304,7 +306,14 @@ export function useLocalizeCreature(
         creature.condition_immunities,
       );
       if (immunities.length) {
-        info_parts.push(ti("info.immunities", immunities));
+        info_parts.push([
+          tp(
+            "info.immunities",
+            creature.damage_immunities.length +
+              creature.condition_immunities.length,
+          ),
+          immunities,
+        ]);
       }
 
       const resistances = formatDamagesAndConditions(
@@ -312,7 +321,14 @@ export function useLocalizeCreature(
         creature.condition_resistances,
       );
       if (resistances) {
-        info_parts.push(ti("info.resistances", resistances));
+        info_parts.push([
+          tp(
+            "info.resistances",
+            creature.damage_resistances.length +
+              creature.condition_resistances.length,
+          ),
+          resistances,
+        ]);
       }
 
       const vulnerabilities = formatDamagesAndConditions(
@@ -320,7 +336,14 @@ export function useLocalizeCreature(
         creature.condition_vulnerabilities,
       );
       if (vulnerabilities) {
-        info_parts.push(ti("info.vulnerabilities", vulnerabilities));
+        info_parts.push([
+          tp(
+            "info.vulnerabilities",
+            creature.damage_vulnerabilities.length +
+              creature.condition_vulnerabilities.length,
+          ),
+          vulnerabilities,
+        ]);
       }
 
       // Gear
@@ -333,7 +356,10 @@ export function useLocalizeCreature(
         .filter((entry) => entry)
         .join(", ");
       if (gear) {
-        info_parts.push(ti("info.gear", gear));
+        info_parts.push([
+          tp("info.gear", creature.gear.equipments.length),
+          gear,
+        ]);
       }
 
       // Languages
@@ -343,7 +369,10 @@ export function useLocalizeCreature(
         .sort()
         .join(", ");
       if (languages) {
-        info_parts.push(ti("info.languages", languages));
+        info_parts.push([
+          tp("info.languages", creature.language_ids.length),
+          languages,
+        ]);
       }
 
       // Senses
@@ -364,14 +393,18 @@ export function useLocalizeCreature(
           ti("senses.truesight", formatCm(creature.truesight))
         : "";
 
-      const senses = [blindsight, darkvision, tremorsense, truesight]
-        .filter((sense) => sense)
-        .join(", ");
+      const sensesParts = [
+        blindsight,
+        darkvision,
+        tremorsense,
+        truesight,
+      ].filter((sense) => sense);
+      const senses = sensesParts.join(", ");
       if (senses) {
-        info_parts.push(ti("info.senses", senses));
+        info_parts.push([tp("info.senses", sensesParts.length), senses]);
       }
 
-      const info = info_parts.join("\n");
+      const info = formatInfo(info_parts);
 
       // Description section
       const details_parts: string[] = [];
@@ -485,6 +518,7 @@ export function useLocalizeCreature(
       system,
       t,
       ti,
+      tp,
       tpi,
       translateCreatureAlignment,
       translateCreatureCondition,
@@ -535,33 +569,61 @@ const i18nContext = {
     en: "XP <2>, PB <3>",
     it: "PE <2>, BC <3>",
   },
-  "info.gear": {
-    en: "**Gear:** <1>",
-    it: "**Equipaggiamento:** <1>",
+  "info.gear/*": {
+    en: "Gear",
+    it: "Equipaggiamento",
   },
-  "info.immunities": {
-    en: "**Immunities:** <1>",
-    it: "**Immunità:** <1>",
+  "info.gear/1": {
+    en: "Gear",
+    it: "Equipaggiamento",
   },
-  "info.languages": {
-    en: "**Languages:** <1>",
-    it: "**Lingue:** <1>",
+  "info.immunities/*": {
+    en: "Immunities",
+    it: "Immunità",
   },
-  "info.resistances": {
-    en: "**Resistances:** <1>",
-    it: "**Resistenze:** <1>",
+  "info.immunities/1": {
+    en: "Immunity",
+    it: "Immunità",
   },
-  "info.senses": {
-    en: "**Senses:** <1>",
-    it: "**Sensi:** <1>",
+  "info.languages/*": {
+    en: "Languages",
+    it: "Lingue",
   },
-  "info.skills": {
-    en: "**Skills:** <1>",
-    it: "**Abilità:** <1>",
+  "info.languages/1": {
+    en: "Language",
+    it: "Lingua",
   },
-  "info.vulnerabilities": {
-    en: "**Vulnerabilities:** <1>",
-    it: "**Vulnerabilità:** <1>",
+  "info.resistances/*": {
+    en: "Resistances",
+    it: "Resistenze",
+  },
+  "info.resistances/1": {
+    en: "Resistance",
+    it: "Resistenza",
+  },
+  "info.senses/*": {
+    en: "Senses",
+    it: "Sensi",
+  },
+  "info.senses/1": {
+    en: "Senses",
+    it: "Sensi",
+  },
+  "info.skills/*": {
+    en: "Skills",
+    it: "Abilità",
+  },
+  "info.skills/1": {
+    en: "Skill",
+    it: "Abilità",
+  },
+  "info.vulnerabilities/*": {
+    en: "Vulnerabilities",
+    it: "Vulnerabilità",
+  },
+  "info.vulnerabilities/1": {
+    en: "Vulnerability",
+    it: "Vulnerabilità",
   },
   "senses.blindsight": {
     en: "Blindsight <1>",

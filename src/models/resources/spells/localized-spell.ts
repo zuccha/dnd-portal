@@ -9,6 +9,7 @@ import { useTranslateSpellDuration } from "../../types/spell-duration";
 import { useTranslateSpellRange } from "../../types/spell-range";
 import { useTranslateSpellSchool } from "../../types/spell-school";
 import {
+  formatInfo,
   localizedResourceSchema,
   useLocalizeResource,
 } from "../localized-resource";
@@ -45,7 +46,7 @@ export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 
 export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const localizeResource = useLocalizeResource<Spell>();
-  const { lang, ti, tp, tpi } = useI18nLangContext(i18nContext);
+  const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
 
   const translateSpellSchool = useTranslateSpellSchool(lang);
   const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
@@ -104,7 +105,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
           spell.concentration ?
             ti("duration_with_concentration", duration)
           : duration,
-        info: materials ? ti("materials", materials) : "",
+        info: formatInfo([[t("materials"), materials]]),
         level: `${spell.level}`,
         level_long: tpi("level_long", spell.level, `${spell.level}`),
         materials,
@@ -118,6 +119,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       formatTime,
       lang,
       localizeResource,
+      t,
       ti,
       tp,
       tpi,
@@ -151,8 +153,8 @@ const i18nContext = {
     it: "Trucchetto", // 1 = level
   },
   "materials": {
-    en: "**Materials:** <1>",
-    it: "**Materiali:** <1>",
+    en: "Materials",
+    it: "Materiali",
   },
   "subtitle/*": {
     en: "Level <2> <1>", // 1 = school, 2 = level

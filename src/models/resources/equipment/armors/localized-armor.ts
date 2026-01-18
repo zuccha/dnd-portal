@@ -3,6 +3,7 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { formatSigned } from "~/utils/number";
 import { useTranslateArmorType } from "../../../types/armor-type";
+import { formatInfo } from "../../localized-resource";
 import {
   localizedEquipmentSchema,
   useLocalizeEquipment,
@@ -34,7 +35,7 @@ export type LocalizedArmor = z.infer<typeof localizedArmorSchema>;
 
 export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
   const localizeEquipment = useLocalizeEquipment<Armor>();
-  const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
+  const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
   const translateArmorType = useTranslateArmorType(lang);
 
   return useCallback(
@@ -82,12 +83,13 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
       ].filter((requirement) => requirement);
       const requirements = requirementsList.join(", ");
 
-      const info = [
-        tpi("requirements", requirementsList.length, requirements),
-        armor.disadvantage_on_stealth ? t("stealth") : "",
-      ]
-        .filter((text) => text)
-        .join("\n");
+      const info = formatInfo([
+        [tp("requirements", requirementsList.length), requirements],
+        [
+          t("stealth"),
+          armor.disadvantage_on_stealth ? t("stealth.disadvantage") : "",
+        ],
+      ]);
 
       const type = translateArmorType(armor.type).label;
 
@@ -107,7 +109,7 @@ export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
         type,
       };
     },
-    [localizeEquipment, t, ti, tpi, translateArmorType],
+    [localizeEquipment, t, ti, tp, translateArmorType],
   );
 }
 
@@ -193,20 +195,16 @@ const i18nContext = {
     it: "<1> Sag.",
   },
   "requirements/*": {
-    en: "**Requirements:** <1>",
-    it: "**Requisiti:** <1>",
-  },
-  "requirements/0": {
-    en: "",
-    it: "",
+    en: "Requirements",
+    it: "Requisiti",
   },
   "requirements/1": {
-    en: "**Requirement:** <1>",
-    it: "**Requisito:** <1>",
+    en: "Requirement",
+    it: "Requisito",
   },
   "stealth": {
-    en: "**Stealth:** Disadvantage",
-    it: "**Furtività:** Svantaggio",
+    en: "Stealth",
+    it: "Furtività",
   },
   "stealth.disadvantage": {
     en: "Disadvantage",

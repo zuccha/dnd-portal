@@ -4,6 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateLanguageRarity } from "../../types/language-rarity";
 import {
+  formatInfo,
   localizedResourceSchema,
   useLocalizeResource,
 } from "../localized-resource";
@@ -31,7 +32,7 @@ export function useLocalizeLanguage(): (
   language: Language,
 ) => LocalizedLanguage {
   const localizeResource = useLocalizeResource<Language>();
-  const { lang, ti } = useI18nLangContext(i18nContext);
+  const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   const translateLanguageRarity = useTranslateLanguageRarity(lang);
 
@@ -44,12 +45,12 @@ export function useLocalizeLanguage(): (
         ...localizeResource(language),
         descriptor: ti("subtitle", rarity),
 
-        info: ti("origin", origin),
+        info: formatInfo([[t("origin"), origin]]),
         origin,
         rarity,
       };
     },
-    [lang, localizeResource, ti, translateLanguageRarity],
+    [lang, localizeResource, t, ti, translateLanguageRarity],
   );
 }
 
@@ -59,8 +60,8 @@ export function useLocalizeLanguage(): (
 
 const i18nContext = {
   origin: {
-    en: "**Origin:** <1>", // 1 = rarity
-    it: "**Origine:** <1>", // 1 = rarity
+    en: "Origin",
+    it: "Origine",
   },
   subtitle: {
     en: "<1> Language", // 1 = rarity

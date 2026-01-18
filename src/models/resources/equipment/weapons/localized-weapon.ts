@@ -12,6 +12,7 @@ import {
 } from "../../../types/weapon-mastery";
 import { useTranslateWeaponProperty } from "../../../types/weapon-property";
 import { useTranslateWeaponType } from "../../../types/weapon-type";
+import { formatInfo } from "../../localized-resource";
 import {
   localizedEquipmentSchema,
   useLocalizeEquipment,
@@ -46,7 +47,7 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 
 export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const localizeEquipment = useLocalizeEquipment<Weapon>();
-  const { lang, ti, tpi } = useI18nLangContext(i18nContext);
+  const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
 
   const translateDamageType = useTranslateDamageType(lang);
@@ -79,13 +80,11 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
         .sort()
         .join(", ");
 
-      const info = [
-        tpi("properties", weapon.properties.length, properties),
-        has_range ? ti("range", range) : "",
-        ammunition ? ti("ammunition", ammunition) : "",
-      ]
-        .filter((text) => text)
-        .join("\n");
+      const info = formatInfo([
+        [tp("properties", weapon.properties.length), properties],
+        [t("range"), has_range ? range : ""],
+        [t("ammunition"), ammunition ? ammunition : ""],
+      ]);
 
       const mastery = translateWeaponMastery(weapon.mastery).label;
 
@@ -101,7 +100,7 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
           equipment.details,
           ti("mastery", mastery, translateWeaponMasteryRuling(weapon.mastery)),
         ]
-          .map((text) => text)
+          .filter((text) => text)
           .join("\n\n"),
 
         damage: weapon.damage,
@@ -118,16 +117,17 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
       };
     },
     [
-      lang,
-      localizeEquipment,
-      system,
-      ti,
-      tpi,
       translateDamageType,
-      translateWeaponMastery,
+      t,
+      ti,
+      system,
+      lang,
       translateWeaponProperty,
-      translateWeaponMasteryRuling,
+      tp,
+      translateWeaponMastery,
+      localizeEquipment,
       translateWeaponType,
+      translateWeaponMasteryRuling,
     ],
   );
 }
@@ -138,8 +138,8 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
 
 const i18nContext = {
   "ammunition": {
-    en: "**Ammunition:** <1>", // 1 = ammunition
-    it: "**Munizioni:** <1>", // 1 = ammunition
+    en: "Ammunition",
+    it: "Munizioni",
   },
   "damage_extended": {
     en: "<1> <2>", // 1 = damage value, 2 = damage type
@@ -162,20 +162,16 @@ const i18nContext = {
     it: "<1> (<2>)", // 1 = property label, 2 = value
   },
   "properties/*": {
-    en: "**Properties:** <1>", // 1 = properties
-    it: "**Proprietà:** <1>", // 1 = properties
-  },
-  "properties/0": {
-    en: "",
-    it: "",
+    en: "Properties",
+    it: "Proprietà",
   },
   "properties/1": {
-    en: "**Property:** <1>", // 1 = properties
-    it: "**Proprietà:** <1>", // 1 = properties
+    en: "Property",
+    it: "Proprietà",
   },
   "range": {
-    en: "**Range:** <1>", // 1 = range
-    it: "**Gittata:** <1>", // 1 = range
+    en: "Range",
+    it: "Gittata",
   },
   "range.ft": {
     en: "<1> ft", // 1 = range

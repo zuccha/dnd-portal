@@ -13,6 +13,7 @@ import { useTranslateWeaponType } from "../../types/weapon-type";
 import { equipmentStore } from "../equipment/equipment-store";
 import { toolStore } from "../equipment/tools/tool-store";
 import {
+  formatInfo,
   localizedResourceSchema,
   useLocalizeResource,
 } from "../localized-resource";
@@ -44,7 +45,7 @@ export type LocalizedCharacterClass = z.infer<
 export function useLocalizeCharacterClass(
   campaignId: string,
 ): (characterClass: CharacterClass) => LocalizedCharacterClass {
-  const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
+  const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
   const localizeResource = useLocalizeResource<CharacterClass>();
   const translateArmorType = useTranslateArmorType(lang);
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
@@ -96,32 +97,35 @@ export function useLocalizeCharacterClass(
         .sort()
         .join(", ");
 
-      const info = [
-        tpi(
-          "saving_throw_proficiencies",
-          characterClass.saving_throw_proficiencies.length,
+      const info = formatInfo([
+        [
+          tp(
+            "saving_throw_proficiencies",
+            characterClass.saving_throw_proficiencies.length,
+          ),
           saving_throw_proficiencies,
-        ),
-        tpi(
-          "weapon_proficiencies",
-          characterClass.weapon_proficiencies.length +
-            (characterClass.weapon_proficiencies_extra ? 1 : 0),
+        ],
+        [
+          tp(
+            "weapon_proficiencies",
+            characterClass.weapon_proficiencies.length +
+              (characterClass.weapon_proficiencies_extra ? 1 : 0),
+          ),
           weapon_proficiencies,
-        ),
-        tpi(
-          "armor_proficiencies",
-          characterClass.armor_proficiencies.length +
-            (characterClass.armor_proficiencies_extra ? 1 : 0),
+        ],
+        [
+          tp(
+            "armor_proficiencies",
+            characterClass.armor_proficiencies.length +
+              (characterClass.armor_proficiencies_extra ? 1 : 0),
+          ),
           armor_proficiencies,
-        ),
-        tpi(
-          "tool_proficiencies",
-          characterClass.tool_proficiency_ids.length,
+        ],
+        [
+          tp("tool_proficiencies", characterClass.tool_proficiency_ids.length),
           tool_proficiencies,
-        ),
-      ]
-        .filter((text) => text)
-        .join("\n");
+        ],
+      ]);
 
       const skill_proficiencies_pool =
         characterClass.skill_proficiencies_pool.length ?
@@ -198,6 +202,7 @@ export function useLocalizeCharacterClass(
       localizeToolName,
       t,
       ti,
+      tp,
       tpi,
       translateArmorType,
       translateCreatureAbility,
@@ -214,16 +219,12 @@ export function useLocalizeCharacterClass(
 
 const i18nContext = {
   "armor_proficiencies/*": {
-    en: "**Armors:** <1>",
-    it: "**Armature:** <1>",
-  },
-  "armor_proficiencies/0": {
-    en: "",
-    it: "",
+    en: "Armors",
+    it: "Armature",
   },
   "armor_proficiencies/1": {
-    en: "**Armor:** <1>",
-    it: "**Armatura:** <1>",
+    en: "Armor",
+    it: "Armatura",
   },
   "descriptor": {
     en: "Character Class",
@@ -242,16 +243,12 @@ const i18nContext = {
     it: "<1>", // 1 = name
   },
   "saving_throw_proficiencies/*": {
-    en: "**Saving Throws:** <1>",
-    it: "**Tiri Salvezza:** <1>",
-  },
-  "saving_throw_proficiencies/0": {
-    en: "",
-    it: "",
+    en: "Saving Throws",
+    it: "Tiri Salvezza",
   },
   "saving_throw_proficiencies/1": {
-    en: "**Saving Throw:** <1>",
-    it: "**Tiro Salvezza:** <1>",
+    en: "Saving Throw",
+    it: "Tiro Salvezza",
   },
   "skill_proficiencies_pool": {
     en: "##Skill Proficiencies##\r_Choose <1>:_ <2>.",
@@ -274,27 +271,19 @@ const i18nContext = {
     it: "<1>.",
   },
   "tool_proficiencies/*": {
-    en: "**Tools:** <1>",
-    it: "**Strumenti:** <1>",
-  },
-  "tool_proficiencies/0": {
-    en: "",
-    it: "",
+    en: "Tools",
+    it: "Strumenti",
   },
   "tool_proficiencies/1": {
-    en: "**Tool:** <1>",
-    it: "**Strumento:** <1>",
+    en: "Tool",
+    it: "Strumento",
   },
   "weapon_proficiencies/*": {
-    en: "**Weapons:** <1>",
-    it: "**Armi:** <1>",
-  },
-  "weapon_proficiencies/0": {
-    en: "",
-    it: "",
+    en: "Weapons",
+    it: "Armi",
   },
   "weapon_proficiencies/1": {
-    en: "**Weapon:** <1>",
-    it: "**Arma:** <1>",
+    en: "Weapon",
+    it: "Arma",
   },
 };
