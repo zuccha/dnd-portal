@@ -5,7 +5,7 @@ import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatCmWithUnit } from "~/measures/distance";
-import { formatSigned } from "~/utils/number";
+import { formatNumber, formatSigned } from "~/utils/number";
 import type { CreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import {
@@ -75,7 +75,8 @@ export const localizedCreatureSchema = localizedResourceSchema(
 
   initiative: z.string(),
   initiative_passive: z.string(),
-  passive_perception: z.string(),
+  perception: z.string(),
+  perception_passive: z.string(),
 
   speed: z.string(),
   speed_burrow: z.string(),
@@ -97,7 +98,6 @@ export const localizedCreatureSchema = localizedResourceSchema(
   skills: z.string(),
   vulnerabilities: z.string(),
 
-  description: z.string(),
   info: z.string(),
 });
 
@@ -166,7 +166,7 @@ export function useLocalizeCreature(
         : creature.cr <= 0.25 ? "¼"
         : creature.cr <= 0.5 ? "½"
         : `${creature.cr}`;
-      const exp = `${crToExp[creature.cr] ?? 0}`;
+      const exp = crToExp[creature.cr] ?? 0;
       const pb = crToPb[creature.cr] ?? 2;
 
       // Speed conversions
@@ -246,6 +246,13 @@ export function useLocalizeCreature(
         strength: ability_str_mod_value,
         wisdom: ability_wis_mod_value,
       };
+
+      // Perception
+      const perception =
+        ability_wis_mod_value +
+        (creature.skill_expertise.includes("perception") ? 2 * pb
+        : creature.skill_proficiencies.includes("perception") ? pb
+        : 0);
 
       // Stats section
       const info_parts: string[] = [];
@@ -367,42 +374,43 @@ export function useLocalizeCreature(
       const info = info_parts.join("\n");
 
       // Description section
-      const description_parts: string[] = [];
+      const details_parts: string[] = [];
 
       const traits = translate(creature.traits, lang);
       if (traits) {
-        description_parts.push(t("description.traits") + "\r" + traits);
+        details_parts.push(t("description.traits") + "\r" + traits);
       }
 
       const actions = translate(creature.actions, lang);
       if (actions) {
-        description_parts.push(t("description.actions") + "\r" + actions);
+        details_parts.push(t("description.actions") + "\r" + actions);
       }
 
       const bonus_actions = translate(creature.bonus_actions, lang);
       if (bonus_actions) {
-        description_parts.push(
+        details_parts.push(
           t("description.bonus_actions") + "\r" + bonus_actions,
         );
       }
 
       const reactions = translate(creature.reactions, lang);
       if (reactions) {
-        description_parts.push(t("description.reactions") + "\r" + reactions);
+        details_parts.push(t("description.reactions") + "\r" + reactions);
       }
 
       const legendary_actions = translate(creature.legendary_actions, lang);
       if (legendary_actions) {
-        description_parts.push(
+        details_parts.push(
           t("description.legendary_actions") + "\r" + legendary_actions,
         );
       }
 
-      const description = description_parts.join("\n\n");
+      const details = details_parts.join("\n\n");
 
       return {
         ...localizeResource(creature),
         descriptor: ti("subtitle", size, type, alignment),
+        details,
 
         alignment,
         size,
@@ -412,7 +420,7 @@ export function useLocalizeCreature(
         treasures,
 
         cr,
-        exp,
+        exp: formatNumber(exp, lang),
         pb: formatSigned(pb),
 
         ac: `${creature.ac}`,
@@ -440,7 +448,8 @@ export function useLocalizeCreature(
 
         initiative: formatSigned(creature.initiative),
         initiative_passive: `${10 + creature.initiative}`,
-        passive_perception: `${creature.passive_perception}`,
+        perception: formatSigned(perception),
+        perception_passive: `${creature.passive_perception}`,
 
         speed,
         speed_burrow,
@@ -462,7 +471,6 @@ export function useLocalizeCreature(
         skills,
         vulnerabilities,
 
-        description,
         info,
       };
     },
