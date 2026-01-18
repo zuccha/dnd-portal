@@ -140,10 +140,10 @@ const i18nContext = {
   "lb.long/*": { en: "<1> pounds", it: "<1> libbre" },
   "lb.long/1": { en: "<1> pound", it: "<1> libbra" },
 
-  "g.short/*": { en: "<1> g", it: "<1> g" },
-  "g.short/1": { en: "<1> g", it: "<1> g" },
-  "kg.short/*": { en: "<1> kg", it: "<1> kg" },
-  "kg.short/1": { en: "<1> kg", it: "<1> kg" },
-  "lb.short/*": { en: "<1> lb", it: "<1> lb" },
-  "lb.short/1": { en: "<1> lb", it: "<1> lb" },
+  "g.short/*": { en: "<1> g", it: "<1> g" },
+  "g.short/1": { en: "<1> g", it: "<1> g" },
+  "kg.short/*": { en: "<1> kg", it: "<1> kg" },
+  "kg.short/1": { en: "<1> kg", it: "<1> kg" },
+  "lb.short/*": { en: "<1> lb", it: "<1> lb" },
+  "lb.short/1": { en: "<1> lb", it: "<1> lb" },
 };
