@@ -2,7 +2,7 @@ import { Box, SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import type { Spell } from "~/models/resources/spells/spell";
-import PokerCard from "../../../../../../../ui/poker-card";
+import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
   type ResourcePokerCardProps,
@@ -110,9 +110,9 @@ function GridItem({ label, value }: GridItemProps) {
   );
 }
 
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 // I18n Context
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 
 const i18nContext = {
   casting_time: {

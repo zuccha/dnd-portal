@@ -32,7 +32,7 @@ export default function usePaginatedContent(
   }, [content]);
 
   useLayoutEffect(() => {
-    if (renderCountRef.current > 50) {
+    if (renderCountRef.current > 45) {
       renderCountRef.current = 0;
       requestAnimationFrame(() => setPages([...pages]));
       return;
