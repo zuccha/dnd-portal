@@ -9,7 +9,7 @@ const formatNumberOptions = {
 
 const formatNumberFormats: Record<string, (value: number) => string> = {
   en: new Intl.NumberFormat("en-US", formatNumberOptions).format,
-  it: new Intl.NumberFormat("it-CH", formatNumberOptions).format,
+  it: new Intl.NumberFormat("it-IT", formatNumberOptions).format,
 };
 
 const defaultFormatNumberFormat = new Intl.NumberFormat(
