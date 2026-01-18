@@ -78,6 +78,8 @@ export function createResourceCardInteractive<
       pageCountRef.current = count ?? 0;
     }, []);
 
+    const pointerDownRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
     const cycleLeft = useCallback(() => {
       setSelectedPageIndex((prev) =>
         prev > 0 ? prev - 1 : pageCountRef.current - 1,
@@ -101,6 +103,21 @@ export function createResourceCardInteractive<
       <Box
         className="group"
         h={`${AlbumCard.h}in`}
+        onPointerDown={(e) => {
+          pointerDownRef.current = { x: e.clientX, y: e.clientY };
+        }}
+        onPointerUp={(e) => {
+          const dx = Math.abs(e.clientX - pointerDownRef.current.x);
+          const dy = Math.abs(e.clientY - pointerDownRef.current.y);
+          const selection = window.getSelection()?.toString() ?? "";
+          if (selection) return; // user selected text
+          if (dx > 4 || dy > 4) return; // treat as drag
+          const el = e.currentTarget;
+          const rect = el.getBoundingClientRect();
+          const isLeft = e.clientX < rect.left + rect.width / 2;
+          if (isLeft) cycleLeft();
+          else cycleRight();
+        }}
         position="relative"
         w={`${AlbumCard.w}in`}
         zoom={zoom}
@@ -115,23 +132,6 @@ export function createResourceCardInteractive<
           top={0}
         />
         <Theme appearance="light">
-          <Box
-            h="100%"
-            onClick={cycleLeft}
-            position="absolute"
-            w="50%"
-            zIndex={2}
-          />
-
-          <Box
-            h="100%"
-            left="50%"
-            onClick={cycleRight}
-            position="absolute"
-            w="50%"
-            zIndex={2}
-          />
-
           <VStack
             _groupHover={{ visibility: "visible" }}
             left={PokerCard.rem0500}
@@ -145,7 +145,10 @@ export function createResourceCardInteractive<
                 Icon={EditIcon}
                 _hover={{ bgColor: palette[100] }}
                 className="light"
-                onClick={edit}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  edit();
+                }}
                 size="2xs"
                 variant="ghost"
               />
@@ -155,7 +158,10 @@ export function createResourceCardInteractive<
           <IconButton
             Icon={selected ? SquareCheckIcon : SquareIcon}
             _groupHover={{ visibility: "visible" }}
-            onClick={() => setResourceSelection(!selected)}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              setResourceSelection(!selected);
+            }}
             position="absolute"
             right={PokerCard.rem0500}
             size="2xs"
