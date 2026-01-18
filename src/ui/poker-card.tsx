@@ -205,6 +205,7 @@ function Details({ children, palette }: DetailsProps) {
             fontFamily="Mr Eaves Alt"
             fontSize={rem1125}
             fontWeight="bold"
+            key={paragraphIndex}
             mb={rem0125}
             w="full"
           >
