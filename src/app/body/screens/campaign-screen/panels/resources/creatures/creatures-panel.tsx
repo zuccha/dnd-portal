@@ -179,7 +179,7 @@ const CreaturesPanel = createResourcesPanel(creatureStore, {
   album: { AlbumCard: CreatureCard },
   filters: { Filters: CreaturesFilters },
   form: { Editor: CreatureEditor, form: creatureEditorForm, parseFormData },
-  table: { columns, detailsKey: "description" },
+  table: { columns, detailsKey: "details" },
 });
 
 export default CreaturesPanel;
