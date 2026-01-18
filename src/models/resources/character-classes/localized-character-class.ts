@@ -262,7 +262,7 @@ const i18nContext = {
     it: "##Equipaggiamento Iniziale##\r<1>",
   },
   "starting_equipment.group/*": {
-    en: "Choose:_ <1>.",
+    en: "_Choose:_ <1>.",
     it: "_Scegli:_ <1>.",
   },
   "starting_equipment.group/0": {
