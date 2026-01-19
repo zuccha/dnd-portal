@@ -2,7 +2,7 @@ import { Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
-import PokerCard from "../../../../../../../../ui/poker-card";
+import PokerCard from "~/ui/poker-card";
 import type { ResourcePokerCardProps } from "../../_base/resource-poker-card";
 import { EquipmentCard } from "../equipment-card";
 
@@ -41,8 +41,9 @@ export function ToolCard({
   );
 }
 
-ToolCard.h = PokerCard.cardH;
-ToolCard.w = PokerCard.cardW;
+ToolCard.Placeholder = EquipmentCard.Placeholder;
+ToolCard.h = EquipmentCard.h;
+ToolCard.w = EquipmentCard.w;
 
 //------------------------------------------------------------------------------
 // I18n Context

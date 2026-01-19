@@ -1,7 +1,7 @@
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
-import PokerCard from "../../../../../../../../ui/poker-card";
+import PokerCard from "~/ui/poker-card";
 import type { ResourcePokerCardProps } from "../../_base/resource-poker-card";
 import { EquipmentCard } from "../equipment-card";
 
@@ -50,8 +50,9 @@ export function WeaponCard({
   );
 }
 
-WeaponCard.h = PokerCard.cardH;
-WeaponCard.w = PokerCard.cardW;
+WeaponCard.Placeholder = EquipmentCard.Placeholder;
+WeaponCard.h = EquipmentCard.h;
+WeaponCard.w = EquipmentCard.w;
 
 //------------------------------------------------------------------------------
 // I18n Context

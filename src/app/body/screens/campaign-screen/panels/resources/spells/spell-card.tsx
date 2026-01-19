@@ -87,8 +87,9 @@ export function SpellCard({
   );
 }
 
-SpellCard.h = PokerCard.cardH;
-SpellCard.w = PokerCard.cardW;
+SpellCard.Placeholder = ResourcePokerCard.Placeholder;
+SpellCard.h = ResourcePokerCard.h;
+SpellCard.w = ResourcePokerCard.w;
 
 //------------------------------------------------------------------------------
 // Grid Item

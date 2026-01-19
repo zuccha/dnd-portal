@@ -1,4 +1,4 @@
-import { Table } from "@chakra-ui/react";
+import { Box, Flex, Table } from "@chakra-ui/react";
 import { useCanEditCampaign } from "~/models/campaign";
 import type {
   DBResource,
@@ -57,28 +57,32 @@ export function createResourcesTable<
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
-      <Table.Root
-        borderCollapse="separate"
-        borderSpacing={0}
-        showColumnBorder
-        stickyHeader
-        variant="line"
-      >
-        <Table.Header>
-          <ResourcesTableHead campaignId={campaignId} />
-        </Table.Header>
+      <Flex flex={1} overflow="scroll" w="full">
+        <Box bgColor="bg.subtle" w="full">
+          <Table.Root
+            borderCollapse="separate"
+            borderSpacing={0}
+            showColumnBorder
+            stickyHeader
+            variant="line"
+          >
+            <Table.Header>
+              <ResourcesTableHead campaignId={campaignId} />
+            </Table.Header>
 
-        <Table.Body>
-          {filteredResourceIds.map((id) => (
-            <ResourcesTableRow
-              campaignId={campaignId}
-              editable={editable}
-              key={id}
-              resourceId={id}
-            />
-          ))}
-        </Table.Body>
-      </Table.Root>
+            <Table.Body>
+              {filteredResourceIds.map((id) => (
+                <ResourcesTableRow
+                  campaignId={campaignId}
+                  editable={editable}
+                  key={id}
+                  resourceId={id}
+                />
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Box>
+      </Flex>
     );
   };
 }

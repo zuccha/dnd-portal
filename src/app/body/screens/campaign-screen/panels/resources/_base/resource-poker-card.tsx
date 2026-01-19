@@ -87,3 +87,40 @@ export function ResourcePokerCard<
     </>
   );
 }
+
+ResourcePokerCard.Placeholder = ResourcePokerCardPlaceholder;
+ResourcePokerCard.h = PokerCard.cardH;
+ResourcePokerCard.w = PokerCard.cardW;
+
+//------------------------------------------------------------------------------
+// Resource Poker Card Placeholder
+//------------------------------------------------------------------------------
+
+export type ResourcePokerCardPlaceholderProps<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+> = StackProps & {
+  localizedResource: L;
+  palette: Palette;
+};
+
+export function ResourcePokerCardPlaceholder<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+>({
+  localizedResource,
+  palette,
+  ...rest
+}: ResourcePokerCardPlaceholderProps<R, L>) {
+  return (
+    <PokerCard.Frame
+      descriptor={localizedResource.descriptor}
+      name={localizedResource.name}
+      pageIndicator=""
+      palette={palette}
+      sourceName={localizedResource.campaign}
+      sourcePage={localizedResource.page}
+      {...rest}
+    />
+  );
+}

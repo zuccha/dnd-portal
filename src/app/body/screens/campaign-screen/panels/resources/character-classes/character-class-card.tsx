@@ -9,7 +9,7 @@ import D8Icon from "~/icons/d8-icon";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
 import type { LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
 import Icon from "~/ui/icon";
-import PokerCard from "../../../../../../../ui/poker-card";
+import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
   type ResourcePokerCardProps,
@@ -74,8 +74,9 @@ export function CharacterClassCard({
   );
 }
 
-CharacterClassCard.h = PokerCard.cardH;
-CharacterClassCard.w = PokerCard.cardW;
+CharacterClassCard.Placeholder = ResourcePokerCard.Placeholder;
+CharacterClassCard.h = ResourcePokerCard.h;
+CharacterClassCard.w = ResourcePokerCard.w;
 
 //------------------------------------------------------------------------------
 // Die Icons

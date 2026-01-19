@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Separator, VStack } from "@chakra-ui/react";
+import { HStack, Separator, VStack } from "@chakra-ui/react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -100,12 +100,8 @@ export function createResourcesPanel<
           <ResourceFilters campaignId={campaignId} w="full" wrap="wrap" />
         </VStack>
 
-        <Flex flex={1} overflow="auto" w="full">
-          <Box bgColor="bg.subtle" w="full">
-            {view === "table" && <ResourcesTable campaignId={campaignId} />}
-            {view === "cards" && <ResourcesAlbum campaignId={campaignId} />}
-          </Box>
-        </Flex>
+        {view === "table" && <ResourcesTable campaignId={campaignId} />}
+        {view === "cards" && <ResourcesAlbum campaignId={campaignId} />}
 
         <ResourceCreator campaignId={campaignId} />
         <ResourceEditor campaignId={campaignId} />

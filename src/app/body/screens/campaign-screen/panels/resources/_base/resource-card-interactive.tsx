@@ -13,7 +13,10 @@ import type { ResourceStore } from "~/models/resources/resource-store";
 import IconButton from "~/ui/icon-button";
 import PokerCard from "~/ui/poker-card";
 import { type Palette, defaultPalette } from "~/utils/palette";
-import type { ResourcePokerCardProps } from "./resource-poker-card";
+import type {
+  ResourcePokerCardPlaceholderProps,
+  ResourcePokerCardProps,
+} from "./resource-poker-card";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -29,7 +32,11 @@ export type ResourceCardInteractiveExtra<
       ResourcePokerCardProps<R, L>,
       "afterDetails" | "beforeDetails" | "firstPageInfo"
     >
-  > & { h: number; w: number };
+  > & {
+    Placeholder: React.FC<ResourcePokerCardPlaceholderProps<R, L>>;
+    h: number;
+    w: number;
+  };
 };
 
 //------------------------------------------------------------------------------
@@ -39,6 +46,13 @@ export type ResourceCardInteractiveExtra<
 export type ResourceCardInteractiveProps = {
   campaignId: string;
   editable?: boolean;
+  palette?: Palette;
+  resourceId: string;
+  zoom?: number;
+};
+
+export type ResourceCardInteractivePlaceholderProps = {
+  campaignId: string;
   palette?: Palette;
   resourceId: string;
   zoom?: number;
@@ -175,6 +189,27 @@ export function createResourceCardInteractive<
     );
   }
 
+  function ResourcesAlbumCardInteractivePlaceholder({
+    campaignId,
+    palette = defaultPalette,
+    resourceId,
+    zoom,
+  }: ResourceCardInteractivePlaceholderProps) {
+    const localizedResource = useLocalizedResource(campaignId, resourceId);
+
+    if (!localizedResource) return null;
+
+    return (
+      <AlbumCard.Placeholder
+        localizedResource={localizedResource}
+        palette={palette}
+        zoom={zoom}
+      />
+    );
+  }
+
+  ResourcesAlbumCardInteractive.Placeholder =
+    ResourcesAlbumCardInteractivePlaceholder;
   ResourcesAlbumCardInteractive.h = AlbumCard.h;
   ResourcesAlbumCardInteractive.w = AlbumCard.w;
 

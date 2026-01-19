@@ -1,6 +1,5 @@
 import type { Item } from "~/models/resources/equipment/items/item";
 import type { LocalizedItem } from "~/models/resources/equipment/items/localized-item";
-import PokerCard from "../../../../../../../../ui/poker-card";
 import type { ResourcePokerCardProps } from "../../_base/resource-poker-card";
 import { EquipmentCard } from "../equipment-card";
 
@@ -29,5 +28,6 @@ export function ItemCard({
   );
 }
 
-ItemCard.h = PokerCard.cardH;
-ItemCard.w = PokerCard.cardW;
+ItemCard.Placeholder = EquipmentCard.Placeholder;
+ItemCard.h = EquipmentCard.h;
+ItemCard.w = EquipmentCard.w;

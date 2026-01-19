@@ -1,4 +1,5 @@
-import { Wrap } from "@chakra-ui/react";
+import { Box, Flex, Wrap } from "@chakra-ui/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useCanEditCampaign } from "~/models/campaign";
 import type {
   DBResource,
@@ -54,24 +55,103 @@ export function createResourcesAlbum<
     const filteredResourceIds = store.useFilteredResourceIds(campaignId);
     const zoom = context.useZoom();
 
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const [visibleRange, setVisibleRange] = useState({ end: 0, start: 0 });
+
+    const virtualize = useCallback(() => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const scrollTop = container.scrollTop;
+
+      const cardH = ResourceCardInteractive.h * zoom * 96;
+      const cardW = ResourceCardInteractive.w * zoom * 96;
+      const rowH = cardH + gap;
+      const columns = computeFit(container.clientWidth, cardW, gap, gap) || 1;
+
+      const startRow = Math.floor(scrollTop / rowH);
+      const endRow = Math.floor((scrollTop + container.clientHeight) / rowH);
+
+      const last = filteredResourceIds.length - 1;
+      const start = startRow * columns;
+      const end = Math.min(last, (endRow + 1) * columns - 1);
+
+      setVisibleRange((prev) =>
+        prev.start === start && prev.end === end ? prev : { end, start },
+      );
+    }, [filteredResourceIds.length, zoom]);
+
+    useEffect(() => {
+      if (!containerRef.current) return;
+      const resizeObserver = new ResizeObserver(virtualize);
+      resizeObserver.observe(containerRef.current);
+      return () => resizeObserver.disconnect();
+    }, [virtualize]);
+
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
-      <Wrap bgColor="bg.subtle" gap={4} justify="center" p={4} w="full">
-        {filteredResourceIds.map((id) => (
-          <ResourceCardInteractive
-            campaignId={campaignId}
-            editable={editable}
-            key={id}
-            resourceId={id}
-            zoom={zoom}
-          />
-        ))}
-      </Wrap>
+      <Flex
+        flex={1}
+        onScroll={virtualize}
+        overflow="scroll"
+        ref={containerRef}
+        w="full"
+      >
+        <Box bgColor="bg.subtle" w="full">
+          <Wrap
+            bgColor="bg.subtle"
+            gap={`${gap}px`}
+            justify="center"
+            p={`${gap}px`}
+            w="full"
+          >
+            {filteredResourceIds.map((id, index) => {
+              const isVisible =
+                index >= visibleRange.start && index <= visibleRange.end;
+              return isVisible ?
+                  <ResourceCardInteractive
+                    campaignId={campaignId}
+                    editable={editable}
+                    key={id}
+                    resourceId={id}
+                    zoom={zoom}
+                  />
+                : <ResourceCardInteractive.Placeholder
+                    campaignId={campaignId}
+                    key={id}
+                    resourceId={id}
+                    zoom={zoom}
+                  />;
+            })}
+          </Wrap>
+        </Box>
+      </Flex>
     );
   }
 
   ResourcesAlbum.Card = ResourceCardInteractive;
 
   return ResourcesAlbum;
+}
+
+//------------------------------------------------------------------------------
+// Constants
+//------------------------------------------------------------------------------
+
+const gap = 16;
+
+//------------------------------------------------------------------------------
+// Compute Fit
+//------------------------------------------------------------------------------
+
+function computeFit(
+  containerWidth: number,
+  contentWidth: number,
+  padding: number,
+  gap: number,
+): number {
+  const available = containerWidth - 2 * padding;
+  const fit = Math.floor((available + gap) / (contentWidth + gap));
+  return Math.max(1, fit);
 }

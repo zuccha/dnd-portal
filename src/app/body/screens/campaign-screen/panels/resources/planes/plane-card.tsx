@@ -1,6 +1,6 @@
 import type { LocalizedPlane } from "~/models/resources/planes/localized-plane";
 import type { Plane } from "~/models/resources/planes/plane";
-import PokerCard from "../../../../../../../ui/poker-card";
+import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
   type ResourcePokerCardProps,
@@ -38,5 +38,6 @@ export function PlaneCard({
   );
 }
 
-PlaneCard.h = PokerCard.cardH;
-PlaneCard.w = PokerCard.cardW;
+PlaneCard.Placeholder = ResourcePokerCard.Placeholder;
+PlaneCard.h = ResourcePokerCard.h;
+PlaneCard.w = ResourcePokerCard.w;

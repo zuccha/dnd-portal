@@ -173,8 +173,9 @@ export function CreatureCard({
   );
 }
 
-CreatureCard.h = PokerCard.cardH;
-CreatureCard.w = PokerCard.cardW;
+CreatureCard.Placeholder = ResourcePokerCard.Placeholder;
+CreatureCard.h = ResourcePokerCard.h;
+CreatureCard.w = ResourcePokerCard.w;
 
 //------------------------------------------------------------------------------
 // Ability Header

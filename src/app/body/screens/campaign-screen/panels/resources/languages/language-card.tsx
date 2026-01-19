@@ -1,6 +1,6 @@
 import type { Language } from "~/models/resources/languages/language";
 import type { LocalizedLanguage } from "~/models/resources/languages/localized-language";
-import PokerCard from "../../../../../../../ui/poker-card";
+import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
   type ResourcePokerCardProps,
@@ -38,5 +38,6 @@ export function LanguageCard({
   );
 }
 
-LanguageCard.h = PokerCard.cardH;
-LanguageCard.w = PokerCard.cardW;
+LanguageCard.Placeholder = ResourcePokerCard.Placeholder;
+LanguageCard.h = ResourcePokerCard.h;
+LanguageCard.w = ResourcePokerCard.w;

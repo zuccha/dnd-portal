@@ -5,7 +5,7 @@ import ScaleIcon from "~/icons/scale-icon";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { LocalizedEquipment } from "~/models/resources/equipment/localized-equipment";
 import Icon from "~/ui/icon";
-import PokerCard from "../../../../../../../ui/poker-card";
+import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
   type ResourcePokerCardProps,
@@ -58,3 +58,7 @@ export function EquipmentCard<
     />
   );
 }
+
+EquipmentCard.Placeholder = ResourcePokerCard.Placeholder;
+EquipmentCard.h = ResourcePokerCard.h;
+EquipmentCard.w = ResourcePokerCard.w;
