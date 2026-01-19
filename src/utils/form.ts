@@ -5,6 +5,20 @@ import type { StoreSet } from "~/store/set/store-set";
 import { createObservable } from "./observable";
 
 //------------------------------------------------------------------------------
+// Field Bag
+//------------------------------------------------------------------------------
+
+export type FieldBag<Name, Value> = {
+  "data-invalid": "" | undefined;
+  "disabled": boolean;
+  "error": string | undefined;
+  "name": Name;
+  "onBlur": () => void;
+  "onValueChange": (value: Value) => void;
+  "value": Value;
+};
+
+//------------------------------------------------------------------------------
 // Form
 //------------------------------------------------------------------------------
 
@@ -16,15 +30,7 @@ export type Form<Fields extends Record<string, unknown>> = {
     name: Name,
     defaultValue: Fields[Name],
     validate?: (value: Fields[Name]) => string | undefined,
-  ) => {
-    "data-invalid": "" | undefined;
-    "disabled": boolean;
-    "error": string | undefined;
-    "name": Name;
-    "onBlur": () => void;
-    "onValueChange": (value: Fields[Name]) => void;
-    "value": Fields[Name];
-  };
+  ) => FieldBag<Name, Fields[Name]>;
   useFieldError: (name: keyof Fields) => string | undefined;
   useSubmit: (
     onSubmit: (data: Partial<Fields>) => Promise<string | undefined>,
