@@ -14,6 +14,7 @@ import { useCreatureSkillOptions } from "~/models/types/creature-skill";
 import { useCreatureTreasureOptions } from "~/models/types/creature-treasure";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
+import { useLanguageScopeOptions } from "~/models/types/language-scope";
 import DistanceInput from "~/ui/distance-input";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
@@ -48,7 +49,9 @@ import {
   useCreatureEditorFormHPFormula,
   useCreatureEditorFormHabitats,
   useCreatureEditorFormInitiative,
+  useCreatureEditorFormLanguageAdditionalCount,
   useCreatureEditorFormLanguageIds,
+  useCreatureEditorFormLanguageScope,
   useCreatureEditorFormLegendaryActions,
   useCreatureEditorFormName,
   useCreatureEditorFormPage,
@@ -63,6 +66,7 @@ import {
   useCreatureEditorFormSpeedFly,
   useCreatureEditorFormSpeedSwim,
   useCreatureEditorFormSpeedWalk,
+  useCreatureEditorFormTelepathyRange,
   useCreatureEditorFormTraits,
   useCreatureEditorFormTreasures,
   useCreatureEditorFormTremorsense,
@@ -195,11 +199,29 @@ export default function CreatureEditor({
         <CreatureEditorTruesight defaultTruesight={resource.truesight} />
       </HStack>
 
-      {/* Descriptive Fields */}
-      <CreatureEditorLanguageIds
-        campaignId={campaignId}
-        defaultLanguageIds={resource.language_ids}
-      />
+      {/* Language */}
+      <HStack align="flex-start" gap={2} w="full">
+        <CreatureEditorLanguageScope
+          defaultLanguageScope={resource.language_scope}
+        />
+        <CreatureEditorLanguageIds
+          campaignId={campaignId}
+          defaultLanguageIds={resource.language_ids}
+          defaultLanguageScope={resource.language_scope}
+        />
+        <CreatureEditorLanguageAdditionalCount
+          defaultLanguageAdditionalCount={resource.language_additional_count}
+          defaultLanguageScope={resource.language_scope}
+        />
+      </HStack>
+
+      <HStack w="full">
+        <CreatureEditorTelepathyRange
+          defaultTelepathyRange={resource.telepathy_range}
+        />
+      </HStack>
+
+      {/* Gear */}
       <CreatureEditorGear campaignId={campaignId} defaultGear={resource.gear} />
 
       {/* Actions and Traits */}
@@ -835,15 +857,44 @@ function CreatureEditorInitiative({
 }
 
 //------------------------------------------------------------------------------
+// Language Additional Count
+//------------------------------------------------------------------------------
+
+function CreatureEditorLanguageAdditionalCount({
+  defaultLanguageAdditionalCount,
+  defaultLanguageScope,
+}: {
+  defaultLanguageAdditionalCount: number;
+  defaultLanguageScope: Creature["language_scope"];
+}) {
+  const { error, ...rest } = useCreatureEditorFormLanguageAdditionalCount(
+    defaultLanguageAdditionalCount,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  const { value } = useCreatureEditorFormLanguageScope(defaultLanguageScope);
+  if (value !== "specific") return null;
+
+  return (
+    <Field error={message} label={t("language_additional_count.label")} w="5em">
+      <NumberInput min={0} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Language Ids
 //------------------------------------------------------------------------------
 
 function CreatureEditorLanguageIds({
   campaignId,
   defaultLanguageIds,
+  defaultLanguageScope,
 }: {
   campaignId: string;
   defaultLanguageIds: string[];
+  defaultLanguageScope: Creature["language_scope"];
 }) {
   const languageOptions = languageStore.useResourceOptions(campaignId);
 
@@ -852,6 +903,9 @@ function CreatureEditorLanguageIds({
   const { t } = useI18nLangContext(i18nContext);
   const message = error ? t(error) : undefined;
 
+  const { value } = useCreatureEditorFormLanguageScope(defaultLanguageScope);
+  if (value !== "specific") return null;
+
   return (
     <Field error={message} label={t("language_ids.label")}>
       <ResourceSearch
@@ -859,6 +913,38 @@ function CreatureEditorLanguageIds({
         options={languageOptions}
         w="full"
         withinDialog
+      />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Language Scope
+//------------------------------------------------------------------------------
+
+function CreatureEditorLanguageScope({
+  defaultLanguageScope,
+}: {
+  defaultLanguageScope: Creature["language_scope"];
+}) {
+  const habitatOptions = useLanguageScopeOptions();
+  const { error, ...rest } =
+    useCreatureEditorFormLanguageScope(defaultLanguageScope);
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field
+      error={message}
+      label={t("language_scope.label")}
+      maxW="10em"
+      minW="10em"
+    >
+      <Select
+        options={habitatOptions}
+        placeholder={t("language_scope.placeholder")}
+        withinDialog
+        {...rest}
       />
     </Field>
   );
@@ -1162,6 +1248,28 @@ function CreatureEditorSpeedWalk({
 }
 
 //------------------------------------------------------------------------------
+// TelepathyRange
+//------------------------------------------------------------------------------
+
+function CreatureEditorTelepathyRange({
+  defaultTelepathyRange,
+}: {
+  defaultTelepathyRange: number;
+}) {
+  const { error, ...rest } = useCreatureEditorFormTelepathyRange(
+    defaultTelepathyRange,
+  );
+  const { t } = useI18nLangContext(i18nContext);
+  const message = error ? t(error) : undefined;
+
+  return (
+    <Field error={message} label={t("telepathy_range.label")}>
+      <DistanceInput min={0} {...rest} />
+    </Field>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Treasures
 //------------------------------------------------------------------------------
 
@@ -1437,13 +1545,21 @@ const i18nContext = {
     en: "E.g.: 11",
     it: "Es: 11",
   },
+  "language_additional_count.label": {
+    en: "plus...",
+    it: "più...",
+  },
   "language_ids.label": {
-    en: "Languages",
-    it: "Lingue",
+    en: "these...",
+    it: "queste...",
   },
   "language_ids.placeholder": {
     en: "None",
     it: "Nessuna",
+  },
+  "language_scope.label": {
+    en: "Languages",
+    it: "Lingue",
   },
   "legendary_actions.label": {
     en: "Legendary Actions",
@@ -1552,6 +1668,10 @@ const i18nContext = {
   "speed_walk.label": {
     en: "Speed",
     it: "Velocità",
+  },
+  "telepathy_range.label": {
+    en: "Telepathy",
+    it: "Telepatia",
   },
   "traits.label": {
     en: "Traits",

@@ -5,7 +5,7 @@ import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatCmWithUnit } from "~/measures/distance";
-import { formatNumber, formatSigned } from "~/utils/number";
+import { formatNumber, formatNumberAsWord, formatSigned } from "~/utils/number";
 import type { CreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import {
@@ -363,11 +363,35 @@ export function useLocalizeCreature(
       }
 
       // Languages
-      const languages = creature.language_ids
-        .map(localizeLanguageName)
-        .filter((language) => language)
-        .sort()
-        .join(", ");
+      const baseLanguages =
+        creature.language_scope === "all" ? t("languages.all")
+        : creature.language_scope === "none" ? t("languages.none")
+        : creature.language_ids
+            .map(localizeLanguageName)
+            .filter(Boolean)
+            .sort()
+            .join(", ");
+      const additionalLanguages =
+        (
+          creature.language_additional_count > 0 &&
+          creature.language_scope === "specific"
+        ) ?
+          tpi(
+            baseLanguages.length ? "languages.additional" : "languages.count",
+            creature.language_additional_count,
+            formatNumberAsWord(creature.language_additional_count, lang),
+          )
+        : "";
+      const telepathy =
+        creature.telepathy_range > 0 ?
+          ti("languages.telepathy", formatCm(creature.telepathy_range))
+        : "";
+      const languages = [
+        [baseLanguages, additionalLanguages].filter(Boolean).join(" "),
+        telepathy,
+      ]
+        .filter(Boolean)
+        .join(";");
       if (languages) {
         info_parts.push([
           tp("info.languages", creature.language_ids.length),
@@ -624,6 +648,34 @@ const i18nContext = {
   "info.vulnerabilities/1": {
     en: "Vulnerability",
     it: "Vulnerabilità",
+  },
+  "languages.additional/*": {
+    en: "plus <1> more",
+    it: "più <1> aggiuntive",
+  },
+  "languages.additional/1": {
+    en: "plus one more",
+    it: "più una aggiuntiva",
+  },
+  "languages.all": {
+    en: "All",
+    it: "Tutte",
+  },
+  "languages.count/*": {
+    en: "<1> languages",
+    it: "<1> lingue",
+  },
+  "languages.count/1": {
+    en: "One language",
+    it: "Una lingua",
+  },
+  "languages.none": {
+    en: "None",
+    it: "Nessuna",
+  },
+  "languages.telepathy": {
+    en: "Telepathy (<1>)",
+    it: "Telepatia (<1>)",
   },
   "senses.blindsight": {
     en: "Blindsight <1>",

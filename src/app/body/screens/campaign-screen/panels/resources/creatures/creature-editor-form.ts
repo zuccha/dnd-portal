@@ -10,6 +10,7 @@ import { creatureSkillSchema } from "~/models/types/creature-skill";
 import { creatureTreasureSchema } from "~/models/types/creature-treasure";
 import { creatureTypeSchema } from "~/models/types/creature-type";
 import { damageTypeSchema } from "~/models/types/damage-type";
+import { languageScopeSchema } from "~/models/types/language-scope";
 import { createForm } from "~/utils/form";
 
 //------------------------------------------------------------------------------
@@ -42,7 +43,9 @@ export const creatureEditorFormFieldsSchema = z.object({
   hp: z.number(),
   hp_formula: z.string(),
   initiative: z.number(),
+  language_additional_count: z.number(),
   language_ids: z.array(z.uuid()),
+  language_scope: languageScopeSchema,
   legendary_actions: z.string(),
   name: z.string(),
   page: z.number(),
@@ -57,6 +60,7 @@ export const creatureEditorFormFieldsSchema = z.object({
   speed_fly: z.number(),
   speed_swim: z.number(),
   speed_walk: z.number(),
+  telepathy_range: z.number(),
   traits: z.string(),
   treasures: z.array(creatureTreasureSchema),
   tremorsense: z.number(),
@@ -263,12 +267,32 @@ export const useCreatureEditorFormInitiative = (
 ) => useCreatureEditorFormField("initiative", defaultInitiative);
 
 //------------------------------------------------------------------------------
+// Language Additional Count
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormLanguageAdditionalCount = (
+  defaultLanguageAdditionalCount: CreatureEditorFormFields["language_additional_count"],
+) =>
+  useCreatureEditorFormField(
+    "language_additional_count",
+    defaultLanguageAdditionalCount,
+  );
+
+//------------------------------------------------------------------------------
 // Language Ids
 //------------------------------------------------------------------------------
 
 export const useCreatureEditorFormLanguageIds = (
   defaultLanguageIds: CreatureEditorFormFields["language_ids"],
 ) => useCreatureEditorFormField("language_ids", defaultLanguageIds);
+
+//------------------------------------------------------------------------------
+// Language Scope
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormLanguageScope = (
+  defaultLanguageScope: CreatureEditorFormFields["language_scope"],
+) => useCreatureEditorFormField("language_scope", defaultLanguageScope);
 
 //------------------------------------------------------------------------------
 // Name
@@ -358,6 +382,14 @@ export const useCreatureEditorFormSpeedSwim = (
 export const useCreatureEditorFormSpeedWalk = (
   defaultSpeedWalk: CreatureEditorFormFields["speed_walk"],
 ) => useCreatureEditorFormField("speed_walk", defaultSpeedWalk);
+
+//------------------------------------------------------------------------------
+// Telepathy Range
+//------------------------------------------------------------------------------
+
+export const useCreatureEditorFormTelepathyRange = (
+  defaultTelepathyRange: CreatureEditorFormFields["telepathy_range"],
+) => useCreatureEditorFormField("telepathy_range", defaultTelepathyRange);
 
 //------------------------------------------------------------------------------
 // Treasures

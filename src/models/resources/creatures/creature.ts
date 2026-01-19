@@ -14,6 +14,7 @@ import { creatureSkillSchema } from "../../types/creature-skill";
 import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { damageTypeSchema } from "../../types/damage-type";
+import { languageScopeSchema } from "../../types/language-scope";
 import {
   type TranslationFields,
   defaultResource,
@@ -52,7 +53,9 @@ export const creatureSchema = resourceSchema
     hp: z.number(),
     hp_formula: z.string(),
     initiative: z.number(),
+    language_additional_count: z.number(),
     language_ids: z.array(z.uuid()),
+    language_scope: languageScopeSchema,
     legendary_actions: i18nStringSchema,
     passive_perception: z.number(),
     plane_ids: z.array(z.uuid()),
@@ -65,6 +68,7 @@ export const creatureSchema = resourceSchema
     speed_fly: z.number(),
     speed_swim: z.number(),
     speed_walk: z.number(),
+    telepathy_range: z.number(),
     traits: i18nStringSchema,
     treasures: z.array(creatureTreasureSchema),
     tremorsense: z.number(),
@@ -109,7 +113,9 @@ export const defaultCreature: Creature = {
   hp: 11,
   hp_formula: "2d10",
   initiative: 0,
+  language_additional_count: 0,
   language_ids: [],
+  language_scope: "specific",
   legendary_actions: {},
   passive_perception: 10,
   plane_ids: [],
@@ -122,6 +128,7 @@ export const defaultCreature: Creature = {
   speed_fly: 0,
   speed_swim: 0,
   speed_walk: 0,
+  telepathy_range: 0,
   traits: {},
   treasures: [],
   tremorsense: 0,

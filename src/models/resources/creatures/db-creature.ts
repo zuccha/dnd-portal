@@ -9,6 +9,7 @@ import { creatureSkillSchema } from "../../types/creature-skill";
 import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { damageTypeSchema } from "../../types/damage-type";
+import { languageScopeSchema } from "../../types/language-scope";
 import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 
 //------------------------------------------------------------------------------
@@ -39,7 +40,9 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   hp: z.number(),
   hp_formula: z.string(),
   initiative: z.number(),
+  language_additional_count: z.number(),
   language_ids: z.array(z.uuid()),
+  language_scope: languageScopeSchema,
   passive_perception: z.number(),
   plane_ids: z.array(z.uuid()),
   size: creatureSizeSchema,
@@ -50,6 +53,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   speed_fly: z.number(),
   speed_swim: z.number(),
   speed_walk: z.number(),
+  telepathy_range: z.number(),
   treasures: z.array(creatureTreasureSchema),
   tremorsense: z.number(),
   truesight: z.number(),
