@@ -235,8 +235,8 @@ const i18nContext = {
     it: "; o ",
   },
   "equipment/*": {
-    en: "<2> <1>", // 1 = name, 2 = quantity
-    it: "<2> <1>", // 1 = name, 2 = quantity
+    en: "<1> (<2>)", // 1 = name, 2 = quantity
+    it: "<1> (<2>)", // 1 = name, 2 = quantity
   },
   "equipment/1": {
     en: "<1>", // 1 = name

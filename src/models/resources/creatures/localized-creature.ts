@@ -365,7 +365,7 @@ export function useLocalizeCreature(
       // Languages
       const baseLanguages =
         creature.language_scope === "all" ? t("languages.all")
-        : creature.language_scope === "none" ? t("languages.none")
+        : creature.language_scope === "none" ? ""
         : creature.language_ids
             .map(localizeLanguageName)
             .filter(Boolean)
@@ -386,12 +386,13 @@ export function useLocalizeCreature(
         creature.telepathy_range > 0 ?
           ti("languages.telepathy", formatCm(creature.telepathy_range))
         : "";
-      const languages = [
-        [baseLanguages, additionalLanguages].filter(Boolean).join(" "),
-        telepathy,
-      ]
-        .filter(Boolean)
-        .join(";");
+      const languages =
+        [
+          [baseLanguages, additionalLanguages].filter(Boolean).join(" "),
+          telepathy,
+        ]
+          .filter(Boolean)
+          .join(";") || t("languages.none");
       if (languages) {
         info_parts.push([
           tp("info.languages", creature.language_ids.length),
@@ -582,8 +583,8 @@ const i18nContext = {
     it: "##Tratti##",
   },
   "equipment/*": {
-    en: "<2> <1>", // 1 = name, 2 = quantity
-    it: "<2> <1>", // 1 = name, 2 = quantity
+    en: "<1> (<2>)", // 1 = name, 2 = quantity
+    it: "<1> (<2>)", // 1 = name, 2 = quantity
   },
   "equipment/1": {
     en: "<1>", // 1 = name
@@ -674,8 +675,8 @@ const i18nContext = {
     it: "Nessuna",
   },
   "languages.telepathy": {
-    en: "Telepathy (<1>)",
-    it: "Telepatia (<1>)",
+    en: "Telepathy <1>",
+    it: "Telepatia <1>",
   },
   "senses.blindsight": {
     en: "Blindsight <1>",
