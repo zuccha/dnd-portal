@@ -33,7 +33,10 @@ export async function signInWithDiscord() {
     },
     provider: "discord",
   });
-  if (error) console.error(error);
+
+  if (!error) return window.location.reload();
+  console.error(error);
+  return error;
 }
 
 //------------------------------------------------------------------------------
@@ -46,7 +49,7 @@ export async function signInWithPassword(credentials: {
 }) {
   const { error } = await supabase.auth.signInWithPassword(credentials);
 
-  if (!error) return;
+  if (!error) return window.location.reload();
   console.error(error);
   return error;
 }
@@ -61,7 +64,7 @@ export async function signUpWithPassword(credentials: {
 }) {
   const { error } = await supabase.auth.signUp(credentials);
 
-  if (!error) return;
+  if (!error) return window.location.reload();
   console.error(error);
   return error;
 }
@@ -72,7 +75,10 @@ export async function signUpWithPassword(credentials: {
 
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
-  if (error) console.error(error);
+
+  if (!error) return window.location.reload();
+  console.error(error);
+  return error;
 }
 
 //------------------------------------------------------------------------------
