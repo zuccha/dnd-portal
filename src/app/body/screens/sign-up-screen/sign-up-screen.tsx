@@ -9,7 +9,7 @@ import {
 import { ArrowLeftIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import RawDiscordIcon from "~/assets/images/icons/discord.svg?react";
-import { signInWithDiscord, signInWithPassword } from "~/auth/auth";
+import { signInWithDiscord, signUpWithPassword } from "~/auth/auth";
 import useAuth from "~/auth/use-auth";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Redirect from "~/navigation/redirect";
@@ -29,19 +29,24 @@ export default function SignInScreen() {
   const { t } = useI18nLangContext(i18nContext);
 
   const [loading, setLoading] = useState(false);
+  // const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const signIn = useCallback(async () => {
+  const signUp = useCallback(async () => {
     if (loading) return;
+    // if (!username) return setErrorMessage("error.username.empty");
     if (!email) return setErrorMessage("error.email.empty");
     if (!password) return setErrorMessage("error.password.empty");
+    if (password !== passwordConfirmation)
+      return setErrorMessage("error.password.mismatch");
     setLoading(true);
-    const error = await signInWithPassword({ email, password });
+    const error = await signUpWithPassword({ email, password });
     if (error) setErrorMessage("error.generic");
     setLoading(false);
-  }, [email, loading, password]);
+  }, [email, loading, password, passwordConfirmation]);
 
   if (auth.user) return <Redirect route={Route._} />;
 
@@ -49,6 +54,10 @@ export default function SignInScreen() {
     <Center bgColor="bg.subtle" minH="100vh" position="relative" w="full">
       <VStack align="flex-start" gap={4} maxW="20em" mt={20} w="full">
         <Heading size="2xl">{t("title")}</Heading>
+
+        {/* <Field label={t("username")}>
+          <Input onValueChange={setUsername} size="sm" value={username} />
+        </Field> */}
 
         <Field label={t("email")}>
           <Input
@@ -68,6 +77,15 @@ export default function SignInScreen() {
           />
         </Field>
 
+        <Field label={t("password_confirmation")}>
+          <Input
+            onValueChange={setPasswordConfirmation}
+            size="sm"
+            type="password"
+            value={passwordConfirmation}
+          />
+        </Field>
+
         {errorMessage && (
           <Span color="fg.error" fontSize="sm" w="full">
             {t(errorMessage)}
@@ -75,14 +93,14 @@ export default function SignInScreen() {
         )}
 
         <Span fontSize="sm" w="full">
-          {`${t("not_registered")} `}
-          <Link onClick={() => history.pushState({}, "", Route.SignUp)}>
-            {t("signup")}
+          {`${t("already_registered")} `}
+          <Link onClick={() => history.pushState({}, "", Route.SignIn)}>
+            {t("signin")}
           </Link>
         </Span>
 
-        <Button alignSelf="flex-end" onClick={signIn} size="sm">
-          {t("signin")}
+        <Button alignSelf="flex-end" onClick={signUp} size="sm">
+          {t("signup")}
         </Button>
 
         <HStack fontSize="xs" w="full">
@@ -93,7 +111,6 @@ export default function SignInScreen() {
 
         <Button
           borderColor="bg.inverted"
-          disabled={loading}
           onClick={signInWithDiscord}
           variant="outline"
           w="full"
@@ -105,7 +122,6 @@ export default function SignInScreen() {
 
       <IconButton
         Icon={ArrowLeftIcon}
-        disabled={loading}
         left={4}
         onClick={() => history.pushState({}, "", Route._)}
         position="absolute"
@@ -126,6 +142,10 @@ const DiscordIcon = chakra(RawDiscordIcon);
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "already_registered": {
+    en: "Already have an account?",
+    it: "Hai già un account?",
+  },
   "discord": {
     en: "Use Discord",
     it: "Usa Discord",
@@ -138,13 +158,21 @@ const i18nContext = {
     en: "The email address cannot be empty",
     it: "L'indirizzo email non può essere vuoto",
   },
+  "error.generic": {
+    en: "Something went wrong",
+    it: "Qualcosa è andato storto",
+  },
   "error.password.empty": {
     en: "The password cannot be empty",
     it: "La password non può essere vuota",
   },
-  "not_registered": {
-    en: "Don't have an account?",
-    it: "Non hai un account?",
+  "error.password.mismatch": {
+    en: "Password and password confirmation must be the same",
+    it: "Password e conferma password devono essere uguali",
+  },
+  "error.username.empty": {
+    en: "The username cannot be empty",
+    it: "Il nome utente non può essere vuoto",
   },
   "or": {
     en: "OR",
@@ -154,6 +182,10 @@ const i18nContext = {
     en: "Password",
     it: "Password",
   },
+  "password_confirmation": {
+    en: "Confirm Password",
+    it: "Conferma Password",
+  },
   "signin": {
     en: "Sign in",
     it: "Loggati",
@@ -162,8 +194,16 @@ const i18nContext = {
     en: "Register",
     it: "Registrati",
   },
+  "subtitle": {
+    en: "Fill the form to register.",
+    it: "Compila il modulo per registrarti.",
+  },
   "title": {
-    en: "Sign In for D&D Portal",
-    it: "Loggati su D&D Portal",
+    en: "Register for D&D Portal",
+    it: "Registrati su D&D Portal",
+  },
+  "username": {
+    en: "Username",
+    it: "Nome Utente",
   },
 };

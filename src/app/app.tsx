@@ -4,6 +4,7 @@ import { useRoute } from "../navigation/navigation";
 import { Route } from "../navigation/routes";
 import CampaignScreen from "./body/screens/campaign-screen/campaign-screen";
 import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
+import SignUpScreen from "./body/screens/sign-up-screen/sign-up-screen";
 
 //------------------------------------------------------------------------------
 // App
@@ -40,5 +41,6 @@ function AppRouter() {
   const route = useRoute();
 
   if (route === Route.SignIn) return <SignInScreen />;
+  if (route === Route.SignUp) return <SignUpScreen />;
   return <CampaignScreen />;
 }

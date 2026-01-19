@@ -37,6 +37,36 @@ export async function signInWithDiscord() {
 }
 
 //------------------------------------------------------------------------------
+// Sign In With Password
+//------------------------------------------------------------------------------
+
+export async function signInWithPassword(credentials: {
+  email: string;
+  password: string;
+}) {
+  const { error } = await supabase.auth.signInWithPassword(credentials);
+
+  if (!error) return;
+  console.error(error);
+  return error;
+}
+
+//------------------------------------------------------------------------------
+// Sign Up With Password
+//------------------------------------------------------------------------------
+
+export async function signUpWithPassword(credentials: {
+  email: string;
+  password: string;
+}) {
+  const { error } = await supabase.auth.signUp(credentials);
+
+  if (!error) return;
+  console.error(error);
+  return error;
+}
+
+//------------------------------------------------------------------------------
 // Sign Out
 //------------------------------------------------------------------------------
 

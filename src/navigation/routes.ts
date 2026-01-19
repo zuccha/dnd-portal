@@ -23,6 +23,7 @@ export const Route = {
   Settings: "/settings",
   SettingsCampaign: "/settings/campaign",
   SignIn: "/sign-in",
+  SignUp: "/sign-up",
 } as const;
 
 export type Route = (typeof Route)[keyof typeof Route];

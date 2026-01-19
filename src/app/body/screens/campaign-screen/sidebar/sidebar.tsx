@@ -1,4 +1,4 @@
-import { Avatar, HStack, Menu, Portal, Span, VStack } from "@chakra-ui/react";
+import { Avatar, HStack, Span, VStack } from "@chakra-ui/react";
 import { PanelRightIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { signOut } from "~/auth/auth";
@@ -144,42 +144,28 @@ function UserButton() {
           {t("button.signin")}
         </Link>
         /
-        <Link onClick={() => history.pushState({}, "", Route.SignIn)}>
+        <Link onClick={() => history.pushState({}, "", Route.SignUp)}>
           {t("button.signup")}
         </Link>
       </HStack>
     );
 
   return (
-    <Menu.Root>
-      <Menu.Trigger focusRing="outside" mr={2} rounded="full">
-        <HStack justify="flex-start" w="full">
-          <Avatar.Root
-            borderColor="border.inverted"
-            borderWidth={2}
-            cursor="pointer"
-            size="xs"
-          >
-            <Avatar.Fallback name={user.name} />
-            <Avatar.Image src={user.avatarUrl} />
-          </Avatar.Root>
+    <HStack justify="flex-start" overflow="hidden" w="full">
+      <Avatar.Root
+        borderColor="border.inverted"
+        borderWidth={2}
+        cursor="pointer"
+        size="xs"
+      >
+        <Avatar.Fallback name={user.name} />
+        <Avatar.Image src={user.avatarUrl} />
+      </Avatar.Root>
 
-          <Span>{user.name}</Span>
-        </HStack>
-      </Menu.Trigger>
-      <Portal>
-        <Menu.Positioner>
-          <Menu.Content>
-            <Menu.ItemGroup>
-              <Menu.ItemGroupLabel>{user.name ?? "User"}</Menu.ItemGroupLabel>
-              <Menu.Item onClick={signOut} value="logout">
-                {t("button.signout")}
-              </Menu.Item>
-            </Menu.ItemGroup>
-          </Menu.Content>
-        </Menu.Positioner>
-      </Portal>
-    </Menu.Root>
+      <Link onClick={signOut} size="sm">
+        {t("button.signout")}
+      </Link>
+    </HStack>
   );
 }
 
