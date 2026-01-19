@@ -1,6 +1,7 @@
 import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useState } from "react";
-import useAuth from "~/auth/use-auth";
+import { useRoute } from "../navigation/navigation";
+import { Route } from "../navigation/routes";
 import CampaignScreen from "./body/screens/campaign-screen/campaign-screen";
 import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
 
@@ -9,7 +10,6 @@ import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
 //------------------------------------------------------------------------------
 
 export default function App() {
-  const auth = useAuth();
   const [ready, setReady] = useState(false);
 
   useLayoutEffect(() => {
@@ -27,11 +27,18 @@ export default function App() {
 
   return (
     <VStack gap={0} h="100vh" w="full">
-      {auth.user ?
-        <CampaignScreen />
-      : !auth.loading ?
-        <SignInScreen />
-      : null}
+      <AppRouter />
     </VStack>
   );
+}
+
+//------------------------------------------------------------------------------
+// App Router
+//------------------------------------------------------------------------------
+
+function AppRouter() {
+  const route = useRoute();
+
+  if (route === Route.SignIn) return <SignInScreen />;
+  return <CampaignScreen />;
 }

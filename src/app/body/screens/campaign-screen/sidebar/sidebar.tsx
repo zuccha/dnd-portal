@@ -8,8 +8,10 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { i18nSystems, useI18nSystem } from "~/i18n/i18n-system";
 import { useSelectedCampaignId } from "~/models/campaign";
 import { useLangs } from "~/models/lang";
+import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
 import IconButton from "~/ui/icon-button";
+import Link from "~/ui/link";
 import Select from "~/ui/select";
 import { compareObjects } from "~/utils/object";
 import SidebarCampaign from "./sidebar-campaign";
@@ -135,7 +137,18 @@ function UserButton() {
   const user = useAuth().user;
   const { t } = useI18nLangContext(i18nContext);
 
-  if (!user) return null;
+  if (!user)
+    return (
+      <HStack w="full">
+        <Link onClick={() => history.pushState({}, "", Route.SignIn)}>
+          {t("button.signin")}
+        </Link>
+        /
+        <Link onClick={() => history.pushState({}, "", Route.SignIn)}>
+          {t("button.signup")}
+        </Link>
+      </HStack>
+    );
 
   return (
     <Menu.Root>
@@ -175,11 +188,18 @@ function UserButton() {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "button.signin": {
+    en: "Sign in",
+    it: "Login",
+  },
   "button.signout": {
     en: "Sign out",
     it: "Logout",
   },
-
+  "button.signup": {
+    en: "Register",
+    it: "Registrati",
+  },
   "system.imperial": {
     en: "Imperial",
     it: "Imperiale",

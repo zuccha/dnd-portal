@@ -1,18 +1,26 @@
 import { Center, Heading, VStack, chakra } from "@chakra-ui/react";
+import { ArrowLeftIcon } from "lucide-react";
 import RawDiscordIcon from "~/assets/images/icons/discord.svg?react";
 import { signInWithDiscord } from "~/auth/auth";
+import useAuth from "~/auth/use-auth";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import Redirect from "~/navigation/redirect";
+import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
+import IconButton from "~/ui/icon-button";
 
 //------------------------------------------------------------------------------
 // Sign In Screen
 //------------------------------------------------------------------------------
 
 export default function SignInScreen() {
+  const auth = useAuth();
   const { t } = useI18nLangContext(i18nContext);
 
+  if (auth.user) return <Redirect route={Route._} />;
+
   return (
-    <Center w="full">
+    <Center position="relative" w="full">
       <VStack align="flex-start" gap={10} maxW="20em" mt={20} w="full">
         <VStack align="flex-start" gap={0}>
           <Heading size="2xl">{t("title")}</Heading>
@@ -30,6 +38,15 @@ export default function SignInScreen() {
           {t("button.discord")}
         </Button>
       </VStack>
+
+      <IconButton
+        Icon={ArrowLeftIcon}
+        left={4}
+        onClick={() => history.pushState({}, "", Route._)}
+        position="absolute"
+        // size="sm"
+        top={4}
+      />
     </Center>
   );
 }
