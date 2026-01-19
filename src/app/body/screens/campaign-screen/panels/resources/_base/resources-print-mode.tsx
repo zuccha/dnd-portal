@@ -133,7 +133,7 @@ export function createResourcesPrintMode<
         ...Object.fromEntries(
           range(columns).map((c) => [
             `&:nth-of-type(${cardsPerPaper}n+${c + 1})`,
-            { marginTop: `${paperPadding.py}in` },
+            { breakBefore: "page", marginTop: `${paperPadding.py}in` },
           ]),
         ),
         ...Object.fromEntries(
@@ -160,6 +160,7 @@ export function createResourcesPrintMode<
               {range(papersCount).map((paperNumber) => (
                 <Box
                   bgColor="white"
+                  breakBefore="page"
                   height={`${paperHeight}in`}
                   key={paperNumber}
                   position="relative"
