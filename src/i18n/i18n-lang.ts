@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createLocalStore } from "~/store/local-store";
+import type { I18nString } from "./i18n-string";
 
 //------------------------------------------------------------------------------
 // I18n Lang
@@ -11,7 +12,7 @@ export type I18nLang = string;
 // I18n Lang Context
 //------------------------------------------------------------------------------
 
-export type I18nLangContext = Record<string, Record<I18nLang, string>>;
+export type I18nLangContext = Record<string, I18nString>;
 
 //------------------------------------------------------------------------------
 // I18n Lang Store
