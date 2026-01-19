@@ -70,16 +70,21 @@ export function createResourcesAlbum<
 
       const scrollTop = container.scrollTop;
 
+      const containerH = container.clientHeight;
+      const containerW = container.clientWidth;
+
       const cardH = ResourceCardInteractive.h * zoom * 96;
       const cardW = ResourceCardInteractive.w * zoom * 96;
-      const rowH = cardH + gap;
-      const columns = computeFit(container.clientWidth, cardW, gap, gap) || 1;
 
-      const startRow = Math.floor(scrollTop / rowH);
-      const endRow = Math.floor((scrollTop + container.clientHeight) / rowH);
+      const rowH = cardH + gap;
+      const columns = computeFit(containerW, cardW, gap, gap) || 1;
+
+      const overscan = 2;
+      const startRow = Math.floor(scrollTop / rowH) - overscan;
+      const endRow = Math.floor((scrollTop + containerH) / rowH) + overscan;
 
       const last = filteredResourceIds.length - 1;
-      const start = startRow * columns;
+      const start = Math.max(0, startRow * columns);
       const end = Math.min(last, (endRow + 1) * columns - 1);
 
       setVisibleById((prev) => {
