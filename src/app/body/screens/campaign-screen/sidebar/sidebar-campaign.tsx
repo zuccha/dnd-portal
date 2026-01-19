@@ -127,4 +127,8 @@ const i18nContext = {
     en: "Settings",
     it: "Impostazioni",
   },
+  [Route.SettingsCampaign]: {
+    en: "Campaign",
+    it: "Campagna",
+  },
 };
