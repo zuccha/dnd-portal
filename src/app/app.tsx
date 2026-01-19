@@ -1,9 +1,8 @@
-import { Box, VStack } from "@chakra-ui/react";
-import useAuth from "~/auth/use-auth";
+import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useState } from "react";
+import useAuth from "~/auth/use-auth";
 import CampaignScreen from "./body/screens/campaign-screen/campaign-screen";
-import PageSignIn from "./body/screens/sign-in-screen/page-sign-in";
-import Header, { headerHeight } from "./header/header";
+import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
 
 //------------------------------------------------------------------------------
 // App
@@ -28,15 +27,11 @@ export default function App() {
 
   return (
     <VStack gap={0} h="100vh" w="full">
-      <Header />
-
-      <Box h={`calc(100vh - ${headerHeight})`} w="full">
-        {auth.user ?
-          <CampaignScreen />
-        : !auth.loading ?
-          <PageSignIn />
-        : null}
-      </Box>
+      {auth.user ?
+        <CampaignScreen />
+      : !auth.loading ?
+        <SignInScreen />
+      : null}
     </VStack>
   );
 }

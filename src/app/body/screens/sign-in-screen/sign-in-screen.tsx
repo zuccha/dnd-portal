@@ -5,10 +5,10 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Button from "~/ui/button";
 
 //------------------------------------------------------------------------------
-// Page Sign In
+// Sign In Screen
 //------------------------------------------------------------------------------
 
-export default function PageSignIn() {
+export default function SignInScreen() {
   const { t } = useI18nLangContext(i18nContext);
 
   return (
@@ -46,8 +46,8 @@ const DiscordIcon = chakra(RawDiscordIcon);
 
 const i18nContext = {
   "title": {
-    en: "Welcome.",
-    it: "Benvenutə.",
+    en: "Welcome to D&D Portal.",
+    it: "Benvenutə su D&D Portal.",
   },
 
   "subtitle": {

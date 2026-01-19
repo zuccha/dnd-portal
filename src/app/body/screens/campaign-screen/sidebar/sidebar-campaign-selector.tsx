@@ -1,4 +1,4 @@
-import { Text, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import {
@@ -63,10 +63,6 @@ export default function SidebarCampaignSelector() {
 
   return (
     <VStack align="flex-start" gap={2} px={5} w="full">
-      <Text fontSize="sm" fontWeight="semibold">
-        {t("title")}
-      </Text>
-
       <Select
         categories={campaignCategories}
         disabled={!campaignOptions.length}
@@ -83,18 +79,12 @@ export default function SidebarCampaignSelector() {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "select.modules": {
-    en: "Modules",
-    it: "Moduli",
-  },
-
   "select.campaigns": {
     en: "Campaigns",
     it: "Campagne",
   },
-
-  "title": {
-    en: "Content",
-    it: "Contenuti",
+  "select.modules": {
+    en: "Modules",
+    it: "Moduli",
   },
 };
