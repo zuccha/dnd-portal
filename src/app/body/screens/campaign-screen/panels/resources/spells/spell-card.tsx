@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Span, VStack } from "@chakra-ui/react";
+import { Box, GridItem, SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import type { Spell } from "~/models/resources/spells/spell";
@@ -25,49 +25,45 @@ export function SpellCard({
 }: SpellCardProps) {
   const { t } = useI18nLangContext(i18nContext);
 
+  const casting_time = localizedResource.casting_time_with_ritual;
+  const range = localizedResource.range;
+  const components = localizedResource.components;
+  const duration = localizedResource.duration_with_concentration;
+
   return (
     <ResourcePokerCard
       beforeDetails={
         <>
-          <SimpleGrid
-            columns={2}
-            gapY={PokerCard.rem0375}
-            position="relative"
-            px={PokerCard.rem1000}
-            w="full"
-          >
-            <GridItem
-              label={t("casting_time")}
-              value={localizedResource.casting_time_with_ritual}
-            />
-            <GridItem label={t("range")} value={localizedResource.range} />
-            <GridItem
-              label={t("components")}
-              value={localizedResource.components}
-            />
-            <GridItem
-              label={t("duration")}
-              value={localizedResource.duration_with_concentration}
-            />
+          <SimpleGrid columns={2} gap={0} px={PokerCard.rem1000} w="full">
+            <VStack gap={0} pb={PokerCard.rem0125}>
+              <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
+                {t("casting_time")}
+              </Span>
+              <Span textAlign="center">{casting_time}</Span>
+            </VStack>
 
-            <Box
-              left="50%"
-              position="absolute"
-              top="50%"
-              transform="translate(-50%, -50%)"
-              w="20%"
-            >
-              <svg viewBox="0 0 100 100" width="100%">
-                <polygon
-                  fill={PokerCard.separatorColor}
-                  points="0,50 50,49 100,50 50,51"
-                />
-                <polygon
-                  fill={PokerCard.separatorColor}
-                  points="50,0 49,50 50,100 51,50"
-                />
-              </svg>
-            </Box>
+            <VStack gap={0} pb={PokerCard.rem0125}>
+              <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
+                {t("range")}
+              </Span>
+              <Span textAlign="center">{range}</Span>
+            </VStack>
+
+            <Star />
+
+            <VStack gap={0} pt={PokerCard.rem0125}>
+              <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
+                {t("components")}
+              </Span>
+              <Span textAlign="center">{components}</Span>
+            </VStack>
+
+            <VStack gap={0} pt={PokerCard.rem0125}>
+              <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
+                {t("duration")}
+              </Span>
+              <Span textAlign="center">{duration}</Span>
+            </VStack>
           </SimpleGrid>
 
           <PokerCard.Separator />
@@ -92,24 +88,31 @@ SpellCard.h = ResourcePokerCard.h;
 SpellCard.w = ResourcePokerCard.w;
 
 //------------------------------------------------------------------------------
-// Grid Item
+// Star
 //------------------------------------------------------------------------------
 
-type GridItemProps = {
-  label: string;
-  value: string;
-};
-
-function GridItem({ label, value }: GridItemProps) {
+function Star() {
   return (
-    <VStack gap={0}>
-      <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
-        {label}
-      </Span>
-      <Span>{value}</Span>
-    </VStack>
+    <GridItem
+      colSpan={2}
+      h={0}
+      justifyItems="center"
+      position="relative"
+      w="full"
+    >
+      <Box position="absolute" transform="translateY(-50%)">
+        <svg height={starSize} viewBox="0 0 100 100" width={starSize}>
+          <polygon
+            fill={PokerCard.separatorColor}
+            points="50,0 51.5,48.5 100,50 51.5,51.5 50,100 48.5,51.5 0,50 48.5,48.5"
+          />
+        </svg>
+      </Box>
+    </GridItem>
   );
 }
+
+const starSize = `${PokerCard.remToIn(4)}in`;
 
 // ------------------------------------------------------------------------------
 // I18n Context
