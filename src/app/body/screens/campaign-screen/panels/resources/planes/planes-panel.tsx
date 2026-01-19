@@ -8,8 +8,8 @@ import { type LocalizedPlane } from "~/models/resources/planes/localized-plane";
 import { type Plane } from "~/models/resources/planes/plane";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableExtra } from "../resources-table";
 import { PlaneCard } from "./plane-card";
 import PlaneEditor from "./plane-editor";
 import planeEditorForm, {

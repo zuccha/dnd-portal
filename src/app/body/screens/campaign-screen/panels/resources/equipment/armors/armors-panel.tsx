@@ -9,8 +9,8 @@ import {
 } from "~/models/resources/equipment/armors/db-armor";
 import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../../_base/resources-panel";
-import type { ResourcesTableExtra } from "../../_base/resources-table";
+import { createResourcesPanel } from "../../resources-panel";
+import type { ResourcesTableExtra } from "../../resources-table";
 import { ArmorCard } from "./armor-card";
 import ArmorEditor from "./armor-editor";
 import armorEditorForm, {

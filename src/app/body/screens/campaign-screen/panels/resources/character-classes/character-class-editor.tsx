@@ -14,7 +14,7 @@ import Field from "~/ui/field";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
-import ResourceSearch from "../_base/resource-search";
+import ResourceSearch from "../resource-search";
 import {
   useCharacterClassEditorFormArmorProficiencies,
   useCharacterClassEditorFormArmorProficienciesExtra,

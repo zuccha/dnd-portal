@@ -9,8 +9,8 @@ import {
 import { type LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
 import { startingEquipmentToEntries } from "~/models/resources/character-classes/starting-equipment";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableExtra } from "../resources-table";
 import { CharacterClassCard } from "./character-class-card";
 import CharacterClassEditor from "./character-class-editor";
 import itemEditorForm, {

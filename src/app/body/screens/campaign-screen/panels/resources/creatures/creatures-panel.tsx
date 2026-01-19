@@ -9,8 +9,8 @@ import {
 } from "~/models/resources/creatures/db-creature";
 import { type LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableExtra } from "../resources-table";
 import { CreatureCard } from "./creature-card";
 import CreatureEditor from "./creature-editor";
 import creatureEditorForm, {

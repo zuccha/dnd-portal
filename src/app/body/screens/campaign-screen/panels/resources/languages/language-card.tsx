@@ -4,7 +4,7 @@ import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
   type ResourcePokerCardProps,
-} from "../_base/resource-poker-card";
+} from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Language Card

@@ -21,8 +21,8 @@ import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import Textarea from "~/ui/textarea";
-import EquipmentBundleEditor from "../_base/equipment-bundle-editor";
-import ResourceSearch from "../_base/resource-search";
+import EquipmentBundleEditor from "../equipment-bundle-editor";
+import ResourceSearch from "../resource-search";
 import {
   useCreatureEditorFormAC,
   useCreatureEditorFormAbilityCha,

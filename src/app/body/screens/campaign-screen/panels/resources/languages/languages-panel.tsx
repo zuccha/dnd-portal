@@ -8,8 +8,8 @@ import { type Language } from "~/models/resources/languages/language";
 import { languageStore } from "~/models/resources/languages/language-store";
 import { type LocalizedLanguage } from "~/models/resources/languages/localized-language";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableExtra } from "../resources-table";
 import { LanguageCard } from "./language-card";
 import LanguageEditor from "./language-editor";
 import languageEditorForm, {

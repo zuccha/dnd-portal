@@ -9,8 +9,8 @@ import { type LocalizedTool } from "~/models/resources/equipment/tools/localized
 import { type Tool } from "~/models/resources/equipment/tools/tool";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../../_base/resources-panel";
-import type { ResourcesTableExtra } from "../../_base/resources-table";
+import { createResourcesPanel } from "../../resources-panel";
+import type { ResourcesTableExtra } from "../../resources-table";
 import { ToolCard } from "./tool-card";
 import ToolEditor from "./tool-editor";
 import toolEditorForm, { type ToolEditorFormFields } from "./tool-editor-form";

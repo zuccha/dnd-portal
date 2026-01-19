@@ -8,8 +8,8 @@ import { type EldritchInvocation } from "~/models/resources/eldritch-invocations
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
 import { type LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableExtra } from "../resources-table";
 import { EldritchInvocationCard } from "./eldritch-invocation-card";
 import EldritchInvocationEditor from "./eldritch-invocation-editor";
 import eldritchInvocationEditorForm, {

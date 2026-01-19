@@ -8,8 +8,8 @@ import { type LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import { type Spell } from "~/models/resources/spells/spell";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../_base/resources-panel";
-import type { ResourcesTableExtra } from "../_base/resources-table";
+import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableExtra } from "../resources-table";
 import { SpellCard } from "./spell-card";
 import SpellEditor from "./spell-editor";
 import spellEditorForm, {

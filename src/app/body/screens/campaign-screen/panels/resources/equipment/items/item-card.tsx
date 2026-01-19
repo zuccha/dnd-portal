@@ -1,6 +1,6 @@
 import type { Item } from "~/models/resources/equipment/items/item";
 import type { LocalizedItem } from "~/models/resources/equipment/items/localized-item";
-import type { ResourcePokerCardProps } from "../../_base/resource-poker-card";
+import type { ResourcePokerCardProps } from "../../resource-poker-card";
 import { EquipmentCard } from "../equipment-card";
 
 //------------------------------------------------------------------------------

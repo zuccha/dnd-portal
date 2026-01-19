@@ -10,7 +10,7 @@ import { removeItem, replaceItem } from "~/ui/array";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import { numberToLetter } from "~/utils/number";
-import EquipmentBundleEditor from "../_base/equipment-bundle-editor";
+import EquipmentBundleEditor from "../equipment-bundle-editor";
 
 //------------------------------------------------------------------------------
 // Starting Equipment Editor

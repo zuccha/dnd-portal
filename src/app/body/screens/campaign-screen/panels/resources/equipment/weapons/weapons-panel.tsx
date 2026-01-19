@@ -9,8 +9,8 @@ import { type LocalizedWeapon } from "~/models/resources/equipment/weapons/local
 import { type Weapon } from "~/models/resources/equipment/weapons/weapon";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { report } from "~/utils/error";
-import { createResourcesPanel } from "../../_base/resources-panel";
-import type { ResourcesTableExtra } from "../../_base/resources-table";
+import { createResourcesPanel } from "../../resources-panel";
+import type { ResourcesTableExtra } from "../../resources-table";
 import { WeaponCard } from "./weapon-card";
 import WeaponEditor from "./weapon-editor";
 import weaponEditorForm, {

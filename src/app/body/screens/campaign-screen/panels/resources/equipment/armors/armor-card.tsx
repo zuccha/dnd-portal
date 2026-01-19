@@ -2,7 +2,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Armor } from "~/models/resources/equipment/armors/armor";
 import type { LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import PokerCard from "~/ui/poker-card";
-import type { ResourcePokerCardProps } from "../../_base/resource-poker-card";
+import type { ResourcePokerCardProps } from "../../resource-poker-card";
 import { EquipmentCard } from "../equipment-card";
 
 //------------------------------------------------------------------------------
