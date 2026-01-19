@@ -1,5 +1,11 @@
 import { Box, Flex, Wrap } from "@chakra-ui/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useCanEditCampaign } from "~/models/campaign";
 import type {
   DBResource,
@@ -56,7 +62,7 @@ export function createResourcesAlbum<
     const zoom = context.useZoom();
 
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const [visibleRange, setVisibleRange] = useState({ end: 0, start: 0 });
+    const [visibleById, setVisibleById] = useState<Record<string, boolean>>({});
 
     const virtualize = useCallback(() => {
       const container = containerRef.current;
@@ -76,10 +82,16 @@ export function createResourcesAlbum<
       const start = startRow * columns;
       const end = Math.min(last, (endRow + 1) * columns - 1);
 
-      setVisibleRange((prev) =>
-        prev.start === start && prev.end === end ? prev : { end, start },
-      );
-    }, [filteredResourceIds.length, zoom]);
+      setVisibleById((prev) => {
+        const next = { ...prev };
+        for (let i = start; i <= end; ++i) next[filteredResourceIds[i]!] = true;
+        return next;
+      });
+    }, [filteredResourceIds, zoom]);
+
+    useLayoutEffect(() => {
+      setVisibleById({});
+    }, [filteredResourceIds]);
 
     useEffect(() => {
       if (!containerRef.current) return;
@@ -106,10 +118,8 @@ export function createResourcesAlbum<
             p={`${gap}px`}
             w="full"
           >
-            {filteredResourceIds.map((id, index) => {
-              const isVisible =
-                index >= visibleRange.start && index <= visibleRange.end;
-              return isVisible ?
+            {filteredResourceIds.map((id) => {
+              return visibleById[id] ?
                   <ResourceCardInteractive
                     campaignId={campaignId}
                     editable={editable}
