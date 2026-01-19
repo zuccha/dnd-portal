@@ -44,7 +44,7 @@ export function ResourcePokerCard<
   return (
     <>
       {pages.map((page, pageIndex) => {
-        const text = page.text + page.textTemp;
+        const text = (page.text + page.textTemp).trim();
         return (
           <PokerCard.Frame
             descriptor={pageIndex === 0 ? localizedResource.descriptor : ""}
