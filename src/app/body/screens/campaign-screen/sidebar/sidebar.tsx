@@ -37,8 +37,8 @@ export default function Sidebar() {
 
   return (
     <VStack borderRightWidth={1} gap={6} h="full" py={4} w="15em">
-      <VStack gap={2} w="full">
-        <HStack justify="space-between" px={6} w="full">
+      <VStack gap={2} px={6} w="full">
+        <HStack justify="space-between" w="full">
           <Span fontSize="lg">D&D Portal</Span>
           <HStack gap={0} mr={-2}>
             <ThemeButton />
@@ -50,6 +50,12 @@ export default function Sidebar() {
             />
           </HStack>
         </HStack>
+
+        <HStack w="full">
+          <LanguageSelect />
+          <SystemSelect />
+        </HStack>
+
         <SidebarCampaignSelector />
       </VStack>
 
@@ -57,10 +63,6 @@ export default function Sidebar() {
 
       <VStack flex={1} justify="flex-end" px={6} w="full">
         <UserButton />
-        <HStack w="full">
-          <LanguageSelect />
-          <SystemSelect />
-        </HStack>
       </VStack>
     </VStack>
   );
@@ -138,7 +140,7 @@ function UserButton() {
   return (
     <Menu.Root>
       <Menu.Trigger focusRing="outside" mr={2} rounded="full">
-        <HStack>
+        <HStack justify="flex-start" w="full">
           <Avatar.Root
             borderColor="border.inverted"
             borderWidth={2}

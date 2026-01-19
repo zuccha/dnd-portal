@@ -62,12 +62,13 @@ export default function SidebarCampaignSelector() {
   }, [all, fetched, setSelectedCampaignId]);
 
   return (
-    <VStack align="flex-start" gap={2} px={5} w="full">
+    <VStack align="flex-start" gap={2} w="full">
       <Select
         categories={campaignCategories}
         disabled={!campaignOptions.length}
         onValueChange={setSelectedCampaignId}
         options={campaignOptions}
+        size="sm"
         value={selectedCampaignId ?? ""}
       />
     </VStack>
