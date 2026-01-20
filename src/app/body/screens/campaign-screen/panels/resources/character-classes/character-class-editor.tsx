@@ -1,37 +1,26 @@
-import { HStack, VStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
+import { type CharacterClassFormData } from "~/models/resources/character-classes/character-class-form";
 import type { StartingEquipmentGroup } from "~/models/resources/character-classes/starting-equipment";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
-import { useCampaignRoleOptions } from "~/models/types/campaign-role";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useCreatureSkillOptions } from "~/models/types/creature-skill";
 import { useDieTypeOptions } from "~/models/types/die_type";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
 import Field from "~/ui/field";
-import Input from "~/ui/input";
-import NumberInput from "~/ui/number-input";
-import Select from "~/ui/select";
-import ResourceSearch from "../resource-search";
+import type { Form } from "~/utils/form";
+import { createResourceEditor } from "../resource-editor";
 import {
-  useCharacterClassEditorFormArmorProficiencies,
-  useCharacterClassEditorFormArmorProficienciesExtra,
-  useCharacterClassEditorFormHpDie,
-  useCharacterClassEditorFormName,
-  useCharacterClassEditorFormPage,
-  useCharacterClassEditorFormPrimaryAbilities,
-  useCharacterClassEditorFormSavingThrowProficiencies,
-  useCharacterClassEditorFormSkillProficienciesPool,
-  useCharacterClassEditorFormSkillProficienciesPoolQuantity,
-  useCharacterClassEditorFormSpellIds,
-  useCharacterClassEditorFormStartingEquipment,
-  useCharacterClassEditorFormToolProficiencyIds,
-  useCharacterClassEditorFormVisibility,
-  useCharacterClassEditorFormWeaponProficiencies,
-  useCharacterClassEditorFormWeaponProficienciesExtra,
-} from "./character-class-editor-form";
+  createInputField,
+  createMultipleSelectField,
+  createMultipleSelectIdsField,
+  createNumberInputField,
+  createResourceSearchField,
+  createSelectField,
+} from "../resource-editor-form";
 import StartingEquipmentEditor from "./starting-equipment-editor";
 
 //------------------------------------------------------------------------------
@@ -43,471 +32,305 @@ export type CharacterClassEditorProps = {
   resource: CharacterClass;
 };
 
-export default function CharacterClassEditor({
-  campaignId,
-  resource,
-}: CharacterClassEditorProps) {
-  const { lang } = useI18nLangContext(i18nContext);
+export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
+  //----------------------------------------------------------------------------
+  // Resource Editor
+  //----------------------------------------------------------------------------
 
-  return (
-    <VStack align="stretch" gap={4}>
-      <HStack align="flex-start" gap={4}>
-        <CharacterClassEditorName defaultName={resource.name[lang] ?? ""} />
-        <CharacterClassEditorPage defaultPage={resource.page?.[lang] ?? 0} />
-        <CharacterClassEditorVisibility
-          defaultVisibility={resource.visibility}
-        />
-      </HStack>
+  const ResourceEditor = createResourceEditor(form);
 
-      <HStack gap={4} w="full">
-        <CharacterClassEditorPrimaryAbilities
-          defaultPrimaryAbilities={resource.primary_abilities}
-        />
+  //----------------------------------------------------------------------------
+  // Armor Proficiencies Field
+  //----------------------------------------------------------------------------
 
-        <CharacterClassEditorHpDie defaultHpDie={resource.hp_die} />
-      </HStack>
+  const ArmorProficienciesField = createMultipleSelectField({
+    i18nContext: {
+      label: {
+        en: "Armor Training",
+        it: "Competenze nelle Armature",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    useField: form.createUseField("armor_proficiencies"),
+    useOptions: useArmorTypeOptions,
+  });
 
-      <CharacterClassEditorSavingThrowProficiencies
-        defaultSavingThrowProficiencies={resource.saving_throw_proficiencies}
-      />
+  //----------------------------------------------------------------------------
+  // Armor Proficiencies Extra Field
+  //----------------------------------------------------------------------------
 
-      <HStack gap={4} w="full">
-        <CharacterClassEditorSkillProficienciesPool
-          defaultSkillProficienciesPool={resource.skill_proficiencies_pool}
-        />
+  const ArmorProficienciesExtraField = createInputField({
+    i18nContext: {
+      label: {
+        en: "Other",
+        it: "Altro",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    translatable: true,
+    useField: form.createUseField("armor_proficiencies_extra"),
+  });
 
-        <CharacterClassEditorSkillProficienciesPoolQuantity
-          defaultSkillProficienciesPoolQuantity={
-            resource.skill_proficiencies_pool_quantity
-          }
-        />
-      </HStack>
+  //----------------------------------------------------------------------------
+  // HP Die Field
+  //----------------------------------------------------------------------------
 
-      <HStack gap={2} w="full">
-        <CharacterClassEditorWeaponProficiencies
-          defaultWeaponProficiencies={resource.weapon_proficiencies}
-        />
-        <CharacterClassEditorWeaponProficienciesExtra
-          defaultWeaponProficienciesExtra={
-            resource.weapon_proficiencies_extra[lang] ?? ""
-          }
-        />
-      </HStack>
+  const HpDieField = createSelectField({
+    i18nContext: {
+      label: {
+        en: "Hit Point Die",
+        it: "Dado Vita",
+      },
+    },
+    useField: form.createUseField("hp_die"),
+    useOptions: useDieTypeOptions,
+  });
 
-      <CharacterClassEditorToolProficiencyIds
-        campaignId={campaignId}
-        defaultToolProficiencyIds={resource.tool_proficiency_ids}
-      />
+  //----------------------------------------------------------------------------
+  // Primary Abilities Field
+  //----------------------------------------------------------------------------
 
-      <HStack gap={2} w="full">
-        <CharacterClassEditorArmorProficiencies
-          defaultArmorProficiencies={resource.armor_proficiencies}
-        />
-        <CharacterClassEditorArmorProficienciesExtra
-          defaultArmorProficienciesExtra={
-            resource.armor_proficiencies_extra[lang] ?? ""
-          }
-        />
-      </HStack>
+  const PrimaryAbilitiesField = createMultipleSelectField({
+    i18nContext: {
+      label: {
+        en: "Primary Abilities",
+        it: "Abilità Primarie",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    useField: form.createUseField("primary_abilities"),
+    useOptions: useCreatureAbilityOptions,
+  });
 
-      <CharacterClassEditorStartingEquipment
-        campaignId={campaignId}
-        defaultStartingEquipment={resource.starting_equipment}
-      />
+  //----------------------------------------------------------------------------
+  // Saving Throw Proficiencies Field
+  //----------------------------------------------------------------------------
 
-      <CharacterClassEditorSpellIds
-        campaignId={campaignId}
-        defaultSpellIds={resource.spell_ids}
-      />
-    </VStack>
-  );
-}
+  const SavingThrowProficienciesField = createMultipleSelectField({
+    i18nContext: {
+      label: {
+        en: "Saving Throw Proficiencies",
+        it: "Competenze nei Tiri Salvezza",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    useField: form.createUseField("saving_throw_proficiencies"),
+    useOptions: useCreatureAbilityOptions,
+  });
 
-//------------------------------------------------------------------------------
-// Armor Proficiencies
-//------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+  // Skill Proficiencies Pool Field
+  //----------------------------------------------------------------------------
 
-function CharacterClassEditorArmorProficiencies({
-  defaultArmorProficiencies,
-}: {
-  defaultArmorProficiencies: CharacterClass["armor_proficiencies"];
-}) {
-  const armorTypeOptions = useArmorTypeOptions();
-  const { error, ...rest } = useCharacterClassEditorFormArmorProficiencies(
-    defaultArmorProficiencies,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
+  const SkillProficienciesPoolField = createMultipleSelectField({
+    i18nContext: {
+      label: {
+        en: "Skill Proficiencies",
+        it: "Competenze nelle Abilità",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    useField: form.createUseField("skill_proficiencies_pool"),
+    useOptions: useCreatureSkillOptions,
+  });
 
-  return (
-    <Field error={message} label={t("armor_proficiencies.label")}>
-      <Select
-        multiple
-        options={armorTypeOptions}
-        placeholder={t("armor_proficiencies.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
+  //----------------------------------------------------------------------------
+  // Skill Proficiencies Pool Quantity Field
+  //----------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// Armor Proficiencies Extra
-//------------------------------------------------------------------------------
+  const SkillProficienciesPoolQuantityField = createNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Quantity",
+        it: "Quantità",
+      },
+    },
+    useField: form.createUseField("skill_proficiencies_pool_quantity"),
+  });
 
-function CharacterClassEditorArmorProficienciesExtra({
-  defaultArmorProficienciesExtra,
-}: {
-  defaultArmorProficienciesExtra: string;
-}) {
-  const { error, ...rest } = useCharacterClassEditorFormArmorProficienciesExtra(
-    defaultArmorProficienciesExtra,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
+  //----------------------------------------------------------------------------
+  // Spell Ids
+  //----------------------------------------------------------------------------
 
-  return (
-    <Field error={message} label={t("armor_proficiencies_extra.label")}>
-      <Input
-        bgColor="bg.info"
-        placeholder={t("armor_proficiencies_extra.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
+  const SpellIdsField = createResourceSearchField({
+    i18nContext: {
+      label: {
+        en: "Spells",
+        it: "Incantesimi",
+      },
+      placeholder: {
+        en: "Search spell",
+        it: "Cerca incantesimo",
+      },
+    },
+    useField: form.createUseField("spell_ids"),
+    useOptions: spellStore.useResourceOptions,
+  });
 
-//------------------------------------------------------------------------------
-// HP Die
-//------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+  // Starting Equipment Extra
+  //----------------------------------------------------------------------------
 
-function CharacterClassEditorHpDie({
-  defaultHpDie,
-}: {
-  defaultHpDie: CharacterClass["hp_die"];
-}) {
-  const dieTypeOptions = useDieTypeOptions();
-  const { error, ...rest } = useCharacterClassEditorFormHpDie(defaultHpDie);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
+  const useStartingEquipment = form.createUseField("starting_equipment");
 
-  return (
-    <Field error={message} label={t("hp_die.label")}>
-      <Select
-        options={dieTypeOptions}
-        placeholder={t("hp_die.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
+  function StartingEquipmentField({
+    campaignId,
+    defaultValue,
+  }: {
+    campaignId: string;
+    defaultValue: StartingEquipmentGroup[];
+  }) {
+    const { error, ...rest } = useStartingEquipment(defaultValue);
+    const { t } = useI18nLangContext(i18nContext);
+    const message = error ? t(error) : undefined;
 
-//------------------------------------------------------------------------------
-// Name
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorName({ defaultName }: { defaultName: string }) {
-  const { error, ...rest } = useCharacterClassEditorFormName(defaultName);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("name.label")}>
-      <Input
-        autoComplete="off"
-        bgColor="bg.info"
-        placeholder={t("name.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Page
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorPage({ defaultPage }: { defaultPage: number }) {
-  const { error, ...rest } = useCharacterClassEditorFormPage(defaultPage);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput bgColor="bg.info" {...rest} w="6em" />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Primary Abilities
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorPrimaryAbilities({
-  defaultPrimaryAbilities,
-}: {
-  defaultPrimaryAbilities: CharacterClass["primary_abilities"];
-}) {
-  const abilityOptions = useCreatureAbilityOptions();
-  const { error, ...rest } = useCharacterClassEditorFormPrimaryAbilities(
-    defaultPrimaryAbilities,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("primary_abilities.label")}>
-      <Select
-        multiple
-        options={abilityOptions}
-        placeholder={t("primary_abilities.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Saving Throw Proficiencies
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorSavingThrowProficiencies({
-  defaultSavingThrowProficiencies,
-}: {
-  defaultSavingThrowProficiencies: CharacterClass["saving_throw_proficiencies"];
-}) {
-  const abilityOptions = useCreatureAbilityOptions();
-  const { error, ...rest } =
-    useCharacterClassEditorFormSavingThrowProficiencies(
-      defaultSavingThrowProficiencies,
+    return (
+      <Field error={message} label={t("starting_equipment.label")}>
+        <StartingEquipmentEditor campaignId={campaignId} w="full" {...rest} />
+      </Field>
     );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
+  }
 
-  return (
-    <Field error={message} label={t("saving_throw_proficiencies.label")}>
-      <Select
-        multiple
-        options={abilityOptions}
-        placeholder={t("saving_throw_proficiencies.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
+  //----------------------------------------------------------------------------
+  // Tool Proficiency Ids Field
+  //----------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// Skill Proficiencies Pool
-//------------------------------------------------------------------------------
+  const ToolProficiencyIdsField = createMultipleSelectIdsField({
+    i18nContext: {
+      label: {
+        en: "Tool Proficiencies",
+        it: "Competenza negli Strumenti",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    useField: form.createUseField("tool_proficiency_ids"),
+    useOptions: toolStore.useResourceOptions,
+  });
 
-function CharacterClassEditorSkillProficienciesPool({
-  defaultSkillProficienciesPool,
-}: {
-  defaultSkillProficienciesPool: CharacterClass["skill_proficiencies_pool"];
-}) {
-  const skillOptions = useCreatureSkillOptions();
-  const { error, ...rest } = useCharacterClassEditorFormSkillProficienciesPool(
-    defaultSkillProficienciesPool,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
+  //----------------------------------------------------------------------------
+  // Weapon Proficiencies Field
+  //----------------------------------------------------------------------------
 
-  return (
-    <Field error={message} label={t("skill_proficiencies_pool.label")}>
-      <Select
-        multiple
-        options={skillOptions}
-        placeholder={t("skill_proficiencies_pool.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
+  const WeaponProficienciesField = createMultipleSelectField({
+    i18nContext: {
+      label: {
+        en: "Weapon Proficiencies",
+        it: "Competenze nelle Armi",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    useField: form.createUseField("weapon_proficiencies"),
+    useOptions: useWeaponTypeOptions,
+  });
 
-//------------------------------------------------------------------------------
-// Skill Proficiencies Pool Quantity
-//------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+  // Weapon Proficiencies Extra Field
+  //----------------------------------------------------------------------------
 
-function CharacterClassEditorSkillProficienciesPoolQuantity({
-  defaultSkillProficienciesPoolQuantity,
-}: {
-  defaultSkillProficienciesPoolQuantity: number;
-}) {
-  const { error, ...rest } =
-    useCharacterClassEditorFormSkillProficienciesPoolQuantity(
-      defaultSkillProficienciesPoolQuantity,
+  const WeaponProficienciesExtraField = createInputField({
+    i18nContext: {
+      label: {
+        en: "Other",
+        it: "Altro",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    translatable: true,
+    useField: form.createUseField("weapon_proficiencies_extra"),
+  });
+
+  //----------------------------------------------------------------------------
+  // Character Class Editor
+  //----------------------------------------------------------------------------
+
+  return function CharacterClassEditor({
+    campaignId,
+    resource,
+  }: CharacterClassEditorProps) {
+    const { lang } = useI18nLangContext(i18nContext);
+
+    return (
+      <ResourceEditor resource={resource}>
+        <HStack gap={4} w="full">
+          <PrimaryAbilitiesField defaultValue={resource.primary_abilities} />
+          <HpDieField defaultValue={resource.hp_die} maxW="10em" />
+        </HStack>
+
+        <SavingThrowProficienciesField
+          defaultValue={resource.saving_throw_proficiencies}
+        />
+
+        <HStack gap={4} w="full">
+          <SkillProficienciesPoolField
+            defaultValue={resource.skill_proficiencies_pool}
+          />
+
+          <SkillProficienciesPoolQuantityField
+            defaultValue={resource.skill_proficiencies_pool_quantity}
+            maxW="6em"
+          />
+        </HStack>
+
+        <HStack gap={2} w="full">
+          <WeaponProficienciesField
+            defaultValue={resource.weapon_proficiencies}
+          />
+          <WeaponProficienciesExtraField
+            defaultValue={resource.weapon_proficiencies_extra[lang] ?? ""}
+          />
+        </HStack>
+
+        <HStack gap={2} w="full">
+          <ArmorProficienciesField
+            defaultValue={resource.armor_proficiencies}
+          />
+          <ArmorProficienciesExtraField
+            defaultValue={resource.armor_proficiencies_extra[lang] ?? ""}
+          />
+        </HStack>
+
+        <ToolProficiencyIdsField
+          campaignId={campaignId}
+          defaultValue={resource.tool_proficiency_ids}
+        />
+
+        <StartingEquipmentField
+          campaignId={campaignId}
+          defaultValue={resource.starting_equipment}
+        />
+
+        <SpellIdsField
+          campaignId={campaignId}
+          defaultValue={resource.spell_ids}
+          w="full"
+        />
+      </ResourceEditor>
     );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("skill_proficiencies_pool_quantity.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Spell Ids
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorSpellIds({
-  campaignId,
-  defaultSpellIds,
-}: {
-  campaignId: string;
-  defaultSpellIds: CharacterClass["spell_ids"];
-}) {
-  const spellOptions = spellStore.useResourceOptions(campaignId);
-
-  const { error, ...rest } =
-    useCharacterClassEditorFormSpellIds(defaultSpellIds);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("spell_ids.label")}>
-      <ResourceSearch options={spellOptions} {...rest} w="full" withinDialog />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Starting Equipment Extra
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorStartingEquipment({
-  campaignId,
-  defaultStartingEquipment,
-}: {
-  campaignId: string;
-  defaultStartingEquipment: StartingEquipmentGroup[];
-}) {
-  const { error, ...rest } = useCharacterClassEditorFormStartingEquipment(
-    defaultStartingEquipment,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("starting_equipment.label")}>
-      <StartingEquipmentEditor campaignId={campaignId} w="full" {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Tool Proficiency Ids
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorToolProficiencyIds({
-  campaignId,
-  defaultToolProficiencyIds,
-}: {
-  campaignId: string;
-  defaultToolProficiencyIds: CharacterClass["tool_proficiency_ids"];
-}) {
-  const toolOptions = toolStore.useResourceOptions(campaignId);
-  const { error, ...rest } = useCharacterClassEditorFormToolProficiencyIds(
-    defaultToolProficiencyIds,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("tool_proficiency_ids.label")}>
-      <Select
-        multiple
-        options={toolOptions}
-        placeholder={t("tool_proficiency_ids.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Visibility
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorVisibility({
-  defaultVisibility,
-}: {
-  defaultVisibility: CharacterClass["visibility"];
-}) {
-  const visibilityOptions = useCampaignRoleOptions();
-  const { error, ...rest } =
-    useCharacterClassEditorFormVisibility(defaultVisibility);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Proficiencies
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorWeaponProficiencies({
-  defaultWeaponProficiencies,
-}: {
-  defaultWeaponProficiencies: CharacterClass["weapon_proficiencies"];
-}) {
-  const weaponTypeOptions = useWeaponTypeOptions();
-  const { error, ...rest } = useCharacterClassEditorFormWeaponProficiencies(
-    defaultWeaponProficiencies,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("weapon_proficiencies.label")}>
-      <Select
-        multiple
-        options={weaponTypeOptions}
-        placeholder={t("weapon_proficiencies.placeholder")}
-        withinDialog
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weapon Proficiencies Extra
-//------------------------------------------------------------------------------
-
-function CharacterClassEditorWeaponProficienciesExtra({
-  defaultWeaponProficienciesExtra,
-}: {
-  defaultWeaponProficienciesExtra: string;
-}) {
-  const { error, ...rest } =
-    useCharacterClassEditorFormWeaponProficienciesExtra(
-      defaultWeaponProficienciesExtra,
-    );
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("weapon_proficiencies_extra.label")}>
-      <Input
-        bgColor="bg.info"
-        placeholder={t("weapon_proficiencies_extra.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
+  };
 }
 
 //----------------------------------------------------------------------------
@@ -515,116 +338,8 @@ function CharacterClassEditorWeaponProficienciesExtra({
 //----------------------------------------------------------------------------
 
 const i18nContext = {
-  "armor_proficiencies.label": {
-    en: "Armor Training",
-    it: "Competenze nelle Armature",
-  },
-  "armor_proficiencies.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "armor_proficiencies_extra.label": {
-    en: "Other",
-    it: "Altro",
-  },
-  "armor_proficiencies_extra.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "hp_die.label": {
-    en: "Hit Point Die",
-    it: "Dado Vita",
-  },
-  "hp_die.placeholder": {
-    en: "None",
-    it: "Nessuno",
-  },
-  "name.error.empty": {
-    en: "The name cannot be empty",
-    it: "Il nome non può essere vuoto",
-  },
-  "name.label": {
-    en: "Name",
-    it: "Nome",
-  },
-  "name.placeholder": {
-    en: "E.g.: Barbarian",
-    it: "Es: Barbaro",
-  },
-  "page.label": {
-    en: "Page",
-    it: "Pagina",
-  },
-  "primary_abilities.label": {
-    en: "Primary Abilities",
-    it: "Abilità Primarie",
-  },
-  "primary_abilities.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "saving_throw_proficiencies.label": {
-    en: "Saving Throw Proficiencies",
-    it: "Competenze nei Tiri Salvezza",
-  },
-  "saving_throw_proficiencies.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "skill_proficiencies_pool.label": {
-    en: "Skill Proficiencies",
-    it: "Competenze nelle Abilità",
-  },
-  "skill_proficiencies_pool.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "skill_proficiencies_pool_quantity.label": {
-    en: "Quantity",
-    it: "Quantità",
-  },
-  "spell_ids.label": {
-    en: "Spells",
-    it: "Incantesimi",
-  },
-  "spell_ids.placeholder": {
-    en: "Search spell",
-    it: "Cerca incantesimo",
-  },
   "starting_equipment.label": {
     en: "Starting Equipment",
     it: "Equipaggiamento Iniziale",
-  },
-  "starting_equipment.placeholder": {
-    en: "None",
-    it: "Nessuno",
-  },
-  "tool_proficiency_ids.label": {
-    en: "Tool Proficiencies",
-    it: "Competenza negli Strumenti",
-  },
-  "tool_proficiency_ids.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "visibility.label": {
-    en: "Visibility",
-    it: "Visibilità",
-  },
-  "weapon_proficiencies.label": {
-    en: "Weapon Proficiencies",
-    it: "Competenze nelle Armi",
-  },
-  "weapon_proficiencies.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "weapon_proficiencies_extra.label": {
-    en: "Other",
-    it: "Altro",
-  },
-  "weapon_proficiencies_extra.placeholder": {
-    en: "None",
-    it: "Nessuna",
   },
 };
