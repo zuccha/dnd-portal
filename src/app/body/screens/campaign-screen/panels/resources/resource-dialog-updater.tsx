@@ -9,14 +9,14 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import type { Form } from "~/utils/form";
-import ResourceEditor from "./resource-editor";
+import ResourceDialog from "./resource-dialog";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
-// Resource Updater Extra
+// Resource Dialog Updater Extra
 //------------------------------------------------------------------------------
 
-export type ResourceUpdaterExtra<
+export type ResourceDialogUpdaterExtra<
   R extends Resource,
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
@@ -30,14 +30,14 @@ export type ResourceUpdaterExtra<
 };
 
 //------------------------------------------------------------------------------
-// Create Resource Updater
+// Create Resource Dialog Updater
 //------------------------------------------------------------------------------
 
-export type ResourceUpdaterProps = {
+export type ResourceDialogUpdaterProps = {
   campaignId: string;
 };
 
-export function createResourceUpdater<
+export function createResourceDialogUpdater<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
@@ -47,7 +47,7 @@ export function createResourceUpdater<
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
-  { Editor, form, parseFormData }: ResourceUpdaterExtra<R, DBR, DBT, FF>,
+  { Editor, form, parseFormData }: ResourceDialogUpdaterExtra<R, DBR, DBT, FF>,
 ) {
   async function submitForm(
     data: Partial<FF>,
@@ -68,7 +68,7 @@ export function createResourceUpdater<
     return undefined;
   }
 
-  return function ResourcesUpdater({ campaignId }: ResourceUpdaterProps) {
+  return function ResourcesUpdater({ campaignId }: ResourceDialogUpdaterProps) {
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
     const editedResource = context.useEditedResource();
@@ -99,7 +99,7 @@ export function createResourceUpdater<
     const name = editedResource?.name[lang] ?? "";
 
     return (
-      <ResourceEditor
+      <ResourceDialog
         error={error}
         onClose={unsetEditedResource}
         onCopyToClipboard={form.copyDataToClipboard}
@@ -117,7 +117,7 @@ export function createResourceUpdater<
           campaignId={campaignId}
           resource={editedResource ?? store.defaultResource}
         />
-      </ResourceEditor>
+      </ResourceDialog>
     );
   };
 }

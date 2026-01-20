@@ -9,12 +9,12 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import {
   type ResourceCreatorExtra,
-  createResourceCreator,
-} from "./resource-creator";
+  createResourceDialogCreator,
+} from "./resource-dialog-creator";
 import {
-  type ResourceUpdaterExtra,
-  createResourceUpdater,
-} from "./resource-updater";
+  type ResourceDialogUpdaterExtra,
+  createResourceDialogUpdater,
+} from "./resource-dialog-updater";
 import { createResourcesActions } from "./resources-actions";
 import {
   type ResourcesAlbumExtra,
@@ -52,14 +52,14 @@ export function createResourcesPanel<
     album: ResourcesAlbumExtra<R, L>;
     filters: ResourcesFiltersExtra;
     form: ResourceCreatorExtra<R, DBR, DBT, FF> &
-      ResourceUpdaterExtra<R, DBR, DBT, FF>;
+      ResourceDialogUpdaterExtra<R, DBR, DBT, FF>;
     table: ResourcesTableExtra<R, L>;
   },
 ) {
   const context = createResourcesContext<R>(store.id);
 
-  const ResourceCreator = createResourceCreator(store, context, form);
-  const ResourceEditor = createResourceUpdater(store, context, form);
+  const ResourceCreator = createResourceDialogCreator(store, context, form);
+  const ResourceUpdater = createResourceDialogUpdater(store, context, form);
   const ResourcesActions = createResourcesActions(store, context);
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesCounter = createResourcesCounter(store, context);
@@ -104,7 +104,7 @@ export function createResourcesPanel<
         {view === "cards" && <ResourcesAlbum campaignId={campaignId} />}
 
         <ResourceCreator campaignId={campaignId} />
-        <ResourceEditor campaignId={campaignId} />
+        <ResourceUpdater campaignId={campaignId} />
       </VStack>
     );
   };

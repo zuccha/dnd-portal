@@ -9,11 +9,11 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import type { Form } from "~/utils/form";
-import ResourceEditor from "./resource-editor";
+import ResourceDialog from "./resource-dialog";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
-// Resource Creator Extra
+// Resource Dialog Creator Extra
 //------------------------------------------------------------------------------
 
 export type ResourceCreatorExtra<
@@ -30,14 +30,14 @@ export type ResourceCreatorExtra<
 };
 
 //------------------------------------------------------------------------------
-// Create Resource Creator
+// Create Resource Dialog Creator
 //------------------------------------------------------------------------------
 
-export type ResourceCreatorProps = {
+export type ResourceDialogCreatorProps = {
   campaignId: string;
 };
 
-export function createResourceCreator<
+export function createResourceDialogCreator<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
@@ -73,7 +73,7 @@ export function createResourceCreator<
     return undefined;
   }
 
-  return function ResourcesCreator({ campaignId }: ResourceCreatorProps) {
+  return function ResourcesCreator({ campaignId }: ResourceDialogCreatorProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
 
     const createdResource = context.useCreatedResource();
@@ -103,7 +103,7 @@ export function createResourceCreator<
     const error = form.useSubmitError();
 
     return (
-      <ResourceEditor
+      <ResourceDialog
         error={error}
         onClose={unsetCreatedResource}
         onCopyToClipboard={form.copyDataToClipboard}
@@ -121,7 +121,7 @@ export function createResourceCreator<
           campaignId={campaignId}
           resource={createdResource ?? store.defaultResource}
         />
-      </ResourceEditor>
+      </ResourceDialog>
     );
   };
 }

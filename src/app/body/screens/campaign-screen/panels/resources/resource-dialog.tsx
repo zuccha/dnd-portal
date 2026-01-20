@@ -6,10 +6,10 @@ import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 
 //------------------------------------------------------------------------------
-// Resource Editor
+// Resource Dialog
 //------------------------------------------------------------------------------
 
-export type ResourceEditorProps = {
+export type ResourceDialogProps = {
   children: ReactNode;
   error: string | undefined;
   title: string;
@@ -25,7 +25,7 @@ export type ResourceEditorProps = {
   valid: boolean;
 };
 
-export default function ResourceEditor({
+export default function ResourceDialog({
   children,
   error,
   onClose,
@@ -39,7 +39,7 @@ export default function ResourceEditor({
   secondaryActionText,
   title,
   valid,
-}: ResourceEditorProps) {
+}: ResourceDialogProps) {
   const { t } = useI18nLangContext(i18nContext);
 
   const disabled = !valid || saving;
