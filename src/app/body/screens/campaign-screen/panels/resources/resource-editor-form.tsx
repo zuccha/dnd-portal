@@ -1,26 +1,120 @@
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
+import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { ResourceOption } from "~/models/resources/resource";
+import DistanceInput from "~/ui/distance-input";
 import Field, { type FieldProps } from "~/ui/field";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select, { type SelectOption } from "~/ui/select";
+import Textarea from "~/ui/textarea";
 import type { FieldBag } from "~/utils/form";
+import EquipmentBundleEditor from "./equipment-bundle-editor";
 import ResourceSearch from "./resource-search";
 
 //------------------------------------------------------------------------------
-// I18n Field Context
+// Common Types
 //------------------------------------------------------------------------------
 
+type Props<T> = Omit<FieldProps, "defaultValue"> & { defaultValue: T };
+
 type I18nFieldContext<T extends string> = Record<T, I18nString>;
+
+//------------------------------------------------------------------------------
+// Create Distance Input Field
+//------------------------------------------------------------------------------
+
+export type DistanceInputFieldProps = Props<number>;
+
+export function createDistanceInputField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
+  translatable?: boolean;
+  useField: (defaultValue: number) => FieldBag<string, number>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function DistanceInputField({
+    defaultValue,
+    ...rest
+  }: DistanceInputFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <DistanceInput
+          bgColor={translatable ? "bg.info" : undefined}
+          {...inputProps}
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return DistanceInputField;
+}
+
+//------------------------------------------------------------------------------
+// Create Equipment Bundle Field
+//------------------------------------------------------------------------------
+
+export type EquipmentBundleFieldProps = Props<EquipmentBundle> & {
+  campaignId: string;
+};
+
+export function createEquipmentBundleField({
+  i18nContext,
+  i18nContextExtra,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  translatable?: boolean;
+  useField: (
+    defaultValue: EquipmentBundle,
+  ) => FieldBag<string, EquipmentBundle>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function EquipmentBundleField({
+    campaignId,
+    defaultValue,
+    ...rest
+  }: EquipmentBundleFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <EquipmentBundleEditor
+          bgColor={translatable ? "bg.info" : undefined}
+          campaignId={campaignId}
+          withinDialog
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return EquipmentBundleField;
+}
 
 //------------------------------------------------------------------------------
 // Create Input Field
 //------------------------------------------------------------------------------
 
-export type InputFieldProps = FieldProps & {
-  defaultValue: string;
-};
+export type InputFieldProps = Props<string>;
 
 export function createInputField({
   i18nContext,
@@ -58,9 +152,7 @@ export function createInputField({
 // Create Multiple Select Field
 //------------------------------------------------------------------------------
 
-export type MultipleSelectFieldProps<T extends string> = FieldProps & {
-  defaultValue: T[];
-};
+export type MultipleSelectFieldProps<T extends string> = Props<T[]>;
 
 export function createMultipleSelectField<T extends string>({
   i18nContext,
@@ -107,9 +199,8 @@ export function createMultipleSelectField<T extends string>({
 // Create Multiple Select Ids Field
 //------------------------------------------------------------------------------
 
-export type MultipleSelectIdsFieldProps<T extends string> = FieldProps & {
+export type MultipleSelectIdsFieldProps<T extends string> = Props<T[]> & {
   campaignId: string;
-  defaultValue: T[];
 };
 
 export function createMultipleSelectIdsField<T extends string>({
@@ -158,18 +249,18 @@ export function createMultipleSelectIdsField<T extends string>({
 // Create Number Input Field
 //------------------------------------------------------------------------------
 
-export type NumberInputFieldProps = FieldProps & {
-  defaultValue: number;
-};
+export type NumberInputFieldProps = Props<number>;
 
 export function createNumberInputField({
   i18nContext,
   i18nContextExtra,
+  inputProps,
   translatable,
   useField,
 }: {
   i18nContext: I18nFieldContext<"label">;
   i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
   translatable?: boolean;
   useField: (defaultValue: number) => FieldBag<string, number>;
 }) {
@@ -184,6 +275,7 @@ export function createNumberInputField({
       <Field error={message} label={t("label")} {...rest}>
         <NumberInput
           bgColor={translatable ? "bg.info" : undefined}
+          {...inputProps}
           {...field}
         />
       </Field>
@@ -197,10 +289,7 @@ export function createNumberInputField({
 // Create Resource Search Field
 //------------------------------------------------------------------------------
 
-export type ResourceSearchFieldProps = FieldProps & {
-  campaignId: string;
-  defaultValue: string[];
-};
+export type ResourceSearchFieldProps = Props<string[]> & { campaignId: string };
 
 export function createResourceSearchField({
   i18nContext,
@@ -247,9 +336,7 @@ export function createResourceSearchField({
 // Create Select Field
 //------------------------------------------------------------------------------
 
-export type SelectFieldProps<T extends string> = FieldProps & {
-  defaultValue: T;
-};
+export type SelectFieldProps<T extends string> = Props<T>;
 
 export function createSelectField<T extends string>({
   i18nContext,
@@ -285,4 +372,45 @@ export function createSelectField<T extends string>({
   }
 
   return SelectField;
+}
+
+//------------------------------------------------------------------------------
+// Create Textarea Field
+//------------------------------------------------------------------------------
+
+export type TextareaFieldProps = Props<string>;
+
+export function createTextareaField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label" | "placeholder">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { rows?: number };
+  translatable?: boolean;
+  useField: (defaultValue: string) => FieldBag<string, string>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function TextareaField({ defaultValue, ...rest }: TextareaFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <Textarea
+          bgColor={translatable ? "bg.info" : undefined}
+          placeholder={t("placeholder")}
+          {...inputProps}
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return TextareaField;
 }
