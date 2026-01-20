@@ -1,6 +1,6 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import type { ReactNode } from "react";
-import { useI18nSystem } from "~/i18n/i18n-system";
+import { useI18nLang } from "~/i18n/i18n-lang";
 import { characterClassForm } from "~/models/resources/character-classes/character-class-form";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFormData } from "~/models/resources/resource-form";
@@ -45,6 +45,7 @@ export function createResourceEditor<D extends ResourceFormData>(
         it: "Il nome non può essere vuoto",
       },
     },
+    translatable: true,
     useField: form.createUseField("name", (name) =>
       name ? undefined : "error.empty",
     ),
@@ -61,6 +62,7 @@ export function createResourceEditor<D extends ResourceFormData>(
         it: "Pagina",
       },
     },
+    translatable: true,
     useField: form.createUseField("page"),
   });
 
@@ -84,7 +86,7 @@ export function createResourceEditor<D extends ResourceFormData>(
   //----------------------------------------------------------------------------
 
   return function ResourceEditor({ children, resource }: ResourceEditorProps) {
-    const [lang] = useI18nSystem();
+    const [lang] = useI18nLang();
 
     return (
       <VStack align="stretch" gap={4}>
