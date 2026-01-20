@@ -24,6 +24,10 @@ export type FieldBag<Name, Value> = {
 
 export type Form<Fields extends Record<string, unknown>> = {
   copyDataToClipboard: () => Promise<void>;
+  createUseField: <Name extends keyof Fields>(
+    name: Name,
+    validate?: (value: Fields[Name]) => string | undefined,
+  ) => (defaultValue: Fields[Name]) => FieldBag<Name, Fields[Name]>;
   pasteDataFromClipboard: () => Promise<void>;
   reset: () => void;
   useField: <Name extends keyof Fields>(
@@ -136,22 +140,14 @@ export function createForm<Fields extends Record<string, unknown>>(
   }
 
   //----------------------------------------------------------------------------
-  // Use Form Field
+  // Use Field
   //----------------------------------------------------------------------------
 
   function useField<Name extends keyof Fields>(
     name: Name,
     defaultValue: Fields[Name],
     validate: (value: Fields[Name]) => string | undefined = () => undefined,
-  ): {
-    "data-invalid": "" | undefined;
-    "disabled": boolean;
-    "error": string | undefined;
-    "name": Name;
-    "onBlur": () => void;
-    "onValueChange": (value: Fields[Name]) => void;
-    "value": Fields[Name];
-  } {
+  ): FieldBag<Name, Fields[Name]> {
     const [value, setValue] = useAndRegisterValue(name, defaultValue);
     const [error, setError] = useAndRegisterError(name, undefined);
     const [disabled] = useSubmitting();
@@ -259,11 +255,25 @@ export function createForm<Fields extends Record<string, unknown>>(
   }
 
   //----------------------------------------------------------------------------
+  // Create Use Field
+  //----------------------------------------------------------------------------
+
+  function createUseField<Name extends keyof Fields>(
+    name: Name,
+    validate: (value: Fields[Name]) => string | undefined = () => undefined,
+  ) {
+    return function (defaultValue: Fields[Name]): FieldBag<Name, Fields[Name]> {
+      return useField(name, defaultValue, validate);
+    };
+  }
+
+  //----------------------------------------------------------------------------
   // Return
   //----------------------------------------------------------------------------
 
   return {
     copyDataToClipboard,
+    createUseField,
     pasteDataFromClipboard,
     reset,
     useField,
