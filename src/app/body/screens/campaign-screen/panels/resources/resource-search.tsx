@@ -52,7 +52,7 @@ export default function ResourceSearch({
   );
 
   return (
-    <VStack gap={1} {...rest}>
+    <VStack gap={1} w="full" {...rest}>
       <HStack gap={1} w="full">
         <Search
           emptyLabel={t("no_result")}
