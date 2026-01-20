@@ -6,10 +6,6 @@ import { campaignRoleSchema } from "../types/campaign-role";
 //------------------------------------------------------------------------------
 
 export const dbResourceSchema = z.object({
-  id: z.uuid(),
-
-  campaign_id: z.string(),
-
   visibility: campaignRoleSchema,
 });
 
@@ -20,9 +16,6 @@ export type DBResource = z.infer<typeof dbResourceSchema>;
 //------------------------------------------------------------------------------
 
 export const dbResourceTranslationSchema = z.object({
-  lang: z.string(),
-  resource_id: z.uuid(),
-
   name: z.string(),
   page: z.number().nullable(),
 });
