@@ -1,20 +1,14 @@
-import {
-  type DBLanguage,
-  type DBLanguageTranslation,
-  dbLanguageSchema,
-  dbLanguageTranslationSchema,
-} from "~/models/resources/languages/db-language";
 import { type Language } from "~/models/resources/languages/language";
+import {
+  languageForm,
+  languageFormDataToDB,
+} from "~/models/resources/languages/language-form";
 import { languageStore } from "~/models/resources/languages/language-store";
 import { type LocalizedLanguage } from "~/models/resources/languages/localized-language";
-import { report } from "~/utils/error";
 import { createResourcesPanel } from "../resources-panel";
 import type { ResourcesTableExtra } from "../resources-table";
 import { LanguageCard } from "./language-card";
-import LanguageEditor from "./language-editor";
-import languageEditorForm, {
-  type LanguageEditorFormFields,
-} from "./language-editor-form";
+import { createLanguageEditor } from "./language-editor";
 import LanguagesFilters from "./languages-filters";
 
 //------------------------------------------------------------------------------
@@ -38,39 +32,6 @@ const columns: ResourcesTableExtra<Language, LocalizedLanguage>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
-// Parse Form Data
-//------------------------------------------------------------------------------
-
-function parseFormData(data: Partial<LanguageEditorFormFields>):
-  | {
-      resource: Partial<DBLanguage>;
-      translation: Partial<DBLanguageTranslation>;
-    }
-  | string {
-  const maybeLanguage = {
-    rarity: data.rarity,
-    visibility: data.visibility,
-  };
-
-  const maybeTranslation = {
-    name: data.name,
-    origin: data.origin,
-    page: data.page || null,
-  };
-
-  const language = dbLanguageSchema.partial().safeParse(maybeLanguage);
-  if (!language.success) return report(language.error, "form.error.invalid");
-
-  const translation = dbLanguageTranslationSchema
-    .partial()
-    .safeParse(maybeTranslation);
-  if (!translation.success)
-    return report(translation.error, "form.error.invalid_translation");
-
-  return { resource: language.data, translation: translation.data };
-}
-
-//------------------------------------------------------------------------------
 // Languages Panel
 //------------------------------------------------------------------------------
 
@@ -78,9 +39,9 @@ const LanguagesPanel = createResourcesPanel(languageStore, {
   album: { AlbumCard: LanguageCard },
   filters: { Filters: LanguagesFilters },
   form: {
-    Editor: LanguageEditor,
-    form: languageEditorForm,
-    parseFormData,
+    Editor: createLanguageEditor(languageForm),
+    form: languageForm,
+    parseFormData: languageFormDataToDB,
   },
   table: { columns },
 });
