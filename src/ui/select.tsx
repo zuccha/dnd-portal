@@ -4,7 +4,7 @@ import {
   type SelectRootProps as ChakraSelectRootProps,
   useListCollection,
 } from "@chakra-ui/react";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useMemo } from "react";
 
 //------------------------------------------------------------------------------
 // Select
@@ -50,9 +50,19 @@ export default function Select<T>({
   withinDialog,
   ...rest
 }: SelectProps<T>) {
-  const { collection, set } = useListCollection({ initialItems: options });
+  const stringifiedOptions = useMemo(
+    () => options.map((o) => ({ ...o, value: stringify(o.value) })),
+    [options, stringify],
+  );
 
-  useLayoutEffect(() => set(options), [options, set]);
+  const { collection, set } = useListCollection({
+    initialItems: stringifiedOptions,
+  });
+
+  useLayoutEffect(
+    () => set(stringifiedOptions),
+    [options, set, stringifiedOptions],
+  );
 
   const content = (
     <ChakraSelect.Positioner>
@@ -70,7 +80,7 @@ export default function Select<T>({
             </ChakraSelect.ItemGroup>
           ))
         : collection.items.map((option) => (
-            <ChakraSelect.Item item={option} key={stringify(option.value)}>
+            <ChakraSelect.Item item={option} key={option.value}>
               {option.label}
               <ChakraSelect.ItemIndicator />
             </ChakraSelect.Item>

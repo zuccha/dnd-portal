@@ -21,12 +21,29 @@ export type CharacterLevel = z.infer<typeof characterLevelSchema>;
 export type CharacterLevelString = z.infer<typeof characterLevelStringSchema>;
 
 //------------------------------------------------------------------------------
+// Parse/Stringify Character Level
+//------------------------------------------------------------------------------
+
+export function parseCharacterLevel(characterLevel: string): CharacterLevel {
+  const value = parseInt(characterLevel);
+  return characterLevels.includes(value as CharacterLevel) ?
+      (value as CharacterLevel)
+    : 0;
+}
+
+export function stringifyCharacterLevel(
+  characterLevel: CharacterLevel,
+): string {
+  return `${characterLevel}`;
+}
+
+//------------------------------------------------------------------------------
 // Use Character Level Options
 //------------------------------------------------------------------------------
 
-const characterLevelOptions = characterLevels.map((level) => ({
-  label: `${level}`,
-  value: level,
+const characterLevelOptions = characterLevels.map((value) => ({
+  label: stringifyCharacterLevel(value),
+  value: value,
 }));
 
 export function useCharacterLevelOptions() {

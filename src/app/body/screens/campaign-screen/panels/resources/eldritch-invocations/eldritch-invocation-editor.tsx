@@ -2,7 +2,11 @@ import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { EldritchInvocation } from "~/models/resources/eldritch-invocations/eldritch-invocation";
 import type { EldritchInvocationFormData } from "~/models/resources/eldritch-invocations/eldritch-invocation-form";
-import { useCharacterLevelOptions } from "~/models/types/character-level";
+import {
+  parseCharacterLevel,
+  stringifyCharacterLevel,
+  useCharacterLevelOptions,
+} from "~/models/types/character-level";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
@@ -51,8 +55,8 @@ export function createEldritchInvocationEditor(
       label: { en: "Min. Lvl.", it: "Lvl. Min." },
     },
     inputProps: {
-      parse: (value) => parseInt(value),
-      stringify: (value) => `${value}`,
+      parse: parseCharacterLevel,
+      stringify: stringifyCharacterLevel,
     },
     useField: form.createUseField("min_warlock_level"),
     useOptions: useCharacterLevelOptions,

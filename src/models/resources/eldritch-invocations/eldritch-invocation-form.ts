@@ -1,5 +1,6 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
+import { characterLevelSchema } from "../../types/character-level";
 import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import {
   type DBEldritchInvocation,
@@ -12,7 +13,7 @@ import {
 
 export const eldritchInvocationFormDataSchema = resourceFormDataSchema.extend({
   description: z.string(),
-  min_warlock_level: z.number(),
+  min_warlock_level: characterLevelSchema,
   name: z.string(),
   page: z.number(),
   prerequisite: z.string(),
