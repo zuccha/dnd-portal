@@ -84,7 +84,7 @@ function ToolEditorAbility({
 
   return (
     <Field error={message} label={t("ability.label")}>
-      <Select options={abilityOptions} withinDialog {...rest} />
+      <Select.Enum options={abilityOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -211,7 +211,7 @@ function ToolEditorRarity({
 
   return (
     <Field error={message} label={t("rarity.label")}>
-      <Select options={rarityOptions} withinDialog {...rest} />
+      <Select.Enum options={rarityOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -228,7 +228,7 @@ function ToolEditorType({ defaultType }: { defaultType: Tool["type"] }) {
 
   return (
     <Field error={message} label={t("type.label")}>
-      <Select options={typeOptions} withinDialog {...rest} />
+      <Select.Enum options={typeOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -270,7 +270,7 @@ function ToolEditorVisibility({
 
   return (
     <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }

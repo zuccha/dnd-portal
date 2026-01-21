@@ -149,12 +149,12 @@ export function createInputField({
 }
 
 //------------------------------------------------------------------------------
-// Create Multiple Select Field
+// Create Multiple Select Enum Field
 //------------------------------------------------------------------------------
 
-export type MultipleSelectFieldProps<T extends string> = Props<T[]>;
+export type MultipleSelectEnumFieldProps<T extends string> = Props<T[]>;
 
-export function createMultipleSelectField<T extends string>({
+export function createMultipleSelectEnumField<T extends string>({
   i18nContext,
   i18nContextExtra,
   translatable,
@@ -169,10 +169,10 @@ export function createMultipleSelectField<T extends string>({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function MultipleSelectField({
+  function MultipleSelectEnumField({
     defaultValue,
     ...rest
-  }: MultipleSelectFieldProps<T>) {
+  }: MultipleSelectEnumFieldProps<T>) {
     const options = useOptions();
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
@@ -180,7 +180,7 @@ export function createMultipleSelectField<T extends string>({
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <Select
+        <Select.Enum
           bgColor={translatable ? "bg.info" : undefined}
           multiple
           options={options}
@@ -192,7 +192,7 @@ export function createMultipleSelectField<T extends string>({
     );
   }
 
-  return MultipleSelectField;
+  return MultipleSelectEnumField;
 }
 
 //------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ export function createMultipleSelectIdsField<T extends string>({
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <Select
+        <Select.Enum
           bgColor={translatable ? "bg.info" : undefined}
           multiple
           options={options}
@@ -333,12 +333,12 @@ export function createResourceSearchField({
 }
 
 //------------------------------------------------------------------------------
-// Create Select Field
+// Create Select Enum Field
 //------------------------------------------------------------------------------
 
-export type SelectFieldProps<T extends string> = Props<T>;
+export type SelectEnumFieldProps<T extends string> = Props<T>;
 
-export function createSelectField<T extends string>({
+export function createSelectEnumField<T extends string>({
   i18nContext,
   i18nContextExtra,
   translatable,
@@ -353,7 +353,7 @@ export function createSelectField<T extends string>({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function SelectField({ defaultValue, ...rest }: SelectFieldProps<T>) {
+  function SelectEnumField({ defaultValue, ...rest }: SelectEnumFieldProps<T>) {
     const options = useOptions();
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
@@ -361,7 +361,7 @@ export function createSelectField<T extends string>({
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <Select
+        <Select.Enum
           bgColor={translatable ? "bg.info" : undefined}
           options={options}
           withinDialog
@@ -371,7 +371,7 @@ export function createSelectField<T extends string>({
     );
   }
 
-  return SelectField;
+  return SelectEnumField;
 }
 
 //------------------------------------------------------------------------------

@@ -9,7 +9,7 @@ import type { Form } from "~/utils/form";
 import {
   createInputField,
   createNumberInputField,
-  createSelectField,
+  createSelectEnumField,
 } from "./resource-editor-form";
 
 //------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ export function createResourceEditor<D extends ResourceFormData>(
   // Visibility Field Field
   //----------------------------------------------------------------------------
 
-  const VisibilityField = createSelectField({
+  const VisibilityField = createSelectEnumField({
     i18nContext: {
       label: {
         en: "Visibility",

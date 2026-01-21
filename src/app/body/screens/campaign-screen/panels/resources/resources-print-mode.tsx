@@ -238,7 +238,7 @@ export function createResourcesPrintMode<
 
           <VStack w="full">
             <Field label={t("paper_layout.label")}>
-              <Select
+              <Select.Enum
                 onValueChange={setPaperLayout}
                 options={paperLayoutOptions}
                 size="xs"
@@ -247,7 +247,7 @@ export function createResourcesPrintMode<
             </Field>
 
             <Field label={t("paper_type.label")}>
-              <Select
+              <Select.Enum
                 onValueChange={setPaperType}
                 options={paperTypeOptions}
                 size="xs"
@@ -273,7 +273,7 @@ export function createResourcesPrintMode<
             </Field>
 
             <Field label={t("palette_name.label")}>
-              <Select
+              <Select.Enum
                 onValueChange={setPaletteName}
                 options={paletteNameOptions}
                 size="xs"

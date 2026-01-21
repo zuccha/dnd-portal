@@ -155,7 +155,7 @@ function ItemEditorRarity({
 
   return (
     <Field error={message} label={t("rarity.label")}>
-      <Select options={rarityOptions} withinDialog {...rest} />
+      <Select.Enum options={rarityOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -176,7 +176,7 @@ function ItemEditorVisibility({
 
   return (
     <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }

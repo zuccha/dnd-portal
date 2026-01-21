@@ -76,7 +76,7 @@ export function createResourcesGenericFilters<
           {t("modules")}
         </InclusionSelect>
 
-        <Select
+        <Select.Enum
           onValueChange={(value) => {
             const order = value.split(".");
             const order_by = order[0] ?? "name";

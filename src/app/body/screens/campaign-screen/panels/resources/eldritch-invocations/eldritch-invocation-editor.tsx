@@ -101,7 +101,7 @@ function EldritchInvocationEditorMinWarlockLevel({
 
   return (
     <Field label={t("min_warlock_level.label")} maxW="5em">
-      <Select
+      <Select.Enum
         {...minWarlockLevel}
         onValueChange={(value) =>
           minWarlockLevel.onValueChange(parseInt(value))
@@ -202,7 +202,7 @@ function EldritchInvocationEditorVisibility({
 
   return (
     <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }

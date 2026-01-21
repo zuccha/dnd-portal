@@ -59,7 +59,7 @@ function PlaneEditorAlignments({
 
   return (
     <Field error={message} label={t("alignments.label")}>
-      <Select
+      <Select.Enum
         multiple
         options={creatureAlignmentOptions}
         placeholder={t("alignments.placeholder")}
@@ -86,7 +86,7 @@ function PlaneEditorCategory({
 
   return (
     <Field error={message} label={t("category.label")}>
-      <Select
+      <Select.Enum
         options={planeCategoryOptions}
         placeholder={t("category.placeholder")}
         withinDialog
@@ -149,7 +149,7 @@ function PlaneEditorVisibility({
 
   return (
     <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }

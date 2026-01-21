@@ -15,11 +15,11 @@ import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
   createInputField,
-  createMultipleSelectField,
+  createMultipleSelectEnumField,
   createMultipleSelectIdsField,
   createNumberInputField,
   createResourceSearchField,
-  createSelectField,
+  createSelectEnumField,
 } from "../resource-editor-form";
 import StartingEquipmentEditor from "./starting-equipment-editor";
 
@@ -43,7 +43,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   // Armor Proficiencies Field
   //----------------------------------------------------------------------------
 
-  const ArmorProficienciesField = createMultipleSelectField({
+  const ArmorProficienciesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Armor Training",
@@ -81,7 +81,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   // HP Die Field
   //----------------------------------------------------------------------------
 
-  const HpDieField = createSelectField({
+  const HpDieField = createSelectEnumField({
     i18nContext: {
       label: {
         en: "Hit Point Die",
@@ -96,7 +96,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   // Primary Abilities Field
   //----------------------------------------------------------------------------
 
-  const PrimaryAbilitiesField = createMultipleSelectField({
+  const PrimaryAbilitiesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Primary Abilities",
@@ -115,7 +115,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   // Saving Throw Proficiencies Field
   //----------------------------------------------------------------------------
 
-  const SavingThrowProficienciesField = createMultipleSelectField({
+  const SavingThrowProficienciesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Saving Throw Proficiencies",
@@ -134,7 +134,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   // Skill Proficiencies Pool Field
   //----------------------------------------------------------------------------
 
-  const SkillProficienciesPoolField = createMultipleSelectField({
+  const SkillProficienciesPoolField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Skill Proficiencies",
@@ -229,7 +229,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   // Weapon Proficiencies Field
   //----------------------------------------------------------------------------
 
-  const WeaponProficienciesField = createMultipleSelectField({
+  const WeaponProficienciesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Weapon Proficiencies",

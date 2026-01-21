@@ -509,7 +509,7 @@ function ArmorEditorRarity({
 
   return (
     <Field error={message} label={t("rarity.label")}>
-      <Select options={rarityOptions} withinDialog {...rest} />
+      <Select.Enum options={rarityOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -626,7 +626,7 @@ function ArmorEditorType({ defaultType }: { defaultType: Armor["type"] }) {
 
   return (
     <Field error={message} label={t("type.label")}>
-      <Select options={typeOptions} withinDialog {...rest} />
+      <Select.Enum options={typeOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -647,7 +647,7 @@ function ArmorEditorVisibility({
 
   return (
     <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }

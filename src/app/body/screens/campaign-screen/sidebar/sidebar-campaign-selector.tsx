@@ -63,7 +63,7 @@ export default function SidebarCampaignSelector() {
 
   return (
     <VStack align="flex-start" gap={2} w="full">
-      <Select
+      <Select.Enum
         categories={campaignCategories}
         disabled={!campaignOptions.length}
         onValueChange={setSelectedCampaignId}

@@ -20,11 +20,11 @@ import {
   createDistanceInputField,
   createEquipmentBundleField,
   createInputField,
-  createMultipleSelectField,
+  createMultipleSelectEnumField,
   createMultipleSelectIdsField,
   createNumberInputField,
   createResourceSearchField,
-  createSelectField,
+  createSelectEnumField,
   createTextareaField,
 } from "../resource-editor-form";
 
@@ -91,7 +91,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Alignment
   //----------------------------------------------------------------------------
 
-  const AlignmentField = createSelectField({
+  const AlignmentField = createSelectEnumField({
     i18nContext: { label: { en: "Alignment", it: "Allineamento" } },
     useField: form.createUseField("alignment"),
     useOptions: useCreatureAlignmentOptions,
@@ -101,7 +101,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Conditions
   //----------------------------------------------------------------------------
 
-  const ConditionImmunitiesField = createMultipleSelectField({
+  const ConditionImmunitiesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Condition Immunities",
@@ -116,7 +116,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useOptions: useCreatureConditionOptions,
   });
 
-  const ConditionResistancesField = createMultipleSelectField({
+  const ConditionResistancesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Condition Resistances",
@@ -131,7 +131,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useOptions: useCreatureConditionOptions,
   });
 
-  const ConditionVulnerabilitiesField = createMultipleSelectField({
+  const ConditionVulnerabilitiesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Condition Vulnerabilities",
@@ -159,7 +159,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Damages
   //----------------------------------------------------------------------------
 
-  const DamageImmunitiesField = createMultipleSelectField({
+  const DamageImmunitiesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Damage Immunities",
@@ -174,7 +174,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useOptions: useDamageTypeOptions,
   });
 
-  const DamageResistancesField = createMultipleSelectField({
+  const DamageResistancesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Damage Resistances",
@@ -189,7 +189,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useOptions: useDamageTypeOptions,
   });
 
-  const DamageVulnerabilitiesField = createMultipleSelectField({
+  const DamageVulnerabilitiesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Damage Vulnerabilities",
@@ -217,7 +217,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Habitat
   //----------------------------------------------------------------------------
 
-  const HabitatsField = createMultipleSelectField({
+  const HabitatsField = createMultipleSelectEnumField({
     i18nContext: {
       label: { en: "Habitat", it: "Habitat" },
       placeholder: { en: "None", it: "Nessuno" },
@@ -267,7 +267,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
   const useLanguageScopeField = form.createUseField("language_scope");
 
-  const LanguageScopeField = createSelectField({
+  const LanguageScopeField = createSelectEnumField({
     i18nContext: { label: { en: "Languages", it: "Lingue" } },
     useField: useLanguageScopeField,
     useOptions: useLanguageScopeOptions,
@@ -310,7 +310,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Proficiencies
   //----------------------------------------------------------------------------
 
-  const AbilityProficienciesField = createMultipleSelectField({
+  const AbilityProficienciesField = createMultipleSelectEnumField({
     i18nContext: {
       label: {
         en: "Saving Throws Proficiencies",
@@ -325,7 +325,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useOptions: useCreatureAbilityOptions,
   });
 
-  const SkillProficienciesField = createMultipleSelectField({
+  const SkillProficienciesField = createMultipleSelectEnumField({
     i18nContext: {
       label: { en: "Skill Proficiencies", it: "Competenze nelle Abilità" },
       placeholder: { en: "None", it: "Nessuna" },
@@ -334,7 +334,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useOptions: useCreatureSkillOptions,
   });
 
-  const SkillExpertiseField = createMultipleSelectField({
+  const SkillExpertiseField = createMultipleSelectEnumField({
     i18nContext: {
       label: { en: "Skill Expertise", it: "Maestrie nelle Abilità" },
       placeholder: { en: "None", it: "Nessuna" },
@@ -375,7 +375,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Size
   //----------------------------------------------------------------------------
 
-  const SizeField = createSelectField({
+  const SizeField = createSelectEnumField({
     i18nContext: { label: { en: "Size", it: "Taglia" } },
     useField: form.createUseField("size"),
     useOptions: useCreatureSizeOptions,
@@ -473,7 +473,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Treasures
   //----------------------------------------------------------------------------
 
-  const TreasuresField = createMultipleSelectField({
+  const TreasuresField = createMultipleSelectEnumField({
     i18nContext: {
       label: { en: "Treasures", it: "Tesori" },
       placeholder: { en: "None", it: "Nessuno" },
@@ -486,7 +486,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Type
   //------------------------------------------------------------------------------
 
-  const TypeField = createSelectField({
+  const TypeField = createSelectEnumField({
     i18nContext: { label: { en: "Type", it: "Tipo" } },
     useField: form.createUseField("type"),
     useOptions: useCreatureTypeOptions,

@@ -154,7 +154,7 @@ function SpellEditorCastingTime({
   return (
     <HStack align="flex-end" w="full">
       <Field error={message} flex={1} label={t("casting_time.label")}>
-        <Select options={castingTimeOptions} withinDialog {...rest} />
+        <Select.Enum options={castingTimeOptions} withinDialog {...rest} />
       </Field>
       {rest.value === "value" && (
         <SpellEditorCastingTimeValue
@@ -206,7 +206,7 @@ function SpellEditorCharacterClasses({
 
   return (
     <Field error={message} label={t("character_class_ids.label")}>
-      <Select
+      <Select.Enum
         multiple
         options={characterClassOptions}
         placeholder={t("character_class_ids.placeholder")}
@@ -261,7 +261,7 @@ function SpellEditorDuration({
   return (
     <HStack align="flex-end" w="full">
       <Field error={message} flex={1} label={t("duration.label")}>
-        <Select options={durationOptions} withinDialog {...rest} />
+        <Select.Enum options={durationOptions} withinDialog {...rest} />
       </Field>
       {rest.value === "value" && (
         <SpellEditorDurationValue defaultDurationValue={defaultDurationValue} />
@@ -300,7 +300,7 @@ function SpellEditorLevel({ defaultLevel }: { defaultLevel: Spell["level"] }) {
 
   return (
     <Field label={t("level.label")} maxW="5em">
-      <Select
+      <Select.Enum
         {...level}
         onValueChange={(value) => level.onValueChange(parseInt(value))}
         options={levelOptions}
@@ -391,7 +391,7 @@ function SpellEditorRange({
   return (
     <HStack align="flex-end" w="full">
       <Field error={message} label={t("range.label")}>
-        <Select options={rangeOptions} withinDialog {...rest} />
+        <Select.Enum options={rangeOptions} withinDialog {...rest} />
       </Field>
       {rest.value === "value" && (
         <SpellEditorRangeValue defaultRangeValue={defaultRangeValue} />
@@ -434,7 +434,7 @@ function SpellEditorSchool({
 
   return (
     <Field error={message} label={t("school.label")} w="20em">
-      <Select options={schoolOptions} withinDialog {...rest} />
+      <Select.Enum options={schoolOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -455,7 +455,7 @@ function SpellEditorVisibility({
 
   return (
     <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }

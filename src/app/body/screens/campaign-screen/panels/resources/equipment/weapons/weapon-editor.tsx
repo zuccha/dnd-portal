@@ -200,7 +200,7 @@ function WeaponEditorDamageType({
 
   return (
     <Field error={message} label={t("damage_type.label")}>
-      <Select options={damageTypeOptions} withinDialog {...rest} />
+      <Select.Enum options={damageTypeOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -221,7 +221,7 @@ function WeaponEditorMastery({
 
   return (
     <Field error={message} label={t("mastery.label")}>
-      <Select options={masteryOptions} withinDialog {...rest} />
+      <Select.Enum options={masteryOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -300,7 +300,7 @@ function WeaponEditorProperties({
 
   return (
     <Field error={message} label={t("properties.label")}>
-      <Select
+      <Select.Enum
         multiple
         options={propertyOptions}
         placeholder={t("properties.placeholder")}
@@ -367,7 +367,7 @@ function WeaponEditorRarity({
 
   return (
     <Field error={message} label={t("rarity.label")}>
-      <Select options={rarityOptions} withinDialog {...rest} />
+      <Select.Enum options={rarityOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -384,7 +384,7 @@ function WeaponEditorType({ defaultType }: { defaultType: Weapon["type"] }) {
 
   return (
     <Field error={message} label={t("type.label")}>
-      <Select options={typeOptions} withinDialog {...rest} />
+      <Select.Enum options={typeOptions} withinDialog {...rest} />
     </Field>
   );
 }
@@ -405,7 +405,7 @@ function WeaponEditorVisibility({
 
   return (
     <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }

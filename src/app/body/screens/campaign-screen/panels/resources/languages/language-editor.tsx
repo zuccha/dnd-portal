@@ -117,7 +117,7 @@ function LanguageEditorRarity({
 
   return (
     <Field error={message} label={t("rarity.label")}>
-      <Select
+      <Select.Enum
         options={languageRarityOptions}
         placeholder={t("rarity.placeholder")}
         withinDialog
@@ -143,7 +143,7 @@ function LanguageEditorVisibility({
 
   return (
     <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select options={visibilityOptions} withinDialog {...rest} />
+      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
     </Field>
   );
 }

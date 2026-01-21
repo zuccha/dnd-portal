@@ -88,7 +88,7 @@ function LanguageSelect() {
   );
 
   return (
-    <Select
+    <Select.Enum
       onValueChange={setLanguage}
       options={languageOptions}
       size="sm"
@@ -118,7 +118,7 @@ function SystemSelect() {
   );
 
   return (
-    <Select
+    <Select.Enum
       flex={1}
       onValueChange={setSystem}
       options={systemOptions}
