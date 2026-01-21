@@ -375,6 +375,51 @@ export function createSelectEnumField<T extends string>({
 }
 
 //------------------------------------------------------------------------------
+// Create Select Field
+//------------------------------------------------------------------------------
+
+export type SelectFieldProps<T> = Props<T>;
+
+export function createSelectField<T>({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useOptions,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps: { parse: (value: string) => T; stringify: (value: T) => string };
+  translatable?: boolean;
+  useOptions: () => SelectOption<T>[];
+  useField: (defaultValue: T) => FieldBag<string, T>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function SelectField({ defaultValue, ...rest }: SelectFieldProps<T>) {
+    const options = useOptions();
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <Select
+          bgColor={translatable ? "bg.info" : undefined}
+          options={options}
+          withinDialog
+          {...inputProps}
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return SelectField;
+}
+
+//------------------------------------------------------------------------------
 // Create Textarea Field
 //------------------------------------------------------------------------------
 

@@ -26,7 +26,7 @@ export type CharacterLevelString = z.infer<typeof characterLevelStringSchema>;
 
 const characterLevelOptions = characterLevels.map((level) => ({
   label: `${level}`,
-  value: `${level}`,
+  value: level,
 }));
 
 export function useCharacterLevelOptions() {
