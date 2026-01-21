@@ -1,12 +1,16 @@
 import { HStack, type StackProps } from "@chakra-ui/react";
+import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
-import { useSpellLevelOptions } from "~/models/types/spell-level";
+import { useSpellCastingTimeOptions } from "~/models/types/spell-casting-time";
+import {
+  stringifySpellLevel,
+  useSpellLevelOptions,
+} from "~/models/types/spell-level";
 import { useSpellSchoolOptions } from "~/models/types/spell-school";
 import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
-import { useSpellCastingTimeOptions } from "../../../../../../../models/types/spell-casting-time";
 
 //------------------------------------------------------------------------------
 // Spells Filters
@@ -24,6 +28,12 @@ export default function SpellsFilters({
   const [filters, setFilters] = spellStore.useFilters();
 
   const levelOptions = useSpellLevelOptions();
+  const stringifiedLevelOptions = useMemo(
+    () =>
+      levelOptions.map((o) => ({ ...o, value: stringifySpellLevel(o.value) })),
+    [levelOptions],
+  );
+
   const characterClassOptions =
     characterClassStore.useResourceOptions(campaignId);
   const schoolOptions = useSpellSchoolOptions();
@@ -37,7 +47,7 @@ export default function SpellsFilters({
         onValueChange={(partial) =>
           setFilters({ levels: { ...filters.levels, ...partial } })
         }
-        options={levelOptions}
+        options={stringifiedLevelOptions}
         size="sm"
       >
         {t("levels")}

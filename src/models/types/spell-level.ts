@@ -19,12 +19,25 @@ export type SpellLevel = z.infer<typeof spellLevelSchema>;
 export type SpellLevelString = z.infer<typeof spellLevelStringSchema>;
 
 //------------------------------------------------------------------------------
+// Parse/Stringify Spell Level
+//------------------------------------------------------------------------------
+
+export function parseSpellLevel(spellLevel: string): SpellLevel {
+  const value = parseInt(spellLevel);
+  return spellLevels.includes(value as SpellLevel) ? (value as SpellLevel) : 0;
+}
+
+export function stringifySpellLevel(spellLevel: SpellLevel): string {
+  return `${spellLevel}`;
+}
+
+//------------------------------------------------------------------------------
 // Use Spell Level Options
 //------------------------------------------------------------------------------
 
-const spellLevelOptions = spellLevels.map((level) => ({
-  label: `${level}`,
-  value: `${level}`,
+const spellLevelOptions = spellLevels.map((value) => ({
+  label: `${value}`,
+  value: value,
 }));
 
 export function useSpellLevelOptions() {
