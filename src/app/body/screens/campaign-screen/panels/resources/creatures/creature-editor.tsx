@@ -35,7 +35,7 @@ import {
 } from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
-// Creature Editor
+// Create Creature Editor
 //------------------------------------------------------------------------------
 
 export type CreatureEditorProps = {
@@ -535,18 +535,17 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
           />
         </HStack>
 
-        {/* HP and CR */}
-        <HStack align="flex-start" gap={4} w="full">
-          <HPField defaultValue={resource.hp} />
-          <HPFormulaField defaultValue={resource.hp_formula} />
-          <CRField defaultValue={resource.cr} />
-        </HStack>
-
-        {/* AC, Initiative, and Perception */}
+        {/* AC and HP */}
         <HStack align="flex-start" gap={4} w="full">
           <ACField defaultValue={resource.ac} />
+          <HPField defaultValue={resource.hp} />
+          <HPFormulaField defaultValue={resource.hp_formula} />
+        </HStack>
+
+        {/* CR, Initiative, and Speed */}
+        <HStack align="flex-start" gap={4} w="full">
+          <CRField defaultValue={resource.cr} />
           <InitiativeField defaultValue={resource.initiative} />
-          <PassivePerceptionField defaultValue={resource.passive_perception} />
           <SpeedWalkField defaultValue={resource.speed_walk ?? 0} />
         </HStack>
 
@@ -609,26 +608,26 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
           <TruesightField defaultValue={resource.truesight} />
         </HStack>
 
-        {/* Language */}
-        <HStack align="flex-start" gap={2} w="full">
-          <LanguageScopeField defaultValue={resource.language_scope} w="14em" />
-          {languageScope === "specific" && (
-            <>
-              <LanguageIdsField
-                campaignId={campaignId}
-                defaultValue={resource.language_ids}
-              />
-              <LanguageAdditionalCountField
-                defaultValue={resource.language_additional_count}
-                w="5em"
-              />
-            </>
-          )}
+        {/* Perception and Language */}
+        <HStack w="full">
+          <PassivePerceptionField defaultValue={resource.passive_perception} />
+          <TelepathyRangeField defaultValue={resource.telepathy_range} />
+          <LanguageScopeField defaultValue={resource.language_scope} />
         </HStack>
 
-        <HStack w="full">
-          <TelepathyRangeField defaultValue={resource.telepathy_range} />
-        </HStack>
+        {/* Language */}
+        {languageScope === "specific" && (
+          <HStack align="flex-start" gap={2} w="full">
+            <LanguageIdsField
+              campaignId={campaignId}
+              defaultValue={resource.language_ids}
+            />
+            <LanguageAdditionalCountField
+              defaultValue={resource.language_additional_count}
+              w="5em"
+            />
+          </HStack>
+        )}
 
         {/* Gear */}
         <GearField campaignId={campaignId} defaultValue={resource.gear} />
