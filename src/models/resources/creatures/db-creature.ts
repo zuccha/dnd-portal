@@ -2,6 +2,7 @@ import z from "zod";
 import { equipmentEntrySchema } from "../../other/equipment-bundle";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
+import { creatureChallengeRatingSchema } from "../../types/creature-challenge-rating";
 import { creatureConditionSchema } from "../../types/creature-condition";
 import { creatureHabitatSchema } from "../../types/creature-habitat";
 import { creatureSizeSchema } from "../../types/creature-size";
@@ -30,7 +31,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   condition_immunities: z.array(creatureConditionSchema),
   condition_resistances: z.array(creatureConditionSchema),
   condition_vulnerabilities: z.array(creatureConditionSchema),
-  cr: z.number(),
+  cr: creatureChallengeRatingSchema,
   damage_immunities: z.array(damageTypeSchema),
   damage_resistances: z.array(damageTypeSchema),
   damage_vulnerabilities: z.array(damageTypeSchema),

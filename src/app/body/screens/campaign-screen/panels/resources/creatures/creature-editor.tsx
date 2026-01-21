@@ -6,6 +6,11 @@ import { languageStore } from "~/models/resources/languages/language-store";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
+import {
+  parseCreatureChallengeRating,
+  stringifyCreatureChallengeRating,
+  useCreatureChallengeRatingOptions,
+} from "~/models/types/creature-challenge-rating";
 import { useCreatureConditionOptions } from "~/models/types/creature-condition";
 import { useCreatureHabitatOptions } from "~/models/types/creature-habitat";
 import { useCreatureSizeOptions } from "~/models/types/creature-size";
@@ -25,6 +30,7 @@ import {
   createNumberInputField,
   createResourceSearchField,
   createSelectEnumField,
+  createSelectField,
   createTextareaField,
 } from "../resource-editor-form";
 
@@ -150,9 +156,14 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // CR
   //----------------------------------------------------------------------------
 
-  const CRField = createNumberInputField({
+  const CRField = createSelectField({
     i18nContext: { label: { en: "Challenge Rating", it: "Grado Sfida" } },
+    inputProps: {
+      parse: parseCreatureChallengeRating,
+      stringify: stringifyCreatureChallengeRating,
+    },
     useField: form.createUseField("cr"),
+    useOptions: useCreatureChallengeRatingOptions,
   });
 
   //----------------------------------------------------------------------------
