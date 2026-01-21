@@ -2,6 +2,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { ResourceOption } from "~/models/resources/resource";
+import CostInput from "~/ui/cost-input";
 import DistanceInput from "~/ui/distance-input";
 import Field, { type FieldProps } from "~/ui/field";
 import Input from "~/ui/input";
@@ -10,6 +11,7 @@ import Select, { type SelectOption } from "~/ui/select";
 import Switch from "~/ui/switch";
 import Textarea from "~/ui/textarea";
 import TimeInput from "~/ui/time-input";
+import WeightInput from "~/ui/weight-input";
 import type { FieldBag } from "~/utils/form";
 import EquipmentBundleEditor from "./equipment-bundle-editor";
 import ResourceSearch from "./resource-search";
@@ -21,6 +23,46 @@ import ResourceSearch from "./resource-search";
 type Props<T> = Omit<FieldProps, "defaultValue"> & { defaultValue: T };
 
 type I18nFieldContext<T extends string> = Record<T, I18nString>;
+
+//------------------------------------------------------------------------------
+// Create Cost Input Field
+//------------------------------------------------------------------------------
+
+export type CostInputFieldProps = Props<number>;
+
+export function createCostInputField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
+  translatable?: boolean;
+  useField: (defaultValue: number) => FieldBag<string, number>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function CostInputField({ defaultValue, ...rest }: CostInputFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <CostInput
+          bgColor={translatable ? "bg.info" : undefined}
+          {...inputProps}
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return CostInputField;
+}
 
 //------------------------------------------------------------------------------
 // Create Distance Input Field
@@ -527,4 +569,44 @@ export function createTimeInputField({
   }
 
   return TimeInputField;
+}
+
+//------------------------------------------------------------------------------
+// Create Weight Input Field
+//------------------------------------------------------------------------------
+
+export type WeightInputFieldProps = Props<number>;
+
+export function createWeightInputField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
+  translatable?: boolean;
+  useField: (defaultValue: number) => FieldBag<string, number>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function WeightInputField({ defaultValue, ...rest }: WeightInputFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <WeightInput
+          bgColor={translatable ? "bg.info" : undefined}
+          {...inputProps}
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return WeightInputField;
 }
