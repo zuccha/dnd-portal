@@ -12,11 +12,11 @@ import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 
 export const dbSpellSchema = dbResourceSchema.extend({
   casting_time: spellCastingTimeSchema,
-  casting_time_value_temp: z.number().nullish(),
+  casting_time_value: z.number().nullish(),
   character_class_ids: z.array(z.uuid()),
   concentration: z.boolean(),
   duration: spellDurationSchema,
-  duration_value_temp: z.number().nullish(),
+  duration_value: z.number().nullish(),
   level: spellLevelSchema,
   material: z.boolean(),
   range: spellRangeSchema,
