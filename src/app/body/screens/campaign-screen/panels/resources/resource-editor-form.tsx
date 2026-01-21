@@ -7,7 +7,9 @@ import Field, { type FieldProps } from "~/ui/field";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select, { type SelectOption } from "~/ui/select";
+import Switch from "~/ui/switch";
 import Textarea from "~/ui/textarea";
+import TimeInput from "~/ui/time-input";
 import type { FieldBag } from "~/utils/form";
 import EquipmentBundleEditor from "./equipment-bundle-editor";
 import ResourceSearch from "./resource-search";
@@ -420,6 +422,33 @@ export function createSelectField<T>({
 }
 
 //------------------------------------------------------------------------------
+// Create Switch Field
+//------------------------------------------------------------------------------
+
+export type SwitchFieldProps = Props<boolean>;
+
+export function createSwitchField({
+  i18nContext,
+  i18nContextExtra,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  useField: (defaultValue: boolean) => FieldBag<string, boolean>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function SwitchField({ defaultValue }: SwitchFieldProps) {
+    const field = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+
+    return <Switch label={t("label")} size="lg" {...field} />;
+  }
+
+  return SwitchField;
+}
+
+//------------------------------------------------------------------------------
 // Create Textarea Field
 //------------------------------------------------------------------------------
 
@@ -458,4 +487,44 @@ export function createTextareaField({
   }
 
   return TextareaField;
+}
+
+//------------------------------------------------------------------------------
+// Create Time Input Field
+//------------------------------------------------------------------------------
+
+export type TimeInputFieldProps = Props<number>;
+
+export function createTimeInputField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
+  translatable?: boolean;
+  useField: (defaultValue: number) => FieldBag<string, number>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function TimeInputField({ defaultValue, ...rest }: TimeInputFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <TimeInput
+          bgColor={translatable ? "bg.info" : undefined}
+          {...inputProps}
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return TimeInputField;
 }
