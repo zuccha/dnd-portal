@@ -94,7 +94,7 @@ export default function Select<T>({
     <ChakraSelect.Root
       collection={collection}
       defaultValue={
-        defaultValue ?
+        defaultValue !== undefined ?
           multiple ?
             defaultValue.map(stringify)
           : [stringify(defaultValue)]
@@ -110,7 +110,7 @@ export default function Select<T>({
         : undefined
       }
       value={
-        value ?
+        value !== undefined ?
           multiple ?
             value.map(stringify)
           : [stringify(value)]
