@@ -38,9 +38,9 @@ export function createPlaneEditor(form: Form<PlaneFormData>) {
     useOptions: useCreatureAlignmentOptions,
   });
 
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // Category
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
 
   const CategoryField = createSelectEnumField({
     i18nContext: { label: { en: "Category", it: "Categoria" } },

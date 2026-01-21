@@ -38,9 +38,9 @@ export function createLanguageEditor(form: Form<LanguageFormData>) {
     useField: form.createUseField("origin"),
   });
 
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // Rarity
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
 
   const RarityField = createSelectEnumField({
     i18nContext: { label: { en: "Rarity", it: "Rarità" } },
