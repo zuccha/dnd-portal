@@ -1,7 +1,9 @@
+import { HStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { ResourceOption } from "~/models/resources/resource";
+import Checkbox from "~/ui/checkbox";
 import CostInput from "~/ui/cost-input";
 import DistanceInput from "~/ui/distance-input";
 import Field, { type FieldProps } from "~/ui/field";
@@ -23,6 +25,59 @@ import ResourceSearch from "./resource-search";
 type Props<T> = Omit<FieldProps, "defaultValue"> & { defaultValue: T };
 
 type I18nFieldContext<T extends string> = Record<T, I18nString>;
+
+//------------------------------------------------------------------------------
+// Create Conditional Number Input Field
+//------------------------------------------------------------------------------
+
+export type ConditionalNumberInputFieldProps = Props<number> & {
+  defaultConditionalValue: boolean;
+};
+
+export function createConditionalNumberInputField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useConditionalField,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
+  translatable?: boolean;
+  useConditionalField: (defaultValue: boolean) => FieldBag<string, boolean>;
+  useField: (defaultValue: number) => FieldBag<string, number>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function ConditionalNumberInputField({
+    defaultConditionalValue,
+    defaultValue,
+    ...rest
+  }: ConditionalNumberInputFieldProps) {
+    const conditionalField = useConditionalField(defaultConditionalValue);
+    const { disabled, error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <HStack>
+          <Checkbox {...conditionalField} />
+          <NumberInput
+            bgColor={translatable ? "bg.info" : undefined}
+            disabled={disabled || !conditionalField.value}
+            {...inputProps}
+            {...field}
+          />
+        </HStack>
+      </Field>
+    );
+  }
+
+  return ConditionalNumberInputField;
+}
 
 //------------------------------------------------------------------------------
 // Create Cost Input Field
