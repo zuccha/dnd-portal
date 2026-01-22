@@ -1,7 +1,6 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
-import { characterClassForm } from "~/models/resources/character-classes/character-class-form";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFormData } from "~/models/resources/resource-form";
 import { useCampaignRoleOptions } from "~/models/types/campaign-role";
@@ -77,7 +76,7 @@ export function createResourceEditor<D extends ResourceFormData>(
         it: "Visibilità",
       },
     },
-    useField: characterClassForm.createUseField("visibility"),
+    useField: form.createUseField("visibility"),
     useOptions: useCampaignRoleOptions,
   });
 
