@@ -41,7 +41,7 @@ export function createEquipmentStore<
     kinds: ResourceKind[];
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<E>[];
-    useLocalizeEquipment: () => (equipment: E) => L;
+    useLocalizeEquipment: (campaignId: string) => (equipment: E) => L;
   },
 ): ResourceStore<E, L, F, DBR, DBT> {
   return createResourceStore(name, {
