@@ -1,32 +1,15 @@
-import { HStack, VStack } from "@chakra-ui/react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { HStack } from "@chakra-ui/react";
+import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
-import { useCampaignRoleOptions } from "~/models/types/campaign-role";
+import type { ToolFormData } from "~/models/resources/equipment/tools/tool-form";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
-import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import { useToolTypeOptions } from "~/models/types/tool-type";
-import CostInput from "~/ui/cost-input";
-import Field from "~/ui/field";
-import Input from "~/ui/input";
-import NumberInput from "~/ui/number-input";
-import Select from "~/ui/select";
-import Switch from "~/ui/switch";
-import Textarea from "~/ui/textarea";
-import WeightInput from "~/ui/weight-input";
+import type { Form } from "~/utils/form";
 import {
-  useToolEditorFormAbility,
-  useToolEditorFormCost,
-  useToolEditorFormCraft,
-  useToolEditorFormMagic,
-  useToolEditorFormName,
-  useToolEditorFormNotes,
-  useToolEditorFormPage,
-  useToolEditorFormRarity,
-  useToolEditorFormType,
-  useToolEditorFormUtilize,
-  useToolEditorFormVisibility,
-  useToolEditorFormWeight,
-} from "./tool-editor-form";
+  createSelectEnumField,
+  createTextareaField,
+} from "../../resource-editor-form";
+import { createEquipmentEditor } from "../equipment-editor";
 
 //------------------------------------------------------------------------------
 // Tool Editor
@@ -36,332 +19,78 @@ export type ToolEditorProps = {
   resource: Tool;
 };
 
-export default function ToolEditor({ resource }: ToolEditorProps) {
-  const { lang } = useI18nLangContext(i18nContext);
+export function createToolEditor(form: Form<ToolFormData>) {
+  //----------------------------------------------------------------------------
+  // Equipment Editor
+  //----------------------------------------------------------------------------
 
-  return (
-    <VStack align="stretch" gap={4}>
-      <HStack align="flex-start" gap={4}>
-        <ToolEditorName defaultName={resource.name[lang] ?? ""} />
-        <ToolEditorPage defaultPage={resource.page?.[lang] ?? 0} />
-        <ToolEditorVisibility defaultVisibility={resource.visibility} />
-      </HStack>
+  const EquipmentEditor = createEquipmentEditor(form);
 
-      <HStack align="flex-start" gap={4}>
-        <ToolEditorType defaultType={resource.type} />
-        <ToolEditorAbility defaultAbility={resource.ability} />
-      </HStack>
+  //------------------------------------------------------------------------------
+  // Ability
+  //------------------------------------------------------------------------------
 
-      <HStack align="flex-start" gap={4}>
-        <ToolEditorWeight defaultWeight={resource.weight} />
-        <ToolEditorCost defaultCost={resource.cost} />
-        <ToolEditorRarity defaultRarity={resource.rarity} />
-      </HStack>
+  const AbilityField = createSelectEnumField({
+    i18nContext: { label: { en: "Ability", it: "Caratteristica" } },
+    useField: form.createUseField("ability"),
+    useOptions: useCreatureAbilityOptions,
+  });
 
-      <ToolEditorMagic defaultMagic={resource.magic} />
+  //----------------------------------------------------------------------------
+  // Craft
+  //----------------------------------------------------------------------------
 
-      <ToolEditorUtilize defaultUtilize={resource.utilize[lang] ?? ""} />
-      <ToolEditorCraft defaultCraft={resource.craft[lang] ?? ""} />
+  const CraftField = createTextareaField({
+    i18nContext: {
+      label: { en: "Craft", it: "Creazione" },
+      placeholder: { en: "None", it: "Nessuna" },
+    },
+    inputProps: { rows: 5 },
+    translatable: true,
+    useField: form.createUseField("craft"),
+  });
 
-      <ToolEditorNotes defaultNotes={resource.notes[lang] ?? ""} />
-    </VStack>
-  );
+  //------------------------------------------------------------------------------
+  // Type
+  //------------------------------------------------------------------------------
+
+  const TypeField = createSelectEnumField({
+    i18nContext: { label: { en: "Type", it: "Tipo" } },
+    useField: form.createUseField("type"),
+    useOptions: useToolTypeOptions,
+  });
+
+  //----------------------------------------------------------------------------
+  // Utilize
+  //----------------------------------------------------------------------------
+
+  const UtilizeField = createTextareaField({
+    i18nContext: {
+      label: { en: "Utilize", it: "Utilizzo" },
+      placeholder: { en: "None", it: "Nessuno" },
+    },
+    inputProps: { rows: 5 },
+    translatable: true,
+    useField: form.createUseField("utilize"),
+  });
+
+  //----------------------------------------------------------------------------
+  // Tool Editor
+  //----------------------------------------------------------------------------
+
+  return function ToolEditor({ resource }: ToolEditorProps) {
+    const [lang] = useI18nLang();
+
+    return (
+      <EquipmentEditor resource={resource}>
+        <HStack align="flex-start" gap={4}>
+          <TypeField defaultValue={resource.type} />
+          <AbilityField defaultValue={resource.ability} />
+        </HStack>
+
+        <UtilizeField defaultValue={resource.utilize[lang] ?? ""} />
+        <CraftField defaultValue={resource.craft[lang] ?? ""} />
+      </EquipmentEditor>
+    );
+  };
 }
-
-//------------------------------------------------------------------------------
-// Ability
-//------------------------------------------------------------------------------
-
-function ToolEditorAbility({
-  defaultAbility,
-}: {
-  defaultAbility: Tool["ability"];
-}) {
-  const abilityOptions = useCreatureAbilityOptions();
-  const { error, ...rest } = useToolEditorFormAbility(defaultAbility);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("ability.label")}>
-      <Select.Enum options={abilityOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Cost
-//------------------------------------------------------------------------------
-
-function ToolEditorCost({ defaultCost }: { defaultCost: number }) {
-  const { error, ...rest } = useToolEditorFormCost(defaultCost);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("cost.label")}>
-      <CostInput min={0} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Craft
-//------------------------------------------------------------------------------
-
-function ToolEditorCraft({ defaultCraft }: { defaultCraft: string }) {
-  const { error, ...rest } = useToolEditorFormCraft(defaultCraft);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("craft.label")}>
-      <Textarea
-        bgColor="bg.info"
-        placeholder={t("craft.placeholder")}
-        rows={5}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Magic
-//------------------------------------------------------------------------------
-
-function ToolEditorMagic({ defaultMagic }: { defaultMagic: boolean }) {
-  const { error: _, ...rest } = useToolEditorFormMagic(defaultMagic);
-  const { t } = useI18nLangContext(i18nContext);
-
-  return <Switch label={t("magic.label")} size="lg" {...rest} />;
-}
-
-//------------------------------------------------------------------------------
-// Name
-//------------------------------------------------------------------------------
-
-function ToolEditorName({ defaultName }: { defaultName: string }) {
-  const { error, ...rest } = useToolEditorFormName(defaultName);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("name.label")}>
-      <Input
-        autoComplete="off"
-        bgColor="bg.info"
-        placeholder={t("name.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Notes
-//------------------------------------------------------------------------------
-
-function ToolEditorNotes({ defaultNotes }: { defaultNotes: string }) {
-  const { error, ...rest } = useToolEditorFormNotes(defaultNotes);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("notes.label")}>
-      <Textarea
-        bgColor="bg.info"
-        placeholder={t("notes.placeholder")}
-        rows={5}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Page
-//------------------------------------------------------------------------------
-
-function ToolEditorPage({ defaultPage }: { defaultPage: number }) {
-  const { error, ...rest } = useToolEditorFormPage(defaultPage);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput bgColor="bg.info" {...rest} w="6em" />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Rarity
-//------------------------------------------------------------------------------
-
-function ToolEditorRarity({
-  defaultRarity,
-}: {
-  defaultRarity: Tool["rarity"];
-}) {
-  const rarityOptions = useEquipmentRarityOptions();
-  const { error, ...rest } = useToolEditorFormRarity(defaultRarity);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("rarity.label")}>
-      <Select.Enum options={rarityOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Type
-//------------------------------------------------------------------------------
-
-function ToolEditorType({ defaultType }: { defaultType: Tool["type"] }) {
-  const typeOptions = useToolTypeOptions();
-  const { error, ...rest } = useToolEditorFormType(defaultType);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("type.label")}>
-      <Select.Enum options={typeOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Utilize
-//------------------------------------------------------------------------------
-
-function ToolEditorUtilize({ defaultUtilize }: { defaultUtilize: string }) {
-  const { error, ...rest } = useToolEditorFormUtilize(defaultUtilize);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("utilize.label")}>
-      <Textarea
-        bgColor="bg.info"
-        placeholder={t("utilize.placeholder")}
-        rows={5}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Visibility
-//------------------------------------------------------------------------------
-
-function ToolEditorVisibility({
-  defaultVisibility,
-}: {
-  defaultVisibility: Tool["visibility"];
-}) {
-  const visibilityOptions = useCampaignRoleOptions();
-  const { error, ...rest } = useToolEditorFormVisibility(defaultVisibility);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weight
-//------------------------------------------------------------------------------
-
-function ToolEditorWeight({ defaultWeight }: { defaultWeight: number }) {
-  const { error, ...rest } = useToolEditorFormWeight(defaultWeight);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("weight.label")}>
-      <WeightInput min={0} {...rest} />
-    </Field>
-  );
-}
-
-//----------------------------------------------------------------------------
-// I18n Context
-//----------------------------------------------------------------------------
-
-const i18nContext = {
-  "ability.label": {
-    en: "Ability",
-    it: "Caratteristica",
-  },
-  "cost.label": {
-    en: "Cost",
-    it: "Costo",
-  },
-  "craft.label": {
-    en: "Craft",
-    it: "Creazione",
-  },
-  "craft.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "magic.label": {
-    en: "Magic",
-    it: "Magico",
-  },
-  "name.error.empty": {
-    en: "The name cannot be empty",
-    it: "Il nome non può essere vuoto",
-  },
-  "name.label": {
-    en: "Name",
-    it: "Nome",
-  },
-  "name.placeholder": {
-    en: "E.g.: Forgery Kit",
-    it: "Es: Arnesi da Falsario",
-  },
-  "notes.label": {
-    en: "Notes",
-    it: "Note",
-  },
-  "notes.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "page.label": {
-    en: "Page",
-    it: "Pagina",
-  },
-  "rarity.label": {
-    en: "Rarity",
-    it: "Rarità",
-  },
-  "type.label": {
-    en: "Type",
-    it: "Tipo",
-  },
-  "utilize.label": {
-    en: "Utilize",
-    it: "Utilizzo",
-  },
-  "utilize.placeholder": {
-    en: "None",
-    it: "Nessuno",
-  },
-  "visibility.label": {
-    en: "Visibility",
-    it: "Visibilità",
-  },
-  "weight.label": {
-    en: "Weight",
-    it: "Peso",
-  },
-};

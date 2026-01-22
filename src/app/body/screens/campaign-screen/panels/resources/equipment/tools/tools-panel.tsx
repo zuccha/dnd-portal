@@ -1,19 +1,15 @@
 import { WandIcon } from "lucide-react";
-import {
-  type DBTool,
-  type DBToolTranslation,
-  dbToolSchema,
-  dbToolTranslationSchema,
-} from "~/models/resources/equipment/tools/db-tool";
 import { type LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import { type Tool } from "~/models/resources/equipment/tools/tool";
+import {
+  toolForm,
+  toolFormDataToDB,
+} from "~/models/resources/equipment/tools/tool-form";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
-import { report } from "~/utils/error";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
 import { ToolCard } from "./tool-card";
-import ToolEditor from "./tool-editor";
-import toolEditorForm, { type ToolEditorFormFields } from "./tool-editor-form";
+import { createToolEditor } from "./tool-editor";
 import ToolsFilters from "./tools-filters";
 
 //------------------------------------------------------------------------------
@@ -57,52 +53,17 @@ const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
-// Parse Form Data
-//------------------------------------------------------------------------------
-
-function parseFormData(
-  data: Partial<ToolEditorFormFields>,
-):
-  | { resource: Partial<DBTool>; translation: Partial<DBToolTranslation> }
-  | string {
-  const maybeTool = {
-    ability: data.ability,
-    cost: data.cost,
-    magic: data.magic,
-    rarity: data.rarity,
-    type: data.type,
-    visibility: data.visibility,
-    weight: data.weight,
-  };
-
-  const maybeTranslation = {
-    craft: data.craft,
-    name: data.name,
-    notes: data.notes,
-    page: data.page || null,
-    utilize: data.utilize,
-  };
-
-  const tool = dbToolSchema.partial().safeParse(maybeTool);
-  if (!tool.success) return report(tool.error, "form.error.invalid");
-
-  const translation = dbToolTranslationSchema
-    .partial()
-    .safeParse(maybeTranslation);
-  if (!translation.success)
-    return report(translation.error, "form.error.invalid_translation");
-
-  return { resource: tool.data, translation: translation.data };
-}
-
-//------------------------------------------------------------------------------
 // Tools Panel
 //------------------------------------------------------------------------------
 
 const ToolsPanel = createResourcesPanel(toolStore, {
   album: { AlbumCard: ToolCard },
   filters: { Filters: ToolsFilters },
-  form: { Editor: ToolEditor, form: toolEditorForm, parseFormData },
+  form: {
+    Editor: createToolEditor(toolForm),
+    form: toolForm,
+    parseFormData: toolFormDataToDB,
+  },
   table: { columns, detailsKey: "details" },
 });
 
