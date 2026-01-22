@@ -1,44 +1,40 @@
---------------------------------------------------------------------------------
--- TOOL ROW
---------------------------------------------------------------------------------
+DROP FUNCTION public.fetch_tool(p_id uuid);
+DROP FUNCTION public.fetch_tools(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text);
 
-CREATE TYPE public.tool_row AS (
-  -- Resource
-  campaign_id uuid,
-  campaign_name text,
-  id uuid,
-  kind public.resource_kind,
-  visibility public.campaign_role,
-  name jsonb,
-  page jsonb,
-  -- Equipment
-  cost integer,
-  magic boolean,
-  rarity public.equipment_rarity,
-  weight integer,
-  notes jsonb,
-  -- Tool
-  ability public.creature_ability,
-  craft_ids uuid[],
-  type public.tool_type,
-  -- Tool Translation
-  utilize jsonb
+drop type "public"."tool_row";
+
+create table "public"."tool_crafts" (
+  "tool_id" uuid not null,
+  "equipment_id" uuid not null
 );
 
+alter table "public"."tool_crafts" enable row level security;
 
---------------------------------------------------------------------------------
--- CREATE TOOL
---------------------------------------------------------------------------------
+alter table "public"."tool_translations" drop column "craft";
 
-CREATE OR REPLACE FUNCTION public.create_tool(
-  p_campaign_id uuid,
-  p_lang text,
-  p_tool jsonb,
-  p_tool_translation jsonb)
-RETURNS uuid
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE INDEX idx_tool_crafts_equipment_id ON public.tool_crafts USING btree (equipment_id);
+
+CREATE INDEX idx_tool_crafts_tool_id ON public.tool_crafts USING btree (tool_id);
+
+CREATE UNIQUE INDEX tool_crafts_pkey ON public.tool_crafts USING btree (tool_id, equipment_id);
+
+alter table "public"."tool_crafts" add constraint "tool_crafts_pkey" PRIMARY KEY using index "tool_crafts_pkey";
+
+alter table "public"."tool_crafts" add constraint "tool_crafts_equipment_id_fkey" FOREIGN KEY (equipment_id) REFERENCES public.equipments(resource_id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."tool_crafts" validate constraint "tool_crafts_equipment_id_fkey";
+
+alter table "public"."tool_crafts" add constraint "tool_crafts_tool_id_fkey" FOREIGN KEY (tool_id) REFERENCES public.tools(resource_id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."tool_crafts" validate constraint "tool_crafts_tool_id_fkey";
+
+create type "public"."tool_row" as ("campaign_id" uuid, "campaign_name" text, "id" uuid, "kind" public.resource_kind, "visibility" public.campaign_role, "name" jsonb, "page" jsonb, "cost" integer, "magic" boolean, "rarity" public.equipment_rarity, "weight" integer, "notes" jsonb, "ability" public.creature_ability, "craft_ids" uuid[], "type" public.tool_type, "utilize" jsonb);
+
+CREATE OR REPLACE FUNCTION public.create_tool(p_campaign_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_id uuid;
   r public.tools%ROWTYPE;
@@ -76,24 +72,14 @@ BEGIN
 
   RETURN v_id;
 END;
-$$;
-
-ALTER FUNCTION public.create_tool(p_campaign_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.create_tool(p_campaign_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_tool(p_campaign_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_tool(p_campaign_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH TOOL
---------------------------------------------------------------------------------
+$function$
+;
 
 CREATE OR REPLACE FUNCTION public.fetch_tool(p_id uuid)
-RETURNS public.tool_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+ RETURNS public.tool_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
   SELECT
     e.campaign_id,
     e.campaign_name,
@@ -131,29 +117,14 @@ AS $$
     GROUP BY t.resource_id
   ) tt ON tt.id = e.id
   WHERE e.id = p_id;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_tool(p_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_tool(p_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.fetch_tool(p_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_tool(p_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH TOOLS
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.fetch_tools(
-  p_campaign_id uuid,
-  p_langs text[],
-  p_filters jsonb DEFAULT '{}'::jsonb,
-  p_order_by text DEFAULT 'name'::text,
-  p_order_dir text DEFAULT 'asc'::text)
-RETURNS SETOF public.tool_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.fetch_tools(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text)
+ RETURNS SETOF public.tool_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 WITH prefs AS (
   SELECT
     -- types
@@ -257,66 +228,14 @@ ORDER BY
     WHEN p_order_by = 'name' AND p_order_dir = 'desc'
       THEN (f.name->>coalesce(p_langs[1],'en'))
   END DESC NULLS LAST;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_tools(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_tools(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_tools(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_tools(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPSERT TOOL TRANSLATION
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.upsert_tool_translation(
-  p_id uuid,
-  p_lang text,
-  p_tool_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
-DECLARE
-  r public.tool_translations%ROWTYPE;
-BEGIN
-  r := jsonb_populate_record(null::public.tool_translations, p_tool_translation);
-
-  INSERT INTO public.tool_translations AS tt (
-    resource_id, lang, utilize
-  ) VALUES (
-    p_id, p_lang, r.utilize
-  )
-  ON conflict (resource_id, lang) DO UPDATE
-  SET
-    utilize = excluded.utilize;
-
-  perform public.upsert_resource_translation(p_id, p_lang, p_tool_translation);
-  perform public.upsert_equipment_translation(p_id, p_lang, p_tool_translation);
-END;
-$$;
-
-ALTER FUNCTION public.upsert_tool_translation(p_id uuid, p_lang text, p_tool_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.upsert_tool_translation(p_id uuid, p_lang text, p_tool_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.upsert_tool_translation(p_id uuid, p_lang text, p_tool_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.upsert_tool_translation(p_id uuid, p_lang text, p_tool_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPDATE TOOL
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.update_tool(
-  p_id uuid,
-  p_lang text,
-  p_tool jsonb,
-  p_tool_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.update_tool(p_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_rows int;
 BEGIN
@@ -379,10 +298,101 @@ BEGIN
 
   perform public.upsert_tool_translation(p_id, p_lang, p_tool_translation);
 END;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.update_tool(p_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb) OWNER TO postgres;
+CREATE OR REPLACE FUNCTION public.upsert_tool_translation(p_id uuid, p_lang text, p_tool_translation jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
+DECLARE
+  r public.tool_translations%ROWTYPE;
+BEGIN
+  r := jsonb_populate_record(null::public.tool_translations, p_tool_translation);
 
-GRANT ALL ON FUNCTION public.update_tool(p_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_tool(p_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_tool(p_id uuid, p_lang text, p_tool jsonb, p_tool_translation jsonb) TO service_role;
+  INSERT INTO public.tool_translations AS tt (
+    resource_id, lang, utilize
+  ) VALUES (
+    p_id, p_lang, r.utilize
+  )
+  ON conflict (resource_id, lang) DO UPDATE
+  SET
+    utilize = excluded.utilize;
+
+  perform public.upsert_resource_translation(p_id, p_lang, p_tool_translation);
+  perform public.upsert_equipment_translation(p_id, p_lang, p_tool_translation);
+END;
+$function$
+;
+
+grant delete on table "public"."tool_crafts" to "anon";
+
+grant insert on table "public"."tool_crafts" to "anon";
+
+grant references on table "public"."tool_crafts" to "anon";
+
+grant select on table "public"."tool_crafts" to "anon";
+
+grant trigger on table "public"."tool_crafts" to "anon";
+
+grant truncate on table "public"."tool_crafts" to "anon";
+
+grant update on table "public"."tool_crafts" to "anon";
+
+grant delete on table "public"."tool_crafts" to "authenticated";
+
+grant insert on table "public"."tool_crafts" to "authenticated";
+
+grant references on table "public"."tool_crafts" to "authenticated";
+
+grant select on table "public"."tool_crafts" to "authenticated";
+
+grant trigger on table "public"."tool_crafts" to "authenticated";
+
+grant truncate on table "public"."tool_crafts" to "authenticated";
+
+grant update on table "public"."tool_crafts" to "authenticated";
+
+grant delete on table "public"."tool_crafts" to "service_role";
+
+grant insert on table "public"."tool_crafts" to "service_role";
+
+grant references on table "public"."tool_crafts" to "service_role";
+
+grant select on table "public"."tool_crafts" to "service_role";
+
+grant trigger on table "public"."tool_crafts" to "service_role";
+
+grant truncate on table "public"."tool_crafts" to "service_role";
+
+grant update on table "public"."tool_crafts" to "service_role";
+
+
+  create policy "Creators and GMs can create tool crafts"
+  on "public"."tool_crafts"
+  as permissive
+  for insert
+  to authenticated
+with check (public.can_edit_resource(tool_id));
+
+
+
+  create policy "Creators and GMs can delete tool crafts"
+  on "public"."tool_crafts"
+  as permissive
+  for delete
+  to authenticated
+using (public.can_edit_resource(tool_id));
+
+
+
+  create policy "Users can read tool crafts"
+  on "public"."tool_crafts"
+  as permissive
+  for select
+  to anon, authenticated
+using ((public.can_read_resource(tool_id) AND public.can_read_resource(equipment_id)));
+
+
+

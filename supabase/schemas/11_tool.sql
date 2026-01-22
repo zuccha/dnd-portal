@@ -25,7 +25,6 @@ GRANT ALL ON TABLE public.tools TO service_role;
 CREATE TABLE IF NOT EXISTS public.tool_translations (
   resource_id uuid NOT NULL,
   lang text NOT NULL,
-  craft text NOT NULL,
   utilize text NOT NULL,
   CONSTRAINT tool_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT tool_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.tools(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -90,4 +89,3 @@ CREATE POLICY "Creators and GMs can delete tool translations"
 ON public.tool_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
