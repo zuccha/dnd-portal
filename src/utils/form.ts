@@ -174,7 +174,7 @@ export function createForm<Fields extends Record<string, unknown>>(
     }, [defaultValue, setError, validate]);
 
     useLayoutEffect(() => {
-      subscribeReset(() => {
+      return subscribeReset(() => {
         setValue(defaultValue);
         setError(validate(defaultValue));
       });
