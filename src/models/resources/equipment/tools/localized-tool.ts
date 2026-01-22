@@ -58,9 +58,9 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
         descriptor:
           tool.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
         details: [
-          equipment.details,
-          tpi("craft", craftCount, craft),
           tpi("utilize", utilizeCount, utilize),
+          tpi("craft", craftCount, craft),
+          equipment.details,
         ]
           .filter((text) => text)
           .join("\n\n"),
