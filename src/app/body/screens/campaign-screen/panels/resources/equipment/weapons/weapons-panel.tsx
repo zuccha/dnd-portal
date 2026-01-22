@@ -1,21 +1,15 @@
 import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
-import {
-  type DBWeapon,
-  type DBWeaponTranslation,
-  dbWeaponSchema,
-  dbWeaponTranslationSchema,
-} from "~/models/resources/equipment/weapons/db-weapon";
 import { type LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import { type Weapon } from "~/models/resources/equipment/weapons/weapon";
+import {
+  weaponForm,
+  weaponFormDataToDB,
+} from "~/models/resources/equipment/weapons/weapon-form";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
-import { report } from "~/utils/error";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
 import { WeaponCard } from "./weapon-card";
-import WeaponEditor from "./weapon-editor";
-import weaponEditorForm, {
-  type WeaponEditorFormFields,
-} from "./weapon-editor-form";
+import { createWeaponEditor } from "./weapon-editor";
 import WeaponsFilters from "./weapons-filters";
 
 //------------------------------------------------------------------------------
@@ -85,59 +79,17 @@ const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
-// Parse Form Data
-//------------------------------------------------------------------------------
-
-function parseFormData(
-  data: Partial<WeaponEditorFormFields>,
-):
-  | { resource: Partial<DBWeapon>; translation: Partial<DBWeaponTranslation> }
-  | string {
-  const maybeWeapon = {
-    cost: data.cost,
-    damage: data.damage,
-    damage_type: data.damage_type,
-    damage_versatile: data.damage_versatile,
-    magic: data.magic,
-    mastery: data.mastery,
-    melee: data.melee,
-    properties: data.properties,
-    range_long: data.range_long,
-    range_short: data.range_short,
-    ranged: data.ranged,
-    rarity: data.rarity,
-    type: data.type,
-    visibility: data.visibility,
-    weight: data.weight,
-  };
-
-  const maybeTranslation = {
-    ammunition: data.ammunition,
-    name: data.name,
-    notes: data.notes,
-    page: data.page || null,
-  };
-
-  const weapon = dbWeaponSchema.partial().safeParse(maybeWeapon);
-  if (!weapon.success) return report(weapon.error, "form.error.invalid");
-
-  const translation = dbWeaponTranslationSchema
-    .partial()
-    .safeParse(maybeTranslation);
-  if (!translation.success)
-    return report(translation.error, "form.error.invalid_translation");
-
-  return { resource: weapon.data, translation: translation.data };
-}
-
-//------------------------------------------------------------------------------
 // Weapons Panel
 //------------------------------------------------------------------------------
 
 const WeaponsPanel = createResourcesPanel(weaponStore, {
   album: { AlbumCard: WeaponCard },
   filters: { Filters: WeaponsFilters },
-  form: { Editor: WeaponEditor, form: weaponEditorForm, parseFormData },
+  form: {
+    Editor: createWeaponEditor(weaponForm),
+    form: weaponForm,
+    parseFormData: weaponFormDataToDB,
+  },
   table: { columns, detailsKey: "details" },
 });
 
