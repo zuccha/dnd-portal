@@ -14,7 +14,7 @@ import { type DBTool, type DBToolTranslation } from "./db-tool";
 
 export const toolFormDataSchema = equipmentFormDataSchema.extend({
   ability: creatureAbilitySchema,
-  craft: z.string(),
+  craft_ids: z.array(z.uuid()),
   type: toolTypeSchema,
   utilize: z.string(),
 });
@@ -35,11 +35,11 @@ export function toolFormDataToDB(data: Partial<ToolFormData>): {
     resource: {
       ...resource,
       ability: data.ability,
+      craft_ids: data.craft_ids,
       type: data.type,
     },
     translation: {
       ...translation,
-      craft: data.craft,
       utilize: data.utilize,
     },
   };

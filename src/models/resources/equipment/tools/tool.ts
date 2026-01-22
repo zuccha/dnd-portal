@@ -15,7 +15,7 @@ import {
 
 export const toolSchema = equipmentSchema.extend({
   ability: creatureAbilitySchema,
-  craft: i18nStringSchema,
+  craft_ids: z.array(z.uuid()),
   type: toolTypeSchema,
   utilize: i18nStringSchema,
 });
@@ -29,7 +29,7 @@ export type Tool = z.infer<typeof toolSchema>;
 export const defaultTool: Tool = {
   ...defaultEquipment,
   ability: "strength",
-  craft: {},
+  craft_ids: [],
   type: "other",
   utilize: {},
 };
@@ -40,6 +40,5 @@ export const defaultTool: Tool = {
 
 export const toolTranslationFields: TranslationFields<Tool>[] = [
   ...equipmentTranslationFields,
-  "craft",
   "utilize",
 ];

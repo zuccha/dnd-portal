@@ -12,6 +12,7 @@ import {
 
 export const dbToolSchema = dbEquipmentSchema.extend({
   ability: creatureAbilitySchema,
+  craft_ids: z.array(z.uuid()),
   type: toolTypeSchema,
 });
 
@@ -22,7 +23,6 @@ export type DBTool = z.infer<typeof dbToolSchema>;
 //------------------------------------------------------------------------------
 
 export const dbToolTranslationSchema = dbEquipmentTranslationSchema.extend({
-  craft: z.string(),
   utilize: z.string(),
 });
 

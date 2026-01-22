@@ -1,11 +1,13 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
+import { equipmentStore } from "~/models/resources/equipment/equipment-store";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import type { ToolFormData } from "~/models/resources/equipment/tools/tool-form";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useToolTypeOptions } from "~/models/types/tool-type";
 import type { Form } from "~/utils/form";
 import {
+  createResourceSearchField,
   createSelectEnumField,
   createTextareaField,
 } from "../../resource-editor-form";
@@ -16,6 +18,7 @@ import { createEquipmentEditor } from "../equipment-editor";
 //------------------------------------------------------------------------------
 
 export type ToolEditorProps = {
+  campaignId: string;
   resource: Tool;
 };
 
@@ -40,14 +43,13 @@ export function createToolEditor(form: Form<ToolFormData>) {
   // Craft
   //----------------------------------------------------------------------------
 
-  const CraftField = createTextareaField({
+  const CraftIdsField = createResourceSearchField({
     i18nContext: {
-      label: { en: "Craft", it: "Creazione" },
+      label: { en: "Craft", it: "Creazioni" },
       placeholder: { en: "None", it: "Nessuna" },
     },
-    inputProps: { rows: 5 },
-    translatable: true,
-    useField: form.createUseField("craft"),
+    useField: form.createUseField("craft_ids"),
+    useOptions: equipmentStore.useResourceOptions,
   });
 
   //------------------------------------------------------------------------------
@@ -78,7 +80,7 @@ export function createToolEditor(form: Form<ToolFormData>) {
   // Tool Editor
   //----------------------------------------------------------------------------
 
-  return function ToolEditor({ resource }: ToolEditorProps) {
+  return function ToolEditor({ campaignId, resource }: ToolEditorProps) {
     const [lang] = useI18nLang();
 
     return (
@@ -89,7 +91,10 @@ export function createToolEditor(form: Form<ToolFormData>) {
         </HStack>
 
         <UtilizeField defaultValue={resource.utilize[lang] ?? ""} />
-        <CraftField defaultValue={resource.craft[lang] ?? ""} />
+        <CraftIdsField
+          campaignId={campaignId}
+          defaultValue={resource.craft_ids}
+        />
       </EquipmentEditor>
     );
   };

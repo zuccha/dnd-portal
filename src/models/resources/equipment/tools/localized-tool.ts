@@ -4,6 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
 import { useTranslateToolType } from "../../../types/tool-type";
+import { equipmentStore } from "../equipment-store";
 import {
   localizedEquipmentSchema,
   useLocalizeEquipment,
@@ -25,25 +26,26 @@ export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 // Use Localized Tool
 //------------------------------------------------------------------------------
 
-export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
+export function useLocalizeTool(
+  campaignId: string,
+): (tool: Tool) => LocalizedTool {
   const localizeEquipment = useLocalizeEquipment<Tool>();
   const { lang, ti, tpi } = useI18nLangContext(i18nContext);
 
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateToolType = useTranslateToolType(lang);
+  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+    campaignId,
+    lang,
+  );
 
   return useCallback(
     (tool: Tool): LocalizedTool => {
       const equipment = localizeEquipment(tool);
       const type = translateToolType(tool.type).label;
 
-      const craft = translate(tool.craft, lang);
-      const craftCount =
-        craft ?
-          craft.includes(",") ?
-            2
-          : 1
-        : 0;
+      const craft =
+        tool.craft_ids.map(localizeEquipmentName).sort().join(", ") + ".";
 
       const utilize = translate(tool.utilize, lang);
       const utilizeCount =
@@ -59,7 +61,7 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
           tool.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
         details: [
           tpi("utilize", utilizeCount, utilize),
-          tpi("craft", craftCount, craft),
+          tpi("craft", tool.craft_ids.length, craft),
           equipment.details,
         ]
           .filter((text) => text)
@@ -72,6 +74,7 @@ export function useLocalizeTool(): (tool: Tool) => LocalizedTool {
     [
       lang,
       localizeEquipment,
+      localizeEquipmentName,
       ti,
       tpi,
       translateCreatureAbility,
