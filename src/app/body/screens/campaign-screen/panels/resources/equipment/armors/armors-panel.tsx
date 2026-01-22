@@ -1,21 +1,15 @@
 import { WandIcon } from "lucide-react";
 import { type Armor } from "~/models/resources/equipment/armors/armor";
-import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import {
-  type DBArmor,
-  type DBArmorTranslation,
-  dbArmorSchema,
-  dbArmorTranslationSchema,
-} from "~/models/resources/equipment/armors/db-armor";
+  armorForm,
+  armorFormDataToDB,
+} from "~/models/resources/equipment/armors/armor-form";
+import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
-import { report } from "~/utils/error";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
 import { ArmorCard } from "./armor-card";
-import ArmorEditor from "./armor-editor";
-import armorEditorForm, {
-  type ArmorEditorFormFields,
-} from "./armor-editor-form";
+import { createArmorEditor } from "./armor-editor";
 import ArmorsFilters from "./armors-filters";
 
 //------------------------------------------------------------------------------
@@ -68,82 +62,17 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
-// Parse Form Data
-//------------------------------------------------------------------------------
-
-function parseFormData(
-  data: Partial<ArmorEditorFormFields>,
-):
-  | { resource: Partial<DBArmor>; translation: Partial<DBArmorTranslation> }
-  | string {
-  const maybeArmor = {
-    armor_class_max_cha_modifier:
-      data.armor_class_includes_cha_modifier ?
-        data.armor_class_max_cha_modifier
-      : null,
-    armor_class_max_con_modifier:
-      data.armor_class_includes_con_modifier ?
-        data.armor_class_max_con_modifier
-      : null,
-    armor_class_max_dex_modifier:
-      data.armor_class_includes_dex_modifier ?
-        data.armor_class_max_dex_modifier
-      : null,
-    armor_class_max_int_modifier:
-      data.armor_class_includes_int_modifier ?
-        data.armor_class_max_int_modifier
-      : null,
-    armor_class_max_str_modifier:
-      data.armor_class_includes_str_modifier ?
-        data.armor_class_max_str_modifier
-      : null,
-    armor_class_max_wis_modifier:
-      data.armor_class_includes_wis_modifier ?
-        data.armor_class_max_wis_modifier
-      : null,
-    armor_class_modifier: data.armor_class_modifier,
-    base_armor_class: data.base_armor_class,
-    cost: data.cost,
-    disadvantage_on_stealth: data.disadvantage_on_stealth,
-    magic: data.magic,
-    rarity: data.rarity,
-    required_cha: data.required_cha,
-    required_con: data.required_con,
-    required_dex: data.required_dex,
-    required_int: data.required_int,
-    required_str: data.required_str,
-    required_wis: data.required_wis,
-    type: data.type,
-    visibility: data.visibility,
-    weight: data.weight,
-  };
-
-  const maybeTranslation = {
-    name: data.name,
-    notes: data.notes,
-    page: data.page || null,
-  };
-
-  const armor = dbArmorSchema.partial().safeParse(maybeArmor);
-  if (!armor.success) return report(armor.error, "form.error.invalid");
-
-  const translation = dbArmorTranslationSchema
-    .partial()
-    .safeParse(maybeTranslation);
-  if (!translation.success)
-    return report(translation.error, "form.error.invalid_translation");
-
-  return { resource: armor.data, translation: translation.data };
-}
-
-//------------------------------------------------------------------------------
 // Armors Panel
 //------------------------------------------------------------------------------
 
 const ArmorsPanel = createResourcesPanel(armorStore, {
   album: { AlbumCard: ArmorCard },
   filters: { Filters: ArmorsFilters },
-  form: { Editor: ArmorEditor, form: armorEditorForm, parseFormData },
+  form: {
+    Editor: createArmorEditor(armorForm),
+    form: armorForm,
+    parseFormData: armorFormDataToDB,
+  },
   table: { columns, detailsKey: "details" },
 });
 

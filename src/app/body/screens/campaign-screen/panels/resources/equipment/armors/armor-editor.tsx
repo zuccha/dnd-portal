@@ -1,50 +1,15 @@
-import { HStack, VStack } from "@chakra-ui/react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { HStack } from "@chakra-ui/react";
 import type { Armor } from "~/models/resources/equipment/armors/armor";
+import type { ArmorFormData } from "~/models/resources/equipment/armors/armor-form";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
-import { useCampaignRoleOptions } from "~/models/types/campaign-role";
-import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
-import Checkbox from "~/ui/checkbox";
-import CostInput from "~/ui/cost-input";
-import Field from "~/ui/field";
-import Input from "~/ui/input";
-import NumberInput from "~/ui/number-input";
-import Select from "~/ui/select";
-import Switch from "~/ui/switch";
-import Textarea from "~/ui/textarea";
-import WeightInput from "~/ui/weight-input";
+import type { Form } from "~/utils/form";
 import {
-  useArmorEditorFormArmorClassIncludesChaModifier,
-  useArmorEditorFormArmorClassIncludesConModifier,
-  useArmorEditorFormArmorClassIncludesDexModifier,
-  useArmorEditorFormArmorClassIncludesIntModifier,
-  useArmorEditorFormArmorClassIncludesStrModifier,
-  useArmorEditorFormArmorClassIncludesWisModifier,
-  useArmorEditorFormArmorClassMaxChaModifier,
-  useArmorEditorFormArmorClassMaxConModifier,
-  useArmorEditorFormArmorClassMaxDexModifier,
-  useArmorEditorFormArmorClassMaxIntModifier,
-  useArmorEditorFormArmorClassMaxStrModifier,
-  useArmorEditorFormArmorClassMaxWisModifier,
-  useArmorEditorFormArmorClassModifier,
-  useArmorEditorFormBaseArmorClass,
-  useArmorEditorFormCost,
-  useArmorEditorFormDisadvantageOnStealth,
-  useArmorEditorFormMagic,
-  useArmorEditorFormName,
-  useArmorEditorFormNotes,
-  useArmorEditorFormPage,
-  useArmorEditorFormRarity,
-  useArmorEditorFormRequiredCha,
-  useArmorEditorFormRequiredCon,
-  useArmorEditorFormRequiredDex,
-  useArmorEditorFormRequiredInt,
-  useArmorEditorFormRequiredStr,
-  useArmorEditorFormRequiredWis,
-  useArmorEditorFormType,
-  useArmorEditorFormVisibility,
-  useArmorEditorFormWeight,
-} from "./armor-editor-form";
+  createConditionalNumberInputField,
+  createNumberInputField,
+  createSelectEnumField,
+  createSwitchField,
+} from "../../resource-editor-form";
+import { createEquipmentEditor } from "../equipment-editor";
 
 //------------------------------------------------------------------------------
 // Armor Editor
@@ -54,747 +19,265 @@ export type ArmorEditorProps = {
   resource: Armor;
 };
 
-export default function ArmorEditor({ resource }: ArmorEditorProps) {
-  const { lang } = useI18nLangContext(i18nContext);
+export function createArmorEditor(form: Form<ArmorFormData>) {
+  //----------------------------------------------------------------------------
+  // Equipment Editor
+  //----------------------------------------------------------------------------
 
-  return (
-    <VStack align="stretch" gap={4}>
-      <HStack align="flex-start" gap={4}>
-        <ArmorEditorName defaultName={resource.name[lang] ?? ""} />
-        <ArmorEditorPage defaultPage={resource.page?.[lang] ?? 0} />
-        <ArmorEditorVisibility defaultVisibility={resource.visibility} />
-      </HStack>
+  const EquipmentEditor = createEquipmentEditor(form);
 
-      <HStack align="flex-start" gap={4}>
-        <ArmorEditorType defaultType={resource.type} />
-        <ArmorEditorBaseArmorClass
-          defaultBaseArmorClass={resource.base_armor_class}
-        />
-        <ArmorEditorArmorClassModifier
-          defaultArmorClassModifier={resource.armor_class_modifier}
-        />
-      </HStack>
+  //----------------------------------------------------------------------------
+  // Modifiers
+  //----------------------------------------------------------------------------
 
-      <HStack align="flex-start" gap={4}>
-        <ArmorEditorArmorClassStrModifier
-          defaultArmorClassIncludesStrModifier={
-            typeof resource.armor_class_max_str_modifier === "number"
-          }
-          defaultArmorClassMaxStrModifier={
-            resource.armor_class_max_str_modifier ?? 0
-          }
-        />
-        <ArmorEditorArmorClassDexModifier
-          defaultArmorClassIncludesDexModifier={
-            typeof resource.armor_class_max_dex_modifier === "number"
-          }
-          defaultArmorClassMaxDexModifier={
-            resource.armor_class_max_dex_modifier ?? 0
-          }
-        />
-        <ArmorEditorArmorClassConModifier
-          defaultArmorClassIncludesConModifier={
-            typeof resource.armor_class_max_con_modifier === "number"
-          }
-          defaultArmorClassMaxConModifier={
-            resource.armor_class_max_con_modifier ?? 0
-          }
-        />
-      </HStack>
+  const ChaModifierField = createConditionalNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Max Charisma Modifier",
+        it: "Mod. Carisma Massimo",
+      },
+    },
+    useConditionalField: form.createUseField(
+      "armor_class_includes_cha_modifier",
+    ),
+    useField: form.createUseField("armor_class_max_cha_modifier"),
+  });
 
-      <HStack align="flex-start" gap={4}>
-        <ArmorEditorArmorClassIntModifier
-          defaultArmorClassIncludesIntModifier={
-            typeof resource.armor_class_max_int_modifier === "number"
-          }
-          defaultArmorClassMaxIntModifier={
-            resource.armor_class_max_int_modifier ?? 0
-          }
-        />
-        <ArmorEditorArmorClassWisModifier
-          defaultArmorClassIncludesWisModifier={
-            typeof resource.armor_class_max_wis_modifier === "number"
-          }
-          defaultArmorClassMaxWisModifier={
-            resource.armor_class_max_wis_modifier ?? 0
-          }
-        />
-        <ArmorEditorArmorClassChaModifier
-          defaultArmorClassIncludesChaModifier={
-            typeof resource.armor_class_max_cha_modifier === "number"
-          }
-          defaultArmorClassMaxChaModifier={
-            resource.armor_class_max_cha_modifier ?? 0
-          }
-        />
-      </HStack>
+  const ConModifierField = createConditionalNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Max Constitution Modifier",
+        it: "Mod. Costituzione Massimo",
+      },
+    },
+    useConditionalField: form.createUseField(
+      "armor_class_includes_con_modifier",
+    ),
+    useField: form.createUseField("armor_class_max_con_modifier"),
+  });
 
-      <HStack align="flex-start" gap={4}>
-        <ArmorEditorRequiredStr defaultRequiredStr={resource.required_str} />
-        <ArmorEditorRequiredDex defaultRequiredDex={resource.required_dex} />
-        <ArmorEditorRequiredCon defaultRequiredCon={resource.required_con} />
-      </HStack>
+  const DexModifierField = createConditionalNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Max Dexterity Modifier",
+        it: "Mod. Destrezza Massimo",
+      },
+    },
+    useConditionalField: form.createUseField(
+      "armor_class_includes_dex_modifier",
+    ),
+    useField: form.createUseField("armor_class_max_dex_modifier"),
+  });
 
-      <HStack align="flex-start" gap={4}>
-        <ArmorEditorRequiredInt defaultRequiredInt={resource.required_int} />
-        <ArmorEditorRequiredWis defaultRequiredWis={resource.required_wis} />
-        <ArmorEditorRequiredCha defaultRequiredCha={resource.required_cha} />
-      </HStack>
+  const IntModifierField = createConditionalNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Max Intelligence Modifier",
+        it: "Mod. Intelligenza Massimo",
+      },
+    },
+    useConditionalField: form.createUseField(
+      "armor_class_includes_int_modifier",
+    ),
+    useField: form.createUseField("armor_class_max_int_modifier"),
+  });
 
-      <HStack align="flex-start" gap={4}>
-        <ArmorEditorMagic defaultMagic={resource.magic} />
-        <ArmorEditorDisadvantageOnStealth
-          defaultDisadvantageOnStealth={resource.disadvantage_on_stealth}
-        />
-      </HStack>
+  const StrModifierField = createConditionalNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Max Strength Modifier",
+        it: "Mod. Forza Massimo",
+      },
+    },
+    useConditionalField: form.createUseField(
+      "armor_class_includes_str_modifier",
+    ),
+    useField: form.createUseField("armor_class_max_str_modifier"),
+  });
 
-      <HStack align="flex-start" gap={4}>
-        <ArmorEditorWeight defaultWeight={resource.weight} />
-        <ArmorEditorCost defaultCost={resource.cost} />
-        <ArmorEditorRarity defaultRarity={resource.rarity} />
-      </HStack>
+  const WisModifierField = createConditionalNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Max Wisdom Modifier",
+        it: "Mod. Saggezza Massimo",
+      },
+    },
+    useConditionalField: form.createUseField(
+      "armor_class_includes_wis_modifier",
+    ),
+    useField: form.createUseField("armor_class_max_wis_modifier"),
+  });
 
-      <ArmorEditorNotes defaultNotes={resource.notes[lang] ?? ""} />
-    </VStack>
-  );
-}
+  //----------------------------------------------------------------------------
+  // Armor Class Modifier
+  //----------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// Armor Class Includes <Ability> Modifier
-//------------------------------------------------------------------------------
+  const ArmorClassModifierField = createNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Armor Class Modifier",
+        it: "Modificatore Classe Armatura",
+      },
+    },
+    useField: form.createUseField("armor_class_modifier"),
+  });
 
-function ArmorEditorArmorClassChaModifier({
-  defaultArmorClassIncludesChaModifier,
-  defaultArmorClassMaxChaModifier,
-}: {
-  defaultArmorClassIncludesChaModifier: boolean;
-  defaultArmorClassMaxChaModifier: number;
-}) {
-  const { t } = useI18nLangContext(i18nContext);
+  //----------------------------------------------------------------------------
+  // Base Armor Class
+  //----------------------------------------------------------------------------
 
-  const { error: includesModifierError, ...includesModifier } =
-    useArmorEditorFormArmorClassIncludesChaModifier(
-      defaultArmorClassIncludesChaModifier,
+  const BaseArmorClassField = createNumberInputField({
+    i18nContext: {
+      label: {
+        en: "Base Armor Class",
+        it: "Classe Armatura Base",
+      },
+    },
+    useField: form.createUseField("base_armor_class"),
+  });
+
+  //------------------------------------------------------------------------------
+  // Disadvantage on Stealth
+  //------------------------------------------------------------------------------
+
+  const DisadvantageOnStealth = createSwitchField({
+    i18nContext: {
+      label: { en: "Disadvantage on stealth", it: "Svantaggio su furtività" },
+    },
+    useField: form.createUseField("disadvantage_on_stealth"),
+  });
+
+  //------------------------------------------------------------------------------
+  // Required Abilities
+  //------------------------------------------------------------------------------
+
+  const RequiredChaField = createNumberInputField({
+    i18nContext: {
+      label: { en: "Min Charisma", it: "Carisma Mininmo" },
+    },
+    useField: form.createUseField("required_cha"),
+  });
+
+  const RequiredConField = createNumberInputField({
+    i18nContext: {
+      label: { en: "Min Constitution", it: "Costituzione Mininmo" },
+    },
+    useField: form.createUseField("required_con"),
+  });
+
+  const RequiredDexField = createNumberInputField({
+    i18nContext: {
+      label: { en: "Min Dexterity", it: "Destrezza Mininmo" },
+    },
+    useField: form.createUseField("required_dex"),
+  });
+
+  const RequiredIntField = createNumberInputField({
+    i18nContext: {
+      label: { en: "Min Intelligence", it: "Intelligenza Mininmo" },
+    },
+    useField: form.createUseField("required_int"),
+  });
+
+  const RequiredStrField = createNumberInputField({
+    i18nContext: {
+      label: { en: "Min Strength", it: "Forza Mininmo" },
+    },
+    useField: form.createUseField("required_str"),
+  });
+
+  const RequiredWisField = createNumberInputField({
+    i18nContext: {
+      label: { en: "Min Wisdom", it: "Saggezza Mininmo" },
+    },
+    useField: form.createUseField("required_wis"),
+  });
+
+  //------------------------------------------------------------------------------
+  // Type
+  //------------------------------------------------------------------------------
+
+  const TypeField = createSelectEnumField({
+    i18nContext: { label: { en: "Type", it: "Tipo" } },
+    useField: form.createUseField("type"),
+    useOptions: useArmorTypeOptions,
+  });
+
+  //----------------------------------------------------------------------------
+  // Armor Editor
+  //----------------------------------------------------------------------------
+
+  return function ArmorEditor({ resource }: ArmorEditorProps) {
+    return (
+      <EquipmentEditor resource={resource}>
+        <HStack align="flex-start" gap={4}>
+          <TypeField defaultValue={resource.type} />
+          <BaseArmorClassField defaultValue={resource.base_armor_class} />
+          <ArmorClassModifierField
+            defaultValue={resource.armor_class_modifier}
+          />
+        </HStack>
+
+        <HStack align="flex-start" gap={4}>
+          <StrModifierField
+            defaultConditionalValue={
+              typeof resource.armor_class_max_str_modifier === "number"
+            }
+            defaultValue={resource.armor_class_max_str_modifier ?? 0}
+          />
+          <DexModifierField
+            defaultConditionalValue={
+              typeof resource.armor_class_max_dex_modifier === "number"
+            }
+            defaultValue={resource.armor_class_max_dex_modifier ?? 0}
+          />
+          <ConModifierField
+            defaultConditionalValue={
+              typeof resource.armor_class_max_con_modifier === "number"
+            }
+            defaultValue={resource.armor_class_max_con_modifier ?? 0}
+          />
+        </HStack>
+
+        <HStack align="flex-start" gap={4}>
+          <IntModifierField
+            defaultConditionalValue={
+              typeof resource.armor_class_max_int_modifier === "number"
+            }
+            defaultValue={resource.armor_class_max_int_modifier ?? 0}
+          />
+          <WisModifierField
+            defaultConditionalValue={
+              typeof resource.armor_class_max_wis_modifier === "number"
+            }
+            defaultValue={resource.armor_class_max_wis_modifier ?? 0}
+          />
+          <ChaModifierField
+            defaultConditionalValue={
+              typeof resource.armor_class_max_cha_modifier === "number"
+            }
+            defaultValue={resource.armor_class_max_cha_modifier ?? 0}
+          />
+        </HStack>
+
+        <HStack align="flex-start" gap={4}>
+          <RequiredStrField defaultValue={resource.required_str} />
+          <RequiredDexField defaultValue={resource.required_dex} />
+          <RequiredConField defaultValue={resource.required_con} />
+        </HStack>
+
+        <HStack align="flex-start" gap={4}>
+          <RequiredIntField defaultValue={resource.required_int} />
+          <RequiredWisField defaultValue={resource.required_wis} />
+          <RequiredChaField defaultValue={resource.required_cha} />
+        </HStack>
+
+        <HStack align="flex-start" gap={4}>
+          <DisadvantageOnStealth
+            defaultValue={resource.disadvantage_on_stealth}
+          />
+        </HStack>
+      </EquipmentEditor>
     );
-  const { error: maxModifierError, ...maxModifier } =
-    useArmorEditorFormArmorClassMaxChaModifier(defaultArmorClassMaxChaModifier);
-  const message =
-    includesModifierError ? t(includesModifierError)
-    : maxModifierError ? t(maxModifierError)
-    : undefined;
-
-  return (
-    <Field error={message} label={t("armor_class_modifier[cha].label")}>
-      <HStack>
-        <Checkbox {...includesModifier} />
-        <NumberInput {...maxModifier} disabled={!includesModifier.value} />
-      </HStack>
-    </Field>
-  );
+  };
 }
-
-function ArmorEditorArmorClassConModifier({
-  defaultArmorClassIncludesConModifier,
-  defaultArmorClassMaxConModifier,
-}: {
-  defaultArmorClassIncludesConModifier: boolean;
-  defaultArmorClassMaxConModifier: number;
-}) {
-  const { t } = useI18nLangContext(i18nContext);
-
-  const { error: includesModifierError, ...includesModifier } =
-    useArmorEditorFormArmorClassIncludesConModifier(
-      defaultArmorClassIncludesConModifier,
-    );
-  const { error: maxModifierError, ...maxModifier } =
-    useArmorEditorFormArmorClassMaxConModifier(defaultArmorClassMaxConModifier);
-  const message =
-    includesModifierError ? t(includesModifierError)
-    : maxModifierError ? t(maxModifierError)
-    : undefined;
-
-  return (
-    <Field error={message} label={t("armor_class_modifier[con].label")}>
-      <HStack>
-        <Checkbox {...includesModifier} />
-        <NumberInput {...maxModifier} disabled={!includesModifier.value} />
-      </HStack>
-    </Field>
-  );
-}
-
-function ArmorEditorArmorClassDexModifier({
-  defaultArmorClassIncludesDexModifier,
-  defaultArmorClassMaxDexModifier,
-}: {
-  defaultArmorClassIncludesDexModifier: boolean;
-  defaultArmorClassMaxDexModifier: number;
-}) {
-  const { t } = useI18nLangContext(i18nContext);
-
-  const { error: includesModifierError, ...includesModifier } =
-    useArmorEditorFormArmorClassIncludesDexModifier(
-      defaultArmorClassIncludesDexModifier,
-    );
-  const { error: maxModifierError, ...maxModifier } =
-    useArmorEditorFormArmorClassMaxDexModifier(defaultArmorClassMaxDexModifier);
-  const message =
-    includesModifierError ? t(includesModifierError)
-    : maxModifierError ? t(maxModifierError)
-    : undefined;
-
-  return (
-    <Field error={message} label={t("armor_class_modifier[dex].label")}>
-      <HStack>
-        <Checkbox {...includesModifier} />
-        <NumberInput {...maxModifier} disabled={!includesModifier.value} />
-      </HStack>
-    </Field>
-  );
-}
-
-function ArmorEditorArmorClassIntModifier({
-  defaultArmorClassIncludesIntModifier,
-  defaultArmorClassMaxIntModifier,
-}: {
-  defaultArmorClassIncludesIntModifier: boolean;
-  defaultArmorClassMaxIntModifier: number;
-}) {
-  const { t } = useI18nLangContext(i18nContext);
-
-  const { error: includesModifierError, ...includesModifier } =
-    useArmorEditorFormArmorClassIncludesIntModifier(
-      defaultArmorClassIncludesIntModifier,
-    );
-  const { error: maxModifierError, ...maxModifier } =
-    useArmorEditorFormArmorClassMaxIntModifier(defaultArmorClassMaxIntModifier);
-  const message =
-    includesModifierError ? t(includesModifierError)
-    : maxModifierError ? t(maxModifierError)
-    : undefined;
-
-  return (
-    <Field error={message} label={t("armor_class_modifier[int].label")}>
-      <HStack>
-        <Checkbox {...includesModifier} />
-        <NumberInput {...maxModifier} disabled={!includesModifier.value} />
-      </HStack>
-    </Field>
-  );
-}
-
-function ArmorEditorArmorClassStrModifier({
-  defaultArmorClassIncludesStrModifier,
-  defaultArmorClassMaxStrModifier,
-}: {
-  defaultArmorClassIncludesStrModifier: boolean;
-  defaultArmorClassMaxStrModifier: number;
-}) {
-  const { t } = useI18nLangContext(i18nContext);
-
-  const { error: includesModifierError, ...includesModifier } =
-    useArmorEditorFormArmorClassIncludesStrModifier(
-      defaultArmorClassIncludesStrModifier,
-    );
-  const { error: maxModifierError, ...maxModifier } =
-    useArmorEditorFormArmorClassMaxStrModifier(defaultArmorClassMaxStrModifier);
-  const message =
-    includesModifierError ? t(includesModifierError)
-    : maxModifierError ? t(maxModifierError)
-    : undefined;
-
-  return (
-    <Field error={message} label={t("armor_class_modifier[str].label")}>
-      <HStack>
-        <Checkbox {...includesModifier} />
-        <NumberInput {...maxModifier} disabled={!includesModifier.value} />
-      </HStack>
-    </Field>
-  );
-}
-
-function ArmorEditorArmorClassWisModifier({
-  defaultArmorClassIncludesWisModifier,
-  defaultArmorClassMaxWisModifier,
-}: {
-  defaultArmorClassIncludesWisModifier: boolean;
-  defaultArmorClassMaxWisModifier: number;
-}) {
-  const { t } = useI18nLangContext(i18nContext);
-
-  const { error: includesModifierError, ...includesModifier } =
-    useArmorEditorFormArmorClassIncludesWisModifier(
-      defaultArmorClassIncludesWisModifier,
-    );
-  const { error: maxModifierError, ...maxModifier } =
-    useArmorEditorFormArmorClassMaxWisModifier(defaultArmorClassMaxWisModifier);
-  const message =
-    includesModifierError ? t(includesModifierError)
-    : maxModifierError ? t(maxModifierError)
-    : undefined;
-
-  return (
-    <Field error={message} label={t("armor_class_modifier[wis].label")}>
-      <HStack>
-        <Checkbox {...includesModifier} />
-        <NumberInput {...maxModifier} />
-      </HStack>
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Armor Class Modifier
-//------------------------------------------------------------------------------
-
-function ArmorEditorArmorClassModifier({
-  defaultArmorClassModifier,
-}: {
-  defaultArmorClassModifier: number;
-}) {
-  const { t } = useI18nLangContext(i18nContext);
-
-  const { error, ...rest } = useArmorEditorFormArmorClassModifier(
-    defaultArmorClassModifier,
-  );
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("armor_class_modifier.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Base Armor Class
-//------------------------------------------------------------------------------
-
-function ArmorEditorBaseArmorClass({
-  defaultBaseArmorClass,
-}: {
-  defaultBaseArmorClass: number;
-}) {
-  const { t } = useI18nLangContext(i18nContext);
-
-  const { error, ...rest } = useArmorEditorFormBaseArmorClass(
-    defaultBaseArmorClass,
-  );
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("base_armor_class.label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Cost
-//------------------------------------------------------------------------------
-
-function ArmorEditorCost({ defaultCost }: { defaultCost: number }) {
-  const { error, ...rest } = useArmorEditorFormCost(defaultCost);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("cost.label")}>
-      <CostInput min={0} {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Disadvantage on Stealth
-//------------------------------------------------------------------------------
-
-function ArmorEditorDisadvantageOnStealth({
-  defaultDisadvantageOnStealth,
-}: {
-  defaultDisadvantageOnStealth: boolean;
-}) {
-  const { error: _, ...rest } = useArmorEditorFormDisadvantageOnStealth(
-    defaultDisadvantageOnStealth,
-  );
-  const { t } = useI18nLangContext(i18nContext);
-
-  return (
-    <Switch label={t("disadvantage_on_stealth.label")} size="lg" {...rest} />
-  );
-}
-
-//------------------------------------------------------------------------------
-// Magic
-//------------------------------------------------------------------------------
-
-function ArmorEditorMagic({ defaultMagic }: { defaultMagic: boolean }) {
-  const { error: _, ...rest } = useArmorEditorFormMagic(defaultMagic);
-  const { t } = useI18nLangContext(i18nContext);
-
-  return <Switch label={t("magic.label")} size="lg" {...rest} />;
-}
-
-//------------------------------------------------------------------------------
-// Name
-//------------------------------------------------------------------------------
-
-function ArmorEditorName({ defaultName }: { defaultName: string }) {
-  const { error, ...rest } = useArmorEditorFormName(defaultName);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("name.label")}>
-      <Input
-        autoComplete="off"
-        bgColor="bg.info"
-        placeholder={t("name.placeholder")}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Notes
-//------------------------------------------------------------------------------
-
-function ArmorEditorNotes({ defaultNotes }: { defaultNotes: string }) {
-  const { error, ...rest } = useArmorEditorFormNotes(defaultNotes);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("notes.label")}>
-      <Textarea
-        bgColor="bg.info"
-        placeholder={t("notes.placeholder")}
-        rows={5}
-        {...rest}
-      />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Page
-//------------------------------------------------------------------------------
-
-function ArmorEditorPage({ defaultPage }: { defaultPage: number }) {
-  const { error, ...rest } = useArmorEditorFormPage(defaultPage);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("page.label")} maxW="6em">
-      <NumberInput bgColor="bg.info" {...rest} w="6em" />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Rarity
-//------------------------------------------------------------------------------
-
-function ArmorEditorRarity({
-  defaultRarity,
-}: {
-  defaultRarity: Armor["rarity"];
-}) {
-  const rarityOptions = useEquipmentRarityOptions();
-  const { error, ...rest } = useArmorEditorFormRarity(defaultRarity);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("rarity.label")}>
-      <Select.Enum options={rarityOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Required <Ability>
-//------------------------------------------------------------------------------
-
-function ArmorEditorRequiredCha({
-  defaultRequiredCha,
-}: {
-  defaultRequiredCha: number;
-}) {
-  const { error, ...rest } = useArmorEditorFormRequiredCha(defaultRequiredCha);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("required[cha].label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function ArmorEditorRequiredCon({
-  defaultRequiredCon,
-}: {
-  defaultRequiredCon: number;
-}) {
-  const { error, ...rest } = useArmorEditorFormRequiredCon(defaultRequiredCon);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("required[con].label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function ArmorEditorRequiredDex({
-  defaultRequiredDex,
-}: {
-  defaultRequiredDex: number;
-}) {
-  const { error, ...rest } = useArmorEditorFormRequiredDex(defaultRequiredDex);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("required[dex].label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function ArmorEditorRequiredInt({
-  defaultRequiredInt,
-}: {
-  defaultRequiredInt: number;
-}) {
-  const { error, ...rest } = useArmorEditorFormRequiredInt(defaultRequiredInt);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("required[int].label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function ArmorEditorRequiredStr({
-  defaultRequiredStr,
-}: {
-  defaultRequiredStr: number;
-}) {
-  const { error, ...rest } = useArmorEditorFormRequiredStr(defaultRequiredStr);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("required[str].label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-function ArmorEditorRequiredWis({
-  defaultRequiredWis,
-}: {
-  defaultRequiredWis: number;
-}) {
-  const { error, ...rest } = useArmorEditorFormRequiredWis(defaultRequiredWis);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("required[wis].label")}>
-      <NumberInput {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Type
-//------------------------------------------------------------------------------
-
-function ArmorEditorType({ defaultType }: { defaultType: Armor["type"] }) {
-  const typeOptions = useArmorTypeOptions();
-  const { error, ...rest } = useArmorEditorFormType(defaultType);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("type.label")}>
-      <Select.Enum options={typeOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Visibility
-//------------------------------------------------------------------------------
-
-function ArmorEditorVisibility({
-  defaultVisibility,
-}: {
-  defaultVisibility: Armor["visibility"];
-}) {
-  const visibilityOptions = useCampaignRoleOptions();
-  const { error, ...rest } = useArmorEditorFormVisibility(defaultVisibility);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("visibility.label")} maxW="10em">
-      <Select.Enum options={visibilityOptions} withinDialog {...rest} />
-    </Field>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Weight
-//------------------------------------------------------------------------------
-
-function ArmorEditorWeight({ defaultWeight }: { defaultWeight: number }) {
-  const { error, ...rest } = useArmorEditorFormWeight(defaultWeight);
-  const { t } = useI18nLangContext(i18nContext);
-  const message = error ? t(error) : undefined;
-
-  return (
-    <Field error={message} label={t("weight.label")}>
-      <WeightInput min={0} {...rest} />
-    </Field>
-  );
-}
-
-//----------------------------------------------------------------------------
-// I18n Context
-//----------------------------------------------------------------------------
-
-const i18nContext = {
-  "armor_class_modifier.label": {
-    en: "Armor Class Modifier",
-    it: "Modificatore Classe Armatura",
-  },
-  "armor_class_modifier[cha].label": {
-    en: "Max Charisma Modifier",
-    it: "Mod. Carisma Massimo",
-  },
-  "armor_class_modifier[con].label": {
-    en: "Max Constitution Modifier",
-    it: "Mod. Costituzione Massimo",
-  },
-  "armor_class_modifier[dex].label": {
-    en: "Max Dexterity Modifier",
-    it: "Mod. Destrezza Massimo",
-  },
-  "armor_class_modifier[int].label": {
-    en: "Intelligence Modifier",
-    it: "Mod. Intelligenza Massimo",
-  },
-  "armor_class_modifier[str].label": {
-    en: "Max Strength Modifier",
-    it: "Mod. Forza Massimo",
-  },
-  "armor_class_modifier[wis].label": {
-    en: "Max Wisdom Modifier",
-    it: "Mod. Saggezza Massimo",
-  },
-  "base_armor_class.label": {
-    en: "Base Armor Class",
-    it: "Classe Armatura Base",
-  },
-  "cost.label": {
-    en: "Cost",
-    it: "Costo",
-  },
-  "disadvantage_on_stealth.label": {
-    en: "Disadvantage on stealth",
-    it: "Svantaggio su furtività",
-  },
-  "form.error.creation_failure": {
-    en: "Failed to create the armor.",
-    it: "Errore durante la creazione.",
-  },
-  "form.error.invalid": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-  "form.error.invalid_translation": {
-    en: "The inserted data is not valid.",
-    it: "I dati inseriti non sono validi.",
-  },
-  "form.error.update_failure": {
-    en: "Failed to update the armor.",
-    it: "Errore durante il salvataggio.",
-  },
-  "magic.label": {
-    en: "Magic",
-    it: "Magica",
-  },
-  "name.error.empty": {
-    en: "The name cannot be empty",
-    it: "Il nome non può essere vuoto",
-  },
-  "name.label": {
-    en: "Name",
-    it: "Nome",
-  },
-  "name.placeholder": {
-    en: "E.g.: Padded Armor",
-    it: "Es: Armatura Imbottita",
-  },
-  "notes.label": {
-    en: "Notes",
-    it: "Note",
-  },
-  "notes.placeholder": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "page.label": {
-    en: "Page",
-    it: "Pagina",
-  },
-  "rarity.label": {
-    en: "Rarity",
-    it: "Rarità",
-  },
-  "required[cha].label": {
-    en: "Min Charisma",
-    it: "Carisma Mininmo",
-  },
-  "required[con].label": {
-    en: "Min Constitution",
-    it: "Costituzione Mininma",
-  },
-  "required[dex].label": {
-    en: "Min Dexterity",
-    it: "Destrezza Mininma",
-  },
-  "required[int].label": {
-    en: "Min Intelligence",
-    it: "Intelligenza Mininma",
-  },
-  "required[str].label": {
-    en: "Min Strength",
-    it: "Forza Mininma",
-  },
-  "required[wis].label": {
-    en: "Min Wisdom",
-    it: "Saggezza Mininma",
-  },
-  "type.label": {
-    en: "Type",
-    it: "Tipo",
-  },
-  "visibility.label": {
-    en: "Visibility",
-    it: "Visibilità",
-  },
-  "weight.label": {
-    en: "Weight",
-    it: "Peso",
-  },
-};
