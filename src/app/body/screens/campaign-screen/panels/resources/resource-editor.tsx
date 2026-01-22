@@ -34,8 +34,8 @@ export function createResourceEditor<D extends ResourceFormData>(
         it: "Nome",
       },
       placeholder: {
-        en: "E.g.: Barbarian",
-        it: "Es: Barbaro",
+        en: "None",
+        it: "Nessuno",
       },
     },
     i18nContextExtra: {
