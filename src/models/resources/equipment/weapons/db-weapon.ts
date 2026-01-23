@@ -13,6 +13,7 @@ import {
 //------------------------------------------------------------------------------
 
 export const dbWeaponSchema = dbEquipmentSchema.extend({
+  ammunition_ids: z.array(z.uuid()),
   damage: z.string(),
   damage_type: damageTypeSchema,
   damage_versatile: z.string().nullish(),
@@ -31,8 +32,8 @@ export type DBWeapon = z.infer<typeof dbWeaponSchema>;
 // DB Weapon Translation
 //------------------------------------------------------------------------------
 
-export const dbWeaponTranslationSchema = dbEquipmentTranslationSchema.extend({
-  ammunition: z.string().nullish(),
-});
+export const dbWeaponTranslationSchema = dbEquipmentTranslationSchema.extend(
+  {},
+);
 
 export type DBWeaponTranslation = z.infer<typeof dbWeaponTranslationSchema>;

@@ -15,7 +15,7 @@ import { type DBWeapon, type DBWeaponTranslation } from "./db-weapon";
 //------------------------------------------------------------------------------
 
 export const weaponFormDataSchema = equipmentFormDataSchema.extend({
-  ammunition: z.string(),
+  ammunition_ids: z.array(z.uuid()),
   damage: z.string(),
   damage_type: damageTypeSchema,
   damage_versatile: z.string(),
@@ -43,6 +43,7 @@ export function weaponFormDataToDB(data: Partial<WeaponFormData>): {
   return {
     resource: {
       ...resource,
+      ammunition_ids: data.ammunition_ids,
       damage: data.damage,
       damage_type: data.damage_type,
       damage_versatile: data.damage_versatile,
@@ -57,7 +58,6 @@ export function weaponFormDataToDB(data: Partial<WeaponFormData>): {
     },
     translation: {
       ...translation,
-      ammunition: data.ammunition,
     },
   };
 }

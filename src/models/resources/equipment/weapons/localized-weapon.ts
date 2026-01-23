@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { cmToDistanceValue } from "~/measures/distance";
 import { formatNumber } from "~/utils/number";
@@ -13,6 +12,7 @@ import {
 import { useTranslateWeaponProperty } from "../../../types/weapon-property";
 import { useTranslateWeaponType } from "../../../types/weapon-type";
 import { formatInfo } from "../../localized-resource";
+import { equipmentStore } from "../equipment-store";
 import {
   localizedEquipmentSchema,
   useLocalizeEquipment,
@@ -45,7 +45,9 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 // Use Localized Weapon
 //------------------------------------------------------------------------------
 
-export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
+export function useLocalizeWeapon(
+  campaignId: string,
+): (weapon: Weapon) => LocalizedWeapon {
   const localizeEquipment = useLocalizeEquipment<Weapon>();
   const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
@@ -55,6 +57,10 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
   const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(lang);
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
+  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+    campaignId,
+    lang,
+  );
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
@@ -72,7 +78,10 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
           ti("range.m", `${formatNumber(ms, lang)}/${formatNumber(ml, lang)}`)
         : ti("range.ft", `${formatNumber(is, lang)}/${formatNumber(il, lang)}`);
 
-      const ammunition = translate(weapon.ammunition, lang);
+      const ammunition = weapon.ammunition_ids
+        .map(localizeEquipmentName)
+        .sort()
+        .join(", ");
 
       const properties = weapon.properties
         .map(translateWeaponProperty)
@@ -118,12 +127,13 @@ export function useLocalizeWeapon(): (weapon: Weapon) => LocalizedWeapon {
     },
     [
       translateDamageType,
-      t,
       ti,
       system,
       lang,
+      localizeEquipmentName,
       translateWeaponProperty,
       tp,
+      t,
       translateWeaponMastery,
       localizeEquipment,
       translateWeaponType,

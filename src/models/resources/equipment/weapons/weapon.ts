@@ -1,5 +1,4 @@
 import z from "zod";
-import { i18nStringSchema } from "~/i18n/i18n-string";
 import { damageTypeSchema } from "../../../types/damage-type";
 import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
@@ -16,7 +15,7 @@ import {
 //------------------------------------------------------------------------------
 
 export const weaponSchema = equipmentSchema.extend({
-  ammunition: i18nStringSchema,
+  ammunition_ids: z.array(z.uuid()),
   damage: z.string(),
   damage_type: damageTypeSchema,
   damage_versatile: z.string().nullish(),
@@ -37,7 +36,7 @@ export type Weapon = z.infer<typeof weaponSchema>;
 
 export const defaultWeapon: Weapon = {
   ...defaultEquipment,
-  ammunition: {},
+  ammunition_ids: [],
   damage: "",
   damage_type: "slashing",
   damage_versatile: undefined,
@@ -56,5 +55,4 @@ export const defaultWeapon: Weapon = {
 
 export const weaponTranslationFields: TranslationFields<Weapon>[] = [
   ...equipmentTranslationFields,
-  "ammunition",
 ];

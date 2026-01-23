@@ -1,5 +1,5 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
+import { equipmentStore } from "~/models/resources/equipment/equipment-store";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import type { WeaponFormData } from "~/models/resources/equipment/weapons/weapon-form";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
@@ -11,6 +11,7 @@ import {
   createDistanceInputField,
   createInputField,
   createMultipleSelectEnumField,
+  createResourceSearchField,
   createSelectEnumField,
   createSwitchField,
 } from "../../resource-editor-form";
@@ -21,6 +22,7 @@ import { createEquipmentEditor } from "../equipment-editor";
 //------------------------------------------------------------------------------
 
 export type WeaponEditorProps = {
+  campaignId: string;
   resource: Weapon;
 };
 
@@ -32,10 +34,10 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
   const EquipmentEditor = createEquipmentEditor(form);
 
   //----------------------------------------------------------------------------
-  // Ammunition
+  // Ammunition Ids
   //----------------------------------------------------------------------------
 
-  const AmmunitionField = createInputField({
+  const AmmunitionIdsField = createResourceSearchField({
     i18nContext: {
       label: { en: "Ammunition", it: "Munizione" },
       placeholder: { en: "None", it: "Nessuna" },
@@ -46,10 +48,10 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
         it: "La munizione non può essere vuota",
       },
     },
-    translatable: true,
-    useField: form.createUseField("ammunition", (ammunition) =>
-      ammunition ? undefined : "error.empty",
+    useField: form.createUseField("ammunition_ids", (ammunition_ids) =>
+      ammunition_ids.length > 0 ? undefined : "error.empty",
     ),
+    useOptions: equipmentStore.useResourceOptions,
   });
 
   //----------------------------------------------------------------------------
@@ -163,9 +165,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
   // Weapon Editor
   //----------------------------------------------------------------------------
 
-  return function WeaponEditor({ resource }: WeaponEditorProps) {
-    const [lang] = useI18nLang();
-
+  return function WeaponEditor({ campaignId, resource }: WeaponEditorProps) {
     const { value: ranged } = useRangedField(resource.ranged);
     const { value: properties } = usePropertiesField(resource.properties);
 
@@ -186,7 +186,10 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
           )}
           <DamageTypeField defaultValue={resource.damage_type} />
           {properties.includes("ammunition") && (
-            <AmmunitionField defaultValue={resource.ammunition[lang] ?? ""} />
+            <AmmunitionIdsField
+              campaignId={campaignId}
+              defaultValue={resource.ammunition_ids}
+            />
           )}
         </HStack>
 
