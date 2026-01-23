@@ -1,5 +1,6 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
+import { itemTypeSchema } from "../../../types/item-type";
 import {
   equipmentFormDataSchema,
   equipmentFormDataToDB,
@@ -10,7 +11,9 @@ import { type DBItem, type DBItemTranslation } from "./db-item";
 // Item Form Data
 //------------------------------------------------------------------------------
 
-export const itemFormDataSchema = equipmentFormDataSchema.extend({});
+export const itemFormDataSchema = equipmentFormDataSchema.extend({
+  type: itemTypeSchema,
+});
 
 export type ItemFormData = z.infer<typeof itemFormDataSchema>;
 
@@ -27,6 +30,7 @@ export function itemFormDataToDB(data: Partial<ItemFormData>): {
   return {
     resource: {
       ...resource,
+      type: data.type,
     },
     translation: {
       ...translation,

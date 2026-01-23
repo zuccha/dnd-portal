@@ -1,4 +1,5 @@
 import z from "zod";
+import { itemTypeSchema } from "../../../types/item-type";
 import {
   dbEquipmentSchema,
   dbEquipmentTranslationSchema,
@@ -8,7 +9,9 @@ import {
 // DB Item
 //------------------------------------------------------------------------------
 
-export const dbItemSchema = dbEquipmentSchema.extend({});
+export const dbItemSchema = dbEquipmentSchema.extend({
+  type: itemTypeSchema,
+});
 
 export type DBItem = z.infer<typeof dbItemSchema>;
 

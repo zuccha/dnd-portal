@@ -1,4 +1,5 @@
 import z from "zod";
+import { itemTypeSchema } from "../../../types/item-type";
 import type { TranslationFields } from "../../resource";
 import {
   defaultEquipment,
@@ -10,7 +11,9 @@ import {
 // Item
 //------------------------------------------------------------------------------
 
-export const itemSchema = equipmentSchema.extend({});
+export const itemSchema = equipmentSchema.extend({
+  type: itemTypeSchema,
+});
 
 export type Item = z.infer<typeof itemSchema>;
 
@@ -20,6 +23,8 @@ export type Item = z.infer<typeof itemSchema>;
 
 export const defaultItem: Item = {
   ...defaultEquipment,
+
+  type: "other",
 };
 
 //------------------------------------------------------------------------------
