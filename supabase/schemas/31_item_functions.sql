@@ -112,7 +112,21 @@ RETURNS SETOF public.item_row
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
-WITH base AS (
+WITH prefs AS (
+  SELECT
+    -- types
+    (
+      SELECT coalesce(array_agg((e.key)::public.item_type), null)
+      FROM jsonb_each_text(p_filters->'types') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS types_inc,
+    (
+      SELECT coalesce(array_agg((e.key)::public.item_type), null)
+      FROM jsonb_each_text(p_filters->'types') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS types_exc
+),
+base AS (
   SELECT e.*
   FROM public.fetch_equipments(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS e
 ),
@@ -133,6 +147,13 @@ src AS (
     b.notes
   FROM base b
   JOIN public.items i ON i.resource_id = b.id
+),
+filtered AS (
+  SELECT s.*
+  FROM src s, prefs p
+  WHERE
+        (p.types_inc IS NULL OR s.type = any(p.types_inc))
+    AND (p.types_exc IS NULL OR NOT (s.type = any(p.types_exc)))
 )
 SELECT
   s.campaign_id,
@@ -148,7 +169,7 @@ SELECT
   s.weight,
   s.type,
   s.notes
-FROM src s
+FROM filtered s
 ORDER BY
   CASE
     WHEN p_order_by = 'name' AND p_order_dir = 'asc'
