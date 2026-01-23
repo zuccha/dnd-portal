@@ -6,6 +6,7 @@ import {
   useSelectedCampaignId,
 } from "~/models/campaign";
 import Select from "~/ui/select";
+import { compareObjects } from "~/utils/object";
 
 //------------------------------------------------------------------------------
 // Sidebar Campaign Selector
@@ -19,15 +20,19 @@ export default function SidebarCampaignSelector() {
   const { t } = useI18nLangContext(i18nContext);
 
   const [campaignOptions, campaignCategories] = useMemo(() => {
-    const moduleItems = modules.map(({ id, name }) => ({
-      label: name,
-      value: id,
-    }));
+    const moduleItems = modules
+      .map(({ id, name }) => ({
+        label: name,
+        value: id,
+      }))
+      .sort(compareObjects("label"));
 
-    const campaignItems = campaigns.map(({ id, name }) => ({
-      label: name,
-      value: id,
-    }));
+    const campaignItems = campaigns
+      .map(({ id, name }) => ({
+        label: name,
+        value: id,
+      }))
+      .sort(compareObjects("label"));
 
     const items = [...moduleItems, ...campaignItems];
 
