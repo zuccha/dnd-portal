@@ -1,51 +1,40 @@
---------------------------------------------------------------------------------
--- WEAPON ROW
---------------------------------------------------------------------------------
+DROP FUNCTION public.fetch_weapon(p_id uuid);
+DROP FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text);
 
-CREATE TYPE public.weapon_row AS (
-  -- Resource
-  campaign_id uuid,
-  campaign_name text,
-  id uuid,
-  kind public.resource_kind,
-  visibility public.campaign_role,
-  name jsonb,
-  page jsonb,
-  -- Equipment
-  cost integer,
-  magic boolean,
-  rarity public.equipment_rarity,
-  weight integer,
-  -- Weapon
-  damage text,
-  damage_type public.damage_type,
-  damage_versatile text,
-  mastery public.weapon_mastery,
-  melee boolean,
-  properties public.weapon_property[],
-  range_long integer,
-  range_short integer,
-  ranged boolean,
-  type public.weapon_type,
-  -- Translation
-  ammunition_ids uuid[],
-  notes jsonb
+drop type "public"."weapon_row";
+
+create table "public"."weapon_ammunitions" (
+  "weapon_id" uuid not null,
+  "equipment_id" uuid not null
 );
 
+alter table "public"."weapon_ammunitions" enable row level security;
 
---------------------------------------------------------------------------------
--- CREATE WEAPON
---------------------------------------------------------------------------------
+alter table "public"."weapon_translations" drop column "ammunition";
 
-CREATE OR REPLACE FUNCTION public.create_weapon(
-  p_campaign_id uuid,
-  p_lang text,
-  p_weapon jsonb,
-  p_weapon_translation jsonb)
-RETURNS uuid
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE INDEX idx_weapon_ammunitions_equipment_id ON public.weapon_ammunitions USING btree (equipment_id);
+
+CREATE INDEX idx_weapon_ammunitions_weapon_id ON public.weapon_ammunitions USING btree (weapon_id);
+
+CREATE UNIQUE INDEX weapon_ammunitions_pkey ON public.weapon_ammunitions USING btree (weapon_id, equipment_id);
+
+alter table "public"."weapon_ammunitions" add constraint "weapon_ammunitions_pkey" PRIMARY KEY using index "weapon_ammunitions_pkey";
+
+alter table "public"."weapon_ammunitions" add constraint "weapon_ammunitions_equipment_id_fkey" FOREIGN KEY (equipment_id) REFERENCES public.equipments(resource_id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."weapon_ammunitions" validate constraint "weapon_ammunitions_equipment_id_fkey";
+
+alter table "public"."weapon_ammunitions" add constraint "weapon_ammunitions_weapon_id_fkey" FOREIGN KEY (weapon_id) REFERENCES public.weapons(resource_id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."weapon_ammunitions" validate constraint "weapon_ammunitions_weapon_id_fkey";
+
+create type "public"."weapon_row" as ("campaign_id" uuid, "campaign_name" text, "id" uuid, "kind" public.resource_kind, "visibility" public.campaign_role, "name" jsonb, "page" jsonb, "cost" integer, "magic" boolean, "rarity" public.equipment_rarity, "weight" integer, "damage" text, "damage_type" public.damage_type, "damage_versatile" text, "mastery" public.weapon_mastery, "melee" boolean, "properties" public.weapon_property[], "range_long" integer, "range_short" integer, "ranged" boolean, "type" public.weapon_type, "ammunition_ids" uuid[], "notes" jsonb);
+
+CREATE OR REPLACE FUNCTION public.create_weapon(p_campaign_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_id uuid;
   r public.weapons%ROWTYPE;
@@ -87,24 +76,14 @@ BEGIN
 
   RETURN v_id;
 END;
-$$;
-
-ALTER FUNCTION public.create_weapon(p_campaign_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.create_weapon(p_campaign_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_weapon(p_campaign_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_weapon(p_campaign_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH WEAPON
---------------------------------------------------------------------------------
+$function$
+;
 
 CREATE OR REPLACE FUNCTION public.fetch_weapon(p_id uuid)
-RETURNS public.weapon_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+ RETURNS public.weapon_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
   SELECT
     e.campaign_id,
     e.campaign_name,
@@ -148,29 +127,14 @@ AS $$
     GROUP BY w.resource_id
   ) tt ON tt.id = e.id
   WHERE e.id = p_id;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_weapon(p_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_weapon(p_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.fetch_weapon(p_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_weapon(p_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH WEAPONS
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.fetch_weapons(
-  p_campaign_id uuid,
-  p_langs text[],
-  p_filters jsonb DEFAULT '{}'::jsonb,
-  p_order_by text DEFAULT 'name'::text,
-  p_order_dir text DEFAULT 'asc'::text)
-RETURNS SETOF public.weapon_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text)
+ RETURNS SETOF public.weapon_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 WITH prefs AS (
   SELECT
     -- campaign/modules include/exclude filter (keys are campaign or module ids)
@@ -322,64 +286,14 @@ ORDER BY
     WHEN p_order_by = 'name' AND p_order_dir = 'desc'
       THEN (f.name->>coalesce(p_langs[1],'en'))
   END DESC NULLS LAST;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_weapons(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPSERT WEAPON TRANSLATION
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.upsert_weapon_translation(
-  p_id uuid,
-  p_lang text,
-  p_weapon_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
-DECLARE
-  r public.weapon_translations%ROWTYPE;
-BEGIN
-  r := jsonb_populate_record(null::public.weapon_translations, p_weapon_translation);
-
-  INSERT INTO public.weapon_translations AS wt (
-    resource_id, lang
-  ) VALUES (
-    p_id, p_lang
-  )
-  ON conflict (resource_id, lang) DO NOTHING;
-
-  perform public.upsert_resource_translation(p_id, p_lang, p_weapon_translation);
-  perform public.upsert_equipment_translation(p_id, p_lang, p_weapon_translation);
-END;
-$$;
-
-ALTER FUNCTION public.upsert_weapon_translation(p_id uuid, p_lang text, p_weapon_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.upsert_weapon_translation(p_id uuid, p_lang text, p_weapon_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.upsert_weapon_translation(p_id uuid, p_lang text, p_weapon_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.upsert_weapon_translation(p_id uuid, p_lang text, p_weapon_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPDATE WEAPON
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.update_weapon(
-  p_id uuid,
-  p_lang text,
-  p_weapon jsonb,
-  p_weapon_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.update_weapon(p_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_rows int;
 BEGIN
@@ -446,10 +360,99 @@ BEGIN
 
   perform public.upsert_weapon_translation(p_id, p_lang, p_weapon_translation);
 END;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.update_weapon(p_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) OWNER TO postgres;
+CREATE OR REPLACE FUNCTION public.upsert_weapon_translation(p_id uuid, p_lang text, p_weapon_translation jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
+DECLARE
+  r public.weapon_translations%ROWTYPE;
+BEGIN
+  r := jsonb_populate_record(null::public.weapon_translations, p_weapon_translation);
 
-GRANT ALL ON FUNCTION public.update_weapon(p_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_weapon(p_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_weapon(p_id uuid, p_lang text, p_weapon jsonb, p_weapon_translation jsonb) TO service_role;
+  INSERT INTO public.weapon_translations AS wt (
+    resource_id, lang
+  ) VALUES (
+    p_id, p_lang
+  )
+  ON conflict (resource_id, lang) DO NOTHING;
+
+  perform public.upsert_resource_translation(p_id, p_lang, p_weapon_translation);
+  perform public.upsert_equipment_translation(p_id, p_lang, p_weapon_translation);
+END;
+$function$
+;
+
+grant delete on table "public"."weapon_ammunitions" to "anon";
+
+grant insert on table "public"."weapon_ammunitions" to "anon";
+
+grant references on table "public"."weapon_ammunitions" to "anon";
+
+grant select on table "public"."weapon_ammunitions" to "anon";
+
+grant trigger on table "public"."weapon_ammunitions" to "anon";
+
+grant truncate on table "public"."weapon_ammunitions" to "anon";
+
+grant update on table "public"."weapon_ammunitions" to "anon";
+
+grant delete on table "public"."weapon_ammunitions" to "authenticated";
+
+grant insert on table "public"."weapon_ammunitions" to "authenticated";
+
+grant references on table "public"."weapon_ammunitions" to "authenticated";
+
+grant select on table "public"."weapon_ammunitions" to "authenticated";
+
+grant trigger on table "public"."weapon_ammunitions" to "authenticated";
+
+grant truncate on table "public"."weapon_ammunitions" to "authenticated";
+
+grant update on table "public"."weapon_ammunitions" to "authenticated";
+
+grant delete on table "public"."weapon_ammunitions" to "service_role";
+
+grant insert on table "public"."weapon_ammunitions" to "service_role";
+
+grant references on table "public"."weapon_ammunitions" to "service_role";
+
+grant select on table "public"."weapon_ammunitions" to "service_role";
+
+grant trigger on table "public"."weapon_ammunitions" to "service_role";
+
+grant truncate on table "public"."weapon_ammunitions" to "service_role";
+
+grant update on table "public"."weapon_ammunitions" to "service_role";
+
+
+  create policy "Creators and GMs can create weapon ammunitions"
+  on "public"."weapon_ammunitions"
+  as permissive
+  for insert
+  to authenticated
+with check (public.can_edit_resource(weapon_id));
+
+
+
+  create policy "Creators and GMs can delete weapon ammunitions"
+  on "public"."weapon_ammunitions"
+  as permissive
+  for delete
+  to authenticated
+using (public.can_edit_resource(weapon_id));
+
+
+
+  create policy "Users can read weapon ammunitions"
+  on "public"."weapon_ammunitions"
+  as permissive
+  for select
+  to anon, authenticated
+using ((public.can_read_resource(weapon_id) AND public.can_read_resource(equipment_id)));
+
+
+

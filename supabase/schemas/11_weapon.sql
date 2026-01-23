@@ -35,7 +35,6 @@ GRANT ALL ON TABLE public.weapons TO service_role;
 CREATE TABLE IF NOT EXISTS public.weapon_translations (
   resource_id uuid NOT NULL,
   lang text NOT NULL,
-  ammunition text,
   CONSTRAINT weapon_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT weapon_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.weapons(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT weapon_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
@@ -99,4 +98,3 @@ CREATE POLICY "Creators and GMs can delete weapon translations"
 ON public.weapon_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
