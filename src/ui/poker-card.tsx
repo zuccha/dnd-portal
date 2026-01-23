@@ -211,7 +211,7 @@ function Details({ children, palette }: DetailsProps) {
           >
             {paragraph.substring(2, paragraph.length - 2)}
           </Span>
-        : <RichText key={paragraphIndex} text={paragraph} />,
+        : <RichText hyphens="auto" key={paragraphIndex} text={paragraph} />,
       )}
     </VStack>
   );
