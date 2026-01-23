@@ -29,7 +29,7 @@ export function createTypeTranslationHooks<Type extends string>(
 
   function useTranslate(
     lang: I18nLang,
-  ): (characterClass: Type) => TypeTranslation<Type> {
+  ): (value: Type) => TypeTranslation<Type> {
     const translate = useCallback(
       (type: Type): TypeTranslation<Type> => {
         const label = labels[type][lang] ?? type;
