@@ -17,6 +17,7 @@ CREATE TYPE public.item_row AS (
   rarity public.equipment_rarity,
   weight integer,
   -- Item Translation
+  type public.item_type,
   notes jsonb
 );
 
@@ -36,7 +37,9 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 DECLARE
   v_id uuid;
+  r public.items%ROWTYPE;
 BEGIN
+  r := jsonb_populate_record(null::public.items, p_item);
   v_id := public.create_equipment(
     p_campaign_id,
     p_lang,
@@ -44,8 +47,8 @@ BEGIN
     p_item_translation
   );
 
-  INSERT INTO public.items (resource_id)
-  VALUES (v_id);
+  INSERT INTO public.items (resource_id, type)
+  VALUES (v_id, r.type);
 
   perform public.upsert_item_translation(v_id, p_lang, p_item_translation);
 
@@ -81,6 +84,7 @@ AS $$
     e.magic,
     e.rarity,
     e.weight,
+    i.type,
     e.notes
   FROM public.fetch_equipment(p_id) AS e
   JOIN public.items i ON i.resource_id = e.id
@@ -125,6 +129,7 @@ src AS (
     b.magic,
     b.rarity,
     b.weight,
+    i.type,
     b.notes
   FROM base b
   JOIN public.items i ON i.resource_id = b.id
@@ -141,6 +146,7 @@ SELECT
   s.magic,
   s.rarity,
   s.weight,
+  s.type,
   s.notes
 FROM src s
 ORDER BY
@@ -215,7 +221,12 @@ BEGIN
   );
 
   UPDATE public.items i
-  SET resource_id = i.resource_id
+  SET (
+    type
+  ) = (
+    SELECT r.type
+    FROM jsonb_populate_record(null::public.items, to_jsonb(i) || p_item) AS r
+  )
   WHERE i.resource_id = p_id;
 
   GET diagnostics v_rows = ROW_COUNT;

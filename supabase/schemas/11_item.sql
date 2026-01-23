@@ -4,6 +4,7 @@
 
 CREATE TABLE IF NOT EXISTS public.items (
   resource_id uuid NOT NULL,
+  type public.item_type DEFAULT 'other'::public.item_type NOT NULL,
   CONSTRAINT items_pkey PRIMARY KEY (resource_id),
   CONSTRAINT items_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.equipments(resource_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -86,4 +87,3 @@ CREATE POLICY "Creators and GMs can delete item translations"
 ON public.item_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
