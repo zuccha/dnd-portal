@@ -1,14 +1,14 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
-import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
+import { type StackProps } from "@chakra-ui/react";
+import { BowArrowIcon, SwordsIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
-import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
+import EquipmentFilters from "../equipment-filters";
 
 //------------------------------------------------------------------------------
 // Weapons Filters
@@ -21,10 +21,9 @@ export default function WeaponsFilters(props: StackProps) {
   const typeOptions = useWeaponTypeOptions();
   const propertyOptions = useWeaponPropertyOptions();
   const masteryOptions = useWeaponMasteryOptions();
-  const rarityOptions = useEquipmentRarityOptions();
 
   return (
-    <HStack {...props}>
+    <EquipmentFilters filters={filters} onFiltersChange={setFilters} {...props}>
       <InclusionSelect
         includes={filters.types ?? {}}
         minW="10em"
@@ -63,26 +62,6 @@ export default function WeaponsFilters(props: StackProps) {
         {t("masteries")}
       </InclusionSelect>
 
-      <InclusionSelect
-        includes={filters.rarities ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ rarities: { ...filters.rarities, ...partial } })
-        }
-        options={rarityOptions}
-        size="sm"
-      >
-        {t("rarity")}
-      </InclusionSelect>
-
-      <InclusionButton
-        include={filters.magic}
-        onValueChange={(magic) => setFilters({ magic })}
-        size="sm"
-      >
-        <Icon Icon={WandIcon} size="sm" />
-      </InclusionButton>
-
       <InclusionButton
         include={filters.melee}
         onValueChange={(melee) => setFilters({ melee })}
@@ -98,7 +77,7 @@ export default function WeaponsFilters(props: StackProps) {
       >
         <Icon Icon={BowArrowIcon} size="sm" />
       </InclusionButton>
-    </HStack>
+    </EquipmentFilters>
   );
 }
 
@@ -107,29 +86,13 @@ export default function WeaponsFilters(props: StackProps) {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  magic: {
-    en: "🪄",
-    it: "🪄",
-  },
   masteries: {
     en: "Masteries",
     it: "Padronanze",
   },
-  melee: {
-    en: "⚔️",
-    it: "⚔️",
-  },
   properties: {
     en: "Properties",
     it: "Proprietà",
-  },
-  ranged: {
-    en: "🏹",
-    it: "🏹",
-  },
-  rarity: {
-    en: "Rarity",
-    it: "Rarità",
   },
   types: {
     en: "Type",
