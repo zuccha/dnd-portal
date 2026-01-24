@@ -27,7 +27,7 @@ export default function App() {
   if (!ready) return null;
 
   return (
-    <VStack gap={0} h="100vh" w="full">
+    <VStack gap={0} h="100vh" overflow="hidden" w="full">
       <AppRouter />
     </VStack>
   );
