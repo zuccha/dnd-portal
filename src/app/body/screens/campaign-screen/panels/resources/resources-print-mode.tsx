@@ -25,7 +25,11 @@ import Field from "~/ui/field";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import { compareObjects } from "~/utils/object";
-import type { Palette } from "~/utils/palette";
+import {
+  customPalettes,
+  paletteNameSchema,
+  paletteNames,
+} from "~/utils/palette";
 import {
   type ResourceCardPrintableExtra,
   createResourceCardPrintable,
@@ -103,7 +107,7 @@ export function createResourcesPrintMode<
     const [gradientIntensity, setGradientIntensity] = useGradientIntensity();
 
     const [paletteName, setPaletteName] = usePaletteName();
-    const palette = palettes[paletteName];
+    const palette = customPalettes[paletteName];
 
     const paletteNameOptions = useMemo(() => {
       return paletteNames
@@ -438,44 +442,6 @@ function CropMarksV({ columns, gap, h, offsetX, offsetY }: CropMarksVProps) {
 }
 
 //------------------------------------------------------------------------------
-// Palette Name
-//------------------------------------------------------------------------------
-
-const paletteNameSchema = z.enum([
-  "blue",
-  "cyan",
-  "gray",
-  "green",
-  "orange",
-  "pink",
-  "purple",
-  "red",
-  "teal",
-  "yellow",
-]);
-
-type PaletteName = z.infer<typeof paletteNameSchema>;
-
-const paletteNames = paletteNameSchema.options;
-
-//------------------------------------------------------------------------------
-// Palette
-//------------------------------------------------------------------------------
-
-const palettes: Record<PaletteName, Palette> = {
-  blue: { 50: "#eff6ff", 100: "#dbeafe", 700: "#173da6", 800: "#1a3478" },
-  cyan: { 50: "#ecfeff", 100: "#cffafe", 700: "#0c5c72", 800: "#134152" },
-  gray: { 50: "#fafafa", 100: "#f4f4f5", 700: "#3f3f46", 800: "#27272a" },
-  green: { 50: "#f0fdf4", 100: "#dcfce7", 700: "#116932", 800: "#124a28" },
-  orange: { 50: "#fff7ed", 100: "#ffedd5", 700: "#92310a", 800: "#6c2710" },
-  pink: { 50: "#fdf2f8", 100: "#fce7f3", 700: "#a41752", 800: "#6d0e34" },
-  purple: { 50: "#faf5ff", 100: "#f3e8ff", 700: "#641ba3", 800: "#4a1772" },
-  red: { 50: "#fef2f2", 100: "#fee2e2", 700: "#991919", 800: "#511111" },
-  teal: { 50: "#f0fdfa", 100: "#ccfbf1", 700: "#0c5d56", 800: "#114240" },
-  yellow: { 50: "#fefce8", 100: "#fef9c3", 700: "#845209", 800: "#713f12" },
-};
-
-//------------------------------------------------------------------------------
 // Paper Type
 //------------------------------------------------------------------------------
 
@@ -578,6 +544,10 @@ const i18nContext = {
     en: "Blue",
     it: "Blue",
   },
+  "palette_name[brown]": {
+    en: "Brown",
+    it: "Marrone",
+  },
   "palette_name[cyan]": {
     en: "Cyan",
     it: "Ciano",
@@ -589,6 +559,10 @@ const i18nContext = {
   "palette_name[green]": {
     en: "Green",
     it: "Verde",
+  },
+  "palette_name[lime]": {
+    en: "Lime",
+    it: "Lime",
   },
   "palette_name[magenta]": {
     en: "Magenta",
