@@ -76,7 +76,12 @@ function Frame({
       {...rest}
     >
       <VStack gap={0} lineHeight={0.9} px={rem0750} textAlign="center">
-        <Span fontFamily="Mr Eaves Alt" fontSize={rem1625} pt={rem0750}>
+        <Span
+          color={palette[800]}
+          fontFamily="Mr Eaves Alt"
+          fontSize={rem1625}
+          pt={rem0750}
+        >
           {name}
         </Span>
         {descriptor && (
