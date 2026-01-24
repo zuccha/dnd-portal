@@ -7,6 +7,7 @@ export const Route = {
   Resources: "/resources",
   ResourcesBestiary: "/resources/bestiary",
   ResourcesBestiaryMonsters: "/resources/bestiary/monsters",
+  ResourcesBestiaryTags: "/resources/bestiary/tags",
   ResourcesCharacter: "/resources/character",
   ResourcesCharacterClasses: "/resources/character/classes",
   ResourcesCharacterEldritchInvocations:

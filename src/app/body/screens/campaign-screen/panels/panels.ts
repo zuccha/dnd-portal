@@ -4,7 +4,10 @@ import { Route } from "~/navigation/routes";
 // Bestiary Panel Ids
 //------------------------------------------------------------------------------
 
-export const bestiaryPanelIds = [Route.ResourcesBestiaryMonsters] as const;
+export const bestiaryPanelIds = [
+  Route.ResourcesBestiaryMonsters,
+  Route.ResourcesBestiaryTags,
+] as const;
 
 export type BestiaryPanelId = (typeof bestiaryPanelIds)[number];
 

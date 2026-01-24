@@ -75,6 +75,10 @@ const i18nContext = {
     en: "Monsters",
     it: "Mostri",
   },
+  [Route.ResourcesBestiaryTags]: {
+    en: "Groups",
+    it: "Gruppi",
+  },
   [Route.ResourcesCharacter]: {
     en: "Character",
     it: "Personaggio",
