@@ -1,82 +1,40 @@
---------------------------------------------------------------------------------
--- CREATURE ROW
---------------------------------------------------------------------------------
+DROP FUNCTION public.fetch_creature(p_id uuid);
+DROP FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text);
 
-CREATE TYPE public.creature_row AS (
-  -- Resource
-  campaign_id uuid,
-  campaign_name text,
-  id uuid,
-  kind public.resource_kind,
-  visibility public.campaign_role,
-  name jsonb,
-  page jsonb,
-  -- Creature
-  ac smallint,
-  ability_cha smallint,
-  ability_con smallint,
-  ability_dex smallint,
-  ability_int smallint,
-  ability_str smallint,
-  ability_wis smallint,
-  ability_proficiencies public.creature_ability[],
-  alignment public.creature_alignment,
-  blindsight integer,
-  condition_immunities public.creature_condition[],
-  condition_resistances public.creature_condition[],
-  condition_vulnerabilities public.creature_condition[],
-  cr numeric,
-  darkvision integer,
-  damage_immunities public.damage_type[],
-  damage_resistances public.damage_type[],
-  damage_vulnerabilities public.damage_type[],
-  habitats public.creature_habitat[],
-  hp smallint,
-  hp_formula text,
-  initiative smallint,
-  language_additional_count smallint,
-  passive_perception smallint,
-  size public.creature_size,
-  skill_expertise public.creature_skill[],
-  skill_proficiencies public.creature_skill[],
-  speed_burrow integer,
-  speed_climb integer,
-  speed_fly integer,
-  speed_swim integer,
-  speed_walk integer,
-  treasures public.creature_treasure[],
-  equipment_entries jsonb,
-  language_ids uuid[],
-  language_scope public.language_scope,
-  tag_ids uuid[],
-  plane_ids uuid[],
-  telepathy_range integer,
-  tremorsense integer,
-  truesight integer,
-  type public.creature_type,
-  -- Creature Translation
-  actions jsonb,
-  bonus_actions jsonb,
-  gear jsonb,
-  legendary_actions jsonb,
-  reactions jsonb,
-  traits jsonb
-);
+drop type "public"."creature_row";
 
 
---------------------------------------------------------------------------------
--- CREATE CREATURE
---------------------------------------------------------------------------------
+  create table "public"."creature_creature_tags" (
+    "creature_id" uuid not null,
+    "creature_tag_id" uuid not null
+      );
 
-CREATE OR REPLACE FUNCTION public.create_creature(
-  p_campaign_id uuid,
-  p_lang text,
-  p_creature jsonb,
-  p_creature_translation jsonb)
-RETURNS uuid
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+
+alter table "public"."creature_creature_tags" enable row level security;
+
+CREATE UNIQUE INDEX creature_creature_tags_pkey ON public.creature_creature_tags USING btree (creature_id, creature_tag_id);
+
+CREATE INDEX idx_creature_creature_tags_creature_id ON public.creature_creature_tags USING btree (creature_id);
+
+CREATE INDEX idx_creature_creature_tags_creature_tag_id ON public.creature_creature_tags USING btree (creature_tag_id);
+
+alter table "public"."creature_creature_tags" add constraint "creature_creature_tags_pkey" PRIMARY KEY using index "creature_creature_tags_pkey";
+
+alter table "public"."creature_creature_tags" add constraint "creature_creature_tags_creature_id_fkey" FOREIGN KEY (creature_id) REFERENCES public.creatures(resource_id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."creature_creature_tags" validate constraint "creature_creature_tags_creature_id_fkey";
+
+alter table "public"."creature_creature_tags" add constraint "creature_creature_tags_creature_tag_id_fkey" FOREIGN KEY (creature_tag_id) REFERENCES public.creature_tags(resource_id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."creature_creature_tags" validate constraint "creature_creature_tags_creature_tag_id_fkey";
+
+create type "public"."creature_row" as ("campaign_id" uuid, "campaign_name" text, "id" uuid, "kind" public.resource_kind, "visibility" public.campaign_role, "name" jsonb, "page" jsonb, "ac" smallint, "ability_cha" smallint, "ability_con" smallint, "ability_dex" smallint, "ability_int" smallint, "ability_str" smallint, "ability_wis" smallint, "ability_proficiencies" public.creature_ability[], "alignment" public.creature_alignment, "blindsight" integer, "condition_immunities" public.creature_condition[], "condition_resistances" public.creature_condition[], "condition_vulnerabilities" public.creature_condition[], "cr" numeric, "darkvision" integer, "damage_immunities" public.damage_type[], "damage_resistances" public.damage_type[], "damage_vulnerabilities" public.damage_type[], "habitats" public.creature_habitat[], "hp" smallint, "hp_formula" text, "initiative" smallint, "language_additional_count" smallint, "passive_perception" smallint, "size" public.creature_size, "skill_expertise" public.creature_skill[], "skill_proficiencies" public.creature_skill[], "speed_burrow" integer, "speed_climb" integer, "speed_fly" integer, "speed_swim" integer, "speed_walk" integer, "treasures" public.creature_treasure[], "equipment_entries" jsonb, "language_ids" uuid[], "language_scope" public.language_scope, "tag_ids" uuid[], "plane_ids" uuid[], "telepathy_range" integer, "tremorsense" integer, "truesight" integer, "type" public.creature_type, "actions" jsonb, "bonus_actions" jsonb, "gear" jsonb, "legendary_actions" jsonb, "reactions" jsonb, "traits" jsonb);
+
+CREATE OR REPLACE FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_id uuid;
   r public.creatures%ROWTYPE;
@@ -178,24 +136,14 @@ BEGIN
 
   RETURN v_id;
 END;
-$$;
-
-ALTER FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_creature(p_campaign_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH CREATURE
---------------------------------------------------------------------------------
+$function$
+;
 
 CREATE OR REPLACE FUNCTION public.fetch_creature(p_id uuid)
-RETURNS public.creature_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+ RETURNS public.creature_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
   SELECT
     r.campaign_id,
     r.campaign_name,
@@ -307,29 +255,14 @@ AS $$
     GROUP BY ce.creature_id
   ) eq ON eq.id = r.id
   WHERE r.id = p_id;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_creature(p_id uuid) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_creature(p_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.fetch_creature(p_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_creature(p_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH CREATURES
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.fetch_creatures(
-  p_campaign_id uuid,
-  p_langs text[],
-  p_filters jsonb DEFAULT '{}'::jsonb,
-  p_order_by text DEFAULT 'name'::text,
-  p_order_dir text DEFAULT 'asc'::text)
-RETURNS SETOF public.creature_row
-LANGUAGE sql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb DEFAULT '{}'::jsonb, p_order_by text DEFAULT 'name'::text, p_order_dir text DEFAULT 'asc'::text)
+ RETURNS SETOF public.creature_row
+ LANGUAGE sql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 WITH prefs AS (
   SELECT
     -- campaign/modules include/exclude filter (keys are campaign or module ids)
@@ -601,70 +534,14 @@ ORDER BY
     WHEN p_order_by = 'name' AND p_order_dir = 'desc'
       THEN (f.name->>coalesce(p_langs[1],'en'))
   END DESC NULLS LAST;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_creatures(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPSERT CREATURE TRANSLATION
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.upsert_creature_translation(
-  p_id uuid,
-  p_lang text,
-  p_creature_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
-DECLARE
-  r public.creature_translations%ROWTYPE;
-BEGIN
-  r := jsonb_populate_record(null::public.creature_translations, p_creature_translation);
-
-  INSERT INTO public.creature_translations AS ct (
-    resource_id, lang, gear,
-    traits, actions, bonus_actions, reactions, legendary_actions
-  ) VALUES (
-    p_id, p_lang, r.gear,
-    r.traits, r.actions, r.bonus_actions, r.reactions, r.legendary_actions
-  )
-  ON conflict (resource_id, lang) DO UPDATE
-  SET
-    gear = excluded.gear,
-    traits = excluded.traits,
-    actions = excluded.actions,
-    bonus_actions = excluded.bonus_actions,
-    reactions = excluded.reactions,
-    legendary_actions = excluded.legendary_actions;
-END;
-$$;
-
-ALTER FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.upsert_creature_translation(p_id uuid, p_lang text, p_creature_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPDATE CREATURE
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.update_creature(
-  p_id uuid,
-  p_lang text,
-  p_creature jsonb,
-  p_creature_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
+CREATE OR REPLACE FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
 DECLARE
   v_rows int;
 BEGIN
@@ -864,10 +741,76 @@ BEGIN
 
   perform public.upsert_creature_translation(p_id, p_lang, p_creature_translation);
 END;
-$$;
+$function$
+;
 
-ALTER FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) OWNER TO postgres;
+grant delete on table "public"."creature_creature_tags" to "anon";
 
-GRANT ALL ON FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_creature(p_id uuid, p_lang text, p_creature jsonb, p_creature_translation jsonb) TO service_role;
+grant insert on table "public"."creature_creature_tags" to "anon";
+
+grant references on table "public"."creature_creature_tags" to "anon";
+
+grant select on table "public"."creature_creature_tags" to "anon";
+
+grant trigger on table "public"."creature_creature_tags" to "anon";
+
+grant truncate on table "public"."creature_creature_tags" to "anon";
+
+grant update on table "public"."creature_creature_tags" to "anon";
+
+grant delete on table "public"."creature_creature_tags" to "authenticated";
+
+grant insert on table "public"."creature_creature_tags" to "authenticated";
+
+grant references on table "public"."creature_creature_tags" to "authenticated";
+
+grant select on table "public"."creature_creature_tags" to "authenticated";
+
+grant trigger on table "public"."creature_creature_tags" to "authenticated";
+
+grant truncate on table "public"."creature_creature_tags" to "authenticated";
+
+grant update on table "public"."creature_creature_tags" to "authenticated";
+
+grant delete on table "public"."creature_creature_tags" to "service_role";
+
+grant insert on table "public"."creature_creature_tags" to "service_role";
+
+grant references on table "public"."creature_creature_tags" to "service_role";
+
+grant select on table "public"."creature_creature_tags" to "service_role";
+
+grant trigger on table "public"."creature_creature_tags" to "service_role";
+
+grant truncate on table "public"."creature_creature_tags" to "service_role";
+
+grant update on table "public"."creature_creature_tags" to "service_role";
+
+
+  create policy "Creators and GMs can create creature creature tags"
+  on "public"."creature_creature_tags"
+  as permissive
+  for insert
+  to authenticated
+with check (public.can_edit_resource(creature_id));
+
+
+
+  create policy "Creators and GMs can delete creature creature tags"
+  on "public"."creature_creature_tags"
+  as permissive
+  for delete
+  to authenticated
+using (public.can_edit_resource(creature_id));
+
+
+
+  create policy "Users can read creature creature tags"
+  on "public"."creature_creature_tags"
+  as permissive
+  for select
+  to anon, authenticated
+using ((public.can_read_resource(creature_id) AND public.can_read_resource(creature_tag_id)));
+
+
+
