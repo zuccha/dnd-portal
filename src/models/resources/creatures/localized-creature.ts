@@ -24,6 +24,7 @@ import {
   type DamageType,
   useTranslateDamageType,
 } from "../../types/damage-type";
+import { creatureTagStore } from "../creature-tags/creature-tag-store";
 import { equipmentStore } from "../equipment/equipment-store";
 import { languageStore } from "../languages/language-store";
 import {
@@ -135,6 +136,10 @@ export function useLocalizeCreature(
     campaignId,
     lang,
   );
+  const localizeTagName = creatureTagStore.useLocalizeResourceName(
+    campaignId,
+    lang,
+  );
   const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 
@@ -144,6 +149,7 @@ export function useLocalizeCreature(
       const type = translateCreatureType(creature.type).label;
       const alignment = translateCreatureAlignment(creature.alignment).label;
 
+      const tags = creature.tag_ids.map(localizeTagName).join(", ");
       const planes = creature.plane_ids.map(localizePlaneName).join(", ");
 
       const habitats = creature.habitats
@@ -467,7 +473,10 @@ export function useLocalizeCreature(
 
       return {
         ...localizeResource(creature),
-        descriptor: ti("subtitle", size, type, alignment),
+        descriptor:
+          tags ?
+            ti("subtitle.with_tags", size, type, alignment, tags)
+          : ti("subtitle.without_tags", size, type, alignment),
         details,
 
         alignment,
@@ -540,6 +549,7 @@ export function useLocalizeCreature(
       localizeLanguageName,
       localizePlaneName,
       localizeResource,
+      localizeTagName,
       system,
       t,
       ti,
@@ -714,7 +724,11 @@ const i18nContext = {
     en: "<1>",
     it: "<1>",
   },
-  "subtitle": {
+  "subtitle.with_tags": {
+    en: "<1> <2> (<4>), <3>", // 1 = size, 2 = type, 3 = alignment
+    it: "<2> <1> (<4>), <3>", // 1 = size, 2 = type, 3 = alignment
+  },
+  "subtitle.without_tags": {
     en: "<1> <2>, <3>", // 1 = size, 2 = type, 3 = alignment
     it: "<2> <1>, <3>", // 1 = size, 2 = type, 3 = alignment
   },

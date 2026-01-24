@@ -1,5 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
+import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { type Creature } from "~/models/resources/creatures/creature";
 import type { CreatureFormData } from "~/models/resources/creatures/creature-form";
 import { languageStore } from "~/models/resources/languages/language-store";
@@ -427,6 +428,19 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   });
 
   //----------------------------------------------------------------------------
+  // Tag Ids
+  //----------------------------------------------------------------------------
+
+  const TagIdsField = createResourceSearchField({
+    i18nContext: {
+      label: { en: "Groups", it: "Group" },
+      placeholder: { en: "None", it: "Nessuno" },
+    },
+    useField: form.createUseField("tag_ids"),
+    useOptions: creatureTagStore.useResourceOptions,
+  });
+
+  //----------------------------------------------------------------------------
   // Text
   //----------------------------------------------------------------------------
 
@@ -524,6 +538,9 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
           <SizeField defaultValue={resource.size} />
           <AlignmentField defaultValue={resource.alignment} />
         </HStack>
+
+        {/* Tags */}
+        <TagIdsField campaignId={campaignId} defaultValue={resource.tag_ids} />
 
         {/* Treasures & Habitat */}
         <HStack align="flex-start" gap={4} w="full">

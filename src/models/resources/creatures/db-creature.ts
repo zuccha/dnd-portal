@@ -54,6 +54,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   speed_fly: z.number(),
   speed_swim: z.number(),
   speed_walk: z.number(),
+  tag_ids: z.array(z.uuid()),
   telepathy_range: z.number(),
   treasures: z.array(creatureTreasureSchema),
   tremorsense: z.number(),
