@@ -37,15 +37,19 @@ const columns: ResourcesTableExtra<
 // Character Classes Panel
 //------------------------------------------------------------------------------
 
-const CharacterClassesPanel = createResourcesPanel(characterClassStore, {
-  album: { AlbumCard: CharacterClassCard },
-  filters: { Filters: CharacterClassesFilters },
-  form: {
-    Editor: createCharacterClassEditor(characterClassForm),
-    form: characterClassForm,
-    parseFormData: characterClassFormDataToDB,
+const CharacterClassesPanel = createResourcesPanel(
+  characterClassStore,
+  { initialPaletteName: "blue" },
+  {
+    album: { AlbumCard: CharacterClassCard },
+    filters: { Filters: CharacterClassesFilters },
+    form: {
+      Editor: createCharacterClassEditor(characterClassForm),
+      form: characterClassForm,
+      parseFormData: characterClassFormDataToDB,
+    },
+    table: { columns },
   },
-  table: { columns },
-});
+);
 
 export default CharacterClassesPanel;

@@ -82,15 +82,19 @@ const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
 // Weapons Panel
 //------------------------------------------------------------------------------
 
-const WeaponsPanel = createResourcesPanel(weaponStore, {
-  album: { AlbumCard: WeaponCard },
-  filters: { Filters: WeaponsFilters },
-  form: {
-    Editor: createWeaponEditor(weaponForm),
-    form: weaponForm,
-    parseFormData: weaponFormDataToDB,
+const WeaponsPanel = createResourcesPanel(
+  weaponStore,
+  { initialPaletteName: "yellow" },
+  {
+    album: { AlbumCard: WeaponCard },
+    filters: { Filters: WeaponsFilters },
+    form: {
+      Editor: createWeaponEditor(weaponForm),
+      form: weaponForm,
+      parseFormData: weaponFormDataToDB,
+    },
+    table: { columns, detailsKey: "details" },
   },
-  table: { columns, detailsKey: "details" },
-});
+);
 
 export default WeaponsPanel;

@@ -68,15 +68,19 @@ const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
 // Spells Panel
 //------------------------------------------------------------------------------
 
-const SpellsPanel = createResourcesPanel(spellStore, {
-  album: { AlbumCard: SpellCard },
-  filters: { Filters: SpellsFilters },
-  form: {
-    Editor: createSpellEditor(spellForm),
-    form: spellForm,
-    parseFormData: spellFormDataToDB,
+const SpellsPanel = createResourcesPanel(
+  spellStore,
+  { initialPaletteName: "pink" },
+  {
+    album: { AlbumCard: SpellCard },
+    filters: { Filters: SpellsFilters },
+    form: {
+      Editor: createSpellEditor(spellForm),
+      form: spellForm,
+      parseFormData: spellFormDataToDB,
+    },
+    table: { columns, detailsKey: "details" },
   },
-  table: { columns, detailsKey: "details" },
-});
+);
 
 export default SpellsPanel;

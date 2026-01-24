@@ -7,6 +7,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import type { PaletteName } from "~/utils/palette";
 import {
   type ResourceCreatorExtra,
   createResourceDialogCreator,
@@ -43,6 +44,9 @@ export function createResourcesPanel<
   FF extends Record<string, unknown>,
 >(
   store: ResourceStore<R, L, F, DBR, DBT>,
+  contextOptions: {
+    initialPaletteName: PaletteName;
+  },
   {
     album,
     filters,
@@ -56,7 +60,7 @@ export function createResourcesPanel<
     table: ResourcesTableExtra<R, L>;
   },
 ) {
-  const context = createResourcesContext<R>(store.id);
+  const context = createResourcesContext<R>(store.id, contextOptions);
 
   const ResourceCreator = createResourceDialogCreator(store, context, form);
   const ResourceUpdater = createResourceDialogUpdater(store, context, form);

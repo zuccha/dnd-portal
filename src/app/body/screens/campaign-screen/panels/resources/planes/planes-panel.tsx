@@ -34,15 +34,19 @@ const columns: ResourcesTableExtra<Plane, LocalizedPlane>["columns"] = [
 // Planes Panel
 //------------------------------------------------------------------------------
 
-const PlanesPanel = createResourcesPanel(planeStore, {
-  album: { AlbumCard: PlaneCard },
-  filters: { Filters: PlanesFilters },
-  form: {
-    Editor: createPlaneEditor(planeForm),
-    form: planeForm,
-    parseFormData: planeFormDataToDB,
+const PlanesPanel = createResourcesPanel(
+  planeStore,
+  { initialPaletteName: "teal" },
+  {
+    album: { AlbumCard: PlaneCard },
+    filters: { Filters: PlanesFilters },
+    form: {
+      Editor: createPlaneEditor(planeForm),
+      form: planeForm,
+      parseFormData: planeFormDataToDB,
+    },
+    table: { columns },
   },
-  table: { columns },
-});
+);
 
 export default PlanesPanel;

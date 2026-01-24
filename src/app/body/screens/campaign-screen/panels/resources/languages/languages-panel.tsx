@@ -35,15 +35,19 @@ const columns: ResourcesTableExtra<Language, LocalizedLanguage>["columns"] = [
 // Languages Panel
 //------------------------------------------------------------------------------
 
-const LanguagesPanel = createResourcesPanel(languageStore, {
-  album: { AlbumCard: LanguageCard },
-  filters: { Filters: LanguagesFilters },
-  form: {
-    Editor: createLanguageEditor(languageForm),
-    form: languageForm,
-    parseFormData: languageFormDataToDB,
+const LanguagesPanel = createResourcesPanel(
+  languageStore,
+  { initialPaletteName: "green" },
+  {
+    album: { AlbumCard: LanguageCard },
+    filters: { Filters: LanguagesFilters },
+    form: {
+      Editor: createLanguageEditor(languageForm),
+      form: languageForm,
+      parseFormData: languageFormDataToDB,
+    },
+    table: { columns },
   },
-  table: { columns },
-});
+);
 
 export default LanguagesPanel;

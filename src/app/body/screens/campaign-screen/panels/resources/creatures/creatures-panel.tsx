@@ -92,15 +92,19 @@ const columns: ResourcesTableExtra<Creature, LocalizedCreature>["columns"] = [
 // Creatures Panel
 //------------------------------------------------------------------------------
 
-const CreaturesPanel = createResourcesPanel(creatureStore, {
-  album: { AlbumCard: CreatureCard },
-  filters: { Filters: CreaturesFilters },
-  form: {
-    Editor: createCreatureEditor(creatureForm),
-    form: creatureForm,
-    parseFormData: creatureFormDataToDB,
+const CreaturesPanel = createResourcesPanel(
+  creatureStore,
+  { initialPaletteName: "red" },
+  {
+    album: { AlbumCard: CreatureCard },
+    filters: { Filters: CreaturesFilters },
+    form: {
+      Editor: createCreatureEditor(creatureForm),
+      form: creatureForm,
+      parseFormData: creatureFormDataToDB,
+    },
+    table: { columns, detailsKey: "details" },
   },
-  table: { columns, detailsKey: "details" },
-});
+);
 
 export default CreaturesPanel;

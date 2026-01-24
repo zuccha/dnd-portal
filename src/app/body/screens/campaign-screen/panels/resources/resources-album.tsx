@@ -15,6 +15,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { customPalettes } from "~/utils/palette";
 import {
   type ResourceCardInteractiveExtra,
   createResourceCardInteractive,
@@ -59,6 +60,7 @@ export function createResourcesAlbum<
   function ResourcesAlbum({ campaignId }: ResourcesAlbumProps) {
     const editable = useCanEditCampaign(campaignId);
     const filteredResourceIds = store.useFilteredResourceIds(campaignId);
+    const paletteName = context.usePaletteName();
     const zoom = context.useZoom();
 
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -129,12 +131,14 @@ export function createResourcesAlbum<
                     campaignId={campaignId}
                     editable={editable}
                     key={id}
+                    palette={customPalettes[paletteName]}
                     resourceId={id}
                     zoom={zoom}
                   />
                 : <ResourceCardInteractive.Placeholder
                     campaignId={campaignId}
                     key={id}
+                    palette={customPalettes[paletteName]}
                     resourceId={id}
                     zoom={zoom}
                   />;

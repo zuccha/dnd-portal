@@ -1,8 +1,11 @@
+import { useMemo } from "react";
+import z from "zod";
+import { useI18nLangContext } from "../i18n/i18n-lang-context";
+import { compareObjects } from "./object";
+
 //------------------------------------------------------------------------------
 // Palette
 //------------------------------------------------------------------------------
-
-import z from "zod";
 
 export type Palette = {
   "50": string;
@@ -73,4 +76,80 @@ export const customPalettes: Record<PaletteName, Palette> = {
   red: { 50: "#DED2D2", 100: "#CFC2C2", 700: "#7D5858", 800: "#6D1515" },
   teal: { 50: "#D8E3E1", 100: "#C7D6D4", 700: "#587D77", 800: "#145B4F" },
   yellow: { 50: "#F3E7C7", 100: "#E2CF98", 700: "#8E7A2D", 800: "#6E5B1E" },
+};
+
+//------------------------------------------------------------------------------
+// Use Palette Name Options
+//------------------------------------------------------------------------------
+
+export function usePaletteNameOptions() {
+  const { t } = useI18nLangContext(i18nContext);
+
+  return useMemo(() => {
+    return paletteNames
+      .map((paletteName) => ({
+        label: t(`palette_name[${paletteName}]`),
+        value: paletteName,
+      }))
+      .sort(compareObjects("label"));
+  }, [t]);
+}
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  "palette_name[blue]": {
+    en: "Blue",
+    it: "Blue",
+  },
+  "palette_name[brown]": {
+    en: "Brown",
+    it: "Marrone",
+  },
+  "palette_name[cyan]": {
+    en: "Cyan",
+    it: "Ciano",
+  },
+  "palette_name[gray]": {
+    en: "Gray",
+    it: "Grigio",
+  },
+  "palette_name[green]": {
+    en: "Green",
+    it: "Verde",
+  },
+  "palette_name[lime]": {
+    en: "Lime",
+    it: "Lime",
+  },
+  "palette_name[magenta]": {
+    en: "Magenta",
+    it: "Magenta",
+  },
+  "palette_name[orange]": {
+    en: "Orange",
+    it: "Arancione",
+  },
+  "palette_name[pink]": {
+    en: "Pink",
+    it: "Rosa",
+  },
+  "palette_name[purple]": {
+    en: "Purple",
+    it: "Viola",
+  },
+  "palette_name[red]": {
+    en: "Red",
+    it: "Rosso",
+  },
+  "palette_name[teal]": {
+    en: "Teal",
+    it: "Verde Mare",
+  },
+  "palette_name[yellow]": {
+    en: "Yellow",
+    it: "Giallo",
+  },
 };

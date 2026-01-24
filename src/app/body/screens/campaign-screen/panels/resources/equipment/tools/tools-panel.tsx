@@ -56,15 +56,19 @@ const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
 // Tools Panel
 //------------------------------------------------------------------------------
 
-const ToolsPanel = createResourcesPanel(toolStore, {
-  album: { AlbumCard: ToolCard },
-  filters: { Filters: ToolsFilters },
-  form: {
-    Editor: createToolEditor(toolForm),
-    form: toolForm,
-    parseFormData: toolFormDataToDB,
+const ToolsPanel = createResourcesPanel(
+  toolStore,
+  { initialPaletteName: "brown" },
+  {
+    album: { AlbumCard: ToolCard },
+    filters: { Filters: ToolsFilters },
+    form: {
+      Editor: createToolEditor(toolForm),
+      form: toolForm,
+      parseFormData: toolFormDataToDB,
+    },
+    table: { columns, detailsKey: "details" },
   },
-  table: { columns, detailsKey: "details" },
-});
+);
 
 export default ToolsPanel;

@@ -65,15 +65,19 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
 // Armors Panel
 //------------------------------------------------------------------------------
 
-const ArmorsPanel = createResourcesPanel(armorStore, {
-  album: { AlbumCard: ArmorCard },
-  filters: { Filters: ArmorsFilters },
-  form: {
-    Editor: createArmorEditor(armorForm),
-    form: armorForm,
-    parseFormData: armorFormDataToDB,
+const ArmorsPanel = createResourcesPanel(
+  armorStore,
+  { initialPaletteName: "gray" },
+  {
+    album: { AlbumCard: ArmorCard },
+    filters: { Filters: ArmorsFilters },
+    form: {
+      Editor: createArmorEditor(armorForm),
+      form: armorForm,
+      parseFormData: armorFormDataToDB,
+    },
+    table: { columns, detailsKey: "details" },
   },
-  table: { columns, detailsKey: "details" },
-});
+);
 
 export default ArmorsPanel;

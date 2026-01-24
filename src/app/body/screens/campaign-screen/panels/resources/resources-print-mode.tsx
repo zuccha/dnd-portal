@@ -24,11 +24,10 @@ import Checkbox from "~/ui/checkbox";
 import Field from "~/ui/field";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
-import { compareObjects } from "~/utils/object";
 import {
   customPalettes,
   paletteNameSchema,
-  paletteNames,
+  usePaletteNameOptions,
 } from "~/utils/palette";
 import {
   type ResourceCardPrintableExtra,
@@ -109,14 +108,7 @@ export function createResourcesPrintMode<
     const [paletteName, setPaletteName] = usePaletteName();
     const palette = customPalettes[paletteName];
 
-    const paletteNameOptions = useMemo(() => {
-      return paletteNames
-        .map((paletteName) => ({
-          label: t(`palette_name[${paletteName}]`),
-          value: paletteName,
-        }))
-        .sort(compareObjects("label"));
-    }, [t]);
+    const paletteNameOptions = usePaletteNameOptions();
 
     const paperLayoutOptions = useMemo(() => {
       return paperLayouts.map((paperLayout) => ({
@@ -539,58 +531,6 @@ const i18nContext = {
   "palette_name.label": {
     en: "Color",
     it: "Colore",
-  },
-  "palette_name[blue]": {
-    en: "Blue",
-    it: "Blue",
-  },
-  "palette_name[brown]": {
-    en: "Brown",
-    it: "Marrone",
-  },
-  "palette_name[cyan]": {
-    en: "Cyan",
-    it: "Ciano",
-  },
-  "palette_name[gray]": {
-    en: "Gray",
-    it: "Grigio",
-  },
-  "palette_name[green]": {
-    en: "Green",
-    it: "Verde",
-  },
-  "palette_name[lime]": {
-    en: "Lime",
-    it: "Lime",
-  },
-  "palette_name[magenta]": {
-    en: "Magenta",
-    it: "Magenta",
-  },
-  "palette_name[orange]": {
-    en: "Orange",
-    it: "Arancione",
-  },
-  "palette_name[pink]": {
-    en: "Pink",
-    it: "Rosa",
-  },
-  "palette_name[purple]": {
-    en: "Purple",
-    it: "Viola",
-  },
-  "palette_name[red]": {
-    en: "Red",
-    it: "Rosso",
-  },
-  "palette_name[teal]": {
-    en: "Teal",
-    it: "Verde Mare",
-  },
-  "palette_name[yellow]": {
-    en: "Yellow",
-    it: "Giallo",
   },
   "paper_layout.label": {
     en: "Layout",

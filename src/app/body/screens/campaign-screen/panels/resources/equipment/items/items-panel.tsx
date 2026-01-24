@@ -48,15 +48,19 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
 // Items Panel
 //------------------------------------------------------------------------------
 
-const ItemsPanel = createResourcesPanel(itemStore, {
-  album: { AlbumCard: ItemCard },
-  filters: { Filters: ItemsFilters },
-  form: {
-    Editor: createItemEditor(itemForm),
-    form: itemForm,
-    parseFormData: itemFormDataToDB,
+const ItemsPanel = createResourcesPanel(
+  itemStore,
+  { initialPaletteName: "orange" },
+  {
+    album: { AlbumCard: ItemCard },
+    filters: { Filters: ItemsFilters },
+    form: {
+      Editor: createItemEditor(itemForm),
+      form: itemForm,
+      parseFormData: itemFormDataToDB,
+    },
+    table: { columns, detailsKey: "details" },
   },
-  table: { columns, detailsKey: "details" },
-});
+);
 
 export default ItemsPanel;

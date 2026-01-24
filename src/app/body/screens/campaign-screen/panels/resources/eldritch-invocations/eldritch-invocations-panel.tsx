@@ -35,18 +35,22 @@ const columns: ResourcesTableExtra<
 ] as const;
 
 //------------------------------------------------------------------------------
-// EldritchInvocations Panel
+// Eldritch Invocations Panel
 //------------------------------------------------------------------------------
 
-const EldritchInvocationsPanel = createResourcesPanel(eldritchInvocationStore, {
-  album: { AlbumCard: EldritchInvocationCard },
-  filters: { Filters: EldritchInvocationsFilters },
-  form: {
-    Editor: createEldritchInvocationEditor(eldritchInvocationForm),
-    form: eldritchInvocationForm,
-    parseFormData: eldritchInvocationFormDataToDB,
+const EldritchInvocationsPanel = createResourcesPanel(
+  eldritchInvocationStore,
+  { initialPaletteName: "purple" },
+  {
+    album: { AlbumCard: EldritchInvocationCard },
+    filters: { Filters: EldritchInvocationsFilters },
+    form: {
+      Editor: createEldritchInvocationEditor(eldritchInvocationForm),
+      form: eldritchInvocationForm,
+      parseFormData: eldritchInvocationFormDataToDB,
+    },
+    table: { columns, detailsKey: "details" },
   },
-  table: { columns, detailsKey: "details" },
-});
+);
 
 export default EldritchInvocationsPanel;

@@ -3,6 +3,7 @@ import type { Resource } from "~/models/resources/resource";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStore } from "~/store/memory-store";
 import { createMemoryStoreSet } from "~/store/set/memory-store-set";
+import { type PaletteName, paletteNameSchema } from "~/utils/palette";
 
 //------------------------------------------------------------------------------
 // Resources Context View
@@ -24,7 +25,10 @@ export type ResourcesContext<R extends Resource> = ReturnType<
 // Create Resources Context
 //------------------------------------------------------------------------------
 
-export function createResourcesContext<R extends Resource>(id: string) {
+export function createResourcesContext<R extends Resource>(
+  id: string,
+  { initialPaletteName }: { initialPaletteName: PaletteName },
+) {
   const createdResourceStore = createMemoryStore<R | undefined>(
     `${id}.created_resource`,
     undefined,
@@ -33,6 +37,12 @@ export function createResourcesContext<R extends Resource>(id: string) {
   const editedResourceStore = createMemoryStore<R | undefined>(
     `${id}.edited_resource`,
     undefined,
+  );
+
+  const paletteNameStore = createLocalStore(
+    `${id}.palette_name`,
+    initialPaletteName,
+    paletteNameSchema.parse,
   );
 
   const printModeStore = createMemoryStore<boolean>(`${id}.print_mode`, false);
@@ -52,12 +62,14 @@ export function createResourcesContext<R extends Resource>(id: string) {
   return {
     setCreatedResource: createdResourceStore.set,
     setEditedResource: editedResourceStore.set,
+    setPaletteName: paletteNameStore.set,
     setPrintMode: printModeStore.set,
     setResourceExpansion: resourceExpansionStore.set,
     setView: viewStore.set,
     setZoom: zoomStore.set,
     useCreatedResource: createdResourceStore.useValue,
     useEditedResource: editedResourceStore.useValue,
+    usePaletteName: paletteNameStore.useValue,
     usePrintMode: printModeStore.useValue,
     useResourceExpansion: resourceExpansionStore.useValue,
     useView: viewStore.useValue,
