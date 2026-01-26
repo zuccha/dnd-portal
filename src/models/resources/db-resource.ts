@@ -17,6 +17,7 @@ export type DBResource = z.infer<typeof dbResourceSchema>;
 
 export const dbResourceTranslationSchema = z.object({
   name: z.string(),
+  name_short: z.string(),
   page: z.number().nullable(),
 });
 

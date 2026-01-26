@@ -549,6 +549,26 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Localize Resource Name Short
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useLocalizeResourceNameShort(
+    campaignId: string,
+    lang: string,
+  ): (resourceId: string) => string {
+    const [lookupIds] = useResourceLookupIds(campaignId);
+
+    return useCallback(
+      (resourceId: string) => {
+        const lookup =
+          resourceLookupCache.get(resourceId) ?? defaultResourceLookup;
+        return translate(lookup.name_short, lang);
+      },
+      [lang, lookupIds], // eslint-disable-line react-hooks/exhaustive-deps
+    );
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Localized Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -574,7 +594,12 @@ export function createResourceStore<
         .map((id) => {
           const lookup = resourceLookupCache.get(id) ?? defaultResourceLookup;
           const label = translate(lookup.name, lang);
-          return { label, name: lookup.name, value: lookup.id };
+          return {
+            label,
+            name: lookup.name,
+            name_short: lookup.name_short,
+            value: lookup.id,
+          };
         })
         .sort(compareObjects("label")),
     resourceLookupCache.cache.subscribe,
@@ -631,6 +656,7 @@ export function createResourceStore<
 
     useLocalizeResource,
     useLocalizeResourceName,
+    useLocalizeResourceNameShort,
     useLocalizedResource,
     useResourceOptions,
   };

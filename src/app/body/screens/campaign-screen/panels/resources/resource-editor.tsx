@@ -51,6 +51,19 @@ export function createResourceEditor<D extends ResourceFormData>(
   });
 
   //----------------------------------------------------------------------------
+  // Name Short
+  //----------------------------------------------------------------------------
+
+  const NameShortField = createInputField({
+    i18nContext: {
+      label: { en: "Abbreviation", it: "Abbreviazione" },
+      placeholder: { en: "None", it: "Nessuna" },
+    },
+    translatable: true,
+    useField: form.createUseField("name_short"),
+  });
+
+  //----------------------------------------------------------------------------
   // Page Field
   //----------------------------------------------------------------------------
 
@@ -91,6 +104,10 @@ export function createResourceEditor<D extends ResourceFormData>(
       <VStack align="stretch" gap={4}>
         <HStack align="flex-start" gap={4}>
           <NameField defaultValue={resource.name[lang] ?? ""} />
+          <NameShortField
+            defaultValue={resource.name_short[lang] ?? ""}
+            w="14em"
+          />
           <PageField defaultValue={resource.page?.[lang] ?? 0} maxW="6em" />
           <VisibilityField defaultValue={resource.visibility} maxW="10em" />
         </HStack>

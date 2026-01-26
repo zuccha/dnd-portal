@@ -17,6 +17,7 @@ export const resourceSchema = z.object({
   visibility: campaignRoleSchema,
 
   name: i18nStringSchema,
+  name_short: i18nStringSchema,
   page: i18nNumberSchema.nullish(),
 });
 
@@ -31,6 +32,7 @@ export const defaultResource: Resource = {
   campaign_name: "",
   id: "",
   name: {},
+  name_short: {},
   page: {},
   visibility: "game_master",
 };
@@ -46,6 +48,7 @@ export type TranslationFields<R extends Resource> = KeysOfType<
 
 export const resourceTranslationFields: TranslationFields<Resource>[] = [
   "name",
+  "name_short",
   "page",
 ];
 
@@ -56,11 +59,16 @@ export const resourceTranslationFields: TranslationFields<Resource>[] = [
 export const resourceLookupSchema = z.object({
   id: z.uuid(),
   name: i18nStringSchema,
+  name_short: i18nStringSchema,
 });
 
 export type ResourceLookup = z.infer<typeof resourceLookupSchema>;
 
-export const defaultResourceLookup: ResourceLookup = { id: "", name: {} };
+export const defaultResourceLookup: ResourceLookup = {
+  id: "",
+  name: {},
+  name_short: {},
+};
 
 //------------------------------------------------------------------------------
 // Resource Option
@@ -69,6 +77,7 @@ export const defaultResourceLookup: ResourceLookup = { id: "", name: {} };
 export const localizedResourceOptionSchema = z.object({
   label: z.string(),
   name: i18nStringSchema,
+  name_short: i18nStringSchema,
   value: z.uuid(),
 });
 
@@ -77,5 +86,6 @@ export type ResourceOption = z.infer<typeof localizedResourceOptionSchema>;
 export const defaultResourceOption: ResourceOption = {
   label: "",
   name: {},
+  name_short: {},
   value: "",
 };

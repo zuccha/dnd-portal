@@ -8,6 +8,7 @@ import type { DBResource, DBResourceTranslation } from "./db-resource";
 
 export const resourceFormDataSchema = z.object({
   name: z.string(),
+  name_short: z.string(),
   page: z.number(),
   visibility: campaignRoleSchema,
 });
@@ -28,6 +29,7 @@ export function resourceFormDataToDB(data: Partial<ResourceFormData>): {
     },
     translation: {
       name: data.name,
+      name_short: data.name_short,
       page: data.page || null,
     },
   };
