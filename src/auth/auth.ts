@@ -34,7 +34,7 @@ export async function signInWithDiscord() {
     provider: "discord",
   });
 
-  if (!error) return window.location.reload();
+  if (!error) return;
   console.error(error);
   return error;
 }
