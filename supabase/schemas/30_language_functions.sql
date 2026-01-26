@@ -10,6 +10,7 @@ CREATE TYPE public.language_row AS (
   kind public.resource_kind,
   visibility public.campaign_role,
   name jsonb,
+  name_short jsonb,
   page jsonb,
   -- Language
   rarity public.language_rarity,
@@ -79,6 +80,7 @@ AS $$
     r.kind,
     r.visibility,
     r.name,
+    r.name_short,
     r.page,
     l.rarity,
     coalesce(tt.origin, '{}'::jsonb) AS origin
@@ -130,6 +132,7 @@ src AS (
     b.kind,
     b.visibility,
     b.name,
+    b.name_short,
     b.page,
     l.rarity
   FROM base b
@@ -151,6 +154,7 @@ SELECT
   s.kind,
   s.visibility,
   s.name,
+  s.name_short,
   s.page,
   s.rarity,
   coalesce(tt.origin, '{}'::jsonb) AS origin

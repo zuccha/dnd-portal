@@ -10,6 +10,7 @@ CREATE TYPE public.creature_tag_row AS (
   kind public.resource_kind,
   visibility public.campaign_role,
   name jsonb,
+  name_short jsonb,
   page jsonb
 );
 
@@ -69,6 +70,7 @@ AS $$
     r.kind,
     r.visibility,
     r.name,
+    r.name_short,
     r.page
   FROM public.fetch_resource(p_id) AS r
   JOIN public.creature_tags ct ON ct.resource_id = r.id
@@ -109,6 +111,7 @@ src AS (
     b.kind,
     b.visibility,
     b.name,
+    b.name_short,
     b.page
   FROM base b
   JOIN public.creature_tags ct ON ct.resource_id = b.id
@@ -120,6 +123,7 @@ SELECT
   s.kind,
   s.visibility,
   s.name,
+  s.name_short,
   s.page
 FROM src s
 ORDER BY

@@ -10,6 +10,7 @@ CREATE TYPE public.plane_row AS (
   kind public.resource_kind,
   visibility public.campaign_role,
   name jsonb,
+  name_short jsonb,
   page jsonb,
   -- Plane
   category public.plane_category,
@@ -78,6 +79,7 @@ AS $$
     r.kind,
     r.visibility,
     r.name,
+    r.name_short,
     r.page,
     p.category,
     p.alignments
@@ -143,6 +145,7 @@ src AS (
     b.kind,
     b.visibility,
     b.name,
+    b.name_short,
     b.page,
     p.category,
     p.alignments
@@ -165,6 +168,7 @@ SELECT
   f.kind,
   f.visibility,
   f.name,
+  f.name_short,
   f.page,
   f.category,
   f.alignments

@@ -11,6 +11,7 @@ CREATE TYPE public.eldritch_invocation_row AS (
   visibility public.campaign_role,
   -- Resource Translation
   name jsonb,
+  name_short jsonb,
   page jsonb,
   -- Eldritch Invocation
   min_warlock_level smallint,
@@ -81,6 +82,7 @@ AS $$
     r.kind,
     r.visibility,
     r.name,
+    r.name_short,
     r.page,
     ei.min_warlock_level,
     coalesce(tt.description, '{}'::jsonb)  AS description,
@@ -155,6 +157,7 @@ SELECT
   f.kind,
   f.visibility,
   f.name,
+  f.name_short,
   f.page,
   f.min_warlock_level,
   coalesce(et.description, '{}'::jsonb)  AS description,

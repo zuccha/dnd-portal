@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS public.resource_translations (
   resource_id uuid DEFAULT gen_random_uuid() NOT NULL,
   lang text NOT NULL,
   name text DEFAULT ''::text NOT NULL,
+  name_short text DEFAULT ''::text NOT NULL,
   page smallint,
   CONSTRAINT resource_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT resource_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.resources(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -53,6 +54,7 @@ CREATE TYPE public.resource_row AS (
   kind public.resource_kind,
   visibility public.campaign_role,
   name jsonb,
+  name_short jsonb,
   page jsonb
 );
 
@@ -277,6 +279,7 @@ AS $$
     r.kind,
     r.visibility,
     coalesce(tt.name, '{}'::jsonb)  AS name,
+    coalesce(tt.name_short, '{}'::jsonb) AS name_short,
     coalesce(tt.page, '{}'::jsonb)  AS page
   FROM public.resources r
   JOIN public.campaigns c ON c.id = r.campaign_id
@@ -284,6 +287,7 @@ AS $$
     SELECT
       r.id,
       jsonb_object_agg(t.lang, t.name) AS name,
+      jsonb_object_agg(t.lang, t.name_short) AS name_short,
       jsonb_object_agg(t.lang, t.page) AS page
     FROM public.resources r
     LEFT JOIN public.resource_translations t ON t.resource_id = r.id
@@ -349,6 +353,7 @@ t AS (
   SELECT
     f.id,
     jsonb_object_agg(t.lang, t.name) AS name,
+    jsonb_object_agg(t.lang, t.name_short) AS name_short,
     jsonb_object_agg(t.lang, t.page) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS page
   FROM filtered f
   LEFT JOIN public.resource_translations t ON t.resource_id = f.id
@@ -362,6 +367,7 @@ SELECT
   f.kind,
   f.visibility,
   coalesce(tt.name, '{}'::jsonb) AS name,
+  coalesce(tt.name_short, '{}'::jsonb) AS name_short,
   coalesce(tt.page, '{}'::jsonb) AS page
 FROM filtered f
 JOIN public.campaigns c ON c.id = f.campaign_id
@@ -391,7 +397,7 @@ GRANT ALL ON FUNCTION public.fetch_resources(p_campaign_id uuid, p_langs text[],
 CREATE OR REPLACE FUNCTION public.fetch_resource_lookups(
   p_campaign_id uuid,
   p_resource_kinds public.resource_kind[])
-RETURNS TABLE(id uuid, name jsonb)
+RETURNS TABLE(id uuid, name jsonb, name_short jsonb)
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
@@ -401,13 +407,15 @@ AS $$
   )
   SELECT
     r.id,
-    coalesce(tt.name, '{}'::jsonb) AS name
+    coalesce(tt.name, '{}'::jsonb) AS name,
+    coalesce(tt.name_short, '{}'::jsonb) AS name_short
   FROM public.resources r
   JOIN campaign_ids cids ON cids.id = r.campaign_id
   LEFT JOIN (
     SELECT
       rt.resource_id AS id,
-      jsonb_object_agg(rt.lang, rt.name) AS name
+      jsonb_object_agg(rt.lang, rt.name) AS name,
+      jsonb_object_agg(rt.lang, rt.name_short) AS name_short
     FROM public.resource_translations rt
     GROUP BY rt.resource_id
   ) tt ON tt.id = r.id
@@ -427,18 +435,20 @@ GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resour
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_resource_lookup(p_id uuid)
-RETURNS TABLE(id uuid, name jsonb)
+RETURNS TABLE(id uuid, name jsonb, name_short jsonb)
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT
     r.id,
-    coalesce(tt.name, '{}'::jsonb) AS name
+    coalesce(tt.name, '{}'::jsonb) AS name,
+    coalesce(tt.name_short, '{}'::jsonb) AS name_short
   FROM public.resources r
   LEFT JOIN (
     SELECT
       rt.resource_id AS id,
-      jsonb_object_agg(rt.lang, rt.name) AS name
+      jsonb_object_agg(rt.lang, rt.name) AS name,
+      jsonb_object_agg(rt.lang, rt.name_short) AS name_short
     FROM public.resource_translations rt
     WHERE rt.resource_id = p_id
     GROUP BY rt.resource_id
@@ -471,13 +481,14 @@ BEGIN
   r := jsonb_populate_record(null::public.resource_translations, p_resource_translation);
 
   INSERT INTO public.resource_translations AS rt (
-    resource_id, lang, name, page
+    resource_id, lang, name, name_short, page
   ) VALUES (
-    p_id, p_lang, r.name, r.page
+    p_id, p_lang, r.name, r.name_short, r.page
   )
   ON conflict (resource_id, lang) DO UPDATE
   SET
     name = excluded.name,
+    name_short = excluded.name_short,
     page = excluded.page;
 END;
 $$;
