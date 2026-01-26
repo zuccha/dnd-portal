@@ -1,4 +1,11 @@
-import { Box, GridItem, SimpleGrid, Span, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  GridItem,
+  SimpleGrid,
+  Span,
+  VStack,
+} from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import type { Spell } from "~/models/resources/spells/spell";
@@ -14,7 +21,7 @@ import {
 
 export type SpellCardProps = Omit<
   ResourcePokerCardProps<Spell, LocalizedSpell>,
-  "afterDetails" | "beforeDetails" | "firstPageInfo"
+  "afterDescriptor" | "beforeDetails" | "firstPageInfo"
 >;
 
 export function SpellCard({
@@ -32,6 +39,16 @@ export function SpellCard({
 
   return (
     <ResourcePokerCard
+      afterDescriptor={
+        <Center
+          fontFamily="Mr Eaves"
+          fontSize={PokerCard.rem0750}
+          fontStyle="normal"
+          textTransform="uppercase"
+        >
+          {localizedResource.character_classes}
+        </Center>
+      }
       beforeDetails={
         <>
           <SimpleGrid columns={2} gap={0} px={PokerCard.rem1000} w="full">

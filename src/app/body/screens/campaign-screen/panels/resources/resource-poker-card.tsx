@@ -14,7 +14,7 @@ export type ResourcePokerCardProps<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = StackProps & {
-  afterDetails?: ReactNode;
+  afterDescriptor?: ReactNode;
   beforeDetails?: ReactNode;
   firstPageInfo?: ReactNode;
   localizedResource: L;
@@ -27,7 +27,7 @@ export function ResourcePokerCard<
   R extends Resource,
   L extends LocalizedResource<R>,
 >({
-  afterDetails,
+  afterDescriptor,
   beforeDetails,
   firstPageInfo,
   localizedResource,
@@ -47,7 +47,14 @@ export function ResourcePokerCard<
         const text = (page.text + page.textTemp).trim();
         return (
           <PokerCard.Frame
-            descriptor={pageIndex === 0 ? localizedResource.descriptor : ""}
+            descriptor={
+              pageIndex === 0 ?
+                <VStack gap={PokerCard.rem0375}>
+                  {localizedResource.descriptor}
+                  {afterDescriptor}
+                </VStack>
+              : ""
+            }
             key={pageIndex}
             name={localizedResource.name}
             pageIndicator={`${pageIndex + 1} / ${pages.length}`}
@@ -71,8 +78,6 @@ export function ResourcePokerCard<
               {text.length > 0 && (
                 <PokerCard.Details palette={palette}>{text}</PokerCard.Details>
               )}
-
-              {afterDetails}
             </VStack>
 
             {pageIndex === 0 && firstPageInfo && (

@@ -8,6 +8,7 @@ import { useTranslateSpellCastingTime } from "../../types/spell-casting-time";
 import { useTranslateSpellDuration } from "../../types/spell-duration";
 import { useTranslateSpellRange } from "../../types/spell-range";
 import { useTranslateSpellSchool } from "../../types/spell-school";
+import { characterClassStore } from "../character-classes/character-class-store";
 import {
   formatInfo,
   localizedResourceSchema,
@@ -23,6 +24,7 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema).extend(
   {
     casting_time: z.string(),
     casting_time_with_ritual: z.string(),
+    character_classes: z.string(),
     components: z.string(),
     concentration: z.boolean(),
     details: z.string(),
@@ -44,7 +46,9 @@ export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 // Use Localize Spell
 //------------------------------------------------------------------------------
 
-export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
+export function useLocalizeSpell(
+  campaignId: string,
+): (spell: Spell) => LocalizedSpell {
   const localizeResource = useLocalizeResource<Spell>();
   const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
 
@@ -56,12 +60,21 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const formatRange = useFormatCm();
   const formatTime = useFormatSeconds();
 
+  const localizeCharacterClassNameShort =
+    characterClassStore.useLocalizeResourceNameShort(campaignId, lang);
+
   return useCallback(
     (spell: Spell): LocalizedSpell => {
       const casting_time =
         spell.casting_time_value ?
           formatTime(spell.casting_time_value)
         : translateSpellCastingTime(spell.casting_time).label;
+
+      const character_classes = spell.character_class_ids
+        .map(localizeCharacterClassNameShort)
+        .map((characterClass) => `${characterClass}.`)
+        .sort()
+        .join(" ");
 
       const duration =
         spell.duration_value ?
@@ -88,6 +101,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
           spell.ritual ?
             ti("casting_time_with_ritual", casting_time)
           : casting_time,
+        character_classes,
         components: [
           spell.verbal ? "V" : "",
           spell.somatic ? "S" : "",
@@ -118,6 +132,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
       formatRange,
       formatTime,
       lang,
+      localizeCharacterClassNameShort,
       localizeResource,
       t,
       ti,

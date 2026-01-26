@@ -1,4 +1,5 @@
 import { Box, HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 import RichText from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
 
@@ -36,8 +37,8 @@ const rem2000 = `${remToIn(1.2)}in`;
 //------------------------------------------------------------------------------
 
 export type FrameProps = StackProps & {
-  descriptor?: string;
-  name: string;
+  descriptor?: ReactNode;
+  name: ReactNode;
   palette: Palette;
   pageIndicator: string;
   sourceName: string;
@@ -76,18 +77,18 @@ function Frame({
       {...rest}
     >
       <VStack gap={0} lineHeight={0.9} px={rem0750} textAlign="center">
-        <Span
+        <HStack
           color={palette[800]}
           fontFamily="Mr Eaves Alt"
           fontSize={rem1625}
-          pt={rem0750}
+          pt={rem1000}
         >
           {name}
-        </Span>
+        </HStack>
         {descriptor && (
-          <Span fontSize={rem1000} fontStyle="italic" pt={rem0375}>
+          <HStack fontSize={rem1000} fontStyle="italic" pt={rem0375}>
             {descriptor}
-          </Span>
+          </HStack>
         )}
       </VStack>
 
