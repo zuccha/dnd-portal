@@ -40,14 +40,16 @@ export function SpellCard({
   return (
     <ResourcePokerCard
       afterDescriptor={
-        <Center
-          fontFamily="Mr Eaves"
-          fontSize={PokerCard.rem0750}
-          fontStyle="normal"
-          textTransform="uppercase"
-        >
-          {localizedResource.character_classes}
-        </Center>
+        localizedResource.character_classes ?
+          <Center
+            fontFamily="Mr Eaves"
+            fontSize={PokerCard.rem0750}
+            fontStyle="normal"
+            textTransform="uppercase"
+          >
+            {localizedResource.character_classes}
+          </Center>
+        : null
       }
       beforeDetails={
         <>
