@@ -60,6 +60,6 @@ EldritchInvocationCard.w = ResourcePokerCard.w;
 const i18nContext = {
   min_warlock_level: {
     en: "Level <1> Warlock",
-    it: "Warlock di <1>˚ Livello",
+    it: "Warlock di <1>° Livello",
   },
 };
