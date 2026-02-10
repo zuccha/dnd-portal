@@ -577,12 +577,12 @@ const i18nContext = {
     it: "##Azioni##",
   },
   "description.bonus_actions": {
-    en: "##Bonus Actions##",
-    it: "##Azioni Bonus##",
+    en: "##Bonus Actions##",
+    it: "##Azioni Bonus##",
   },
   "description.legendary_actions": {
-    en: "##Legendary Actions##",
-    it: "##Azioni Leggendarie##",
+    en: "##Legendary Actions##",
+    it: "##Azioni Leggendarie##",
   },
   "description.reactions": {
     en: "##Reactions##",
