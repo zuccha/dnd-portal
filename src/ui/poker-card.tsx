@@ -1,7 +1,8 @@
 import { Box, HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import RichText from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
+import { useBleed } from "./bleed-context";
 
 const separatorColor = "#3F3F46";
 
@@ -24,7 +25,7 @@ const rem0500 = `${remToIn(0.5)}in`;
 const rem0625 = `${remToIn(0.625)}in`;
 const rem0750 = `${remToIn(0.75)}in`;
 const rem0875 = `${remToIn(0.875)}in`;
-const rem1000 = `${remToIn(1.0)}in`;
+const rem1000 = `${remToIn(1)}in`;
 const rem1125 = `${remToIn(1.125)}in`;
 const rem1250 = `${remToIn(1.25)}in`;
 const rem1375 = `${remToIn(1.375)}in`;
@@ -55,6 +56,7 @@ function Frame({
   sourcePage,
   ...rest
 }: FrameProps) {
+  const bleed = useBleed();
   const bgImage = `radial-gradient(circle, {colors.gray.50} 0%, {colors.gray.100} 50%, {colors.gray.200} 100%)`;
 
   return (
@@ -69,19 +71,24 @@ function Frame({
       fontFamily="Bookinsanity"
       fontSize={rem0875}
       gap={rem0750}
-      h={`${cardH}in`}
+      h={`${cardH + 2 * bleed.y}in`}
       lineHeight={1.2}
       overflow="hidden"
       shadow="sm"
-      w={`${cardW}in`}
+      w={`${cardW + 2 * bleed.x}in`}
       {...rest}
     >
-      <VStack gap={0} lineHeight={0.9} px={rem0750} textAlign="center">
+      <VStack
+        gap={0}
+        lineHeight={0.9}
+        px={`${remToIn(0.75) + bleed.x}in`}
+        textAlign="center"
+      >
         <HStack
           color={palette[800]}
           fontFamily="Mr Eaves Alt"
           fontSize={rem1625}
-          pt={rem1000}
+          pt={`${remToIn(1) + bleed.y}in`}
         >
           {name}
         </HStack>
@@ -103,8 +110,9 @@ function Frame({
         fontFamily="Mr Eaves Alt"
         fontSize={rem0750}
         gap={0}
-        px={rem0750}
-        py={rem0500}
+        pb={`${remToIn(0.5) + bleed.y}in`}
+        pt={rem0500}
+        px={`${remToIn(0.75) + bleed.x}in`}
         textOverflow="ellipsis"
         textTransform="uppercase"
         w="full"
@@ -145,18 +153,20 @@ type ArrowProps = {
 };
 
 function Arrow({ label, palette, value }: ArrowProps) {
+  const bleed = useBleed();
+
   return (
     <HStack gap={0}>
       <VStack
         bgColor={palette[800]}
         borderColor={palette[800]}
-        borderWidth={PokerCard.px1}
-        clipPath={`polygon(0 50%, ${PokerCard.rem1000} 0, 100% 0, 100% 100%, ${PokerCard.rem1000} 100%)`}
+        borderWidth={px1}
+        clipPath={`polygon(0 50%, ${rem1000} 0, 100% 0, 100% 100%, ${rem1000} 100%)`}
         color={palette[800]}
         gap={0}
-        py={PokerCard.rem0250}
+        py={rem0250}
         transform={`translateX(calc(97%))`}
-        w={PokerCard.rem1500}
+        w={rem1500}
       >
         <Span>{"\u0200b"}</Span>
         <Span>{"\u0200b"}</Span>
@@ -166,13 +176,13 @@ function Arrow({ label, palette, value }: ArrowProps) {
         align="flex-end"
         bgColor={palette[50]}
         borderColor={palette[800]}
-        borderYWidth={PokerCard.px1}
-        clipPath={`polygon(0 50%, ${PokerCard.rem1000} 0, 100% 0, 100% 100%, ${PokerCard.rem1000} 100%)`}
+        borderYWidth={px1}
+        clipPath={`polygon(0 50%, ${rem1000} 0, 100% 0, 100% 100%, ${rem1000} 100%)`}
         gap={0}
-        mr={`-${PokerCard.rem0750}`}
-        pl={PokerCard.rem1500}
-        pr={PokerCard.rem0750}
-        py={PokerCard.rem0250}
+        mr={`-${rem0750}`}
+        pl={rem1500}
+        pr={`${remToIn(0.75) + bleed.x}in`}
+        py={rem0250}
       >
         <Span fontStyle="italic" fontWeight="bold">
           {label}
@@ -193,13 +203,15 @@ type DetailsProps = {
 };
 
 function Details({ children, palette }: DetailsProps) {
+  const bleed = useBleed();
+
   return (
     <VStack
       align="flex-start"
       flex={1}
       gap={rem0250}
       lineHeight={1.1}
-      px={rem1000}
+      px={`${remToIn(1) + bleed.x}in`}
       w="full"
     >
       {children.split(/[\n\r]/).map((paragraph, paragraphIndex) =>
@@ -234,8 +246,11 @@ type EntryProps = {
 };
 
 function Entry({ children, label, palette }: EntryProps) {
+  const bleed = useBleed();
+  const px = `${remToIn(1) + bleed.x}in`;
+
   return (
-    <VStack align="flex-start" lineHeight={1} px={rem1000} w="full">
+    <VStack align="flex-start" lineHeight={1} px={px} w="full">
       <VStack
         align="flex-start"
         borderColor={palette["800"]}
@@ -265,6 +280,8 @@ type InfoProps = {
 };
 
 function Info({ children, palette }: InfoProps) {
+  const bleed = useBleed();
+
   return (
     <VStack
       align="flex-start"
@@ -274,7 +291,7 @@ function Info({ children, palette }: InfoProps) {
       fontStyle="italic"
       gap={0}
       lineHeight={1}
-      px={rem1000}
+      px={`${remToIn(1) + bleed.x}in`}
       py={rem0500}
       w="full"
     >
@@ -290,8 +307,10 @@ function Info({ children, palette }: InfoProps) {
 //------------------------------------------------------------------------------
 
 function Separator(props: StackProps) {
+  const bleed = useBleed();
+
   return (
-    <Box px={rem0500} w="full" {...props}>
+    <Box px={`${remToIn(0.5) + bleed.x}in`} w="full" {...props}>
       <svg
         preserveAspectRatio="none"
         style={{ height: px2, width: "100%" }}
