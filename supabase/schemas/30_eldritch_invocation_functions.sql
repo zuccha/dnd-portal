@@ -9,6 +9,7 @@ CREATE TYPE public.eldritch_invocation_row AS (
   campaign_name text,
   kind public.resource_kind,
   visibility public.campaign_role,
+  image_url text,
   -- Resource Translation
   name jsonb,
   name_short jsonb,
@@ -81,6 +82,7 @@ AS $$
     r.campaign_name,
     r.kind,
     r.visibility,
+    r.image_url,
     r.name,
     r.name_short,
     r.page,
@@ -156,6 +158,7 @@ SELECT
   f.campaign_name,
   f.kind,
   f.visibility,
+  f.image_url,
   f.name,
   f.name_short,
   f.page,

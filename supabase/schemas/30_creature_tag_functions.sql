@@ -9,6 +9,7 @@ CREATE TYPE public.creature_tag_row AS (
   id uuid,
   kind public.resource_kind,
   visibility public.campaign_role,
+  image_url text,
   name jsonb,
   name_short jsonb,
   page jsonb
@@ -69,6 +70,7 @@ AS $$
     r.id,
     r.kind,
     r.visibility,
+    r.image_url,
     r.name,
     r.name_short,
     r.page
@@ -110,6 +112,7 @@ src AS (
     b.campaign_name,
     b.kind,
     b.visibility,
+    b.image_url,
     b.name,
     b.name_short,
     b.page
@@ -122,6 +125,7 @@ SELECT
   s.id,
   s.kind,
   s.visibility,
+  s.image_url,
   s.name,
   s.name_short,
   s.page
