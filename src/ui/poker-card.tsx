@@ -38,7 +38,8 @@ const rem2000 = `${remToIn(1.2)}in`;
 //------------------------------------------------------------------------------
 
 export type FrameProps = StackProps & {
-  descriptor?: ReactNode;
+  compact?: boolean;
+  descriptor: ReactNode;
   name: ReactNode;
   palette: Palette;
   pageIndicator: string;
@@ -47,6 +48,7 @@ export type FrameProps = StackProps & {
 };
 
 function Frame({
+  compact,
   children,
   descriptor,
   name,
@@ -81,66 +83,80 @@ function Frame({
     >
       {bleed.corner && <BleedGuide {...bleed} corner={bleed.corner} />}
 
-      <VStack
-        gap={0}
-        lineHeight={0.9}
-        px={`${remToIn(0.75) + bleed.x}in`}
-        textAlign="center"
-      >
+      {compact ?
         <HStack
+          align="baseline"
           color={palette[800]}
           fontFamily="Mr Eaves Alt"
-          fontSize={rem1625}
-          pt={`${remToIn(1) + bleed.y}in`}
+          justify="space-between"
+          lineHeight={0.9}
+          mb={`-${rem0250}`}
+          pt={`${remToIn(0.75) + bleed.y}in`}
+          px={`${remToIn(1) + bleed.x}in`}
+          w="full"
         >
-          {name}
+          <Span fontSize={rem1250}>{name}</Span>
+          <Span>{pageIndicator}</Span>
         </HStack>
-        {descriptor && (
+      : <VStack
+          gap={0}
+          lineHeight={0.9}
+          px={`${remToIn(1) + bleed.x}in`}
+          textAlign="center"
+        >
+          <HStack
+            color={palette[800]}
+            fontFamily="Mr Eaves Alt"
+            fontSize={rem1625}
+            pt={`${remToIn(1) + bleed.y}in`}
+          >
+            {name}
+          </HStack>
           <HStack fontSize={rem1000} fontStyle="italic" pt={rem0375}>
             {descriptor}
           </HStack>
-        )}
-      </VStack>
+        </VStack>
+      }
 
       <VStack flex={1} gap={rem0750} overflow="hidden" w="full">
         {children}
       </VStack>
 
-      <HStack
-        bgColor={palette["700"]}
-        color="white"
-        columns={3}
-        fontFamily="Mr Eaves Alt"
-        fontSize={rem0750}
-        gap={0}
-        pb={`${remToIn(0.5) + bleed.y}in`}
-        pt={rem0500}
-        px={`${remToIn(0.75) + bleed.x}in`}
-        textOverflow="ellipsis"
-        textTransform="uppercase"
-        w="full"
-        whiteSpace="nowrap"
-      >
-        <Span
-          overflow="hidden"
-          textAlign="left"
+      {compact ?
+        <Span h={bleed.y} />
+      : <HStack
+          bgColor={palette["700"]}
+          color="white"
+          fontFamily="Mr Eaves Alt"
+          fontSize={rem0750}
+          gap={0}
+          pb={`${remToIn(0.5) + bleed.y}in`}
+          pt={rem0500}
+          px={`${remToIn(0.75) + bleed.x}in`}
           textOverflow="ellipsis"
-          w="40%"
+          textTransform="uppercase"
+          w="full"
+          whiteSpace="nowrap"
         >
-          {sourcePage ? `${sourceName} > ${sourcePage}` : sourceName}
-        </Span>
-        <Span fontSize={rem0875} textAlign="center" w="20%">
-          {pageIndicator}
-        </Span>
-        <Span
-          overflow="hidden"
-          textAlign="right"
-          textOverflow="ellipsis"
-          w="40%"
-        >
-          D&D 5e '24
-        </Span>
-      </HStack>
+          <Span
+            overflow="hidden"
+            textAlign="left"
+            textOverflow="ellipsis"
+            w="40%"
+          >
+            {sourcePage ? `${sourceName} > ${sourcePage}` : sourceName}
+          </Span>
+          <Span w="20%"></Span>
+          <Span
+            overflow="hidden"
+            textAlign="right"
+            textOverflow="ellipsis"
+            w="40%"
+          >
+            D&D Portal
+          </Span>
+        </HStack>
+      }
     </VStack>
   );
 }

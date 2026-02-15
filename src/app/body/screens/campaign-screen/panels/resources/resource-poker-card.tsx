@@ -47,17 +47,16 @@ export function ResourcePokerCard<
         const text = (page.text + page.textTemp).trim();
         return (
           <PokerCard.Frame
+            compact={pageIndex > 0}
             descriptor={
-              pageIndex === 0 ?
-                <VStack gap={PokerCard.rem0375}>
-                  {localizedResource.descriptor}
-                  {afterDescriptor}
-                </VStack>
-              : ""
+              <VStack gap={PokerCard.rem0375}>
+                {localizedResource.descriptor}
+                {afterDescriptor}
+              </VStack>
             }
             key={pageIndex}
             name={localizedResource.name}
-            pageIndicator={`${pageIndex + 1} / ${pages.length}`}
+            pageIndicator={`${pageIndex + 1} / ${pages.length}`}
             palette={palette}
             sourceName={localizedResource.campaign}
             sourcePage={localizedResource.page}
