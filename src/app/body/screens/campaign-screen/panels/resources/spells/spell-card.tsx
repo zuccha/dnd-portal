@@ -131,7 +131,7 @@ function Star() {
   );
 }
 
-const starSize = `${PokerCard.remToIn(4)}in`;
+const starSize = `${PokerCard.remToIn(3.5)}in`;
 
 // ------------------------------------------------------------------------------
 // I18n Context
