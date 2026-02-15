@@ -89,16 +89,16 @@ function Frame({
         <HStack
           align="baseline"
           color={palette[800]}
-          fontFamily="Mr Eaves Alt"
+          fontFamily="Title Wave"
+          gap={rem1000}
           justify="space-between"
-          lineHeight={0.9}
           mb={`-${rem0250}`}
           pt={`${remToIn(0.75) + bleed.y}in`}
           px={`${remToIn(1) + bleed.x}in`}
           w="full"
         >
-          <Span fontSize={rem1250}>{name}</Span>
-          <Span>{pageIndicator}</Span>
+          <Span fontWeight="bold">{name}</Span>
+          <Span whiteSpace="nowrap">{pageIndicator}</Span>
         </HStack>
       : <VStack
           gap={0}
@@ -108,8 +108,9 @@ function Frame({
         >
           <HStack
             color={palette[800]}
-            fontFamily="Mr Eaves Alt"
-            fontSize={rem1625}
+            fontFamily="Title Wave"
+            fontSize={rem1375}
+            lineHeight={1.1}
             pt={`${remToIn(1) + bleed.y}in`}
           >
             {name}

@@ -59,7 +59,7 @@ export function ResourcePokerCard<
             footer={footer}
             key={pageIndex}
             name={localizedResource.name}
-            pageIndicator={`${pageIndex + 1} / ${pages.length}`}
+            pageIndicator={`${pageIndex + 1} / ${pages.length}`}
             palette={palette}
             sourceName={localizedResource.campaign}
             sourcePage={localizedResource.page}

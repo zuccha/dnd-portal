@@ -96,18 +96,18 @@ export function SpellCard({
       }
       footer={
         <Center
-          aspectRatio={1}
+          aspectRatio={1.4}
           bgColor="gray.200"
           borderColor={palette[700]}
           borderWidth={PokerCard.rem0250}
           color={palette[700]}
           fontFamily="Fira Mono"
-          fontSize={PokerCard.rem1000}
+          fontSize={PokerCard.rem1125}
           fontWeight="bold"
           h={`${PokerCard.remToIn(2.2)}in`}
           left="50%"
           position="absolute"
-          rounded="full"
+          rounded="70%"
           top="-0.18in"
           transform="translateX(-50%)"
         >
