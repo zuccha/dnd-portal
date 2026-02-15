@@ -79,13 +79,45 @@ export function createResourcesPrintMode<
 
     const [paperLayout, setPaperLayout] = usePaperLayout();
     const [paperType, setPaperType] = usePaperType();
+
     const paperSize = paperSizes[paperType];
+
     const [paperHeight, paperWidth] =
       paperLayout === "portrait" ?
         [paperSize.height, paperSize.width]
       : [paperSize.width, paperSize.height];
 
-    const [bleed] = useState({ showGuides: true, x: 0.05, y: 0.05 });
+    const [pageCropMarksVisible, setPageCropMarksVisible] =
+      usePageCropMarksVisible();
+    const [pageCropMarksLength, setPageCropMarksLength] =
+      usePageCropMarksLength();
+
+    const [cardCropMarksVisible, setCardCropMarksVisible] =
+      useCardCropMarksVisible();
+    const [cardCropMarksLength, setCardCropMarksLength] =
+      useCardCropMarksLength();
+
+    const [bleedSize, setBleedSize] = useBleedSize();
+    const [bleedVisible, setBleedVisible] = useBleedVisible();
+
+    const bleed = useMemo(
+      () => ({
+        corner:
+          cardCropMarksVisible ?
+            { color: "white", length: cardCropMarksLength }
+          : undefined,
+        x: bleedVisible ? bleedSize.x : 0,
+        y: bleedVisible ? bleedSize.y : 0,
+      }),
+      [
+        bleedSize.x,
+        bleedSize.y,
+        bleedVisible,
+        cardCropMarksLength,
+        cardCropMarksVisible,
+      ],
+    );
+
     const cardW = ResourceCardPrintable.w + 2 * bleed.x;
     const cardH = ResourceCardPrintable.h + 2 * bleed.y;
 
@@ -102,9 +134,6 @@ export function createResourcesPrintMode<
 
     const pagesCount = Object.values(pagesCounts).reduce((s, c) => s + c, 0);
     const papersCount = Math.ceil(pagesCount / cardsPerPaper);
-
-    const [cropMarksVisible, setCropMarksVisible] = useCropMarksVisible();
-    const [cropMarksLength, setCropMarksLength] = useCropMarksLength();
 
     const [paletteName, setPaletteName] = usePaletteName();
     const palette = customPalettes[paletteName];
@@ -162,14 +191,14 @@ export function createResourcesPrintMode<
                   position="relative"
                   width={`${paperWidth}in`}
                 >
-                  {cropMarksVisible && (
+                  {pageCropMarksVisible && (
                     <CropMarks
                       bleedX={bleed.x}
                       bleedY={bleed.y}
                       cardH={cardH}
                       cardW={cardW}
                       columns={columns}
-                      length={cropMarksLength}
+                      length={pageCropMarksLength}
                       offsetX={paperPadding.px}
                       offsetY={paperPadding.py}
                       rows={rows}
@@ -255,19 +284,60 @@ export function createResourcesPrintMode<
               />
             </Field>
 
-            <Field label={t("crop_marks.label")}>
+            <Field label={t("bleed.label")}>
               <HStack>
                 <Checkbox
-                  onValueChange={setCropMarksVisible}
+                  onValueChange={setBleedVisible}
                   size="sm"
-                  value={cropMarksVisible}
+                  value={bleedVisible}
                 />
                 <NumberInput
-                  disabled={!cropMarksVisible}
-                  onValueChange={setCropMarksLength}
+                  disabled={!bleedVisible}
+                  onValueChange={(x) => setBleedSize((b) => ({ ...b, x }))}
+                  size="xs"
+                  step={0.01}
+                  value={bleedSize.x}
+                />
+                <NumberInput
+                  disabled={!bleedVisible}
+                  onValueChange={(y) => setBleedSize((b) => ({ ...b, y }))}
+                  size="xs"
+                  step={0.01}
+                  value={bleedSize.y}
+                />
+              </HStack>
+            </Field>
+
+            <Field label={t("page_crop_marks.label")}>
+              <HStack>
+                <Checkbox
+                  onValueChange={setPageCropMarksVisible}
+                  size="sm"
+                  value={pageCropMarksVisible}
+                />
+                <NumberInput
+                  disabled={!pageCropMarksVisible}
+                  onValueChange={setPageCropMarksLength}
                   size="xs"
                   step={0.05}
-                  value={cropMarksLength}
+                  value={pageCropMarksLength}
+                />
+              </HStack>
+            </Field>
+
+            <Field label={t("card_crop_marks.label")}>
+              <HStack>
+                <Checkbox
+                  onValueChange={setCardCropMarksVisible}
+                  size="sm"
+                  value={cardCropMarksVisible}
+                />
+                <NumberInput
+                  disabled={!cardCropMarksVisible}
+                  onValueChange={setCardCropMarksLength}
+                  size="xs"
+                  step={0.05}
+                  value={cardCropMarksLength}
                 />
               </HStack>
             </Field>
@@ -510,14 +580,38 @@ const px1 = 1 / 96;
 // Store
 //------------------------------------------------------------------------------
 
-const useCropMarksLength = createLocalStore(
-  "print_mode.crop_marks_length",
+const useBleedSize = createLocalStore(
+  "print_mode.bleed_size",
+  { x: 0.05, y: 0.05 },
+  z.object({ x: z.number(), y: z.number() }).parse,
+).use;
+
+const useBleedVisible = createLocalStore(
+  "print_mode.bleed_visible",
+  true,
+  z.boolean().parse,
+).use;
+
+const useCardCropMarksLength = createLocalStore(
+  "print_mode.card_crop_marks_length",
   0.2,
   z.number().parse,
 ).use;
 
-const useCropMarksVisible = createLocalStore(
-  "print_mode.crop_marks_visible",
+const useCardCropMarksVisible = createLocalStore(
+  "print_mode.card_crop_marks_visible",
+  true,
+  z.boolean().parse,
+).use;
+
+const usePageCropMarksLength = createLocalStore(
+  "print_mode.page_crop_marks_length",
+  0.2,
+  z.number().parse,
+).use;
+
+const usePageCropMarksVisible = createLocalStore(
+  "print_mode.page_crop_marks_visible",
   true,
   z.boolean().parse,
 ).use;
@@ -545,13 +639,21 @@ const usePaperLayout = createLocalStore(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "bleed.label": {
+    en: "Bleed",
+    it: "Bleed",
+  },
+  "card_crop_marks.label": {
+    en: "Crop Marks (Card)",
+    it: "Marchi di Taglio (Carta)",
+  },
   "close": {
     en: "Close",
     it: "Chiudi",
   },
-  "crop_marks.label": {
-    en: "Crop Marks",
-    it: "Marchi di Taglio",
+  "page_crop_marks.label": {
+    en: "Crop Marks (Page)",
+    it: "Marchi di Taglio (Pagina)",
   },
   "palette_name.label": {
     en: "Color",

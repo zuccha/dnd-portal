@@ -2,7 +2,7 @@ import { Box, HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 import RichText from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
-import { useBleed } from "./bleed-context";
+import { type BleedCorner, useBleed } from "./bleed-context";
 
 const separatorColor = "#3F3F46";
 
@@ -58,7 +58,6 @@ function Frame({
 }: FrameProps) {
   const bleed = useBleed();
   const bgImage = `radial-gradient(circle, {colors.gray.50} 0%, {colors.gray.100} 50%, {colors.gray.200} 100%)`;
-  const guideProps = { borderColor: "blue", h: "0.2in", w: "0.2in" };
 
   return (
     <VStack
@@ -80,25 +79,7 @@ function Frame({
       w={`${cardW + 2 * bleed.x}in`}
       {...rest}
     >
-      {bleed.showGuides && (
-        <VStack
-          h="full"
-          justify="space-between"
-          position="absolute"
-          px={`calc(${bleed.x}in - 1px)`}
-          py={`calc(${bleed.y}in - 1px)`}
-          w="full"
-        >
-          <HStack justify="space-between" w="full">
-            <Box {...guideProps} borderWidth={`1px 0 0 1px`} />
-            <Box {...guideProps} borderWidth={`1px 1px 0 0`} />
-          </HStack>
-          <HStack justify="space-between" w="full">
-            <Box {...guideProps} borderWidth={`0 0 1px 1px`} />
-            <Box {...guideProps} borderWidth={`0 1px 1px 0`} />
-          </HStack>
-        </VStack>
-      )}
+      {bleed.corner && <BleedGuide {...bleed} corner={bleed.corner} />}
 
       <VStack
         gap={0}
@@ -341,6 +322,41 @@ function Separator(props: StackProps) {
         <polygon fill={separatorColor} points="0,1 50,0 100,1 50,2" />
       </svg>
     </Box>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Bleed Guide
+//------------------------------------------------------------------------------
+
+type BleedGuideProps = {
+  corner: BleedCorner;
+  x: number;
+  y: number;
+};
+
+function BleedGuide({ corner, x, y }: BleedGuideProps) {
+  const length = `${corner.length}in`;
+  const cornerProps = { borderColor: corner.color, h: length, w: length };
+
+  return (
+    <VStack
+      h="full"
+      justify="space-between"
+      position="absolute"
+      px={`calc(${x}in - 1px)`}
+      py={`calc(${y}in - 1px)`}
+      w="full"
+    >
+      <HStack justify="space-between" w="full">
+        <Box {...cornerProps} borderWidth={`1px 0 0 1px`} />
+        <Box {...cornerProps} borderWidth={`1px 1px 0 0`} />
+      </HStack>
+      <HStack justify="space-between" w="full">
+        <Box {...cornerProps} borderWidth={`0 0 1px 1px`} />
+        <Box {...cornerProps} borderWidth={`0 1px 1px 0`} />
+      </HStack>
+    </VStack>
   );
 }
 
