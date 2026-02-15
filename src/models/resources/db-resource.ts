@@ -6,6 +6,7 @@ import { campaignRoleSchema } from "../types/campaign-role";
 //------------------------------------------------------------------------------
 
 export const dbResourceSchema = z.object({
+  image_url: z.string().nullable(),
   visibility: campaignRoleSchema,
 });
 

@@ -24,6 +24,24 @@ export function createResourceEditor<D extends ResourceFormData>(
   form: Form<D>,
 ) {
   //----------------------------------------------------------------------------
+  // Image Url Field
+  //----------------------------------------------------------------------------
+
+  const ImageUrlField = createInputField({
+    i18nContext: {
+      label: {
+        en: "Image URL",
+        it: "URL Immagine",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    useField: form.createUseField("image_url"),
+  });
+
+  //----------------------------------------------------------------------------
   // Name Field
   //----------------------------------------------------------------------------
 
@@ -111,6 +129,8 @@ export function createResourceEditor<D extends ResourceFormData>(
           <PageField defaultValue={resource.page?.[lang] ?? 0} maxW="6em" />
           <VisibilityField defaultValue={resource.visibility} maxW="10em" />
         </HStack>
+
+        <ImageUrlField defaultValue={resource.image_url ?? ""} />
 
         {children}
       </VStack>

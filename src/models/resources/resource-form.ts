@@ -7,6 +7,7 @@ import type { DBResource, DBResourceTranslation } from "./db-resource";
 //------------------------------------------------------------------------------
 
 export const resourceFormDataSchema = z.object({
+  image_url: z.string(),
   name: z.string(),
   name_short: z.string(),
   page: z.number(),
@@ -25,6 +26,7 @@ export function resourceFormDataToDB(data: Partial<ResourceFormData>): {
 } {
   return {
     resource: {
+      image_url: data.image_url || null,
       visibility: data.visibility,
     },
     translation: {

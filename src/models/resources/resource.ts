@@ -14,6 +14,7 @@ export const resourceSchema = z.object({
   campaign_id: z.string(),
   campaign_name: z.string(),
 
+  image_url: z.string().nullish(),
   visibility: campaignRoleSchema,
 
   name: i18nStringSchema,
@@ -31,6 +32,7 @@ export const defaultResource: Resource = {
   campaign_id: "",
   campaign_name: "",
   id: "",
+  image_url: undefined,
   name: {},
   name_short: {},
   page: {},
