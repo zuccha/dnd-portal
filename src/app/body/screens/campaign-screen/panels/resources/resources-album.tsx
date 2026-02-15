@@ -57,11 +57,14 @@ export function createResourcesAlbum<
     extra,
   );
 
+  const { useFilteredResourceIds } = store;
+  const { usePaletteName, useZoom } = context;
+
   function ResourcesAlbum({ campaignId }: ResourcesAlbumProps) {
     const editable = useCanEditCampaign(campaignId);
-    const filteredResourceIds = store.useFilteredResourceIds(campaignId);
-    const paletteName = context.usePaletteName();
-    const zoom = context.useZoom();
+    const filteredResourceIds = useFilteredResourceIds(campaignId);
+    const paletteName = usePaletteName();
+    const zoom = useZoom();
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [visibleById, setVisibleById] = useState<Record<string, boolean>>({});
