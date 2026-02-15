@@ -106,8 +106,6 @@ export function createResourcesPrintMode<
     const [cropMarksVisible, setCropMarksVisible] = useCropMarksVisible();
     const [cropMarksLength, setCropMarksLength] = useCropMarksLength();
 
-    const [gradientIntensity, setGradientIntensity] = useGradientIntensity();
-
     const [paletteName, setPaletteName] = usePaletteName();
     const palette = customPalettes[paletteName];
 
@@ -280,17 +278,6 @@ export function createResourcesPrintMode<
                 options={paletteNameOptions}
                 size="xs"
                 value={paletteName}
-              />
-            </Field>
-
-            <Field label={t("gradient_intensity.label")}>
-              <NumberInput
-                max={100}
-                min={0}
-                onValueChange={setGradientIntensity}
-                size="xs"
-                step={1}
-                value={gradientIntensity}
               />
             </Field>
           </VStack>
@@ -535,12 +522,6 @@ const useCropMarksVisible = createLocalStore(
   z.boolean().parse,
 ).use;
 
-const useGradientIntensity = createLocalStore(
-  "print_mode.gradient_intensity",
-  40,
-  z.number().parse,
-).use;
-
 const usePaletteName = createLocalStore(
   "print_mode.palette_name",
   "gray",
@@ -571,10 +552,6 @@ const i18nContext = {
   "crop_marks.label": {
     en: "Crop Marks",
     it: "Marchi di Taglio",
-  },
-  "gradient_intensity.label": {
-    en: "Gradient Intensity",
-    it: "Intensità Gradiente",
   },
   "palette_name.label": {
     en: "Color",
