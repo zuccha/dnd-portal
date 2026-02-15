@@ -1,5 +1,5 @@
-import { type StackProps, VStack } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { Box, type StackProps, VStack } from "@chakra-ui/react";
+import { type ReactNode, useCallback } from "react";
 import usePaginatedContent from "~/hooks/use-paginated-content";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
@@ -38,18 +38,62 @@ export function ResourcePokerCard<
   selectedPageIndex = -1,
   ...rest
 }: ResourcePokerCardProps<R, L>) {
+  const imageUrl = localizedResource._raw.image_url?.trim() ?? "";
+  const hasImage = imageUrl.length > 0;
+  const firstPageIndexWithoutImage = hasImage ? 1 : 0;
+
+  const handlePageCountChange = useCallback(
+    (count: number | undefined) => {
+      if (count === undefined) onPageCountChange(undefined);
+      else onPageCountChange(count + firstPageIndexWithoutImage);
+    },
+    [firstPageIndexWithoutImage, onPageCountChange],
+  );
+
   const pages = usePaginatedContent(
     localizedResource.details,
-    onPageCountChange,
+    handlePageCountChange,
   );
+
+  const pageCount = pages.length + firstPageIndexWithoutImage;
 
   return (
     <>
+      {hasImage && (
+        <PokerCard.Frame
+          descriptor={
+            <VStack gap={PokerCard.rem0375}>
+              {localizedResource.descriptor}
+              {afterDescriptor}
+            </VStack>
+          }
+          footer={footer}
+          name={localizedResource.name}
+          pageIndicator={`1 / ${pageCount}`}
+          palette={palette}
+          sourceName={localizedResource.campaign}
+          sourcePage={localizedResource.page}
+          zIndex={0 === selectedPageIndex ? 1 : 0}
+          {...rest}
+        >
+          <Box
+            aspectRatio={1}
+            backgroundPosition="center"
+            bgImage={`url(${imageUrl})`}
+            bgRepeat="no-repeat"
+            bgSize="contain"
+            flex={1}
+          />
+          {firstPageInfo}
+        </PokerCard.Frame>
+      )}
+
       {pages.map((page, pageIndex) => {
         const text = (page.text + page.textTemp).trim();
+        const adjustedPageIndex = pageIndex + firstPageIndexWithoutImage;
         return (
           <PokerCard.Frame
-            compact={pageIndex > 0}
+            compact={hasImage || pageIndex > 0}
             descriptor={
               <VStack gap={PokerCard.rem0375}>
                 {localizedResource.descriptor}
@@ -59,11 +103,11 @@ export function ResourcePokerCard<
             footer={footer}
             key={pageIndex}
             name={localizedResource.name}
-            pageIndicator={`${pageIndex + 1} / ${pages.length}`}
+            pageIndicator={`${adjustedPageIndex + 1} / ${pageCount}`}
             palette={palette}
             sourceName={localizedResource.campaign}
             sourcePage={localizedResource.page}
-            zIndex={pageIndex === selectedPageIndex ? 1 : 0}
+            zIndex={adjustedPageIndex === selectedPageIndex ? 1 : 0}
             {...rest}
           >
             <PokerCard.Separator />
@@ -82,7 +126,7 @@ export function ResourcePokerCard<
               )}
             </VStack>
 
-            {pageIndex === 0 && firstPageInfo && (
+            {!hasImage && pageIndex === 0 && firstPageInfo && (
               <>
                 <PokerCard.Separator />
                 {firstPageInfo}
