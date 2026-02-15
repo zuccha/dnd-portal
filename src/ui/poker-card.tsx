@@ -58,6 +58,7 @@ function Frame({
 }: FrameProps) {
   const bleed = useBleed();
   const bgImage = `radial-gradient(circle, {colors.gray.50} 0%, {colors.gray.100} 50%, {colors.gray.200} 100%)`;
+  const guideProps = { borderColor: "blue", h: "0.2in", w: "0.2in" };
 
   return (
     <VStack
@@ -74,10 +75,31 @@ function Frame({
       h={`${cardH + 2 * bleed.y}in`}
       lineHeight={1.2}
       overflow="hidden"
+      position="relative"
       shadow="sm"
       w={`${cardW + 2 * bleed.x}in`}
       {...rest}
     >
+      {bleed.showGuides && (
+        <VStack
+          h="full"
+          justify="space-between"
+          position="absolute"
+          px={`calc(${bleed.x}in - 1px)`}
+          py={`calc(${bleed.y}in - 1px)`}
+          w="full"
+        >
+          <HStack justify="space-between" w="full">
+            <Box {...guideProps} borderWidth={`1px 0 0 1px`} />
+            <Box {...guideProps} borderWidth={`1px 1px 0 0`} />
+          </HStack>
+          <HStack justify="space-between" w="full">
+            <Box {...guideProps} borderWidth={`0 0 1px 1px`} />
+            <Box {...guideProps} borderWidth={`0 1px 1px 0`} />
+          </HStack>
+        </VStack>
+      )}
+
       <VStack
         gap={0}
         lineHeight={0.9}

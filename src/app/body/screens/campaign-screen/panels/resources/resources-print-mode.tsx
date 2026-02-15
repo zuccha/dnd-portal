@@ -6,7 +6,7 @@ import {
   type StackProps,
   VStack,
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
@@ -19,6 +19,7 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { createLocalStore } from "~/store/local-store";
 import { range } from "~/ui/array";
+import { BleedContext } from "~/ui/bleed-context";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
 import Field from "~/ui/field";
@@ -78,27 +79,29 @@ export function createResourcesPrintMode<
 
     const [paperLayout, setPaperLayout] = usePaperLayout();
     const [paperType, setPaperType] = usePaperType();
+    const paperSize = paperSizes[paperType];
     const [paperHeight, paperWidth] =
       paperLayout === "portrait" ?
-        [paperSizes[paperType].height, paperSizes[paperType].width]
-      : [paperSizes[paperType].width, paperSizes[paperType].height];
+        [paperSize.height, paperSize.width]
+      : [paperSize.width, paperSize.height];
 
-    const columns = Math.floor(paperWidth / ResourceCardPrintable.w);
-    const rows = Math.floor(paperHeight / ResourceCardPrintable.h);
+    const [bleed] = useState({ showGuides: true, x: 0.05, y: 0.05 });
+    const cardW = ResourceCardPrintable.w + 2 * bleed.x;
+    const cardH = ResourceCardPrintable.h + 2 * bleed.y;
+
+    const columns = Math.floor(paperWidth / cardW);
+    const rows = Math.floor(paperHeight / cardH);
     const cardsPerPaper = columns * rows;
 
     const paperPadding = {
-      px: (paperWidth - columns * ResourceCardPrintable.w) / 2,
-      py: (paperHeight - rows * ResourceCardPrintable.h) / 2,
+      px: (paperWidth - columns * cardW) / 2,
+      py: (paperHeight - rows * cardH) / 2,
     };
 
     const [pagesCounts, setPagesCounts] = useState<Record<string, number>>({});
-    const papersCount = Math.ceil(
-      Object.values(pagesCounts).reduce(
-        (papersCount, pagesCount) => papersCount + pagesCount,
-        0,
-      ) / cardsPerPaper,
-    );
+
+    const pagesCount = Object.values(pagesCounts).reduce((s, c) => s + c, 0);
+    const papersCount = Math.ceil(pagesCount / cardsPerPaper);
 
     const [cropMarksVisible, setCropMarksVisible] = useCropMarksVisible();
     const [cropMarksLength, setCropMarksLength] = useCropMarksLength();
@@ -145,7 +148,6 @@ export function createResourcesPrintMode<
       <HStack gap={0} overflow="hidden" {...rest}>
         <VStack bg="bg.subtle" flex={1} h="full" overflow="auto" p={4}>
           <VStack
-            bgColor="green"
             className="printable"
             h={`${paperHeight * papersCount}in`}
             pointerEvents="none"
@@ -164,9 +166,11 @@ export function createResourcesPrintMode<
                 >
                   {cropMarksVisible && (
                     <CropMarks
+                      bleedX={bleed.x}
+                      bleedY={bleed.y}
+                      cardH={cardH}
+                      cardW={cardW}
                       columns={columns}
-                      gapX={ResourceCardPrintable.w}
-                      gapY={ResourceCardPrintable.h}
                       length={cropMarksLength}
                       offsetX={paperPadding.px}
                       offsetY={paperPadding.py}
@@ -196,32 +200,34 @@ export function createResourcesPrintMode<
               w="1in"
             />
 
-            <Flex
-              alignContent="flex-start"
-              justify="flex-start"
-              position="absolute"
-              px={`${paperPadding.px}in`}
-              width={`${paperWidth}in`}
-              wrap="wrap"
-            >
-              {resourceIds.map((resourceId) => (
-                <ResourceCardPrintable
-                  campaignId={campaignId}
-                  css={albumCardCss}
-                  key={resourceId}
-                  onPageCountChange={(count) => {
-                    setPagesCounts((prev) => {
-                      const next = { ...prev };
-                      if (count) next[resourceId] = count;
-                      else delete next[resourceId];
-                      return next;
-                    });
-                  }}
-                  palette={palette}
-                  resourceId={resourceId}
-                />
-              ))}
-            </Flex>
+            <BleedContext value={bleed}>
+              <Flex
+                alignContent="flex-start"
+                justify="flex-start"
+                position="absolute"
+                px={`${paperPadding.px}in`}
+                width={`${paperWidth}in`}
+                wrap="wrap"
+              >
+                {resourceIds.map((resourceId) => (
+                  <ResourceCardPrintable
+                    campaignId={campaignId}
+                    css={albumCardCss}
+                    key={resourceId}
+                    onPageCountChange={(count) => {
+                      setPagesCounts((prev) => {
+                        const next = { ...prev };
+                        if (count) next[resourceId] = count;
+                        else delete next[resourceId];
+                        return next;
+                      });
+                    }}
+                    palette={palette}
+                    resourceId={resourceId}
+                  />
+                ))}
+              </Flex>
+            </BleedContext>
           </VStack>
         </VStack>
 
@@ -313,10 +319,12 @@ export function createResourcesPrintMode<
 //------------------------------------------------------------------------------
 
 type CropMarksProps = {
+  bleedX: number;
+  bleedY: number;
+  cardH: number;
+  cardW: number;
   columns: number;
   length: number;
-  gapX: number;
-  gapY: number;
   offsetX: number;
   offsetY: number;
   rows: number;
@@ -324,9 +332,11 @@ type CropMarksProps = {
 
 // eslint-disable-next-line react-refresh/only-export-components
 function CropMarks({
+  bleedX,
+  bleedY,
+  cardH,
+  cardW,
   columns,
-  gapX,
-  gapY,
   length,
   offsetX,
   offsetY,
@@ -335,7 +345,8 @@ function CropMarks({
   return (
     <>
       <CropMarksH
-        gap={gapY}
+        bleedY={bleedY}
+        cardH={cardH}
         offsetX={offsetX - length}
         offsetY={offsetY}
         rows={rows}
@@ -343,27 +354,30 @@ function CropMarks({
       />
 
       <CropMarksH
-        gap={gapY}
-        offsetX={offsetX + columns * gapX}
+        bleedY={bleedY}
+        cardH={cardH}
+        offsetX={offsetX + columns * cardW}
         offsetY={offsetY}
         rows={rows}
         w={length}
       />
 
       <CropMarksV
+        bleedX={bleedX}
+        cardW={cardW}
         columns={columns}
-        gap={gapX}
         h={length}
         offsetX={offsetX}
         offsetY={offsetY - length}
       />
 
       <CropMarksV
+        bleedX={bleedX}
+        cardW={cardW}
         columns={columns}
-        gap={gapX}
         h={length}
         offsetX={offsetX}
-        offsetY={offsetY + rows * gapY}
+        offsetY={offsetY + rows * cardH}
       />
     </>
   );
@@ -374,7 +388,8 @@ function CropMarks({
 //------------------------------------------------------------------------------
 
 type CropMarksHProps = {
-  gap: number;
+  bleedY: number;
+  cardH: number;
   offsetX: number;
   offsetY: number;
   rows: number;
@@ -382,20 +397,35 @@ type CropMarksHProps = {
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-function CropMarksH({ gap, offsetX, offsetY, rows, w }: CropMarksHProps) {
+function CropMarksH({
+  bleedY,
+  cardH,
+  offsetX,
+  offsetY,
+  rows,
+  w,
+}: CropMarksHProps) {
   return (
     <>
-      {range(rows + 1).map((c) => (
-        <Box
-          bgColor="black"
-          h="1px"
-          key={c}
-          left={`${offsetX}in`}
-          position="absolute"
-          top={`${offsetY + gap * c}in`}
-          transform="translateY(-50%)"
-          w={`${w}in`}
-        />
+      {range(rows).map((c) => (
+        <Fragment key={c}>
+          <Box
+            bgColor="black"
+            h="1px"
+            left={`${offsetX}in`}
+            position="absolute"
+            top={`${offsetY + (bleedY - px1) + c * cardH}in`}
+            w={`${w}in`}
+          />
+          <Box
+            bgColor="black"
+            h="1px"
+            left={`${offsetX}in`}
+            position="absolute"
+            top={`${offsetY + (cardH - bleedY) + c * cardH}in`}
+            w={`${w}in`}
+          />
+        </Fragment>
       ))}
     </>
   );
@@ -406,30 +436,46 @@ function CropMarksH({ gap, offsetX, offsetY, rows, w }: CropMarksHProps) {
 //------------------------------------------------------------------------------
 
 type CropMarksVProps = {
+  bleedX: number;
+  cardW: number;
   columns: number;
-  gap: number;
   h: number;
   offsetX: number;
   offsetY: number;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-function CropMarksV({ columns, gap, h, offsetX, offsetY }: CropMarksVProps) {
+function CropMarksV({
+  bleedX,
+  cardW,
+  columns,
+  h,
+  offsetX,
+  offsetY,
+}: CropMarksVProps) {
   return (
-    <>
-      {range(columns + 1).map((c) => (
-        <Box
-          bgColor="black"
-          h={`${h}in`}
-          key={c}
-          left={`${offsetX + gap * c}in`}
-          position="absolute"
-          top={`${offsetY}in`}
-          transform="translateX(-50%)"
-          w="1px"
-        />
+    <Fragment>
+      {range(columns).map((c) => (
+        <Fragment key={c}>
+          <Box
+            bgColor="black"
+            h={`${h}in`}
+            left={`${offsetX + (bleedX - px1) + c * cardW}in`}
+            position="absolute"
+            top={`${offsetY}in`}
+            w="1px"
+          />
+          <Box
+            bgColor="black"
+            h={`${h}in`}
+            left={`${offsetX + (cardW - bleedX) + c * cardW}in`}
+            position="absolute"
+            top={`${offsetY}in`}
+            w="1px"
+          />
+        </Fragment>
       ))}
-    </>
+    </Fragment>
   );
 }
 
@@ -470,6 +516,8 @@ const paperSizes: Record<PaperType, { height: number; width: number }> = {
   letter: { height: 11, width: 8.5 },
   tabloid: { height: 17, width: 11 },
 };
+
+const px1 = 1 / 96;
 
 //------------------------------------------------------------------------------
 // Store
