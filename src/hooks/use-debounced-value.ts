@@ -12,9 +12,10 @@ export default function useDebouncedState<T>(
   const [tempState, setTempState] = useState(state);
 
   useLayoutEffect(() => {
+    if (tempState === state) return;
     const id = setTimeout(() => onDebounceEnd(tempState), delay);
     return () => clearTimeout(id);
-  }, [delay, onDebounceEnd, tempState]);
+  }, [delay, onDebounceEnd, state, tempState]);
 
   useLayoutEffect(() => {
     setTempState(state);
