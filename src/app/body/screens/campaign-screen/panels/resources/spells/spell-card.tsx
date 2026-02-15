@@ -94,6 +94,26 @@ export function SpellCard({
           )}
         </>
       }
+      footer={
+        <Center
+          aspectRatio={1}
+          bgColor="gray.200"
+          borderColor={palette[700]}
+          borderWidth={PokerCard.rem0250}
+          color={palette[700]}
+          fontFamily="Fira Mono"
+          fontSize={PokerCard.rem1000}
+          fontWeight="bold"
+          h={`${PokerCard.remToIn(2.2)}in`}
+          left="50%"
+          position="absolute"
+          rounded="full"
+          top="-0.18in"
+          transform="translateX(-50%)"
+        >
+          {localizedResource.level}
+        </Center>
+      }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}
       palette={palette}

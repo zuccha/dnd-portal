@@ -40,6 +40,7 @@ const rem2000 = `${remToIn(1.2)}in`;
 export type FrameProps = StackProps & {
   compact?: boolean;
   descriptor: ReactNode;
+  footer?: ReactNode;
   name: ReactNode;
   palette: Palette;
   pageIndicator: string;
@@ -51,6 +52,7 @@ function Frame({
   compact,
   children,
   descriptor,
+  footer,
   name,
   palette,
   pageIndicator,
@@ -146,7 +148,9 @@ function Frame({
           >
             {sourcePage ? `${sourceName} > ${sourcePage}` : sourceName}
           </Span>
-          <Span w="20%"></Span>
+          <Span position="relative" w="20%">
+            {footer}
+          </Span>
           <Span
             overflow="hidden"
             textAlign="right"

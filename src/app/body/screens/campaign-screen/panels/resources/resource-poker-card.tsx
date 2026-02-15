@@ -17,6 +17,7 @@ export type ResourcePokerCardProps<
   afterDescriptor?: ReactNode;
   beforeDetails?: ReactNode;
   firstPageInfo?: ReactNode;
+  footer?: ReactNode;
   localizedResource: L;
   onPageCountChange?: (count: number | undefined) => void;
   palette: Palette;
@@ -30,6 +31,7 @@ export function ResourcePokerCard<
   afterDescriptor,
   beforeDetails,
   firstPageInfo,
+  footer,
   localizedResource,
   onPageCountChange = () => {},
   palette,
@@ -54,6 +56,7 @@ export function ResourcePokerCard<
                 {afterDescriptor}
               </VStack>
             }
+            footer={footer}
             key={pageIndex}
             name={localizedResource.name}
             pageIndicator={`${pageIndex + 1} / ${pages.length}`}
