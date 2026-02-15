@@ -23,6 +23,7 @@ export default function App() {
       document.fonts.load('bold 16px "Fira Mono"'),
       document.fonts.load('16px "Mr Eaves"'),
       document.fonts.load('16px "Mr Eaves Alt"'),
+      document.fonts.load('16px "Title Wave"'),
     ]).then(() => setReady(true));
   }, []);
 

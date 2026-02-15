@@ -97,3 +97,14 @@
   font-weight: normal;
   font-style: normal;
 }
+
+/******************************************************************************/
+/* Title Wave
+/******************************************************************************/
+
+@font-face {
+  font-family: "Title Wave";
+  src: url("../assets/fonts/Title Wave.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
