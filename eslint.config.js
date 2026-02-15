@@ -44,6 +44,7 @@ export default tseslint.config(
           "named": true,
         },
       ],
+      "no-irregular-whitespace": "off",
       "quote-props": ["error", "consistent"],
       "react/jsx-sort-props": ["error"],
       "react-refresh/only-export-components": [
