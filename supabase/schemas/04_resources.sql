@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS public.resources (
   campaign_id uuid NOT NULL,
   visibility public.campaign_role DEFAULT 'game_master'::public.campaign_role NOT NULL,
   kind public.resource_kind NOT NULL,
+  image_url text,
   CONSTRAINT resources_pkey PRIMARY KEY (id),
   CONSTRAINT resources_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -53,6 +54,7 @@ CREATE TYPE public.resource_row AS (
   campaign_name text,
   kind public.resource_kind,
   visibility public.campaign_role,
+  image_url text,
   name jsonb,
   name_short jsonb,
   page jsonb
@@ -244,9 +246,9 @@ BEGIN
   r := jsonb_populate_record(null::public.resources, p_resource);
 
   INSERT INTO public.resources (
-    campaign_id, visibility, kind
+    campaign_id, visibility, kind, image_url
   ) VALUES (
-    p_campaign_id, r.visibility, r.kind
+    p_campaign_id, r.visibility, r.kind, r.image_url
   )
   RETURNING id INTO v_id;
 
@@ -278,6 +280,7 @@ AS $$
     c.name                          AS campaign_name,
     r.kind,
     r.visibility,
+    r.image_url,
     coalesce(tt.name, '{}'::jsonb)  AS name,
     coalesce(tt.name_short, '{}'::jsonb) AS name_short,
     coalesce(tt.page, '{}'::jsonb)  AS page
@@ -366,6 +369,7 @@ SELECT
   c.name                        AS campaign_name,
   f.kind,
   f.visibility,
+  f.image_url,
   coalesce(tt.name, '{}'::jsonb) AS name,
   coalesce(tt.name_short, '{}'::jsonb) AS name_short,
   coalesce(tt.page, '{}'::jsonb) AS page
@@ -518,9 +522,9 @@ DECLARE
 BEGIN
   UPDATE public.resources r
   SET (
-    visibility, kind
+    visibility, kind, image_url
   ) = (
-    SELECT rr.visibility, rr.kind
+    SELECT rr.visibility, rr.kind, rr.image_url
     FROM jsonb_populate_record(null::public.resources, to_jsonb(r) || p_resource) AS rr
   )
   WHERE r.id = p_id;
