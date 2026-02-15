@@ -31,6 +31,24 @@
 }
 
 /******************************************************************************/
+/* Fira Mono
+/******************************************************************************/
+
+@font-face {
+  font-family: "Fira Mono";
+  src: url("../assets/fonts/Fira Mono.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Fira Mono";
+  src: url("../assets/fonts/Fira Mono Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/******************************************************************************/
 /* Lato
 /******************************************************************************/
 

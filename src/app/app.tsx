@@ -19,6 +19,8 @@ export default function App() {
       document.fonts.load('italic 16px "Bookinsanity"'),
       document.fonts.load('bold 16px "Bookinsanity"'),
       document.fonts.load('bold italic 16px "Bookinsanity"'),
+      document.fonts.load('16px "Fira Mono"'),
+      document.fonts.load('bold 16px "Fira Mono"'),
       document.fonts.load('16px "Mr Eaves"'),
       document.fonts.load('16px "Mr Eaves Alt"'),
     ]).then(() => setReady(true));
