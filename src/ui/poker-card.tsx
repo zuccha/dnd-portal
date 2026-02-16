@@ -211,7 +211,7 @@ function Arrow({ label, palette, value }: ArrowProps) {
         <Span fontStyle="italic" fontWeight="bold">
           {label}
         </Span>
-        <Span>{value}</Span>
+        <Span fontFamily="Mr Eaves Alt">{value}</Span>
       </VStack>
     </HStack>
   );
