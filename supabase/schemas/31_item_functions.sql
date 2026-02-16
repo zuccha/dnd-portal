@@ -4,8 +4,8 @@
 
 CREATE TYPE public.item_row AS (
   -- Resource
-  campaign_id uuid,
-  campaign_name text,
+  source_id uuid,
+  source_code text,
   id uuid,
   kind public.resource_kind,
   visibility public.campaign_role,
@@ -29,7 +29,7 @@ CREATE TYPE public.item_row AS (
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.create_item(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_lang text,
   p_item jsonb,
   p_item_translation jsonb)
@@ -43,7 +43,7 @@ DECLARE
 BEGIN
   r := jsonb_populate_record(null::public.items, p_item);
   v_id := public.create_equipment(
-    p_campaign_id,
+    p_source_id,
     p_lang,
     p_item || jsonb_build_object('kind', 'item'::public.resource_kind),
     p_item_translation
@@ -58,11 +58,11 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.create_item(p_campaign_id uuid, p_lang text, p_item jsonb, p_item_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.create_item(p_source_id uuid, p_lang text, p_item jsonb, p_item_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.create_item(p_campaign_id uuid, p_lang text, p_item jsonb, p_item_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_item(p_campaign_id uuid, p_lang text, p_item jsonb, p_item_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_item(p_campaign_id uuid, p_lang text, p_item jsonb, p_item_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.create_item(p_source_id uuid, p_lang text, p_item jsonb, p_item_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_item(p_source_id uuid, p_lang text, p_item jsonb, p_item_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_item(p_source_id uuid, p_lang text, p_item jsonb, p_item_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -75,8 +75,8 @@ LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT
-    e.campaign_id,
-    e.campaign_name,
+    e.source_id,
+    e.source_code,
     e.id,
     e.kind,
     e.visibility,
@@ -107,7 +107,7 @@ GRANT ALL ON FUNCTION public.fetch_item(p_id uuid) TO service_role;
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_items(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_langs text[],
   p_filters jsonb DEFAULT '{}'::jsonb,
   p_order_by text DEFAULT 'name'::text,
@@ -132,13 +132,13 @@ WITH prefs AS (
 ),
 base AS (
   SELECT e.*
-  FROM public.fetch_equipments(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS e
+  FROM public.fetch_equipments(p_source_id, p_langs, p_filters, p_order_by, p_order_dir) AS e
 ),
 src AS (
   SELECT
     b.id,
-    b.campaign_id,
-    b.campaign_name,
+    b.source_id,
+    b.source_code,
     b.kind,
     b.visibility,
     b.image_url,
@@ -162,8 +162,8 @@ filtered AS (
     AND (p.types_exc IS NULL OR NOT (s.type = any(p.types_exc)))
 )
 SELECT
-  s.campaign_id,
-  s.campaign_name,
+  s.source_id,
+  s.source_code,
   s.id,
   s.kind,
   s.visibility,
@@ -189,11 +189,11 @@ ORDER BY
   END DESC NULLS LAST;
 $$;
 
-ALTER FUNCTION public.fetch_items(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
+ALTER FUNCTION public.fetch_items(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_items(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_items(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_items(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_items(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_items(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_items(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------

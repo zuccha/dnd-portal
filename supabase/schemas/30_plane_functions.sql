@@ -4,8 +4,8 @@
 
 CREATE TYPE public.plane_row AS (
   -- Resource
-  campaign_id uuid,
-  campaign_name text,
+  source_id uuid,
+  source_code text,
   id uuid,
   kind public.resource_kind,
   visibility public.campaign_role,
@@ -24,7 +24,7 @@ CREATE TYPE public.plane_row AS (
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.create_plane(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_lang text,
   p_plane jsonb,
   p_plane_translation jsonb)
@@ -39,7 +39,7 @@ BEGIN
   r := jsonb_populate_record(null::public.planes, p_plane);
 
   v_id := public.create_resource(
-    p_campaign_id,
+    p_source_id,
     p_lang,
     p_plane || jsonb_build_object('kind', 'plane'::public.resource_kind),
     p_plane_translation
@@ -57,11 +57,11 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.create_plane(p_campaign_id uuid, p_lang text, p_plane jsonb, p_plane_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.create_plane(p_source_id uuid, p_lang text, p_plane jsonb, p_plane_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.create_plane(p_campaign_id uuid, p_lang text, p_plane jsonb, p_plane_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_plane(p_campaign_id uuid, p_lang text, p_plane jsonb, p_plane_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_plane(p_campaign_id uuid, p_lang text, p_plane jsonb, p_plane_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.create_plane(p_source_id uuid, p_lang text, p_plane jsonb, p_plane_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_plane(p_source_id uuid, p_lang text, p_plane jsonb, p_plane_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_plane(p_source_id uuid, p_lang text, p_plane jsonb, p_plane_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -74,8 +74,8 @@ LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT
-    r.campaign_id,
-    r.campaign_name,
+    r.source_id,
+    r.source_code,
     r.id,
     r.kind,
     r.visibility,
@@ -102,7 +102,7 @@ GRANT ALL ON FUNCTION public.fetch_plane(p_id uuid) TO service_role;
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_planes(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_langs text[],
   p_filters jsonb DEFAULT '{}'::jsonb,
   p_order_by text DEFAULT 'name'::text,
@@ -136,14 +136,14 @@ WITH prefs AS (
 ),
 base AS (
   SELECT r.*
-  FROM public.fetch_resources(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
+  FROM public.fetch_resources(p_source_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
   WHERE r.kind = 'plane'::public.resource_kind
 ),
 src AS (
   SELECT
     b.id,
-    b.campaign_id,
-    b.campaign_name,
+    b.source_id,
+    b.source_code,
     b.kind,
     b.visibility,
     b.image_url,
@@ -165,8 +165,8 @@ filtered AS (
     AND (p.alignments_exc IS NULL OR NOT (s.alignments && p.alignments_exc))
 )
 SELECT
-  f.campaign_id,
-  f.campaign_name,
+  f.source_id,
+  f.source_code,
   f.id,
   f.kind,
   f.visibility,
@@ -188,11 +188,11 @@ ORDER BY
   END DESC NULLS LAST;
 $$;
 
-ALTER FUNCTION public.fetch_planes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
+ALTER FUNCTION public.fetch_planes(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_planes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_planes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_planes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_planes(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_planes(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_planes(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------

@@ -5,8 +5,8 @@
 CREATE TYPE public.eldritch_invocation_row AS (
   -- Resource
   id uuid,
-  campaign_id uuid,
-  campaign_name text,
+  source_id uuid,
+  source_code text,
   kind public.resource_kind,
   visibility public.campaign_role,
   image_url text,
@@ -27,7 +27,7 @@ CREATE TYPE public.eldritch_invocation_row AS (
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.create_eldritch_invocation(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_lang text,
   p_eldritch_invocation jsonb,
   p_eldritch_invocation_translation jsonb)
@@ -42,7 +42,7 @@ BEGIN
   ei := jsonb_populate_record(null::public.eldritch_invocations, p_eldritch_invocation);
 
   v_id := public.create_resource(
-    p_campaign_id,
+    p_source_id,
     p_lang,
     p_eldritch_invocation || jsonb_build_object('kind', 'eldritch_invocation'::public.resource_kind),
     p_eldritch_invocation_translation
@@ -60,11 +60,11 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.create_eldritch_invocation(p_source_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_campaign_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_source_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_source_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_eldritch_invocation(p_source_id uuid, p_lang text, p_eldritch_invocation jsonb, p_eldritch_invocation_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -78,8 +78,8 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT
     r.id,
-    r.campaign_id,
-    r.campaign_name,
+    r.source_id,
+    r.source_code,
     r.kind,
     r.visibility,
     r.image_url,
@@ -115,7 +115,7 @@ GRANT ALL ON FUNCTION public.fetch_eldritch_invocation(p_id uuid) TO service_rol
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_eldritch_invocations(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_langs text[],
   p_filters jsonb DEFAULT '{}'::jsonb,
   p_order_by text DEFAULT 'name'::text,
@@ -129,7 +129,7 @@ WITH prefs AS (
 ),
 base AS (
   SELECT r.*
-  FROM public.fetch_resources(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
+  FROM public.fetch_resources(p_source_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
   WHERE r.kind = 'eldritch_invocation'::public.resource_kind
 ),
 eldritch AS (
@@ -154,8 +154,8 @@ et AS (
 )
 SELECT
   f.id,
-  f.campaign_id,
-  f.campaign_name,
+  f.source_id,
+  f.source_code,
   f.kind,
   f.visibility,
   f.image_url,
@@ -178,11 +178,11 @@ ORDER BY
   END DESC NULLS LAST;
 $$;
 
-ALTER FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
+ALTER FUNCTION public.fetch_eldritch_invocations(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_eldritch_invocations(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------

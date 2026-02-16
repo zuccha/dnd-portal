@@ -6,12 +6,10 @@ CREATE TABLE IF NOT EXISTS public.resources (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   source_id uuid,
-  campaign_id uuid NOT NULL,
   visibility public.campaign_role DEFAULT 'game_master'::public.campaign_role NOT NULL,
   kind public.resource_kind NOT NULL,
   image_url text,
   CONSTRAINT resources_pkey PRIMARY KEY (id),
-  CONSTRAINT resources_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT resources_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -53,8 +51,7 @@ GRANT ALL ON TABLE public.resource_translations TO service_role;
 CREATE TYPE public.resource_row AS (
   id uuid,
   source_id uuid,
-  campaign_id uuid,
-  campaign_name text,
+  source_code text,
   kind public.resource_kind,
   visibility public.campaign_role,
   image_url text,
@@ -77,19 +74,13 @@ AS $$
   SELECT EXISTS (
     SELECT 1
     FROM public.resources r
-    JOIN public.campaigns c ON c.id = r.campaign_id
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid))
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() AS uid))
     WHERE r.id = p_resource_id
       AND (
-        (c.is_module = true AND c.visibility = 'public'::public.campaign_visibility)
-        OR
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        (c.is_module = false AND cp.user_id IS NOT NULL AND (
+        public.can_edit_source_resources(r.source_id)
+        OR (
           r.visibility = 'player'::public.campaign_role
-          OR cp.role = 'game_master'::public.campaign_role
-        ))
+          AND public.can_read_source(r.source_id)
+        )
       )
   );
 $$;
@@ -114,17 +105,8 @@ AS $$
   SELECT EXISTS (
     SELECT 1
     FROM public.resources r
-    JOIN public.campaigns c ON c.id = r.campaign_id
-    LEFT JOIN public.user_modules um ON (um.module_id = c.id AND um.user_id = (SELECT auth.uid() AS uid) AND um.role = 'creator'::public.module_role)
-    LEFT JOIN public.campaign_players cp ON (cp.campaign_id = c.id AND cp.user_id = (SELECT auth.uid() as uid) AND cp.role = 'game_master'::public.campaign_role)
     WHERE r.id = p_resource_id
-      AND (
-        -- Module creators
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        -- Campaign GMs
-        (c.is_module = false AND cp.user_id IS NOT NULL)
-      )
+      AND public.can_edit_source_resources(r.source_id)
   );
 $$;
 
@@ -139,38 +121,19 @@ GRANT ALL ON FUNCTION public.can_edit_resource(p_resource_id uuid) TO service_ro
 -- CAN CREATE RESOURCE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.can_create_resource(p_campaign_id uuid)
+CREATE OR REPLACE FUNCTION public.can_create_resource(p_source_id uuid)
 RETURNS boolean
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
-  SELECT EXISTS (
-    SELECT 1
-    FROM public.campaigns c
-    LEFT JOIN public.user_modules um ON (
-      um.module_id = c.id
-      AND um.user_id = (SELECT auth.uid() AS uid)
-      AND um.role = 'creator'::public.module_role
-    )
-    LEFT JOIN public.campaign_players cp ON (
-      cp.campaign_id = c.id
-      AND cp.user_id = (SELECT auth.uid() AS uid)
-      AND cp.role = 'game_master'::public.campaign_role
-    )
-    WHERE c.id = p_campaign_id
-      AND (
-        (c.is_module = true AND um.user_id IS NOT NULL)
-        OR
-        (c.is_module = false AND cp.user_id IS NOT NULL)
-      )
-  );
+  SELECT public.can_edit_source_resources(p_source_id);
 $$;
 
-ALTER FUNCTION public.can_create_resource(p_campaign_id uuid) OWNER TO postgres;
+ALTER FUNCTION public.can_create_resource(p_source_id uuid) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.can_create_resource(p_campaign_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.can_create_resource(p_campaign_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.can_create_resource(p_campaign_id uuid) TO service_role;
+GRANT ALL ON FUNCTION public.can_create_resource(p_source_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.can_create_resource(p_source_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.can_create_resource(p_source_id uuid) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -183,13 +146,13 @@ FOR SELECT TO anon, authenticated
 USING (
   public.can_read_resource(id)
   OR public.can_edit_resource(id)
-  OR public.can_create_resource(campaign_id)
+  OR public.can_create_resource(source_id)
 );
 
 CREATE POLICY "Creators and GMs can create new resources"
 ON public.resources
 FOR INSERT TO authenticated
-WITH CHECK (public.can_create_resource(campaign_id));
+WITH CHECK (public.can_create_resource(source_id));
 
 CREATE POLICY "Creators and GMs can update resources"
 ON public.resources
@@ -234,7 +197,7 @@ USING (public.can_edit_resource(resource_id));
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.create_resource(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_lang text,
   p_resource jsonb,
   p_resource_translation jsonb)
@@ -249,9 +212,9 @@ BEGIN
   r := jsonb_populate_record(null::public.resources, p_resource);
 
   INSERT INTO public.resources (
-    campaign_id, visibility, kind, image_url
+    source_id, visibility, kind, image_url
   ) VALUES (
-    p_campaign_id, r.visibility, r.kind, r.image_url
+    p_source_id, r.visibility, r.kind, r.image_url
   )
   RETURNING id INTO v_id;
 
@@ -261,11 +224,11 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.create_resource(p_campaign_id uuid, p_lang text, p_resource jsonb, p_resource_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.create_resource(p_source_id uuid, p_lang text, p_resource jsonb, p_resource_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.create_resource(p_campaign_id uuid, p_lang text, p_resource jsonb, p_resource_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_resource(p_campaign_id uuid, p_lang text, p_resource jsonb, p_resource_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_resource(p_campaign_id uuid, p_lang text, p_resource jsonb, p_resource_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.create_resource(p_source_id uuid, p_lang text, p_resource jsonb, p_resource_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_resource(p_source_id uuid, p_lang text, p_resource jsonb, p_resource_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_resource(p_source_id uuid, p_lang text, p_resource jsonb, p_resource_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -280,8 +243,7 @@ AS $$
   SELECT
     r.id,
     r.source_id,
-    r.campaign_id,
-    c.name                          AS campaign_name,
+    s.code                          AS source_code,
     r.kind,
     r.visibility,
     r.image_url,
@@ -289,7 +251,7 @@ AS $$
     coalesce(tt.name_short, '{}'::jsonb) AS name_short,
     coalesce(tt.page, '{}'::jsonb)  AS page
   FROM public.resources r
-  JOIN public.campaigns c ON c.id = r.campaign_id
+  LEFT JOIN public.sources s ON s.id = r.source_id
   LEFT JOIN (
     SELECT
       r.id,
@@ -316,7 +278,7 @@ GRANT ALL ON FUNCTION public.fetch_resource(p_id uuid) TO service_role;
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_resources(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_langs text[],
   p_filters jsonb DEFAULT '{}'::jsonb,
   p_order_by text DEFAULT 'name'::text,
@@ -327,8 +289,8 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 WITH prefs AS (
   SELECT
-    -- campaign/modules include/exclude filter (keys are campaign or module ids)
-    coalesce(p_filters->'campaigns', '{}'::jsonb) AS campaign_filter,
+    -- sources include/exclude filter (keys are source ids)
+    coalesce(p_filters->'sources', '{}'::jsonb) AS source_filter,
 
     -- kinds
     (
@@ -346,8 +308,8 @@ src AS (
   SELECT r.*
   FROM public.resources r
   JOIN prefs p ON true
-  JOIN public.campaign_resource_ids_with_deps(p_campaign_id, p.campaign_filter) ci ON ci.id = r.campaign_id
-  JOIN public.campaigns c ON c.id = r.campaign_id
+  JOIN public.source_resource_ids_with_deps(p_source_id, p.source_filter) si ON si.id = r.source_id
+  LEFT JOIN public.sources s ON s.id = r.source_id
 ),
 filtered AS (
   SELECT r.*
@@ -370,8 +332,7 @@ t AS (
 SELECT
   f.id,
   f.source_id,
-  f.campaign_id,
-  c.name                        AS campaign_name,
+  s.code                        AS source_code,
   f.kind,
   f.visibility,
   f.image_url,
@@ -379,7 +340,7 @@ SELECT
   coalesce(tt.name_short, '{}'::jsonb) AS name_short,
   coalesce(tt.page, '{}'::jsonb) AS page
 FROM filtered f
-JOIN public.campaigns c ON c.id = f.campaign_id
+LEFT JOIN public.sources s ON s.id = f.source_id
 LEFT JOIN t tt ON tt.id = f.id
 ORDER BY
   CASE
@@ -392,11 +353,11 @@ ORDER BY
   END DESC NULLS LAST;
 $$;
 
-ALTER FUNCTION public.fetch_resources(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
+ALTER FUNCTION public.fetch_resources(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_resources(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_resources(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_resources(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_resources(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_resources(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_resources(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -404,22 +365,22 @@ GRANT ALL ON FUNCTION public.fetch_resources(p_campaign_id uuid, p_langs text[],
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_resource_lookups(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_resource_kinds public.resource_kind[])
 RETURNS TABLE(id uuid, name jsonb, name_short jsonb)
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
-  WITH campaign_ids AS (
+  WITH source_ids AS (
     SELECT id
-    FROM public.campaign_resource_ids_with_deps(p_campaign_id, '{}'::jsonb)
+    FROM public.source_resource_ids_with_deps(p_source_id, '{}'::jsonb)
   )
   SELECT
     r.id,
     coalesce(tt.name, '{}'::jsonb) AS name,
     coalesce(tt.name_short, '{}'::jsonb) AS name_short
   FROM public.resources r
-  JOIN campaign_ids cids ON cids.id = r.campaign_id
+  JOIN source_ids sids ON sids.id = r.source_id
   LEFT JOIN (
     SELECT
       rt.resource_id AS id,
@@ -432,11 +393,11 @@ AS $$
   ORDER BY r.id;
 $$;
 
-ALTER FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) OWNER TO postgres;
+ALTER FUNCTION public.fetch_resource_lookups(p_source_id uuid, p_resource_kinds public.resource_kind[]) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO anon;
-GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_campaign_id uuid, p_resource_kinds public.resource_kind[]) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_source_id uuid, p_resource_kinds public.resource_kind[]) TO anon;
+GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_source_id uuid, p_resource_kinds public.resource_kind[]) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_resource_lookups(p_source_id uuid, p_resource_kinds public.resource_kind[]) TO service_role;
 
 
 --------------------------------------------------------------------------------

@@ -4,8 +4,8 @@
 
 CREATE TYPE public.character_class_row AS (
   -- Resource
-  campaign_id uuid,
-  campaign_name text,
+  source_id uuid,
+  source_code text,
   id uuid,
   kind public.resource_kind,
   visibility public.campaign_role,
@@ -35,7 +35,7 @@ CREATE TYPE public.character_class_row AS (
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.create_character_class(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_lang text,
   p_character_class jsonb,
   p_character_class_translation jsonb)
@@ -50,7 +50,7 @@ BEGIN
   r := jsonb_populate_record(null::public.character_classes, p_character_class);
 
   v_id := public.create_resource(
-    p_campaign_id,
+    p_source_id,
     p_lang,
     p_character_class || jsonb_build_object('kind', 'character_class'::public.resource_kind),
     p_character_class_translation
@@ -135,11 +135,11 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.create_character_class(p_source_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_character_class(p_campaign_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.create_character_class(p_source_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_character_class(p_source_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_character_class(p_source_id uuid, p_lang text, p_character_class jsonb, p_character_class_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -152,8 +152,8 @@ LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT
-    r.campaign_id,
-    r.campaign_name,
+    r.source_id,
+    r.source_code,
     r.id,
     r.kind,
     r.visibility,
@@ -232,7 +232,7 @@ GRANT ALL ON FUNCTION public.fetch_character_class(p_id uuid) TO service_role;
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_character_classes(
-  p_campaign_id uuid,
+  p_source_id uuid,
   p_langs text[],
   p_filters jsonb DEFAULT '{}'::jsonb,
   p_order_by text DEFAULT 'name'::text,
@@ -243,14 +243,14 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 WITH base AS (
   SELECT r.*
-  FROM public.fetch_resources(p_campaign_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
+  FROM public.fetch_resources(p_source_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
   WHERE r.kind = 'character_class'::public.resource_kind
 ),
 src AS (
   SELECT
     b.id,
-    b.campaign_id,
-    b.campaign_name,
+    b.source_id,
+    b.source_code,
     b.kind,
     b.visibility,
     b.image_url,
@@ -307,8 +307,8 @@ t AS (
   GROUP BY s.id
 )
 SELECT
-  s.campaign_id,
-  s.campaign_name,
+  s.source_id,
+  s.source_code,
   s.id,
   s.kind,
   s.visibility,
@@ -344,11 +344,11 @@ ORDER BY
   END DESC NULLS LAST;
 $$;
 
-ALTER FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
+ALTER FUNCTION public.fetch_character_classes(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_character_classes(p_campaign_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_character_classes(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_character_classes(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_character_classes(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------
