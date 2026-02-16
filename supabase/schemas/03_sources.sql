@@ -473,6 +473,111 @@ ON public.source_roles
 FOR DELETE TO authenticated
 USING (public.can_admin_source(source_id) OR user_id = (SELECT auth.uid() AS uid));
 
+--------------------------------------------------------------------------------
+-- SOURCE RESOURCE IDS
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.source_resource_ids(
+  p_source_id uuid,
+  p_source_filter jsonb DEFAULT '{}'::jsonb
+)
+RETURNS TABLE(id uuid)
+LANGUAGE sql STABLE
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  WITH prefs AS (
+    SELECT
+      -- include these ids
+      (
+        SELECT coalesce(array_agg(e.key::uuid), null)
+        FROM jsonb_each_text(p_source_filter) AS e(key, value)
+        WHERE e.value = 'true'
+      ) AS ids_inc,
+      -- exclude these ids
+      (
+        SELECT coalesce(array_agg(e.key::uuid), null)
+        FROM jsonb_each_text(p_source_filter) AS e(key, value)
+        WHERE e.value = 'false'
+      ) AS ids_exc
+  ),
+  base_ids AS (
+    SELECT p_source_id AS id
+    UNION
+    SELECT si.include_id
+    FROM public.source_includes si
+    WHERE si.source_id = p_source_id
+  )
+  SELECT b.id
+  FROM base_ids b, prefs p
+  WHERE (p.ids_inc IS NULL OR b.id = ANY(p.ids_inc))
+    AND (p.ids_exc IS NULL OR NOT (b.id = ANY(p.ids_exc)));
+$$;
+
+ALTER FUNCTION public.source_resource_ids(p_source_id uuid, p_source_filter jsonb) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.source_resource_ids(p_source_id uuid, p_source_filter jsonb) TO anon;
+GRANT ALL ON FUNCTION public.source_resource_ids(p_source_id uuid, p_source_filter jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.source_resource_ids(p_source_id uuid, p_source_filter jsonb) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- SOURCE RESOURCE IDS WITH DEPENDENCIES
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.source_resource_ids_with_deps(
+  p_source_id uuid,
+  p_source_filter jsonb DEFAULT '{}'::jsonb
+)
+RETURNS TABLE(id uuid)
+LANGUAGE sql STABLE
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  WITH RECURSIVE prefs AS (
+    SELECT
+      -- include these ids
+      (
+        SELECT coalesce(array_agg(e.key::uuid), null)
+        FROM jsonb_each_text(p_source_filter) AS e(key, value)
+        WHERE e.value = 'true'
+      ) AS ids_inc,
+      -- exclude these ids
+      (
+        SELECT coalesce(array_agg(e.key::uuid), null)
+        FROM jsonb_each_text(p_source_filter) AS e(key, value)
+        WHERE e.value = 'false'
+      ) AS ids_exc
+  ),
+  base_ids AS (
+    SELECT p_source_id AS id
+    UNION
+    SELECT si.include_id
+    FROM public.source_includes si
+    WHERE si.source_id = p_source_id
+  ),
+  source_tree AS (
+    SELECT b.id, ARRAY[b.id] AS path
+    FROM base_ids b
+    UNION ALL
+    SELECT sr.required_id, st.path || sr.required_id
+    FROM public.source_requires sr
+    JOIN source_tree st ON sr.source_id = st.id
+    WHERE NOT sr.required_id = ANY(st.path)
+  ),
+  all_ids AS (
+    SELECT DISTINCT id FROM source_tree
+  )
+  SELECT a.id
+  FROM all_ids a, prefs p
+  WHERE (p.ids_inc IS NULL OR a.id = ANY(p.ids_inc))
+    AND (p.ids_exc IS NULL OR NOT (a.id = ANY(p.ids_exc)));
+$$;
+
+ALTER FUNCTION public.source_resource_ids_with_deps(p_source_id uuid, p_source_filter jsonb) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.source_resource_ids_with_deps(p_source_id uuid, p_source_filter jsonb) TO anon;
+GRANT ALL ON FUNCTION public.source_resource_ids_with_deps(p_source_id uuid, p_source_filter jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.source_resource_ids_with_deps(p_source_id uuid, p_source_filter jsonb) TO service_role;
+
 
 --------------------------------------------------------------------------------
 -- SOURCE ROLES VALIDATION

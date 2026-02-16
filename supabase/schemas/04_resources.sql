@@ -5,12 +5,14 @@
 CREATE TABLE IF NOT EXISTS public.resources (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
+  source_id uuid,
   campaign_id uuid NOT NULL,
   visibility public.campaign_role DEFAULT 'game_master'::public.campaign_role NOT NULL,
   kind public.resource_kind NOT NULL,
   image_url text,
   CONSTRAINT resources_pkey PRIMARY KEY (id),
-  CONSTRAINT resources_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT resources_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.campaigns(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT resources_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 ALTER TABLE public.resources OWNER TO postgres;
@@ -50,6 +52,7 @@ GRANT ALL ON TABLE public.resource_translations TO service_role;
 
 CREATE TYPE public.resource_row AS (
   id uuid,
+  source_id uuid,
   campaign_id uuid,
   campaign_name text,
   kind public.resource_kind,
@@ -276,6 +279,7 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT
     r.id,
+    r.source_id,
     r.campaign_id,
     c.name                          AS campaign_name,
     r.kind,
@@ -342,7 +346,7 @@ src AS (
   SELECT r.*
   FROM public.resources r
   JOIN prefs p ON true
-  JOIN public.campaign_resource_ids(p_campaign_id, p.campaign_filter) ci ON ci.id = r.campaign_id
+  JOIN public.campaign_resource_ids_with_deps(p_campaign_id, p.campaign_filter) ci ON ci.id = r.campaign_id
   JOIN public.campaigns c ON c.id = r.campaign_id
 ),
 filtered AS (
@@ -365,6 +369,7 @@ t AS (
 )
 SELECT
   f.id,
+  f.source_id,
   f.campaign_id,
   c.name                        AS campaign_name,
   f.kind,
@@ -522,9 +527,9 @@ DECLARE
 BEGIN
   UPDATE public.resources r
   SET (
-    visibility, kind, image_url
+    visibility, kind, image_url, source_id
   ) = (
-    SELECT rr.visibility, rr.kind, rr.image_url
+    SELECT rr.visibility, rr.kind, rr.image_url, rr.source_id
     FROM jsonb_populate_record(null::public.resources, to_jsonb(r) || p_resource) AS rr
   )
   WHERE r.id = p_id;
