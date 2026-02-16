@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFormData } from "~/models/resources/resource-form";
-import { useCampaignRoleOptions } from "~/models/types/campaign-role";
+import { useResourceVisibilityOptions } from "~/models/types/resource-visibility";
 import type { Form } from "~/utils/form";
 import {
   createInputField,
@@ -108,7 +108,7 @@ export function createResourceEditor<D extends ResourceFormData>(
       },
     },
     useField: form.createUseField("visibility"),
-    useOptions: useCampaignRoleOptions,
+    useOptions: useResourceVisibilityOptions,
   });
 
   //----------------------------------------------------------------------------

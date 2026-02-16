@@ -28,8 +28,8 @@ import StartingEquipmentEditor from "./starting-equipment-editor";
 //------------------------------------------------------------------------------
 
 export type CharacterClassEditorProps = {
-  campaignId: string;
   resource: CharacterClass;
+  sourceId: string;
 };
 
 export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
@@ -189,10 +189,10 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   const useStartingEquipment = form.createUseField("starting_equipment");
 
   function StartingEquipmentField({
-    campaignId,
+    sourceId,
     defaultValue,
   }: {
-    campaignId: string;
+    sourceId: string;
     defaultValue: StartingEquipmentGroup[];
   }) {
     const { error, ...rest } = useStartingEquipment(defaultValue);
@@ -201,7 +201,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
 
     return (
       <Field error={message} label={t("starting_equipment.label")}>
-        <StartingEquipmentEditor campaignId={campaignId} w="full" {...rest} />
+        <StartingEquipmentEditor sourceId={sourceId} w="full" {...rest} />
       </Field>
     );
   }
@@ -268,8 +268,8 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   //----------------------------------------------------------------------------
 
   return function CharacterClassEditor({
-    campaignId,
     resource,
+    sourceId,
   }: CharacterClassEditorProps) {
     const { lang } = useI18nLangContext(i18nContext);
 
@@ -314,18 +314,18 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
         </HStack>
 
         <ToolProficiencyIdsField
-          campaignId={campaignId}
           defaultValue={resource.tool_proficiency_ids}
+          sourceId={sourceId}
         />
 
         <StartingEquipmentField
-          campaignId={campaignId}
           defaultValue={resource.starting_equipment}
+          sourceId={sourceId}
         />
 
         <SpellIdsField
-          campaignId={campaignId}
           defaultValue={resource.spell_ids}
+          sourceId={sourceId}
           w="full"
         />
       </ResourceEditor>

@@ -35,7 +35,7 @@ export type ResourcesTableHeadExtra<
 //------------------------------------------------------------------------------
 
 export type ResourcesTableHeadProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesTableHead<
@@ -55,15 +55,15 @@ export function createResourcesTableHead<
     useSelectedFilteredResourceIds,
   } = store;
 
-  return function ResourcesTableHead({ campaignId }: ResourcesTableHeadProps) {
+  return function ResourcesTableHead({ sourceId }: ResourcesTableHeadProps) {
     const [lang] = useI18nLang();
 
     const { deselectAllResources, selectAllResources } =
-      useResourcesSelectionMethods(campaignId);
+      useResourcesSelectionMethods(sourceId);
 
-    const filteredResourceIds = useFilteredResourceIds(campaignId);
+    const filteredResourceIds = useFilteredResourceIds(sourceId);
     const selectedFilteredResourceIds =
-      useSelectedFilteredResourceIds(campaignId);
+      useSelectedFilteredResourceIds(sourceId);
 
     const selected =
       selectedFilteredResourceIds.length === filteredResourceIds.length ? true

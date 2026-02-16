@@ -34,11 +34,11 @@ export type ResourceCardPrintableProps<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
-  campaignId: string;
   css?: ResourcePokerCardProps<R, L>["css"];
   onPageCountChange?: (count: number | undefined) => void;
   palette: Palette;
   resourceId: string;
+  sourceId: string;
   zoom?: number;
 };
 
@@ -58,11 +58,11 @@ export function createResourceCardPrintable<
   const AlbumCard = extra.AlbumCard;
 
   function ResourcesAlbumCardPrintable({
-    campaignId,
     resourceId,
+    sourceId,
     ...rest
   }: ResourceCardPrintableProps<R, L>) {
-    const localizedResource = useLocalizedResource(campaignId, resourceId);
+    const localizedResource = useLocalizedResource(sourceId, resourceId);
 
     if (!localizedResource) return null;
 

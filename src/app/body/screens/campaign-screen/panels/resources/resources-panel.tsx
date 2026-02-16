@@ -74,12 +74,12 @@ export function createResourcesPanel<
 
   const ResourcesPrintMode = createResourcesPrintMode(store, context, album);
 
-  return function ResourcesPanel({ campaignId }: { campaignId: string }) {
+  return function ResourcesPanel({ sourceId }: { sourceId: string }) {
     const view = context.useView();
     const printMode = context.usePrintMode();
 
     if (printMode)
-      return <ResourcesPrintMode campaignId={campaignId} h="full" w="full" />;
+      return <ResourcesPrintMode h="full" sourceId={sourceId} w="full" />;
 
     return (
       <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
@@ -94,21 +94,21 @@ export function createResourcesPanel<
         >
           <HStack align="flex-start" justify="space-between" w="full">
             <HStack wrap="wrap">
-              <ResourcesActions campaignId={campaignId} />
-              <ResourcesGenericFilters campaignId={campaignId} />
+              <ResourcesActions sourceId={sourceId} />
+              <ResourcesGenericFilters sourceId={sourceId} />
               <Separator h="1.5em" orientation="vertical" />
-              <ResourcesCounter campaignId={campaignId} />
+              <ResourcesCounter sourceId={sourceId} />
             </HStack>
-            <ResourcesViewSwitch campaignId={campaignId} />
+            <ResourcesViewSwitch sourceId={sourceId} />
           </HStack>
-          <ResourceFilters campaignId={campaignId} w="full" wrap="wrap" />
+          <ResourceFilters sourceId={sourceId} w="full" wrap="wrap" />
         </VStack>
 
-        {view === "table" && <ResourcesTable campaignId={campaignId} />}
-        {view === "cards" && <ResourcesAlbum campaignId={campaignId} />}
+        {view === "table" && <ResourcesTable sourceId={sourceId} />}
+        {view === "cards" && <ResourcesAlbum sourceId={sourceId} />}
 
-        <ResourceCreator campaignId={campaignId} />
-        <ResourceUpdater campaignId={campaignId} />
+        <ResourceCreator sourceId={sourceId} />
+        <ResourceUpdater sourceId={sourceId} />
       </VStack>
     );
   };

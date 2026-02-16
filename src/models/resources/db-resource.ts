@@ -1,5 +1,5 @@
 import z from "zod";
-import { campaignRoleSchema } from "../types/campaign-role";
+import { resourceVisibilitySchema } from "../types/resource-visibility";
 
 //------------------------------------------------------------------------------
 // DB Resource
@@ -7,7 +7,7 @@ import { campaignRoleSchema } from "../types/campaign-role";
 
 export const dbResourceSchema = z.object({
   image_url: z.string().nullable(),
-  visibility: campaignRoleSchema,
+  visibility: resourceVisibilitySchema,
 });
 
 export type DBResource = z.infer<typeof dbResourceSchema>;

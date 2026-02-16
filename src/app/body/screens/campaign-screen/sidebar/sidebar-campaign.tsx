@@ -1,7 +1,7 @@
 import { VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useCanEditCampaign } from "~/models/campaign";
+import { useCanEditSourceResources } from "~/models/sources";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import { compareObjects } from "~/utils/object";
@@ -13,13 +13,13 @@ import SidebarSection from "./sidebar-section";
 //------------------------------------------------------------------------------
 
 export type SidebarCampaignProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
-export default function SidebarCampaign({ campaignId }: SidebarCampaignProps) {
+export default function SidebarCampaign({ sourceId }: SidebarCampaignProps) {
   const { t } = useI18nLangContext(i18nContext);
   const route = useRoute();
-  const canEdit = useCanEditCampaign(campaignId);
+  const canEdit = useCanEditSourceResources(sourceId);
 
   const localizedResourcePanels = useMemo(
     () =>

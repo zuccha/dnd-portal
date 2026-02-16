@@ -50,7 +50,7 @@ export type ResourcesPrintModeExtra<
 //------------------------------------------------------------------------------
 
 export type ResourcesPrintModeProps = StackProps & {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesPrintMode<
@@ -71,11 +71,11 @@ export function createResourcesPrintMode<
   );
 
   return function ResourcesPrintMode({
-    campaignId,
+    sourceId,
     ...rest
   }: ResourcesPrintModeProps) {
     const { t } = useI18nLangContext(i18nContext);
-    const resourceIds = store.useSelectedFilteredResourceIds(campaignId);
+    const resourceIds = store.useSelectedFilteredResourceIds(sourceId);
 
     const [paperLayout, setPaperLayout] = usePaperLayout();
     const [paperType, setPaperType] = usePaperType();
@@ -238,7 +238,6 @@ export function createResourcesPrintMode<
               >
                 {resourceIds.map((resourceId) => (
                   <ResourceCardPrintable
-                    campaignId={campaignId}
                     css={albumCardCss}
                     key={resourceId}
                     onPageCountChange={(count) => {
@@ -251,6 +250,7 @@ export function createResourcesPrintMode<
                     }}
                     palette={palette}
                     resourceId={resourceId}
+                    sourceId={sourceId}
                   />
                 ))}
               </Flex>

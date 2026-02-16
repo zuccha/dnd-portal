@@ -2,7 +2,7 @@ import z from "zod";
 import { type I18nNumber, i18nNumberSchema } from "~/i18n/i18n-number";
 import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
 import type { KeysOfType } from "~/types";
-import { campaignRoleSchema } from "../types/campaign-role";
+import { resourceVisibilitySchema } from "../types/resource-visibility";
 
 //------------------------------------------------------------------------------
 // Resource
@@ -11,11 +11,11 @@ import { campaignRoleSchema } from "../types/campaign-role";
 export const resourceSchema = z.object({
   id: z.uuid(),
 
-  campaign_id: z.string(),
-  campaign_name: z.string(),
+  source_code: z.string(),
+  source_id: z.string(),
 
   image_url: z.string().nullish(),
-  visibility: campaignRoleSchema,
+  visibility: resourceVisibilitySchema,
 
   name: i18nStringSchema,
   name_short: i18nStringSchema,
@@ -29,14 +29,14 @@ export type Resource = z.infer<typeof resourceSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultResource: Resource = {
-  campaign_id: "",
-  campaign_name: "",
   id: "",
   image_url: undefined,
   name: {},
   name_short: {},
   page: {},
-  visibility: "game_master",
+  source_code: "",
+  source_id: "",
+  visibility: "private",
 };
 
 //------------------------------------------------------------------------------

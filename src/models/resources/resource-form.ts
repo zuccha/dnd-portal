@@ -1,5 +1,5 @@
 import z from "zod";
-import { campaignRoleSchema } from "../types/campaign-role";
+import { resourceVisibilitySchema } from "../types/resource-visibility";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 
 //------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ export const resourceFormDataSchema = z.object({
   name: z.string(),
   name_short: z.string(),
   page: z.number(),
-  visibility: campaignRoleSchema,
+  visibility: resourceVisibilitySchema,
 });
 
 export type ResourceFormData = z.infer<typeof resourceFormDataSchema>;

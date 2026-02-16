@@ -17,13 +17,13 @@ import EquipmentBundleEditor from "../equipment-bundle-editor";
 //------------------------------------------------------------------------------
 
 export type StartingEquipmentEditorProps = StackProps & {
-  campaignId: string;
+  sourceId: string;
   value: StartingEquipmentGroup[];
   onValueChange: (value: StartingEquipmentGroup[]) => void;
 };
 
 export default function StartingEquipmentEditor({
-  campaignId,
+  sourceId,
   value,
   onValueChange,
   ...rest
@@ -36,12 +36,12 @@ export default function StartingEquipmentEditor({
     <VStack align="flex-start" {...rest}>
       {value.map((group, i) => (
         <StartingEquipmentGroupEditor
-          campaignId={campaignId}
           group={group}
           key={group.group}
           label={ti("group", `${i + 1}`)}
           onGroupChange={(g) => onValueChange(replaceItem(value, i, g))}
           onGroupRemove={() => onValueChange(removeItem(value, i))}
+          sourceId={sourceId}
           w="full"
         />
       ))}
@@ -65,7 +65,7 @@ export default function StartingEquipmentEditor({
 //------------------------------------------------------------------------------
 
 type StartingEquipmentGroupEditorProps = StackProps & {
-  campaignId: string;
+  sourceId: string;
   group: StartingEquipmentGroup;
   label: string;
   onGroupChange: (group: StartingEquipmentGroup) => void;
@@ -73,7 +73,7 @@ type StartingEquipmentGroupEditorProps = StackProps & {
 };
 
 function StartingEquipmentGroupEditor({
-  campaignId,
+  sourceId,
   label,
   group,
   onGroupChange,
@@ -132,7 +132,6 @@ function StartingEquipmentGroupEditor({
       >
         {options.map((option, i) => (
           <StartingEquipmentOptionEditor
-            campaignId={campaignId}
             key={option.option}
             label={numberToLetter(i)}
             onOptionChange={(o) =>
@@ -142,6 +141,7 @@ function StartingEquipmentGroupEditor({
               onGroupChange({ ...group, options: removeItem(options, i) })
             }
             option={option}
+            sourceId={sourceId}
           />
         ))}
       </SimpleGrid>
@@ -154,7 +154,7 @@ function StartingEquipmentGroupEditor({
 //------------------------------------------------------------------------------
 
 type StartingEquipmentOptionEditorProps = {
-  campaignId: string;
+  sourceId: string;
   label: string;
   onOptionChange: (option: StartingEquipmentOption) => void;
   onOptionRemove: () => void;
@@ -162,7 +162,7 @@ type StartingEquipmentOptionEditorProps = {
 };
 
 function StartingEquipmentOptionEditor({
-  campaignId,
+  sourceId,
   label,
   onOptionChange,
   onOptionRemove,
@@ -173,8 +173,8 @@ function StartingEquipmentOptionEditor({
       <Span p={2}>({label})</Span>
 
       <EquipmentBundleEditor
-        campaignId={campaignId}
         onValueChange={(bundle) => onOptionChange({ ...option, bundle })}
+        sourceId={sourceId}
         value={option.bundle}
         w="full"
         withinDialog

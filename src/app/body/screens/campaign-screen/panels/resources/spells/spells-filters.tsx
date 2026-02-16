@@ -17,11 +17,11 @@ import InclusionSelect from "~/ui/inclusion-select";
 //------------------------------------------------------------------------------
 
 export type SpellsFiltersProps = StackProps & {
-  campaignId: string;
+  sourceId: string;
 };
 
 export default function SpellsFilters({
-  campaignId,
+  sourceId,
   ...rest
 }: SpellsFiltersProps) {
   const { t } = useI18nLangContext(i18nContext);
@@ -35,7 +35,7 @@ export default function SpellsFilters({
   );
 
   const characterClassOptions =
-    characterClassStore.useResourceOptions(campaignId);
+    characterClassStore.useResourceOptions(sourceId);
   const schoolOptions = useSpellSchoolOptions();
   const castingTimeOptions = useSpellCastingTimeOptions();
 

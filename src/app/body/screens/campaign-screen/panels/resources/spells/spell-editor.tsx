@@ -30,8 +30,8 @@ import {
 //------------------------------------------------------------------------------
 
 export type SpellEditorProps = {
-  campaignId: string;
   resource: Spell;
+  sourceId: string;
 };
 
 export function createSpellEditor(form: Form<SpellFormData>) {
@@ -202,7 +202,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
   // Spell Editor
   //----------------------------------------------------------------------------
 
-  return function SpellEditor({ campaignId, resource }: SpellEditorProps) {
+  return function SpellEditor({ sourceId, resource }: SpellEditorProps) {
     const [lang] = useI18nLang();
 
     const { value: castingTime } = useCastingTime(resource.casting_time);
@@ -214,8 +214,8 @@ export function createSpellEditor(form: Form<SpellFormData>) {
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
           <CharacterClassIdsField
-            campaignId={campaignId}
             defaultValue={resource.character_class_ids}
+            sourceId={sourceId}
           />
           <SchoolField defaultValue={resource.school} w="20em" />
           <LevelField defaultValue={resource.level} w="10em" />

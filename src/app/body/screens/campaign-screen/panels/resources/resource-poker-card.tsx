@@ -71,7 +71,7 @@ export function ResourcePokerCard<
           name={localizedResource.name}
           pageIndicator={`1 / ${pageCount}`}
           palette={palette}
-          sourceName={localizedResource.campaign}
+          sourceName={localizedResource.source}
           sourcePage={localizedResource.page}
           zIndex={0 === selectedPageIndex ? 1 : 0}
           {...rest}
@@ -105,7 +105,7 @@ export function ResourcePokerCard<
             name={localizedResource.name}
             pageIndicator={`${adjustedPageIndex + 1} / ${pageCount}`}
             palette={palette}
-            sourceName={localizedResource.campaign}
+            sourceName={localizedResource.source}
             sourcePage={localizedResource.page}
             zIndex={adjustedPageIndex === selectedPageIndex ? 1 : 0}
             {...rest}
@@ -169,7 +169,7 @@ export function ResourcePokerCardPlaceholder<
       name={localizedResource.name}
       pageIndicator=""
       palette={palette}
-      sourceName={localizedResource.campaign}
+      sourceName={localizedResource.source}
       sourcePage={localizedResource.page}
       {...rest}
     />

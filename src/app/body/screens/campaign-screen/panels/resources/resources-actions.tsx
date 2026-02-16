@@ -2,7 +2,6 @@ import { Menu, Portal } from "@chakra-ui/react";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useCanEditCampaign } from "~/models/campaign";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -11,6 +10,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { useCanEditSourceResources } from "~/models/sources";
 import IconButton from "~/ui/icon-button";
 import { downloadFile } from "~/utils/download";
 import type { ResourcesContext } from "./resources-context";
@@ -20,7 +20,7 @@ import type { ResourcesContext } from "./resources-context";
 //------------------------------------------------------------------------------
 
 export type ResourcesActionsProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesActions<
@@ -32,12 +32,12 @@ export function createResourcesActions<
 >(store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
   const { useSelectedFilteredResourceIds, useLocalizeResource } = store;
 
-  return function ResourcesActions({ campaignId }: ResourcesActionsProps) {
+  return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
     const { t, tpi } = useI18nLangContext(i18nContext);
-    const canEdit = useCanEditCampaign(campaignId);
+    const canEdit = useCanEditSourceResources(sourceId);
     const selectedFilteredResourceIds =
-      useSelectedFilteredResourceIds(campaignId);
-    const localizeResource = useLocalizeResource(campaignId);
+      useSelectedFilteredResourceIds(sourceId);
+    const localizeResource = useLocalizeResource(sourceId);
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);

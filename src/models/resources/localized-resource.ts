@@ -14,13 +14,12 @@ export const localizedResourceSchema = <R extends Resource>(
 ) =>
   z.object({
     _raw: rawSchema,
-    campaign: z.string(),
-    campaign_with_page: z.string(),
     descriptor: z.string(),
     details: z.string(),
     id: z.uuid(),
     name: z.string(),
     page: z.string(),
+    source: z.string(),
   });
 
 export type LocalizedResource<R extends Resource> = z.infer<
@@ -41,16 +40,12 @@ export function useLocalizeResource<R extends Resource>(): (
       const page = translateNumber(resource.page ?? {}, lang);
       return {
         _raw: resource,
-        campaign: resource.campaign_name,
-        campaign_with_page:
-          page ?
-            ti("campaign_with_page", resource.campaign_name, `${page}`)
-          : resource.campaign_name,
         descriptor: "",
         details: "",
         id: resource.id,
         name: translate(resource.name, lang) || t("name.missing"),
         page: page ? ti("page", `${page}`) : "",
+        source: resource.source_code,
       };
     },
     [lang, t, ti],
@@ -73,16 +68,10 @@ export function formatInfo(entries: [string, string][]): string {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "campaign_with_page": {
-    en: "<1> (p. <2>)", // 1 = campaign, 2 = page
-    it: "<1> (p. <2>)", // 1 = campaign, 2 = page
-  },
-
   "name.missing": {
     en: "<Untitled>",
     it: "<Senza nome>",
   },
-
   "page": {
     en: "<1>", // 1 = page
     it: "<1>", // 1 = page

@@ -22,8 +22,8 @@ import { createEquipmentEditor } from "../equipment-editor";
 //------------------------------------------------------------------------------
 
 export type WeaponEditorProps = {
-  campaignId: string;
   resource: Weapon;
+  sourceId: string;
 };
 
 export function createWeaponEditor(form: Form<WeaponFormData>) {
@@ -165,7 +165,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
   // Weapon Editor
   //----------------------------------------------------------------------------
 
-  return function WeaponEditor({ campaignId, resource }: WeaponEditorProps) {
+  return function WeaponEditor({ resource, sourceId }: WeaponEditorProps) {
     const { value: ranged } = useRangedField(resource.ranged);
     const { value: properties } = usePropertiesField(resource.properties);
 
@@ -187,8 +187,8 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
           <DamageTypeField defaultValue={resource.damage_type} />
           {properties.includes("ammunition") && (
             <AmmunitionIdsField
-              campaignId={campaignId}
               defaultValue={resource.ammunition_ids}
+              sourceId={sourceId}
             />
           )}
         </HStack>

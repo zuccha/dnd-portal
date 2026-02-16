@@ -22,7 +22,7 @@ import {
   resourceLookupSchema,
 } from "./resource";
 import type { ResourceFilters } from "./resource-filters";
-import { useResourcesModulesFilter } from "./resources-modules-filter";
+import { useResourcesSourcesFilter } from "./resources-sources-filter";
 
 //------------------------------------------------------------------------------
 // Resource Store
@@ -65,7 +65,7 @@ export function createResourceStore<
     orderOptions: { label: I18nString; value: string }[];
     resourceSchema: ZodType<R>;
     translationFields: TranslationFields<R>[];
-    useLocalizeResource: (campaignId: string) => (resource: R) => L;
+    useLocalizeResource: (sourceId: string) => (resource: R) => L;
   },
 ) {
   const storeId = `resources[${storeName.p}]`;
@@ -108,14 +108,14 @@ export function createResourceStore<
     `${storeId}.create_resource`,
     undefined,
     async (
-      campaignId: string,
+      sourceId: string,
       lang: string,
       resource: Partial<DBR>,
       translation: Partial<DBT>,
     ): Promise<string | undefined> => {
       const { error } = await supabase.rpc(`create_${storeName.s}`, {
-        p_campaign_id: campaignId,
         p_lang: lang,
+        p_source_id: sourceId,
         [`p_${storeName.s}`]: resource,
         [`p_${storeName.s}_translation`]: translation,
       });
@@ -187,18 +187,18 @@ export function createResourceStore<
     `${storeId}.resource_ids`,
     [],
     async (
-      campaignId: string,
-      modules: Record<string, boolean | undefined>,
+      sourceId: string,
+      sources: Record<string, boolean | undefined>,
       filters: Omit<F, "name">,
       lang: string,
     ): Promise<string[]> => {
       const { order_by, order_dir, ...other } = filters;
       const { data, error } = await supabase.rpc(`fetch_${storeName.p}`, {
-        p_campaign_id: campaignId,
-        p_filters: { ...other, campaigns: modules },
+        p_filters: { ...other, sources },
         p_langs: [lang],
         p_order_by: order_by,
         p_order_dir: order_dir,
+        p_source_id: sourceId,
       });
 
       if (error) throw error;
@@ -251,12 +251,12 @@ export function createResourceStore<
   const [fetchResourceLookupIds, resourceLookupIdsCache] = createCachedRequest(
     `${storeId}.lookup_ids`,
     [],
-    async (campaignId: string): Promise<string[]> => {
-      if (!campaignId) return [];
+    async (sourceId: string): Promise<string[]> => {
+      if (!sourceId) return [];
 
       const { data, error } = await supabase.rpc(`fetch_resource_lookups`, {
-        p_campaign_id: campaignId,
         p_resource_kinds: kinds,
+        p_source_id: sourceId,
       });
 
       if (error) throw error;
@@ -330,20 +330,20 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourceIdsByParams(
-    campaignId: string,
-    modules: Record<string, boolean | undefined>,
+    sourceId: string,
+    sources: Record<string, boolean | undefined>,
     filters: Omit<F, "name">,
     lang: string,
   ): [string[], string] {
-    const { key } = fetchResourceIds(campaignId, modules, filters, lang);
+    const { key } = fetchResourceIds(sourceId, sources, filters, lang);
     return [resourceIdsCache.cache.useValue(key) ?? emptyIds, key];
   }
 
-  function useResourceIds(campaignId: string): string[] {
-    const [modules] = useResourcesModulesFilter(campaignId);
+  function useResourceIds(sourceId: string): string[] {
+    const [sources] = useResourcesSourcesFilter(sourceId);
     const [{ name: _name, ...filters }] = useFilters();
     const [lang] = useI18nLang();
-    const params = [campaignId, modules, filters, lang] as const;
+    const params = [sourceId, sources, filters, lang] as const;
     return useResourceIdsByParams(...params)[0];
   }
 
@@ -363,8 +363,8 @@ export function createResourceStore<
   // Use Resource Lookup Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useResourceLookupIds(campaignId: string): [string[], string] {
-    const { key } = fetchResourceLookupIds(campaignId);
+  function useResourceLookupIds(sourceId: string): [string[], string] {
+    const { key } = fetchResourceLookupIds(sourceId);
     return [resourceLookupIdsCache.cache.useValue(key) ?? emptyIds, key];
   }
 
@@ -390,23 +390,23 @@ export function createResourceStore<
   );
 
   function useFilteredResourceIdsByParams(
-    campaignId: string,
-    modules: Record<string, boolean | undefined>,
+    sourceId: string,
+    sources: Record<string, boolean | undefined>,
     { name, ...filters }: F,
     lang: string,
   ): string[] {
     const normalizedName = normalizeString(name);
-    const params = [campaignId, modules, filters, lang] as const;
+    const params = [sourceId, sources, filters, lang] as const;
     const [resourceIds] = useResourceIdsByParams(...params);
-    const key = campaignId;
+    const key = sourceId;
     return useFilteredResourceIdsWithKey(key, resourceIds, normalizedName)[0];
   }
 
-  function useFilteredResourceIds(campaignId: string): string[] {
-    const [modules] = useResourcesModulesFilter(campaignId);
+  function useFilteredResourceIds(sourceId: string): string[] {
+    const [sources] = useResourcesSourcesFilter(sourceId);
     const [filters] = useFilters();
     const [lang] = useI18nLang();
-    const params = [campaignId, modules, filters, lang] as const;
+    const params = [sourceId, sources, filters, lang] as const;
     return useFilteredResourceIdsByParams(...params);
   }
 
@@ -465,12 +465,12 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourcesSelectionMethodsByParams(
-    campaignId: string,
-    modules: Record<string, boolean | undefined>,
+    sourceId: string,
+    sources: Record<string, boolean | undefined>,
     filters: F,
     lang: string,
   ) {
-    const params = [campaignId, modules, filters, lang] as const;
+    const params = [sourceId, sources, filters, lang] as const;
     const filteredResourceIds = useFilteredResourceIdsByParams(...params);
 
     const deselectAllResources = useCallback(() => {
@@ -487,11 +487,11 @@ export function createResourceStore<
     };
   }
 
-  function useResourcesSelectionMethods(campaignId: string) {
-    const [modules] = useResourcesModulesFilter(campaignId);
+  function useResourcesSelectionMethods(sourceId: string) {
+    const [sources] = useResourcesSourcesFilter(sourceId);
     const [filters] = useFilters();
     const [lang] = useI18nLang();
-    const params = [campaignId, modules, filters, lang] as const;
+    const params = [sourceId, sources, filters, lang] as const;
     return useResourcesSelectionMethodsByParams(...params);
   }
 
@@ -505,22 +505,22 @@ export function createResourceStore<
   );
 
   function useSelectedFilteredResourceIdsByParams(
-    campaignId: string,
-    modules: Record<string, boolean | undefined>,
+    sourceId: string,
+    sources: Record<string, boolean | undefined>,
     filters: F,
     lang: string,
   ): string[] {
-    const params = [campaignId, modules, filters, lang] as const;
+    const params = [sourceId, sources, filters, lang] as const;
     const filteredResourceIds = useFilteredResourceIdsByParams(...params);
-    const key = campaignId;
+    const key = sourceId;
     return useSelectedFilteredResourceIdsWithKey(key, filteredResourceIds)[0];
   }
 
-  function useSelectedFilteredResourceIds(campaignId: string): string[] {
-    const [modules] = useResourcesModulesFilter(campaignId);
+  function useSelectedFilteredResourceIds(sourceId: string): string[] {
+    const [sources] = useResourcesSourcesFilter(sourceId);
     const [filters] = useFilters();
     const [lang] = useI18nLang();
-    const params = [campaignId, modules, filters, lang] as const;
+    const params = [sourceId, sources, filters, lang] as const;
     return useSelectedFilteredResourceIdsByParams(...params);
   }
 
@@ -533,10 +533,10 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizeResourceName(
-    campaignId: string,
+    sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const [lookupIds] = useResourceLookupIds(campaignId);
+    const [lookupIds] = useResourceLookupIds(sourceId);
 
     return useCallback(
       (resourceId: string) => {
@@ -553,10 +553,10 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizeResourceNameShort(
-    campaignId: string,
+    sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const [lookupIds] = useResourceLookupIds(campaignId);
+    const [lookupIds] = useResourceLookupIds(sourceId);
 
     return useCallback(
       (resourceId: string) => {
@@ -573,11 +573,11 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizedResource(
-    campaignId: string,
+    sourceId: string,
     resourceId: string,
   ): L | undefined {
     const [resource] = useResource(resourceId);
-    const localizeResource = useLocalizeResource(campaignId);
+    const localizeResource = useLocalizeResource(sourceId);
 
     return useMemo(() => {
       return resource ? localizeResource(resource) : undefined;
@@ -606,18 +606,18 @@ export function createResourceStore<
   );
 
   function useResourceOptionsByLang(
-    campaignId: string,
+    sourceId: string,
     lang: string,
   ): [ResourceOption[], string] {
-    const [lookupIds, lookupIdsKey] = useResourceLookupIds(campaignId);
+    const [lookupIds, lookupIdsKey] = useResourceLookupIds(sourceId);
     const key = hash([lookupIdsKey, lang]);
 
     return useCachedResourceOptions(key, lookupIds, lang);
   }
 
-  function useResourceOptions(campaignId: string): ResourceOption[] {
+  function useResourceOptions(sourceId: string): ResourceOption[] {
     const [lang] = useI18nLang();
-    return useResourceOptionsByLang(campaignId, lang)[0];
+    return useResourceOptionsByLang(sourceId, lang)[0];
   }
 
   //----------------------------------------------------------------------------

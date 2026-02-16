@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { useCanEditCampaign } from "~/models/campaign";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -15,6 +14,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { useCanEditSourceResources } from "~/models/sources";
 import { customPalettes } from "~/utils/palette";
 import {
   type ResourceCardInteractiveExtra,
@@ -37,7 +37,7 @@ export type ResourcesAlbumExtra<
 //------------------------------------------------------------------------------
 
 export type ResourcesAlbumProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesAlbum<
@@ -60,9 +60,9 @@ export function createResourcesAlbum<
   const { useFilteredResourceIds } = store;
   const { usePaletteName, useZoom } = context;
 
-  function ResourcesAlbum({ campaignId }: ResourcesAlbumProps) {
-    const editable = useCanEditCampaign(campaignId);
-    const filteredResourceIds = useFilteredResourceIds(campaignId);
+  function ResourcesAlbum({ sourceId }: ResourcesAlbumProps) {
+    const editable = useCanEditSourceResources(sourceId);
+    const filteredResourceIds = useFilteredResourceIds(sourceId);
     const paletteName = usePaletteName();
     const zoom = useZoom();
 
@@ -131,18 +131,18 @@ export function createResourcesAlbum<
             {filteredResourceIds.map((id) => {
               return visibleById[id] ?
                   <ResourceCardInteractive
-                    campaignId={campaignId}
                     editable={editable}
                     key={id}
                     palette={customPalettes[paletteName]}
                     resourceId={id}
+                    sourceId={sourceId}
                     zoom={zoom}
                   />
                 : <ResourceCardInteractive.Placeholder
-                    campaignId={campaignId}
                     key={id}
                     palette={customPalettes[paletteName]}
                     resourceId={id}
+                    sourceId={sourceId}
                     zoom={zoom}
                   />;
             })}

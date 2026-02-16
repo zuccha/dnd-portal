@@ -40,8 +40,8 @@ import {
 //------------------------------------------------------------------------------
 
 export type CreatureEditorProps = {
-  campaignId: string;
   resource: Creature;
+  sourceId: string;
 };
 
 export function createCreatureEditor(form: Form<CreatureFormData>) {
@@ -521,10 +521,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Creature Editor
   //----------------------------------------------------------------------------
 
-  return function CreatureEditor({
-    campaignId,
-    resource,
-  }: CreatureEditorProps) {
+  return function CreatureEditor({ resource, sourceId }: CreatureEditorProps) {
     const [lang] = useI18nLang();
     const { value: languageScope } = useLanguageScopeField(
       resource.language_scope,
@@ -540,15 +537,15 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         </HStack>
 
         {/* Tags */}
-        <TagIdsField campaignId={campaignId} defaultValue={resource.tag_ids} />
+        <TagIdsField defaultValue={resource.tag_ids} sourceId={sourceId} />
 
         {/* Treasures & Habitat */}
         <HStack align="flex-start" gap={4} w="full">
           <TreasuresField defaultValue={resource.treasures} />
           <HabitatsField defaultValue={resource.habitats} />
           <PlaneIdsField
-            campaignId={campaignId}
             defaultValue={resource.plane_ids}
+            sourceId={sourceId}
           />
         </HStack>
 
@@ -636,8 +633,8 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         {languageScope === "specific" && (
           <HStack align="flex-start" gap={2} w="full">
             <LanguageIdsField
-              campaignId={campaignId}
               defaultValue={resource.language_ids}
+              sourceId={sourceId}
             />
             <LanguageAdditionalCountField
               defaultValue={resource.language_additional_count}
@@ -647,7 +644,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         )}
 
         {/* Gear */}
-        <GearField campaignId={campaignId} defaultValue={resource.gear} />
+        <GearField defaultValue={resource.gear} sourceId={sourceId} />
 
         {/* Actions and Traits */}
         <TraitsField defaultValue={resource.traits[lang] ?? ""} />

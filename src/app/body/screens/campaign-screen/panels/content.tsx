@@ -1,6 +1,6 @@
 import { MapIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useSelectedCampaignId } from "~/models/campaign";
+import { useSelectedSourceId } from "~/models/sources";
 import { useRoute } from "~/navigation/navigation";
 import Redirect from "~/navigation/redirect";
 import { Route } from "~/navigation/routes";
@@ -26,7 +26,7 @@ export default function Content() {
   const { t } = useI18nLangContext(i18nContext);
 
   const route = useRoute();
-  const [selectedCampaignId] = useSelectedCampaignId();
+  const [selectedCampaignId] = useSelectedSourceId();
 
   if (!selectedCampaignId) return null;
 
@@ -41,7 +41,7 @@ export default function Content() {
     );
 
   const Panel = panels[route];
-  if (Panel) return <Panel campaignId={selectedCampaignId} />;
+  if (Panel) return <Panel sourceId={selectedCampaignId} />;
 
   return <Redirect route={Route._} />;
 }
@@ -50,7 +50,7 @@ export default function Content() {
 // Panels
 //------------------------------------------------------------------------------
 
-const panels: Record<string, React.FC<{ campaignId: string }>> = {
+const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesBestiaryMonsters]: CreaturesPanel,
   [Route.ResourcesBestiaryTags]: CreatureTagsPanel,
   [Route.ResourcesCharacterClasses]: CharacterClassesPanel,

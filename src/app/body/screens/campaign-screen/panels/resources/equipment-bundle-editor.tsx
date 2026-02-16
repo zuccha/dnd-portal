@@ -16,15 +16,15 @@ import { normalizeString } from "~/utils/string";
 //------------------------------------------------------------------------------
 
 export type EquipmentBundleEditorProps = StackProps & {
-  campaignId: string;
   onValueChange: (bundle: EquipmentBundle) => void;
+  sourceId: string;
   value: EquipmentBundle;
   withinDialog?: boolean;
 };
 
 export default function EquipmentBundleEditor({
-  campaignId,
   onValueChange,
+  sourceId,
   value,
   withinDialog,
   ...rest
@@ -36,8 +36,8 @@ export default function EquipmentBundleEditor({
   const [equipmentQuantity, setEquipmentQuantity] = useState(1);
   const [equipmentId, setEquipmentId] = useState("");
 
-  const options = equipmentStore.useResourceOptions(campaignId);
-  const localize = equipmentStore.useLocalizeResourceName(campaignId, lang);
+  const options = equipmentStore.useResourceOptions(sourceId);
+  const localize = equipmentStore.useLocalizeResourceName(sourceId, lang);
 
   const filterResourceOptions = useCallback(
     (option: ResourceOption, search: string): boolean => {

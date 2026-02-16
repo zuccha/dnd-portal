@@ -44,17 +44,17 @@ export type ResourceCardInteractiveExtra<
 //------------------------------------------------------------------------------
 
 export type ResourceCardInteractiveProps = {
-  campaignId: string;
   editable?: boolean;
   palette?: Palette;
   resourceId: string;
+  sourceId: string;
   zoom?: number;
 };
 
 export type ResourceCardInteractivePlaceholderProps = {
-  campaignId: string;
   palette?: Palette;
   resourceId: string;
+  sourceId: string;
   zoom?: number;
 };
 
@@ -78,13 +78,13 @@ export function createResourceCardInteractive<
   const AlbumCard = extra.AlbumCard;
 
   function ResourcesAlbumCardInteractive({
-    campaignId,
     editable,
     palette = defaultPalette,
     resourceId,
+    sourceId,
     zoom,
   }: ResourceCardInteractiveProps) {
-    const localizedResource = useLocalizedResource(campaignId, resourceId);
+    const localizedResource = useLocalizedResource(sourceId, resourceId);
 
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
     const pageCountRef = useRef(0);
@@ -190,12 +190,12 @@ export function createResourceCardInteractive<
   }
 
   function ResourcesAlbumCardInteractivePlaceholder({
-    campaignId,
+    sourceId,
     palette = defaultPalette,
     resourceId,
     zoom,
   }: ResourceCardInteractivePlaceholderProps) {
-    const localizedResource = useLocalizedResource(campaignId, resourceId);
+    const localizedResource = useLocalizedResource(sourceId, resourceId);
 
     if (!localizedResource) return null;
 

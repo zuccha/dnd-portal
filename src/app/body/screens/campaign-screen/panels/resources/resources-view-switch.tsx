@@ -19,7 +19,7 @@ import type { ResourcesContext } from "./resources-context";
 //------------------------------------------------------------------------------
 
 type ResourcesViewSwitchProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesViewSwitch<

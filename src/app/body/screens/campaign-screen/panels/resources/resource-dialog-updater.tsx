@@ -22,7 +22,7 @@ export type ResourceDialogUpdaterExtra<
   DBT extends DBResourceTranslation,
   FF extends Record<string, unknown>,
 > = {
-  Editor: React.FC<{ campaignId: string; resource: R }>;
+  Editor: React.FC<{ resource: R; sourceId: string }>;
   form: Form<FF>;
   parseFormData: (
     data: Partial<FF>,
@@ -34,7 +34,7 @@ export type ResourceDialogUpdaterExtra<
 //------------------------------------------------------------------------------
 
 export type ResourceDialogUpdaterProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourceDialogUpdater<
@@ -68,7 +68,7 @@ export function createResourceDialogUpdater<
     return undefined;
   }
 
-  return function ResourcesUpdater({ campaignId }: ResourceDialogUpdaterProps) {
+  return function ResourcesUpdater({ sourceId }: ResourceDialogUpdaterProps) {
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
     const editedResource = context.useEditedResource();
@@ -114,8 +114,8 @@ export function createResourceDialogUpdater<
         valid={valid}
       >
         <Editor
-          campaignId={campaignId}
           resource={editedResource ?? store.defaultResource}
+          sourceId={sourceId}
         />
       </ResourceDialog>
     );

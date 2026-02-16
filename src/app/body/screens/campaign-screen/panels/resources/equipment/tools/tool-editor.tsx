@@ -18,8 +18,8 @@ import { createEquipmentEditor } from "../equipment-editor";
 //------------------------------------------------------------------------------
 
 export type ToolEditorProps = {
-  campaignId: string;
   resource: Tool;
+  sourceId: string;
 };
 
 export function createToolEditor(form: Form<ToolFormData>) {
@@ -80,7 +80,7 @@ export function createToolEditor(form: Form<ToolFormData>) {
   // Tool Editor
   //----------------------------------------------------------------------------
 
-  return function ToolEditor({ campaignId, resource }: ToolEditorProps) {
+  return function ToolEditor({ sourceId, resource }: ToolEditorProps) {
     const [lang] = useI18nLang();
 
     return (
@@ -91,10 +91,7 @@ export function createToolEditor(form: Form<ToolFormData>) {
         </HStack>
 
         <UtilizeField defaultValue={resource.utilize[lang] ?? ""} />
-        <CraftIdsField
-          campaignId={campaignId}
-          defaultValue={resource.craft_ids}
-        />
+        <CraftIdsField defaultValue={resource.craft_ids} sourceId={sourceId} />
       </EquipmentEditor>
     );
   };

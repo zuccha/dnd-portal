@@ -22,7 +22,7 @@ export type ResourceCreatorExtra<
   DBT extends DBResourceTranslation,
   FF extends Record<string, unknown>,
 > = {
-  Editor: React.FC<{ campaignId: string; resource: R }>;
+  Editor: React.FC<{ resource: R; sourceId: string }>;
   form: Form<FF>;
   parseFormData: (
     data: Partial<FF>,
@@ -34,7 +34,7 @@ export type ResourceCreatorExtra<
 //------------------------------------------------------------------------------
 
 export type ResourceDialogCreatorProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourceDialogCreator<
@@ -50,7 +50,7 @@ export function createResourceDialogCreator<
   { Editor, form, parseFormData }: ResourceCreatorExtra<R, DBR, DBT, FF>,
 ) {
   async function submitForm(
-    campaignId: string,
+    sourceId: string,
     data: Partial<FF>,
     { lang }: { lang: string },
   ) {
@@ -59,7 +59,7 @@ export function createResourceDialogCreator<
 
     const { resource, translation } = errorOrData;
     const response = await store.createResource(
-      campaignId,
+      sourceId,
       lang,
       resource,
       translation,
@@ -73,15 +73,15 @@ export function createResourceDialogCreator<
     return undefined;
   }
 
-  return function ResourcesCreator({ campaignId }: ResourceDialogCreatorProps) {
+  return function ResourcesCreator({ sourceId }: ResourceDialogCreatorProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
 
     const createdResource = context.useCreatedResource();
 
     const [submit, saving] = form.useSubmit(
       useCallback(
-        (data) => submitForm(campaignId, data, { lang }),
-        [campaignId, lang],
+        (data) => submitForm(sourceId, data, { lang }),
+        [sourceId, lang],
       ),
     );
 
@@ -118,8 +118,8 @@ export function createResourceDialogCreator<
         valid={valid}
       >
         <Editor
-          campaignId={campaignId}
           resource={createdResource ?? store.defaultResource}
+          sourceId={sourceId}
         />
       </ResourceDialog>
     );

@@ -15,7 +15,7 @@ import type { ResourcesContext } from "./resources-context";
 //------------------------------------------------------------------------------
 
 export type ResourcesCounterProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesCounter<
@@ -25,9 +25,9 @@ export function createResourcesCounter<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(store: ResourceStore<R, L, F, DBR, DBT>, _context: ResourcesContext<R>) {
-  return function ResourcesCounter({ campaignId }: ResourcesCounterProps) {
+  return function ResourcesCounter({ sourceId }: ResourcesCounterProps) {
     const { tpi } = useI18nLangContext(i18nContext);
-    const filteredResourceIds = store.useFilteredResourceIds(campaignId);
+    const filteredResourceIds = store.useFilteredResourceIds(sourceId);
     const count = filteredResourceIds.length;
 
     return (

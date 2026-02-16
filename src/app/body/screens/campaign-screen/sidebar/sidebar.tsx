@@ -6,8 +6,8 @@ import useAuth from "~/auth/use-auth";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { i18nSystems, useI18nSystem } from "~/i18n/i18n-system";
-import { useSelectedCampaignId } from "~/models/campaign";
 import { useLangs } from "~/models/lang";
+import { useSelectedSourceId } from "~/models/sources";
 import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
 import IconButton from "~/ui/icon-button";
@@ -22,7 +22,7 @@ import SidebarCampaignSelector from "./sidebar-campaign-selector";
 //------------------------------------------------------------------------------
 
 export default function Sidebar() {
-  const [campaignId] = useSelectedCampaignId();
+  const [sourceId] = useSelectedSourceId();
   const [collapsed, setCollapsed] = useState(false);
 
   if (collapsed)
@@ -61,7 +61,7 @@ export default function Sidebar() {
         <SidebarCampaignSelector />
       </VStack>
 
-      {campaignId && <SidebarCampaign campaignId={campaignId} />}
+      {sourceId && <SidebarCampaign sourceId={sourceId} />}
 
       <VStack flex={1} justify="flex-end" px={6} w="full">
         <UserButton />

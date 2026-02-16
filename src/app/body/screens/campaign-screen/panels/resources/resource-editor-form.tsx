@@ -167,7 +167,7 @@ export function createDistanceInputField({
 //------------------------------------------------------------------------------
 
 export type EquipmentBundleFieldProps = Props<EquipmentBundle> & {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createEquipmentBundleField({
@@ -186,8 +186,8 @@ export function createEquipmentBundleField({
   const context = { ...i18nContext, ...i18nContextExtra };
 
   function EquipmentBundleField({
-    campaignId,
     defaultValue,
+    sourceId,
     ...rest
   }: EquipmentBundleFieldProps) {
     const { error, ...field } = useField(defaultValue);
@@ -198,7 +198,7 @@ export function createEquipmentBundleField({
       <Field error={message} label={t("label")} {...rest}>
         <EquipmentBundleEditor
           bgColor={translatable ? "bg.info" : undefined}
-          campaignId={campaignId}
+          sourceId={sourceId}
           withinDialog
           {...field}
         />
@@ -299,7 +299,7 @@ export function createMultipleSelectEnumField<T extends string>({
 //------------------------------------------------------------------------------
 
 export type MultipleSelectIdsFieldProps<T extends string> = Props<T[]> & {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createMultipleSelectIdsField<T extends string>({
@@ -312,17 +312,17 @@ export function createMultipleSelectIdsField<T extends string>({
   i18nContext: I18nFieldContext<"label" | "placeholder">;
   i18nContextExtra?: Record<string, I18nString>;
   translatable?: boolean;
-  useOptions: (campaignId: string) => SelectOption<T>[];
+  useOptions: (sourceId: string) => SelectOption<T>[];
   useField: (defaultValue: T[]) => FieldBag<string, T[]>;
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
   function MultipleSelectIdsField({
-    campaignId,
+    sourceId,
     defaultValue,
     ...rest
   }: MultipleSelectIdsFieldProps<T>) {
-    const options = useOptions(campaignId);
+    const options = useOptions(sourceId);
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
@@ -388,7 +388,7 @@ export function createNumberInputField({
 // Create Resource Search Field
 //------------------------------------------------------------------------------
 
-export type ResourceSearchFieldProps = Props<string[]> & { campaignId: string };
+export type ResourceSearchFieldProps = Props<string[]> & { sourceId: string };
 
 export function createResourceSearchField({
   i18nContext,
@@ -400,17 +400,17 @@ export function createResourceSearchField({
   i18nContext: I18nFieldContext<"label" | "placeholder">;
   i18nContextExtra?: Record<string, I18nString>;
   translatable?: boolean;
-  useOptions: (campaignId: string) => ResourceOption[];
+  useOptions: (sourceId: string) => ResourceOption[];
   useField: (defaultValue: string[]) => FieldBag<string, string[]>;
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
   function ResourceSearchField({
-    campaignId,
+    sourceId,
     defaultValue,
     ...rest
   }: ResourceSearchFieldProps) {
-    const options = useOptions(campaignId);
+    const options = useOptions(sourceId);
 
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);

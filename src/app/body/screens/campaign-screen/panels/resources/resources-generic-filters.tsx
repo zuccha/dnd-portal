@@ -3,7 +3,6 @@ import z from "zod";
 import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import { useSelectedCampaign } from "~/models/campaign";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -12,7 +11,8 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { useResourcesModulesFilter } from "~/models/resources/resources-modules-filter";
+import { useResourcesSourcesFilter } from "~/models/resources/resources-sources-filter";
+import { useSelectedSource } from "~/models/sources";
 import InclusionSelect from "~/ui/inclusion-select";
 import Input from "~/ui/input";
 import Select from "~/ui/select";
@@ -23,7 +23,7 @@ import type { ResourcesContext } from "./resources-context";
 //------------------------------------------------------------------------------
 
 export type ResourcesGenericFiltersProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesGenericFilters<
@@ -33,10 +33,12 @@ export function createResourcesGenericFilters<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(store: ResourceStore<R, L, F, DBR, DBT>, _context: ResourcesContext<R>) {
-  return function ResourcesModulesFilter(_props: ResourcesGenericFiltersProps) {
+  return function ResourcesGenericFilters(
+    _props: ResourcesGenericFiltersProps,
+  ) {
     const { lang, t } = useI18nLangContext(i18nContext);
-    const campaign = useSelectedCampaign(); // TODO: Get campaign from campaignId
-    const [modules, setModules] = useResourcesModulesFilter(campaign?.id ?? "");
+    const source = useSelectedSource(); // TODO: Get source from sourceId
+    const [sources, setSources] = useResourcesSourcesFilter(source?.id ?? "");
     const [filters, setFilters] = store.useFilters();
     const [tempFilters, setTempFilters] = useDebouncedState(
       filters,
@@ -54,21 +56,24 @@ export function createResourcesGenericFilters<
     );
 
     const options = useMemo(() => {
-      if (!campaign) return [];
+      if (!source) return [];
       return [
-        ...campaign.modules.map(({ id, name }) => ({ label: name, value: id })),
-        { label: campaign.name, value: campaign.id },
+        ...source.includes.map(({ code, id, name }) => ({
+          label: name[lang] ?? code,
+          value: id,
+        })),
+        { label: source.name[lang] ?? source.code, value: source.id },
       ];
-    }, [campaign]);
+    }, [lang, source]);
 
     return (
       <>
         <InclusionSelect
           disabled={!options.length}
-          includes={modules}
+          includes={sources}
           minW="10em"
           onValueChange={(partial) =>
-            setModules((prev) => ({ ...prev, ...partial }))
+            setSources((prev) => ({ ...prev, ...partial }))
           }
           options={options}
           size="sm"

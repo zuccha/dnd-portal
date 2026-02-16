@@ -2,37 +2,37 @@ import z from "zod";
 import { createLocalStoreSet } from "~/store/set/local-store-set";
 
 //------------------------------------------------------------------------------
-// Resources Modules Filter
+// Resources Sources Filter
 //------------------------------------------------------------------------------
 
-export const resourcesModulesFilterSchema = z.record(
+export const resourcesSourcesFilterSchema = z.record(
   z.string(),
   z.boolean().optional(),
 );
 
-export type ResourcesModulesFilter = z.infer<
-  typeof resourcesModulesFilterSchema
+export type ResourcesSourcesFilter = z.infer<
+  typeof resourcesSourcesFilterSchema
 >;
 
-export const defaultResourcesModulesFilter = {};
+export const defaultResourcesSourcesFilter = {};
 
 //------------------------------------------------------------------------------
-// Resources Modules Filter Store
+// Resources Sources Filter Store
 //------------------------------------------------------------------------------
 
-const resourcesModulesFilterStore = createLocalStoreSet<ResourcesModulesFilter>(
+const resourcesSourcesFilterStore = createLocalStoreSet<ResourcesSourcesFilter>(
   "resources.filters.modules",
   {},
-  resourcesModulesFilterSchema.parse,
+  resourcesSourcesFilterSchema.parse,
 );
 
 //------------------------------------------------------------------------------
-// Use Resources Modules Filter
+// Use Resources Sources Filter
 //------------------------------------------------------------------------------
 
-export function useResourcesModulesFilter(campaignId: string) {
-  return resourcesModulesFilterStore.use(
-    campaignId,
-    defaultResourcesModulesFilter,
+export function useResourcesSourcesFilter(sourceId: string) {
+  return resourcesSourcesFilterStore.use(
+    sourceId,
+    defaultResourcesSourcesFilter,
   );
 }

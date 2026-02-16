@@ -14,7 +14,7 @@ import type { ResourcesContext } from "./resources-context";
 //------------------------------------------------------------------------------
 
 export type ResourcesFiltersExtra = {
-  Filters: React.FC<StackProps & { campaignId: string }>;
+  Filters: React.FC<StackProps & { sourceId: string }>;
 };
 
 //------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ export type ResourcesFiltersExtra = {
 //------------------------------------------------------------------------------
 
 export type ResourcesFiltersProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesFilters<

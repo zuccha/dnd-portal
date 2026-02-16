@@ -1,5 +1,4 @@
 import { Box, Flex, Table } from "@chakra-ui/react";
-import { useCanEditCampaign } from "~/models/campaign";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -8,6 +7,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { useCanEditSourceResources } from "~/models/sources";
 import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
 import {
@@ -33,7 +33,7 @@ export type ResourcesTableExtra<
 //------------------------------------------------------------------------------
 
 type ResourcesTableProps = {
-  campaignId: string;
+  sourceId: string;
 };
 
 export function createResourcesTable<
@@ -50,9 +50,9 @@ export function createResourcesTable<
   const ResourcesTableHead = createResourcesTableHead(store, context, extra);
   const ResourcesTableRow = createResourcesTableRow(store, context, extra);
 
-  return function ResourcesTable({ campaignId }: ResourcesTableProps) {
-    const filteredResourceIds = store.useFilteredResourceIds(campaignId);
-    const editable = useCanEditCampaign(campaignId);
+  return function ResourcesTable({ sourceId }: ResourcesTableProps) {
+    const filteredResourceIds = store.useFilteredResourceIds(sourceId);
+    const editable = useCanEditSourceResources(sourceId);
 
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
@@ -67,16 +67,16 @@ export function createResourcesTable<
             variant="line"
           >
             <Table.Header>
-              <ResourcesTableHead campaignId={campaignId} />
+              <ResourcesTableHead sourceId={sourceId} />
             </Table.Header>
 
             <Table.Body>
               {filteredResourceIds.map((id) => (
                 <ResourcesTableRow
-                  campaignId={campaignId}
                   editable={editable}
                   key={id}
                   resourceId={id}
+                  sourceId={sourceId}
                 />
               ))}
             </Table.Body>

@@ -38,7 +38,7 @@ export type ResourcesTableRowExtra<
 //------------------------------------------------------------------------------
 
 type ResourcesTableRowProps = {
-  campaignId: string;
+  sourceId: string;
   editable: boolean;
   resourceId: string;
 };
@@ -63,13 +63,13 @@ export function createResourcesTableRow<
   const { useResourceExpansion } = context;
 
   return function ResourcesTableRow({
-    campaignId,
+    sourceId,
     editable,
     resourceId,
   }: ResourcesTableRowProps) {
     const [lang] = useI18nLang();
 
-    const localizedResource = useLocalizedResource(campaignId, resourceId);
+    const localizedResource = useLocalizedResource(sourceId, resourceId);
     const selected = useResourceSelection(resourceId);
     const { toggleResourceSelection } = useResourceSelectionMethods(resourceId);
     const expanded = useResourceExpansion(resourceId, false);
@@ -109,7 +109,7 @@ export function createResourcesTableRow<
           <Table.Cell textAlign="center" w="3em">
             <Icon
               Icon={
-                localizedResource._raw.visibility === "player" ?
+                localizedResource._raw.visibility === "public" ?
                   EyeIcon
                 : EyeClosedIcon
               }

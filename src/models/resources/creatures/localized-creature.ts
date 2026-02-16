@@ -110,7 +110,7 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 //------------------------------------------------------------------------------
 
 export function useLocalizeCreature(
-  campaignId: string,
+  sourceId: string,
 ): (creature: Creature) => LocalizedCreature {
   const localizeResource = useLocalizeResource<Creature>();
   const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
@@ -125,19 +125,19 @@ export function useLocalizeCreature(
   const translateCreatureCondition = useTranslateCreatureCondition(lang);
   const translateDamageType = useTranslateDamageType(lang);
   const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
-    campaignId,
+    sourceId,
     lang,
   );
   const localizeLanguageName = languageStore.useLocalizeResourceName(
-    campaignId,
+    sourceId,
     lang,
   );
   const localizePlaneName = planeStore.useLocalizeResourceName(
-    campaignId,
+    sourceId,
     lang,
   );
   const localizeTagName = creatureTagStore.useLocalizeResourceName(
-    campaignId,
+    sourceId,
     lang,
   );
   const formatCp = useFormatCp();
