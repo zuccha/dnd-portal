@@ -308,7 +308,7 @@ src AS (
   SELECT r.*
   FROM public.resources r
   JOIN prefs p ON true
-  JOIN public.source_resource_ids_with_deps(p_source_id, p.source_filter) si ON si.id = r.source_id
+  JOIN public.source_ids_with_includes(p_source_id, p.source_filter) si ON si.id = r.source_id
   LEFT JOIN public.sources s ON s.id = r.source_id
 ),
 filtered AS (
@@ -373,7 +373,7 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
   WITH source_ids AS (
     SELECT id
-    FROM public.source_resource_ids_with_deps(p_source_id, '{}'::jsonb)
+    FROM public.source_ids_with_includes_and_requires(p_source_id, '{}'::jsonb)
   )
   SELECT
     r.id,
