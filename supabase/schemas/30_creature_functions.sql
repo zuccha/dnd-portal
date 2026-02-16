@@ -336,9 +336,6 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 WITH prefs AS (
   SELECT
-    -- campaign/modules include/exclude filter (keys are campaign or module ids)
-    coalesce(p_filters->'sources', '{}'::jsonb) AS campaign_filter,
-
     -- types
     (
       SELECT coalesce(array_agg(lower(e.key)::public.creature_type), null)
