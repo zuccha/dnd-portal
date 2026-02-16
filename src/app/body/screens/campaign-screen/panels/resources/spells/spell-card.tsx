@@ -58,14 +58,18 @@ export function SpellCard({
               <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
                 {t("casting_time")}
               </Span>
-              <Span textAlign="center">{casting_time}</Span>
+              <Span lineHeight={0.9} px={PokerCard.rem0250} textAlign="center">
+                {casting_time}
+              </Span>
             </VStack>
 
             <VStack gap={0} pb={PokerCard.rem0125}>
               <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
                 {t("range")}
               </Span>
-              <Span textAlign="center">{range}</Span>
+              <Span lineHeight={0.9} px={PokerCard.rem0250} textAlign="center">
+                {range}
+              </Span>
             </VStack>
 
             <Star />
@@ -74,14 +78,18 @@ export function SpellCard({
               <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
                 {t("components")}
               </Span>
-              <Span textAlign="center">{components}</Span>
+              <Span lineHeight={0.9} px={PokerCard.rem0250} textAlign="center">
+                {components}
+              </Span>
             </VStack>
 
             <VStack gap={0} pt={PokerCard.rem0125}>
               <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
                 {t("duration")}
               </Span>
-              <Span textAlign="center">{duration}</Span>
+              <Span lineHeight={0.9} px={PokerCard.rem0250} textAlign="center">
+                {duration}
+              </Span>
             </VStack>
           </SimpleGrid>
 
