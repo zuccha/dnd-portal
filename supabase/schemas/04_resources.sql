@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS public.resources (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   source_id uuid,
-  visibility public.campaign_role DEFAULT 'game_master'::public.campaign_role NOT NULL,
+  visibility public.resource_visibility DEFAULT 'private'::public.resource_visibility NOT NULL,
   kind public.resource_kind NOT NULL,
   image_url text,
   CONSTRAINT resources_pkey PRIMARY KEY (id),
@@ -53,7 +53,7 @@ CREATE TYPE public.resource_row AS (
   source_id uuid,
   source_code text,
   kind public.resource_kind,
-  visibility public.campaign_role,
+  visibility public.resource_visibility,
   image_url text,
   name jsonb,
   name_short jsonb,
@@ -78,7 +78,7 @@ AS $$
       AND (
         public.can_edit_source_resources(r.source_id)
         OR (
-          r.visibility = 'player'::public.campaign_role
+          r.visibility = 'public'::public.resource_visibility
           AND public.can_read_source(r.source_id)
         )
       )

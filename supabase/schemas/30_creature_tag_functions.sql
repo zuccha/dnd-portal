@@ -8,7 +8,7 @@ CREATE TYPE public.creature_tag_row AS (
   source_code text,
   id uuid,
   kind public.resource_kind,
-  visibility public.campaign_role,
+  visibility public.resource_visibility,
   image_url text,
   name jsonb,
   name_short jsonb,

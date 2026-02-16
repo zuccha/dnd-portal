@@ -8,7 +8,7 @@ CREATE TYPE public.eldritch_invocation_row AS (
   source_id uuid,
   source_code text,
   kind public.resource_kind,
-  visibility public.campaign_role,
+  visibility public.resource_visibility,
   image_url text,
   -- Resource Translation
   name jsonb,
