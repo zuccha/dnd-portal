@@ -35,11 +35,7 @@ export function WeaponCard({
         <PokerCard.Arrow
           label={ti("damage", localizedResource.damage_type)}
           palette={palette}
-          value={
-            localizedResource.damage_versatile ?
-              `${localizedResource.damage} (${localizedResource.damage_versatile})`
-            : localizedResource.damage
-          }
+          value={localizedResource.damage_line}
         />
       }
       localizedResource={localizedResource}

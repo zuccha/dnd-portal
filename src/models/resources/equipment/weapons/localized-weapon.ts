@@ -28,6 +28,7 @@ export const localizedWeaponSchema = localizedEquipmentSchema(
 ).extend({
   damage: z.string(),
   damage_extended: z.string(),
+  damage_line: z.string(),
   damage_type: z.string(),
   damage_versatile: z.string().nullish(),
   info: z.string(),
@@ -66,6 +67,17 @@ export function useLocalizeWeapon(
     (weapon: Weapon): LocalizedWeapon => {
       const damage_type = translateDamageType(weapon.damage_type).label;
       const damage_extended = ti("damage_extended", weapon.damage, damage_type);
+
+      const damage_modifier =
+        weapon.properties.includes("finesse") ? t("damage_modifier.dex_or_str")
+        : !weapon.ranged || weapon.properties.includes("throw") ?
+          t("damage_modifier.str")
+        : t("damage_modifier.dex");
+
+      const damage_line =
+        weapon.damage_versatile ?
+          `${weapon.damage} (${weapon.damage_versatile}) + ${damage_modifier}`
+        : `${weapon.damage} + ${damage_modifier}`;
 
       const has_range = !!(weapon.range_long || weapon.range_short);
       const ms = cmToDistanceValue(weapon.range_short ?? 0, "m");
@@ -114,6 +126,7 @@ export function useLocalizeWeapon(
 
         damage: weapon.damage,
         damage_extended,
+        damage_line,
         damage_type,
         damage_versatile: weapon.damage_versatile,
         info,
@@ -154,6 +167,18 @@ const i18nContext = {
   "damage_extended": {
     en: "<1> <2>", // 1 = damage value, 2 = damage type
     it: "<1> <2>", // 1 = damage value, 2 = damage type
+  },
+  "damage_modifier.dex": {
+    en: "Dex. mod.",
+    it: "mod. Des.",
+  },
+  "damage_modifier.dex_or_str": {
+    en: "Dex./Str. mod.",
+    it: "mod. Des./For.",
+  },
+  "damage_modifier.str": {
+    en: "Str. mod.",
+    it: "mod. For.",
   },
   "mastery": {
     en: "##Weapon Mastery: <1>##\r<2>", // 1 = mastery, 2 = ruling
