@@ -636,7 +636,7 @@ AS $$
       JOIN tree t ON sr.source_id = t.id
       WHERE NOT sr.required_id = ANY(t.path)
     )
-    SELECT t.id
+    SELECT DISTINCT t.id
     FROM tree t
     WHERE public.can_read_source(t.id)
   ) d ON true
