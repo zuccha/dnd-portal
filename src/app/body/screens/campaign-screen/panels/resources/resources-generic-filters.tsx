@@ -58,13 +58,10 @@ export function createResourcesGenericFilters<
     const options = useMemo(() => {
       if (!source) return [];
       return [
-        ...source.includes.map(({ code, id, name }) => ({
-          label: name[lang] ?? code,
-          value: id,
-        })),
-        { label: source.name[lang] ?? source.code, value: source.id },
+        ...source.includes.map(({ code, id }) => ({ label: code, value: id })),
+        { label: source.code, value: source.id },
       ];
-    }, [lang, source]);
+    }, [source]);
 
     return (
       <>

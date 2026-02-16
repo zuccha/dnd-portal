@@ -1,4 +1,12 @@
-import { Box, HStack, Popover, Portal, Span, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Popover,
+  Portal,
+  Span,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { ChevronDownIcon, XIcon } from "lucide-react";
 import Button, { type ButtonProps } from "./button";
 import Icon from "./icon";
@@ -66,7 +74,7 @@ export default function InclusionSelect({
       <Portal>
         <Popover.Positioner>
           <Popover.Content p={2} width="auto">
-            <VStack align="flex-start" overflow="auto">
+            <VStack align="flex-start" overflow="hidden">
               {options.map(({ label, value }) => (
                 <InclusionButton
                   include={includes[value]}
@@ -76,7 +84,7 @@ export default function InclusionSelect({
                   size="xs"
                   w="full"
                 >
-                  {label}
+                  <Text truncate>{label}</Text>
                 </InclusionButton>
               ))}
             </VStack>
