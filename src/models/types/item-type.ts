@@ -28,7 +28,7 @@ export const {
   useTranslate: useTranslateItemType,
   useTranslations: useItemTypeTranslations,
 } = createTypeTranslationHooks(itemTypes, {
-  other: { en: "Other", it: "Altro" },
+  other: { en: "Generic", it: "Generico" },
   potion: { en: "Potion", it: "Pozione" },
   ring: { en: "Ring", it: "Anello" },
   rod: { en: "Rod", it: "Verga" },

@@ -12,6 +12,8 @@ import { type DBItem, type DBItemTranslation } from "./db-item";
 //------------------------------------------------------------------------------
 
 export const itemFormDataSchema = equipmentFormDataSchema.extend({
+  charges: z.number(),
+  consumable: z.boolean(),
   type: itemTypeSchema,
 });
 
@@ -30,6 +32,8 @@ export function itemFormDataToDB(data: Partial<ItemFormData>): {
   return {
     resource: {
       ...resource,
+      charges: data.charges ?? null,
+      consumable: data.consumable,
       type: data.type,
     },
     translation: {

@@ -12,6 +12,8 @@ import {
 //------------------------------------------------------------------------------
 
 export const itemSchema = equipmentSchema.extend({
+  charges: z.number().nullish(),
+  consumable: z.boolean(),
   type: itemTypeSchema,
 });
 
@@ -24,6 +26,8 @@ export type Item = z.infer<typeof itemSchema>;
 export const defaultItem: Item = {
   ...defaultEquipment,
 
+  charges: 0,
+  consumable: false,
   type: "other",
 };
 

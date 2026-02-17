@@ -10,6 +10,8 @@ import {
 //------------------------------------------------------------------------------
 
 export const dbItemSchema = dbEquipmentSchema.extend({
+  charges: z.number().nullable(),
+  consumable: z.boolean(),
   type: itemTypeSchema,
 });
 
