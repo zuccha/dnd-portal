@@ -70,4 +70,5 @@ export const defaultSpell: Spell = {
 export const spellTranslationFields: TranslationFields<Spell>[] = [
   ...resourceTranslationFields,
   "description",
+  "upgrade",
 ];
