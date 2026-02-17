@@ -20,6 +20,8 @@ CREATE TYPE public.item_row AS (
   weight integer,
   -- Item Translation
   type public.item_type,
+  charges integer,
+  consumable boolean,
   notes jsonb
 );
 
@@ -49,8 +51,8 @@ BEGIN
     p_item_translation
   );
 
-  INSERT INTO public.items (resource_id, type)
-  VALUES (v_id, r.type);
+  INSERT INTO public.items (resource_id, type, charges, consumable)
+  VALUES (v_id, r.type, r.charges, r.consumable);
 
   perform public.upsert_item_translation(v_id, p_lang, p_item_translation);
 
@@ -89,6 +91,8 @@ AS $$
     e.rarity,
     e.weight,
     i.type,
+    i.charges,
+    i.consumable,
     e.notes
   FROM public.fetch_equipment(p_id) AS e
   JOIN public.items i ON i.resource_id = e.id
@@ -150,6 +154,8 @@ src AS (
     b.rarity,
     b.weight,
     i.type,
+    i.charges,
+    i.consumable,
     b.notes
   FROM base b
   JOIN public.items i ON i.resource_id = b.id
@@ -176,6 +182,8 @@ SELECT
   s.rarity,
   s.weight,
   s.type,
+  s.charges,
+  s.consumable,
   s.notes
 FROM filtered s
 ORDER BY
@@ -251,9 +259,11 @@ BEGIN
 
   UPDATE public.items i
   SET (
-    type
+    type,
+    charges,
+    consumable
   ) = (
-    SELECT r.type
+    SELECT r.type, r.charges, r.consumable
     FROM jsonb_populate_record(null::public.items, to_jsonb(i) || p_item) AS r
   )
   WHERE i.resource_id = p_id;

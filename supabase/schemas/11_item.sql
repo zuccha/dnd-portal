@@ -5,8 +5,11 @@
 CREATE TABLE IF NOT EXISTS public.items (
   resource_id uuid NOT NULL,
   type public.item_type DEFAULT 'other'::public.item_type NOT NULL,
+  charges integer,
+  consumable boolean DEFAULT false NOT NULL,
   CONSTRAINT items_pkey PRIMARY KEY (resource_id),
-  CONSTRAINT items_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.equipments(resource_id) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT items_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.equipments(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT items_charges_non_negative CHECK (charges IS NULL OR charges >= 0)
 );
 
 ALTER TABLE public.items OWNER TO postgres;
