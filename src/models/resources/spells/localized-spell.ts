@@ -173,7 +173,7 @@ const i18nContext = {
   },
   "subtitle/*": {
     en: "Level <2> <1>", // 1 = school, 2 = level
-    it: "<1> di <2>˚ livello", // 1 = school, 2 = level
+    it: "<1> di <2>° livello", // 1 = school, 2 = level
   },
   "subtitle/0": {
     en: "<1> Cantrip", // 1 = school
