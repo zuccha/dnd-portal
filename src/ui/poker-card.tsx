@@ -132,6 +132,7 @@ function Frame({
           color="white"
           fontFamily="Mr Eaves Alt"
           fontSize={rem0750}
+          fontWeight="bold"
           gap={0}
           pb={`${remToIn(0.5) + bleed.y}in`}
           pt={rem0500}
