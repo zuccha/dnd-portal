@@ -14,7 +14,11 @@ export const characterSubclassOrderOptions = resourceOrderOptions;
 // Character Subclass Filters
 //------------------------------------------------------------------------------
 
-export const characterSubclassFiltersSchema = resourceFiltersSchema.extend({});
+export const characterSubclassFiltersSchema = resourceFiltersSchema.extend({
+  character_class_ids: z
+    .partialRecord(z.uuid(), z.boolean().optional())
+    .optional(),
+});
 
 export type CharacterSubclassFilters = z.infer<
   typeof characterSubclassFiltersSchema
