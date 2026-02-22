@@ -109,7 +109,21 @@ RETURNS SETOF public.character_subclass_row
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
 AS $$
-WITH base AS (
+WITH prefs AS (
+  SELECT
+    -- class ids
+    (
+      SELECT coalesce(array_agg((e.key)::uuid), null)
+      FROM jsonb_each_text(p_filters->'character_class_ids') AS e(key, value)
+      WHERE e.value = 'true'
+    ) AS class_ids_inc,
+    (
+      SELECT coalesce(array_agg((e.key)::uuid), null)
+      FROM jsonb_each_text(p_filters->'character_class_ids') AS e(key, value)
+      WHERE e.value = 'false'
+    ) AS class_ids_exc
+),
+base AS (
   SELECT r.*
   FROM public.fetch_resources(p_source_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
   WHERE r.kind = 'character_subclass'::public.resource_kind
@@ -128,6 +142,13 @@ src AS (
     s.character_class_id
   FROM base b
   JOIN public.character_subclasses s ON s.resource_id = b.id
+),
+filtered AS (
+  SELECT s.*
+  FROM src s, prefs p
+  WHERE
+        (p.class_ids_inc IS NULL OR s.character_class_id = any(p.class_ids_inc))
+    AND (p.class_ids_exc IS NULL OR NOT (s.character_class_id = any(p.class_ids_exc)))
 )
 SELECT
   s.source_id,
@@ -140,7 +161,7 @@ SELECT
   s.name_short,
   s.page,
   s.character_class_id
-FROM src s
+FROM filtered s
 ORDER BY
   CASE
     WHEN p_order_by = 'name' AND p_order_dir = 'asc'
