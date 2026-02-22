@@ -13,6 +13,7 @@ export const Route = {
   ResourcesCharacterEldritchInvocations:
     "/resources/character/eldritch-invocations",
   ResourcesCharacterSpells: "/resources/character/spells",
+  ResourcesCharacterSubclasses: "/resources/character/subclasses",
   ResourcesEquipment: "/resources/equipment",
   ResourcesEquipmentArmors: "/resources/equipment/armors",
   ResourcesEquipmentItems: "/resources/equipment/items",

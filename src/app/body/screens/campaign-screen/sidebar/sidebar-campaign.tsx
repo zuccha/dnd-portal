@@ -95,6 +95,10 @@ const i18nContext = {
     en: "Spells",
     it: "Incantesimi",
   },
+  [Route.ResourcesCharacterSubclasses]: {
+    en: "Subclasses",
+    it: "Sottoclassi",
+  },
   [Route.ResourcesEquipment]: {
     en: "Equipment",
     it: "Equipaggiamento",

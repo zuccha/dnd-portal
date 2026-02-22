@@ -7,6 +7,7 @@ import { z } from "zod";
 export const resourceKindSchema = z.enum([
   "armor",
   "character_class",
+  "character_subclass",
   "creature",
   "creature_tag",
   "eldritch_invocation",

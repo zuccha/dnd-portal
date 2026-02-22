@@ -6,6 +6,7 @@ import Redirect from "~/navigation/redirect";
 import { Route } from "~/navigation/routes";
 import EmptyState from "~/ui/empty-state";
 import CharacterClassesPanel from "./resources/character-classes/character-classes-panel";
+import CharacterSubclassesPanel from "./resources/character-subclasses/character-subclasses-panel";
 import CreatureTagsPanel from "./resources/creature-tag/creature-tags-panel";
 import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
@@ -56,6 +57,7 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesCharacterClasses]: CharacterClassesPanel,
   [Route.ResourcesCharacterEldritchInvocations]: EldritchInvocationsPanel,
   [Route.ResourcesCharacterSpells]: SpellsPanel,
+  [Route.ResourcesCharacterSubclasses]: CharacterSubclassesPanel,
   [Route.ResourcesEquipmentArmors]: ArmorsPanel,
   [Route.ResourcesEquipmentItems]: ItemsPanel,
   [Route.ResourcesEquipmentTools]: ToolsPanel,

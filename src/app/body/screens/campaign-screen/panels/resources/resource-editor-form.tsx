@@ -519,6 +519,54 @@ export function createSelectField<T>({
 }
 
 //------------------------------------------------------------------------------
+// Create Select Id Field
+//------------------------------------------------------------------------------
+
+export type SelectIdFieldProps<T extends string> = Props<T> & {
+  sourceId: string;
+};
+
+export function createSelectIdField<T extends string>({
+  i18nContext,
+  i18nContextExtra,
+  translatable,
+  useOptions,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  translatable?: boolean;
+  useOptions: (sourceId: string) => SelectOption<T>[];
+  useField: (defaultValue: T) => FieldBag<string, T>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function SelectIdField({
+    sourceId,
+    defaultValue,
+    ...rest
+  }: SelectIdFieldProps<T>) {
+    const options = useOptions(sourceId);
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <Select.Enum
+          bgColor={translatable ? "bg.info" : undefined}
+          options={options}
+          withinDialog
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return SelectIdField;
+}
+
+//------------------------------------------------------------------------------
 // Create Switch Field
 //------------------------------------------------------------------------------
 

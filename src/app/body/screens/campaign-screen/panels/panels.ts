@@ -19,6 +19,7 @@ export const characterPanelIds = [
   Route.ResourcesCharacterClasses,
   Route.ResourcesCharacterEldritchInvocations,
   Route.ResourcesCharacterSpells,
+  Route.ResourcesCharacterSubclasses,
 ] as const;
 
 export type CharacterPanelId = (typeof characterPanelIds)[number];
