@@ -10,8 +10,8 @@ const separatorColor = "#3F3F46";
 // Sizes
 //------------------------------------------------------------------------------
 
-const cardH = 3.5;
-const cardW = 2.5;
+const cardH = 3.48;
+const cardW = 2.48;
 
 const remToIn = (rem: number) => (cardH * rem) / 28;
 
@@ -134,9 +134,9 @@ function Frame({
           fontSize={rem0750}
           fontWeight="bold"
           gap={0}
-          pb={`${remToIn(0.5) + bleed.y}in`}
+          pb={`${remToIn(0.625) + bleed.y}in`}
           pt={rem0500}
-          px={`${remToIn(0.75) + bleed.x}in`}
+          px={`${remToIn(1) + bleed.x}in`}
           textOverflow="ellipsis"
           textTransform="uppercase"
           w="full"
@@ -204,9 +204,9 @@ function Arrow({ label, palette, value }: ArrowProps) {
         borderYWidth={px1}
         clipPath={`polygon(0 50%, ${rem1000} 0, 100% 0, 100% 100%, ${rem1000} 100%)`}
         gap={0}
-        mr={`-${rem0750}`}
+        mr={`-${rem1000}`}
         pl={rem1500}
-        pr={`${remToIn(0.75) + bleed.x}in`}
+        pr={`${remToIn(1) + bleed.x}in`}
         py={rem0250}
       >
         <Span fontStyle="italic" fontWeight="bold">

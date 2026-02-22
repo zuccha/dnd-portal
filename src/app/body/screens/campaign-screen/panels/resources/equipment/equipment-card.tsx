@@ -35,7 +35,7 @@ export function EquipmentCard<
   return (
     <ResourcePokerCard
       firstPageInfo={
-        <HStack justify="space-between" px={PokerCard.rem0750} w="full">
+        <HStack justify="space-between" px={PokerCard.rem1000} w="full">
           <VStack align="flex-start" gap={0}>
             <HStack gap={PokerCard.rem0250}>
               <Icon Icon={ScaleIcon} size="xs" />
