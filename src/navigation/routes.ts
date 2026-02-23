@@ -5,14 +5,15 @@
 export const Route = {
   _: "/",
   Resources: "/resources",
+  ResourcesAbilities: "/resources/abilities",
+  ResourcesAbilitiesEldritchInvocations:
+    "/resources/abilities/eldritch-invocations",
+  ResourcesAbilitiesSpells: "/resources/abilities/spells",
   ResourcesBestiary: "/resources/bestiary",
   ResourcesBestiaryMonsters: "/resources/bestiary/monsters",
   ResourcesBestiaryTags: "/resources/bestiary/tags",
   ResourcesCharacter: "/resources/character",
   ResourcesCharacterClasses: "/resources/character/classes",
-  ResourcesCharacterEldritchInvocations:
-    "/resources/character/eldritch-invocations",
-  ResourcesCharacterSpells: "/resources/character/spells",
   ResourcesCharacterSubclasses: "/resources/character/subclasses",
   ResourcesEquipment: "/resources/equipment",
   ResourcesEquipmentArmors: "/resources/equipment/armors",

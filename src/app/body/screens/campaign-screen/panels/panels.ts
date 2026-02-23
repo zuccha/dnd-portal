@@ -17,12 +17,21 @@ export type BestiaryPanelId = (typeof bestiaryPanelIds)[number];
 
 export const characterPanelIds = [
   Route.ResourcesCharacterClasses,
-  Route.ResourcesCharacterEldritchInvocations,
-  Route.ResourcesCharacterSpells,
   Route.ResourcesCharacterSubclasses,
 ] as const;
 
 export type CharacterPanelId = (typeof characterPanelIds)[number];
+
+//------------------------------------------------------------------------------
+// Abilities Panel Ids
+//------------------------------------------------------------------------------
+
+export const abilitiesPanelIds = [
+  Route.ResourcesAbilitiesEldritchInvocations,
+  Route.ResourcesAbilitiesSpells,
+] as const;
+
+export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number];
 
 //------------------------------------------------------------------------------
 // Equipment Panel Ids
@@ -54,6 +63,7 @@ export type WorldPanelId = (typeof worldPanelIds)[number];
 
 export const resourcePanels = [
   { id: Route.ResourcesCharacter, items: characterPanelIds },
+  { id: Route.ResourcesAbilities, items: abilitiesPanelIds },
   { id: Route.ResourcesBestiary, items: bestiaryPanelIds },
   { id: Route.ResourcesEquipment, items: equipmentPanelIds },
   { id: Route.ResourcesWorld, items: worldPanelIds },

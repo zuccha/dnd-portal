@@ -67,6 +67,18 @@ export default function SidebarCampaign({ sourceId }: SidebarCampaignProps) {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  [Route.ResourcesAbilities]: {
+    en: "Abilities",
+    it: "Abilità",
+  },
+  [Route.ResourcesAbilitiesEldritchInvocations]: {
+    en: "Eldritch Invocations",
+    it: "Suppliche Occulte",
+  },
+  [Route.ResourcesAbilitiesSpells]: {
+    en: "Spells",
+    it: "Incantesimi",
+  },
   [Route.ResourcesBestiary]: {
     en: "Creatures",
     it: "Creature",
@@ -86,14 +98,6 @@ const i18nContext = {
   [Route.ResourcesCharacterClasses]: {
     en: "Classes",
     it: "Classi",
-  },
-  [Route.ResourcesCharacterEldritchInvocations]: {
-    en: "Eldritch Invocations",
-    it: "Suppliche Occulte",
-  },
-  [Route.ResourcesCharacterSpells]: {
-    en: "Spells",
-    it: "Incantesimi",
   },
   [Route.ResourcesCharacterSubclasses]: {
     en: "Subclasses",

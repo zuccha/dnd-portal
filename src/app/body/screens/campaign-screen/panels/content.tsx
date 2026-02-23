@@ -52,11 +52,11 @@ export default function Content() {
 //------------------------------------------------------------------------------
 
 const panels: Record<string, React.FC<{ sourceId: string }>> = {
+  [Route.ResourcesAbilitiesEldritchInvocations]: EldritchInvocationsPanel,
+  [Route.ResourcesAbilitiesSpells]: SpellsPanel,
   [Route.ResourcesBestiaryMonsters]: CreaturesPanel,
   [Route.ResourcesBestiaryTags]: CreatureTagsPanel,
   [Route.ResourcesCharacterClasses]: CharacterClassesPanel,
-  [Route.ResourcesCharacterEldritchInvocations]: EldritchInvocationsPanel,
-  [Route.ResourcesCharacterSpells]: SpellsPanel,
   [Route.ResourcesCharacterSubclasses]: CharacterSubclassesPanel,
   [Route.ResourcesEquipmentArmors]: ArmorsPanel,
   [Route.ResourcesEquipmentItems]: ItemsPanel,
