@@ -10,7 +10,7 @@ const separatorColor = "#3F3F46";
 // Sizes
 //------------------------------------------------------------------------------
 
-const cardH = 3.48;
+const cardH = 3.46;
 const cardW = 2.48;
 
 const remToIn = (rem: number) => (cardH * rem) / 28;
