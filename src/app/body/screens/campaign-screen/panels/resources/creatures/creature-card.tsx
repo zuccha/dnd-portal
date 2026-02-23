@@ -134,7 +134,7 @@ export function CreatureCard({
         </>
       }
       firstPageInfo={
-        <HStack gap={0} justify="space-between" px={PokerCard.rem0750} w="full">
+        <HStack gap={0} justify="space-between" px={PokerCard.rem1000} w="full">
           <HStack gap={PokerCard.rem0750}>
             <StatIcon
               icon={shieldIcon}
@@ -152,15 +152,17 @@ export function CreatureCard({
           <HStack gap={PokerCard.rem0750}>
             <VStack align="flex-end" flex={1} gap={0}>
               <Span>
-                <b>{t("challenge_rating")}</b>{" "}
-                <Span>{localizedResource.cr}</Span>
+                <b>{t("proficiency_bonus")}</b>{" "}
+                <Span>{localizedResource.pb}</Span>
               </Span>
-              <Span>{`${t("exp")} ${localizedResource.exp}`}</Span>
+              <Span>
+                <b>{t("exp")}</b> <Span>{localizedResource.exp}</Span>
+              </Span>
             </VStack>
             <StatIcon
               icon={scrollIcon}
-              label={t("proficiency_bonus")}
-              value={localizedResource.pb}
+              label={t("challenge_rating")}
+              value={localizedResource.cr}
             />
           </HStack>
         </HStack>
@@ -286,6 +288,7 @@ function StatIcon({ icon, label, value }: StatIconProps) {
       bgRepeat="no-repeat"
       bgSize="100% 100%"
       color="white"
+      fontWeight="bold"
       gap={0}
       h={`${PokerCard.remToIn(2.5)}in`}
       justify="center"
