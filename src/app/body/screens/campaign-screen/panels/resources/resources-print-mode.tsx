@@ -77,6 +77,8 @@ export function createResourcesPrintMode<
     const { t } = useI18nLangContext(i18nContext);
     const resourceIds = store.useSelectedFilteredResourceIds(sourceId);
 
+    const [zoom, setZoom] = useState(1);
+
     const [paperLayout, setPaperLayout] = usePaperLayout();
     const [paperType, setPaperType] = usePaperType();
 
@@ -173,7 +175,14 @@ export function createResourcesPrintMode<
 
     return (
       <HStack gap={0} overflow="hidden" {...rest}>
-        <VStack bg="bg.subtle" flex={1} h="full" overflow="auto" p={4}>
+        <VStack
+          bg="bg.subtle"
+          flex={1}
+          h="full"
+          overflow="auto"
+          p={4}
+          zoom={zoom}
+        >
           <VStack
             className="printable"
             h={`${paperHeight * papersCount}in`}
@@ -348,6 +357,15 @@ export function createResourcesPrintMode<
                 options={paletteNameOptions}
                 size="xs"
                 value={paletteName}
+              />
+            </Field>
+
+            <Field label={t("zoom.label")}>
+              <NumberInput
+                min={1}
+                onValueChange={setZoom}
+                size="xs"
+                value={zoom}
               />
             </Field>
           </VStack>
@@ -706,5 +724,9 @@ const i18nContext = {
   "settings.title": {
     en: "Print Settings",
     it: "Impostazioni di Stampa",
+  },
+  "zoom.label": {
+    en: "Zoom",
+    it: "Zoom",
   },
 };
