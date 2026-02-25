@@ -31,7 +31,7 @@ const rem1250 = `${remToIn(1.25)}in`;
 const rem1375 = `${remToIn(1.375)}in`;
 const rem1500 = `${remToIn(1.5)}in`;
 const rem1625 = `${remToIn(1.625)}in`;
-const rem2000 = `${remToIn(1.2)}in`;
+const rem2000 = `${remToIn(2)}in`;
 
 //------------------------------------------------------------------------------
 // Frame
