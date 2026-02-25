@@ -73,7 +73,7 @@ export const customPalettes: Record<PaletteName, Palette> = {
   orange: { 50: "#F2DDCC", 100: "#E1C1A5", 700: "#9B5A2C", 800: "#7A3D1D" },
   pink: { 50: "#EADAE3", 100: "#D3BBC9", 700: "#8B5872", 800: "#65384F" },
   purple: { 50: "#E3DDEA", 100: "#CEC5DB", 700: "#6E5B86", 800: "#4F3D64" },
-  red: { 50: "#DED2D2", 100: "#CFC2C2", 700: "#7D5858", 800: "#6D1515" },
+  red: { 50: "#E7CFCF", 100: "#D9AEAE", 700: "#a93a3a", 800: "#6D1212" },
   teal: { 50: "#D8E3E1", 100: "#C7D6D4", 700: "#587D77", 800: "#145B4F" },
   yellow: { 50: "#F3E7C7", 100: "#E2CF98", 700: "#8E7A2D", 800: "#6E5B1E" },
 };
