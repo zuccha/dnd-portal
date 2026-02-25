@@ -116,9 +116,7 @@ export function useLocalizeSpell(
           : details,
         duration,
         duration_with_concentration:
-          spell.concentration ?
-            ti("duration_with_concentration", duration)
-          : duration,
+          spell.concentration ? ti("duration_with_up_to", duration) : duration,
         info: formatInfo([[t("materials"), materials]]),
         level: `${spell.level}`,
         level_long: tpi("level_long", spell.level, `${spell.level}`),
@@ -158,6 +156,10 @@ const i18nContext = {
   "duration_with_concentration": {
     en: "Up to <1> (C)", // <1> = duration
     it: "Fino a <1> (C)", // <1> = duration
+  },
+  "duration_with_up_to": {
+    en: "Up to <1>", // <1> = duration
+    it: "Fino a <1>", // <1> = duration
   },
   "level_long/*": {
     en: "Level <1>", // 1 = level

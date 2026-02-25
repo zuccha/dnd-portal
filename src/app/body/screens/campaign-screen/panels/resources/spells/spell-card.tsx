@@ -2,13 +2,17 @@ import {
   Box,
   Center,
   GridItem,
+  HStack,
   SimpleGrid,
   Span,
+  type StackProps,
   VStack,
 } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import type { Spell } from "~/models/resources/spells/spell";
+import { useBleed } from "~/ui/bleed-context";
 import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
@@ -31,11 +35,20 @@ export function SpellCard({
   ...rest
 }: SpellCardProps) {
   const { t } = useI18nLangContext(i18nContext);
+  const bleed = useBleed();
 
-  const casting_time = localizedResource.casting_time_with_ritual;
+  const casting_time = localizedResource.casting_time;
   const range = localizedResource.range;
   const components = localizedResource.components;
   const duration = localizedResource.duration_with_concentration;
+
+  const castingTimeColor =
+    (
+      localizedResource._raw.casting_time === "bonus_action" ||
+      localizedResource._raw.casting_time === "reaction"
+    ) ?
+      palette[800]
+    : undefined;
 
   return (
     <ResourcePokerCard
@@ -54,43 +67,27 @@ export function SpellCard({
       beforeDetails={
         <>
           <SimpleGrid columns={2} gap={0} px={PokerCard.rem1000} w="full">
-            <VStack gap={0} pb={PokerCard.rem0125}>
-              <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
-                {t("casting_time")}
-              </Span>
-              <Span lineHeight={0.9} px={PokerCard.rem0250} textAlign="center">
-                {casting_time}
-              </Span>
-            </VStack>
-
-            <VStack gap={0} pb={PokerCard.rem0125}>
-              <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
-                {t("range")}
-              </Span>
-              <Span lineHeight={0.9} px={PokerCard.rem0250} textAlign="center">
-                {range}
-              </Span>
-            </VStack>
-
+            <Cell
+              color={castingTimeColor}
+              label={t("casting_time")}
+              value={casting_time}
+            >
+              {localizedResource._raw.ritual && (
+                <NoteLeft bgColor={palette[700]} bleedX={bleed.x}>
+                  {t("ritual")}
+                </NoteLeft>
+              )}
+            </Cell>
+            <Cell label={t("range")} value={range} />
             <Star />
-
-            <VStack gap={0} pt={PokerCard.rem0125}>
-              <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
-                {t("components")}
-              </Span>
-              <Span lineHeight={0.9} px={PokerCard.rem0250} textAlign="center">
-                {components}
-              </Span>
-            </VStack>
-
-            <VStack gap={0} pt={PokerCard.rem0125}>
-              <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
-                {t("duration")}
-              </Span>
-              <Span lineHeight={0.9} px={PokerCard.rem0250} textAlign="center">
-                {duration}
-              </Span>
-            </VStack>
+            <Cell label={t("components")} value={components} />
+            <Cell label={t("duration")} value={duration}>
+              {localizedResource._raw.concentration && (
+                <NoteRight bgColor={palette[700]} bleedX={bleed.x}>
+                  {t("concentration")}
+                </NoteRight>
+              )}
+            </Cell>
           </SimpleGrid>
 
           <PokerCard.Separator />
@@ -135,6 +132,93 @@ SpellCard.h = ResourcePokerCard.h;
 SpellCard.w = ResourcePokerCard.w;
 
 //------------------------------------------------------------------------------
+// Cell
+//------------------------------------------------------------------------------
+
+type CellProps = {
+  children?: ReactNode;
+  color?: string;
+  label: string;
+  value: string;
+};
+
+function Cell({ children, color, label, value, ...rest }: CellProps) {
+  return (
+    <VStack gap={0} position="relative" {...rest}>
+      <Span fontFamily="Mr Eaves Alt" fontSize={PokerCard.rem1000}>
+        {label}
+      </Span>
+      <Span
+        color={color}
+        fontWeight={color ? "bold" : undefined}
+        lineHeight={0.9}
+        px={PokerCard.rem0250}
+        textAlign="center"
+      >
+        {value}
+      </Span>
+
+      {children}
+    </VStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Note
+//------------------------------------------------------------------------------
+
+type NoteProps = StackProps & {
+  bgColor: string;
+  bleedX: number;
+  children: ReactNode;
+};
+
+function Note({ bgColor, bleedX, children, ...rest }: NoteProps) {
+  return (
+    <HStack
+      bgColor={bgColor}
+      color="white"
+      fontFamily="Fira Mono"
+      fontSize={PokerCard.rem0750}
+      fontWeight="bold"
+      position="absolute"
+      py={PokerCard.rem0250}
+      top="50%"
+      transform="translateY(-50%)"
+      w={`${PokerCard.remToIn(1.5) + bleedX}in`}
+      {...rest}
+    >
+      {children}
+    </HStack>
+  );
+}
+
+function NoteLeft(props: NoteProps) {
+  return (
+    <Note
+      {...props}
+      borderRightRadius="full"
+      left={0}
+      ml={`-${PokerCard.rem1000}`}
+      pl={`${PokerCard.remToIn(0.375) + props.bleedX}in`}
+    />
+  );
+}
+
+function NoteRight(props: NoteProps) {
+  return (
+    <Note
+      {...props}
+      borderLeftRadius="full"
+      justify="flex-end"
+      mr={`-${PokerCard.rem1000}`}
+      pr={`${PokerCard.remToIn(0.375) + props.bleedX}in`}
+      right={0}
+    />
+  );
+}
+
+//------------------------------------------------------------------------------
 // Star
 //------------------------------------------------------------------------------
 
@@ -142,12 +226,12 @@ function Star() {
   return (
     <GridItem
       colSpan={2}
-      h={0}
+      h={PokerCard.rem0250}
       justifyItems="center"
       position="relative"
       w="full"
     >
-      <Box position="absolute" transform="translateY(-50%)">
+      <Box position="absolute" top="50%" transform="translateY(-50%)">
         <svg height={starSize} viewBox="0 0 100 100" width={starSize}>
           <polygon
             fill={PokerCard.separatorColor}
@@ -168,11 +252,15 @@ const starSize = `${PokerCard.remToIn(3.5)}in`;
 const i18nContext = {
   casting_time: {
     en: "Casting Time",
-    it: "Tempo di Lancio",
+    it: "Lancio",
   },
   components: {
     en: "Components",
     it: "Componenti",
+  },
+  concentration: {
+    en: "C",
+    it: "C",
   },
   duration: {
     en: "Duration",
@@ -181,5 +269,9 @@ const i18nContext = {
   range: {
     en: "Range",
     it: "Gittata",
+  },
+  ritual: {
+    en: "R",
+    it: "R",
   },
 };
