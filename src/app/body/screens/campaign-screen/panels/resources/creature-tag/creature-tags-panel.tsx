@@ -31,7 +31,7 @@ const columns: ResourcesTableExtra<
 
 const CreatureTagsPanel = createResourcesPanel(
   creatureTagStore,
-  { initialPaletteName: "gray" },
+  { initialPaletteName: "brown" },
   {
     album: { AlbumCard: CreatureTagCard },
     filters: { Filters: CreatureTagsFilters },

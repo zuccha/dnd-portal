@@ -84,7 +84,7 @@ const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
 
 const WeaponsPanel = createResourcesPanel(
   weaponStore,
-  { initialPaletteName: "yellow" },
+  { initialPaletteName: "brick" },
   {
     album: { AlbumCard: WeaponCard },
     filters: { Filters: WeaponsFilters },

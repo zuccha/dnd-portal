@@ -36,7 +36,7 @@ const columns: ResourcesTableExtra<Plane, LocalizedPlane>["columns"] = [
 
 const PlanesPanel = createResourcesPanel(
   planeStore,
-  { initialPaletteName: "teal" },
+  { initialPaletteName: "moss" },
   {
     album: { AlbumCard: PlaneCard },
     filters: { Filters: PlanesFilters },

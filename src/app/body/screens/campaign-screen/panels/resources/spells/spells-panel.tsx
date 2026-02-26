@@ -70,7 +70,7 @@ const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
 
 const SpellsPanel = createResourcesPanel(
   spellStore,
-  { initialPaletteName: "pink" },
+  { initialPaletteName: "rose" },
   {
     album: { AlbumCard: SpellCard },
     filters: { Filters: SpellsFilters },

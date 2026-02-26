@@ -37,7 +37,7 @@ const columns: ResourcesTableExtra<Language, LocalizedLanguage>["columns"] = [
 
 const LanguagesPanel = createResourcesPanel(
   languageStore,
-  { initialPaletteName: "green" },
+  { initialPaletteName: "sage" },
   {
     album: { AlbumCard: LanguageCard },
     filters: { Filters: LanguagesFilters },

@@ -40,7 +40,7 @@ const columns: ResourcesTableExtra<
 
 const EldritchInvocationsPanel = createResourcesPanel(
   eldritchInvocationStore,
-  { initialPaletteName: "purple" },
+  { initialPaletteName: "mauve" },
   {
     album: { AlbumCard: EldritchInvocationCard },
     filters: { Filters: EldritchInvocationsFilters },

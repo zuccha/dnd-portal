@@ -50,7 +50,7 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
 
 const ItemsPanel = createResourcesPanel(
   itemStore,
-  { initialPaletteName: "orange" },
+  { initialPaletteName: "teal" },
   {
     album: { AlbumCard: ItemCard },
     filters: { Filters: ItemsFilters },

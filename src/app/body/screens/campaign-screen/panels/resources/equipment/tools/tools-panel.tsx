@@ -58,7 +58,7 @@ const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
 
 const ToolsPanel = createResourcesPanel(
   toolStore,
-  { initialPaletteName: "brown" },
+  { initialPaletteName: "coral" },
   {
     album: { AlbumCard: ToolCard },
     filters: { Filters: ToolsFilters },

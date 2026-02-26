@@ -94,7 +94,7 @@ const columns: ResourcesTableExtra<Creature, LocalizedCreature>["columns"] = [
 
 const CreaturesPanel = createResourcesPanel(
   creatureStore,
-  { initialPaletteName: "red" },
+  { initialPaletteName: "copper" },
   {
     album: { AlbumCard: CreatureCard },
     filters: { Filters: CreaturesFilters },

@@ -39,7 +39,7 @@ const columns: ResourcesTableExtra<
 
 const CharacterClassesPanel = createResourcesPanel(
   characterClassStore,
-  { initialPaletteName: "blue" },
+  { initialPaletteName: "slate" },
   {
     album: { AlbumCard: CharacterClassCard },
     filters: { Filters: CharacterClassesFilters },

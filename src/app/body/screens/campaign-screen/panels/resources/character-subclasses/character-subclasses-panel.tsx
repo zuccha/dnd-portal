@@ -36,7 +36,7 @@ const columns: ResourcesTableExtra<
 
 const CharacterSubclassesPanel = createResourcesPanel(
   characterSubclassStore,
-  { initialPaletteName: "green" },
+  { initialPaletteName: "silver" },
   {
     album: { AlbumCard: CharacterSubclassCard },
     filters: { Filters: CharacterSubclassesFilters },
