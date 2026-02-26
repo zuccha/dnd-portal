@@ -32,3 +32,4 @@ db.dump.*
 db-dump/
 _local/
 TODO.local.md
+README.codex.md
