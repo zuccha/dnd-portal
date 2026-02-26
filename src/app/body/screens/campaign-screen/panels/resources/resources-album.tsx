@@ -15,7 +15,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { useCanEditSourceResources } from "~/models/sources";
-import { customPalettes } from "~/utils/palette";
+import { palettes } from "~/utils/palette";
 import {
   type ResourceCardInteractiveExtra,
   createResourceCardInteractive,
@@ -133,14 +133,14 @@ export function createResourcesAlbum<
                   <ResourceCardInteractive
                     editable={editable}
                     key={id}
-                    palette={customPalettes[paletteName]}
+                    palette={palettes[paletteName]}
                     resourceId={id}
                     sourceId={sourceId}
                     zoom={zoom}
                   />
                 : <ResourceCardInteractive.Placeholder
                     key={id}
-                    palette={customPalettes[paletteName]}
+                    palette={palettes[paletteName]}
                     resourceId={id}
                     sourceId={sourceId}
                     zoom={zoom}

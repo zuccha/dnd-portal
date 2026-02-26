@@ -26,7 +26,7 @@ import Field from "~/ui/field";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import {
-  customPalettes,
+  palettes,
   paletteNameSchema,
   usePaletteNameOptions,
 } from "~/utils/palette";
@@ -138,7 +138,7 @@ export function createResourcesPrintMode<
     const papersCount = Math.ceil(pagesCount / cardsPerPaper);
 
     const [paletteName, setPaletteName] = usePaletteName();
-    const palette = customPalettes[paletteName];
+    const palette = palettes[paletteName];
 
     const paletteNameOptions = usePaletteNameOptions();
 
