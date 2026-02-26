@@ -94,7 +94,7 @@ export function usePaletteNameOptions() {
 const i18nContext = {
   "palette_name[blue]": {
     en: "Blue",
-    it: "Blue",
+    it: "Blu",
   },
   "palette_name[brown]": {
     en: "Brown",
