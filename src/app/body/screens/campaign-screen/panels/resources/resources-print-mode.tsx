@@ -26,8 +26,8 @@ import Field from "~/ui/field";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import {
-  palettes,
   paletteNameSchema,
+  palettes,
   usePaletteNameOptions,
 } from "~/utils/palette";
 import {

@@ -132,10 +132,7 @@ export function useLocalizeCreature(
     sourceId,
     lang,
   );
-  const localizePlaneName = planeStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
+  const localizePlaneName = planeStore.useLocalizeResourceName(sourceId, lang);
   const localizeTagName = creatureTagStore.useLocalizeResourceName(
     sourceId,
     lang,
