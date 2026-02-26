@@ -128,7 +128,7 @@ function Frame({
       {compact ?
         <Span h={bleed.y} />
       : <HStack
-          bgColor={palette["700"]}
+          bgColor={palette[700]}
           color="white"
           fontFamily="Mr Eaves Alt"
           fontSize={rem0750}
