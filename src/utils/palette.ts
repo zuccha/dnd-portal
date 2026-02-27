@@ -203,7 +203,7 @@ const i18nContext = {
   },
   navy: {
     en: "Navy",
-    it: "Blue Scuro",
+    it: "Blu Scuro",
   },
   olive: {
     en: "Olive",
