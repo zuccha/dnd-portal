@@ -173,7 +173,7 @@ type IndicatorProps = {
 };
 
 function Indicator({ color, children, position }: IndicatorProps) {
-  const offsetX = PokerCard.rem0375;
+  const offsetX = "0";
   const translateX = position === "left" ? `-${offsetX}` : offsetX;
   return (
     <Center
@@ -255,7 +255,7 @@ const starSize = `${PokerCard.remToIn(3.5)}in`;
 
 const i18nContext = {
   casting_time: {
-    en: "Casting Time",
+    en: "Casting",
     it: "Lancio",
   },
   components: {
