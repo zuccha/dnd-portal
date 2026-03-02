@@ -5,6 +5,7 @@
 const formatNumberOptions = {
   maximumFractionDigits: 3,
   minimumFractionDigits: 0,
+  useGrouping: true,
 };
 
 const formatNumberFormats: Record<string, (value: number) => string> = {
