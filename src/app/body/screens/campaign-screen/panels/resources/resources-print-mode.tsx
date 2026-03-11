@@ -22,6 +22,7 @@ import { range } from "~/ui/array";
 import { BleedContext } from "~/ui/bleed-context";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
+import ColorPicker from "~/ui/color-picker";
 import Field from "~/ui/field";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
@@ -89,11 +90,13 @@ export function createResourcesPrintMode<
         [paperSize.height, paperSize.width]
       : [paperSize.width, paperSize.height];
 
+    const [pageCropMarksColor, setPageCropMarksColor] = usePageCropMarksColor();
     const [pageCropMarksVisible, setPageCropMarksVisible] =
       usePageCropMarksVisible();
     const [pageCropMarksLength, setPageCropMarksLength] =
       usePageCropMarksLength();
 
+    const [cardCropMarksColor, setCardCropMarksColor] = useCardCropMarksColor();
     const [cardCropMarksVisible, setCardCropMarksVisible] =
       useCardCropMarksVisible();
     const [cardCropMarksLength, setCardCropMarksLength] =
@@ -106,7 +109,7 @@ export function createResourcesPrintMode<
       () => ({
         corner:
           cardCropMarksVisible ?
-            { color: "white", length: cardCropMarksLength }
+            { color: cardCropMarksColor, length: cardCropMarksLength }
           : undefined,
         x: bleedVisible ? bleedSize.x : 0,
         y: bleedVisible ? bleedSize.y : 0,
@@ -115,6 +118,7 @@ export function createResourcesPrintMode<
         bleedSize.x,
         bleedSize.y,
         bleedVisible,
+        cardCropMarksColor,
         cardCropMarksLength,
         cardCropMarksVisible,
       ],
@@ -206,6 +210,7 @@ export function createResourcesPrintMode<
                       bleedY={bleed.y}
                       cardH={cardH}
                       cardW={cardW}
+                      color={pageCropMarksColor}
                       columns={columns}
                       length={pageCropMarksLength}
                       offsetX={paperPadding.px}
@@ -331,6 +336,10 @@ export function createResourcesPrintMode<
                   step={0.05}
                   value={pageCropMarksLength}
                 />
+                <ColorPicker
+                  onValueChange={setPageCropMarksColor}
+                  value={pageCropMarksColor}
+                />
               </HStack>
             </Field>
 
@@ -347,6 +356,10 @@ export function createResourcesPrintMode<
                   size="xs"
                   step={0.05}
                   value={cardCropMarksLength}
+                />
+                <ColorPicker
+                  onValueChange={setCardCropMarksColor}
+                  value={cardCropMarksColor}
                 />
               </HStack>
             </Field>
@@ -398,6 +411,7 @@ type CropMarksProps = {
   bleedY: number;
   cardH: number;
   cardW: number;
+  color: string;
   columns: number;
   length: number;
   offsetX: number;
@@ -411,6 +425,7 @@ function CropMarks({
   bleedY,
   cardH,
   cardW,
+  color,
   columns,
   length,
   offsetX,
@@ -422,6 +437,7 @@ function CropMarks({
       <CropMarksH
         bleedY={bleedY}
         cardH={cardH}
+        color={color}
         offsetX={offsetX - length}
         offsetY={offsetY}
         rows={rows}
@@ -431,6 +447,7 @@ function CropMarks({
       <CropMarksH
         bleedY={bleedY}
         cardH={cardH}
+        color={color}
         offsetX={offsetX + columns * cardW}
         offsetY={offsetY}
         rows={rows}
@@ -440,6 +457,7 @@ function CropMarks({
       <CropMarksV
         bleedX={bleedX}
         cardW={cardW}
+        color={color}
         columns={columns}
         h={length}
         offsetX={offsetX}
@@ -449,6 +467,7 @@ function CropMarks({
       <CropMarksV
         bleedX={bleedX}
         cardW={cardW}
+        color={color}
         columns={columns}
         h={length}
         offsetX={offsetX}
@@ -465,6 +484,7 @@ function CropMarks({
 type CropMarksHProps = {
   bleedY: number;
   cardH: number;
+  color: string;
   offsetX: number;
   offsetY: number;
   rows: number;
@@ -475,6 +495,7 @@ type CropMarksHProps = {
 function CropMarksH({
   bleedY,
   cardH,
+  color,
   offsetX,
   offsetY,
   rows,
@@ -485,7 +506,7 @@ function CropMarksH({
       {range(rows).map((c) => (
         <Fragment key={c}>
           <Box
-            bgColor="black"
+            bgColor={color}
             h="1px"
             left={`${offsetX}in`}
             position="absolute"
@@ -493,7 +514,7 @@ function CropMarksH({
             w={`${w}in`}
           />
           <Box
-            bgColor="black"
+            bgColor={color}
             h="1px"
             left={`${offsetX}in`}
             position="absolute"
@@ -513,6 +534,7 @@ function CropMarksH({
 type CropMarksVProps = {
   bleedX: number;
   cardW: number;
+  color: string;
   columns: number;
   h: number;
   offsetX: number;
@@ -523,6 +545,7 @@ type CropMarksVProps = {
 function CropMarksV({
   bleedX,
   cardW,
+  color,
   columns,
   h,
   offsetX,
@@ -533,7 +556,7 @@ function CropMarksV({
       {range(columns).map((c) => (
         <Fragment key={c}>
           <Box
-            bgColor="black"
+            bgColor={color}
             h={`${h}in`}
             left={`${offsetX + (bleedX - px1) + c * cardW}in`}
             position="absolute"
@@ -541,7 +564,7 @@ function CropMarksV({
             w="1px"
           />
           <Box
-            bgColor="black"
+            bgColor={color}
             h={`${h}in`}
             left={`${offsetX + (cardW - bleedX) + c * cardW}in`}
             position="absolute"
@@ -610,6 +633,12 @@ const useBleedVisible = createLocalStore(
   z.boolean().parse,
 ).use;
 
+const useCardCropMarksColor = createLocalStore(
+  "print_mode.card_crop_marks_color",
+  "#ffffff",
+  z.string().parse,
+).use;
+
 const useCardCropMarksLength = createLocalStore(
   "print_mode.card_crop_marks_length",
   0.2,
@@ -620,6 +649,12 @@ const useCardCropMarksVisible = createLocalStore(
   "print_mode.card_crop_marks_visible",
   true,
   z.boolean().parse,
+).use;
+
+const usePageCropMarksColor = createLocalStore(
+  "print_mode.page_crop_marks_color",
+  "#000000",
+  z.string().parse,
 ).use;
 
 const usePageCropMarksLength = createLocalStore(
