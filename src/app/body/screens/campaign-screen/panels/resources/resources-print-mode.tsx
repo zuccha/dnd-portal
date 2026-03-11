@@ -90,6 +90,9 @@ export function createResourcesPrintMode<
         [paperSize.height, paperSize.width]
       : [paperSize.width, paperSize.height];
 
+    const [backgroundColorVisible, setBackgroundColorVisible] =
+      useBackgroundColorVisible();
+
     const [pageCropMarksColor, setPageCropMarksColor] = usePageCropMarksColor();
     const [pageCropMarksVisible, setPageCropMarksVisible] =
       usePageCropMarksVisible();
@@ -252,6 +255,7 @@ export function createResourcesPrintMode<
               >
                 {resourceIds.map((resourceId) => (
                   <ResourceCardPrintable
+                    bgColor={backgroundColorVisible ? undefined : "white"}
                     css={albumCardCss}
                     key={resourceId}
                     onPageCountChange={(count) => {
@@ -365,12 +369,24 @@ export function createResourcesPrintMode<
             </Field>
 
             <Field label={t("palette_name.label")}>
-              <Select.Enum
-                onValueChange={setPaletteName}
-                options={paletteNameOptions}
-                size="xs"
-                value={paletteName}
-              />
+              <VStack w="full">
+                <Select.Enum
+                  onValueChange={setPaletteName}
+                  options={paletteNameOptions}
+                  size="xs"
+                  value={paletteName}
+                />
+                <HStack w="full">
+                  <Checkbox
+                    onValueChange={setBackgroundColorVisible}
+                    size="sm"
+                    value={backgroundColorVisible}
+                  />
+                  <Span fontSize="xs">
+                    {t("background_color_visible.label")}
+                  </Span>
+                </HStack>
+              </VStack>
             </Field>
 
             <Field label={t("zoom.label")}>
@@ -621,6 +637,12 @@ const px1 = 1 / 96;
 // Store
 //------------------------------------------------------------------------------
 
+const useBackgroundColorVisible = createLocalStore(
+  "print_mode.background_color_visible",
+  true,
+  z.boolean().parse,
+).use;
+
 const useBleedSize = createLocalStore(
   "print_mode.bleed_size",
   { x: 0.05, y: 0.05 },
@@ -692,6 +714,10 @@ const usePaperLayout = createLocalStore(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "background_color_visible.label": {
+    en: "Background",
+    it: "Sfondo",
+  },
   "bleed.label": {
     en: "Bleed",
     it: "Bleed",
