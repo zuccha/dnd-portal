@@ -34,6 +34,7 @@ export type ResourceCardPrintableProps<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
+  bgColor?: string;
   css?: ResourcePokerCardProps<R, L>["css"];
   onPageCountChange?: (count: number | undefined) => void;
   palette: Palette;

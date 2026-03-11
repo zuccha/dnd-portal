@@ -49,6 +49,7 @@ export type FrameProps = StackProps & {
 };
 
 function Frame({
+  bgColor,
   compact,
   children,
   descriptor,
@@ -65,7 +66,8 @@ function Frame({
 
   return (
     <VStack
-      bgImage={bgImage}
+      bgColor={bgColor}
+      bgImage={bgColor ? undefined : bgImage}
       bgPos="center"
       bgRepeat="no-repeat"
       bgSize="100% 100%"
