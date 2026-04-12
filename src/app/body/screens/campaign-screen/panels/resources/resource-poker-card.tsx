@@ -14,6 +14,7 @@ export type ResourcePokerCardProps<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = StackProps & {
+  alwaysEvenPages?: boolean;
   afterDescriptor?: ReactNode;
   beforeDetails?: ReactNode;
   firstPageInfo?: ReactNode;
@@ -28,6 +29,7 @@ export function ResourcePokerCard<
   R extends Resource,
   L extends LocalizedResource<R>,
 >({
+  alwaysEvenPages,
   afterDescriptor,
   beforeDetails,
   firstPageInfo,
@@ -135,6 +137,21 @@ export function ResourcePokerCard<
           </PokerCard.Frame>
         );
       })}
+
+      {alwaysEvenPages && pageCount % 2 !== 0 && (
+        <PokerCard.Frame
+          compact
+          descriptor=""
+          footer=""
+          name=""
+          pageIndicator=""
+          palette={palette}
+          sourceName=""
+          sourcePage=""
+          zIndex={0 === selectedPageIndex ? 1 : 0}
+          {...rest}
+        ></PokerCard.Frame>
+      )}
     </>
   );
 }

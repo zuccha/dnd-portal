@@ -127,6 +127,8 @@ export function createResourcesPrintMode<
       ],
     );
 
+    const [includeEmptyBack, setIncludeEmptyBack] = useIncludeEmptyBack();
+
     const cardW = ResourceCardPrintable.w + 2 * bleed.x;
     const cardH = ResourceCardPrintable.h + 2 * bleed.y;
 
@@ -255,6 +257,7 @@ export function createResourcesPrintMode<
               >
                 {resourceIds.map((resourceId) => (
                   <ResourceCardPrintable
+                    alwaysEvenPages={includeEmptyBack}
                     bgColor={backgroundColorVisible ? undefined : "white"}
                     css={albumCardCss}
                     key={resourceId}
@@ -385,6 +388,14 @@ export function createResourcesPrintMode<
                   <Span fontSize="xs">
                     {t("background_color_visible.label")}
                   </Span>
+                </HStack>
+                <HStack w="full">
+                  <Checkbox
+                    onValueChange={setIncludeEmptyBack}
+                    size="sm"
+                    value={includeEmptyBack}
+                  />
+                  <Span fontSize="xs">{t("include_empty_back.label")}</Span>
                 </HStack>
               </VStack>
             </Field>
@@ -673,6 +684,12 @@ const useCardCropMarksVisible = createLocalStore(
   z.boolean().parse,
 ).use;
 
+const useIncludeEmptyBack = createLocalStore(
+  "print_mode.include_empty_back",
+  false,
+  z.boolean().parse,
+).use;
+
 const usePageCropMarksColor = createLocalStore(
   "print_mode.page_crop_marks_color",
   "#000000",
@@ -729,6 +746,10 @@ const i18nContext = {
   "close": {
     en: "Close",
     it: "Chiudi",
+  },
+  "include_empty_back.label": {
+    en: "Empty back",
+    it: "Retro vuoto",
   },
   "page_crop_marks.label": {
     en: "Crop Marks (Page)",
