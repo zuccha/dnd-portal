@@ -264,7 +264,11 @@ export function createResourcesPrintMode<
                     onPageCountChange={(count) => {
                       setPagesCounts((prev) => {
                         const next = { ...prev };
-                        if (count) next[resourceId] = count;
+                        if (count)
+                          next[resourceId] =
+                            count % 2 !== 0 && includeEmptyBack ?
+                              count + 1
+                            : count;
                         else delete next[resourceId];
                         return next;
                       });
