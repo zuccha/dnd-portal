@@ -105,7 +105,7 @@ BEGIN
     v_id, r.type, r.alignment, r.size, r.habitats, r.treasures, r.cr, r.ac, r.hp, r.hp_formula,
     r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow,
     r.ability_str, r.ability_dex, r.ability_con, r.ability_int, r.ability_wis, r.ability_cha,
-    r.initiative, r.language_additional_count, r.language_scope, r.passive_perception,
+    r.initiative, coalesce(r.language_additional_count, 0), r.language_scope, r.passive_perception,
     r.ability_proficiencies, r.skill_proficiencies, r.skill_expertise,
     r.damage_immunities, r.damage_resistances, r.damage_vulnerabilities,
     r.condition_immunities, r.condition_resistances, r.condition_vulnerabilities,
