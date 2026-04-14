@@ -10,8 +10,8 @@ import { type DBPlane, type DBPlaneTranslation } from "./db-plane";
 //------------------------------------------------------------------------------
 
 export const planeFormDataSchema = resourceFormDataSchema.extend({
-  alignments: z.array(creatureAlignmentSchema),
-  category: planeCategorySchema,
+  alignments: z.array(creatureAlignmentSchema).default([]),
+  category: planeCategorySchema.default("material"),
 });
 
 export type PlaneFormData = z.infer<typeof planeFormDataSchema>;

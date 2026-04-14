@@ -13,10 +13,10 @@ import { type DBTool, type DBToolTranslation } from "./db-tool";
 //------------------------------------------------------------------------------
 
 export const toolFormDataSchema = equipmentFormDataSchema.extend({
-  ability: creatureAbilitySchema,
-  craft_ids: z.array(z.uuid()),
-  type: toolTypeSchema,
-  utilize: z.string(),
+  ability: creatureAbilitySchema.default("strength"),
+  craft_ids: z.array(z.uuid()).default([]),
+  type: toolTypeSchema.default("artisan"),
+  utilize: z.string().default(""),
 });
 
 export type ToolFormData = z.infer<typeof toolFormDataSchema>;

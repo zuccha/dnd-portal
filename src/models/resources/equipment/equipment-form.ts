@@ -9,11 +9,11 @@ import { type DBEquipment, type DBEquipmentTranslation } from "./db-equipment";
 //------------------------------------------------------------------------------
 
 export const equipmentFormDataSchema = resourceFormDataSchema.extend({
-  cost: z.number(),
-  magic: z.boolean(),
-  notes: z.string(),
-  rarity: equipmentRaritySchema,
-  weight: z.number(),
+  cost: z.number().default(0),
+  magic: z.boolean().default(false),
+  notes: z.string().default(""),
+  rarity: equipmentRaritySchema.default("common"),
+  weight: z.number().default(0),
 });
 
 export type EquipmentFormData = z.infer<typeof equipmentFormDataSchema>;

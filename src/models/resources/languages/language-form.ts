@@ -9,8 +9,8 @@ import { type DBLanguage, type DBLanguageTranslation } from "./db-language";
 //------------------------------------------------------------------------------
 
 export const languageFormDataSchema = resourceFormDataSchema.extend({
-  origin: z.string(),
-  rarity: languageRaritySchema,
+  origin: z.string().default(""),
+  rarity: languageRaritySchema.default("standard"),
 });
 
 export type LanguageFormData = z.infer<typeof languageFormDataSchema>;

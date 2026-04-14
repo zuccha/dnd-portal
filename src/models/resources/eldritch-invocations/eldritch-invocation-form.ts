@@ -12,11 +12,11 @@ import {
 //------------------------------------------------------------------------------
 
 export const eldritchInvocationFormDataSchema = resourceFormDataSchema.extend({
-  description: z.string(),
-  min_warlock_level: characterLevelSchema,
-  name: z.string(),
-  page: z.number(),
-  prerequisite: z.string(),
+  description: z.string().default(""),
+  min_warlock_level: characterLevelSchema.default(0),
+  name: z.string().default(""),
+  page: z.number().default(0),
+  prerequisite: z.string().default(""),
 });
 
 export type EldritchInvocationFormData = z.infer<

@@ -15,17 +15,17 @@ import { type DBWeapon, type DBWeaponTranslation } from "./db-weapon";
 //------------------------------------------------------------------------------
 
 export const weaponFormDataSchema = equipmentFormDataSchema.extend({
-  ammunition_ids: z.array(z.uuid()),
-  damage: z.string(),
-  damage_type: damageTypeSchema,
-  damage_versatile: z.string(),
-  mastery: weaponMasterySchema,
-  melee: z.boolean(),
-  properties: z.array(weaponPropertySchema),
-  range_long: z.number(),
-  range_short: z.number(),
-  ranged: z.boolean(),
-  type: weaponTypeSchema,
+  ammunition_ids: z.array(z.uuid()).default([]),
+  damage: z.string().default(""),
+  damage_type: damageTypeSchema.default("slashing"),
+  damage_versatile: z.string().default(""),
+  mastery: weaponMasterySchema.default("cleave"),
+  melee: z.boolean().default(true),
+  properties: z.array(weaponPropertySchema).default([]),
+  range_long: z.number().default(0),
+  range_short: z.number().default(0),
+  ranged: z.boolean().default(false),
+  type: weaponTypeSchema.default("simple"),
 });
 
 export type WeaponFormData = z.infer<typeof weaponFormDataSchema>;

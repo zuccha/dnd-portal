@@ -20,18 +20,18 @@ import {
 //------------------------------------------------------------------------------
 
 export const characterClassFormDataSchema = resourceFormDataSchema.extend({
-  armor_proficiencies: z.array(armorTypeSchema),
-  armor_proficiencies_extra: z.string(),
-  hp_die: dieTypeSchema,
-  primary_abilities: z.array(creatureAbilitySchema),
-  saving_throw_proficiencies: z.array(creatureAbilitySchema),
-  skill_proficiencies_pool: z.array(creatureSkillSchema),
-  skill_proficiencies_pool_quantity: z.number(),
-  spell_ids: z.array(z.uuid()),
-  starting_equipment: z.array(startingEquipmentGroupSchema),
-  tool_proficiency_ids: z.array(z.uuid()),
-  weapon_proficiencies: z.array(weaponTypeSchema),
-  weapon_proficiencies_extra: z.string(),
+  armor_proficiencies: z.array(armorTypeSchema).default([]),
+  armor_proficiencies_extra: z.string().default(""),
+  hp_die: dieTypeSchema.default("d8"),
+  primary_abilities: z.array(creatureAbilitySchema).default([]),
+  saving_throw_proficiencies: z.array(creatureAbilitySchema).default([]),
+  skill_proficiencies_pool: z.array(creatureSkillSchema).default([]),
+  skill_proficiencies_pool_quantity: z.number().default(2),
+  spell_ids: z.array(z.uuid()).default([]),
+  starting_equipment: z.array(startingEquipmentGroupSchema).default([]),
+  tool_proficiency_ids: z.array(z.uuid()).default([]),
+  weapon_proficiencies: z.array(weaponTypeSchema).default([]),
+  weapon_proficiencies_extra: z.string().default(""),
 });
 
 export type CharacterClassFormData = z.infer<

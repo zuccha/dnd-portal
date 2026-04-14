@@ -12,9 +12,9 @@ import { type DBItem, type DBItemTranslation } from "./db-item";
 //------------------------------------------------------------------------------
 
 export const itemFormDataSchema = equipmentFormDataSchema.extend({
-  charges: z.number(),
-  consumable: z.boolean(),
-  type: itemTypeSchema,
+  charges: z.number().default(0),
+  consumable: z.boolean().default(false),
+  type: itemTypeSchema.default("other"),
 });
 
 export type ItemFormData = z.infer<typeof itemFormDataSchema>;

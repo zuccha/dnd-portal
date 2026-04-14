@@ -7,11 +7,11 @@ import type { DBResource, DBResourceTranslation } from "./db-resource";
 //------------------------------------------------------------------------------
 
 export const resourceFormDataSchema = z.object({
-  image_url: z.string(),
-  name: z.string(),
-  name_short: z.string(),
-  page: z.number(),
-  visibility: resourceVisibilitySchema,
+  image_url: z.string().default(""),
+  name: z.string().default(""),
+  name_short: z.string().default(""),
+  page: z.number().default(0),
+  visibility: resourceVisibilitySchema.default("public"),
 });
 
 export type ResourceFormData = z.infer<typeof resourceFormDataSchema>;
