@@ -1,6 +1,7 @@
 import { Menu, Portal } from "@chakra-ui/react";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
+import YAML from "yaml";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
   DBResource,
@@ -53,16 +54,37 @@ export function createResourcesActions<
       return JSON.stringify(selectedLocalizedResources, null, 2);
     }, [localizeResource, selectedFilteredResourceIds]);
 
-    const copySelected = useCallback(async () => {
+    const computeSelectedAsYaml = useCallback(() => {
+      const selectedResources = selectedFilteredResourceIds
+        .map(store.getResource)
+        .filter((resource) => resource !== undefined);
+      const selectedLocalizedResources = selectedResources
+        .map(localizeResource)
+        .map(({ _raw, ...rest }) => rest);
+      return YAML.stringify(selectedLocalizedResources);
+    }, [localizeResource, selectedFilteredResourceIds]);
+
+    const copySelectedAsJson = useCallback(async () => {
       const json = computeSelectedAsJson();
       await navigator.clipboard.writeText(json);
       // TODO: Show toast.
     }, [computeSelectedAsJson]);
 
-    const downloadSelected = useCallback(async () => {
+    const copySelectedAsYaml = useCallback(async () => {
+      const json = computeSelectedAsYaml();
+      await navigator.clipboard.writeText(json);
+      // TODO: Show toast.
+    }, [computeSelectedAsYaml]);
+
+    const downloadSelectedAsJson = useCallback(async () => {
       const json = computeSelectedAsJson();
       downloadFile(json, `${store.name.p}.json`, "json"); // TODO: Localize filename
     }, [computeSelectedAsJson]);
+
+    const downloadSelectedAsYaml = useCallback(async () => {
+      const json = computeSelectedAsYaml();
+      downloadFile(json, `${store.name.p}.json`, "json"); // TODO: Localize filename
+    }, [computeSelectedAsYaml]);
 
     const printSelected = useCallback(async () => {
       context.setPrintMode(true);
@@ -103,18 +125,34 @@ export function createResourcesActions<
 
               <Menu.Item
                 disabled={disabled}
-                onClick={copySelected}
-                value="copy"
+                onClick={copySelectedAsJson}
+                value="copy-as-json"
               >
-                {t("copy")}
+                {t("copy_as_json")}
               </Menu.Item>
 
               <Menu.Item
                 disabled={disabled}
-                onClick={downloadSelected}
-                value="download"
+                onClick={copySelectedAsYaml}
+                value="copy-as-yaml"
               >
-                {t("download")}
+                {t("copy_as_yaml")}
+              </Menu.Item>
+
+              <Menu.Item
+                disabled={disabled}
+                onClick={downloadSelectedAsJson}
+                value="download-as-json"
+              >
+                {t("download_as_json")}
+              </Menu.Item>
+
+              <Menu.Item
+                disabled={disabled}
+                onClick={downloadSelectedAsYaml}
+                value="download-as-yaml"
+              >
+                {t("download_as_yaml")}
               </Menu.Item>
 
               <Menu.Item
@@ -153,13 +191,21 @@ const i18nContext = {
     en: "Add new",
     it: "Crea nuovo",
   },
-  "copy": {
-    en: "Copy selected",
-    it: "Copia selezionati",
+  "copy_as_json": {
+    en: "Copy selected as JSON",
+    it: "Copia selezionati come JSON",
   },
-  "download": {
-    en: "Download selected",
-    it: "Scarica selezionati",
+  "copy_as_yaml": {
+    en: "Copy selected as YAML",
+    it: "Copia selezionati come YAML",
+  },
+  "download_as_json": {
+    en: "Download selected as JSON",
+    it: "Scarica selezionati come JSON",
+  },
+  "download_as_yaml": {
+    en: "Download selected as YAML",
+    it: "Scarica selezionati come YAML",
   },
   "print": {
     en: "Print selected",
