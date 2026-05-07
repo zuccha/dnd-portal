@@ -81,16 +81,6 @@ export const localizedCreatureSchema = localizedResourceSchema(
   perception_passive: z.string(),
 
   speed: z.string(),
-  speed_burrow: z.string(),
-  speed_climb: z.string(),
-  speed_fly: z.string(),
-  speed_swim: z.string(),
-  speed_walk: z.string(),
-
-  blindsight: z.string(),
-  darkvision: z.string(),
-  tremorsense: z.string(),
-  truesight: z.string(),
 
   gear: z.string(),
   immunities: z.string(),
@@ -101,6 +91,12 @@ export const localizedCreatureSchema = localizedResourceSchema(
   vulnerabilities: z.string(),
 
   info: z.string(),
+
+  actions: z.string(),
+  bonus_actions: z.string(),
+  legendary_actions: z.string(),
+  reactions: z.string(),
+  traits: z.string(),
 });
 
 export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
@@ -516,16 +512,6 @@ export function useLocalizeCreature(
         perception_passive: `${creature.passive_perception}`,
 
         speed,
-        speed_burrow,
-        speed_climb,
-        speed_fly,
-        speed_swim,
-        speed_walk,
-
-        blindsight,
-        darkvision,
-        tremorsense,
-        truesight,
 
         gear,
         immunities,
@@ -536,6 +522,12 @@ export function useLocalizeCreature(
         vulnerabilities,
 
         info,
+
+        actions,
+        bonus_actions,
+        legendary_actions,
+        reactions,
+        traits,
       };
     },
     [
