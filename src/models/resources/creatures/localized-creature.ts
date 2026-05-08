@@ -45,6 +45,7 @@ export const localizedCreatureSchema = localizedResourceSchema(
   alignment: z.string(),
   habitats: z.string(),
   size: z.string(),
+  tags: z.string(),
   treasures: z.string(),
   type: z.string(),
 
@@ -474,6 +475,7 @@ export function useLocalizeCreature(
 
         alignment,
         size,
+        tags,
         type,
 
         habitats,
