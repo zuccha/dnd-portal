@@ -392,7 +392,7 @@ export function useLocalizeCreature(
           telepathy,
         ]
           .filter(Boolean)
-          .join(";") || t("languages.none");
+          .join("; ") || t("languages.none");
       if (languages) {
         info_parts.push([
           tp("info.languages", creature.language_ids.length),
