@@ -4,6 +4,8 @@ import { createLocalStore } from "~/store/local-store";
 import supabase from "~/supabase";
 import { i18nStringSchema } from "../i18n/i18n-string";
 import type { SourceType } from "./types/source-type";
+import { sourceTypeSchema } from "./types/source-type";
+import { sourceVersionSchema } from "./types/source-version";
 
 //------------------------------------------------------------------------------
 // Source
@@ -13,9 +15,19 @@ export const sourceSchema = z.object({
   code: z.string(),
   id: z.uuid(),
   name: i18nStringSchema,
+  type: sourceTypeSchema,
+  version: sourceVersionSchema,
 
   includes: z
-    .array(z.object({ code: z.string(), id: z.uuid(), name: i18nStringSchema }))
+    .array(
+      z.object({
+        code: z.string(),
+        id: z.uuid(),
+        name: i18nStringSchema,
+        type: sourceTypeSchema,
+        version: sourceVersionSchema,
+      }),
+    )
     .default([]),
 });
 

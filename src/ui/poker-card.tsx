@@ -46,6 +46,7 @@ export type FrameProps = StackProps & {
   pageIndicator: string;
   sourceName: string;
   sourcePage: string;
+  sourceVersion: string;
 };
 
 function Frame({
@@ -59,6 +60,7 @@ function Frame({
   pageIndicator,
   sourceName,
   sourcePage,
+  sourceVersion,
   ...rest
 }: FrameProps) {
   const bleed = useBleed();
@@ -161,7 +163,7 @@ function Frame({
             textOverflow="ellipsis"
             w="40%"
           >
-            D&D Portal
+            {sourceVersion}
           </Span>
         </HStack>
       }

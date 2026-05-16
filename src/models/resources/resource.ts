@@ -3,6 +3,7 @@ import { type I18nNumber, i18nNumberSchema } from "~/i18n/i18n-number";
 import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
 import type { KeysOfType } from "~/types";
 import { resourceVisibilitySchema } from "../types/resource-visibility";
+import { sourceVersionSchema } from "../types/source-version";
 
 //------------------------------------------------------------------------------
 // Resource
@@ -13,6 +14,7 @@ export const resourceSchema = z.object({
 
   source_code: z.string(),
   source_id: z.string(),
+  source_version: sourceVersionSchema,
 
   image_url: z.string().nullish(),
   visibility: resourceVisibilitySchema,
@@ -36,6 +38,7 @@ export const defaultResource: Resource = {
   page: {},
   source_code: "",
   source_id: "",
+  source_version: "dnd5_5",
   visibility: "private",
 };
 

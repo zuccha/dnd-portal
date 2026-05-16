@@ -75,6 +75,7 @@ export function ResourcePokerCard<
           palette={palette}
           sourceName={localizedResource.source}
           sourcePage={localizedResource.page}
+          sourceVersion={localizedResource.sourceVersion}
           zIndex={0 === selectedPageIndex ? 1 : 0}
           {...rest}
         >
@@ -109,6 +110,7 @@ export function ResourcePokerCard<
             palette={palette}
             sourceName={localizedResource.source}
             sourcePage={localizedResource.page}
+            sourceVersion={localizedResource.sourceVersion}
             zIndex={adjustedPageIndex === selectedPageIndex ? 1 : 0}
             {...rest}
           >
@@ -148,6 +150,7 @@ export function ResourcePokerCard<
           palette={palette}
           sourceName=""
           sourcePage=""
+          sourceVersion=""
           zIndex={0 === selectedPageIndex ? 1 : 0}
           {...rest}
         ></PokerCard.Frame>
@@ -188,6 +191,7 @@ export function ResourcePokerCardPlaceholder<
       palette={palette}
       sourceName={localizedResource.source}
       sourcePage={localizedResource.page}
+      sourceVersion={localizedResource.sourceVersion}
       {...rest}
     />
   );

@@ -3,6 +3,7 @@ import z, { ZodType } from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translateNumber } from "~/i18n/i18n-number";
 import { translate } from "~/i18n/i18n-string";
+import { useTranslateSourceVersion } from "../types/source-version";
 import type { Resource } from "./resource";
 
 //------------------------------------------------------------------------------
@@ -20,6 +21,7 @@ export const localizedResourceSchema = <R extends Resource>(
     name: z.string(),
     page: z.string(),
     source: z.string(),
+    sourceVersion: z.string(),
   });
 
 export type LocalizedResource<R extends Resource> = z.infer<
@@ -34,6 +36,7 @@ export function useLocalizeResource<R extends Resource>(): (
   resource: R,
 ) => LocalizedResource<R> {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const translateSourceVersion = useTranslateSourceVersion(lang);
 
   return useCallback(
     (resource: R): LocalizedResource<R> => {
@@ -46,9 +49,10 @@ export function useLocalizeResource<R extends Resource>(): (
         name: translate(resource.name, lang) || t("name.missing"),
         page: page ? ti("page", `${page}`) : "",
         source: resource.source_code,
+        sourceVersion: translateSourceVersion(resource.source_version).label,
       };
     },
-    [lang, t, ti],
+    [lang, t, ti, translateSourceVersion],
   );
 }
 
