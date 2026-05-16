@@ -16,6 +16,7 @@ export const creatureAlignmentSchema = z.enum([
   "neutral_evil",
   "chaotic_evil",
   "unaligned",
+  "any",
 ]);
 
 export const creatureAlignments = creatureAlignmentSchema.options;
@@ -31,6 +32,7 @@ export const {
   useTranslate: useTranslateCreatureAlignment,
   useTranslations: useCreatureAlignmentTranslations,
 } = createTypeTranslationHooks(creatureAlignments, {
+  any: { en: "Any Alignment", it: "Qualsiasi Allineamento" },
   chaotic_evil: { en: "Chaotic Evil", it: "Caotico Malvagio" },
   chaotic_good: { en: "Chaotic Good", it: "Caotico Buono" },
   chaotic_neutral: { en: "Chaotic Neutral", it: "Caotico Neutrale" },
