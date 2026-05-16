@@ -8,7 +8,8 @@ CREATE TYPE public.creature_alignment AS ENUM (
   'chaotic_good',
   'chaotic_neutral',
   'chaotic_evil',
-  'unaligned'
+  'unaligned',
+  'any'
 );
 
 ALTER TYPE public.creature_alignment OWNER TO postgres;
