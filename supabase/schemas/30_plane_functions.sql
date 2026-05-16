@@ -6,6 +6,7 @@ CREATE TYPE public.plane_row AS (
   -- Resource
   source_id uuid,
   source_code text,
+  source_version public.source_version,
   id uuid,
   kind public.resource_kind,
   visibility public.resource_visibility,
@@ -76,6 +77,7 @@ AS $$
   SELECT
     r.source_id,
     r.source_code,
+    r.source_version,
     r.id,
     r.kind,
     r.visibility,
@@ -144,6 +146,7 @@ src AS (
     b.id,
     b.source_id,
     b.source_code,
+    b.source_version,
     b.kind,
     b.visibility,
     b.image_url,
@@ -167,6 +170,7 @@ filtered AS (
 SELECT
   f.source_id,
   f.source_code,
+  f.source_version,
   f.id,
   f.kind,
   f.visibility,

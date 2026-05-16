@@ -6,6 +6,7 @@ CREATE TYPE public.weapon_row AS (
   -- Resource
   source_id uuid,
   source_code text,
+  source_version public.source_version,
   id uuid,
   kind public.resource_kind,
   visibility public.resource_visibility,
@@ -110,6 +111,7 @@ AS $$
   SELECT
     e.source_id,
     e.source_code,
+    e.source_version,
     e.id,
     e.kind,
     e.visibility,
@@ -229,6 +231,7 @@ src AS (
     b.id,
     b.source_id,
     b.source_code,
+    b.source_version,
     b.kind,
     b.visibility,
     b.image_url,
@@ -292,6 +295,7 @@ wa AS (
 SELECT
   f.source_id,
   f.source_code,
+  f.source_version,
   f.id,
   f.kind,
   f.visibility,

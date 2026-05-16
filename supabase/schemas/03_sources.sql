@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS public.sources (
   code text DEFAULT ''::text NOT NULL,
   creator_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   type public.source_type DEFAULT 'campaign'::public.source_type NOT NULL,
+  version public.source_version DEFAULT 'dnd5_5'::public.source_version NOT NULL,
   visibility public.source_visibility DEFAULT 'private'::public.source_visibility NOT NULL,
   CONSTRAINT sources_pkey PRIMARY KEY (id)
 );
@@ -593,7 +594,7 @@ GRANT ALL ON FUNCTION public.source_ids_with_includes_and_requires(p_source_id u
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_sources(p_types public.source_type[] DEFAULT NULL)
-RETURNS TABLE(id uuid, code text, type public.source_type, name jsonb, includes jsonb)
+RETURNS TABLE(id uuid, code text, type public.source_type, version public.source_version, name jsonb, includes jsonb)
 LANGUAGE sql STABLE
 SET search_path TO 'public', 'pg_temp'
 AS $$
@@ -609,6 +610,7 @@ AS $$
       s.id,
       s.code,
       s.type,
+      s.version,
       coalesce(n.name, '{}'::jsonb) AS name
     FROM public.sources s
     LEFT JOIN names n ON n.id = s.id
@@ -619,6 +621,7 @@ AS $$
     v.id,
     v.code,
     v.type,
+    v.version,
     v.name,
     coalesce(
       jsonb_agg(
@@ -626,6 +629,7 @@ AS $$
           'id', d.id,
           'code', ds.code,
           'type', ds.type,
+          'version', ds.version,
           'name', coalesce(dn.name, '{}'::jsonb)
         )
         ORDER BY ds.code
@@ -650,7 +654,7 @@ AS $$
   ) d ON true
   LEFT JOIN public.sources ds ON ds.id = d.id
   LEFT JOIN names dn ON dn.id = d.id
-  GROUP BY v.id, v.code, v.type, v.name
+  GROUP BY v.id, v.code, v.type, v.version, v.name
   ORDER BY v.code;
 $$;
 

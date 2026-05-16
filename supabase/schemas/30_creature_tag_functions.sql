@@ -6,6 +6,7 @@ CREATE TYPE public.creature_tag_row AS (
   -- Resource
   source_id uuid,
   source_code text,
+  source_version public.source_version,
   id uuid,
   kind public.resource_kind,
   visibility public.resource_visibility,
@@ -67,6 +68,7 @@ AS $$
   SELECT
     r.source_id,
     r.source_code,
+    r.source_version,
     r.id,
     r.kind,
     r.visibility,
@@ -110,6 +112,7 @@ src AS (
     b.id,
     b.source_id,
     b.source_code,
+    b.source_version,
     b.kind,
     b.visibility,
     b.image_url,
@@ -122,6 +125,7 @@ src AS (
 SELECT
   s.source_id,
   s.source_code,
+  s.source_version,
   s.id,
   s.kind,
   s.visibility,
