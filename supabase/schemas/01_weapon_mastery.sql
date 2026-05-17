@@ -6,7 +6,8 @@ CREATE TYPE public.weapon_mastery AS ENUM (
   'sap',
   'slow',
   'topple',
-  'vex'
+  'vex',
+  'none'
 );
 
 ALTER TYPE public.weapon_mastery OWNER TO postgres;
