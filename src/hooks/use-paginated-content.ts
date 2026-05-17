@@ -7,7 +7,11 @@ import { dropLast } from "../ui/array";
 
 export default function usePaginatedContent(
   content: string,
-  onPageCountChange: (count: number | undefined) => void,
+  onPageCountChange: (
+    count: number | undefined,
+    firstPageOverflow: boolean,
+  ) => void,
+  options: { firstPageReserved: boolean },
 ) {
   const changePageCountRef = useRef(onPageCountChange);
   const contentRef = useRef("");
@@ -19,17 +23,31 @@ export default function usePaginatedContent(
       text: string;
       textTemp: string;
     }[]
-  >([{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }]);
+  >(
+    options.firstPageReserved ?
+      [
+        { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
+        { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
+      ]
+    : [{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }],
+  );
 
   useLayoutEffect(() => {
     changePageCountRef.current = onPageCountChange;
   }, [onPageCountChange]);
 
   useLayoutEffect(() => {
-    changePageCountRef.current(undefined);
+    changePageCountRef.current(undefined, false);
     contentRef.current = content;
-    setPages([{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }]);
-  }, [content]);
+    setPages(
+      options.firstPageReserved ?
+        [
+          { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
+          { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
+        ]
+      : [{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }],
+    );
+  }, [content, options.firstPageReserved]);
 
   useLayoutEffect(() => {
     if (renderCountRef.current > 45) {
@@ -42,7 +60,7 @@ export default function usePaginatedContent(
 
     const lastPage = pages[pages.length - 1]!;
     const element = lastPage.ref.current;
-    if (!element) return changePageCountRef.current(undefined);
+    if (!element) return changePageCountRef.current(undefined, false);
     const overflow = element.scrollHeight > element.clientHeight;
 
     if (overflow) {
@@ -56,7 +74,10 @@ export default function usePaginatedContent(
       if (!left) [left, right] = [right, ""];
 
       if (!left && !contentRef.current)
-        return changePageCountRef.current(pages.length);
+        return changePageCountRef.current(
+          pages.length,
+          getFirstPageOverflow(pages),
+        );
 
       if (right) {
         setPages([...dropLast(pages), { ...lastPage, textTemp: left }]);
@@ -81,11 +102,22 @@ export default function usePaginatedContent(
       ]);
       contentRef.current = "";
     } else {
-      changePageCountRef.current(pages.length);
+      changePageCountRef.current(pages.length, getFirstPageOverflow(pages));
     }
   }, [pages]);
 
   return pages;
+}
+
+//------------------------------------------------------------------------------
+// Get First Page Overflow
+//------------------------------------------------------------------------------
+
+function getFirstPageOverflow(
+  pages: { ref: React.RefObject<HTMLDivElement | null> }[],
+): boolean {
+  const element = pages[0]?.ref.current;
+  return element ? element.scrollHeight > element.clientHeight : false;
 }
 
 //------------------------------------------------------------------------------

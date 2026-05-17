@@ -20,9 +20,13 @@ export type ResourcePokerCardProps<
   firstPageInfo?: ReactNode;
   footer?: ReactNode;
   localizedResource: L;
-  onPageCountChange?: (count: number | undefined) => void;
+  onPageCountChange?: (
+    count: number | undefined,
+    firstDetailsPageOverflow: boolean,
+  ) => void;
   palette: Palette;
   selectedPageIndex?: number;
+  startDetailsOnSecondPage?: boolean;
 };
 
 export function ResourcePokerCard<
@@ -38,6 +42,7 @@ export function ResourcePokerCard<
   onPageCountChange = () => {},
   palette,
   selectedPageIndex = -1,
+  startDetailsOnSecondPage = false,
   ...rest
 }: ResourcePokerCardProps<R, L>) {
   const imageUrl = localizedResource._raw.image_url?.trim() ?? "";
@@ -45,9 +50,9 @@ export function ResourcePokerCard<
   const firstPageIndexWithoutImage = hasImage ? 1 : 0;
 
   const handlePageCountChange = useCallback(
-    (count: number | undefined) => {
-      if (count === undefined) onPageCountChange(undefined);
-      else onPageCountChange(count + firstPageIndexWithoutImage);
+    (count: number | undefined, overflow: boolean) => {
+      if (count === undefined) onPageCountChange(undefined, false);
+      else onPageCountChange(count + firstPageIndexWithoutImage, overflow);
     },
     [firstPageIndexWithoutImage, onPageCountChange],
   );
@@ -55,6 +60,7 @@ export function ResourcePokerCard<
   const pages = usePaginatedContent(
     localizedResource.details,
     handlePageCountChange,
+    { firstPageReserved: startDetailsOnSecondPage },
   );
 
   const pageCount = pages.length + firstPageIndexWithoutImage;

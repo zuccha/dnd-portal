@@ -1,4 +1,5 @@
 import { GridItem, HStack, SimpleGrid, Span, VStack } from "@chakra-ui/react";
+import { useCallback, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Creature } from "~/models/resources/creatures/creature";
 import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
@@ -24,6 +25,15 @@ export function CreatureCard({
   ...rest
 }: CreatureCardProps) {
   const { t } = useI18nLangContext(i18nContext);
+  const [infoCompact, setInfoCompact] = useState(false);
+
+  const handlePageCountChange = useCallback(
+    (count: number | undefined, firstDetailsPageOverflow: boolean) => {
+      onPageCountChange(count, firstDetailsPageOverflow);
+      if (firstDetailsPageOverflow) setInfoCompact(true);
+    },
+    [onPageCountChange],
+  );
 
   return (
     <ResourcePokerCard
@@ -125,12 +135,10 @@ export function CreatureCard({
           </VStack>
 
           {localizedResource.info && (
-            <PokerCard.Info palette={palette}>
+            <PokerCard.Info compact={infoCompact} palette={palette}>
               {localizedResource.info}
             </PokerCard.Info>
           )}
-
-          <HStack minH="full" />
         </>
       }
       firstPageInfo={
@@ -168,8 +176,9 @@ export function CreatureCard({
         </HStack>
       }
       localizedResource={localizedResource}
-      onPageCountChange={onPageCountChange}
+      onPageCountChange={handlePageCountChange}
       palette={palette}
+      startDetailsOnSecondPage
       {...rest}
     />
   );

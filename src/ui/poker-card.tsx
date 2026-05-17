@@ -305,10 +305,11 @@ function Entry({ children, label, palette }: EntryProps) {
 
 type InfoProps = {
   children: string;
+  compact?: boolean;
   palette: Palette;
 };
 
-function Info({ children, palette }: InfoProps) {
+function Info({ children, compact, palette }: InfoProps) {
   const bleed = useBleed();
 
   return (
@@ -317,6 +318,7 @@ function Info({ children, palette }: InfoProps) {
       bgColor={`${palette[50]}99`}
       borderColor={palette[800]}
       borderYWidth={px1}
+      fontSize={compact ? rem0750 : undefined}
       fontStyle="italic"
       gap={0}
       lineHeight={1}
