@@ -119,7 +119,9 @@ export function useLocalizeWeapon(
           weapon.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
         details: [
           equipment.details,
-          ti("mastery", mastery, translateWeaponMasteryRuling(weapon.mastery)),
+          weapon.mastery !== "none" ?
+            ti("mastery", mastery, translateWeaponMasteryRuling(weapon.mastery))
+          : undefined,
         ]
           .filter((text) => text)
           .join("\n\n"),

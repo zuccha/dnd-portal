@@ -16,6 +16,7 @@ export const weaponMasterySchema = z.enum([
   "slow",
   "topple",
   "vex",
+  "none",
 ]);
 
 export const weaponMasteries = weaponMasterySchema.options;
@@ -34,6 +35,7 @@ export const {
   cleave: { en: "Cleave", it: "Doppio fendente" },
   graze: { en: "Graze", it: "Colpo di striscio" },
   nick: { en: "Nick", it: "Graffio" },
+  none: { en: "None", it: "Nessuna" },
   push: { en: "Push", it: "Spinta" },
   sap: { en: "Sap", it: "Prosciugamento" },
   slow: { en: "Slow", it: "Lentezza" },
@@ -72,6 +74,7 @@ const weaponMasteryRulings: Record<WeaponMastery, I18nString> = {
     en: "When you make the extra attack of the Light property, you can make it as part of the Attack action instead of as a Bonus Action. You can make this extra attack only once per turn.",
     it: "Quando il personaggio effettua l'attacco extra della proprietà leggera, può renderlo parte dell'azione di Attacco invece che dell'azione bonus. L'attacco extra può essere eseguito solo una volta per turno.",
   },
+  none: { en: "", it: "" },
   push: {
     en: "If you hit a creature with this weapon, you can push the creature up to 10 feet straight away from yourself if it is Large or smaller.",
     it: "Se il personaggio colpisce una creatura con quest'arma, può spingerla via da sé di almeno 3 metri se è di taglia Grande o inferiore.",
