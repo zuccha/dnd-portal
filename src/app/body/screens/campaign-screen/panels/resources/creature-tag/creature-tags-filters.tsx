@@ -1,9 +1,9 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { type StackProps } from "@chakra-ui/react";
 
 //------------------------------------------------------------------------------
 // Creature Tags Filters
 //------------------------------------------------------------------------------
 
-export default function CreatureTagsFilters(props: StackProps) {
-  return <HStack {...props}></HStack>;
+export default function CreatureTagsFilters(_props: StackProps) {
+  return null; // <HStack {...props}></HStack>;
 }

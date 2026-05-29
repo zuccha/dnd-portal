@@ -1,9 +1,9 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { type StackProps } from "@chakra-ui/react";
 
 //------------------------------------------------------------------------------
 // Items Filters
 //------------------------------------------------------------------------------
 
-export default function ItemsFilters(props: StackProps) {
-  return <HStack {...props}></HStack>;
+export default function ItemsFilters(_props: StackProps) {
+  return null; // <HStack {...props}></HStack>;
 }
