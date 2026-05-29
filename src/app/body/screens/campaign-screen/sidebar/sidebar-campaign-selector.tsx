@@ -1,8 +1,8 @@
 import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useSelectedSourceId, useSources } from "~/models/sources";
-import Select from "~/ui/select";
+import { type Source, useSelectedSourceId, useSources } from "~/models/sources";
+import Select, { type SelectOption } from "~/ui/select";
 import { compareObjects } from "~/utils/object";
 
 //------------------------------------------------------------------------------
@@ -19,27 +19,9 @@ export default function SidebarCampaignSelector() {
   const { lang, t } = useI18nLangContext(i18nContext);
 
   const [sourceOptions, sourceCategories] = useMemo(() => {
-    const coreItems = (cores.data ?? [])
-      .map(({ code, id, name }) => ({
-        label: name[lang] ?? code,
-        value: id,
-      }))
-      .sort(compareObjects("label"));
-
-    const moduleItems = (modules.data ?? [])
-      .map(({ code, id, name }) => ({
-        label: name[lang] ?? code,
-        value: id,
-      }))
-      .sort(compareObjects("label"));
-
-    const campaignItems = (campaigns.data ?? [])
-      .map(({ code, id, name }) => ({
-        label: name[lang] ?? code,
-        value: id,
-      }))
-      .sort(compareObjects("label"));
-
+    const coreItems = sourcesToOptions(cores.data ?? [], lang);
+    const moduleItems = sourcesToOptions(modules.data ?? [], lang);
+    const campaignItems = sourcesToOptions(campaigns.data ?? [], lang);
     const items = [...coreItems, ...moduleItems, ...campaignItems];
 
     const categories: {
@@ -90,11 +72,40 @@ export default function SidebarCampaignSelector() {
         disabled={!sourceOptions.length}
         onValueChange={setSelectedSourceId}
         options={sourceOptions}
+        positioning={{ slide: true }}
         size="sm"
         value={selectedSourceId ?? ""}
       />
     </VStack>
   );
+}
+
+//------------------------------------------------------------------------------
+// Sources To Options
+//------------------------------------------------------------------------------
+
+function sourcesToOptions(
+  sources: Source[],
+  lang: string,
+): SelectOption<string>[] {
+  return sources
+    .map((source) => sourceToOption(source, lang))
+    .sort(compareObjects("label"));
+}
+
+//------------------------------------------------------------------------------
+// Source To Option
+//------------------------------------------------------------------------------
+
+function sourceToOption(source: Source, lang: string): SelectOption<string> {
+  const name = source.name[lang];
+  const version = { dnd5_0: "5.0", dnd5_5: "5.5" }[source.version];
+
+  return {
+    dropdownLabel: name ? `${version} • ${name}` : source.code,
+    label: source.code,
+    value: source.id,
+  };
 }
 
 //------------------------------------------------------------------------------
