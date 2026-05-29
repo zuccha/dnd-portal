@@ -1,15 +1,21 @@
-import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type Source, useSelectedSourceId, useSources } from "~/models/sources";
+import type { SourceVersion } from "~/models/types/source-version";
 import Select, { type SelectOption } from "~/ui/select";
 import { compareObjects } from "~/utils/object";
 
 //------------------------------------------------------------------------------
-// Sidebar Campaign Selector
+// Sidebar Source Selector
 //------------------------------------------------------------------------------
 
-export default function SidebarCampaignSelector() {
+export type SidebarSourceSelectorProps = {
+  versions: SourceVersion[];
+};
+
+export default function SidebarSourceSelector({
+  versions,
+}: SidebarSourceSelectorProps) {
   const [selectedSourceId, setSelectedSourceId] = useSelectedSourceId();
 
   const campaigns = useSources(["campaign"]);
@@ -19,9 +25,9 @@ export default function SidebarCampaignSelector() {
   const { lang, t } = useI18nLangContext(i18nContext);
 
   const [sourceOptions, sourceCategories] = useMemo(() => {
-    const coreItems = sourcesToOptions(cores.data ?? [], lang);
-    const moduleItems = sourcesToOptions(modules.data ?? [], lang);
-    const campaignItems = sourcesToOptions(campaigns.data ?? [], lang);
+    const coreItems = itemizeSources(cores.data ?? [], versions, lang);
+    const moduleItems = itemizeSources(modules.data ?? [], versions, lang);
+    const campaignItems = itemizeSources(campaigns.data ?? [], versions, lang);
     const items = [...coreItems, ...moduleItems, ...campaignItems];
 
     const categories: {
@@ -52,7 +58,7 @@ export default function SidebarCampaignSelector() {
       });
 
     return [items, categories];
-  }, [cores.data, modules.data, campaigns.data, t, lang]);
+  }, [cores.data, versions, lang, modules.data, campaigns.data, t]);
 
   const fetched = campaigns.isFetched && modules.isFetched && cores.isFetched;
 
@@ -66,17 +72,16 @@ export default function SidebarCampaignSelector() {
   }, [fetched, setSelectedSourceId, sourceOptions]);
 
   return (
-    <VStack align="flex-start" gap={2} w="full">
-      <Select.Enum
-        categories={sourceCategories}
-        disabled={!sourceOptions.length}
-        onValueChange={setSelectedSourceId}
-        options={sourceOptions}
-        positioning={{ slide: true }}
-        size="sm"
-        value={selectedSourceId ?? ""}
-      />
-    </VStack>
+    <Select.Enum
+      categories={sourceCategories}
+      disabled={!sourceOptions.length}
+      flex={1}
+      onValueChange={setSelectedSourceId}
+      options={sourceOptions}
+      positioning={{ slide: true }}
+      size="sm"
+      value={selectedSourceId ?? ""}
+    />
   );
 }
 
@@ -84,11 +89,13 @@ export default function SidebarCampaignSelector() {
 // Sources To Options
 //------------------------------------------------------------------------------
 
-function sourcesToOptions(
+function itemizeSources(
   sources: Source[],
+  versions: SourceVersion[],
   lang: string,
 ): SelectOption<string>[] {
   return sources
+    .filter((source) => versions.includes(source.version))
     .map((source) => sourceToOption(source, lang))
     .sort(compareObjects("label"));
 }

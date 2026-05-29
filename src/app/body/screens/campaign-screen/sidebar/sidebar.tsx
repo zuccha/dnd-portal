@@ -8,6 +8,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { i18nSystems, useI18nSystem } from "~/i18n/i18n-system";
 import { useLangs } from "~/models/lang";
 import { useSelectedSourceId } from "~/models/sources";
+import { useSelectedSourceVersion } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
 import IconButton from "~/ui/icon-button";
@@ -15,7 +16,8 @@ import Link from "~/ui/link";
 import Select from "~/ui/select";
 import { compareObjects } from "~/utils/object";
 import SidebarCampaign from "./sidebar-campaign";
-import SidebarCampaignSelector from "./sidebar-campaign-selector";
+import SidebarSourceSelector from "./sidebar-source-selector";
+import SidebarSourceVersionsSelector from "./sidebar-source-versions-selector";
 
 //------------------------------------------------------------------------------
 // Sidebar
@@ -23,6 +25,8 @@ import SidebarCampaignSelector from "./sidebar-campaign-selector";
 
 export default function Sidebar() {
   const [sourceId] = useSelectedSourceId();
+  const [selectedSourceVersions, setSelectedSourceVersions] =
+    useSelectedSourceVersion();
   const [collapsed, setCollapsed] = useState(false);
 
   if (collapsed)
@@ -58,7 +62,13 @@ export default function Sidebar() {
           <SystemSelect />
         </HStack>
 
-        <SidebarCampaignSelector />
+        <HStack w="full">
+          <SidebarSourceVersionsSelector
+            onSourceVersionsChange={setSelectedSourceVersions}
+            sourceVersions={selectedSourceVersions}
+          />
+          <SidebarSourceSelector versions={selectedSourceVersions} />
+        </HStack>
       </VStack>
 
       {sourceId && <SidebarCampaign sourceId={sourceId} />}
@@ -93,7 +103,7 @@ function LanguageSelect() {
       options={languageOptions}
       size="sm"
       value={language}
-      w="4em"
+      w="6em"
     />
   );
 }
@@ -119,12 +129,10 @@ function SystemSelect() {
 
   return (
     <Select.Enum
-      flex={1}
       onValueChange={setSystem}
       options={systemOptions}
       size="sm"
       value={system}
-      w="6.5em"
     />
   );
 }
