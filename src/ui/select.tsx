@@ -10,7 +10,11 @@ import { useLayoutEffect, useMemo } from "react";
 // Select
 //------------------------------------------------------------------------------
 
-export type SelectOption<T> = { label: string; value: T };
+export type SelectOption<T> = {
+  dropdownLabel?: string;
+  label: string;
+  value: T;
+};
 
 export type SelectProps<T> = Omit<
   ChakraSelectRootProps,
@@ -70,10 +74,12 @@ export default function Select<T>({
         {categories ?
           categories.map(({ id, items, title }) => (
             <ChakraSelect.ItemGroup key={id}>
-              <ChakraSelect.ItemGroupLabel>{title}</ChakraSelect.ItemGroupLabel>
+              <ChakraSelect.ItemGroupLabel fontWeight="bold">
+                {title}
+              </ChakraSelect.ItemGroupLabel>
               {items.map((item) => (
                 <ChakraSelect.Item item={item} key={stringify(item.value)}>
-                  {item.label}
+                  {item.dropdownLabel ?? item.label}
                   <ChakraSelect.ItemIndicator />
                 </ChakraSelect.Item>
               ))}
@@ -81,7 +87,7 @@ export default function Select<T>({
           ))
         : collection.items.map((option) => (
             <ChakraSelect.Item item={option} key={option.value}>
-              {option.label}
+              {option.dropdownLabel ?? option.label}
               <ChakraSelect.ItemIndicator />
             </ChakraSelect.Item>
           ))
