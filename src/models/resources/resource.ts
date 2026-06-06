@@ -39,7 +39,7 @@ export const defaultResource: Resource = {
   source_code: "",
   source_id: "",
   source_version: "dnd5_5",
-  visibility: "private",
+  visibility: "public",
 };
 
 //------------------------------------------------------------------------------
