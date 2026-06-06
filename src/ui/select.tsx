@@ -126,7 +126,7 @@ export default function Select<T>({
     >
       <ChakraSelect.HiddenSelect aria-labelledby="" />
       <ChakraSelect.Control>
-        <ChakraSelect.Trigger>
+        <ChakraSelect.Trigger cursor={rest.disabled ? undefined : "pointer"}>
           <ChakraSelect.ValueText placeholder={placeholder} />
         </ChakraSelect.Trigger>
         <ChakraSelect.IndicatorGroup>

@@ -51,6 +51,8 @@ export default function InclusionSelect({
       <Popover.Trigger asChild>
         <Box position="relative" {...rest}>
           <Button
+            _hover={{ bgColor: "unset" }}
+            fontWeight="normal"
             px={2.5}
             size={size}
             variant="outline"
@@ -68,7 +70,7 @@ export default function InclusionSelect({
                     )
                     .filter(Boolean)
                     .join(", ")
-                : <Span color="fg.subtle">{placeholder}</Span>}
+                : <Span color="fg.muted">{placeholder}</Span>}
               </Span>
               <Icon Icon={ChevronDownIcon} color="fg.muted" />
             </HStack>
