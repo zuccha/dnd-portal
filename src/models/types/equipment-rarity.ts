@@ -30,7 +30,7 @@ export const {
   artifact: { en: "Artifact", it: "Manufatto" },
   common: { en: "Common", it: "Comune" },
   legendary: { en: "Legendary", it: "Leggendario" },
-  rare: { en: "Rare", it: "Rara" },
+  rare: { en: "Rare", it: "Raro" },
   uncommon: { en: "Uncommon", it: "Non Comune" },
   very_rare: { en: "Very Rare", it: "Molto Raro" },
 });
