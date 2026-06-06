@@ -51,7 +51,7 @@ export function gramsToWeightValue(g: number, unit: WeightUnit): number {
 //------------------------------------------------------------------------------
 
 export function gramsToWeightImp(g: number): Weight {
-  return { unit: "g", value: g / gInLb };
+  return { unit: "lb", value: g / gInLb };
 }
 
 //------------------------------------------------------------------------------
