@@ -5,6 +5,7 @@ import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
+import CaptionInput from "~/ui/caption-input";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
@@ -24,58 +25,66 @@ export default function WeaponsFilters(props: StackProps) {
 
   return (
     <EquipmentFilters filters={filters} onFiltersChange={setFilters} {...props}>
-      <InclusionSelect
-        includes={filters.types ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ types: { ...filters.types, ...partial } })
-        }
-        options={typeOptions}
-        size="sm"
-      >
-        {t("types")}
-      </InclusionSelect>
+      <CaptionInput caption={t("types")} w="full">
+        <InclusionSelect
+          includes={filters.types ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ types: { ...filters.types, ...partial } })
+          }
+          options={typeOptions}
+          size="sm"
+          w="full"
+        >
+          {t("types")}
+        </InclusionSelect>
+      </CaptionInput>
 
-      <InclusionSelect
-        includes={filters.properties ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({
-            properties: { ...filters.properties, ...partial },
-          })
-        }
-        options={propertyOptions}
-        size="sm"
-      >
-        {t("properties")}
-      </InclusionSelect>
+      <CaptionInput caption={t("properties")} w="full">
+        <InclusionSelect
+          includes={filters.properties ?? {}}
+          onValueChange={(partial) =>
+            setFilters({
+              properties: { ...filters.properties, ...partial },
+            })
+          }
+          options={propertyOptions}
+          size="sm"
+          w="full"
+        >
+          {t("properties")}
+        </InclusionSelect>
+      </CaptionInput>
 
-      <InclusionSelect
-        includes={filters.masteries ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ masteries: { ...filters.masteries, ...partial } })
-        }
-        options={masteryOptions}
-        size="sm"
-      >
-        {t("masteries")}
-      </InclusionSelect>
+      <CaptionInput caption={t("masteries")} w="full">
+        <InclusionSelect
+          includes={filters.masteries ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ masteries: { ...filters.masteries, ...partial } })
+          }
+          options={masteryOptions}
+          size="sm"
+          w="full"
+        >
+          {t("masteries")}
+        </InclusionSelect>
+      </CaptionInput>
 
       <InclusionButton
         include={filters.melee}
         onValueChange={(melee) => setFilters({ melee })}
         size="sm"
+        w="full"
       >
-        <Icon Icon={SwordsIcon} size="sm" />
+        <Icon Icon={SwordsIcon} size="sm" /> {t("melee")}
       </InclusionButton>
 
       <InclusionButton
         include={filters.ranged}
         onValueChange={(ranged) => setFilters({ ranged })}
         size="sm"
+        w="full"
       >
-        <Icon Icon={BowArrowIcon} size="sm" />
+        <Icon Icon={BowArrowIcon} size="sm" /> {t("ranged")}
       </InclusionButton>
     </EquipmentFilters>
   );
@@ -90,9 +99,17 @@ const i18nContext = {
     en: "Masteries",
     it: "Padronanze",
   },
+  melee: {
+    en: "Melee",
+    it: "Da mischia",
+  },
   properties: {
     en: "Properties",
     it: "Proprietà",
+  },
+  ranged: {
+    en: "Ranged",
+    it: "A distanza",
   },
   types: {
     en: "Type",

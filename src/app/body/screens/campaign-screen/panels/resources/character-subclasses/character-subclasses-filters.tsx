@@ -1,7 +1,8 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
+import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 
 //------------------------------------------------------------------------------
@@ -24,22 +25,27 @@ export default function CharacterSubclassesFilters({
   const [filters, setFilters] = characterSubclassStore.useFilters();
 
   return (
-    <HStack {...rest}>
-      <InclusionSelect
-        disabled={!characterClassOptions.length}
-        includes={filters.character_class_ids ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({
-            character_class_ids: { ...filters.character_class_ids, ...partial },
-          })
-        }
-        options={characterClassOptions}
-        size="sm"
-      >
-        {t("character_classes")}
-      </InclusionSelect>
-    </HStack>
+    <VStack {...rest}>
+      <CaptionInput caption={t("character_classes")} w="full">
+        <InclusionSelect
+          buttonProps={{ disabled: !characterClassOptions.length }}
+          includes={filters.character_class_ids ?? {}}
+          onValueChange={(partial) =>
+            setFilters({
+              character_class_ids: {
+                ...filters.character_class_ids,
+                ...partial,
+              },
+            })
+          }
+          options={characterClassOptions}
+          size="sm"
+          w="full"
+        >
+          {t("character_classes")}
+        </InclusionSelect>
+      </CaptionInput>
+    </VStack>
   );
 }
 

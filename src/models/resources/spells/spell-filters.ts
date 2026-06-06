@@ -16,15 +16,15 @@ export const spellOrderOptions: { label: I18nString; value: string }[] = [
   ...resourceOrderOptions,
   {
     label: {
-      en: "Sort by Level (0-9)",
-      it: "Ordina per Livello (0-9)",
+      en: "Level (0-9)",
+      it: "Livello (0-9)",
     },
     value: "level.asc",
   },
   {
     label: {
-      en: "Sort by Level (9-0)",
-      it: "Ordina per Livello (9-0)",
+      en: "Level (9-0)",
+      it: "Livello (9-0)",
     },
     value: "level.desc",
   },

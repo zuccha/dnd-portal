@@ -101,9 +101,9 @@ export function createResourcesPanel<
 
           <ResourcesViewSettings sourceId={sourceId} />
 
-          <VStack align="flex-start" w="full">
+          <VStack align="flex-start" gap={3} w="full">
             <ResourcesGenericFilters sourceId={sourceId} />
-            <ResourceFilters sourceId={sourceId} w="full" />
+            <ResourceFilters gap={3} sourceId={sourceId} w="full" />
           </VStack>
 
           <ResourcesCounter sourceId={sourceId} />

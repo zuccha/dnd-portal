@@ -14,6 +14,7 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { useResourcesSourcesFilter } from "~/models/resources/resources-sources-filter";
 import { useSelectedSource } from "~/models/sources";
+import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 import Input from "~/ui/input";
 import Select from "~/ui/select";
@@ -68,43 +69,51 @@ export function createResourcesGenericFilters<
       <>
         <Heading size="sm">{t("heading")}</Heading>
 
-        <InclusionSelect
-          buttonProps={{ disabled: !options.length }}
-          includes={sources}
-          onValueChange={(partial) =>
-            setSources((prev) => ({ ...prev, ...partial }))
-          }
-          options={options}
-          size="sm"
-          w="full"
-        >
-          {t("modules")}
-        </InclusionSelect>
+        <CaptionInput caption={t("modules")} w="full">
+          <InclusionSelect
+            buttonProps={{ disabled: !options.length }}
+            includes={sources}
+            onValueChange={(partial) =>
+              setSources((prev) => ({ ...prev, ...partial }))
+            }
+            options={options}
+            size="sm"
+            w="full"
+          >
+            {t("modules")}
+          </InclusionSelect>
+        </CaptionInput>
 
-        <Select.Enum
-          onValueChange={(value) => {
-            const order = value.split(".");
-            const order_by = order[0] ?? "name";
-            const maybe_order_dir = z.enum(["asc", "desc"]).safeParse(order[1]);
-            const order_dir = maybe_order_dir.data ?? "asc";
-            setTempFilters((prev) => ({ ...prev, order_by, order_dir }));
-          }}
-          options={orderOptions}
-          size="sm"
-          value={`${tempFilters.order_by}.${tempFilters.order_dir}`}
-          w="full"
-        />
+        <CaptionInput caption={t("sort_by")} w="full">
+          <Select.Enum
+            onValueChange={(value) => {
+              const order = value.split(".");
+              const order_by = order[0] ?? "name";
+              const maybe_order_dir = z
+                .enum(["asc", "desc"])
+                .safeParse(order[1]);
+              const order_dir = maybe_order_dir.data ?? "asc";
+              setTempFilters((prev) => ({ ...prev, order_by, order_dir }));
+            }}
+            options={orderOptions}
+            size="sm"
+            value={`${tempFilters.order_by}.${tempFilters.order_dir}`}
+            w="full"
+          />
+        </CaptionInput>
 
-        <Input
-          groupProps={{ w: "full" }}
-          id={`filter-${store.name.s}-name`}
-          onValueChange={(name) =>
-            setTempFilters((prev) => ({ ...prev, name }))
-          }
-          placeholder={t("name.placeholder")}
-          size="sm"
-          value={tempFilters.name}
-        />
+        <CaptionInput caption={t("name.placeholder")} w="full">
+          <Input
+            groupProps={{ w: "full" }}
+            id={`filter-${store.name.s}-name`}
+            onValueChange={(name) =>
+              setTempFilters((prev) => ({ ...prev, name }))
+            }
+            placeholder={t("name.placeholder")}
+            size="sm"
+            value={tempFilters.name}
+          />
+        </CaptionInput>
       </>
     );
   };
@@ -126,5 +135,9 @@ const i18nContext = {
   "name.placeholder": {
     en: "Name",
     it: "Nome",
+  },
+  "sort_by": {
+    en: "Sort by",
+    it: "Ordina per",
   },
 };

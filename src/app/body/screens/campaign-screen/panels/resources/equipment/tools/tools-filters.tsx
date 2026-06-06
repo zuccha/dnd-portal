@@ -3,6 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useToolTypeOptions } from "~/models/types/tool-type";
+import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 import EquipmentFilters from "../equipment-filters";
 
@@ -19,29 +20,33 @@ export default function ToolsFilters(props: StackProps) {
 
   return (
     <EquipmentFilters filters={filters} onFiltersChange={setFilters} {...props}>
-      <InclusionSelect
-        includes={filters.types ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ types: { ...filters.types, ...partial } })
-        }
-        options={typeOptions}
-        size="sm"
-      >
-        {t("types")}
-      </InclusionSelect>
+      <CaptionInput caption={t("types")} w="full">
+        <InclusionSelect
+          includes={filters.types ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ types: { ...filters.types, ...partial } })
+          }
+          options={typeOptions}
+          size="sm"
+          w="full"
+        >
+          {t("types")}
+        </InclusionSelect>
+      </CaptionInput>
 
-      <InclusionSelect
-        includes={filters.abilities ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ abilities: { ...filters.abilities, ...partial } })
-        }
-        options={abilityOptions}
-        size="sm"
-      >
-        {t("abilities")}
-      </InclusionSelect>
+      <CaptionInput caption={t("abilities")} w="full">
+        <InclusionSelect
+          includes={filters.abilities ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ abilities: { ...filters.abilities, ...partial } })
+          }
+          options={abilityOptions}
+          size="sm"
+          w="full"
+        >
+          {t("abilities")}
+        </InclusionSelect>
+      </CaptionInput>
     </EquipmentFilters>
   );
 }

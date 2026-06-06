@@ -1,4 +1,4 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { HStack, type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
@@ -6,6 +6,7 @@ import { useCreatureHabitatOptions } from "~/models/types/creature-habitat";
 import { useCreatureSizeOptions } from "~/models/types/creature-size";
 import { useCreatureTreasureOptions } from "~/models/types/creature-treasure";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
+import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 import NumberInput from "~/ui/number-input";
 
@@ -24,88 +25,100 @@ export default function CreaturesFilters(props: StackProps) {
   const sizeOptions = useCreatureSizeOptions();
 
   return (
-    <HStack {...props}>
-      <InclusionSelect
-        includes={filters.types ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ types: { ...filters.types, ...partial } })
-        }
-        options={typeOptions}
-        size="sm"
-      >
-        {t("types")}
-      </InclusionSelect>
-
-      <InclusionSelect
-        includes={filters.size ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ size: { ...filters.size, ...partial } })
-        }
-        options={sizeOptions}
-        size="sm"
-      >
-        {t("size")}
-      </InclusionSelect>
-
-      <InclusionSelect
-        includes={filters.alignment ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ alignment: { ...filters.alignment, ...partial } })
-        }
-        options={alignmentOptions}
-        size="sm"
-      >
-        {t("alignment")}
-      </InclusionSelect>
-
-      <HStack>
-        <NumberInput
-          inputProps={{ minW: "4em" }}
-          max={filters.cr_max}
-          min={0}
-          onValueChange={(value) => setFilters({ cr_min: value })}
+    <VStack {...props}>
+      <CaptionInput caption={t("types")} w="full">
+        <InclusionSelect
+          includes={filters.types ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ types: { ...filters.types, ...partial } })
+          }
+          options={typeOptions}
           size="sm"
-          value={filters.cr_min}
-          w="4em"
-        />
+          w="full"
+        >
+          {t("types")}
+        </InclusionSelect>
+      </CaptionInput>
 
-        <NumberInput
-          inputProps={{ minW: "4em" }}
-          min={filters.cr_min}
-          onValueChange={(value) => setFilters({ cr_max: value })}
+      <CaptionInput caption={t("size")} w="full">
+        <InclusionSelect
+          includes={filters.size ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ size: { ...filters.size, ...partial } })
+          }
+          options={sizeOptions}
           size="sm"
-          value={filters.cr_max}
-          w="4em"
-        />
+          w="full"
+        >
+          {t("size")}
+        </InclusionSelect>
+      </CaptionInput>
+
+      <CaptionInput caption={t("alignment")} w="full">
+        <InclusionSelect
+          includes={filters.alignment ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ alignment: { ...filters.alignment, ...partial } })
+          }
+          options={alignmentOptions}
+          size="sm"
+          w="full"
+        >
+          {t("alignment")}
+        </InclusionSelect>
+      </CaptionInput>
+
+      <CaptionInput caption={t("habitats")} w="full">
+        <InclusionSelect
+          includes={filters.habitats ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ habitats: { ...filters.habitats, ...partial } })
+          }
+          options={habitatOptions}
+          size="sm"
+          w="full"
+        >
+          {t("habitats")}
+        </InclusionSelect>
+      </CaptionInput>
+
+      <CaptionInput caption={t("treasures")} w="full">
+        <InclusionSelect
+          includes={filters.treasures ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ treasures: { ...filters.treasures, ...partial } })
+          }
+          options={treasureOptions}
+          size="sm"
+          w="full"
+        >
+          {t("treasures")}
+        </InclusionSelect>
+      </CaptionInput>
+
+      <HStack w="full">
+        <CaptionInput caption={t("cr_min")} flex={1}>
+          <NumberInput
+            inputProps={{ minW: "4em" }}
+            max={filters.cr_max}
+            min={0}
+            onValueChange={(value) => setFilters({ cr_min: value })}
+            size="sm"
+            value={filters.cr_min}
+          />
+        </CaptionInput>
+
+        <CaptionInput caption={t("cr_max")} flex={1}>
+          <NumberInput
+            inputProps={{ minW: "4em" }}
+            min={filters.cr_min}
+            onValueChange={(value) => setFilters({ cr_max: value })}
+            size="sm"
+            value={filters.cr_max}
+          />
+        </CaptionInput>
       </HStack>
-
-      <InclusionSelect
-        includes={filters.habitats ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ habitats: { ...filters.habitats, ...partial } })
-        }
-        options={habitatOptions}
-        size="sm"
-      >
-        {t("habitats")}
-      </InclusionSelect>
-
-      <InclusionSelect
-        includes={filters.treasures ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ treasures: { ...filters.treasures, ...partial } })
-        }
-        options={treasureOptions}
-        size="sm"
-      >
-        {t("treasures")}
-      </InclusionSelect>
-    </HStack>
+    </VStack>
   );
 }
 
@@ -120,11 +133,11 @@ const i18nContext = {
   },
   cr_max: {
     en: "Max CR",
-    it: "CR Max",
+    it: "GS Max",
   },
   cr_min: {
     en: "Min CR",
-    it: "CR Min",
+    it: "GS Min",
   },
   habitats: {
     en: "Habitats",

@@ -1,7 +1,8 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { languageStore } from "~/models/resources/languages/language-store";
 import { useLanguageRarityOptions } from "~/models/types/language-rarity";
+import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 
 //------------------------------------------------------------------------------
@@ -15,21 +16,27 @@ export default function LanguagesFilters(props: StackProps) {
   const rarityOptions = useLanguageRarityOptions();
 
   return (
-    <HStack {...props}>
-      <InclusionSelect
-        includes={filters.rarity ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ rarity: { ...filters.rarity, ...partial } })
-        }
-        options={rarityOptions}
-        size="sm"
-      >
-        {t("rarity")}
-      </InclusionSelect>
-    </HStack>
+    <VStack {...props}>
+      <CaptionInput caption={t("rarity")} w="full">
+        <InclusionSelect
+          includes={filters.rarity ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ rarity: { ...filters.rarity, ...partial } })
+          }
+          options={rarityOptions}
+          size="sm"
+          w="full"
+        >
+          {t("rarity")}
+        </InclusionSelect>
+      </CaptionInput>
+    </VStack>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
 
 const i18nContext = {
   rarity: {

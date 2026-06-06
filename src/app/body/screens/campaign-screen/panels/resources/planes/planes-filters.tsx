@@ -1,8 +1,9 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
 import { usePlaneCategoryOptions } from "~/models/types/plane-category";
+import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 
 //------------------------------------------------------------------------------
@@ -17,33 +18,41 @@ export default function PlanesFilters(props: StackProps) {
   const alignmentOptions = useCreatureAlignmentOptions();
 
   return (
-    <HStack {...props}>
-      <InclusionSelect
-        includes={filters.categories ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ categories: { ...filters.categories, ...partial } })
-        }
-        options={categoryOptions}
-        size="sm"
-      >
-        {t("categories")}
-      </InclusionSelect>
+    <VStack {...props}>
+      <CaptionInput caption={t("categories")} w="full">
+        <InclusionSelect
+          includes={filters.categories ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ categories: { ...filters.categories, ...partial } })
+          }
+          options={categoryOptions}
+          size="sm"
+          w="full"
+        >
+          {t("categories")}
+        </InclusionSelect>
+      </CaptionInput>
 
-      <InclusionSelect
-        includes={filters.alignments ?? {}}
-        minW="10em"
-        onValueChange={(partial) =>
-          setFilters({ alignments: { ...filters.alignments, ...partial } })
-        }
-        options={alignmentOptions}
-        size="sm"
-      >
-        {t("alignments")}
-      </InclusionSelect>
-    </HStack>
+      <CaptionInput caption={t("alignments")} w="full">
+        <InclusionSelect
+          includes={filters.alignments ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ alignments: { ...filters.alignments, ...partial } })
+          }
+          options={alignmentOptions}
+          size="sm"
+          w="full"
+        >
+          {t("alignments")}
+        </InclusionSelect>
+      </CaptionInput>
+    </VStack>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
 
 const i18nContext = {
   alignments: {

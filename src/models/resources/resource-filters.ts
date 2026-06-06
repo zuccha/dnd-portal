@@ -8,15 +8,15 @@ import type { I18nString } from "~/i18n/i18n-string";
 export const resourceOrderOptions: { label: I18nString; value: string }[] = [
   {
     label: {
-      en: "Sort by Name (A-Z)",
-      it: "Ordina per Nome (A-Z)",
+      en: "Name (A-Z)",
+      it: "Nome (A-Z)",
     },
     value: `name.asc`,
   },
   {
     label: {
-      en: "Sort by Name (Z-A)",
-      it: "Ordina per Nome (Z-A)",
+      en: "Name (Z-A)",
+      it: "Nome (Z-A)",
     },
     value: "name.desc",
   },

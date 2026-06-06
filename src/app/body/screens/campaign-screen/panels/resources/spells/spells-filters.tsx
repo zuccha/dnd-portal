@@ -11,6 +11,7 @@ import {
   useSpellLevelOptions,
 } from "~/models/types/spell-level";
 import { useSpellSchoolOptions } from "~/models/types/spell-school";
+import CaptionInput from "~/ui/caption-input";
 import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
@@ -44,55 +45,68 @@ export default function SpellsFilters({
 
   return (
     <VStack {...rest}>
-      <InclusionSelect
-        includes={filters.levels ?? {}}
-        onValueChange={(partial) =>
-          setFilters({ levels: { ...filters.levels, ...partial } })
-        }
-        options={stringifiedLevelOptions}
-        size="sm"
-        w="full"
-      >
-        {t("levels")}
-      </InclusionSelect>
+      <CaptionInput caption={t("levels")} w="full">
+        <InclusionSelect
+          includes={filters.levels ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ levels: { ...filters.levels, ...partial } })
+          }
+          options={stringifiedLevelOptions}
+          size="sm"
+          w="full"
+        >
+          {t("levels")}
+        </InclusionSelect>
+      </CaptionInput>
 
-      <InclusionSelect
-        includes={filters.character_class_ids ?? {}}
-        onValueChange={(partial) =>
-          setFilters({
-            character_class_ids: { ...filters.character_class_ids, ...partial },
-          })
-        }
-        options={characterClassOptions}
-        size="sm"
-        w="full"
-      >
-        {t("character_classes")}
-      </InclusionSelect>
+      <CaptionInput caption={t("character_classes")} w="full">
+        <InclusionSelect
+          includes={filters.character_class_ids ?? {}}
+          onValueChange={(partial) =>
+            setFilters({
+              character_class_ids: {
+                ...filters.character_class_ids,
+                ...partial,
+              },
+            })
+          }
+          options={characterClassOptions}
+          size="sm"
+          w="full"
+        >
+          {t("character_classes")}
+        </InclusionSelect>
+      </CaptionInput>
 
-      <InclusionSelect
-        includes={filters.schools ?? {}}
-        onValueChange={(partial) =>
-          setFilters({ schools: { ...filters.schools, ...partial } })
-        }
-        options={schoolOptions}
-        size="sm"
-        w="full"
-      >
-        {t("schools")}
-      </InclusionSelect>
+      <CaptionInput caption={t("schools")} w="full">
+        <InclusionSelect
+          includes={filters.schools ?? {}}
+          onValueChange={(partial) =>
+            setFilters({ schools: { ...filters.schools, ...partial } })
+          }
+          options={schoolOptions}
+          size="sm"
+          w="full"
+        >
+          {t("schools")}
+        </InclusionSelect>
+      </CaptionInput>
 
-      <InclusionSelect
-        includes={filters.casting_time ?? {}}
-        onValueChange={(partial) =>
-          setFilters({ casting_time: { ...filters.casting_time, ...partial } })
-        }
-        options={castingTimeOptions}
-        size="sm"
-        w="full"
-      >
-        {t("casting_time")}
-      </InclusionSelect>
+      <CaptionInput caption={t("casting_time")} w="full">
+        <InclusionSelect
+          includes={filters.casting_time ?? {}}
+          onValueChange={(partial) =>
+            setFilters({
+              casting_time: { ...filters.casting_time, ...partial },
+            })
+          }
+          options={castingTimeOptions}
+          size="sm"
+          w="full"
+        >
+          {t("casting_time")}
+        </InclusionSelect>
+      </CaptionInput>
 
       <InclusionButton
         include={filters.ritual}

@@ -8,6 +8,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import CaptionInput from "~/ui/caption-input";
 import NumberInput from "~/ui/number-input";
 import Select from "~/ui/select";
 import { usePaletteNameOptions } from "~/utils/palette";
@@ -39,27 +40,31 @@ export function createResourcesViewSettings<
 
     if (view === "cards") {
       return (
-        <VStack align="flex-start" w="full">
+        <VStack align="flex-start" gap={3} w="full">
           <Heading size="sm">{t("heading")}</Heading>
 
-          <NumberInput
-            formatOptions={{ style: "percent" }}
-            max={2}
-            min={0.2}
-            onValueChange={context.setZoom}
-            size="sm"
-            step={0.1}
-            value={zoom * 100}
-            w="full"
-          />
+          <CaptionInput caption={t("zoom")} w="full">
+            <NumberInput
+              formatOptions={{ style: "percent" }}
+              max={2}
+              min={0.2}
+              onValueChange={context.setZoom}
+              size="sm"
+              step={0.1}
+              value={zoom * 100}
+              w="full"
+            />
+          </CaptionInput>
 
-          <Select.Enum
-            onValueChange={context.setPaletteName}
-            options={paletteNameOptions}
-            size="sm"
-            value={paletteName}
-            w="full"
-          />
+          <CaptionInput caption={t("accent_color")} w="full">
+            <Select.Enum
+              onValueChange={context.setPaletteName}
+              options={paletteNameOptions}
+              size="sm"
+              value={paletteName}
+              w="full"
+            />
+          </CaptionInput>
         </VStack>
       );
     }
@@ -73,8 +78,16 @@ export function createResourcesViewSettings<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  accent_color: {
+    en: "Color",
+    it: "Colore",
+  },
   heading: {
     en: "View",
     it: "Vista",
+  },
+  zoom: {
+    en: "Zoom",
+    it: "Zoom",
   },
 };
