@@ -115,10 +115,10 @@ export function createResourcesAlbum<
     return (
       <Flex
         flex={1}
+        h="full"
         onScroll={virtualize}
         overflow="scroll"
         ref={containerRef}
-        w="full"
       >
         <Box bgColor="bg.subtle" w="full">
           <Wrap

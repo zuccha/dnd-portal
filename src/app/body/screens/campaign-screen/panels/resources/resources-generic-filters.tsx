@@ -1,3 +1,4 @@
+import { Heading } from "@chakra-ui/react";
 import { useMemo } from "react";
 import z from "zod";
 import useDebouncedState from "~/hooks/use-debounced-value";
@@ -65,15 +66,17 @@ export function createResourcesGenericFilters<
 
     return (
       <>
+        <Heading size="sm">{t("heading")}</Heading>
+
         <InclusionSelect
-          disabled={!options.length}
+          buttonProps={{ disabled: !options.length }}
           includes={sources}
-          minW="10em"
           onValueChange={(partial) =>
             setSources((prev) => ({ ...prev, ...partial }))
           }
           options={options}
           size="sm"
+          w="full"
         >
           {t("modules")}
         </InclusionSelect>
@@ -89,11 +92,11 @@ export function createResourcesGenericFilters<
           options={orderOptions}
           size="sm"
           value={`${tempFilters.order_by}.${tempFilters.order_dir}`}
-          w="13.5em"
+          w="full"
         />
 
         <Input
-          groupProps={{ w: "auto" }}
+          groupProps={{ w: "full" }}
           id={`filter-${store.name.s}-name`}
           onValueChange={(name) =>
             setTempFilters((prev) => ({ ...prev, name }))
@@ -101,7 +104,6 @@ export function createResourcesGenericFilters<
           placeholder={t("name.placeholder")}
           size="sm"
           value={tempFilters.name}
-          w="15em"
         />
       </>
     );
@@ -113,6 +115,10 @@ export function createResourcesGenericFilters<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "heading": {
+    en: "Filters",
+    it: "Filtri",
+  },
   "modules": {
     en: "Modules",
     it: "Moduli",

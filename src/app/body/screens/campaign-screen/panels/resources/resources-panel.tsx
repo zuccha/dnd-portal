@@ -1,4 +1,4 @@
-import { HStack, Separator, VStack } from "@chakra-ui/react";
+import { HStack, VStack } from "@chakra-ui/react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -29,10 +29,13 @@ import {
 } from "./resources-filters";
 import { createResourcesGenericFilters } from "./resources-generic-filters";
 import { createResourcesPrintMode } from "./resources-print-mode";
+import ResourcesSidebar from "./resources-sidebar";
+import ResourcesSidebarToggleButton from "./resources-sidebar-toggle-button";
 import {
   type ResourcesTableExtra,
   createResourcesTable,
 } from "./resources-table";
+import { createResourcesViewSettings } from "./resources-view-settings";
 import { createResourcesViewSwitch } from "./resources-view-switch";
 
 export function createResourcesPanel<
@@ -71,6 +74,7 @@ export function createResourcesPanel<
   const ResourcesGenericFilters = createResourcesGenericFilters(store, context);
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesViewSwitch = createResourcesViewSwitch(store, context);
+  const ResourcesViewSettings = createResourcesViewSettings(store, context);
 
   const ResourcesPrintMode = createResourcesPrintMode(store, context, album);
 
@@ -82,34 +86,32 @@ export function createResourcesPanel<
       return <ResourcesPrintMode h="full" sourceId={sourceId} w="full" />;
 
     return (
-      <VStack flex={1} gap={0} h="full" overflow="auto" w="full">
-        <VStack
-          align="space-between"
-          borderBottomWidth={1}
-          gap={2}
-          justify="center"
-          px={4}
-          py={2}
-          w="full"
-        >
-          <HStack align="flex-start" justify="space-between" w="full">
-            <HStack wrap="wrap">
-              <ResourcesActions sourceId={sourceId} />
-              <ResourcesGenericFilters sourceId={sourceId} />
-              <Separator h="1.5em" orientation="vertical" />
-              <ResourcesCounter sourceId={sourceId} />
-            </HStack>
-            <ResourcesViewSwitch sourceId={sourceId} />
-          </HStack>
-          <ResourceFilters sourceId={sourceId} w="full" wrap="wrap" />
-        </VStack>
-
+      <HStack flex={1} gap={0} h="full" overflow="auto" w="full">
         {view === "table" && <ResourcesTable sourceId={sourceId} />}
         {view === "cards" && <ResourcesAlbum sourceId={sourceId} />}
 
+        <ResourcesSidebar>
+          <HStack justify="space-between" w="full">
+            <HStack gap={0} ml={-2}>
+              <ResourcesSidebarToggleButton />
+              <ResourcesActions sourceId={sourceId} />
+            </HStack>
+            <ResourcesViewSwitch sourceId={sourceId} />
+          </HStack>
+
+          <ResourcesViewSettings sourceId={sourceId} />
+
+          <VStack align="flex-start" w="full">
+            <ResourcesGenericFilters sourceId={sourceId} />
+            <ResourceFilters sourceId={sourceId} w="full" />
+          </VStack>
+
+          <ResourcesCounter sourceId={sourceId} />
+        </ResourcesSidebar>
+
         <ResourceCreator sourceId={sourceId} />
         <ResourceUpdater sourceId={sourceId} />
-      </VStack>
+      </HStack>
     );
   };
 }

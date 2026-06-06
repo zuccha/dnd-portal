@@ -112,7 +112,7 @@ export function createResourcesActions<
     return (
       <Menu.Root>
         <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
-          <IconButton Icon={EllipsisVerticalIcon} size="sm" variant="ghost" />
+          <IconButton Icon={EllipsisVerticalIcon} size="xs" variant="ghost" />
         </Menu.Trigger>
         <Portal>
           <Menu.Positioner>

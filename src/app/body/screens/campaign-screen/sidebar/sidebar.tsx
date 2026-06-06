@@ -42,7 +42,7 @@ export default function Sidebar() {
     );
 
   return (
-    <VStack borderRightWidth={1} gap={6} h="full" py={4} w="15em">
+    <VStack borderRightWidth={1} gap={6} h="full" py={4} w="15rem">
       <VStack gap={2} px={6} w="full">
         <HStack justify="space-between" w="full">
           <Span fontSize="lg">D&D Portal</Span>

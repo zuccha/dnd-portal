@@ -1,6 +1,8 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { type StackProps, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import ConcentrationIcon from "~/icons/concentration-icon";
+import RitualIcon from "~/icons/ritual-icon";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { useSpellCastingTimeOptions } from "~/models/types/spell-casting-time";
@@ -9,6 +11,7 @@ import {
   useSpellLevelOptions,
 } from "~/models/types/spell-level";
 import { useSpellSchoolOptions } from "~/models/types/spell-school";
+import Icon from "~/ui/icon";
 import InclusionButton from "~/ui/inclusion-button";
 import InclusionSelect from "~/ui/inclusion-select";
 
@@ -40,22 +43,21 @@ export default function SpellsFilters({
   const castingTimeOptions = useSpellCastingTimeOptions();
 
   return (
-    <HStack {...rest}>
+    <VStack {...rest}>
       <InclusionSelect
         includes={filters.levels ?? {}}
-        minW="10em"
         onValueChange={(partial) =>
           setFilters({ levels: { ...filters.levels, ...partial } })
         }
         options={stringifiedLevelOptions}
         size="sm"
+        w="full"
       >
         {t("levels")}
       </InclusionSelect>
 
       <InclusionSelect
         includes={filters.character_class_ids ?? {}}
-        minW="10em"
         onValueChange={(partial) =>
           setFilters({
             character_class_ids: { ...filters.character_class_ids, ...partial },
@@ -63,30 +65,31 @@ export default function SpellsFilters({
         }
         options={characterClassOptions}
         size="sm"
+        w="full"
       >
         {t("character_classes")}
       </InclusionSelect>
 
       <InclusionSelect
         includes={filters.schools ?? {}}
-        minW="10em"
         onValueChange={(partial) =>
           setFilters({ schools: { ...filters.schools, ...partial } })
         }
         options={schoolOptions}
         size="sm"
+        w="full"
       >
         {t("schools")}
       </InclusionSelect>
 
       <InclusionSelect
         includes={filters.casting_time ?? {}}
-        minW="10em"
         onValueChange={(partial) =>
           setFilters({ casting_time: { ...filters.casting_time, ...partial } })
         }
         options={castingTimeOptions}
         size="sm"
+        w="full"
       >
         {t("casting_time")}
       </InclusionSelect>
@@ -95,18 +98,20 @@ export default function SpellsFilters({
         include={filters.ritual}
         onValueChange={(ritual) => setFilters({ ritual })}
         size="sm"
+        w="full"
       >
-        {t("ritual")}
+        <Icon Icon={RitualIcon} size="sm" /> {t("ritual")}
       </InclusionButton>
 
       <InclusionButton
         include={filters.concentration}
         onValueChange={(concentration) => setFilters({ concentration })}
         size="sm"
+        w="full"
       >
-        {t("concentration")}
+        <Icon Icon={ConcentrationIcon} size="sm" /> {t("concentration")}
       </InclusionButton>
-    </HStack>
+    </VStack>
   );
 }
 
@@ -124,16 +129,16 @@ const i18nContext = {
     it: "Classi",
   },
   concentration: {
-    en: "C",
-    it: "C",
+    en: "Concentration",
+    it: "Concentrazione",
   },
   levels: {
     en: "Levels",
     it: "Livelli",
   },
   ritual: {
-    en: "R",
-    it: "R",
+    en: "Ritual",
+    it: "Rituale",
   },
   schools: {
     en: "Schools",
