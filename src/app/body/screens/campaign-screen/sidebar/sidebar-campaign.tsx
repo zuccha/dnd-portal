@@ -81,12 +81,12 @@ const i18nContext = {
     it: "Incantesimi",
   },
   [Route.ResourcesBestiary]: {
-    en: "Creatures",
-    it: "Creature",
+    en: "Bestiary",
+    it: "Bestiario",
   },
   [Route.ResourcesBestiaryMonsters]: {
-    en: "Monsters",
-    it: "Mostri",
+    en: "Creatures",
+    it: "Creature",
   },
   [Route.ResourcesBestiaryTags]: {
     en: "Groups",
