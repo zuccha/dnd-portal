@@ -2,6 +2,7 @@ import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type Source, useSelectedSourceId, useSources } from "~/models/sources";
 import type { SourceVersion } from "~/models/types/source-version";
+import CaptionInput from "~/ui/caption-input";
 import Select, { type SelectOption } from "~/ui/select";
 import { compareObjects } from "~/utils/object";
 
@@ -72,16 +73,17 @@ export default function SidebarSourceSelector({
   }, [fetched, setSelectedSourceId, sourceOptions]);
 
   return (
-    <Select.Enum
-      categories={sourceCategories}
-      disabled={!sourceOptions.length}
-      flex={1}
-      onValueChange={setSelectedSourceId}
-      options={sourceOptions}
-      positioning={{ slide: true }}
-      size="sm"
-      value={selectedSourceId ?? ""}
-    />
+    <CaptionInput caption={t("sources")} flex={1}>
+      <Select.Enum
+        categories={sourceCategories}
+        disabled={!sourceOptions.length}
+        onValueChange={setSelectedSourceId}
+        options={sourceOptions}
+        positioning={{ slide: true }}
+        size="sm"
+        value={selectedSourceId ?? ""}
+      />
+    </CaptionInput>
   );
 }
 
@@ -131,5 +133,9 @@ const i18nContext = {
   "select.modules": {
     en: "Modules",
     it: "Moduli",
+  },
+  "sources": {
+    en: "Sources",
+    it: "Fonti",
   },
 };

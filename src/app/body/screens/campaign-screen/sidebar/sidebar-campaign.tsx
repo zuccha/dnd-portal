@@ -1,11 +1,14 @@
 import { VStack } from "@chakra-ui/react";
+import { SettingsIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useCanEditSourceResources } from "~/models/sources";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
+import Button from "~/ui/button";
+import Icon from "~/ui/icon";
 import { compareObjects } from "~/utils/object";
-import { resourcePanels, settingPanelIds } from "../panels/panels";
+import { resourcePanels } from "../panels/panels";
 import SidebarSection from "./sidebar-section";
 
 //------------------------------------------------------------------------------
@@ -37,26 +40,24 @@ export default function SidebarCampaign({ sourceId }: SidebarCampaignProps) {
     [route, t],
   );
 
-  const settingsItems = useMemo(
-    () =>
-      settingPanelIds
-        .map((value) => ({
-          label: t(value),
-          onClick: () => history.pushState({}, "", value),
-          selected: route === value,
-          value,
-        }))
-        .sort(compareObjects("label")),
-    [route, t],
-  );
-
   return (
-    <VStack gap={6} overflow="auto" w="full">
+    <VStack align="flex-start" flex={1} gap={4} overflow="auto" w="full">
       {localizedResourcePanels.map(({ id, items }) => (
         <SidebarSection items={items} key={id} title={t(id)} />
       ))}
+
       {canEdit && (
-        <SidebarSection items={settingsItems} title={t(Route.Settings)} />
+        <VStack flex={1} justifyContent="flex-end" px={4} w="full">
+          <Button
+            justifyContent="flex-start"
+            onClick={() => history.pushState({}, "", Route.SettingsCampaign)}
+            px={2}
+            variant="ghost"
+            w="full"
+          >
+            <Icon Icon={SettingsIcon} size="xs" /> {t(Route.SettingsCampaign)}
+          </Button>
+        </VStack>
       )}
     </VStack>
   );
@@ -140,7 +141,7 @@ const i18nContext = {
     it: "Impostazioni",
   },
   [Route.SettingsCampaign]: {
-    en: "Campaign",
-    it: "Campagna",
+    en: "Settings",
+    it: "Impostazioni",
   },
 };
