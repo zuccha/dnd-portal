@@ -41,7 +41,9 @@ export function createResourcesViewSettings<
     if (view === "cards") {
       return (
         <VStack align="flex-start" gap={3} w="full">
-          <Heading size="sm">{t("heading")}</Heading>
+          <VStack h={8} justify="center">
+            <Heading size="sm">{t("heading")}</Heading>
+          </VStack>
 
           <CaptionInput caption={t("zoom")} w="full">
             <NumberInput

@@ -1,4 +1,4 @@
-import { Menu, Portal } from "@chakra-ui/react";
+import { HStack, Heading, Menu, Portal, VStack } from "@chakra-ui/react";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import YAML from "yaml";
@@ -12,6 +12,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { useCanEditSourceResources } from "~/models/sources";
+import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import { downloadFile } from "~/utils/download";
 import type { ResourcesContext } from "./resources-context";
@@ -110,74 +111,94 @@ export function createResourcesActions<
     const disabled = !selectedFilteredResourceIds.length;
 
     return (
-      <Menu.Root>
-        <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
-          <IconButton Icon={EllipsisVerticalIcon} size="xs" variant="ghost" />
-        </Menu.Trigger>
-        <Portal>
-          <Menu.Positioner>
-            <Menu.Content>
-              {canEdit && (
-                <Menu.Item onClick={addNew} value="add">
-                  {t("add")}
-                </Menu.Item>
-              )}
+      <VStack w="full">
+        <HStack h={8} justify="space-between" w="full">
+          <Heading size="sm">{t("actions")}</Heading>
 
-              <Menu.Item
-                disabled={disabled}
-                onClick={copySelectedAsJson}
-                value="copy-as-json"
-              >
-                {t("copy_as_json")}
-              </Menu.Item>
+          <Menu.Root>
+            <Menu.Trigger asChild focusRing="outside" mr={-2} rounded="full">
+              <IconButton
+                Icon={EllipsisVerticalIcon}
+                size="xs"
+                variant="ghost"
+              />
+            </Menu.Trigger>
+            <Portal>
+              <Menu.Positioner>
+                <Menu.Content>
+                  {canEdit && (
+                    <Menu.Item onClick={addNew} value="add">
+                      {t("add")}
+                    </Menu.Item>
+                  )}
 
-              <Menu.Item
-                disabled={disabled}
-                onClick={copySelectedAsYaml}
-                value="copy-as-yaml"
-              >
-                {t("copy_as_yaml")}
-              </Menu.Item>
+                  <Menu.Item
+                    disabled={disabled}
+                    onClick={copySelectedAsJson}
+                    value="copy-as-json"
+                  >
+                    {t("copy_as_json")}
+                  </Menu.Item>
 
-              <Menu.Item
-                disabled={disabled}
-                onClick={downloadSelectedAsJson}
-                value="download-as-json"
-              >
-                {t("download_as_json")}
-              </Menu.Item>
+                  <Menu.Item
+                    disabled={disabled}
+                    onClick={copySelectedAsYaml}
+                    value="copy-as-yaml"
+                  >
+                    {t("copy_as_yaml")}
+                  </Menu.Item>
 
-              <Menu.Item
-                disabled={disabled}
-                onClick={downloadSelectedAsYaml}
-                value="download-as-yaml"
-              >
-                {t("download_as_yaml")}
-              </Menu.Item>
+                  <Menu.Item
+                    disabled={disabled}
+                    onClick={downloadSelectedAsJson}
+                    value="download-as-json"
+                  >
+                    {t("download_as_json")}
+                  </Menu.Item>
 
-              <Menu.Item
-                disabled={disabled}
-                onClick={printSelected}
-                value="print"
-              >
-                {t("print")}
-              </Menu.Item>
+                  <Menu.Item
+                    disabled={disabled}
+                    onClick={downloadSelectedAsYaml}
+                    value="download-as-yaml"
+                  >
+                    {t("download_as_yaml")}
+                  </Menu.Item>
 
-              {canEdit && (
-                <Menu.Item
-                  _hover={{ bg: "bg.error", color: "fg.error" }}
-                  color="fg.error"
-                  disabled={disabled}
-                  onClick={removeSelected}
-                  value="remove"
-                >
-                  {t("remove")}
-                </Menu.Item>
-              )}
-            </Menu.Content>
-          </Menu.Positioner>
-        </Portal>
-      </Menu.Root>
+                  <Menu.Item
+                    disabled={disabled}
+                    onClick={printSelected}
+                    value="print"
+                  >
+                    {t("print")}
+                  </Menu.Item>
+
+                  {canEdit && (
+                    <Menu.Item
+                      _hover={{ bg: "bg.error", color: "fg.error" }}
+                      color="fg.error"
+                      disabled={disabled}
+                      onClick={removeSelected}
+                      value="remove"
+                    >
+                      {t("remove")}
+                    </Menu.Item>
+                  )}
+                </Menu.Content>
+              </Menu.Positioner>
+            </Portal>
+          </Menu.Root>
+        </HStack>
+
+        <Button
+          disabled={disabled}
+          onClick={printSelected}
+          size="sm"
+          variant="outline"
+          w="full"
+        >
+          {t("print")}
+        </Button>
+      </VStack>
     );
   };
 }
@@ -187,6 +208,10 @@ export function createResourcesActions<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "actions": {
+    en: "Actions",
+    it: "Azioni",
+  },
   "add": {
     en: "Add new",
     it: "Crea nuovo",

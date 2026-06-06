@@ -94,10 +94,11 @@ export function createResourcesPanel<
           <HStack justify="space-between" w="full">
             <HStack gap={0} ml={-2}>
               <ResourcesSidebarToggleButton />
-              <ResourcesActions sourceId={sourceId} />
             </HStack>
             <ResourcesViewSwitch sourceId={sourceId} />
           </HStack>
+
+          <ResourcesActions sourceId={sourceId} />
 
           <ResourcesViewSettings sourceId={sourceId} />
 
