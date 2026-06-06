@@ -9,7 +9,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, XIcon } from "lucide-react";
-import type { ReactNode } from "react";
 import Button, { type ButtonProps } from "./button";
 import Icon from "./icon";
 import IconButton from "./icon-button";
@@ -19,21 +18,21 @@ import InclusionButton from "./inclusion-button";
 // Inclusion Select
 //------------------------------------------------------------------------------
 
-export type InclusionSelectProps = BoxProps & {
+export type InclusionSelectProps = Omit<BoxProps, "children"> & {
   buttonProps?: Omit<ButtonProps, "children" | "onClick" | "size">;
-  children: ReactNode;
   includes: Record<string, boolean | undefined>;
   onValueChange: (partial: Record<string, boolean | undefined>) => void;
   options: { label: string; value: string }[];
+  placeholder?: string;
   size?: ButtonProps["size"];
 };
 
 export default function InclusionSelect({
   buttonProps,
-  children,
   includes,
   onValueChange,
   options,
+  placeholder,
   size,
   ...rest
 }: InclusionSelectProps) {
@@ -51,14 +50,26 @@ export default function InclusionSelect({
     <Popover.Root positioning={{ sameWidth: true }}>
       <Popover.Trigger asChild>
         <Box position="relative" {...rest}>
-          <Button size={size} variant="outline" w="full" {...buttonProps}>
+          <Button
+            px={2.5}
+            size={size}
+            variant="outline"
+            w="full"
+            {...buttonProps}
+          >
             <HStack justify="space-between" w="full">
-              {count ?
-                <HStack gap={1}>
-                  {children}
-                  <Span>{` (${count})`}</Span>
-                </HStack>
-              : children}
+              <Span overflow="hidden" textAlign="left" textOverflow="ellipsis">
+                {count ?
+                  options
+                    .map((option) =>
+                      includes[option.value] === true ? `+${option.label}`
+                      : includes[option.value] === false ? `-${option.label}`
+                      : "",
+                    )
+                    .filter(Boolean)
+                    .join(", ")
+                : <Span color="fg.subtle">{placeholder}</Span>}
+              </Span>
               <Icon Icon={ChevronDownIcon} color="fg.muted" />
             </HStack>
           </Button>

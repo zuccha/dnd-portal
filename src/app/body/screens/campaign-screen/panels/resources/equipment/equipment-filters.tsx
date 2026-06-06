@@ -45,11 +45,10 @@ export default function EquipmentFilters({
             onFiltersChange({ rarities: { ...filters.rarities, ...partial } })
           }
           options={rarityOptions}
+          placeholder={t("rarity")}
           size="sm"
           w="full"
-        >
-          {t("rarity")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       {children}

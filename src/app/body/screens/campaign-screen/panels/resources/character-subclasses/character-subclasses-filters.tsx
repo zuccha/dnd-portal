@@ -39,11 +39,10 @@ export default function CharacterSubclassesFilters({
             })
           }
           options={characterClassOptions}
+          placeholder={t("character_classes")}
           size="sm"
           w="full"
-        >
-          {t("character_classes")}
-        </InclusionSelect>
+        />
       </CaptionInput>
     </VStack>
   );

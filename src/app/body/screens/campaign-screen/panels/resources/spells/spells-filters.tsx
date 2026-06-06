@@ -52,11 +52,10 @@ export default function SpellsFilters({
             setFilters({ levels: { ...filters.levels, ...partial } })
           }
           options={stringifiedLevelOptions}
+          placeholder={t("levels")}
           size="sm"
           w="full"
-        >
-          {t("levels")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("character_classes")} w="full">
@@ -71,11 +70,10 @@ export default function SpellsFilters({
             })
           }
           options={characterClassOptions}
+          placeholder={t("character_classes")}
           size="sm"
           w="full"
-        >
-          {t("character_classes")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("schools")} w="full">
@@ -85,11 +83,10 @@ export default function SpellsFilters({
             setFilters({ schools: { ...filters.schools, ...partial } })
           }
           options={schoolOptions}
+          placeholder={t("schools")}
           size="sm"
           w="full"
-        >
-          {t("schools")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("casting_time")} w="full">
@@ -101,11 +98,10 @@ export default function SpellsFilters({
             })
           }
           options={castingTimeOptions}
+          placeholder={t("casting_time")}
           size="sm"
           w="full"
-        >
-          {t("casting_time")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <InclusionButton

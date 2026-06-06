@@ -27,11 +27,10 @@ export default function ToolsFilters(props: StackProps) {
             setFilters({ types: { ...filters.types, ...partial } })
           }
           options={typeOptions}
+          placeholder={t("types")}
           size="sm"
           w="full"
-        >
-          {t("types")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("abilities")} w="full">
@@ -41,11 +40,10 @@ export default function ToolsFilters(props: StackProps) {
             setFilters({ abilities: { ...filters.abilities, ...partial } })
           }
           options={abilityOptions}
+          placeholder={t("abilities")}
           size="sm"
           w="full"
-        >
-          {t("abilities")}
-        </InclusionSelect>
+        />
       </CaptionInput>
     </EquipmentFilters>
   );

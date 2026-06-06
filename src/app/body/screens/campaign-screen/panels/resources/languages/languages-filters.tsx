@@ -24,11 +24,10 @@ export default function LanguagesFilters(props: StackProps) {
             setFilters({ rarity: { ...filters.rarity, ...partial } })
           }
           options={rarityOptions}
+          placeholder={t("rarity")}
           size="sm"
           w="full"
-        >
-          {t("rarity")}
-        </InclusionSelect>
+        />
       </CaptionInput>
     </VStack>
   );

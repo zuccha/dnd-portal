@@ -77,11 +77,10 @@ export function createResourcesGenericFilters<
               setSources((prev) => ({ ...prev, ...partial }))
             }
             options={options}
+            placeholder={t("modules")}
             size="sm"
             w="full"
-          >
-            {t("modules")}
-          </InclusionSelect>
+          />
         </CaptionInput>
 
         <CaptionInput caption={t("sort_by")} w="full">

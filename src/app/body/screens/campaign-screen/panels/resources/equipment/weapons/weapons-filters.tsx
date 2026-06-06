@@ -32,11 +32,10 @@ export default function WeaponsFilters(props: StackProps) {
             setFilters({ types: { ...filters.types, ...partial } })
           }
           options={typeOptions}
+          placeholder={t("types")}
           size="sm"
           w="full"
-        >
-          {t("types")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("properties")} w="full">
@@ -48,11 +47,10 @@ export default function WeaponsFilters(props: StackProps) {
             })
           }
           options={propertyOptions}
+          placeholder={t("properties")}
           size="sm"
           w="full"
-        >
-          {t("properties")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("masteries")} w="full">
@@ -62,11 +60,10 @@ export default function WeaponsFilters(props: StackProps) {
             setFilters({ masteries: { ...filters.masteries, ...partial } })
           }
           options={masteryOptions}
+          placeholder={t("masteries")}
           size="sm"
           w="full"
-        >
-          {t("masteries")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <InclusionButton

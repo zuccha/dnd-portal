@@ -25,11 +25,10 @@ export default function ItemsFilters(props: StackProps) {
             setFilters({ types: { ...filters.types, ...partial } })
           }
           options={typeOptions}
+          placeholder={t("types")}
           size="sm"
           w="full"
-        >
-          {t("types")}
-        </InclusionSelect>
+        />
       </CaptionInput>
     </EquipmentFilters>
   );

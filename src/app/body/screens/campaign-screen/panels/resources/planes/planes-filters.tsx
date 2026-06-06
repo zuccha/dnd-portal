@@ -26,11 +26,10 @@ export default function PlanesFilters(props: StackProps) {
             setFilters({ categories: { ...filters.categories, ...partial } })
           }
           options={categoryOptions}
+          placeholder={t("categories")}
           size="sm"
           w="full"
-        >
-          {t("categories")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("alignments")} w="full">
@@ -40,11 +39,10 @@ export default function PlanesFilters(props: StackProps) {
             setFilters({ alignments: { ...filters.alignments, ...partial } })
           }
           options={alignmentOptions}
+          placeholder={t("alignments")}
           size="sm"
           w="full"
-        >
-          {t("alignments")}
-        </InclusionSelect>
+        />
       </CaptionInput>
     </VStack>
   );

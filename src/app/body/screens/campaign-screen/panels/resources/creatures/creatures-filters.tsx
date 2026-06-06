@@ -33,11 +33,10 @@ export default function CreaturesFilters(props: StackProps) {
             setFilters({ types: { ...filters.types, ...partial } })
           }
           options={typeOptions}
+          placeholder={t("types")}
           size="sm"
           w="full"
-        >
-          {t("types")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("size")} w="full">
@@ -47,11 +46,10 @@ export default function CreaturesFilters(props: StackProps) {
             setFilters({ size: { ...filters.size, ...partial } })
           }
           options={sizeOptions}
+          placeholder={t("size")}
           size="sm"
           w="full"
-        >
-          {t("size")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("alignment")} w="full">
@@ -61,11 +59,10 @@ export default function CreaturesFilters(props: StackProps) {
             setFilters({ alignment: { ...filters.alignment, ...partial } })
           }
           options={alignmentOptions}
+          placeholder={t("alignment")}
           size="sm"
           w="full"
-        >
-          {t("alignment")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("habitats")} w="full">
@@ -75,11 +72,10 @@ export default function CreaturesFilters(props: StackProps) {
             setFilters({ habitats: { ...filters.habitats, ...partial } })
           }
           options={habitatOptions}
+          placeholder={t("habitats")}
           size="sm"
           w="full"
-        >
-          {t("habitats")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <CaptionInput caption={t("treasures")} w="full">
@@ -89,11 +85,10 @@ export default function CreaturesFilters(props: StackProps) {
             setFilters({ treasures: { ...filters.treasures, ...partial } })
           }
           options={treasureOptions}
+          placeholder={t("treasures")}
           size="sm"
           w="full"
-        >
-          {t("treasures")}
-        </InclusionSelect>
+        />
       </CaptionInput>
 
       <HStack w="full">

@@ -17,7 +17,7 @@ export default function CaptionInput({
     <VStack align="flex-start" gap={1} position="relative" {...rest}>
       <Span
         bgColor="bg"
-        fontSize="xx-small"
+        fontSize="0.625rem"
         left={1}
         position="absolute"
         px={1.5}
