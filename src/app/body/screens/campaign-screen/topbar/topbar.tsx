@@ -19,7 +19,9 @@ export default function Topbar() {
       px={6}
       w="full"
     >
-      <Span fontSize="lg">D&D Portal</Span>
+      <Span fontFamily="Title Wave" fontSize="2xl" fontWeight="bold">
+        <Span color="fg.error">D&D</Span> Portal
+      </Span>
 
       <HStack gap={4}>
         <HStack mr={2}>
