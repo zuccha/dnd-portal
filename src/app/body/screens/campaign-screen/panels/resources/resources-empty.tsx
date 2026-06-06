@@ -13,7 +13,7 @@ export default function ResourcesEmpty() {
     <EmptyState
       Icon={RatIcon}
       flex={1}
-      mt="10%"
+      mb="10%"
       subtitle={t("subtitle")}
       title={t("title")}
     />
