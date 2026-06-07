@@ -1,3 +1,4 @@
+import { HStack } from "@chakra-ui/react";
 import { MapIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
@@ -33,12 +34,18 @@ export default function Content() {
 
   if (route === Route._)
     return (
-      <EmptyState
-        Icon={MapIcon}
-        mt="10%"
-        subtitle={t("welcome.subtitle")}
-        title={t("welcome.title")}
-      />
+      <HStack flex={1} h="full">
+        <EmptyState
+          Icon={MapIcon}
+          alignSelf="center"
+          flex={1}
+          mb="10%"
+          subtitle={t("welcome.subtitle")}
+          title={t("welcome.title")}
+        />
+
+        <HStack borderLeftWidth={1} h="full" w="15rem" />
+      </HStack>
     );
 
   const Panel = panels[route];
@@ -73,8 +80,8 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
 
 const i18nContext = {
   "welcome.title": {
-    en: "Welcome to your campaign",
-    it: "Benvenuto nella tua campagna",
+    en: "Welcome to D&D Portal",
+    it: "Benvenutə su D&D Portal",
   },
 
   "welcome.subtitle": {

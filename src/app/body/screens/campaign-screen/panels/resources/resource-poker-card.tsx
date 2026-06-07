@@ -26,6 +26,7 @@ export type ResourcePokerCardProps<
   ) => void;
   palette: Palette;
   selectedPageIndex?: number;
+  showImage: boolean;
   startDetailsOnSecondPage?: boolean;
 };
 
@@ -42,11 +43,12 @@ export function ResourcePokerCard<
   onPageCountChange = () => {},
   palette,
   selectedPageIndex = -1,
+  showImage,
   startDetailsOnSecondPage = false,
   ...rest
 }: ResourcePokerCardProps<R, L>) {
   const imageUrl = localizedResource._raw.image_url?.trim() ?? "";
-  const hasImage = imageUrl.length > 0;
+  const hasImage = showImage && imageUrl.length > 0;
   const firstPageIndexWithoutImage = hasImage ? 1 : 0;
 
   const handlePageCountChange = useCallback(

@@ -108,6 +108,8 @@ export function createResourcesPrintMode<
     const [bleedSize, setBleedSize] = useBleedSize();
     const [bleedVisible, setBleedVisible] = useBleedVisible();
 
+    const [showImage, setShowImage] = useShowImage();
+
     const bleed = useMemo(
       () => ({
         corner:
@@ -275,6 +277,7 @@ export function createResourcesPrintMode<
                     }}
                     palette={palette}
                     resourceId={resourceId}
+                    showImage={showImage}
                     sourceId={sourceId}
                   />
                 ))}
@@ -383,24 +386,6 @@ export function createResourcesPrintMode<
                   size="xs"
                   value={paletteName}
                 />
-                <HStack w="full">
-                  <Checkbox
-                    onValueChange={setBackgroundColorVisible}
-                    size="sm"
-                    value={backgroundColorVisible}
-                  />
-                  <Span fontSize="xs">
-                    {t("background_color_visible.label")}
-                  </Span>
-                </HStack>
-                <HStack w="full">
-                  <Checkbox
-                    onValueChange={setIncludeEmptyBack}
-                    size="sm"
-                    value={includeEmptyBack}
-                  />
-                  <Span fontSize="xs">{t("include_empty_back.label")}</Span>
-                </HStack>
               </VStack>
             </Field>
 
@@ -412,6 +397,33 @@ export function createResourcesPrintMode<
                 value={zoom}
               />
             </Field>
+
+            <HStack w="full">
+              <Checkbox
+                onValueChange={setShowImage}
+                size="sm"
+                value={showImage}
+              />
+              <Span fontSize="xs">{t("show_images.label")}</Span>
+            </HStack>
+
+            <HStack w="full">
+              <Checkbox
+                onValueChange={setBackgroundColorVisible}
+                size="sm"
+                value={backgroundColorVisible}
+              />
+              <Span fontSize="xs">{t("background_color_visible.label")}</Span>
+            </HStack>
+
+            <HStack w="full">
+              <Checkbox
+                onValueChange={setIncludeEmptyBack}
+                size="sm"
+                value={includeEmptyBack}
+              />
+              <Span fontSize="xs">{t("include_empty_back.label")}</Span>
+            </HStack>
           </VStack>
 
           <HStack justify="flex-end" w="full">
@@ -730,14 +742,20 @@ const usePaperLayout = createLocalStore(
   paperLayoutSchema.parse,
 ).use;
 
+const useShowImage = createLocalStore(
+  "print_mode.show_image",
+  true,
+  z.boolean().parse,
+).use;
+
 //------------------------------------------------------------------------------
 // I18n Context
 //------------------------------------------------------------------------------
 
 const i18nContext = {
   "background_color_visible.label": {
-    en: "Background",
-    it: "Sfondo",
+    en: "Include background",
+    it: "Includi sfondo",
   },
   "bleed.label": {
     en: "Bleed",
@@ -752,8 +770,8 @@ const i18nContext = {
     it: "Chiudi",
   },
   "include_empty_back.label": {
-    en: "Empty back",
-    it: "Retro vuoto",
+    en: "Add empty back",
+    it: "Aggiungi retro vuoto",
   },
   "page_crop_marks.label": {
     en: "Crop Marks (Page)",
@@ -810,6 +828,10 @@ const i18nContext = {
   "settings.title": {
     en: "Print Settings",
     it: "Impostazioni di Stampa",
+  },
+  "show_images.label": {
+    en: "Include image",
+    it: "Includi immagine",
   },
   "zoom.label": {
     en: "Zoom",

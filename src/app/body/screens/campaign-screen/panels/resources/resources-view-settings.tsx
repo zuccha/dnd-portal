@@ -1,4 +1,4 @@
-import { Heading, VStack } from "@chakra-ui/react";
+import { Checkbox, Heading, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
   DBResource,
@@ -29,12 +29,15 @@ export function createResourcesViewSettings<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(_store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
+  const { usePaletteName, useShowImage, useView, useZoom } = context;
+
   return function ResourcesViewSwitch(_props: ResourcesViewSettingsProps) {
     const { t } = useI18nLangContext(i18nContext);
 
-    const paletteName = context.usePaletteName();
-    const view = context.useView();
-    const zoom = context.useZoom();
+    const paletteName = usePaletteName();
+    const showImage = useShowImage();
+    const view = useView();
+    const zoom = useZoom();
 
     const paletteNameOptions = usePaletteNameOptions();
 
@@ -67,6 +70,16 @@ export function createResourcesViewSettings<
               w="full"
             />
           </CaptionInput>
+
+          <Checkbox.Root
+            checked={showImage}
+            onCheckedChange={(e) => context.setShowImage(!!e.checked)}
+            size="sm"
+          >
+            <Checkbox.HiddenInput />
+            <Checkbox.Control />
+            <Checkbox.Label>{t("show_images")}</Checkbox.Label>
+          </Checkbox.Root>
         </VStack>
       );
     }
@@ -87,6 +100,10 @@ const i18nContext = {
   heading: {
     en: "View",
     it: "Vista",
+  },
+  show_images: {
+    en: "Show images",
+    it: "Mostra immagini",
   },
   zoom: {
     en: "Zoom",

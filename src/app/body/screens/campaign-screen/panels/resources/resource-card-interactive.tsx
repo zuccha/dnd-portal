@@ -76,6 +76,7 @@ export function createResourceCardInteractive<
   } = store;
 
   const AlbumCard = extra.AlbumCard;
+  const { useShowImage } = context;
 
   function ResourcesAlbumCardInteractive({
     editable,
@@ -91,6 +92,8 @@ export function createResourceCardInteractive<
     const handlePageCountChange = useCallback((count: number | undefined) => {
       pageCountRef.current = count ?? 0;
     }, []);
+
+    const showImage = useShowImage();
 
     const pointerDownRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
@@ -143,6 +146,7 @@ export function createResourceCardInteractive<
           palette={palette}
           position="absolute"
           selectedPageIndex={selectedPageIndex}
+          showImage={showImage}
           top={0}
         />
         <Theme appearance="light">

@@ -40,6 +40,7 @@ export type ResourceCardPrintableProps<
   onPageCountChange?: (count: number | undefined) => void;
   palette: Palette;
   resourceId: string;
+  showImage: boolean;
   sourceId: string;
   zoom?: number;
 };

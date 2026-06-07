@@ -51,6 +51,12 @@ export function createResourcesContext<R extends Resource>(
     `${id}.resource_expansion`,
   );
 
+  const showImageStore = createLocalStore<boolean>(
+    `${id}.show_image`,
+    true,
+    z.boolean().parse,
+  );
+
   const viewStore = createLocalStore(
     `${id}.view`,
     "table",
@@ -65,6 +71,7 @@ export function createResourcesContext<R extends Resource>(
     setPaletteName: paletteNameStore.set,
     setPrintMode: printModeStore.set,
     setResourceExpansion: resourceExpansionStore.set,
+    setShowImage: showImageStore.set,
     setView: viewStore.set,
     setZoom: zoomStore.set,
     useCreatedResource: createdResourceStore.useValue,
@@ -72,6 +79,7 @@ export function createResourcesContext<R extends Resource>(
     usePaletteName: paletteNameStore.useValue,
     usePrintMode: printModeStore.useValue,
     useResourceExpansion: resourceExpansionStore.useValue,
+    useShowImage: showImageStore.useValue,
     useView: viewStore.useValue,
     useZoom: zoomStore.useValue,
   };
