@@ -20,7 +20,7 @@ export type RichTextProps = {
 } & Omit<SpanProps, "children">;
 
 export default function RichText({
-  patterns = defaultPatterns,
+  patterns = RichText.defaultPatterns,
   text,
   ...rest
 }: RichTextProps) {
@@ -70,7 +70,7 @@ function isListWithAtLeastOneItem<T>(items: T[]): items is [T, ...T[]] {
 // Is List With At Least One Item
 //------------------------------------------------------------------------------
 
-const defaultPatterns = [
+RichText.defaultPatterns = [
   {
     regex: /##(.+?)##/,
     render: (val: ReactNode) => (

@@ -1,14 +1,15 @@
 import { Box, HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
-import { type ReactNode } from "react";
+import { type ReactNode, useMemo } from "react";
+import { type I18nSystem, useI18nSystem } from "~/i18n/i18n-system";
 import RichText from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
 import { type BleedCorner, useBleed } from "./bleed-context";
 
-const separatorColor = "#3F3F46";
-
 //------------------------------------------------------------------------------
 // Sizes
 //------------------------------------------------------------------------------
+
+const separatorColor = "#3F3F46";
 
 const cardH = 3.46;
 const cardW = 2.48;
@@ -233,6 +234,15 @@ type DetailsProps = {
 
 function Details({ children, palette }: DetailsProps) {
   const bleed = useBleed();
+  const [system] = useI18nSystem();
+
+  const patterns = useMemo(
+    () => [
+      ...RichText.defaultPatterns,
+      { regex: /\{(.+?)\}/, render: renderMetImp(system) },
+    ],
+    [system],
+  );
 
   return (
     <VStack
@@ -258,7 +268,12 @@ function Details({ children, palette }: DetailsProps) {
           >
             {paragraph.substring(2, paragraph.length - 2)}
           </Span>
-        : <RichText hyphens="auto" key={paragraphIndex} text={paragraph} />,
+        : <RichText
+            hyphens="auto"
+            key={paragraphIndex}
+            patterns={patterns}
+            text={paragraph}
+          />,
       )}
     </VStack>
   );
@@ -386,6 +401,17 @@ function BleedGuide({ corner, x, y }: BleedGuideProps) {
       </HStack>
     </VStack>
   );
+}
+
+//------------------------------------------------------------------------------
+// Render Met Imp
+//------------------------------------------------------------------------------
+
+function renderMetImp(system: I18nSystem) {
+  return (val: ReactNode) =>
+    typeof val === "string" ?
+      (val.split("|")[system === "metric" ? 0 : 1] ?? "")
+    : val;
 }
 
 //------------------------------------------------------------------------------
