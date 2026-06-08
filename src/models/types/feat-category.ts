@@ -28,5 +28,5 @@ export const {
   epic_boon: { en: "Epic Boon", it: "Dono Epico" },
   fighting_style: { en: "Fighting Style", it: "Stile di Combattimento" },
   general: { en: "General", it: "Generale" },
-  origin: { en: "Origin", it: "Origine" },
+  origin: { en: "Origin", it: "Origini" },
 });
