@@ -1,6 +1,6 @@
 import { Box, HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
-import { type ReactNode, useMemo } from "react";
-import { type I18nSystem, useI18nSystem } from "~/i18n/i18n-system";
+import { type ReactNode } from "react";
+import { useI18nSystemPatterns } from "~/i18n/i18n-system";
 import RichText from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
 import { type BleedCorner, useBleed } from "./bleed-context";
@@ -234,15 +234,7 @@ type DetailsProps = {
 
 function Details({ children, palette }: DetailsProps) {
   const bleed = useBleed();
-  const [system] = useI18nSystem();
-
-  const patterns = useMemo(
-    () => [
-      ...RichText.defaultPatterns,
-      { regex: /\{(.+?)\}/, render: renderMetImp(system) },
-    ],
-    [system],
-  );
+  const patterns = useI18nSystemPatterns();
 
   return (
     <VStack
@@ -401,17 +393,6 @@ function BleedGuide({ corner, x, y }: BleedGuideProps) {
       </HStack>
     </VStack>
   );
-}
-
-//------------------------------------------------------------------------------
-// Render Met Imp
-//------------------------------------------------------------------------------
-
-function renderMetImp(system: I18nSystem) {
-  return (val: ReactNode) =>
-    typeof val === "string" ?
-      (val.split("|")[system === "metric" ? 0 : 1] ?? "")
-    : val;
 }
 
 //------------------------------------------------------------------------------

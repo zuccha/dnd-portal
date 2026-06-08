@@ -3,6 +3,7 @@ import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
+import { useI18nSystemPatterns } from "~/i18n/i18n-system";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -73,6 +74,8 @@ export function createResourcesTableRow<
     const selected = useResourceSelection(resourceId);
     const { toggleResourceSelection } = useResourceSelectionMethods(resourceId);
     const expanded = useResourceExpansion(resourceId, false);
+
+    const patterns = useI18nSystemPatterns();
 
     const edit = useCallback(
       (e: React.MouseEvent) => {
@@ -146,7 +149,7 @@ export function createResourcesTableRow<
                   String(localizedResource[extra.detailsKey])
                     .split(/[\n\r]/)
                     .map((paragraph, i) => (
-                      <RichText key={i} text={paragraph} />
+                      <RichText key={i} patterns={patterns} text={paragraph} />
                     ))
                 : <RichText
                     text={translate(
