@@ -12,6 +12,7 @@ export const resourceKindSchema = z.enum([
   "creature_tag",
   "eldritch_invocation",
   "equipment",
+  "feat",
   "item",
   "language",
   "plane",
