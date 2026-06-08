@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import type { LocalizedSpecies } from "~/models/resources/species/localized-species";
 import type { Species } from "~/models/resources/species/species";
 import PokerCard from "~/ui/poker-card";
