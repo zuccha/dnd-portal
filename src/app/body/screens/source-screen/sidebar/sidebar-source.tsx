@@ -72,8 +72,8 @@ const i18nContext = {
     en: "Abilities",
     it: "Abilità",
   },
-  [Route.ResourcesAbilitiesClassPrivileges]: {
-    en: "Class Privileges",
+  [Route.ResourcesAbilitiesClassFeatures]: {
+    en: "Class Features",
     it: "Privilegi di Classe",
   },
   [Route.ResourcesAbilitiesEldritchInvocations]: {
