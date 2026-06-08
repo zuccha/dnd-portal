@@ -17,6 +17,7 @@ import ToolsPanel from "./resources/equipment/tools/tools-panel";
 import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
 import LanguagesPanel from "./resources/languages/languages-panel";
 import PlanesPanel from "./resources/planes/planes-panel";
+import SpeciesPanel from "./resources/species/species-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
 import CampaignPanel from "./settings/campaign-panel";
 
@@ -73,7 +74,7 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesBestiaryTags]: CreatureTagsPanel,
   [Route.ResourcesCharacterBackgrounds]: WIP,
   [Route.ResourcesCharacterClasses]: CharacterClassesPanel,
-  [Route.ResourcesCharacterSpecies]: WIP,
+  [Route.ResourcesCharacterSpecies]: SpeciesPanel,
   [Route.ResourcesCharacterSubclasses]: CharacterSubclassesPanel,
   [Route.ResourcesEquipmentArmors]: ArmorsPanel,
   [Route.ResourcesEquipmentItems]: ItemsPanel,
