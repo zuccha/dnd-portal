@@ -88,6 +88,10 @@ const i18nContext = {
     en: "Spells",
     it: "Incantesimi",
   },
+  [Route.ResourcesAbilitiesSpeciesTraits]: {
+    en: "Species Traits",
+    it: "Tratti di Specie",
+  },
   [Route.ResourcesBestiary]: {
     en: "Bestiary",
     it: "Bestiario",

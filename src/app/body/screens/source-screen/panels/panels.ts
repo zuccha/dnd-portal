@@ -33,6 +33,7 @@ export const abilitiesPanelIds = [
   Route.ResourcesAbilitiesFeats,
   Route.ResourcesAbilitiesPrivileges,
   Route.ResourcesAbilitiesSpells,
+  Route.ResourcesAbilitiesSpeciesTraits,
 ] as const;
 
 export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number];

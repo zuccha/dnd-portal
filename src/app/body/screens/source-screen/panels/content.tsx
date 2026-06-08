@@ -70,6 +70,7 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesAbilitiesFeats]: WIP,
   [Route.ResourcesAbilitiesPrivileges]: WIP,
   [Route.ResourcesAbilitiesSpells]: SpellsPanel,
+  [Route.ResourcesAbilitiesSpeciesTraits]: WIP,
   [Route.ResourcesBestiaryMonsters]: CreaturesPanel,
   [Route.ResourcesBestiaryTags]: CreatureTagsPanel,
   [Route.ResourcesCharacterBackgrounds]: WIP,

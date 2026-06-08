@@ -10,6 +10,7 @@ export const Route = {
     "/resources/abilities/eldritch-invocations",
   ResourcesAbilitiesFeats: "/resources/abilities/feats",
   ResourcesAbilitiesPrivileges: "/resources/abilities/privileges",
+  ResourcesAbilitiesSpeciesTraits: "/resources/abilities/species-traits",
   ResourcesAbilitiesSpells: "/resources/abilities/spells",
   ResourcesBestiary: "/resources/bestiary",
   ResourcesBestiaryMonsters: "/resources/bestiary/monsters",
