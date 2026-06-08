@@ -11,7 +11,8 @@ CREATE TYPE public.resource_kind AS ENUM (
   'language',
   'plane',
   'creature_tag',
-  'character_subclass'
+  'character_subclass',
+  'species'
 );
 
 ALTER TYPE public.resource_kind OWNER TO postgres;
