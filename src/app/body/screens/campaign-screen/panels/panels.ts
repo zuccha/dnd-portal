@@ -16,7 +16,9 @@ export type BestiaryPanelId = (typeof bestiaryPanelIds)[number];
 //------------------------------------------------------------------------------
 
 export const characterPanelIds = [
+  Route.ResourcesCharacterBackgrounds,
   Route.ResourcesCharacterClasses,
+  Route.ResourcesCharacterSpecies,
   Route.ResourcesCharacterSubclasses,
 ] as const;
 
@@ -28,6 +30,8 @@ export type CharacterPanelId = (typeof characterPanelIds)[number];
 
 export const abilitiesPanelIds = [
   Route.ResourcesAbilitiesEldritchInvocations,
+  Route.ResourcesAbilitiesFeats,
+  Route.ResourcesAbilitiesPrivileges,
   Route.ResourcesAbilitiesSpells,
 ] as const;
 

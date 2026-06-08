@@ -76,6 +76,14 @@ const i18nContext = {
     en: "Eldritch Invocations",
     it: "Suppliche Occulte",
   },
+  [Route.ResourcesAbilitiesFeats]: {
+    en: "Feats",
+    it: "Talenti",
+  },
+  [Route.ResourcesAbilitiesPrivileges]: {
+    en: "Class Privileges",
+    it: "Privilegi di Classe",
+  },
   [Route.ResourcesAbilitiesSpells]: {
     en: "Spells",
     it: "Incantesimi",
@@ -96,9 +104,17 @@ const i18nContext = {
     en: "Character",
     it: "Personaggio",
   },
+  [Route.ResourcesCharacterBackgrounds]: {
+    en: "Backgrounds",
+    it: "Background",
+  },
   [Route.ResourcesCharacterClasses]: {
     en: "Classes",
     it: "Classi",
+  },
+  [Route.ResourcesCharacterSpecies]: {
+    en: "Species",
+    it: "Specie",
   },
   [Route.ResourcesCharacterSubclasses]: {
     en: "Subclasses",

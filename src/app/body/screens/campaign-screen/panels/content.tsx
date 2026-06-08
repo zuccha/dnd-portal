@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react";
+import { Center, HStack } from "@chakra-ui/react";
 import { MapIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
@@ -58,12 +58,22 @@ export default function Content() {
 // Panels
 //------------------------------------------------------------------------------
 
+const WIP = () => (
+  <Center h="full" w="full">
+    WIP
+  </Center>
+);
+
 const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesAbilitiesEldritchInvocations]: EldritchInvocationsPanel,
+  [Route.ResourcesAbilitiesFeats]: WIP,
+  [Route.ResourcesAbilitiesPrivileges]: WIP,
   [Route.ResourcesAbilitiesSpells]: SpellsPanel,
   [Route.ResourcesBestiaryMonsters]: CreaturesPanel,
   [Route.ResourcesBestiaryTags]: CreatureTagsPanel,
+  [Route.ResourcesCharacterBackgrounds]: WIP,
   [Route.ResourcesCharacterClasses]: CharacterClassesPanel,
+  [Route.ResourcesCharacterSpecies]: WIP,
   [Route.ResourcesCharacterSubclasses]: CharacterSubclassesPanel,
   [Route.ResourcesEquipmentArmors]: ArmorsPanel,
   [Route.ResourcesEquipmentItems]: ItemsPanel,
