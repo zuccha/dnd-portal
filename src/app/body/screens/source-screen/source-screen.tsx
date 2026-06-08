@@ -4,10 +4,10 @@ import Sidebar from "./sidebar/sidebar";
 import Topbar from "./topbar/topbar";
 
 //------------------------------------------------------------------------------
-// Campaign Screen
+// Source Screen
 //------------------------------------------------------------------------------
 
-export default function CampaignScreen() {
+export default function SourceScreen() {
   return (
     <VStack gap={0} h="full" w="full">
       <Topbar />

@@ -12,14 +12,14 @@ import { resourcePanels } from "../panels/panels";
 import SidebarSection from "./sidebar-section";
 
 //------------------------------------------------------------------------------
-// Sidebar Campaign
+// Sidebar Source
 //------------------------------------------------------------------------------
 
-export type SidebarCampaignProps = {
+export type SidebarSourceProps = {
   sourceId: string;
 };
 
-export default function SidebarCampaign({ sourceId }: SidebarCampaignProps) {
+export default function SidebarSource({ sourceId }: SidebarSourceProps) {
   const { t } = useI18nLangContext(i18nContext);
   const route = useRoute();
   const canEdit = useCanEditSourceResources(sourceId);

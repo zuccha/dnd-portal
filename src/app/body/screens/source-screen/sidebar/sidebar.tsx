@@ -5,7 +5,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
 import { useSelectedSourceVersion } from "~/models/types/source-version";
 import IconButton from "~/ui/icon-button";
-import SidebarCampaign from "./sidebar-campaign";
+import SidebarSource from "./sidebar-source";
 import SidebarSourceSelector from "./sidebar-source-selector";
 import SidebarSourceVersionsSelector from "./sidebar-source-versions-selector";
 
@@ -58,7 +58,7 @@ export default function Sidebar() {
         </HStack>
       </VStack>
 
-      {sourceId && <SidebarCampaign sourceId={sourceId} />}
+      {sourceId && <SidebarSource sourceId={sourceId} />}
     </VStack>
   );
 }
