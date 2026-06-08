@@ -57,7 +57,7 @@ export function createResourcesTable<
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
-      <Flex flex={1} h="full" overflow="scroll">
+      <Flex bgColor="bg.subtle" flex={1} h="full" overflow="scroll">
         <Box bgColor="bg.subtle" w="full">
           <Table.Root
             borderCollapse="separate"
