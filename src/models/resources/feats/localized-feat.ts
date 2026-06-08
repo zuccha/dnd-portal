@@ -37,7 +37,7 @@ export function useLocalizeFeat(): (feat: Feat) => LocalizedFeat {
       const category = translateFeatCategory(feat.category).label;
       const description = translate(feat.description, lang);
       const prerequisite = translate(feat.prerequisite, lang);
-      const min_level = `${feat.min_level}`;
+      const min_level = feat.min_level ? `${feat.min_level}` : "";
 
       return {
         ...localizeResource(feat),
