@@ -6,7 +6,9 @@ import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCmWithUnit } from "~/measures/distance";
 import { useTranslateCreatureSize } from "../../types/creature-size";
 import { useTranslateCreatureType } from "../../types/creature-type";
+import { useFormatFeatureEntries } from "../../other/feature-entries";
 import {
+  formatDetails,
   formatInfo,
   localizedResourceSchema,
   useLocalizeResource,
@@ -33,19 +35,23 @@ export type LocalizedSpecies = z.infer<typeof localizedSpeciesSchema>;
 // Use Localized Species
 //------------------------------------------------------------------------------
 
-export function useLocalizeSpecies(): (species: Species) => LocalizedSpecies {
+export function useLocalizeSpecies(
+  sourceId: string,
+): (species: Species) => LocalizedSpecies {
   const localizeResource = useLocalizeResource<Species>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   const translateCreatureSize = useTranslateCreatureSize(lang);
   const translateCreatureType = useTranslateCreatureType(lang);
+  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
 
   const [system] = useI18nSystem();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 
   return useCallback(
     (species: Species): LocalizedSpecies => {
-      const details = translate(species.description, lang);
+      const description = translate(species.description, lang);
+      const features = formatFeatureEntriesDetails(species.feature_entries);
       const sizes = species.sizes
         .map((size) => translateCreatureSize(size).label)
         .join("/");
@@ -56,7 +62,7 @@ export function useLocalizeSpecies(): (species: Species) => LocalizedSpecies {
         ...localizeResource(species),
         descriptor: ti("descriptor", sizes, type),
 
-        details,
+        details: formatDetails(description, features),
         info: formatInfo([[t("speed"), speed]]),
         sizes,
         speed,
@@ -65,6 +71,7 @@ export function useLocalizeSpecies(): (species: Species) => LocalizedSpecies {
     },
     [
       formatCm,
+      formatFeatureEntriesDetails,
       lang,
       localizeResource,
       t,

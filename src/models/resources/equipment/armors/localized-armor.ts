@@ -33,8 +33,10 @@ export type LocalizedArmor = z.infer<typeof localizedArmorSchema>;
 // Use Localized Armor
 //------------------------------------------------------------------------------
 
-export function useLocalizeArmor(): (armor: Armor) => LocalizedArmor {
-  const localizeEquipment = useLocalizeEquipment<Armor>();
+export function useLocalizeArmor(
+  sourceId: string,
+): (armor: Armor) => LocalizedArmor {
+  const localizeEquipment = useLocalizeEquipment<Armor>(sourceId);
   const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
   const translateArmorType = useTranslateArmorType(lang);
 

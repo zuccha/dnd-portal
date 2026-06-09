@@ -12,7 +12,9 @@ import { useTranslateDieType } from "../../types/die_type";
 import { useTranslateWeaponType } from "../../types/weapon-type";
 import { equipmentStore } from "../equipment/equipment-store";
 import { toolStore } from "../equipment/tools/tool-store";
+import { useFormatFeatureEntries } from "../../other/feature-entries";
 import {
+  formatDetails,
   formatInfo,
   localizedResourceSchema,
   useLocalizeResource,
@@ -57,6 +59,7 @@ export function useLocalizeCharacterClass(
     sourceId,
     lang,
   );
+  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
   const formatCp = useFormatCp();
 
   return useCallback(
@@ -173,18 +176,20 @@ export function useLocalizeCharacterClass(
         })
         .filter((text) => text)
         .join("\n");
+      const features = formatFeatureEntriesDetails(
+        characterClass.feature_entries,
+      );
 
       return {
         ...localizeResource(characterClass),
         descriptor: t("descriptor"),
-        details: [
+        details: formatDetails(
           skill_proficiencies_pool,
           starting_equipment ?
             ti("starting_equipment", starting_equipment)
           : "",
-        ]
-          .filter((text) => text)
-          .join("\n\n"),
+          features,
+        ),
 
         armor_proficiencies,
         hp_die: translateDieType(characterClass.hp_die).label,
@@ -196,6 +201,7 @@ export function useLocalizeCharacterClass(
     },
     [
       formatCp,
+      formatFeatureEntriesDetails,
       lang,
       localizeEquipmentName,
       localizeResource,

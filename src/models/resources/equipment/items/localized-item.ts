@@ -22,11 +22,11 @@ export type LocalizedItem = z.infer<typeof localizedItemSchema>;
 // Use Localized Item
 //------------------------------------------------------------------------------
 
-export function useLocalizeItem(): (item: Item) => LocalizedItem {
+export function useLocalizeItem(sourceId: string): (item: Item) => LocalizedItem {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   const translateType = useTranslateItemType(lang);
-  const localizeEquipment = useLocalizeEquipment<Item>();
+  const localizeEquipment = useLocalizeEquipment<Item>(sourceId);
 
   return useCallback(
     (item: Item): LocalizedItem => {

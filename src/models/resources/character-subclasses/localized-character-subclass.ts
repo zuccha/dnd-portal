@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { characterClassStore } from "../character-classes/character-class-store";
+import { useFormatFeatureEntries } from "../../other/feature-entries";
 import {
   localizedResourceSchema,
   useLocalizeResource,
@@ -38,6 +39,7 @@ export function useLocalizeCharacterSubclass(
     sourceId,
     lang,
   );
+  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
 
   return useCallback(
     (characterSubclass: CharacterSubclass): LocalizedCharacterSubclass => {
@@ -48,11 +50,12 @@ export function useLocalizeCharacterSubclass(
       return {
         ...localizeResource(characterSubclass),
         descriptor: ti("descriptor", character_class),
+        details: formatFeatureEntriesDetails(characterSubclass.feature_entries),
 
         character_class,
       };
     },
-    [localizeCharacterClass, localizeResource, ti],
+    [formatFeatureEntriesDetails, localizeCharacterClass, localizeResource, ti],
   );
 }
 

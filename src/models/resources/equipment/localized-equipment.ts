@@ -5,7 +5,9 @@ import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
 import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
+import { useFormatFeatureEntries } from "../../other/feature-entries";
 import {
+  formatDetails,
   localizedResourceSchema,
   useLocalizeResource,
 } from "../localized-resource";
@@ -34,23 +36,26 @@ export type LocalizedEquipment<E extends Equipment> = z.infer<
 // Use Localized Equipment
 //------------------------------------------------------------------------------
 
-export function useLocalizeEquipment<E extends Equipment>(): (
-  equipment: E,
-) => LocalizedEquipment<E> {
+export function useLocalizeEquipment<E extends Equipment>(
+  sourceId: string,
+): (equipment: E) => LocalizedEquipment<E> {
   const localizeResource = useLocalizeResource<E>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
+  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
   const translateRarity = useTranslateEquipmentRarity(lang);
 
   return useCallback(
     (equipment: E): LocalizedEquipment<E> => {
       const rarity = translateRarity(equipment.rarity).label;
+      const notes = translate(equipment.notes, lang);
+      const features = formatFeatureEntriesDetails(equipment.feature_entries);
 
       return {
         ...localizeResource(equipment),
-        details: translate(equipment.notes, lang),
+        details: formatDetails(notes, features),
 
         cost: formatCost(equipment.cost),
         magic: equipment.magic,
@@ -64,7 +69,16 @@ export function useLocalizeEquipment<E extends Equipment>(): (
         weight: formatWeight(equipment.weight),
       };
     },
-    [formatCost, formatWeight, lang, localizeResource, t, ti, translateRarity],
+    [
+      formatCost,
+      formatFeatureEntriesDetails,
+      formatWeight,
+      lang,
+      localizeResource,
+      t,
+      ti,
+      translateRarity,
+    ],
   );
 }
 

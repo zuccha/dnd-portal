@@ -29,7 +29,7 @@ export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 export function useLocalizeTool(
   sourceId: string,
 ): (tool: Tool) => LocalizedTool {
-  const localizeEquipment = useLocalizeEquipment<Tool>();
+  const localizeEquipment = useLocalizeEquipment<Tool>(sourceId);
   const { lang, ti, tpi } = useI18nLangContext(i18nContext);
 
   const translateCreatureAbility = useTranslateCreatureAbility(lang);

@@ -326,6 +326,23 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resources
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const [useCachedResources] = createUseProcessedData(
+    (resourceIds: string[]) =>
+      resourceIds.map((id) => resourceCache.get(id) ?? defaultResource),
+    resourceCache.cache.subscribe,
+  );
+
+  function useResources(resourceIds: string[]): R[] {
+    for (const resourceId of resourceIds) fetchResource(resourceId);
+
+    const key = hash(resourceIds);
+    return useCachedResources(key, resourceIds)[0];
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resource Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -342,6 +359,14 @@ export function createResourceStore<
   function useResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
     const [{ name: _name, ...filters }] = useFilters();
+    const [lang] = useI18nLang();
+    const params = [sourceId, sources, filters, lang] as const;
+    return useResourceIdsByParams(...params)[0];
+  }
+
+  function useAllResourceIds(sourceId: string): string[] {
+    const [sources] = useResourcesSourcesFilter(sourceId);
+    const { name: _name, ...filters } = defaultFilters;
     const [lang] = useI18nLang();
     const params = [sourceId, sources, filters, lang] as const;
     return useResourceIdsByParams(...params)[0];
@@ -642,10 +667,12 @@ export function createResourceStore<
     getResource,
     getResourceLookup,
     updateResource,
+    useAllResourceIds,
     useResource,
     useResourceIds,
     useResourceLookup,
     useResourceLookupIds,
+    useResources,
 
     useFilteredResourceIds,
 

@@ -3,7 +3,9 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateFeatCategory } from "../../types/feat-category";
+import { useFormatFeatureEntries } from "../../other/feature-entries";
 import {
+  formatDetails,
   formatInfo,
   localizedResourceSchema,
   useLocalizeResource,
@@ -27,15 +29,19 @@ export type LocalizedFeat = z.infer<typeof localizedFeatSchema>;
 // Use Localized Feat
 //------------------------------------------------------------------------------
 
-export function useLocalizeFeat(): (feat: Feat) => LocalizedFeat {
+export function useLocalizeFeat(
+  sourceId: string,
+): (feat: Feat) => LocalizedFeat {
   const localizeResource = useLocalizeResource<Feat>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
   const translateFeatCategory = useTranslateFeatCategory(lang);
 
   return useCallback(
     (feat: Feat): LocalizedFeat => {
       const category = translateFeatCategory(feat.category).label;
       const description = translate(feat.description, lang);
+      const features = formatFeatureEntriesDetails(feat.feature_entries);
       const prerequisite = translate(feat.prerequisite, lang);
       const min_level = feat.min_level ? `${feat.min_level}` : "";
 
@@ -44,7 +50,7 @@ export function useLocalizeFeat(): (feat: Feat) => LocalizedFeat {
         descriptor: ti("subtitle", category),
 
         category,
-        details: description,
+        details: formatDetails(description, features),
         info: formatInfo([
           [t("min_level"), min_level],
           [t("prerequisite"), prerequisite],
@@ -53,7 +59,14 @@ export function useLocalizeFeat(): (feat: Feat) => LocalizedFeat {
         prerequisite,
       };
     },
-    [lang, localizeResource, t, ti, translateFeatCategory],
+    [
+      formatFeatureEntriesDetails,
+      lang,
+      localizeResource,
+      t,
+      ti,
+      translateFeatCategory,
+    ],
   );
 }
 
