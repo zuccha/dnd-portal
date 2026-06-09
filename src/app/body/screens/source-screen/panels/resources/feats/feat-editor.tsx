@@ -11,6 +11,7 @@ import { useFeatCategoryOptions } from "~/models/types/feat-category";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
+  createFeatureEntriesField,
   createInputField,
   createSelectEnumField,
   createSelectField,
@@ -23,6 +24,7 @@ import {
 
 export type FeatEditorProps = {
   resource: Feat;
+  sourceId: string;
 };
 
 export function createFeatEditor(form: Form<FeatFormData>) {
@@ -31,6 +33,15 @@ export function createFeatEditor(form: Form<FeatFormData>) {
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
+
+  //----------------------------------------------------------------------------
+  // Feature Entries
+  //----------------------------------------------------------------------------
+
+  const FeatureEntriesField = createFeatureEntriesField({
+    i18nContext: { label: { en: "Benefits", it: "Benefici" } },
+    useField: form.createUseField("feature_entries"),
+  });
 
   //----------------------------------------------------------------------------
   // Category
@@ -90,7 +101,7 @@ export function createFeatEditor(form: Form<FeatFormData>) {
   // Feat Editor
   //----------------------------------------------------------------------------
 
-  return function FeatEditor({ resource }: FeatEditorProps) {
+  return function FeatEditor({ resource, sourceId }: FeatEditorProps) {
     const [lang] = useI18nLang();
 
     return (
@@ -103,6 +114,12 @@ export function createFeatEditor(form: Form<FeatFormData>) {
         </HStack>
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
+
+        <FeatureEntriesField
+          defaultValue={resource.feature_entries}
+          sourceId={sourceId}
+          w="full"
+        />
       </ResourceEditor>
     );
   };

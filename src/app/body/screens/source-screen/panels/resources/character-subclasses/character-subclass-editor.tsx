@@ -4,7 +4,10 @@ import type { CharacterSubclass } from "~/models/resources/character-subclasses/
 import type { CharacterSubclassFormData } from "~/models/resources/character-subclasses/character-subclass-form";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
-import { createSelectIdField } from "../resource-editor-form";
+import {
+  createFeatureEntriesField,
+  createSelectIdField,
+} from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
 // Create CharacterSubclass Editor
@@ -23,6 +26,15 @@ export function createCharacterSubclassEditor(
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
+
+  //----------------------------------------------------------------------------
+  // Feature Entries
+  //----------------------------------------------------------------------------
+
+  const FeatureEntriesField = createFeatureEntriesField({
+    i18nContext: { label: { en: "Features", it: "Privilegi" } },
+    useField: form.createUseField("feature_entries"),
+  });
 
   //----------------------------------------------------------------------------
   // Character Class
@@ -50,6 +62,12 @@ export function createCharacterSubclassEditor(
             sourceId={sourceId}
           />
         </HStack>
+
+        <FeatureEntriesField
+          defaultValue={resource.feature_entries}
+          sourceId={sourceId}
+          w="full"
+        />
       </ResourceEditor>
     );
   };

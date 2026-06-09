@@ -5,6 +5,7 @@ import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
 import { dieTypeSchema } from "../../types/die_type";
 import { weaponTypeSchema } from "../../types/weapon-type";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import {
   type DBCharacterClass,
@@ -22,6 +23,7 @@ import {
 export const characterClassFormDataSchema = resourceFormDataSchema.extend({
   armor_proficiencies: z.array(armorTypeSchema).default([]),
   armor_proficiencies_extra: z.string().default(""),
+  feature_entries: z.array(dbFeatureEntrySchema).default([]),
   hp_die: dieTypeSchema.default("d8"),
   primary_abilities: z.array(creatureAbilitySchema).default([]),
   saving_throw_proficiencies: z.array(creatureAbilitySchema).default([]),
@@ -54,6 +56,7 @@ export function characterClassFormDataToDB(
     resource: {
       ...resource,
       armor_proficiencies: data.armor_proficiencies,
+      feature_entries: data.feature_entries,
       hp_die: data.hp_die,
       primary_abilities: data.primary_abilities,
       saving_throw_proficiencies: data.saving_throw_proficiencies,

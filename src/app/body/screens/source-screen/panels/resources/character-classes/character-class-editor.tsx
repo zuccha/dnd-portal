@@ -14,6 +14,7 @@ import Field from "~/ui/field";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
+  createFeatureEntriesField,
   createInputField,
   createMultipleSelectEnumField,
   createMultipleSelectIdsField,
@@ -38,6 +39,15 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
+
+  //----------------------------------------------------------------------------
+  // Feature Entries
+  //----------------------------------------------------------------------------
+
+  const FeatureEntriesField = createFeatureEntriesField({
+    i18nContext: { label: { en: "Features", it: "Privilegi" } },
+    useField: form.createUseField("feature_entries"),
+  });
 
   //----------------------------------------------------------------------------
   // Armor Proficiencies Field
@@ -325,6 +335,12 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
 
         <SpellIdsField
           defaultValue={resource.spell_ids}
+          sourceId={sourceId}
+          w="full"
+        />
+
+        <FeatureEntriesField
+          defaultValue={resource.feature_entries}
           sourceId={sourceId}
           w="full"
         />

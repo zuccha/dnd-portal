@@ -13,6 +13,17 @@ export const dbFeatureGrantSchema = z.object({
 export type DBFeatureGrant = z.infer<typeof dbFeatureGrantSchema>;
 
 //------------------------------------------------------------------------------
+// DB Feature Entry
+//------------------------------------------------------------------------------
+
+export const dbFeatureEntrySchema = z.object({
+  id: z.uuid(),
+  min_level: z.number().min(0).max(20),
+});
+
+export type DBFeatureEntry = z.infer<typeof dbFeatureEntrySchema>;
+
+//------------------------------------------------------------------------------
 // DB Feature
 //------------------------------------------------------------------------------
 

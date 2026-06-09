@@ -1,6 +1,7 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
 import { equipmentRaritySchema } from "../../types/equipment-rarity";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import { type DBEquipment, type DBEquipmentTranslation } from "./db-equipment";
 
@@ -10,6 +11,7 @@ import { type DBEquipment, type DBEquipmentTranslation } from "./db-equipment";
 
 export const equipmentFormDataSchema = resourceFormDataSchema.extend({
   cost: z.number().default(0),
+  feature_entries: z.array(dbFeatureEntrySchema).default([]),
   magic: z.boolean().default(false),
   notes: z.string().default(""),
   rarity: equipmentRaritySchema.default("common"),
@@ -32,6 +34,7 @@ export function equipmentFormDataToDB(data: Partial<EquipmentFormData>): {
     resource: {
       ...resource,
       cost: data.cost,
+      feature_entries: data.feature_entries,
       magic: data.magic,
       rarity: data.rarity,
       weight: data.weight,

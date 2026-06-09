@@ -2,6 +2,7 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import { creatureSizeSchema } from "../../types/creature-size";
 import { creatureTypeSchema } from "../../types/creature-type";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import type { DBSpecies, DBSpeciesTranslation } from "./db-species";
 
@@ -11,6 +12,7 @@ import type { DBSpecies, DBSpeciesTranslation } from "./db-species";
 
 export const speciesFormDataSchema = resourceFormDataSchema.extend({
   description: z.string().default(""),
+  feature_entries: z.array(dbFeatureEntrySchema).default([]),
   sizes: z.array(creatureSizeSchema).min(1).default(["medium"]),
   speed: z.number().default(30),
   type: creatureTypeSchema.default("humanoid"),
@@ -31,6 +33,7 @@ export function speciesFormDataToDB(data: Partial<SpeciesFormData>): {
   return {
     resource: {
       ...resource,
+      feature_entries: data.feature_entries,
       sizes: data.sizes,
       speed: data.speed,
       type: data.type,

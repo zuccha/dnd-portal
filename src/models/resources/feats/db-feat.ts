@@ -2,6 +2,7 @@ import z from "zod";
 import { characterLevelSchema } from "../../types/character-level";
 import { featCategorySchema } from "../../types/feat-category";
 import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 
 //------------------------------------------------------------------------------
 // DB Feat
@@ -9,6 +10,7 @@ import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 
 export const dbFeatSchema = dbResourceSchema.extend({
   category: featCategorySchema,
+  feature_entries: z.array(dbFeatureEntrySchema),
   min_level: characterLevelSchema,
 });
 

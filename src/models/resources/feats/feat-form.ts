@@ -2,6 +2,7 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import { characterLevelSchema } from "../../types/character-level";
 import { featCategorySchema } from "../../types/feat-category";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import type { DBFeat, DBFeatTranslation } from "./db-feat";
 
@@ -12,6 +13,7 @@ import type { DBFeat, DBFeatTranslation } from "./db-feat";
 export const featFormDataSchema = resourceFormDataSchema.extend({
   category: featCategorySchema.default("general"),
   description: z.string().default(""),
+  feature_entries: z.array(dbFeatureEntrySchema).default([]),
   min_level: characterLevelSchema.default(0),
   prerequisite: z.string().default(""),
 });
@@ -32,6 +34,7 @@ export function featFormDataToDB(data: Partial<FeatFormData>): {
     resource: {
       ...resource,
       category: data.category,
+      feature_entries: data.feature_entries,
       min_level: data.min_level,
     },
     translation: {

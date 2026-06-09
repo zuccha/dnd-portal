@@ -2,6 +2,7 @@ import { HStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
+import type { DBFeatureEntry } from "~/models/resources/features/db-feature";
 import type { ResourceOption } from "~/models/resources/resource";
 import Checkbox from "~/ui/checkbox";
 import CostInput from "~/ui/cost-input";
@@ -16,6 +17,7 @@ import TimeInput from "~/ui/time-input";
 import WeightInput from "~/ui/weight-input";
 import type { FieldBag } from "~/utils/form";
 import EquipmentBundleEditor from "./equipment-bundle-editor";
+import FeatureEntriesEditor from "./feature-entries-editor";
 import ResourceSearch from "./resource-search";
 
 //------------------------------------------------------------------------------
@@ -207,6 +209,54 @@ export function createEquipmentBundleField({
   }
 
   return EquipmentBundleField;
+}
+
+//------------------------------------------------------------------------------
+// Create Feature Entries Field
+//------------------------------------------------------------------------------
+
+export type FeatureEntriesFieldProps = Props<DBFeatureEntry[]> & {
+  sourceId: string;
+};
+
+export function createFeatureEntriesField({
+  i18nContext,
+  i18nContextExtra,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  translatable?: boolean;
+  useField: (
+    defaultValue: DBFeatureEntry[],
+  ) => FieldBag<string, DBFeatureEntry[]>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function FeatureEntriesField({
+    defaultValue,
+    sourceId,
+    ...rest
+  }: FeatureEntriesFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <FeatureEntriesEditor
+          bgColor={translatable ? "bg.info" : undefined}
+          sourceId={sourceId}
+          w="full"
+          withinDialog
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return FeatureEntriesField;
 }
 
 //------------------------------------------------------------------------------

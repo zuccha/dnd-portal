@@ -1,5 +1,6 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import type {
   DBCharacterSubclass,
@@ -12,6 +13,7 @@ import type {
 
 export const characterSubclassFormDataSchema = resourceFormDataSchema.extend({
   character_class_id: z.uuid(),
+  feature_entries: z.array(dbFeatureEntrySchema).default([]),
 });
 
 export type CharacterSubclassFormData = z.infer<
@@ -34,6 +36,7 @@ export function characterSubclassFormDataToDB(
     resource: {
       ...resource,
       character_class_id: data.character_class_id,
+      feature_entries: data.feature_entries,
     },
     translation: {
       ...translation,

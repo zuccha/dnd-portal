@@ -16,6 +16,7 @@ import { createEquipmentEditor } from "../equipment-editor";
 
 export type ItemEditorProps = {
   resource: Item;
+  sourceId: string;
 };
 
 export function createItemEditor(form: Form<ItemFormData>) {
@@ -58,9 +59,9 @@ export function createItemEditor(form: Form<ItemFormData>) {
   // Item Editor
   //----------------------------------------------------------------------------
 
-  return function ItemEditor({ resource }: ItemEditorProps) {
+  return function ItemEditor({ resource, sourceId }: ItemEditorProps) {
     return (
-      <EquipmentEditor resource={resource}>
+      <EquipmentEditor resource={resource} sourceId={sourceId}>
         <HStack align="flex-start" gap={4} w="full">
           <TypeField defaultValue={resource.type} />
           <VStack align="flex-start" gap={4} w="full">

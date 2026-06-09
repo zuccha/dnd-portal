@@ -5,6 +5,7 @@ import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
 import { dieTypeSchema } from "../../types/die_type";
 import { weaponTypeSchema } from "../../types/weapon-type";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 import {
   type TranslationFields,
   defaultResource,
@@ -24,6 +25,7 @@ export const characterClassSchema = resourceSchema
   .extend({
     armor_proficiencies: z.array(armorTypeSchema),
     armor_proficiencies_extra: i18nStringSchema,
+    feature_entries: z.array(dbFeatureEntrySchema),
     hp_die: dieTypeSchema,
     primary_abilities: z.array(creatureAbilitySchema),
     saving_throw_proficiencies: z.array(creatureAbilitySchema),
@@ -52,6 +54,7 @@ export const defaultCharacterClass: CharacterClass = {
   ...defaultResource,
   armor_proficiencies: [],
   armor_proficiencies_extra: {},
+  feature_entries: [],
   hp_die: "d8",
   primary_abilities: [],
   saving_throw_proficiencies: [],

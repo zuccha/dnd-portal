@@ -9,6 +9,7 @@ import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
   createCostInputField,
+  createFeatureEntriesField,
   createSelectEnumField,
   createSelectField,
   createTextareaField,
@@ -22,6 +23,7 @@ import {
 export type EquipmentEditorProps = {
   children?: ReactNode;
   resource: Equipment;
+  sourceId: string;
 };
 
 export function createEquipmentEditor<E extends EquipmentFormData>(
@@ -32,6 +34,15 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
+
+  //----------------------------------------------------------------------------
+  // Feature Entries
+  //----------------------------------------------------------------------------
+
+  const FeatureEntriesField = createFeatureEntriesField({
+    i18nContext: { label: { en: "Qualities", it: "Qualità" } },
+    useField: form.createUseField("feature_entries"),
+  });
 
   //----------------------------------------------------------------------------
   // Cost
@@ -101,6 +112,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   return function EquipmentEditor({
     children,
     resource,
+    sourceId,
   }: EquipmentEditorProps) {
     const [lang] = useI18nLang();
 
@@ -116,6 +128,12 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
         {children}
 
         <NotesField defaultValue={resource.notes[lang] ?? ""} />
+
+        <FeatureEntriesField
+          defaultValue={resource.feature_entries}
+          sourceId={sourceId}
+          w="full"
+        />
       </ResourceEditor>
     );
   };

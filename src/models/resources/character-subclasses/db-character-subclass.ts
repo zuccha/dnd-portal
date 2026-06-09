@@ -1,5 +1,6 @@
 import z from "zod";
 import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 
 //------------------------------------------------------------------------------
 // DB Character Subclass
@@ -7,6 +8,7 @@ import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 
 export const dbCharacterSubclassSchema = dbResourceSchema.extend({
   character_class_id: z.uuid(),
+  feature_entries: z.array(dbFeatureEntrySchema),
 });
 
 export type DBCharacterSubclass = z.infer<typeof dbCharacterSubclassSchema>;

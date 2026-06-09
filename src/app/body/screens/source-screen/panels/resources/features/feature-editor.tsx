@@ -57,6 +57,8 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
 
     return (
       <ResourceEditor resource={resource}>
+        <DescriptionField defaultValue={resource.description[lang] ?? ""} />
+
         <Field error={error ? t(error) : undefined} label={t("granted_by")}>
           <FeatureGrantedByEditor
             onValueChange={onValueChange}
@@ -66,8 +68,6 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
             withinDialog
           />
         </Field>
-
-        <DescriptionField defaultValue={resource.description[lang] ?? ""} />
       </ResourceEditor>
     );
   };

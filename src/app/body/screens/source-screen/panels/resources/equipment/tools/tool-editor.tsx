@@ -84,7 +84,7 @@ export function createToolEditor(form: Form<ToolFormData>) {
     const [lang] = useI18nLang();
 
     return (
-      <EquipmentEditor resource={resource}>
+      <EquipmentEditor resource={resource} sourceId={sourceId}>
         <HStack align="flex-start" gap={4}>
           <TypeField defaultValue={resource.type} />
           <AbilityField defaultValue={resource.ability} />

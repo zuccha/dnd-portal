@@ -1,6 +1,7 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { equipmentRaritySchema } from "../../types/equipment-rarity";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 import {
   type TranslationFields,
   defaultResource,
@@ -14,6 +15,7 @@ import {
 
 export const equipmentSchema = resourceSchema.extend({
   cost: z.number(),
+  feature_entries: z.array(dbFeatureEntrySchema),
   magic: z.boolean(),
   notes: i18nStringSchema,
   rarity: equipmentRaritySchema,
@@ -29,6 +31,7 @@ export type Equipment = z.infer<typeof equipmentSchema>;
 export const defaultEquipment: Equipment = {
   ...defaultResource,
   cost: 0,
+  feature_entries: [],
   magic: false,
   notes: {},
   rarity: "common",

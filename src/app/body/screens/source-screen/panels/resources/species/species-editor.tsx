@@ -8,6 +8,7 @@ import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
   createDistanceInputField,
+  createFeatureEntriesField,
   createMultipleSelectEnumField,
   createSelectEnumField,
   createTextareaField,
@@ -19,6 +20,7 @@ import {
 
 export type SpeciesEditorProps = {
   resource: Species;
+  sourceId: string;
 };
 
 export function createSpeciesEditor(form: Form<SpeciesFormData>) {
@@ -27,6 +29,15 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
+
+  //----------------------------------------------------------------------------
+  // Feature Entries
+  //----------------------------------------------------------------------------
+
+  const FeatureEntriesField = createFeatureEntriesField({
+    i18nContext: { label: { en: "Traits", it: "Tratti" } },
+    useField: form.createUseField("feature_entries"),
+  });
 
   //----------------------------------------------------------------------------
   // Description
@@ -81,7 +92,7 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
   // Species Editor
   //----------------------------------------------------------------------------
 
-  return function SpeciesEditor({ resource }: SpeciesEditorProps) {
+  return function SpeciesEditor({ resource, sourceId }: SpeciesEditorProps) {
     const [lang] = useI18nLang();
 
     return (
@@ -93,6 +104,12 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
         </HStack>
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
+
+        <FeatureEntriesField
+          defaultValue={resource.feature_entries}
+          sourceId={sourceId}
+          w="full"
+        />
       </ResourceEditor>
     );
   };

@@ -170,7 +170,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
     const { value: properties } = usePropertiesField(resource.properties);
 
     return (
-      <EquipmentEditor resource={resource}>
+      <EquipmentEditor resource={resource} sourceId={sourceId}>
         <HStack align="flex-start" gap={4}>
           <TypeField defaultValue={resource.type} />
           <PropertiesField defaultValue={resource.properties} />

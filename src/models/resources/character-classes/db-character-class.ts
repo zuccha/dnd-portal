@@ -5,6 +5,7 @@ import { creatureSkillSchema } from "../../types/creature-skill";
 import { dieTypeSchema } from "../../types/die_type";
 import { weaponTypeSchema } from "../../types/weapon-type";
 import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
+import { dbFeatureEntrySchema } from "../features/db-feature";
 import { startingEquipmentEntrySchema } from "./starting-equipment";
 
 //------------------------------------------------------------------------------
@@ -13,6 +14,7 @@ import { startingEquipmentEntrySchema } from "./starting-equipment";
 
 export const dbCharacterClassSchema = dbResourceSchema.extend({
   armor_proficiencies: z.array(armorTypeSchema),
+  feature_entries: z.array(dbFeatureEntrySchema),
   hp_die: dieTypeSchema,
   primary_abilities: z.array(creatureAbilitySchema),
   saving_throw_proficiencies: z.array(creatureAbilitySchema),

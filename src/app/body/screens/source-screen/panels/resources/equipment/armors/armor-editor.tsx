@@ -17,6 +17,7 @@ import { createEquipmentEditor } from "../equipment-editor";
 
 export type ArmorEditorProps = {
   resource: Armor;
+  sourceId: string;
 };
 
 export function createArmorEditor(form: Form<ArmorFormData>) {
@@ -207,9 +208,9 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
   // Armor Editor
   //----------------------------------------------------------------------------
 
-  return function ArmorEditor({ resource }: ArmorEditorProps) {
+  return function ArmorEditor({ resource, sourceId }: ArmorEditorProps) {
     return (
-      <EquipmentEditor resource={resource}>
+      <EquipmentEditor resource={resource} sourceId={sourceId}>
         <HStack align="flex-start" gap={4}>
           <TypeField defaultValue={resource.type} />
           <BaseArmorClassField defaultValue={resource.base_armor_class} />
