@@ -10,6 +10,7 @@ import type { DBFeature, DBFeatureTranslation } from "./db-feature";
 
 export const featureFormDataSchema = resourceFormDataSchema.extend({
   description: z.string().default(""),
+  display_name: z.string().default(""),
   granted_by: z.array(dbFeatureGrantSchema).default([]),
 });
 
@@ -33,6 +34,7 @@ export function featureFormDataToDB(data: Partial<FeatureFormData>): {
     translation: {
       ...translation,
       description: data.description,
+      display_name: data.display_name,
     },
   };
 }

@@ -1,6 +1,18 @@
 --------------------------------------------------------------------------------
+-- FEATURE DISPLAY NAME
+--------------------------------------------------------------------------------
+
+ALTER TABLE public.feature_translations
+ADD COLUMN display_name text DEFAULT ''::text NOT NULL;
+
+
+--------------------------------------------------------------------------------
 -- FEATURE ROW
 --------------------------------------------------------------------------------
+
+DROP FUNCTION public.fetch_feature(uuid);
+DROP FUNCTION public.fetch_features(uuid, text[], jsonb, text, text);
+DROP TYPE public.feature_row;
 
 CREATE TYPE public.feature_row AS (
   -- Resource
@@ -20,61 +32,6 @@ CREATE TYPE public.feature_row AS (
   -- Resource Features
   granted_by jsonb
 );
-
-
---------------------------------------------------------------------------------
--- CREATE FEATURE
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.create_feature(
-  p_source_id uuid,
-  p_lang text,
-  p_feature jsonb,
-  p_feature_translation jsonb)
-RETURNS uuid
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
-DECLARE
-  v_id uuid;
-BEGIN
-  v_id := public.create_resource(
-    p_source_id,
-    p_lang,
-    p_feature || jsonb_build_object('kind', 'feature'::public.resource_kind),
-    p_feature_translation
-  );
-
-  INSERT INTO public.features (
-    resource_id
-  ) VALUES (
-    v_id
-  );
-
-  INSERT INTO public.resource_features (
-    resource_id,
-    feature_id,
-    min_level,
-    position
-  )
-  SELECT
-    (a.value->>'id')::uuid,
-    v_id,
-    coalesce((a.value->>'min_level')::smallint, 0),
-    coalesce((a.value->>'position')::smallint, (a.ordinality - 1)::smallint)
-  FROM jsonb_array_elements(coalesce(p_feature->'granted_by', '[]'::jsonb)) WITH ORDINALITY AS a(value, ordinality);
-
-  perform public.upsert_feature_translation(v_id, p_lang, p_feature_translation);
-
-  RETURN v_id;
-END;
-$$;
-
-ALTER FUNCTION public.create_feature(p_source_id uuid, p_lang text, p_feature jsonb, p_feature_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.create_feature(p_source_id uuid, p_lang text, p_feature jsonb, p_feature_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_feature(p_source_id uuid, p_lang text, p_feature jsonb, p_feature_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_feature(p_source_id uuid, p_lang text, p_feature jsonb, p_feature_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -263,64 +220,3 @@ ALTER FUNCTION public.upsert_feature_translation(p_id uuid, p_lang text, p_featu
 GRANT ALL ON FUNCTION public.upsert_feature_translation(p_id uuid, p_lang text, p_feature_translation jsonb) TO anon;
 GRANT ALL ON FUNCTION public.upsert_feature_translation(p_id uuid, p_lang text, p_feature_translation jsonb) TO authenticated;
 GRANT ALL ON FUNCTION public.upsert_feature_translation(p_id uuid, p_lang text, p_feature_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPDATE FEATURE
---------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION public.update_feature(
-  p_id uuid,
-  p_lang text,
-  p_feature jsonb,
-  p_feature_translation jsonb)
-RETURNS void
-LANGUAGE plpgsql
-SET search_path TO 'public', 'pg_temp'
-AS $$
-DECLARE
-  v_rows int;
-BEGIN
-  perform public.update_resource(
-    p_id,
-    p_lang,
-    p_feature || jsonb_build_object('kind', 'feature'::public.resource_kind),
-    p_feature_translation
-  );
-
-  UPDATE public.features f
-  SET resource_id = f.resource_id
-  WHERE f.resource_id = p_id;
-
-  GET diagnostics v_rows = ROW_COUNT;
-  IF v_rows = 0 THEN
-    raise exception 'No row with id %', p_id;
-  END IF;
-
-  IF p_feature ? 'granted_by' THEN
-    DELETE FROM public.resource_features rf
-    WHERE rf.feature_id = p_id;
-
-    INSERT INTO public.resource_features (
-      resource_id,
-      feature_id,
-      min_level,
-      position
-    )
-    SELECT
-      (a.value->>'id')::uuid,
-      p_id,
-      coalesce((a.value->>'min_level')::smallint, 0),
-      coalesce((a.value->>'position')::smallint, (a.ordinality - 1)::smallint)
-    FROM jsonb_array_elements(coalesce(p_feature->'granted_by', '[]'::jsonb)) WITH ORDINALITY AS a(value, ordinality);
-  END IF;
-
-  perform public.upsert_feature_translation(p_id, p_lang, p_feature_translation);
-END;
-$$;
-
-ALTER FUNCTION public.update_feature(p_id uuid, p_lang text, p_feature jsonb, p_feature_translation jsonb) OWNER TO postgres;
-
-GRANT ALL ON FUNCTION public.update_feature(p_id uuid, p_lang text, p_feature jsonb, p_feature_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_feature(p_id uuid, p_lang text, p_feature jsonb, p_feature_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_feature(p_id uuid, p_lang text, p_feature jsonb, p_feature_translation jsonb) TO service_role;

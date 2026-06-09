@@ -23,6 +23,7 @@ GRANT ALL ON TABLE public.features TO service_role;
 CREATE TABLE IF NOT EXISTS public.feature_translations (
   resource_id uuid NOT NULL,
   lang text NOT NULL,
+  display_name text DEFAULT ''::text NOT NULL,
   description text DEFAULT ''::text NOT NULL,
   CONSTRAINT feature_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT feature_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.features(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,

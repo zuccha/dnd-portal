@@ -39,6 +39,7 @@ export type DBFeature = z.infer<typeof dbFeatureSchema>;
 
 export const dbFeatureTranslationSchema = dbResourceTranslationSchema.extend({
   description: z.string(),
+  display_name: z.string(),
 });
 
 export type DBFeatureTranslation = z.infer<typeof dbFeatureTranslationSchema>;

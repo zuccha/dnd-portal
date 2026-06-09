@@ -14,6 +14,7 @@ import { dbFeatureGrantSchema } from "./db-feature";
 
 export const featureSchema = resourceSchema.extend({
   description: i18nStringSchema,
+  display_name: i18nStringSchema,
   granted_by: z.array(dbFeatureGrantSchema),
 });
 
@@ -26,6 +27,7 @@ export type Feature = z.infer<typeof featureSchema>;
 export const defaultFeature: Feature = {
   ...defaultResource,
   description: {},
+  display_name: {},
   granted_by: [],
 };
 
@@ -36,4 +38,5 @@ export const defaultFeature: Feature = {
 export const featureTranslationFields: TranslationFields<Feature>[] = [
   ...resourceTranslationFields,
   "description",
+  "display_name",
 ];

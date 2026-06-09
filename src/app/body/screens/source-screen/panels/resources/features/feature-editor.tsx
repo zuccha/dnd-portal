@@ -5,7 +5,7 @@ import type { FeatureFormData } from "~/models/resources/features/feature-form";
 import Field from "~/ui/field";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
-import { createTextareaField } from "../resource-editor-form";
+import { createInputField, createTextareaField } from "../resource-editor-form";
 import FeatureGrantedByEditor from "./feature-granted-by-editor";
 
 //------------------------------------------------------------------------------
@@ -29,6 +29,19 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
   //----------------------------------------------------------------------------
 
   const useGrantedByField = form.createUseField("granted_by");
+
+  //----------------------------------------------------------------------------
+  // Display Name
+  //----------------------------------------------------------------------------
+
+  const DisplayNameField = createInputField({
+    i18nContext: {
+      label: { en: "Display Name", it: "Nome Visualizzato" },
+      placeholder: { en: "Use name", it: "Usa nome" },
+    },
+    translatable: true,
+    useField: form.createUseField("display_name"),
+  });
 
   //----------------------------------------------------------------------------
   // Description
@@ -57,6 +70,10 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
 
     return (
       <ResourceEditor resource={resource}>
+        <DisplayNameField
+          defaultValue={resource.display_name?.[lang] ?? ""}
+        />
+
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
 
         <Field error={error ? t(error) : undefined} label={t("granted_by")}>
