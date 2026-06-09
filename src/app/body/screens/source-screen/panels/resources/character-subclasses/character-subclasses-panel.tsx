@@ -45,7 +45,7 @@ const CharacterSubclassesPanel = createResourcesPanel(
       form: characterSubclassForm,
       parseFormData: characterSubclassFormDataToDB,
     },
-    table: { columns },
+    table: { columns, detailsKey: "details" },
   },
 );
 
