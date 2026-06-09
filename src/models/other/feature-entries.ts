@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import type { DBFeatureEntry } from "../resources/features/db-feature";
-import { type Feature, defaultFeature } from "../resources/features/feature";
+import { defaultFeature } from "../resources/features/feature";
 import { featureStore } from "../resources/features/feature-store";
 
 //------------------------------------------------------------------------------
