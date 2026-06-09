@@ -4,8 +4,8 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
-import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import { useFormatFeatureEntries } from "../../other/feature-entries";
+import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import {
   formatDetails,
   localizedResourceSchema,

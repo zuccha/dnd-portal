@@ -5,6 +5,7 @@ import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { joinWith } from "~/ui/array";
 import { numberToLetter } from "~/utils/number";
+import { useFormatFeatureEntries } from "../../other/feature-entries";
 import { useTranslateArmorType } from "../../types/armor-type";
 import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
@@ -12,7 +13,6 @@ import { useTranslateDieType } from "../../types/die_type";
 import { useTranslateWeaponType } from "../../types/weapon-type";
 import { equipmentStore } from "../equipment/equipment-store";
 import { toolStore } from "../equipment/tools/tool-store";
-import { useFormatFeatureEntries } from "../../other/feature-entries";
 import {
   formatDetails,
   formatInfo,

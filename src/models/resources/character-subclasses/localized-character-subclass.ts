@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { characterClassStore } from "../character-classes/character-class-store";
 import { useFormatFeatureEntries } from "../../other/feature-entries";
+import { characterClassStore } from "../character-classes/character-class-store";
 import {
   localizedResourceSchema,
   useLocalizeResource,

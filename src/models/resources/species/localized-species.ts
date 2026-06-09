@@ -4,9 +4,9 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCmWithUnit } from "~/measures/distance";
+import { useFormatFeatureEntries } from "../../other/feature-entries";
 import { useTranslateCreatureSize } from "../../types/creature-size";
 import { useTranslateCreatureType } from "../../types/creature-type";
-import { useFormatFeatureEntries } from "../../other/feature-entries";
 import {
   formatDetails,
   formatInfo,
