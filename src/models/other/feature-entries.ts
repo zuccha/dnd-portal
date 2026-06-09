@@ -40,7 +40,7 @@ export function useFormatFeatureEntries(
             description,
           ]
             .filter(Boolean)
-            .join("\n");
+            .join("\r");
         })
         .filter(Boolean)
         .join("\n\n"),
