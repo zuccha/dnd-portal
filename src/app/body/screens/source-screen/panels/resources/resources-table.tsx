@@ -50,8 +50,11 @@ export function createResourcesTable<
   const ResourcesTableHead = createResourcesTableHead(store, context, extra);
   const ResourcesTableRow = createResourcesTableRow(store, context, extra);
 
+  const { useFilteredResourceIds, useLocalizeResource } = store;
+
   return function ResourcesTable({ sourceId }: ResourcesTableProps) {
-    const filteredResourceIds = store.useFilteredResourceIds(sourceId);
+    const filteredResourceIds = useFilteredResourceIds(sourceId);
+    const localizeResource = useLocalizeResource(sourceId);
     const editable = useCanEditSourceResources(sourceId);
 
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
@@ -75,8 +78,8 @@ export function createResourcesTable<
                 <ResourcesTableRow
                   editable={editable}
                   key={id}
+                  localizeResource={localizeResource}
                   resourceId={id}
-                  sourceId={sourceId}
                 />
               ))}
             </Table.Body>

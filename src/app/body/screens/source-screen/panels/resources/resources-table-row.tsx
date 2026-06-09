@@ -1,6 +1,6 @@
 import { Table, VStack } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { useI18nSystemPatterns } from "~/i18n/i18n-system";
@@ -38,9 +38,12 @@ export type ResourcesTableRowExtra<
 // Create Resources Table Row
 //------------------------------------------------------------------------------
 
-type ResourcesTableRowProps = {
-  sourceId: string;
+type ResourcesTableRowProps<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+> = {
   editable: boolean;
+  localizeResource: (resource: R) => L;
   resourceId: string;
 };
 
@@ -55,22 +58,23 @@ export function createResourcesTableRow<
   context: ResourcesContext<R>,
   extra: ResourcesTableRowExtra<R, L>,
 ) {
-  const {
-    useLocalizedResource,
-    useResourceSelection,
-    useResourceSelectionMethods,
-  } = store;
+  const { useResource, useResourceSelection, useResourceSelectionMethods } =
+    store;
 
   const { useResourceExpansion } = context;
 
   return function ResourcesTableRow({
-    sourceId,
     editable,
+    localizeResource,
     resourceId,
-  }: ResourcesTableRowProps) {
+  }: ResourcesTableRowProps<R, L>) {
     const [lang] = useI18nLang();
 
-    const localizedResource = useLocalizedResource(sourceId, resourceId);
+    const [resource] = useResource(resourceId);
+    const localizedResource = useMemo(
+      () => localizeResource(resource),
+      [localizeResource, resource],
+    );
     const selected = useResourceSelection(resourceId);
     const { toggleResourceSelection } = useResourceSelectionMethods(resourceId);
     const expanded = useResourceExpansion(resourceId, false);
@@ -93,8 +97,6 @@ export function createResourcesTableRow<
       },
       [toggleResourceSelection],
     );
-
-    if (!localizedResource) return null;
 
     const columnCount = extra.columns.length + (editable ? 2 : 1);
 

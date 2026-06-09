@@ -1,6 +1,6 @@
 import { Box, Theme, VStack } from "@chakra-ui/react";
 import { EditIcon, SquareIcon } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import SquareCheckIcon from "~/icons/square-check-icon";
@@ -45,11 +45,14 @@ export type ResourceCardInteractiveExtra<
 // Create Resource Card Interactive
 //------------------------------------------------------------------------------
 
-export type ResourceCardInteractiveProps = {
+export type ResourceCardInteractiveProps<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+> = {
   editable?: boolean;
+  localizeResource: (resource: R) => L;
   palette?: Palette;
   resourceId: string;
-  sourceId: string;
   zoom?: number;
 };
 
@@ -71,7 +74,7 @@ export function createResourceCardInteractive<
   extra: ResourceCardInteractiveExtra<R, L>,
 ) {
   const {
-    useLocalizedResource,
+    useResource,
     useResourceLookup,
     useResourceSelection,
     useResourceSelectionMethods,
@@ -82,12 +85,16 @@ export function createResourceCardInteractive<
 
   function ResourcesAlbumCardInteractive({
     editable,
+    localizeResource,
     palette = defaultPalette,
     resourceId,
-    sourceId,
     zoom,
-  }: ResourceCardInteractiveProps) {
-    const localizedResource = useLocalizedResource(sourceId, resourceId);
+  }: ResourceCardInteractiveProps<R, L>) {
+    const [resource] = useResource(resourceId);
+    const localizedResource = useMemo(
+      () => localizeResource(resource),
+      [localizeResource, resource],
+    );
 
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
     const pageCountRef = useRef(0);
@@ -115,8 +122,6 @@ export function createResourceCardInteractive<
     const edit = useCallback(() => {
       if (localizedResource) context.setEditedResource(localizedResource._raw);
     }, [localizedResource]);
-
-    if (!localizedResource) return null;
 
     return (
       <Box
@@ -204,13 +209,7 @@ export function createResourceCardInteractive<
     const [lookup] = useResourceLookup(resourceId);
     const name = translate(lookup.name, lang);
 
-    return (
-      <AlbumCard.Placeholder
-        name={name}
-        palette={palette}
-        zoom={zoom}
-      />
-    );
+    return <AlbumCard.Placeholder name={name} palette={palette} zoom={zoom} />;
   }
 
   ResourcesAlbumCardInteractive.Placeholder =

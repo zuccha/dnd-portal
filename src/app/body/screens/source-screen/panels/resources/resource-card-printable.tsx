@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -37,11 +38,11 @@ export type ResourceCardPrintableProps<
   alwaysEvenPages?: boolean;
   bgColor?: string;
   css?: ResourcePokerCardProps<R, L>["css"];
+  localizeResource: (resource: R) => L;
   onPageCountChange?: (count: number | undefined) => void;
   palette: Palette;
   resourceId: string;
   showImage: boolean;
-  sourceId: string;
   zoom?: number;
 };
 
@@ -56,18 +57,20 @@ export function createResourceCardPrintable<
   _context: ResourcesContext<R>,
   extra: ResourceCardPrintableExtra<R, L>,
 ) {
-  const { useLocalizedResource } = store;
+  const { useResource } = store;
 
   const AlbumCard = extra.AlbumCard;
 
   function ResourcesAlbumCardPrintable({
+    localizeResource,
     resourceId,
-    sourceId,
     ...rest
   }: ResourceCardPrintableProps<R, L>) {
-    const localizedResource = useLocalizedResource(sourceId, resourceId);
-
-    if (!localizedResource) return null;
+    const [resource] = useResource(resourceId);
+    const localizedResource = useMemo(
+      () => localizeResource(resource),
+      [localizeResource, resource],
+    );
 
     return (
       <AlbumCard

@@ -71,12 +71,15 @@ export function createResourcesPrintMode<
     extra,
   );
 
+  const { useLocalizeResource, useSelectedFilteredResourceIds } = store;
+
   return function ResourcesPrintMode({
     sourceId,
     ...rest
   }: ResourcesPrintModeProps) {
     const { t } = useI18nLangContext(i18nContext);
-    const resourceIds = store.useSelectedFilteredResourceIds(sourceId);
+    const resourceIds = useSelectedFilteredResourceIds(sourceId);
+    const localizeResource = useLocalizeResource(sourceId);
 
     const [zoom, setZoom] = useState(1);
 
@@ -263,6 +266,7 @@ export function createResourcesPrintMode<
                     bgColor={backgroundColorVisible ? undefined : "white"}
                     css={albumCardCss}
                     key={resourceId}
+                    localizeResource={localizeResource}
                     onPageCountChange={(count) => {
                       setPagesCounts((prev) => {
                         const next = { ...prev };
@@ -278,7 +282,6 @@ export function createResourcesPrintMode<
                     palette={palette}
                     resourceId={resourceId}
                     showImage={showImage}
-                    sourceId={sourceId}
                   />
                 ))}
               </Flex>

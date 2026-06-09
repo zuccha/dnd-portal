@@ -57,12 +57,13 @@ export function createResourcesAlbum<
     extra,
   );
 
-  const { useFilteredResourceIds } = store;
+  const { useFilteredResourceIds, useLocalizeResource } = store;
   const { usePaletteName, useZoom } = context;
 
   function ResourcesAlbum({ sourceId }: ResourcesAlbumProps) {
     const editable = useCanEditSourceResources(sourceId);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
+    const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
     const zoom = useZoom();
 
@@ -133,9 +134,9 @@ export function createResourcesAlbum<
                   <ResourceCardInteractive
                     editable={editable}
                     key={id}
+                    localizeResource={localizeResource}
                     palette={palettes[paletteName]}
                     resourceId={id}
-                    sourceId={sourceId}
                     zoom={zoom}
                   />
                 : <ResourceCardInteractive.Placeholder
