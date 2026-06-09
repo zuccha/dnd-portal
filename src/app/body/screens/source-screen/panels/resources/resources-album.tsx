@@ -142,7 +142,6 @@ export function createResourcesAlbum<
                     key={id}
                     palette={palettes[paletteName]}
                     resourceId={id}
-                    sourceId={sourceId}
                     zoom={zoom}
                   />;
             })}

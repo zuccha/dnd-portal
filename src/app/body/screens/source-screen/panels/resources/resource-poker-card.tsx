@@ -175,31 +175,25 @@ ResourcePokerCard.w = PokerCard.cardW;
 // Resource Poker Card Placeholder
 //------------------------------------------------------------------------------
 
-export type ResourcePokerCardPlaceholderProps<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = StackProps & {
-  localizedResource: L;
+export type ResourcePokerCardPlaceholderProps = StackProps & {
+  name: string;
   palette: Palette;
 };
 
-export function ResourcePokerCardPlaceholder<
-  R extends Resource,
-  L extends LocalizedResource<R>,
->({
-  localizedResource,
+export function ResourcePokerCardPlaceholder({
+  name,
   palette,
   ...rest
-}: ResourcePokerCardPlaceholderProps<R, L>) {
+}: ResourcePokerCardPlaceholderProps) {
   return (
     <PokerCard.Frame
-      descriptor={localizedResource.descriptor}
-      name={localizedResource.name}
+      descriptor=""
+      name={name}
       pageIndicator=""
       palette={palette}
-      sourceName={localizedResource.source}
-      sourcePage={localizedResource.page}
-      sourceVersion={localizedResource.sourceVersion}
+      sourceName=""
+      sourcePage=""
+      sourceVersion=""
       {...rest}
     />
   );

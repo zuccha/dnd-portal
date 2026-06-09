@@ -1,6 +1,8 @@
 import { Box, Theme, VStack } from "@chakra-ui/react";
 import { EditIcon, SquareIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
+import { useI18nLang } from "~/i18n/i18n-lang";
+import { translate } from "~/i18n/i18n-string";
 import SquareCheckIcon from "~/icons/square-check-icon";
 import type {
   DBResource,
@@ -33,7 +35,7 @@ export type ResourceCardInteractiveExtra<
       "afterDetails" | "beforeDetails" | "firstPageInfo"
     >
   > & {
-    Placeholder: React.FC<ResourcePokerCardPlaceholderProps<R, L>>;
+    Placeholder: React.FC<ResourcePokerCardPlaceholderProps>;
     h: number;
     w: number;
   };
@@ -54,7 +56,6 @@ export type ResourceCardInteractiveProps = {
 export type ResourceCardInteractivePlaceholderProps = {
   palette?: Palette;
   resourceId: string;
-  sourceId: string;
   zoom?: number;
 };
 
@@ -71,6 +72,7 @@ export function createResourceCardInteractive<
 ) {
   const {
     useLocalizedResource,
+    useResourceLookup,
     useResourceSelection,
     useResourceSelectionMethods,
   } = store;
@@ -194,18 +196,17 @@ export function createResourceCardInteractive<
   }
 
   function ResourcesAlbumCardInteractivePlaceholder({
-    sourceId,
     palette = defaultPalette,
     resourceId,
     zoom,
   }: ResourceCardInteractivePlaceholderProps) {
-    const localizedResource = useLocalizedResource(sourceId, resourceId);
-
-    if (!localizedResource) return null;
+    const [lang] = useI18nLang();
+    const [lookup] = useResourceLookup(resourceId);
+    const name = translate(lookup.name, lang);
 
     return (
       <AlbumCard.Placeholder
-        localizedResource={localizedResource}
+        name={name}
         palette={palette}
         zoom={zoom}
       />
