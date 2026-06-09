@@ -28,7 +28,7 @@ const columns: ResourcesTableExtra<Feature, LocalizedFeature>["columns"] = [
 
 const FeaturesPanel = createResourcesPanel(
   featureStore,
-  { initialPaletteName: "slate" },
+  { initialPaletteName: "navy" },
   {
     album: { AlbumCard: FeatureCard },
     filters: { Filters: FeaturesFilters },
