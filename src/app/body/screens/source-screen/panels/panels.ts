@@ -29,11 +29,10 @@ export type CharacterPanelId = (typeof characterPanelIds)[number];
 //------------------------------------------------------------------------------
 
 export const abilitiesPanelIds = [
-  Route.ResourcesAbilitiesClassFeatures,
   Route.ResourcesAbilitiesEldritchInvocations,
+  Route.ResourcesAbilitiesFeatures,
   Route.ResourcesAbilitiesFeats,
   Route.ResourcesAbilitiesSpells,
-  Route.ResourcesAbilitiesSpeciesTraits,
 ] as const;
 
 export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number];

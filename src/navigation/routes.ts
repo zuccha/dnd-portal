@@ -6,11 +6,10 @@ export const Route = {
   _: "/",
   Resources: "/resources",
   ResourcesAbilities: "/resources/abilities",
-  ResourcesAbilitiesClassFeatures: "/resources/abilities/class-privileges",
   ResourcesAbilitiesEldritchInvocations:
     "/resources/abilities/eldritch-invocations",
   ResourcesAbilitiesFeats: "/resources/abilities/feats",
-  ResourcesAbilitiesSpeciesTraits: "/resources/abilities/species-traits",
+  ResourcesAbilitiesFeatures: "/resources/abilities/features",
   ResourcesAbilitiesSpells: "/resources/abilities/spells",
   ResourcesBestiary: "/resources/bestiary",
   ResourcesBestiaryMonsters: "/resources/bestiary/monsters",

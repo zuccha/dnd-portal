@@ -3,6 +3,7 @@ import {
   type BoxProps,
   HStack,
   Popover,
+  type PopoverRootProps,
   Portal,
   Span,
   Text,
@@ -24,6 +25,7 @@ export type InclusionSelectProps = Omit<BoxProps, "children"> & {
   onValueChange: (partial: Record<string, boolean | undefined>) => void;
   options: { label: string; value: string }[];
   placeholder?: string;
+  positioning?: PopoverRootProps["positioning"];
   size?: ButtonProps["size"];
 };
 
@@ -33,6 +35,7 @@ export default function InclusionSelect({
   onValueChange,
   options,
   placeholder,
+  positioning,
   size,
   ...rest
 }: InclusionSelectProps) {
@@ -47,7 +50,7 @@ export default function InclusionSelect({
   };
 
   return (
-    <Popover.Root positioning={{ sameWidth: true }}>
+    <Popover.Root positioning={{ sameWidth: true, ...positioning }}>
       <Popover.Trigger asChild>
         <Box position="relative" {...rest}>
           <Button

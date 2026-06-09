@@ -72,13 +72,13 @@ const i18nContext = {
     en: "Abilities",
     it: "Abilità",
   },
-  [Route.ResourcesAbilitiesClassFeatures]: {
-    en: "Class Features",
-    it: "Privilegi di Classe",
-  },
   [Route.ResourcesAbilitiesEldritchInvocations]: {
     en: "Eldritch Invocations",
     it: "Suppliche Occulte",
+  },
+  [Route.ResourcesAbilitiesFeatures]: {
+    en: "Features",
+    it: "Privilegi",
   },
   [Route.ResourcesAbilitiesFeats]: {
     en: "Feats",
@@ -87,10 +87,6 @@ const i18nContext = {
   [Route.ResourcesAbilitiesSpells]: {
     en: "Spells",
     it: "Incantesimi",
-  },
-  [Route.ResourcesAbilitiesSpeciesTraits]: {
-    en: "Species Traits",
-    it: "Tratti di Specie",
   },
   [Route.ResourcesBestiary]: {
     en: "Bestiary",
