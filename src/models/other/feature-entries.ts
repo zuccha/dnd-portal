@@ -28,10 +28,11 @@ export function useFormatFeatureEntries(
       featureEntries
         .map((entry) => {
           const feature = featureMap.get(entry.id) ?? defaultFeature;
-          const name =
+          const name = (
             translate(feature.display_name, lang) ||
             translate(feature.name, lang) ||
-            "???";
+            " "
+          ).replace(" ", " ");
           const description = translate(feature.description, lang);
           return [
             entry.min_level ?
