@@ -18,6 +18,7 @@ CREATE TYPE public.species_row AS (
   type public.creature_type,
   sizes public.creature_size[],
   speed integer,
+  feature_entries jsonb,
   -- Species Translation
   description jsonb
 );
@@ -53,6 +54,11 @@ BEGIN
     resource_id, type, sizes, speed
   ) VALUES (
     v_id, r.type, r.sizes, r.speed
+  );
+
+  perform public.replace_resource_feature_entries(
+    v_id,
+    coalesce(p_species->'feature_entries', '[]'::jsonb)
   );
 
   perform public.upsert_species_translation(v_id, p_lang, p_species_translation);
@@ -91,6 +97,7 @@ AS $$
     s.type,
     s.sizes,
     s.speed,
+    public.fetch_resource_feature_entries(r.id) AS feature_entries,
     coalesce(tt.description, '{}'::jsonb) AS description
   FROM public.fetch_resource(p_id) AS r
   JOIN public.species s ON s.resource_id = r.id
@@ -205,6 +212,7 @@ SELECT
   f.type,
   f.sizes,
   f.speed,
+  public.fetch_resource_feature_entries(f.id) AS feature_entries,
   coalesce(tt.description, '{}'::jsonb) AS description
 FROM filtered f
 LEFT JOIN t tt ON tt.id = f.id
@@ -300,6 +308,13 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_species ? 'feature_entries' THEN
+    perform public.replace_resource_feature_entries(
+      p_id,
+      p_species->'feature_entries'
+    );
   END IF;
 
   perform public.upsert_species_translation(p_id, p_lang, p_species_translation);

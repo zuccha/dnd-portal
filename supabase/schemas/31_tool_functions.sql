@@ -19,6 +19,7 @@ CREATE TYPE public.tool_row AS (
   magic boolean,
   rarity public.equipment_rarity,
   weight integer,
+  feature_entries jsonb,
   notes jsonb,
   -- Tool
   ability public.creature_ability,
@@ -112,6 +113,7 @@ AS $$
     e.magic,
     e.rarity,
     e.weight,
+    e.feature_entries,
     e.notes,
     t.ability,
     coalesce(tc.craft_ids, '{}'::uuid[]) AS craft_ids,
@@ -206,6 +208,7 @@ src AS (
     b.magic,
     b.rarity,
     b.weight,
+    b.feature_entries,
     b.notes,
     t.ability,
     t.type
@@ -252,6 +255,7 @@ SELECT
   f.magic,
   f.rarity,
   f.weight,
+  f.feature_entries,
   f.notes,
   f.ability,
   coalesce(tc.craft_ids, '{}'::uuid[]) AS craft_ids,

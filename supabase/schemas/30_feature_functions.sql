@@ -36,10 +36,7 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 DECLARE
   v_id uuid;
-  r public.features%ROWTYPE;
 BEGIN
-  r := jsonb_populate_record(null::public.features, p_feature);
-
   v_id := public.create_resource(
     p_source_id,
     p_lang,

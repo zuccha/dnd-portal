@@ -17,6 +17,7 @@ CREATE TYPE public.feat_row AS (
   -- Feat
   category public.feat_category,
   min_level smallint,
+  feature_entries jsonb,
   -- Feat Translation
   prerequisite jsonb,
   description jsonb
@@ -55,6 +56,11 @@ BEGIN
     v_id, r.category, r.min_level
   );
 
+  perform public.replace_resource_feature_entries(
+    v_id,
+    coalesce(p_feat->'feature_entries', '[]'::jsonb)
+  );
+
   perform public.upsert_feat_translation(v_id, p_lang, p_feat_translation);
 
   RETURN v_id;
@@ -90,6 +96,7 @@ AS $$
     r.page,
     f.category,
     f.min_level,
+    public.fetch_resource_feature_entries(r.id) AS feature_entries,
     coalesce(tt.prerequisite, '{}'::jsonb) AS prerequisite,
     coalesce(tt.description, '{}'::jsonb) AS description
   FROM public.fetch_resource(p_id) AS r
@@ -195,6 +202,7 @@ SELECT
   f.page,
   f.category,
   f.min_level,
+  public.fetch_resource_feature_entries(f.id) AS feature_entries,
   coalesce(tt.prerequisite, '{}'::jsonb) AS prerequisite,
   coalesce(tt.description, '{}'::jsonb) AS description
 FROM filtered f
@@ -291,6 +299,13 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_feat ? 'feature_entries' THEN
+    perform public.replace_resource_feature_entries(
+      p_id,
+      p_feat->'feature_entries'
+    );
   END IF;
 
   perform public.upsert_feat_translation(p_id, p_lang, p_feat_translation);

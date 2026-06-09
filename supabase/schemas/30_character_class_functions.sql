@@ -25,6 +25,7 @@ CREATE TYPE public.character_class_row AS (
   tool_proficiency_ids uuid[],
   weapon_proficiencies public.weapon_type[],
   spell_ids uuid[],
+  feature_entries jsonb,
   -- Character Class Translation
   armor_proficiencies_extra jsonb,
   weapon_proficiencies_extra jsonb
@@ -126,6 +127,11 @@ BEGIN
     coalesce(p_character_class->'spell_ids', '[]'::jsonb)
   );
 
+  perform public.replace_resource_feature_entries(
+    v_id,
+    coalesce(p_character_class->'feature_entries', '[]'::jsonb)
+  );
+
   perform public.upsert_character_class_translation(
     v_id,
     p_lang,
@@ -173,6 +179,7 @@ AS $$
     coalesce(tp.tool_proficiency_ids, '{}'::uuid[]) AS tool_proficiency_ids,
     c.weapon_proficiencies,
     coalesce(s.spell_ids, '{}'::uuid[]) AS spell_ids,
+    public.fetch_resource_feature_entries(r.id) AS feature_entries,
     coalesce(tt.armor_proficiencies_extra, '{}'::jsonb) AS armor_proficiencies_extra,
     coalesce(tt.weapon_proficiencies_extra, '{}'::jsonb) AS weapon_proficiencies_extra
   FROM public.fetch_resource(p_id) AS r
@@ -330,6 +337,7 @@ SELECT
   coalesce(tools.tool_proficiency_ids, '{}'::uuid[]) AS tool_proficiency_ids,
   s.weapon_proficiencies,
   coalesce(sp.spell_ids, '{}'::uuid[]) AS spell_ids,
+  public.fetch_resource_feature_entries(s.id) AS feature_entries,
   coalesce(tt.armor_proficiencies_extra, '{}'::jsonb) AS armor_proficiencies_extra,
   coalesce(tt.weapon_proficiencies_extra, '{}'::jsonb) AS weapon_proficiencies_extra
 FROM src s
@@ -567,6 +575,13 @@ BEGIN
     WHERE ct.character_class_id = p_id
       AND ct.tool_id = (v.value)::uuid
   );
+
+  IF p_character_class ? 'feature_entries' THEN
+    perform public.replace_resource_feature_entries(
+      p_id,
+      p_character_class->'feature_entries'
+    );
+  END IF;
 
   perform public.upsert_character_class_translation(p_id, p_lang, p_character_class_translation);
 END;

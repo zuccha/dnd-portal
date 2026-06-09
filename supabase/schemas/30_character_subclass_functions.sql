@@ -15,7 +15,8 @@ CREATE TYPE public.character_subclass_row AS (
   name_short jsonb,
   page jsonb,
   -- Character Subclass
-  character_class_id uuid
+  character_class_id uuid,
+  feature_entries jsonb
 );
 
 
@@ -51,6 +52,11 @@ BEGIN
     v_id, r.character_class_id
   );
 
+  perform public.replace_resource_feature_entries(
+    v_id,
+    coalesce(p_character_subclass->'feature_entries', '[]'::jsonb)
+  );
+
   perform public.upsert_character_subclass_translation(v_id, p_lang, p_character_subclass_translation);
 
   RETURN v_id;
@@ -84,7 +90,8 @@ AS $$
     r.name,
     r.name_short,
     r.page,
-    s.character_class_id
+    s.character_class_id,
+    public.fetch_resource_feature_entries(r.id) AS feature_entries
   FROM public.fetch_resource(p_id) AS r
   JOIN public.character_subclasses s ON s.resource_id = r.id
   WHERE r.id = p_id;
@@ -164,7 +171,8 @@ SELECT
   s.name,
   s.name_short,
   s.page,
-  s.character_class_id
+  s.character_class_id,
+  public.fetch_resource_feature_entries(s.id) AS feature_entries
 FROM filtered s
 ORDER BY
   CASE
@@ -252,6 +260,13 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_character_subclass ? 'feature_entries' THEN
+    perform public.replace_resource_feature_entries(
+      p_id,
+      p_character_subclass->'feature_entries'
+    );
   END IF;
 
   perform public.upsert_character_subclass_translation(p_id, p_lang, p_character_subclass_translation);

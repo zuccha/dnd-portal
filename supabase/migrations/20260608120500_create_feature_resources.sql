@@ -145,6 +145,69 @@ GRANT ALL ON FUNCTION public.validate_resource_features_resource_kind() TO servi
 
 
 --------------------------------------------------------------------------------
+-- RESOURCE FEATURE ENTRIES
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.fetch_resource_feature_entries(p_resource_id uuid)
+RETURNS jsonb
+LANGUAGE sql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+  SELECT coalesce(
+    jsonb_agg(
+      jsonb_build_object(
+        'id', rf.feature_id,
+        'min_level', rf.min_level
+      )
+      ORDER BY rf.position, rf.feature_id
+    ),
+    '[]'::jsonb
+  )
+  FROM public.resource_features rf
+  WHERE rf.resource_id = p_resource_id;
+$$;
+
+ALTER FUNCTION public.fetch_resource_feature_entries(p_resource_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.fetch_resource_feature_entries(p_resource_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.fetch_resource_feature_entries(p_resource_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_resource_feature_entries(p_resource_id uuid) TO service_role;
+
+
+CREATE OR REPLACE FUNCTION public.replace_resource_feature_entries(
+  p_resource_id uuid,
+  p_feature_entries jsonb)
+RETURNS void
+LANGUAGE plpgsql
+SET search_path TO 'public', 'pg_temp'
+AS $$
+BEGIN
+  DELETE FROM public.resource_features rf
+  WHERE rf.resource_id = p_resource_id;
+
+  INSERT INTO public.resource_features (
+    resource_id,
+    feature_id,
+    min_level,
+    position
+  )
+  SELECT
+    p_resource_id,
+    (e.value->>'id')::uuid,
+    coalesce((e.value->>'min_level')::smallint, 0),
+    (e.ordinality - 1)::smallint
+  FROM jsonb_array_elements(coalesce(p_feature_entries, '[]'::jsonb)) WITH ORDINALITY AS e(value, ordinality);
+END;
+$$;
+
+ALTER FUNCTION public.replace_resource_feature_entries(p_resource_id uuid, p_feature_entries jsonb) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.replace_resource_feature_entries(p_resource_id uuid, p_feature_entries jsonb) TO anon;
+GRANT ALL ON FUNCTION public.replace_resource_feature_entries(p_resource_id uuid, p_feature_entries jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.replace_resource_feature_entries(p_resource_id uuid, p_feature_entries jsonb) TO service_role;
+
+
+--------------------------------------------------------------------------------
 -- FEATURES POLICIES
 --------------------------------------------------------------------------------
 
@@ -257,10 +320,7 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 DECLARE
   v_id uuid;
-  r public.features%ROWTYPE;
 BEGIN
-  r := jsonb_populate_record(null::public.features, p_feature);
-
   v_id := public.create_resource(
     p_source_id,
     p_lang,

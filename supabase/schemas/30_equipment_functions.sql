@@ -19,6 +19,7 @@ CREATE TYPE public.equipment_row AS (
   magic boolean,
   rarity public.equipment_rarity,
   weight integer,
+  feature_entries jsonb,
   -- Equipment Translation
   notes jsonb
 );
@@ -62,6 +63,11 @@ BEGIN
     v_id, r.cost, r.magic, r.rarity, r.weight
   );
 
+  perform public.replace_resource_feature_entries(
+    v_id,
+    coalesce(p_equipment->'feature_entries', '[]'::jsonb)
+  );
+
   perform public.upsert_equipment_translation(v_id, p_lang, p_equipment_translation);
 
   RETURN v_id;
@@ -99,6 +105,7 @@ AS $$
     e.magic,
     e.rarity,
     e.weight,
+    public.fetch_resource_feature_entries(r.id) AS feature_entries,
     coalesce(tt.notes, '{}'::jsonb) AS notes
   FROM public.fetch_resource(p_id) AS r
   JOIN public.equipments e ON e.resource_id = r.id
@@ -212,6 +219,7 @@ SELECT
   f.magic,
   f.rarity,
   f.weight,
+  public.fetch_resource_feature_entries(f.id) AS feature_entries,
   coalesce(tt.notes, '{}'::jsonb) AS notes
 FROM filtered f
 LEFT JOIN t tt ON tt.id = f.id
@@ -309,6 +317,13 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_equipment ? 'feature_entries' THEN
+    perform public.replace_resource_feature_entries(
+      p_id,
+      p_equipment->'feature_entries'
+    );
   END IF;
 
   perform public.upsert_equipment_translation(p_id, p_lang, p_equipment_translation);
