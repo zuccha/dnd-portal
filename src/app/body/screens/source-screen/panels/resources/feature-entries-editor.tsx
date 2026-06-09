@@ -1,13 +1,19 @@
-import { HStack, type StackProps, VStack } from "@chakra-ui/react";
+import { HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  GripVerticalIcon,
+  XIcon,
+} from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { DBFeatureEntry } from "~/models/resources/features/db-feature";
 import { featureStore } from "~/models/resources/features/feature-store";
 import type { ResourceOption } from "~/models/resources/resource";
 import Button from "~/ui/button";
+import IconButton from "~/ui/icon-button";
 import NumberInput from "~/ui/number-input";
 import Search, { type SearchRefObject } from "~/ui/search";
-import Tag from "~/ui/tag";
 import { normalizeString } from "~/utils/string";
 
 //------------------------------------------------------------------------------
@@ -67,6 +73,28 @@ export default function FeatureEntriesEditor({
     searchRef.current?.focus();
   }, [featureId, minLevel, onValueChange, value]);
 
+  const moveFeature = useCallback(
+    (index: number, delta: number) => {
+      const nextIndex = index + delta;
+      if (nextIndex < 0 || nextIndex >= value.length) return;
+
+      const next = [...value];
+      const [entry] = next.splice(index, 1);
+      if (!entry) return;
+
+      next.splice(nextIndex, 0, entry);
+      onValueChange(next);
+    },
+    [onValueChange, value],
+  );
+
+  const removeFeature = useCallback(
+    (index: number) => {
+      onValueChange(value.filter((_, i) => i !== index));
+    },
+    [onValueChange, value],
+  );
+
   return (
     <VStack gap={1} {...rest}>
       <HStack gap={1} w="full">
@@ -96,27 +124,61 @@ export default function FeatureEntriesEditor({
       </HStack>
 
       {value.length > 0 && (
-        <HStack gap={1} w="full" wrap="wrap">
-          {value.map((entry) => (
-            <Tag
-              key={`${entry.id}.${entry.min_level}`}
-              label={formatFeatureLabel(
-                optionMap.get(entry.id)?.label ?? t("unknown"),
-                entry.min_level,
-                t,
+        <VStack align="stretch" gap={1} w="full">
+          {value.map((entry, index) => (
+            <HStack
+              borderColor="border"
+              borderWidth={1}
+              gap={2}
+              key={`${entry.id}.${entry.min_level}.${index}`}
+              minH={9}
+              px={2}
+              py={1}
+              rounded="sm"
+              w="full"
+            >
+              <Span color="fg.muted" flexShrink={0}>
+                <GripVerticalIcon size={16} />
+              </Span>
+
+              <Text flex={1} minW={0} truncate>
+                {optionMap.get(entry.id)?.label ?? t("unknown")}
+              </Text>
+
+              {entry.min_level > 0 && (
+                <Span color="fg.muted" flexShrink={0} fontSize="sm">
+                  {formatLevelLabel(entry.min_level, t)}
+                </Span>
               )}
-              onClose={() =>
-                onValueChange(
-                  value.filter(
-                    (other) =>
-                      other.id !== entry.id ||
-                      other.min_level !== entry.min_level,
-                  ),
-                )
-              }
-            />
+
+              <HStack flexShrink={0} gap={0}>
+                <IconButton
+                  Icon={ArrowUpIcon}
+                  aria-label={t("move_up")}
+                  disabled={index === 0}
+                  onClick={() => moveFeature(index, -1)}
+                  size="xs"
+                  variant="ghost"
+                />
+                <IconButton
+                  Icon={ArrowDownIcon}
+                  aria-label={t("move_down")}
+                  disabled={index === value.length - 1}
+                  onClick={() => moveFeature(index, 1)}
+                  size="xs"
+                  variant="ghost"
+                />
+                <IconButton
+                  Icon={XIcon}
+                  aria-label={t("remove")}
+                  onClick={() => removeFeature(index)}
+                  size="xs"
+                  variant="ghost"
+                />
+              </HStack>
+            </HStack>
           ))}
-        </HStack>
+        </VStack>
       )}
     </VStack>
   );
@@ -126,13 +188,11 @@ export default function FeatureEntriesEditor({
 // Utils
 //------------------------------------------------------------------------------
 
-function formatFeatureLabel(
-  name: string,
+function formatLevelLabel(
   minLevel: number,
   t: (key: keyof typeof i18nContext) => string,
 ): string {
-  if (!minLevel) return name;
-  return t("feature").replace("<1>", name).replace("<2>", `${minLevel}`);
+  return t("level").replace("<1>", `${minLevel}`);
 }
 
 //------------------------------------------------------------------------------
@@ -144,13 +204,25 @@ const i18nContext = {
     en: "Add",
     it: "Aggiungi",
   },
-  feature: {
-    en: "<1> (level <2>)",
-    it: "<1> (livello <2>)",
+  level: {
+    en: "Level <1>",
+    it: "Livello <1>",
+  },
+  move_down: {
+    en: "Move down",
+    it: "Sposta giù",
+  },
+  move_up: {
+    en: "Move up",
+    it: "Sposta su",
   },
   no_result: {
     en: "No result",
     it: "Nessun risultato",
+  },
+  remove: {
+    en: "Remove",
+    it: "Rimuovi",
   },
   search: {
     en: "Search feature",
