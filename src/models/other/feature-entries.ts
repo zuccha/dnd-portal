@@ -55,7 +55,7 @@ export function useFormatFeatureEntries(
 
 const i18nContext = {
   "name.min_level": {
-    en: "##Level <2>: <1>##", // 1 = Name, 2 = Min Level
-    it: "##Livello <2>: <1>##", // 1 = Name, 2 = Min Level
+    en: "##Level <2>: <1>##", // 1 = Name, 2 = Min Level
+    it: "##Livello <2>: <1>##", // 1 = Name, 2 = Min Level
   },
 };
