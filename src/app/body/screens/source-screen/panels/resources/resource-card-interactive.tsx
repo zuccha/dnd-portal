@@ -82,7 +82,7 @@ export function createResourceCardInteractive<
   } = store;
 
   const AlbumCard = extra.AlbumCard;
-  const { useShowImage } = context;
+  const { useCardMode, useShowImage } = context;
 
   function ResourcesAlbumCardInteractive({
     editable,
@@ -97,6 +97,7 @@ export function createResourceCardInteractive<
       [localizeResource, resource],
     );
 
+    const cardMode = useCardMode();
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
     const pageCountRef = useRef(0);
     const handlePageCountChange = useCallback((count: number | undefined) => {
@@ -109,13 +110,18 @@ export function createResourceCardInteractive<
 
     const cycleLeft = useCallback(() => {
       setSelectedPageIndex((prev) => {
-        const next = prev > 0 ? prev - 1 : pageCountRef.current - 1;
-        return clamp(next, 0, pageCountRef.current);
+        const last = Math.max(0, pageCountRef.current - 1);
+        const next = prev > 0 ? prev - 1 : last;
+        return clamp(next, 0, last);
       });
     }, []);
 
     const cycleRight = useCallback(() => {
-      setSelectedPageIndex((prev) => (prev + 1) % pageCountRef.current);
+      setSelectedPageIndex((prev) => {
+        const count = pageCountRef.current;
+        if (count <= 0) return prev;
+        return (prev + 1) % count;
+      });
     }, []);
 
     const selected = useResourceSelection(resourceId);
@@ -129,21 +135,29 @@ export function createResourceCardInteractive<
       <Box
         className="group"
         h={`${AlbumCard.h}in`}
-        onPointerDown={(e) => {
-          pointerDownRef.current = { x: e.clientX, y: e.clientY };
-        }}
-        onPointerUp={(e) => {
-          const dx = Math.abs(e.clientX - pointerDownRef.current.x);
-          const dy = Math.abs(e.clientY - pointerDownRef.current.y);
-          const selection = window.getSelection()?.toString() ?? "";
-          if (selection) return; // user selected text
-          if (dx > 4 || dy > 4) return; // treat as drag
-          const el = e.currentTarget;
-          const rect = el.getBoundingClientRect();
-          const isLeft = e.clientX < rect.left + rect.width / 2;
-          if (isLeft) cycleLeft();
-          else cycleRight();
-        }}
+        onPointerDown={
+          cardMode === "paginated" ?
+            (e) => {
+              pointerDownRef.current = { x: e.clientX, y: e.clientY };
+            }
+          : undefined
+        }
+        onPointerUp={
+          cardMode === "paginated" ?
+            (e) => {
+              const dx = Math.abs(e.clientX - pointerDownRef.current.x);
+              const dy = Math.abs(e.clientY - pointerDownRef.current.y);
+              const selection = window.getSelection()?.toString() ?? "";
+              if (selection) return;
+              if (dx > 4 || dy > 4) return;
+              const el = e.currentTarget;
+              const rect = el.getBoundingClientRect();
+              const isLeft = e.clientX < rect.left + rect.width / 2;
+              if (isLeft) cycleLeft();
+              else cycleRight();
+            }
+          : undefined
+        }
         position="relative"
         w={`${AlbumCard.w}in`}
         zoom={zoom}
@@ -151,6 +165,7 @@ export function createResourceCardInteractive<
         <AlbumCard
           left={0}
           localizedResource={localizedResource}
+          mode={cardMode}
           onPageCountChange={handlePageCountChange}
           palette={palette}
           position="absolute"

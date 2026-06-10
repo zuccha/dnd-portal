@@ -1,4 +1,4 @@
-import { Checkbox, Heading, VStack } from "@chakra-ui/react";
+import { Checkbox, HStack, Heading, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
   DBResource,
@@ -29,11 +29,13 @@ export function createResourcesViewSettings<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(_store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
-  const { usePaletteName, useShowImage, useView, useZoom } = context;
+  const { useCardMode, usePaletteName, useShowImage, useView, useZoom } =
+    context;
 
   return function ResourcesViewSwitch(_props: ResourcesViewSettingsProps) {
     const { t } = useI18nLangContext(i18nContext);
 
+    const cardMode = useCardMode();
     const paletteName = usePaletteName();
     const showImage = useShowImage();
     const view = useView();
@@ -48,38 +50,55 @@ export function createResourcesViewSettings<
             <Heading size="sm">{t("heading")}</Heading>
           </VStack>
 
-          <CaptionInput caption={t("zoom")} w="full">
-            <NumberInput
-              formatOptions={{ style: "percent" }}
-              max={2}
-              min={0.2}
-              onValueChange={context.setZoom}
-              size="sm"
-              step={0.1}
-              value={zoom * 100}
-              w="full"
-            />
-          </CaptionInput>
+          <HStack w="full" wrap="wrap">
+            <CaptionInput caption={t("zoom")} flex={1}>
+              <NumberInput
+                formatOptions={{ style: "percent" }}
+                max={2}
+                min={0.2}
+                onValueChange={context.setZoom}
+                size="sm"
+                step={0.1}
+                value={zoom * 100}
+                w="full"
+              />
+            </CaptionInput>
 
-          <CaptionInput caption={t("accent_color")} w="full">
+            <CaptionInput caption={t("accent_color")} flex={1} minW="6.5em">
+              <Select.Enum
+                onValueChange={context.setPaletteName}
+                options={paletteNameOptions}
+                size="sm"
+                value={paletteName}
+                w="full"
+              />
+            </CaptionInput>
+          </HStack>
+
+          <CaptionInput caption={t("card_mode")} w="full">
             <Select.Enum
-              onValueChange={context.setPaletteName}
-              options={paletteNameOptions}
+              onValueChange={context.setCardMode}
+              options={[
+                { label: t("card_mode_scroll"), value: "scroll" },
+                { label: t("card_mode_paginated"), value: "paginated" },
+              ]}
               size="sm"
-              value={paletteName}
+              value={cardMode}
               w="full"
             />
           </CaptionInput>
 
-          <Checkbox.Root
-            checked={showImage}
-            onCheckedChange={(e) => context.setShowImage(!!e.checked)}
-            size="sm"
-          >
-            <Checkbox.HiddenInput />
-            <Checkbox.Control />
-            <Checkbox.Label>{t("show_images")}</Checkbox.Label>
-          </Checkbox.Root>
+          {cardMode === "paginated" && (
+            <Checkbox.Root
+              checked={showImage}
+              onCheckedChange={(e) => context.setShowImage(!!e.checked)}
+              size="sm"
+            >
+              <Checkbox.HiddenInput />
+              <Checkbox.Control />
+              <Checkbox.Label>{t("show_images")}</Checkbox.Label>
+            </Checkbox.Root>
+          )}
         </VStack>
       );
     }
@@ -96,6 +115,18 @@ const i18nContext = {
   accent_color: {
     en: "Color",
     it: "Colore",
+  },
+  card_mode: {
+    en: "Cards",
+    it: "Carte",
+  },
+  card_mode_paginated: {
+    en: "Paginated",
+    it: "Paginate",
+  },
+  card_mode_scroll: {
+    en: "Scrollable",
+    it: "Scorrevoli",
   },
   heading: {
     en: "View",

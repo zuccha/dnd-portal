@@ -9,6 +9,12 @@ import { type PaletteName, paletteNameSchema } from "~/utils/palette";
 // Resources Context View
 //------------------------------------------------------------------------------
 
+export const resourcesContextCardModeSchema = z.enum(["paginated", "scroll"]);
+
+export type ResourcesContextCardMode = z.infer<
+  typeof resourcesContextCardModeSchema
+>;
+
 export const resourcesContextViewSchema = z.enum(["cards", "table"]);
 
 export type ResourcesContextView = z.infer<typeof resourcesContextViewSchema>;
@@ -45,6 +51,12 @@ export function createResourcesContext<R extends Resource>(
     paletteNameSchema.parse,
   );
 
+  const cardModeStore = createLocalStore(
+    `${id}.card_mode`,
+    "scroll",
+    resourcesContextCardModeSchema.parse,
+  );
+
   const printModeStore = createMemoryStore<boolean>(`${id}.print_mode`, false);
 
   const resourceExpansionStore = createMemoryStoreSet<string, boolean>(
@@ -66,6 +78,7 @@ export function createResourcesContext<R extends Resource>(
   const zoomStore = createLocalStore(`${id}.zoom`, 1.3, z.number().parse);
 
   return {
+    setCardMode: cardModeStore.set,
     setCreatedResource: createdResourceStore.set,
     setEditedResource: editedResourceStore.set,
     setPaletteName: paletteNameStore.set,
@@ -74,6 +87,7 @@ export function createResourcesContext<R extends Resource>(
     setShowImage: showImageStore.set,
     setView: viewStore.set,
     setZoom: zoomStore.set,
+    useCardMode: cardModeStore.useValue,
     useCreatedResource: createdResourceStore.useValue,
     useEditedResource: editedResourceStore.useValue,
     usePaletteName: paletteNameStore.useValue,

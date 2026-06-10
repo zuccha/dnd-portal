@@ -1,5 +1,5 @@
 import { Box, type StackProps, VStack } from "@chakra-ui/react";
-import { type ReactNode, useCallback, useMemo } from "react";
+import { type ReactNode, useCallback, useEffect, useMemo } from "react";
 import usePaginatedContent from "~/hooks/use-paginated-content";
 import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
@@ -22,6 +22,7 @@ export type ResourcePokerCardProps<
   firstPageInfo?: ReactNode;
   footer?: ReactNode;
   localizedResource: L;
+  mode?: "paginated" | "scroll";
   onPageCountChange?: (
     count: number | undefined,
     firstDetailsPageOverflow: boolean,
@@ -42,6 +43,7 @@ export function ResourcePokerCard<
   firstPageInfo,
   footer,
   localizedResource,
+  mode = "paginated",
   onPageCountChange = () => {},
   palette,
   selectedPageIndex = -1,
@@ -67,7 +69,90 @@ export function ResourcePokerCard<
     [localizedResource.details, system],
   );
 
-  const pages = usePaginatedContent(details, handlePageCountChange, {
+  if (mode === "scroll")
+    return (
+      <ScrollableResourcePokerCard
+        afterDescriptor={afterDescriptor}
+        beforeDetails={beforeDetails}
+        details={details}
+        firstPageInfo={firstPageInfo}
+        footer={footer}
+        localizedResource={localizedResource}
+        onPageCountChange={onPageCountChange}
+        palette={palette}
+        {...rest}
+      />
+    );
+
+  return (
+    <PaginatedResourcePokerCard
+      afterDescriptor={afterDescriptor}
+      alwaysEvenPages={alwaysEvenPages}
+      beforeDetails={beforeDetails}
+      details={details}
+      firstPageIndexWithoutImage={firstPageIndexWithoutImage}
+      firstPageInfo={firstPageInfo}
+      footer={footer}
+      hasImage={hasImage}
+      imageUrl={imageUrl}
+      localizedResource={localizedResource}
+      onPageCountChange={handlePageCountChange}
+      palette={palette}
+      selectedPageIndex={selectedPageIndex}
+      startDetailsOnSecondPage={startDetailsOnSecondPage}
+      {...rest}
+    />
+  );
+}
+
+//------------------------------------------------------------------------------
+// Paginated Resource Poker Card
+//------------------------------------------------------------------------------
+
+type PaginatedResourcePokerCardProps<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+> = StackProps & {
+  afterDescriptor?: ReactNode;
+  alwaysEvenPages?: boolean;
+  beforeDetails?: ReactNode;
+  details: string;
+  firstPageInfo?: ReactNode;
+  firstPageIndexWithoutImage: number;
+  footer?: ReactNode;
+  hasImage: boolean;
+  imageUrl: string;
+  localizedResource: L;
+  onPageCountChange: (
+    count: number | undefined,
+    firstDetailsPageOverflow: boolean,
+  ) => void;
+  palette: Palette;
+  selectedPageIndex: number;
+  startDetailsOnSecondPage: boolean;
+};
+
+function PaginatedResourcePokerCard<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+>({
+  afterDescriptor,
+  alwaysEvenPages,
+  beforeDetails,
+  details,
+  firstPageInfo,
+  firstPageIndexWithoutImage,
+  footer,
+  hasImage,
+  imageUrl,
+  localizedResource,
+  onPageCountChange,
+  palette,
+  selectedPageIndex,
+  startDetailsOnSecondPage,
+  ...rest
+}: PaginatedResourcePokerCardProps<R, L>) {
+  const pages = usePaginatedContent(details, onPageCountChange, {
     firstPageReserved: startDetailsOnSecondPage,
   });
 
@@ -183,6 +268,88 @@ export function ResourcePokerCard<
         ></PokerCard.Frame>
       )}
     </>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Scrollable Resource Poker Card
+//------------------------------------------------------------------------------
+
+type ScrollableResourcePokerCardProps<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+> = StackProps & {
+  afterDescriptor?: ReactNode;
+  beforeDetails?: ReactNode;
+  details: string;
+  firstPageInfo?: ReactNode;
+  footer?: ReactNode;
+  localizedResource: L;
+  onPageCountChange: (
+    count: number | undefined,
+    firstDetailsPageOverflow: boolean,
+  ) => void;
+  palette: Palette;
+};
+
+function ScrollableResourcePokerCard<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+>({
+  afterDescriptor,
+  beforeDetails,
+  details,
+  firstPageInfo,
+  footer,
+  localizedResource,
+  onPageCountChange,
+  palette,
+  ...rest
+}: ScrollableResourcePokerCardProps<R, L>) {
+  useEffect(() => {
+    onPageCountChange(1, false);
+  }, [onPageCountChange]);
+
+  return (
+    <PokerCard.Frame
+      descriptor={
+        <VStack gap={PokerCard.rem0375}>
+          {localizedResource.descriptor}
+          {afterDescriptor}
+        </VStack>
+      }
+      footer={footer}
+      name={localizedResource.name}
+      pageIndicator=""
+      palette={palette}
+      sourceName={localizedResource.source}
+      sourcePage={localizedResource.page}
+      sourceVersion={localizedResource.sourceVersion}
+      {...rest}
+    >
+      <PokerCard.Separator />
+
+      <VStack
+        flex={1}
+        gap={PokerCard.rem0750}
+        overflowX="hidden"
+        overflowY="auto"
+        w="full"
+      >
+        {beforeDetails}
+
+        {details.length > 0 && (
+          <PokerCard.Details palette={palette}>{details}</PokerCard.Details>
+        )}
+      </VStack>
+
+      {firstPageInfo && (
+        <>
+          <PokerCard.Separator />
+          {firstPageInfo}
+        </>
+      )}
+    </PokerCard.Frame>
   );
 }
 
