@@ -14,6 +14,7 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import IconButton from "~/ui/icon-button";
 import PokerCard from "~/ui/poker-card";
+import { clamp } from "~/utils/math";
 import { type Palette, defaultPalette } from "~/utils/palette";
 import type {
   ResourcePokerCardPlaceholderProps,
@@ -107,9 +108,10 @@ export function createResourceCardInteractive<
     const pointerDownRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
     const cycleLeft = useCallback(() => {
-      setSelectedPageIndex((prev) =>
-        prev > 0 ? prev - 1 : pageCountRef.current - 1,
-      );
+      setSelectedPageIndex((prev) => {
+        const next = prev > 0 ? prev - 1 : pageCountRef.current - 1;
+        return clamp(next, 0, pageCountRef.current);
+      });
     }, []);
 
     const cycleRight = useCallback(() => {
