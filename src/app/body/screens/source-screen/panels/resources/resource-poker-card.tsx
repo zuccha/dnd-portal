@@ -5,6 +5,7 @@ import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import PokerCard from "~/ui/poker-card";
+import { closeRichTextPage, emptyRichTextPageState } from "~/ui/rich-text-page";
 import type { Palette } from "~/utils/palette";
 
 //------------------------------------------------------------------------------
@@ -70,6 +71,17 @@ export function ResourcePokerCard<
     firstPageReserved: startDetailsOnSecondPage,
   });
 
+  const pageTexts = useMemo(() => {
+    let state = emptyRichTextPageState;
+
+    return pages.map((page) => {
+      const text = (page.text + page.textTemp).trim();
+      const result = closeRichTextPage(text, state);
+      state = result.state;
+      return result.text;
+    });
+  }, [pages]);
+
   const pageCount = pages.length + firstPageIndexWithoutImage;
 
   return (
@@ -105,7 +117,7 @@ export function ResourcePokerCard<
       )}
 
       {pages.map((page, pageIndex) => {
-        const text = (page.text + page.textTemp).trim();
+        const text = pageTexts[pageIndex] ?? "";
         const adjustedPageIndex = pageIndex + firstPageIndexWithoutImage;
         return (
           <PokerCard.Frame
