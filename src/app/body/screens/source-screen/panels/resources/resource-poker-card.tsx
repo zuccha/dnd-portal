@@ -98,6 +98,7 @@ export function ResourcePokerCard<
           name={localizedResource.name}
           pageIndicator={`1 / ${pageCount}`}
           palette={palette}
+          shadow={selectedPageIndex === 0 ? "sm" : undefined}
           sourceName={localizedResource.source}
           sourcePage={localizedResource.page}
           sourceVersion={localizedResource.sourceVersion}
@@ -133,6 +134,7 @@ export function ResourcePokerCard<
             name={localizedResource.name}
             pageIndicator={`${adjustedPageIndex + 1} / ${pageCount}`}
             palette={palette}
+            shadow={adjustedPageIndex === selectedPageIndex ? "sm" : undefined}
             sourceName={localizedResource.source}
             sourcePage={localizedResource.page}
             sourceVersion={localizedResource.sourceVersion}

@@ -83,7 +83,6 @@ function Frame({
       lineHeight={1.2}
       overflow="hidden"
       position="relative"
-      shadow="sm"
       w={`${cardW + 2 * bleed.x}in`}
       {...rest}
     >
@@ -258,11 +257,7 @@ function Details({ children, palette }: DetailsProps) {
           >
             {paragraph.substring(2, paragraph.length - 2)}
           </Span>
-        : <RichText
-            hyphens="auto"
-            key={paragraphIndex}
-            text={paragraph}
-          />,
+        : <RichText hyphens="auto" key={paragraphIndex} text={paragraph} />,
       )}
     </VStack>
   );

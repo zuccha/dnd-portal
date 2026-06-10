@@ -76,7 +76,6 @@ export function createResourceCardPrintable<
       <AlbumCard
         borderRadius={0}
         localizedResource={localizedResource}
-        shadow="none"
         {...rest}
       />
     );
