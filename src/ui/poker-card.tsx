@@ -1,6 +1,5 @@
 import { Box, HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
-import { useI18nSystemPatterns } from "~/i18n/i18n-system";
 import RichText from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
 import { type BleedCorner, useBleed } from "./bleed-context";
@@ -234,7 +233,6 @@ type DetailsProps = {
 
 function Details({ children, palette }: DetailsProps) {
   const bleed = useBleed();
-  const patterns = useI18nSystemPatterns();
 
   return (
     <VStack
@@ -263,7 +261,6 @@ function Details({ children, palette }: DetailsProps) {
         : <RichText
             hyphens="auto"
             key={paragraphIndex}
-            patterns={patterns}
             text={paragraph}
           />,
       )}

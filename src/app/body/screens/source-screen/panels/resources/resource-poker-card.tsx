@@ -1,6 +1,7 @@
 import { Box, type StackProps, VStack } from "@chakra-ui/react";
-import { type ReactNode, useCallback } from "react";
+import { type ReactNode, useCallback, useMemo } from "react";
 import usePaginatedContent from "~/hooks/use-paginated-content";
+import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import PokerCard from "~/ui/poker-card";
@@ -50,6 +51,7 @@ export function ResourcePokerCard<
   const imageUrl = localizedResource._raw.image_url?.trim() ?? "";
   const hasImage = showImage && imageUrl.length > 0;
   const firstPageIndexWithoutImage = hasImage ? 1 : 0;
+  const [system] = useI18nSystem();
 
   const handlePageCountChange = useCallback(
     (count: number | undefined, overflow: boolean) => {
@@ -59,11 +61,14 @@ export function ResourcePokerCard<
     [firstPageIndexWithoutImage, onPageCountChange],
   );
 
-  const pages = usePaginatedContent(
-    localizedResource.details,
-    handlePageCountChange,
-    { firstPageReserved: startDetailsOnSecondPage },
+  const details = useMemo(
+    () => resolveSystemText(localizedResource.details, system),
+    [localizedResource.details, system],
   );
+
+  const pages = usePaginatedContent(details, handlePageCountChange, {
+    firstPageReserved: startDetailsOnSecondPage,
+  });
 
   const pageCount = pages.length + firstPageIndexWithoutImage;
 

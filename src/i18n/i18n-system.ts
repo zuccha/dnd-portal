@@ -1,7 +1,5 @@
-import { type ReactNode, useMemo } from "react";
 import { z } from "zod";
 import { createLocalStore } from "~/store/local-store";
-import RichText from "~/ui/rich-text";
 
 //------------------------------------------------------------------------------
 // I18n System
@@ -36,28 +34,12 @@ export const i18nSystemStore = createLocalStore(
 export const useI18nSystem = i18nSystemStore.use;
 
 //------------------------------------------------------------------------------
-// Use I18n System Patterns
+// Resolve System Text
 //------------------------------------------------------------------------------
 
-export function useI18nSystemPatterns() {
-  const [system] = useI18nSystem();
-
-  return useMemo(
-    () => [
-      ...RichText.defaultPatterns,
-      { regex: /\{(.+?)\}/, render: renderSystemPattern(system) },
-    ],
-    [system],
-  );
-}
-
-//------------------------------------------------------------------------------
-// Render System Pattern
-//------------------------------------------------------------------------------
-
-function renderSystemPattern(system: I18nSystem) {
-  return (val: ReactNode) =>
-    typeof val === "string" ?
-      (val.split("|")[system === "metric" ? 0 : 1] ?? "")
-    : val;
+export function resolveSystemText(text: string, system: I18nSystem): string {
+  return text.replace(/\{(.+?)\}/g, (_match, value: string) => {
+    const [metric, imperial] = value.split("|");
+    return system === "metric" ? (metric ?? "") : (imperial ?? "");
+  });
 }

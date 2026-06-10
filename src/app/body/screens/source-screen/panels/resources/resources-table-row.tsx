@@ -3,7 +3,7 @@ import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
-import { useI18nSystemPatterns } from "~/i18n/i18n-system";
+import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -69,6 +69,7 @@ export function createResourcesTableRow<
     resourceId,
   }: ResourcesTableRowProps<R, L>) {
     const [lang] = useI18nLang();
+    const [system] = useI18nSystem();
 
     const [resource] = useResource(resourceId);
     const localizedResource = useMemo(
@@ -78,8 +79,10 @@ export function createResourcesTableRow<
     const selected = useResourceSelection(resourceId);
     const { toggleResourceSelection } = useResourceSelectionMethods(resourceId);
     const expanded = useResourceExpansion(resourceId, false);
-
-    const patterns = useI18nSystemPatterns();
+    const details =
+      extra.detailsKey && localizedResource[extra.detailsKey] ?
+        resolveSystemText(String(localizedResource[extra.detailsKey]), system)
+      : "";
 
     const edit = useCallback(
       (e: React.MouseEvent) => {
@@ -147,11 +150,11 @@ export function createResourcesTableRow<
           <Table.Row bgColor="bg.muted" w="full">
             <Table.Cell colSpan={columnCount}>
               <VStack align="flex-start" gap={1} w="full">
-                {localizedResource[extra.detailsKey] ?
-                  String(localizedResource[extra.detailsKey])
+                {details ?
+                  details
                     .split(/[\n\r]/)
                     .map((paragraph, i) => (
-                      <RichText key={i} patterns={patterns} text={paragraph} />
+                      <RichText key={i} text={paragraph} />
                     ))
                 : <RichText
                     text={translate(
