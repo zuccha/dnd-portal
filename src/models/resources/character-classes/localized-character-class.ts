@@ -257,12 +257,12 @@ const i18nContext = {
     it: "Tiro Salvezza",
   },
   "skill_proficiencies_pool": {
-    en: "##Skill Proficiencies##\r_Choose <1>:_ <2>.",
-    it: "##Competenze nelle Abilità##\r_Scegli <1>:_ <2>.",
+    en: "##Skill Proficiencies##\r_Choose <1>:_ <2>.",
+    it: "##Competenze nelle Abilità##\r_Scegli <1>:_ <2>.",
   },
   "starting_equipment": {
-    en: "##Starting Equipment##\r<1>",
-    it: "##Equipaggiamento Iniziale##\r<1>",
+    en: "##Starting Equipment##\r<1>",
+    it: "##Equipaggiamento Iniziale##\r<1>",
   },
   "starting_equipment.group/*": {
     en: "_Choose:_ <1>.",

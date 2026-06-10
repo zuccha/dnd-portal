@@ -182,11 +182,11 @@ const i18nContext = {
     it: "Trucchetto di <1>", // 1 = school
   },
   "upgrade/*": {
-    en: "##At Higher Levels##",
-    it: "##A Livelli Superiori##",
+    en: "##At Higher Levels##",
+    it: "##A Livelli Superiori##",
   },
   "upgrade/0": {
-    en: "##Cantrip Upgrade##",
-    it: "##Potenziamento del Trucchetto##",
+    en: "##Cantrip Upgrade##",
+    it: "##Potenziamento del Trucchetto##",
   },
 };

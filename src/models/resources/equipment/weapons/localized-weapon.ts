@@ -183,8 +183,8 @@ const i18nContext = {
     it: "mod. For.",
   },
   "mastery": {
-    en: "##Weapon Mastery: <1>##\r<2>", // 1 = mastery, 2 = ruling
-    it: "##Padronanza: <1>##\r<2>", // 1 = mastery, 2 = ruling
+    en: "##Weapon Mastery: <1>##\r<2>", // 1 = mastery, 2 = ruling
+    it: "##Padronanza: <1>##\r<2>", // 1 = mastery, 2 = ruling
   },
   "properties.ammunition": {
     en: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
