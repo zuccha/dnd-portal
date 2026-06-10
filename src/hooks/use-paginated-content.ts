@@ -125,16 +125,35 @@ function getFirstPageOverflow(
 //------------------------------------------------------------------------------
 
 function split(text: string, hardSplit: boolean): [string, string] {
+  let index: number = -1;
   const center = Math.ceil(text.length / 2);
+
+  index = findCenterMostSplitIndex(text, center, /[ \n\t]/);
+  if (index === -1 && !hardSplit) return [text, ""];
+  // if (index === -1) index = findCenterMostSplitIndex(text, center, /\r/);
+  // if (index === -1) index = findCenterMostSplitIndex(text, center, /\s/);
+  if (index === -1) index = center;
+  return [text.slice(0, index), text.slice(index)];
+}
+
+//------------------------------------------------------------------------------
+// Find Center Most Split Index
+//------------------------------------------------------------------------------
+
+function findCenterMostSplitIndex(
+  text: string,
+  center: number,
+  regex: RegExp,
+): number {
   let left = center - 1;
   let right = center;
+
   while (0 <= left || right < text.length) {
-    if (/[ \t\n]/.test(text[right] ?? ""))
-      return [text.slice(0, right), text.slice(right)];
-    if (/[ \t\n]/.test(text[left] ?? ""))
-      return [text.slice(0, left), text.slice(left)];
+    if (regex.test(text[right] ?? "")) return right;
+    if (regex.test(text[left] ?? "")) return left;
     left--;
     right++;
   }
-  return hardSplit ? [text.slice(0, center), text.slice(center)] : [text, ""];
+
+  return -1;
 }
