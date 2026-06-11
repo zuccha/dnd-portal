@@ -26,6 +26,28 @@ CREATE INDEX idx_backgrounds_tool_proficiency_id ON public.backgrounds USING btr
 
 
 --------------------------------------------------------------------------------
+-- BACKGROUND TRANSLATIONS
+--------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS public.background_translations (
+  resource_id uuid NOT NULL,
+  lang text DEFAULT ''::text NOT NULL,
+  feat_notes text DEFAULT ''::text NOT NULL,
+  tool_notes text DEFAULT ''::text NOT NULL,
+  CONSTRAINT background_translations_pkey PRIMARY KEY (resource_id, lang),
+  CONSTRAINT background_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.backgrounds(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT background_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+ALTER TABLE public.background_translations OWNER TO postgres;
+ALTER TABLE public.background_translations ENABLE ROW LEVEL SECURITY;
+
+GRANT ALL ON TABLE public.background_translations TO anon;
+GRANT ALL ON TABLE public.background_translations TO authenticated;
+GRANT ALL ON TABLE public.background_translations TO service_role;
+
+
+--------------------------------------------------------------------------------
 -- BACKGROUND RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 
@@ -93,6 +115,32 @@ WITH CHECK (
 
 CREATE POLICY "Creators and GMs can delete backgrounds"
 ON public.backgrounds
+FOR DELETE TO authenticated
+USING (public.can_edit_resource(resource_id));
+
+
+--------------------------------------------------------------------------------
+-- BACKGROUND TRANSLATIONS POLICIES
+--------------------------------------------------------------------------------
+
+CREATE POLICY "Users can read background translations"
+ON public.background_translations
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
+
+CREATE POLICY "Creators and GMs can create new background translations"
+ON public.background_translations
+FOR INSERT TO authenticated
+WITH CHECK (public.can_edit_resource(resource_id));
+
+CREATE POLICY "Creators and GMs can update background translations"
+ON public.background_translations
+FOR UPDATE TO authenticated
+USING (public.can_edit_resource(resource_id))
+WITH CHECK (public.can_edit_resource(resource_id));
+
+CREATE POLICY "Creators and GMs can delete background translations"
+ON public.background_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
 

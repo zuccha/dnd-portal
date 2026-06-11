@@ -59,4 +59,3 @@ const BackgroundsPanel = createResourcesPanel(
 );
 
 export default BackgroundsPanel;
-

@@ -19,10 +19,12 @@ import {
 export const backgroundFormDataSchema = resourceFormDataSchema.extend({
   ability_scores: z.array(creatureAbilitySchema).default([]),
   feat_id: z.uuid().nullable().default(null),
+  feat_notes: z.string().default(""),
   name: z.string().default(""),
   page: z.number().default(0),
   skill_proficiencies: z.array(creatureSkillSchema).default([]),
   starting_equipment: z.array(startingEquipmentGroupSchema).default([]),
+  tool_notes: z.string().default(""),
   tool_proficiency_id: z.uuid().nullable().default(null),
 });
 
@@ -50,7 +52,11 @@ export function backgroundFormDataToDB(data: Partial<BackgroundFormData>): {
         : undefined,
       tool_proficiency_id: data.tool_proficiency_id,
     },
-    translation,
+    translation: {
+      ...translation,
+      feat_notes: data.feat_notes,
+      tool_notes: data.tool_notes,
+    },
   };
 }
 
@@ -62,4 +68,3 @@ export const backgroundForm = createForm(
   "background",
   backgroundFormDataSchema.parse,
 );
-

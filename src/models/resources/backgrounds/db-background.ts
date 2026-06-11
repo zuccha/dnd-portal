@@ -11,8 +11,10 @@ import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 export const dbBackgroundSchema = dbResourceSchema.extend({
   ability_scores: z.array(creatureAbilitySchema),
   feat_id: z.uuid().nullable(),
+  feat_notes: z.record(z.string(), z.string()),
   skill_proficiencies: z.array(creatureSkillSchema),
   starting_equipment_entries: z.array(startingEquipmentEntrySchema),
+  tool_notes: z.record(z.string(), z.string()),
   tool_proficiency_id: z.uuid().nullable(),
 });
 
@@ -22,9 +24,13 @@ export type DBBackground = z.infer<typeof dbBackgroundSchema>;
 // DB Background Translation
 //------------------------------------------------------------------------------
 
-export const dbBackgroundTranslationSchema = dbResourceTranslationSchema;
+export const dbBackgroundTranslationSchema = dbResourceTranslationSchema.extend(
+  {
+    feat_notes: z.string(),
+    tool_notes: z.string(),
+  },
+);
 
 export type DBBackgroundTranslation = z.infer<
   typeof dbBackgroundTranslationSchema
 >;
-

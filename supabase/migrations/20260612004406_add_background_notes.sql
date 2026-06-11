@@ -1,9 +1,48 @@
---------------------------------------------------------------------------------
--- BACKGROUND ROW
---------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.background_translations (
+  resource_id uuid NOT NULL,
+  lang text DEFAULT ''::text NOT NULL,
+  feat_notes text DEFAULT ''::text NOT NULL,
+  tool_notes text DEFAULT ''::text NOT NULL,
+  CONSTRAINT background_translations_pkey PRIMARY KEY (resource_id, lang),
+  CONSTRAINT background_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.backgrounds(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT background_translations_lang_fkey FOREIGN KEY (lang) REFERENCES public.langs(code) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+ALTER TABLE public.background_translations OWNER TO postgres;
+ALTER TABLE public.background_translations ENABLE ROW LEVEL SECURITY;
+
+GRANT ALL ON TABLE public.background_translations TO anon;
+GRANT ALL ON TABLE public.background_translations TO authenticated;
+GRANT ALL ON TABLE public.background_translations TO service_role;
+
+CREATE POLICY "Users can read background translations"
+ON public.background_translations
+FOR SELECT TO anon, authenticated
+USING (public.can_read_resource(resource_id));
+
+CREATE POLICY "Creators and GMs can create new background translations"
+ON public.background_translations
+FOR INSERT TO authenticated
+WITH CHECK (public.can_edit_resource(resource_id));
+
+CREATE POLICY "Creators and GMs can update background translations"
+ON public.background_translations
+FOR UPDATE TO authenticated
+USING (public.can_edit_resource(resource_id))
+WITH CHECK (public.can_edit_resource(resource_id));
+
+CREATE POLICY "Creators and GMs can delete background translations"
+ON public.background_translations
+FOR DELETE TO authenticated
+USING (public.can_edit_resource(resource_id));
+
+DROP FUNCTION IF EXISTS public.create_background(uuid, text, jsonb, jsonb);
+DROP FUNCTION IF EXISTS public.fetch_background(uuid);
+DROP FUNCTION IF EXISTS public.fetch_backgrounds(uuid, text[], jsonb, text, text);
+DROP FUNCTION IF EXISTS public.update_background(uuid, text, jsonb, jsonb);
+DROP TYPE IF EXISTS public.background_row;
 
 CREATE TYPE public.background_row AS (
-  -- Resource
   source_id uuid,
   source_code text,
   source_version public.source_version,
@@ -14,21 +53,14 @@ CREATE TYPE public.background_row AS (
   name jsonb,
   name_short jsonb,
   page jsonb,
-  -- Background
   ability_scores public.creature_ability[],
   feat_id uuid,
   skill_proficiencies public.creature_skill[],
   starting_equipment_entries jsonb,
   tool_proficiency_id uuid,
-  -- Background Translation
   feat_notes jsonb,
   tool_notes jsonb
 );
-
-
---------------------------------------------------------------------------------
--- CREATE BACKGROUND
---------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.create_background(
   p_source_id uuid,
@@ -115,11 +147,6 @@ GRANT ALL ON FUNCTION public.create_background(p_source_id uuid, p_lang text, p_
 GRANT ALL ON FUNCTION public.create_background(p_source_id uuid, p_lang text, p_background jsonb, p_background_translation jsonb) TO authenticated;
 GRANT ALL ON FUNCTION public.create_background(p_source_id uuid, p_lang text, p_background jsonb, p_background_translation jsonb) TO service_role;
 
-
---------------------------------------------------------------------------------
--- FETCH BACKGROUND
---------------------------------------------------------------------------------
-
 CREATE OR REPLACE FUNCTION public.fetch_background(p_id uuid)
 RETURNS public.background_row
 LANGUAGE sql
@@ -179,11 +206,6 @@ ALTER FUNCTION public.fetch_background(p_id uuid) OWNER TO postgres;
 GRANT ALL ON FUNCTION public.fetch_background(p_id uuid) TO anon;
 GRANT ALL ON FUNCTION public.fetch_background(p_id uuid) TO authenticated;
 GRANT ALL ON FUNCTION public.fetch_background(p_id uuid) TO service_role;
-
-
---------------------------------------------------------------------------------
--- FETCH BACKGROUNDS
---------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_backgrounds(
   p_source_id uuid,
@@ -282,11 +304,6 @@ GRANT ALL ON FUNCTION public.fetch_backgrounds(p_source_id uuid, p_langs text[],
 GRANT ALL ON FUNCTION public.fetch_backgrounds(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
 GRANT ALL ON FUNCTION public.fetch_backgrounds(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
-
---------------------------------------------------------------------------------
--- UPSERT BACKGROUND TRANSLATION
---------------------------------------------------------------------------------
-
 CREATE OR REPLACE FUNCTION public.upsert_background_translation(
   p_id uuid,
   p_lang text,
@@ -317,11 +334,6 @@ ALTER FUNCTION public.upsert_background_translation(p_id uuid, p_lang text, p_ba
 GRANT ALL ON FUNCTION public.upsert_background_translation(p_id uuid, p_lang text, p_background_translation jsonb) TO anon;
 GRANT ALL ON FUNCTION public.upsert_background_translation(p_id uuid, p_lang text, p_background_translation jsonb) TO authenticated;
 GRANT ALL ON FUNCTION public.upsert_background_translation(p_id uuid, p_lang text, p_background_translation jsonb) TO service_role;
-
-
---------------------------------------------------------------------------------
--- UPDATE BACKGROUND
---------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.update_background(
   p_id uuid,
@@ -441,3 +453,4 @@ ALTER FUNCTION public.update_background(p_id uuid, p_lang text, p_background jso
 GRANT ALL ON FUNCTION public.update_background(p_id uuid, p_lang text, p_background jsonb, p_background_translation jsonb) TO anon;
 GRANT ALL ON FUNCTION public.update_background(p_id uuid, p_lang text, p_background jsonb, p_background_translation jsonb) TO authenticated;
 GRANT ALL ON FUNCTION public.update_background(p_id uuid, p_lang text, p_background jsonb, p_background_translation jsonb) TO service_role;
+

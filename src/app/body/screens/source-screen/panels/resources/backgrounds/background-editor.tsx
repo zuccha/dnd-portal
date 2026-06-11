@@ -1,4 +1,5 @@
 import { HStack, type StackProps } from "@chakra-ui/react";
+import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Background } from "~/models/resources/backgrounds/background";
 import type { BackgroundFormData } from "~/models/resources/backgrounds/background-form";
@@ -12,7 +13,10 @@ import Field from "~/ui/field";
 import type { FieldBag, Form } from "~/utils/form";
 import StartingEquipmentEditor from "../character-classes/starting-equipment-editor";
 import { createResourceEditor } from "../resource-editor";
-import { createMultipleSelectEnumField } from "../resource-editor-form";
+import {
+  createInputField,
+  createMultipleSelectEnumField,
+} from "../resource-editor-form";
 import ResourceSearch from "../resource-search";
 
 //------------------------------------------------------------------------------
@@ -67,6 +71,25 @@ export function createBackgroundEditor(form: Form<BackgroundFormData>) {
     },
     useField: form.createUseField("feat_id"),
     useOptions: featStore.useResourceOptions,
+  });
+
+  //----------------------------------------------------------------------------
+  // Feat Notes Field
+  //----------------------------------------------------------------------------
+
+  const FeatNotesField = createInputField({
+    i18nContext: {
+      label: {
+        en: "Feat Notes",
+        it: "Note Talento",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    translatable: true,
+    useField: form.createUseField("feat_notes"),
   });
 
   //----------------------------------------------------------------------------
@@ -132,6 +155,25 @@ export function createBackgroundEditor(form: Form<BackgroundFormData>) {
   });
 
   //----------------------------------------------------------------------------
+  // Tool Notes Field
+  //----------------------------------------------------------------------------
+
+  const ToolNotesField = createInputField({
+    i18nContext: {
+      label: {
+        en: "Tool Notes",
+        it: "Note Strumento",
+      },
+      placeholder: {
+        en: "None",
+        it: "Nessuna",
+      },
+    },
+    translatable: true,
+    useField: form.createUseField("tool_notes"),
+  });
+
+  //----------------------------------------------------------------------------
   // Background Editor
   //----------------------------------------------------------------------------
 
@@ -139,16 +181,23 @@ export function createBackgroundEditor(form: Form<BackgroundFormData>) {
     resource,
     sourceId,
   }: BackgroundEditorProps) {
+    const [lang] = useI18nLang();
+
     return (
       <ResourceEditor resource={resource}>
         <AbilityScoresField defaultValue={resource.ability_scores} />
 
         <HStack align="flex-start" gap={4} w="full">
           <FeatField defaultValue={resource.feat_id} sourceId={sourceId} />
+          <FeatNotesField defaultValue={resource.feat_notes[lang] ?? ""} />
+        </HStack>
+
+        <HStack align="flex-start" gap={4} w="full">
           <ToolProficiencyField
             defaultValue={resource.tool_proficiency_id}
             sourceId={sourceId}
           />
+          <ToolNotesField defaultValue={resource.tool_notes[lang] ?? ""} />
         </HStack>
 
         <SkillProficienciesField defaultValue={resource.skill_proficiencies} />

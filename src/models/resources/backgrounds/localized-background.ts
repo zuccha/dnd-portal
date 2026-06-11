@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { joinWith } from "~/ui/array";
 import { numberToLetter } from "~/utils/number";
@@ -62,7 +63,10 @@ export function useLocalizeBackground(
         .map(({ label }) => label)
         .join(", ");
 
-      const feat = background.feat_id ? localizeFeatName(background.feat_id) : "";
+      const feat_name =
+        background.feat_id ? localizeFeatName(background.feat_id) : "";
+      const feat_notes = translate(background.feat_notes, lang);
+      const feat = formatNamedNote(feat_name, feat_notes);
 
       const skill_proficiencies = background.skill_proficiencies
         .map(translateCreatureSkill)
@@ -70,10 +74,12 @@ export function useLocalizeBackground(
         .sort()
         .join(", ");
 
-      const tool_proficiency =
+      const tool_name =
         background.tool_proficiency_id ?
           localizeToolName(background.tool_proficiency_id)
         : "";
+      const tool_notes = translate(background.tool_notes, lang);
+      const tool_proficiency = formatNamedNote(tool_name, tool_notes);
 
       const starting_equipment = background.starting_equipment
         .map((group) => {
@@ -110,8 +116,14 @@ export function useLocalizeBackground(
         .join("\n");
 
       const info = formatInfo([
-        [tp("ability_scores", background.ability_scores.length), ability_scores],
-        [tp("skill_proficiencies", background.skill_proficiencies.length), skill_proficiencies],
+        [
+          tp("ability_scores", background.ability_scores.length),
+          ability_scores,
+        ],
+        [
+          tp("skill_proficiencies", background.skill_proficiencies.length),
+          skill_proficiencies,
+        ],
         [t("feat"), feat],
         [t("tool_proficiency"), tool_proficiency],
       ]);
@@ -135,6 +147,7 @@ export function useLocalizeBackground(
     },
     [
       formatCp,
+      lang,
       localizeEquipmentName,
       localizeFeatName,
       localizeResource,
@@ -147,6 +160,15 @@ export function useLocalizeBackground(
       translateCreatureSkill,
     ],
   );
+}
+
+//------------------------------------------------------------------------------
+// Format Named NOte
+//------------------------------------------------------------------------------
+
+function formatNamedNote(name: string, note: string): string {
+  if (name && note) return `${name} (${note})`;
+  return name || note;
 }
 
 //------------------------------------------------------------------------------
@@ -211,4 +233,3 @@ const i18nContext = {
     it: "Strumento",
   },
 };
-
