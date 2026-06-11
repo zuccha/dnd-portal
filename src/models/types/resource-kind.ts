@@ -6,6 +6,7 @@ import { z } from "zod";
 
 export const resourceKindSchema = z.enum([
   "armor",
+  "background",
   "character_class",
   "character_subclass",
   "creature",

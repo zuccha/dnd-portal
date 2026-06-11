@@ -1,4 +1,4 @@
-import { Center, HStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { MapIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
@@ -6,6 +6,7 @@ import { useRoute } from "~/navigation/navigation";
 import Redirect from "~/navigation/redirect";
 import { Route } from "~/navigation/routes";
 import EmptyState from "~/ui/empty-state";
+import BackgroundsPanel from "./resources/backgrounds/backgrounds-panel";
 import CharacterClassesPanel from "./resources/character-classes/character-classes-panel";
 import CharacterSubclassesPanel from "./resources/character-subclasses/character-subclasses-panel";
 import CreatureTagsPanel from "./resources/creature-tag/creature-tags-panel";
@@ -63,12 +64,6 @@ export default function Content() {
 // Panels
 //------------------------------------------------------------------------------
 
-const WIP = () => (
-  <Center h="full" w="full">
-    WIP
-  </Center>
-);
-
 const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesAbilitiesEldritchInvocations]: EldritchInvocationsPanel,
   [Route.ResourcesAbilitiesManeuvers]: ManeuversPanel,
@@ -78,7 +73,7 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesCharacterFeats]: FeatsPanel,
   [Route.ResourcesBestiaryMonsters]: CreaturesPanel,
   [Route.ResourcesBestiaryTags]: CreatureTagsPanel,
-  [Route.ResourcesCharacterBackgrounds]: WIP,
+  [Route.ResourcesCharacterBackgrounds]: BackgroundsPanel,
   [Route.ResourcesCharacterClasses]: CharacterClassesPanel,
   [Route.ResourcesCharacterSpecies]: SpeciesPanel,
   [Route.ResourcesCharacterSubclasses]: CharacterSubclassesPanel,
