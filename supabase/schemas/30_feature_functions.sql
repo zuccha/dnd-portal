@@ -58,11 +58,27 @@ BEGIN
     position
   )
   SELECT
-    (a.value->>'id')::uuid,
+    g.resource_id,
     v_id,
-    coalesce((a.value->>'min_level')::smallint, 0),
-    coalesce((a.value->>'position')::smallint, (a.ordinality - 1)::smallint)
-  FROM jsonb_array_elements(coalesce(p_feature->'granted_by', '[]'::jsonb)) WITH ORDINALITY AS a(value, ordinality);
+    g.min_level,
+    (coalesce(mp.position, -1) + g.position_offset + 1)::smallint
+  FROM (
+    SELECT
+      (a.value->>'id')::uuid AS resource_id,
+      coalesce((a.value->>'min_level')::smallint, 0) AS min_level,
+      (row_number() OVER (
+        PARTITION BY (a.value->>'id')::uuid
+        ORDER BY a.ordinality
+      ) - 1)::smallint AS position_offset
+    FROM jsonb_array_elements(coalesce(p_feature->'granted_by', '[]'::jsonb)) WITH ORDINALITY AS a(value, ordinality)
+  ) g
+  LEFT JOIN (
+    SELECT
+      rf.resource_id,
+      max(rf.position) AS position
+    FROM public.resource_features rf
+    GROUP BY rf.resource_id
+  ) mp ON mp.resource_id = g.resource_id;
 
   perform public.upsert_feature_translation(v_id, p_lang, p_feature_translation);
 
@@ -299,7 +315,13 @@ BEGIN
 
   IF p_feature ? 'granted_by' THEN
     DELETE FROM public.resource_features rf
-    WHERE rf.feature_id = p_id;
+    WHERE rf.feature_id = p_id
+      AND NOT EXISTS (
+        SELECT 1
+        FROM jsonb_array_elements(coalesce(p_feature->'granted_by', '[]'::jsonb)) AS a(value)
+        WHERE (a.value->>'id')::uuid = rf.resource_id
+          AND coalesce((a.value->>'min_level')::smallint, 0) = rf.min_level
+      );
 
     INSERT INTO public.resource_features (
       resource_id,
@@ -308,11 +330,40 @@ BEGIN
       position
     )
     SELECT
-      (a.value->>'id')::uuid,
+      g.resource_id,
       p_id,
-      coalesce((a.value->>'min_level')::smallint, 0),
-      coalesce((a.value->>'position')::smallint, (a.ordinality - 1)::smallint)
-    FROM jsonb_array_elements(coalesce(p_feature->'granted_by', '[]'::jsonb)) WITH ORDINALITY AS a(value, ordinality);
+      g.min_level,
+      (coalesce(mp.position, -1) + g.position_offset + 1)::smallint
+    FROM (
+      SELECT
+        n.resource_id,
+        n.min_level,
+        (row_number() OVER (
+          PARTITION BY n.resource_id
+          ORDER BY n.ordinality
+        ) - 1)::smallint AS position_offset
+      FROM (
+        SELECT
+          (a.value->>'id')::uuid AS resource_id,
+          coalesce((a.value->>'min_level')::smallint, 0) AS min_level,
+          a.ordinality
+        FROM jsonb_array_elements(coalesce(p_feature->'granted_by', '[]'::jsonb)) WITH ORDINALITY AS a(value, ordinality)
+      ) n
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM public.resource_features rf
+        WHERE rf.resource_id = n.resource_id
+          AND rf.feature_id = p_id
+          AND rf.min_level = n.min_level
+      )
+    ) g
+    LEFT JOIN (
+      SELECT
+        rf.resource_id,
+        max(rf.position) AS position
+      FROM public.resource_features rf
+      GROUP BY rf.resource_id
+    ) mp ON mp.resource_id = g.resource_id;
   END IF;
 
   perform public.upsert_feature_translation(p_id, p_lang, p_feature_translation);
