@@ -18,6 +18,7 @@ import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
 import FeatsPanel from "./resources/feats/feats-panel";
 import FeaturesPanel from "./resources/features/features-panel";
 import LanguagesPanel from "./resources/languages/languages-panel";
+import ManeuversPanel from "./resources/maneuvers/maneuvers-panel";
 import MetamagicsPanel from "./resources/metamagics/metamagics-panel";
 import PlanesPanel from "./resources/planes/planes-panel";
 import SpeciesPanel from "./resources/species/species-panel";
@@ -70,7 +71,7 @@ const WIP = () => (
 
 const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesAbilitiesEldritchInvocations]: EldritchInvocationsPanel,
-  [Route.ResourcesAbilitiesManeuvers]: WIP,
+  [Route.ResourcesAbilitiesManeuvers]: ManeuversPanel,
   [Route.ResourcesAbilitiesMetamagic]: MetamagicsPanel,
   [Route.ResourcesAbilitiesSpells]: SpellsPanel,
   [Route.ResourcesBlocksFeatures]: FeaturesPanel,
