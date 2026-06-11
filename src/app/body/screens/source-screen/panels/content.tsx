@@ -69,9 +69,11 @@ const WIP = () => (
 
 const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesAbilitiesEldritchInvocations]: EldritchInvocationsPanel,
-  [Route.ResourcesAbilitiesFeats]: FeatsPanel,
-  [Route.ResourcesAbilitiesFeatures]: FeaturesPanel,
+  [Route.ResourcesAbilitiesManeuvers]: WIP,
+  [Route.ResourcesAbilitiesMetamagic]: WIP,
   [Route.ResourcesAbilitiesSpells]: SpellsPanel,
+  [Route.ResourcesBlocksFeatures]: FeaturesPanel,
+  [Route.ResourcesCharacterFeats]: FeatsPanel,
   [Route.ResourcesBestiaryMonsters]: CreaturesPanel,
   [Route.ResourcesBestiaryTags]: CreatureTagsPanel,
   [Route.ResourcesCharacterBackgrounds]: WIP,

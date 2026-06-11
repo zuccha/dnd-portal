@@ -16,11 +16,11 @@ export type BestiaryPanelId = (typeof bestiaryPanelIds)[number];
 //------------------------------------------------------------------------------
 
 export const characterPanelIds = [
-  Route.ResourcesCharacterBackgrounds,
   Route.ResourcesCharacterClasses,
-  Route.ResourcesAbilitiesFeats,
-  Route.ResourcesCharacterSpecies,
   Route.ResourcesCharacterSubclasses,
+  Route.ResourcesCharacterBackgrounds,
+  Route.ResourcesCharacterSpecies,
+  Route.ResourcesCharacterFeats,
 ] as const;
 
 export type CharacterPanelId = (typeof characterPanelIds)[number];
@@ -30,22 +30,31 @@ export type CharacterPanelId = (typeof characterPanelIds)[number];
 //------------------------------------------------------------------------------
 
 export const abilitiesPanelIds = [
-  Route.ResourcesAbilitiesEldritchInvocations,
-  Route.ResourcesAbilitiesFeatures,
   Route.ResourcesAbilitiesSpells,
+  Route.ResourcesAbilitiesEldritchInvocations,
+  Route.ResourcesAbilitiesManeuvers,
+  Route.ResourcesAbilitiesMetamagic,
 ] as const;
 
 export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number];
+
+//------------------------------------------------------------------------------
+// Blocks Panel Ids
+//------------------------------------------------------------------------------
+
+export const blocksPanelIds = [Route.ResourcesBlocksFeatures] as const;
+
+export type BlocksPanelId = (typeof blocksPanelIds)[number];
 
 //------------------------------------------------------------------------------
 // Equipment Panel Ids
 //------------------------------------------------------------------------------
 
 export const equipmentPanelIds = [
-  Route.ResourcesEquipmentArmors,
   Route.ResourcesEquipmentItems,
-  Route.ResourcesEquipmentTools,
+  Route.ResourcesEquipmentArmors,
   Route.ResourcesEquipmentWeapons,
+  Route.ResourcesEquipmentTools,
 ] as const;
 
 export type EquipmentPanelId = (typeof equipmentPanelIds)[number];
@@ -67,6 +76,7 @@ export type WorldPanelId = (typeof worldPanelIds)[number];
 
 export const resourcePanels = [
   { id: Route.ResourcesCharacter, items: characterPanelIds },
+  { id: Route.ResourcesBlocks, items: blocksPanelIds },
   { id: Route.ResourcesAbilities, items: abilitiesPanelIds },
   { id: Route.ResourcesBestiary, items: bestiaryPanelIds },
   { id: Route.ResourcesEquipment, items: equipmentPanelIds },

@@ -7,7 +7,6 @@ import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
 import Icon from "~/ui/icon";
-import { compareObjects } from "~/utils/object";
 import { resourcePanels } from "../panels/panels";
 import SidebarSection from "./sidebar-section";
 
@@ -28,14 +27,12 @@ export default function SidebarSource({ sourceId }: SidebarSourceProps) {
     () =>
       resourcePanels.map(({ id, items }) => ({
         id,
-        items: items
-          .map((value) => ({
-            label: t(value),
-            onClick: () => history.pushState({}, "", value),
-            selected: route === value,
-            value,
-          }))
-          .sort(compareObjects("label")),
+        items: items.map((value) => ({
+          label: t(value),
+          onClick: () => history.pushState({}, "", value),
+          selected: route === value,
+          value,
+        })),
       })),
     [route, t],
   );
@@ -76,13 +73,13 @@ const i18nContext = {
     en: "Eldritch Invocations",
     it: "Suppliche Occulte",
   },
-  [Route.ResourcesAbilitiesFeatures]: {
-    en: "Features",
-    it: "Privilegi",
+  [Route.ResourcesAbilitiesManeuvers]: {
+    en: "Maneuvers",
+    it: "Manovre",
   },
-  [Route.ResourcesAbilitiesFeats]: {
-    en: "Feats",
-    it: "Talenti",
+  [Route.ResourcesAbilitiesMetamagic]: {
+    en: "Metamagic",
+    it: "Metamagic",
   },
   [Route.ResourcesAbilitiesSpells]: {
     en: "Spells",
@@ -100,6 +97,14 @@ const i18nContext = {
     en: "Groups",
     it: "Gruppi",
   },
+  [Route.ResourcesBlocks]: {
+    en: "Blocks",
+    it: "Blocchi",
+  },
+  [Route.ResourcesBlocksFeatures]: {
+    en: "Features",
+    it: "Privilegi",
+  },
   [Route.ResourcesCharacter]: {
     en: "Character",
     it: "Personaggio",
@@ -111,6 +116,10 @@ const i18nContext = {
   [Route.ResourcesCharacterClasses]: {
     en: "Classes",
     it: "Classi",
+  },
+  [Route.ResourcesCharacterFeats]: {
+    en: "Feats",
+    it: "Talenti",
   },
   [Route.ResourcesCharacterSpecies]: {
     en: "Species",
