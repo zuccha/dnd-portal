@@ -14,7 +14,8 @@ CREATE TYPE public.resource_kind AS ENUM (
   'character_subclass',
   'species',
   'feat',
-  'feature'
+  'feature',
+  'metamagic'
 );
 
 ALTER TYPE public.resource_kind OWNER TO postgres;

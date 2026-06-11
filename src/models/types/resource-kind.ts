@@ -16,6 +16,7 @@ export const resourceKindSchema = z.enum([
   "feature",
   "item",
   "language",
+  "metamagic",
   "plane",
   "species",
   "spell",
