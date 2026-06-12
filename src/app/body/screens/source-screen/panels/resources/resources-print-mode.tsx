@@ -198,6 +198,7 @@ export function createResourcesPrintMode<
     return (
       <HStack gap={0} overflow="hidden" {...rest}>
         <VStack
+          align="flex-start"
           bg="bg.subtle"
           flex={1}
           h="full"
@@ -208,6 +209,7 @@ export function createResourcesPrintMode<
           <VStack
             className="printable"
             h={`${paperHeight * papersCount}in`}
+            mx="auto"
             pointerEvents="none"
             position="relative"
             w={`${paperWidth}in`}
