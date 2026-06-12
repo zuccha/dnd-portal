@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, type StackProps, VStack } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -19,6 +19,7 @@ import type { ResourcesContext } from "./resources-context";
 import CropMarks from "./resources-print-mode-crop-marks";
 import ResourcesPrintModeSettings from "./resources-print-mode-settings";
 import {
+  type PrintQuality,
   paperSizes,
   useBackgroundColorVisible,
   useBleedSize,
@@ -33,6 +34,7 @@ import {
   usePaletteName,
   usePaperLayout,
   usePaperType,
+  usePrintQuality,
   useShowImage,
 } from "./resources-print-mode-state";
 
@@ -107,6 +109,7 @@ export function createResourcesPrintMode<
     const [showImage, setShowImage] = useShowImage();
     const [includeEmptyBack, setIncludeEmptyBack] = useIncludeEmptyBack();
     const [paletteName, setPaletteName] = usePaletteName();
+    const [printQuality, setPrintQuality] = usePrintQuality();
 
     const bleed = useMemo(
       () => ({
@@ -162,6 +165,24 @@ export function createResourcesPrintMode<
         ),
       };
     }, [cardsPerPaper, columns, paperPadding.py]);
+
+    const print = useCallback(
+      (quality: PrintQuality) => {
+        if (quality === "standard") return window.print();
+
+        const previousZoom = zoom;
+        const restoreZoom = () => setZoom(previousZoom);
+
+        setZoom(2);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            window.addEventListener("afterprint", restoreZoom, { once: true });
+            window.print();
+          });
+        });
+      },
+      [zoom],
+    );
 
     return (
       <HStack gap={0} overflow="hidden" {...rest}>
@@ -287,7 +308,8 @@ export function createResourcesPrintMode<
           onPaletteNameChange={setPaletteName}
           onPaperLayoutChange={setPaperLayout}
           onPaperTypeChange={setPaperType}
-          onPrint={() => window.print()}
+          onPrint={print}
+          onPrintQualityChange={setPrintQuality}
           onShowImageChange={setShowImage}
           onZoomChange={setZoom}
           pageCropMarksColor={pageCropMarksColor}
@@ -296,6 +318,7 @@ export function createResourcesPrintMode<
           paletteName={paletteName}
           paperLayout={paperLayout}
           paperType={paperType}
+          printQuality={printQuality}
           showImage={showImage}
           zoom={zoom}
         />

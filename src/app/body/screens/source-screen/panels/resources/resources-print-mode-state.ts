@@ -3,6 +3,16 @@ import { createLocalStore } from "~/store/local-store";
 import { paletteNameSchema } from "~/utils/palette";
 
 //------------------------------------------------------------------------------
+// Print Quality
+//------------------------------------------------------------------------------
+
+const printQualitySchema = z.enum(["standard", "high_fidelity"]);
+
+export type PrintQuality = z.infer<typeof printQualitySchema>;
+
+export const printQualities = printQualitySchema.options;
+
+//------------------------------------------------------------------------------
 // Paper Type
 //------------------------------------------------------------------------------
 
@@ -50,6 +60,12 @@ export const paperSizes: Record<PaperType, { height: number; width: number }> =
 export const useBackgroundColorVisible = createLocalStore(
   "print_mode.background_color_visible",
   true,
+  z.boolean().parse,
+).use;
+
+export const useHighFidelityPrintHelpDismissed = createLocalStore(
+  "print_mode.high_fidelity_print_help_dismissed",
+  false,
   z.boolean().parse,
 ).use;
 
@@ -125,8 +141,20 @@ export const usePaperLayout = createLocalStore(
   paperLayoutSchema.parse,
 ).use;
 
+export const usePrintQuality = createLocalStore(
+  "print_mode.print_quality",
+  "high_fidelity",
+  printQualitySchema.parse,
+).use;
+
 export const useShowImage = createLocalStore(
   "print_mode.show_image",
   true,
+  z.boolean().parse,
+).use;
+
+export const useStandardPrintHelpDismissed = createLocalStore(
+  "print_mode.standard_print_help_dismissed",
+  false,
   z.boolean().parse,
 ).use;

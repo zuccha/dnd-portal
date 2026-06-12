@@ -1,10 +1,21 @@
-import { HStack, Span, VStack } from "@chakra-ui/react";
-import { type Dispatch, type SetStateAction, useMemo } from "react";
+import {
+  CloseButton,
+  Dialog,
+  HStack,
+  Image,
+  Portal,
+  Span,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { HelpCircleIcon } from "lucide-react";
+import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
 import ColorPicker from "~/ui/color-picker";
 import Field from "~/ui/field";
+import IconButton from "~/ui/icon-button";
 import NumberInput from "~/ui/number-input";
 import Select, { type SelectOption } from "~/ui/select";
 import { type PaletteName, usePaletteNameOptions } from "~/utils/palette";
@@ -12,8 +23,12 @@ import type { StateSetter } from "~/utils/state";
 import {
   type PaperLayout,
   type PaperType,
+  type PrintQuality,
   paperLayouts,
   paperTypes,
+  printQualities,
+  useHighFidelityPrintHelpDismissed,
+  useStandardPrintHelpDismissed,
 } from "./resources-print-mode-state";
 
 //------------------------------------------------------------------------------
@@ -42,7 +57,8 @@ export type ResourcesPrintModeSettingsProps = {
   onPaletteNameChange: StateSetter<PaletteName>;
   onPaperLayoutChange: StateSetter<PaperLayout>;
   onPaperTypeChange: StateSetter<PaperType>;
-  onPrint: () => void;
+  onPrint: (quality: PrintQuality) => void;
+  onPrintQualityChange: StateSetter<PrintQuality>;
   onShowImageChange: StateSetter<boolean>;
   onZoomChange: Dispatch<SetStateAction<number>>;
   showImage: boolean;
@@ -52,6 +68,7 @@ export type ResourcesPrintModeSettingsProps = {
   paletteName: PaletteName;
   paperLayout: PaperLayout;
   paperType: PaperType;
+  printQuality: PrintQuality;
   zoom: number;
 };
 
@@ -78,6 +95,7 @@ export default function ResourcesPrintModeSettings({
   onPaperLayoutChange,
   onPaperTypeChange,
   onPrint,
+  onPrintQualityChange,
   onShowImageChange,
   onZoomChange,
   pageCropMarksColor,
@@ -86,10 +104,20 @@ export default function ResourcesPrintModeSettings({
   paletteName,
   paperLayout,
   paperType,
+  printQuality,
   showImage,
   zoom,
 }: ResourcesPrintModeSettingsProps) {
   const { t } = useI18nLangContext(i18nContext);
+  const [standardHelpDismissed, setStandardHelpDismissed] =
+    useStandardPrintHelpDismissed();
+  const [highFidelityHelpDismissed, setHighFidelityHelpDismissed] =
+    useHighFidelityPrintHelpDismissed();
+  const [dialogDismiss, setDialogDismiss] = useState(false);
+  const [dialogPrint, setDialogPrint] = useState(false);
+  const [dialogQuality, setDialogQuality] =
+    useState<PrintQuality>(printQuality);
+  const [dialogVisible, setDialogVisible] = useState(false);
 
   const paletteNameOptions = usePaletteNameOptions();
 
@@ -106,6 +134,41 @@ export default function ResourcesPrintModeSettings({
       value: paperType,
     }));
   }, [t]);
+
+  const printQualityOptions = useMemo<SelectOption<PrintQuality>[]>(() => {
+    return printQualities.map((quality) => ({
+      label: t(`print_quality[${quality}]`),
+      value: quality,
+    }));
+  }, [t]);
+
+  const helpDismissed =
+    printQuality === "standard" ?
+      standardHelpDismissed
+    : highFidelityHelpDismissed;
+
+  const isHelpDismissed = (quality: PrintQuality) =>
+    quality === "standard" ? standardHelpDismissed : highFidelityHelpDismissed;
+
+  const openDialog = (quality: PrintQuality, print: boolean) => {
+    setDialogDismiss(isHelpDismissed(quality));
+    setDialogPrint(print);
+    setDialogQuality(quality);
+    setDialogVisible(true);
+  };
+
+  const print = () => {
+    if (helpDismissed) return onPrint(printQuality);
+    openDialog(printQuality, true);
+  };
+
+  const confirmDialog = () => {
+    if (dialogQuality === "standard") setStandardHelpDismissed(dialogDismiss);
+    else setHighFidelityHelpDismissed(dialogDismiss);
+
+    setDialogVisible(false);
+    if (dialogPrint) onPrint(dialogQuality);
+  };
 
   return (
     <VStack borderLeftWidth={1} gap={4} h="full" px={6} py={4} w="15em">
@@ -132,6 +195,32 @@ export default function ResourcesPrintModeSettings({
             size="xs"
             value={paperType}
           />
+        </Field>
+
+        <Field>
+          <HStack align="center" gap={1} h={5}>
+            <Text fontSize="sm" fontWeight="medium" lineHeight={1.25}>
+              {t("print_quality.label")}
+            </Text>
+            <IconButton
+              Icon={HelpCircleIcon}
+              aria-label={t("help")}
+              h={5}
+              minW={5}
+              onClick={() => openDialog(printQuality, false)}
+              size="2xs"
+              variant="ghost"
+              w={5}
+            />
+          </HStack>
+          <HStack align="flex-start" w="full">
+            <Select.Enum
+              onValueChange={onPrintQualityChange}
+              options={printQualityOptions}
+              size="xs"
+              value={printQuality}
+            />
+          </HStack>
         </Field>
 
         <Field label={t("bleed.label")}>
@@ -253,11 +342,109 @@ export default function ResourcesPrintModeSettings({
           {t("close")}
         </Button>
 
-        <Button onClick={onPrint} size="xs">
+        <Button onClick={print} size="xs">
           {t("print")}
         </Button>
       </HStack>
+
+      <PrintHelpDialog
+        dismiss={dialogDismiss}
+        onConfirm={confirmDialog}
+        onDismissChange={setDialogDismiss}
+        onOpenChange={setDialogVisible}
+        open={dialogVisible}
+        print={dialogPrint}
+        quality={dialogQuality}
+      />
     </VStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Print Help Dialog
+//------------------------------------------------------------------------------
+
+type PrintHelpDialogProps = {
+  dismiss: boolean;
+  onConfirm: () => void;
+  onDismissChange: (dismiss: boolean) => void;
+  onOpenChange: (open: boolean) => void;
+  open: boolean;
+  print: boolean;
+  quality: PrintQuality;
+};
+
+function PrintHelpDialog({
+  dismiss,
+  onConfirm,
+  onDismissChange,
+  onOpenChange,
+  open,
+  print,
+  quality,
+}: PrintHelpDialogProps) {
+  const { lang, t } = useI18nLangContext(i18nContext);
+  const highFidelity = quality === "high_fidelity";
+
+  return (
+    <Dialog.Root
+      lazyMount
+      onOpenChange={({ open }) => onOpenChange(open)}
+      open={open}
+      size="lg"
+    >
+      <Portal>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>{t(`print_help.${quality}.title`)}</Dialog.Title>
+            </Dialog.Header>
+
+            <Dialog.Body>
+              <VStack align="flex-start" gap={4}>
+                <Text fontSize="sm">{t(`print_help.${quality}.body`)}</Text>
+
+                {highFidelity && (
+                  <>
+                    <Text fontSize="sm" fontWeight="semibold">
+                      {t("print_help.high_fidelity.instruction")}
+                    </Text>
+                    <Image
+                      alt={t("print_help.high_fidelity.image_alt")}
+                      borderRadius="sm"
+                      maxH="22rem"
+                      objectFit="contain"
+                      src={`https://gvgzmzuwbecnjeeuxtbw.supabase.co/storage/v1/object/public/docs/print-dialog-arrow-${lang}.png`}
+                      w="full"
+                    />
+                  </>
+                )}
+              </VStack>
+            </Dialog.Body>
+
+            <Dialog.Footer justifyContent="space-between">
+              <HStack>
+                <Checkbox
+                  onValueChange={onDismissChange}
+                  size="sm"
+                  value={dismiss}
+                />
+                <Span fontSize="sm">{t("print_help.dismiss")}</Span>
+              </HStack>
+
+              <Button onClick={onConfirm}>
+                {print ? t("ok") : t("close")}
+              </Button>
+            </Dialog.Footer>
+
+            <Dialog.CloseTrigger asChild>
+              <CloseButton />
+            </Dialog.CloseTrigger>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   );
 }
 
@@ -282,9 +469,17 @@ const i18nContext = {
     en: "Close",
     it: "Chiudi",
   },
+  "help": {
+    en: "Help",
+    it: "Aiuto",
+  },
   "include_empty_back.label": {
     en: "Add empty back",
     it: "Aggiungi retro vuoto",
+  },
+  "ok": {
+    en: "OK",
+    it: "OK",
   },
   "page_crop_marks.label": {
     en: "Crop Marks (Page)",
@@ -337,6 +532,50 @@ const i18nContext = {
   "print": {
     en: "Print",
     it: "Stampa",
+  },
+  "print_help.dismiss": {
+    en: "Don't show this again",
+    it: "Non mostrare più",
+  },
+  "print_help.high_fidelity.body": {
+    en: "High fidelity printing temporarily renders the sheet at 2x size before opening the browser print dialog. This reduces small layout imperfections, but the print dialog must scale the result back down.",
+    it: "La stampa ad alta fedeltà renderizza temporaneamente il foglio a dimensione 2x prima di aprire la finestra di stampa del browser. Questo riduce piccole imperfezioni di layout, ma la finestra di stampa deve ridimensionare il risultato.",
+  },
+  "print_help.high_fidelity.image_alt": {
+    en: "Example browser print dialog scale setting",
+    it: "Esempio dell'impostazione di scala nella finestra di stampa del browser",
+  },
+  "print_help.high_fidelity.instruction": {
+    en: "In the browser print dialog, set Scale to 50%.",
+    it: "Nella finestra di stampa del browser, imposta la Scala al 50%.",
+  },
+  "print_help.high_fidelity.title": {
+    en: "High Fidelity Print",
+    it: "Stampa ad Alta Fedeltà",
+  },
+  "print_help.print": {
+    en: "Open print dialog",
+    it: "Apri finestra di stampa",
+  },
+  "print_help.standard.body": {
+    en: "Standard printing opens the browser print dialog directly. It is simpler, but the browser can lose sub-pixel precision and small card layout imperfections may appear.",
+    it: "La stampa standard apre direttamente la finestra di stampa del browser. È più semplice, ma il browser può perdere precisione sub-pixel e potrebbero apparire piccole imperfezioni nel layout delle carte.",
+  },
+  "print_help.standard.title": {
+    en: "Standard Print",
+    it: "Stampa Standard",
+  },
+  "print_quality.label": {
+    en: "Print Quality",
+    it: "Qualità di Stampa",
+  },
+  "print_quality[high_fidelity]": {
+    en: "High Fidelity",
+    it: "Alta Fedeltà",
+  },
+  "print_quality[standard]": {
+    en: "Standard",
+    it: "Standard",
   },
   "settings.title": {
     en: "Print Settings",
