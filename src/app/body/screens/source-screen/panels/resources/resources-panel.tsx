@@ -86,7 +86,14 @@ export function createResourcesPanel<
       return <ResourcesPrintMode h="full" sourceId={sourceId} w="full" />;
 
     return (
-      <HStack flex={1} gap={0} h="full" overflow="auto" w="full">
+      <HStack
+        flex={1}
+        gap={0}
+        h="full"
+        overflow="auto"
+        position="relative"
+        w="full"
+      >
         {view === "table" && <ResourcesTable sourceId={sourceId} />}
         {view === "cards" && <ResourcesAlbum sourceId={sourceId} />}
 

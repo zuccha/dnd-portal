@@ -1,4 +1,3 @@
-import { HStack } from "@chakra-ui/react";
 import { MapIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
@@ -40,18 +39,14 @@ export default function Content() {
 
   if (route === Route._)
     return (
-      <HStack flex={1} h="full">
-        <EmptyState
-          Icon={MapIcon}
-          alignSelf="center"
-          flex={1}
-          mb="10%"
-          subtitle={t("welcome.subtitle")}
-          title={t("welcome.title")}
-        />
-
-        <HStack borderLeftWidth={1} h="full" w="15rem" />
-      </HStack>
+      <EmptyState
+        Icon={MapIcon}
+        alignSelf="center"
+        flex={1}
+        mb="10%"
+        subtitle={t("welcome.subtitle")}
+        title={t("welcome.title")}
+      />
     );
 
   const Panel = panels[route];

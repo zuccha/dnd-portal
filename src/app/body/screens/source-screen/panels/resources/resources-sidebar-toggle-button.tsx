@@ -1,5 +1,6 @@
-import { PanelLeftIcon } from "lucide-react";
-import { createMemoryStore } from "~/store/memory-store";
+import { PanelRightIcon } from "lucide-react";
+import { z } from "zod";
+import { createLocalStore } from "~/store/local-store";
 import IconButton, { type IconButtonProps } from "~/ui/icon-button";
 
 //------------------------------------------------------------------------------
@@ -8,14 +9,15 @@ import IconButton, { type IconButtonProps } from "~/ui/icon-button";
 
 export type ResourcesSidebarToggleButtonProps = Partial<IconButtonProps>;
 
-export default function ResourcesSidebarToggleButton(
-  props: ResourcesSidebarToggleButtonProps,
-) {
+export default function ResourcesSidebarToggleButton({
+  Icon = PanelRightIcon,
+  ...props
+}: ResourcesSidebarToggleButtonProps) {
   const setCollapsed = useResourcesSidebarSetCollapsed();
 
   return (
     <IconButton
-      Icon={PanelLeftIcon}
+      Icon={Icon}
       onClick={() => setCollapsed((prev) => !prev)}
       size="xs"
       variant="ghost"
@@ -32,4 +34,4 @@ export default function ResourcesSidebarToggleButton(
 export const {
   useSetValue: useResourcesSidebarSetCollapsed,
   useValue: useResourcesSidebarCollapsed,
-} = createMemoryStore("resources_sidebar.collapsed", false);
+} = createLocalStore("resources_sidebar.collapsed", false, z.boolean().parse);

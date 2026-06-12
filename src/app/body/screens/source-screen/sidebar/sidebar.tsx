@@ -1,6 +1,5 @@
 import { HStack, Heading, VStack } from "@chakra-ui/react";
-import { PanelLeftIcon, PanelRightIcon } from "lucide-react";
-import { useState } from "react";
+import { PanelLeftIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
 import { useSelectedSourceVersion } from "~/models/types/source-version";
@@ -8,6 +7,7 @@ import IconButton from "~/ui/icon-button";
 import SidebarSource from "./sidebar-source";
 import SidebarSourceSelector from "./sidebar-source-selector";
 import SidebarSourceVersionsSelector from "./sidebar-source-versions-selector";
+import { useSidebarCollapsed, useSidebarSetCollapsed } from "./sidebar-state";
 
 //------------------------------------------------------------------------------
 // Sidebar
@@ -19,23 +19,10 @@ export default function Sidebar() {
   const [sourceId] = useSelectedSourceId();
   const [selectedSourceVersions, setSelectedSourceVersions] =
     useSelectedSourceVersion();
-  const [collapsed, setCollapsed] = useState(false);
+  const collapsed = useSidebarCollapsed();
+  const setCollapsed = useSidebarSetCollapsed();
 
-  if (collapsed)
-    return (
-      <IconButton
-        Icon={PanelRightIcon}
-        bg="bg"
-        boxShadow="md"
-        left={2}
-        onClick={() => setCollapsed(false)}
-        position="absolute"
-        size="sm"
-        top={2}
-        variant="outline"
-        zIndex="docked"
-      />
-    );
+  if (collapsed) return null;
 
   return (
     <VStack
