@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createLocalStore } from "~/store/local-store";
+import { getResponsiveSidebarDefault } from "../responsive-sidebar-default";
 
 //------------------------------------------------------------------------------
 // Sidebar Collapsed State
@@ -8,4 +9,8 @@ import { createLocalStore } from "~/store/local-store";
 export const {
   useSetValue: useSidebarSetCollapsed,
   useValue: useSidebarCollapsed,
-} = createLocalStore("sidebar.collapsed", false, z.boolean().parse);
+} = createLocalStore(
+  "sidebar.collapsed",
+  getResponsiveSidebarDefault(),
+  z.boolean().parse,
+);

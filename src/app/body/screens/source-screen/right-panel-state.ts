@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createLocalStore } from "~/store/local-store";
+import { getResponsiveSidebarDefault } from "./responsive-sidebar-default";
 
 //------------------------------------------------------------------------------
 // Right Panel Collapsed State
@@ -10,6 +11,6 @@ export const {
   useValue: useRightPanelCollapsed,
 } = createLocalStore(
   "source_screen.right_panel_collapsed",
-  false,
+  getResponsiveSidebarDefault(),
   z.boolean().parse,
 );
