@@ -36,7 +36,7 @@ export default function Sidebar() {
       position={{ base: "absolute", md: "static" }}
       py={4}
       top={0}
-      w={{ base: "min(85vw, 18rem)", md: "15rem" }}
+      w="15rem"
       zIndex={{ base: "modal", md: "auto" }}
     >
       <VStack gap={2} px={6} w="full">

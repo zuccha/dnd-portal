@@ -26,7 +26,7 @@ export default function ResourcesSidebar({ children }: ResourcesSidebarProps) {
       py={4}
       right={0}
       top={0}
-      w={{ base: "min(85vw, 18rem)", md: "15rem" }}
+      w="15rem"
       zIndex={{ base: "modal", md: "auto" }}
     >
       {children}

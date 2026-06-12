@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, type StackProps, VStack } from "@chakra-ui/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -34,7 +34,9 @@ import {
   usePaletteName,
   usePaperLayout,
   usePaperType,
+  usePrintModeActiveSet,
   usePrintQuality,
+  usePrintSettingsCollapsed,
   useShowImage,
 } from "./resources-print-mode-state";
 
@@ -110,6 +112,15 @@ export function createResourcesPrintMode<
     const [includeEmptyBack, setIncludeEmptyBack] = useIncludeEmptyBack();
     const [paletteName, setPaletteName] = usePaletteName();
     const [printQuality, setPrintQuality] = usePrintQuality();
+    const [printSettingsCollapsed] = usePrintSettingsCollapsed();
+    const setPrintModeActive = usePrintModeActiveSet();
+
+    useEffect(() => {
+      setPrintModeActive(true);
+      return () => {
+        setPrintModeActive(false);
+      };
+    }, [setPrintModeActive]);
 
     const bleed = useMemo(
       () => ({
@@ -286,42 +297,44 @@ export function createResourcesPrintMode<
           </VStack>
         </VStack>
 
-        <ResourcesPrintModeSettings
-          backgroundColorVisible={backgroundColorVisible}
-          bleedSize={bleedSize}
-          bleedVisible={bleedVisible}
-          cardCropMarksColor={cardCropMarksColor}
-          cardCropMarksLength={cardCropMarksLength}
-          cardCropMarksVisible={cardCropMarksVisible}
-          includeEmptyBack={includeEmptyBack}
-          onBackgroundColorVisibleChange={setBackgroundColorVisible}
-          onBleedSizeChange={setBleedSize}
-          onBleedVisibleChange={setBleedVisible}
-          onCardCropMarksColorChange={setCardCropMarksColor}
-          onCardCropMarksLengthChange={setCardCropMarksLength}
-          onCardCropMarksVisibleChange={setCardCropMarksVisible}
-          onClose={() => context.setPrintMode(false)}
-          onIncludeEmptyBackChange={setIncludeEmptyBack}
-          onPageCropMarksColorChange={setPageCropMarksColor}
-          onPageCropMarksLengthChange={setPageCropMarksLength}
-          onPageCropMarksVisibleChange={setPageCropMarksVisible}
-          onPaletteNameChange={setPaletteName}
-          onPaperLayoutChange={setPaperLayout}
-          onPaperTypeChange={setPaperType}
-          onPrint={print}
-          onPrintQualityChange={setPrintQuality}
-          onShowImageChange={setShowImage}
-          onZoomChange={setZoom}
-          pageCropMarksColor={pageCropMarksColor}
-          pageCropMarksLength={pageCropMarksLength}
-          pageCropMarksVisible={pageCropMarksVisible}
-          paletteName={paletteName}
-          paperLayout={paperLayout}
-          paperType={paperType}
-          printQuality={printQuality}
-          showImage={showImage}
-          zoom={zoom}
-        />
+        {!printSettingsCollapsed && (
+          <ResourcesPrintModeSettings
+            backgroundColorVisible={backgroundColorVisible}
+            bleedSize={bleedSize}
+            bleedVisible={bleedVisible}
+            cardCropMarksColor={cardCropMarksColor}
+            cardCropMarksLength={cardCropMarksLength}
+            cardCropMarksVisible={cardCropMarksVisible}
+            includeEmptyBack={includeEmptyBack}
+            onBackgroundColorVisibleChange={setBackgroundColorVisible}
+            onBleedSizeChange={setBleedSize}
+            onBleedVisibleChange={setBleedVisible}
+            onCardCropMarksColorChange={setCardCropMarksColor}
+            onCardCropMarksLengthChange={setCardCropMarksLength}
+            onCardCropMarksVisibleChange={setCardCropMarksVisible}
+            onClose={() => context.setPrintMode(false)}
+            onIncludeEmptyBackChange={setIncludeEmptyBack}
+            onPageCropMarksColorChange={setPageCropMarksColor}
+            onPageCropMarksLengthChange={setPageCropMarksLength}
+            onPageCropMarksVisibleChange={setPageCropMarksVisible}
+            onPaletteNameChange={setPaletteName}
+            onPaperLayoutChange={setPaperLayout}
+            onPaperTypeChange={setPaperType}
+            onPrint={print}
+            onPrintQualityChange={setPrintQuality}
+            onShowImageChange={setShowImage}
+            onZoomChange={setZoom}
+            pageCropMarksColor={pageCropMarksColor}
+            pageCropMarksLength={pageCropMarksLength}
+            pageCropMarksVisible={pageCropMarksVisible}
+            paletteName={paletteName}
+            paperLayout={paperLayout}
+            paperType={paperType}
+            printQuality={printQuality}
+            showImage={showImage}
+            zoom={zoom}
+          />
+        )}
       </HStack>
     );
   };

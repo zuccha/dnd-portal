@@ -1,5 +1,6 @@
 import z from "zod";
 import { createLocalStore } from "~/store/local-store";
+import { createMemoryStore } from "~/store/memory-store";
 import { paletteNameSchema } from "~/utils/palette";
 
 //------------------------------------------------------------------------------
@@ -153,8 +154,19 @@ export const useShowImage = createLocalStore(
   z.boolean().parse,
 ).use;
 
+export const usePrintSettingsCollapsed = createLocalStore(
+  "print_mode.settings_collapsed",
+  false,
+  z.boolean().parse,
+).use;
+
 export const useStandardPrintHelpDismissed = createLocalStore(
   "print_mode.standard_print_help_dismissed",
   false,
   z.boolean().parse,
 ).use;
+
+export const {
+  useSetValue: usePrintModeActiveSet,
+  useValue: usePrintModeActive,
+} = createMemoryStore("print_mode.active", false);

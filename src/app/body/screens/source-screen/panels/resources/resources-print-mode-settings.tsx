@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { HelpCircleIcon } from "lucide-react";
+import { HelpCircleIcon, PanelRightIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Button from "~/ui/button";
@@ -28,6 +28,7 @@ import {
   paperTypes,
   printQualities,
   useHighFidelityPrintHelpDismissed,
+  usePrintSettingsCollapsed,
   useStandardPrintHelpDismissed,
 } from "./resources-print-mode-state";
 
@@ -113,6 +114,7 @@ export default function ResourcesPrintModeSettings({
     useStandardPrintHelpDismissed();
   const [highFidelityHelpDismissed, setHighFidelityHelpDismissed] =
     useHighFidelityPrintHelpDismissed();
+  const [, setPrintSettingsCollapsed] = usePrintSettingsCollapsed();
   const [dialogDismiss, setDialogDismiss] = useState(false);
   const [dialogPrint, setDialogPrint] = useState(false);
   const [dialogQuality, setDialogQuality] =
@@ -172,7 +174,15 @@ export default function ResourcesPrintModeSettings({
 
   return (
     <VStack borderLeftWidth={1} gap={4} h="full" px={6} py={4} w="15em">
-      <HStack justify="space-between" w="full">
+      <HStack w="full">
+        <IconButton
+          Icon={PanelRightIcon}
+          ml={-2}
+          onClick={() => setPrintSettingsCollapsed(true)}
+          size="xs"
+          variant="ghost"
+        />
+
         <Span fontSize="sm" fontWeight="semibold">
           {t("settings.title")}
         </Span>
