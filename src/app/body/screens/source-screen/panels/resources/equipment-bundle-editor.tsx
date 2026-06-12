@@ -1,5 +1,5 @@
-import { HStack, type StackProps, VStack } from "@chakra-ui/react";
-import { useCallback, useRef, useState } from "react";
+import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import { equipmentStore } from "~/models/resources/equipment/equipment-store";
@@ -35,6 +35,9 @@ export default function EquipmentBundleEditor({
 
   const [equipmentQuantity, setEquipmentQuantity] = useState(1);
   const [equipmentId, setEquipmentId] = useState("");
+  const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(
+    null,
+  );
 
   const options = equipmentStore.useResourceOptions(sourceId);
   const localize = equipmentStore.useLocalizeResourceName(sourceId, lang);
@@ -52,12 +55,52 @@ export default function EquipmentBundleEditor({
   const addEquipment = useCallback(() => {
     if (!equipmentId) return;
     const equipment = { id: equipmentId, quantity: equipmentQuantity };
-    onValueChange({ ...value, equipments: [...value.equipments, equipment] });
+    const index = value.equipments.findIndex(({ id }) => id === equipmentId);
+    const equipments =
+      index === -1 ?
+        [...value.equipments, equipment]
+      : value.equipments.map((current, i) =>
+          i === index ?
+            { ...current, quantity: current.quantity + equipmentQuantity }
+          : current,
+        );
+    onValueChange({ ...value, equipments });
+    setSelectedEquipmentId(equipmentId);
     setEquipmentId("");
     setEquipmentQuantity(1);
     searchRef.current?.clear();
     searchRef.current?.focus();
   }, [equipmentId, equipmentQuantity, onValueChange, value]);
+
+  const selectedEquipment = useMemo(
+    () => value.equipments.find(({ id }) => id === selectedEquipmentId) ?? null,
+    [selectedEquipmentId, value.equipments],
+  );
+
+  const updateEquipmentQuantity = useCallback(
+    (id: string, quantity: number) => {
+      onValueChange({
+        ...value,
+        equipments: value.equipments.map((equipment) =>
+          equipment.id === id ?
+            { ...equipment, quantity: Math.max(1, quantity) }
+          : equipment,
+        ),
+      });
+    },
+    [onValueChange, value],
+  );
+
+  const removeEquipment = useCallback(
+    (id: string) => {
+      onValueChange({
+        ...value,
+        equipments: value.equipments.filter((equipment) => equipment.id !== id),
+      });
+      if (selectedEquipmentId === id) setSelectedEquipmentId(null);
+    },
+    [onValueChange, selectedEquipmentId, value],
+  );
 
   return (
     <VStack gap={1} {...rest}>
@@ -95,20 +138,55 @@ export default function EquipmentBundleEditor({
       </HStack>
 
       {value.equipments.length > 0 && (
-        <HStack gap={1} w="full" wrap="wrap">
-          {value.equipments.map(({ id, quantity }) => (
-            <Tag
-              key={id}
-              label={tpi("equipment", quantity, localize(id), `${quantity}`)}
-              onClose={() =>
-                onValueChange({
-                  ...value,
-                  equipments: value.equipments.filter((e) => e.id !== id),
-                })
-              }
-            />
-          ))}
-        </HStack>
+        <VStack align="stretch" gap={2} w="full">
+          <HStack gap={1} w="full" wrap="wrap">
+            {value.equipments.map(({ id, quantity }) => (
+              <Tag
+                borderColor={
+                  selectedEquipmentId === id ? "border.info" : undefined
+                }
+                borderWidth={selectedEquipmentId === id ? 1 : undefined}
+                key={id}
+                label={
+                  <Button
+                    _hover={{ textDecoration: "underline" }}
+                    onClick={() => setSelectedEquipmentId(id)}
+                    unstyled
+                  >
+                    {tpi("equipment", quantity, localize(id), `${quantity}`)}
+                  </Button>
+                }
+                onClose={() => removeEquipment(id)}
+              />
+            ))}
+          </HStack>
+
+          {selectedEquipment && (
+            <VStack align="flex-end" gap={1} w="full">
+              <HStack borderRadius="sm" borderWidth={1} px={2} py={1} w="full">
+                <Span flex={1}>{localize(selectedEquipment.id)}</Span>
+
+                <NumberInput
+                  min={1}
+                  onValueChange={(quantity) =>
+                    updateEquipmentQuantity(selectedEquipment.id, quantity)
+                  }
+                  size="sm"
+                  value={selectedEquipment.quantity}
+                  w="5em"
+                />
+              </HStack>
+
+              <Button
+                onClick={() => setSelectedEquipmentId(null)}
+                size="xs"
+                variant="outline"
+              >
+                {t("done")}
+              </Button>
+            </VStack>
+          )}
+        </VStack>
       )}
     </VStack>
   );
@@ -122,6 +200,10 @@ const i18nContext = {
   "add": {
     en: "Add",
     it: "Aggiungi",
+  },
+  "done": {
+    en: "Close",
+    it: "Chiudi",
   },
   "empty": {
     en: "None",

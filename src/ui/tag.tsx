@@ -2,13 +2,14 @@ import {
   Tag as ChakraTag,
   type TagRootProps as ChakraTagRootProps,
 } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
 // Tag
 //------------------------------------------------------------------------------
 
 export type TagProps = ChakraTagRootProps & {
-  label: string;
+  label: ReactNode;
   onClose: () => void;
 };
 
