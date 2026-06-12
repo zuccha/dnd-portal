@@ -37,7 +37,7 @@ export default function Topbar() {
         fontFamily="Title Wave"
         fontSize={{ base: "md", md: "2xl" }}
         fontWeight="bold"
-        ml={{ base: -3, md: -3 }}
+        ml={{ base: 0, md: -3 }}
       >
         <IconButton
           Icon={PanelLeftIcon}
@@ -50,7 +50,6 @@ export default function Topbar() {
       </HStack>
 
       <HStack gap={{ base: 1, md: 2 }}>
-        <I18nButton />
         {hasResourcesSidebar && (
           <IconButton
             Icon={SlidersHorizontalIcon}
@@ -69,6 +68,7 @@ export default function Topbar() {
         )}
         <ThemeButton />
         <UserButton />
+        <I18nButton />
       </HStack>
     </HStack>
   );
