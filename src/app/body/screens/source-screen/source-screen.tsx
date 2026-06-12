@@ -16,6 +16,7 @@ export default function SourceScreen() {
         align="flex-start"
         gap={0}
         h={`calc(100% - ${Topbar.height})`}
+        position="relative"
         w="full"
       >
         <Sidebar />

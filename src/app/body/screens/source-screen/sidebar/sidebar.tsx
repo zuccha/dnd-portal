@@ -1,5 +1,5 @@
 import { HStack, Heading, VStack } from "@chakra-ui/react";
-import { PanelRightIcon } from "lucide-react";
+import { PanelLeftIcon, PanelRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
@@ -23,25 +23,42 @@ export default function Sidebar() {
 
   if (collapsed)
     return (
-      <VStack borderRightWidth={1} h="full" px={2} py={4}>
-        <IconButton
-          Icon={PanelRightIcon}
-          onClick={() => setCollapsed(false)}
-          size="xs"
-          variant="ghost"
-        />
-      </VStack>
+      <IconButton
+        Icon={PanelRightIcon}
+        bg="bg"
+        boxShadow="md"
+        left={2}
+        onClick={() => setCollapsed(false)}
+        position="absolute"
+        size="sm"
+        top={2}
+        variant="outline"
+        zIndex="docked"
+      />
     );
 
   return (
-    <VStack borderRightWidth={1} gap={6} h="full" py={4} w="15rem">
+    <VStack
+      bg="bg"
+      borderRightWidth={1}
+      boxShadow={{ base: "lg", md: "none" }}
+      gap={6}
+      h="full"
+      left={0}
+      overflow="auto"
+      position={{ base: "absolute", md: "static" }}
+      py={4}
+      top={0}
+      w={{ base: "min(85vw, 18rem)", md: "15rem" }}
+      zIndex={{ base: "modal", md: "auto" }}
+    >
       <VStack gap={2} px={6} w="full">
         <HStack justify="space-between" py={0.5} w="full">
           <Heading size="md">{t("heading")}</Heading>
 
           <HStack gap={0} mr={-2}>
             <IconButton
-              Icon={PanelRightIcon}
+              Icon={PanelLeftIcon}
               onClick={() => setCollapsed(true)}
               size="xs"
               variant="ghost"
