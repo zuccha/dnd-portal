@@ -71,6 +71,7 @@ BEGIN
     choice_group,
     choice_option,
     equipment_id,
+    notes,
     quantity
   )
   SELECT
@@ -78,12 +79,14 @@ BEGIN
     e.choice_group,
     e.choice_option,
     e.equipment_id,
+    e.notes,
     e.quantity
   FROM (
     SELECT
       coalesce(e.choice_group, 1) AS choice_group,
       e.choice_option AS choice_option,
       e.equipment_id AS equipment_id,
+      coalesce(e.notes, '{}'::jsonb) AS notes,
       sum(coalesce(e.quantity, 1))::smallint AS quantity
     FROM jsonb_to_recordset(
       coalesce(p_background->'starting_equipment_entries', '[]'::jsonb)
@@ -91,12 +94,14 @@ BEGIN
       choice_group smallint,
       choice_option smallint,
       equipment_id uuid,
+      notes jsonb,
       quantity smallint
     )
     GROUP BY
       coalesce(e.choice_group, 1),
       e.choice_option,
-      e.equipment_id
+      e.equipment_id,
+      coalesce(e.notes, '{}'::jsonb)
   ) e;
 
   perform public.upsert_background_translation(
@@ -153,6 +158,7 @@ AS $$
           'choice_group', se.choice_group,
           'choice_option', se.choice_option,
           'equipment_id', se.equipment_id,
+          'notes', se.notes,
           'quantity', se.quantity
         )
         ORDER BY se.choice_group, se.choice_option, se.id
@@ -227,6 +233,7 @@ tse AS (
         'choice_group', se.choice_group,
         'choice_option', se.choice_option,
         'equipment_id', se.equipment_id,
+        'notes', se.notes,
         'quantity', se.quantity
       )
       ORDER BY se.choice_group, se.choice_option, se.id
@@ -368,6 +375,7 @@ BEGIN
       coalesce(e.choice_group, 1) AS choice_group,
       e.choice_option AS choice_option,
       e.equipment_id AS equipment_id,
+      coalesce(e.notes, '{}'::jsonb) AS notes,
       sum(coalesce(e.quantity, 1))::smallint AS quantity
     FROM jsonb_to_recordset(
       coalesce(p_background->'starting_equipment_entries', '[]'::jsonb)
@@ -375,12 +383,14 @@ BEGIN
       choice_group smallint,
       choice_option smallint,
       equipment_id uuid,
+      notes jsonb,
       quantity smallint
     )
     GROUP BY
       coalesce(e.choice_group, 1),
       e.choice_option,
-      e.equipment_id
+      e.equipment_id,
+      coalesce(e.notes, '{}'::jsonb)
   )
   DELETE FROM public.background_starting_equipment se
   WHERE se.background_id = p_id
@@ -390,6 +400,7 @@ BEGIN
       WHERE e.choice_group = se.choice_group
         AND e.choice_option = se.choice_option
         AND e.equipment_id IS NOT DISTINCT FROM se.equipment_id
+        AND e.notes = se.notes
         AND e.quantity = se.quantity
     );
 
@@ -398,6 +409,7 @@ BEGIN
       coalesce(e.choice_group, 1) AS choice_group,
       e.choice_option AS choice_option,
       e.equipment_id AS equipment_id,
+      coalesce(e.notes, '{}'::jsonb) AS notes,
       coalesce(e.quantity, 1) AS quantity
     FROM jsonb_to_recordset(
       coalesce(p_background->'starting_equipment_entries', '[]'::jsonb)
@@ -405,6 +417,7 @@ BEGIN
       choice_group smallint,
       choice_option smallint,
       equipment_id uuid,
+      notes jsonb,
       quantity smallint
     )
   )
@@ -413,6 +426,7 @@ BEGIN
     choice_group,
     choice_option,
     equipment_id,
+    notes,
     quantity
   )
   SELECT
@@ -420,6 +434,7 @@ BEGIN
     e.choice_group,
     e.choice_option,
     e.equipment_id,
+    e.notes,
     e.quantity
   FROM entries e
   WHERE NOT EXISTS (
@@ -429,6 +444,7 @@ BEGIN
       AND se.choice_group = e.choice_group
       AND se.choice_option = e.choice_option
       AND se.equipment_id IS NOT DISTINCT FROM e.equipment_id
+      AND se.notes = e.notes
       AND se.quantity = e.quantity
   );
 

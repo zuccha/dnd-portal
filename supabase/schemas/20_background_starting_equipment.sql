@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS public.background_starting_equipment (
   choice_group smallint NOT NULL DEFAULT 1,
   choice_option smallint NOT NULL,
   equipment_id uuid,
+  notes jsonb NOT NULL DEFAULT '{}'::jsonb,
   quantity smallint NOT NULL DEFAULT 1,
   CONSTRAINT background_starting_equipment_entry_uniq
     UNIQUE NULLS NOT DISTINCT (
@@ -58,4 +59,3 @@ CREATE POLICY "Creators and GMs can delete background starting equipment"
 ON public.background_starting_equipment
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(background_id));
-

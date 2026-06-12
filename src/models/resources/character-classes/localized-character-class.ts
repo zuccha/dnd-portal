@@ -3,6 +3,7 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
+import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { joinWith } from "~/ui/array";
 import { numberToLetter } from "~/utils/number";
 import { useFormatFeatureEntries } from "../../other/feature-entries";
@@ -148,14 +149,11 @@ export function useLocalizeCharacterClass(
           const groupText = joinWith(
             group.options.map((option, index) => {
               const optionText = [
-                ...option.bundle.equipments.map(({ id, quantity }) =>
-                  tpi(
-                    "equipment",
-                    quantity,
-                    localizeEquipmentName(id),
-                    `${quantity}`,
-                  ),
-                ),
+                ...option.bundle.equipments.map(({ id, notes, quantity }) => {
+                  const name = localizeEquipmentName(id);
+                  const name2 = formatEquipmentNameWithNotes(name, notes, lang);
+                  return tpi("equipment", quantity, name2, `${quantity}`);
+                }),
                 option.bundle.currency ? formatCp(option.bundle.currency) : "",
               ]
                 .filter((entry) => entry)

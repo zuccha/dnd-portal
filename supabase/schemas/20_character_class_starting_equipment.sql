@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS public.character_class_starting_equipment (
   choice_group smallint NOT NULL DEFAULT 1,
   choice_option smallint NOT NULL,
   equipment_id uuid,
+  notes jsonb NOT NULL DEFAULT '{}'::jsonb,
   quantity smallint NOT NULL DEFAULT 1,
   CONSTRAINT character_class_starting_equipment_entry_uniq
     UNIQUE NULLS NOT DISTINCT (

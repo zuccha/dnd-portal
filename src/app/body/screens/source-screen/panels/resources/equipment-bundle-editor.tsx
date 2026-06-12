@@ -1,11 +1,15 @@
 import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { EquipmentBundle } from "~/models/other/equipment-bundle";
+import {
+  type EquipmentBundle,
+  formatEquipmentNameWithNotes,
+} from "~/models/other/equipment-bundle";
 import { equipmentStore } from "~/models/resources/equipment/equipment-store";
 import type { ResourceOption } from "~/models/resources/resource";
 import Button from "~/ui/button";
 import CostInput from "~/ui/cost-input";
+import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Search, { type SearchRefObject } from "~/ui/search";
 import Tag from "~/ui/tag";
@@ -54,7 +58,11 @@ export default function EquipmentBundleEditor({
 
   const addEquipment = useCallback(() => {
     if (!equipmentId) return;
-    const equipment = { id: equipmentId, quantity: equipmentQuantity };
+    const equipment = {
+      id: equipmentId,
+      notes: {},
+      quantity: equipmentQuantity,
+    };
     const index = value.equipments.findIndex(({ id }) => id === equipmentId);
     const equipments =
       index === -1 ?
@@ -102,6 +110,20 @@ export default function EquipmentBundleEditor({
     [onValueChange, selectedEquipmentId, value],
   );
 
+  const updateEquipmentNotes = useCallback(
+    (id: string, notes: string) => {
+      onValueChange({
+        ...value,
+        equipments: value.equipments.map((equipment) =>
+          equipment.id === id ?
+            { ...equipment, notes: { ...equipment.notes, [lang]: notes } }
+          : equipment,
+        ),
+      });
+    },
+    [lang, onValueChange, value],
+  );
+
   return (
     <VStack gap={1} {...rest}>
       <HStack gap={1} w="full">
@@ -140,7 +162,7 @@ export default function EquipmentBundleEditor({
       {value.equipments.length > 0 && (
         <VStack align="stretch" gap={2} w="full">
           <HStack gap={1} w="full" wrap="wrap">
-            {value.equipments.map(({ id, quantity }) => (
+            {value.equipments.map(({ id, notes, quantity }) => (
               <Tag
                 borderColor={
                   selectedEquipmentId === id ? "border.info" : undefined
@@ -153,7 +175,12 @@ export default function EquipmentBundleEditor({
                     onClick={() => setSelectedEquipmentId(id)}
                     unstyled
                   >
-                    {tpi("equipment", quantity, localize(id), `${quantity}`)}
+                    {tpi(
+                      "equipment",
+                      quantity,
+                      formatEquipmentNameWithNotes(localize(id), notes, lang),
+                      `${quantity}`,
+                    )}
                   </Button>
                 }
                 onClose={() => removeEquipment(id)}
@@ -165,6 +192,16 @@ export default function EquipmentBundleEditor({
             <VStack align="flex-end" gap={1} w="full">
               <HStack borderRadius="sm" borderWidth={1} px={2} py={1} w="full">
                 <Span flex={1}>{localize(selectedEquipment.id)}</Span>
+
+                <Input
+                  bgColor="bg.info"
+                  onValueChange={(notes) =>
+                    updateEquipmentNotes(selectedEquipment.id, notes)
+                  }
+                  placeholder={t("notes")}
+                  size="sm"
+                  value={selectedEquipment.notes[lang] ?? ""}
+                />
 
                 <NumberInput
                   min={1}
@@ -220,6 +257,10 @@ const i18nContext = {
   "no_result": {
     en: "No result",
     it: "Nessun risultato",
+  },
+  "notes": {
+    en: "Notes",
+    it: "Note",
   },
   "search": {
     en: "Search",

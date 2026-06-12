@@ -1,4 +1,9 @@
 import z from "zod";
+import {
+  type I18nString,
+  i18nStringSchema,
+  translate,
+} from "~/i18n/i18n-string";
 
 //------------------------------------------------------------------------------
 // Equipment Bundle
@@ -6,7 +11,13 @@ import z from "zod";
 
 export const equipmentBundleSchema = z.object({
   currency: z.number(),
-  equipments: z.array(z.object({ id: z.uuid(), quantity: z.number() })),
+  equipments: z.array(
+    z.object({
+      id: z.uuid(),
+      notes: i18nStringSchema.default({}),
+      quantity: z.number(),
+    }),
+  ),
 });
 
 export type EquipmentBundle = z.infer<typeof equipmentBundleSchema>;
@@ -26,10 +37,24 @@ export const defaultEquipmentBundle = {
 
 export const equipmentEntrySchema = z.object({
   equipment_id: z.uuid().nullable(),
+  notes: i18nStringSchema.default({}),
   quantity: z.number(),
 });
 
 export type EquipmentEntry = z.infer<typeof equipmentEntrySchema>;
+
+//------------------------------------------------------------------------------
+// Format Equipment Name With Notes
+//------------------------------------------------------------------------------
+
+export function formatEquipmentNameWithNotes(
+  name: string,
+  notes: I18nString,
+  lang: string,
+): string {
+  const text = translate(notes, lang);
+  return name && text ? `${name} (${text})` : name || text;
+}
 
 //------------------------------------------------------------------------------
 // Equipment Bundle From Entries
@@ -45,7 +70,11 @@ export function equipmentBundleFromEntries(
     if (id) {
       const index = bundle.equipments.findIndex((e) => e.id === id);
       if (index === -1) {
-        bundle.equipments.push({ id, quantity: entry.quantity });
+        bundle.equipments.push({
+          id,
+          notes: entry.notes,
+          quantity: entry.quantity,
+        });
       } else {
         const equipment = bundle.equipments[index]!;
         bundle.equipments[index] = {
@@ -71,9 +100,14 @@ export function equipmentBundleToEntries(
   const entries: EquipmentEntry[] = [];
 
   const { currency, equipments } = bundle;
-  if (currency) entries.push({ equipment_id: null, quantity: currency });
+  if (currency)
+    entries.push({ equipment_id: null, notes: {}, quantity: currency });
   for (const equipment of equipments)
-    entries.push({ equipment_id: equipment.id, quantity: equipment.quantity });
+    entries.push({
+      equipment_id: equipment.id,
+      notes: equipment.notes,
+      quantity: equipment.quantity,
+    });
 
   return entries;
 }

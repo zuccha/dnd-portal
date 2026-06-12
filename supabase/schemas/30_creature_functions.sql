@@ -158,23 +158,27 @@ BEGIN
   INSERT INTO public.creature_equipment (
     creature_id,
     equipment_id,
+    notes,
     quantity
   )
   SELECT
     v_id,
     e.equipment_id,
+    e.notes,
     e.quantity
   FROM (
     SELECT
       e.equipment_id AS equipment_id,
+      coalesce(e.notes, '{}'::jsonb) AS notes,
       sum(coalesce(e.quantity, 1))::smallint AS quantity
     FROM jsonb_to_recordset(
       coalesce(p_creature->'equipment_entries', '[]'::jsonb)
     ) AS e(
       equipment_id uuid,
+      notes jsonb,
       quantity smallint
     )
-    GROUP BY e.equipment_id
+    GROUP BY e.equipment_id, coalesce(e.notes, '{}'::jsonb)
   ) e;
 
   perform public.upsert_creature_translation(v_id, p_lang, p_creature_translation);
@@ -304,6 +308,7 @@ AS $$
       jsonb_agg(
         jsonb_build_object(
           'equipment_id', ce.equipment_id,
+          'notes', ce.notes,
           'quantity', ce.quantity
         )
         ORDER BY ce.id
@@ -529,6 +534,7 @@ eq AS (
     jsonb_agg(
       jsonb_build_object(
         'equipment_id', ce.equipment_id,
+        'notes', ce.notes,
         'quantity', ce.quantity
       )
       ORDER BY ce.id
@@ -715,14 +721,16 @@ BEGIN
   WITH entries AS (
     SELECT
       e.equipment_id AS equipment_id,
+      coalesce(e.notes, '{}'::jsonb) AS notes,
       sum(coalesce(e.quantity, 1))::smallint AS quantity
     FROM jsonb_to_recordset(
       coalesce(p_creature->'equipment_entries', '[]'::jsonb)
     ) AS e(
       equipment_id uuid,
+      notes jsonb,
       quantity smallint
     )
-    GROUP BY e.equipment_id
+    GROUP BY e.equipment_id, coalesce(e.notes, '{}'::jsonb)
   )
   DELETE FROM public.creature_equipment ce
   WHERE ce.creature_id = p_id
@@ -730,29 +738,34 @@ BEGIN
       SELECT 1
       FROM entries e
       WHERE e.equipment_id IS NOT DISTINCT FROM ce.equipment_id
+        AND e.notes = ce.notes
         AND e.quantity = ce.quantity
     );
 
   WITH entries AS (
     SELECT
       e.equipment_id AS equipment_id,
+      coalesce(e.notes, '{}'::jsonb) AS notes,
       sum(coalesce(e.quantity, 1))::smallint AS quantity
     FROM jsonb_to_recordset(
       coalesce(p_creature->'equipment_entries', '[]'::jsonb)
     ) AS e(
       equipment_id uuid,
+      notes jsonb,
       quantity smallint
     )
-    GROUP BY e.equipment_id
+    GROUP BY e.equipment_id, coalesce(e.notes, '{}'::jsonb)
   )
   INSERT INTO public.creature_equipment (
     creature_id,
     equipment_id,
+    notes,
     quantity
   )
   SELECT
     p_id,
     e.equipment_id,
+    e.notes,
     e.quantity
   FROM entries e
   WHERE NOT EXISTS (
@@ -760,6 +773,7 @@ BEGIN
     FROM public.creature_equipment ce
     WHERE ce.creature_id = p_id
       AND ce.equipment_id IS NOT DISTINCT FROM e.equipment_id
+      AND ce.notes = e.notes
       AND ce.quantity = e.quantity
   );
 

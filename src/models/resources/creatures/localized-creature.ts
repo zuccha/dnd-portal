@@ -5,6 +5,7 @@ import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatCmWithUnit } from "~/measures/distance";
+import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { formatNumber, formatNumberAsWord, formatSigned } from "~/utils/number";
 import type { CreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
@@ -348,9 +349,11 @@ export function useLocalizeCreature(
 
       // Gear
       const gear = [
-        ...creature.gear.equipments.map(({ id, quantity }) =>
-          tpi("equipment", quantity, localizeEquipmentName(id), `${quantity}`),
-        ),
+        ...creature.gear.equipments.map(({ id, notes, quantity }) => {
+          const name = localizeEquipmentName(id);
+          const nameWithNotes = formatEquipmentNameWithNotes(name, notes, lang);
+          return tpi("equipment", quantity, nameWithNotes, `${quantity}`);
+        }),
         creature.gear.currency ? formatCp(creature.gear.currency) : "",
       ]
         .filter((entry) => entry)

@@ -1,4 +1,5 @@
 import z from "zod";
+import { i18nStringSchema } from "~/i18n/i18n-string";
 import { compareObjects } from "~/utils/object";
 import {
   type EquipmentBundle,
@@ -13,6 +14,7 @@ export const startingEquipmentEntrySchema = z.object({
   choice_group: z.number(),
   choice_option: z.number(),
   equipment_id: z.uuid().nullable(),
+  notes: i18nStringSchema.default({}),
   quantity: z.number(),
 });
 
@@ -69,7 +71,7 @@ export function startingEquipmentFromEntries(
     if (equipment_id) {
       const index = option.equipments.findIndex((e) => e.id === equipment_id);
       if (index === -1) {
-        option.equipments.push({ id: equipment_id, quantity });
+        option.equipments.push({ id: equipment_id, notes: entry.notes, quantity });
       } else {
         const equipment = option.equipments[index]!;
         option.equipments[index] = {
@@ -113,6 +115,7 @@ export function startingEquipmentToEntries(
           choice_group: group.group,
           choice_option: option.option,
           equipment_id: null,
+          notes: {},
           quantity: currency,
         });
       }
@@ -122,6 +125,7 @@ export function startingEquipmentToEntries(
           choice_group: group.group,
           choice_option: option.option,
           equipment_id: equipment.id,
+          notes: equipment.notes,
           quantity: equipment.quantity,
         });
       }
