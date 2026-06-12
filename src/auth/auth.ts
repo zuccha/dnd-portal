@@ -49,7 +49,7 @@ export async function signInWithPassword(credentials: {
 }) {
   const { error } = await supabase.auth.signInWithPassword(credentials);
 
-  if (!error) return window.location.reload();
+  if (!error) return requestAnimationFrame(() => window.location.reload());
   console.error(error);
   return error;
 }
@@ -64,7 +64,7 @@ export async function signUpWithPassword(credentials: {
 }) {
   const { error } = await supabase.auth.signUp(credentials);
 
-  if (!error) return window.location.reload();
+  if (!error) return requestAnimationFrame(() => window.location.reload());
   console.error(error);
   return error;
 }
@@ -76,7 +76,7 @@ export async function signUpWithPassword(credentials: {
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
 
-  if (!error) return window.location.reload();
+  if (!error) return requestAnimationFrame(() => window.location.reload());
   console.error(error);
   return error;
 }
