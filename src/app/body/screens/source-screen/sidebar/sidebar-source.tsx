@@ -79,7 +79,7 @@ const i18nContext = {
   },
   [Route.ResourcesAbilitiesMetamagic]: {
     en: "Metamagic",
-    it: "Metamagic",
+    it: "Metamagia",
   },
   [Route.ResourcesAbilitiesSpells]: {
     en: "Spells",
