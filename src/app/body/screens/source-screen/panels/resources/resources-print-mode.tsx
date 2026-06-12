@@ -1,14 +1,5 @@
-import {
-  Box,
-  Flex,
-  HStack,
-  Span,
-  type StackProps,
-  VStack,
-} from "@chakra-ui/react";
-import { Fragment, useMemo, useState } from "react";
-import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { Box, Flex, HStack, type StackProps, VStack } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -17,25 +8,33 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { createLocalStore } from "~/store/local-store";
 import { range } from "~/ui/array";
 import { BleedContext } from "~/ui/bleed-context";
-import Button from "~/ui/button";
-import Checkbox from "~/ui/checkbox";
-import ColorPicker from "~/ui/color-picker";
-import Field from "~/ui/field";
-import NumberInput from "~/ui/number-input";
-import Select from "~/ui/select";
-import {
-  paletteNameSchema,
-  palettes,
-  usePaletteNameOptions,
-} from "~/utils/palette";
+import { palettes } from "~/utils/palette";
 import {
   type ResourceCardPrintableExtra,
   createResourceCardPrintable,
 } from "./resource-card-printable";
 import type { ResourcesContext } from "./resources-context";
+import CropMarks from "./resources-print-mode-crop-marks";
+import ResourcesPrintModeSettings from "./resources-print-mode-settings";
+import {
+  paperSizes,
+  useBackgroundColorVisible,
+  useBleedSize,
+  useBleedVisible,
+  useCardCropMarksColor,
+  useCardCropMarksLength,
+  useCardCropMarksVisible,
+  useIncludeEmptyBack,
+  usePageCropMarksColor,
+  usePageCropMarksLength,
+  usePageCropMarksVisible,
+  usePaletteName,
+  usePaperLayout,
+  usePaperType,
+  useShowImage,
+} from "./resources-print-mode-state";
 
 //------------------------------------------------------------------------------
 // Resources Print Mode Extra
@@ -77,7 +76,6 @@ export function createResourcesPrintMode<
     sourceId,
     ...rest
   }: ResourcesPrintModeProps) {
-    const { t } = useI18nLangContext(i18nContext);
     const resourceIds = useSelectedFilteredResourceIds(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
 
@@ -85,7 +83,6 @@ export function createResourcesPrintMode<
 
     const [paperLayout, setPaperLayout] = usePaperLayout();
     const [paperType, setPaperType] = usePaperType();
-
     const paperSize = paperSizes[paperType];
 
     const [paperHeight, paperWidth] =
@@ -95,23 +92,21 @@ export function createResourcesPrintMode<
 
     const [backgroundColorVisible, setBackgroundColorVisible] =
       useBackgroundColorVisible();
-
     const [pageCropMarksColor, setPageCropMarksColor] = usePageCropMarksColor();
     const [pageCropMarksVisible, setPageCropMarksVisible] =
       usePageCropMarksVisible();
     const [pageCropMarksLength, setPageCropMarksLength] =
       usePageCropMarksLength();
-
     const [cardCropMarksColor, setCardCropMarksColor] = useCardCropMarksColor();
     const [cardCropMarksVisible, setCardCropMarksVisible] =
       useCardCropMarksVisible();
     const [cardCropMarksLength, setCardCropMarksLength] =
       useCardCropMarksLength();
-
     const [bleedSize, setBleedSize] = useBleedSize();
     const [bleedVisible, setBleedVisible] = useBleedVisible();
-
     const [showImage, setShowImage] = useShowImage();
+    const [includeEmptyBack, setIncludeEmptyBack] = useIncludeEmptyBack();
+    const [paletteName, setPaletteName] = usePaletteName();
 
     const bleed = useMemo(
       () => ({
@@ -132,8 +127,6 @@ export function createResourcesPrintMode<
       ],
     );
 
-    const [includeEmptyBack, setIncludeEmptyBack] = useIncludeEmptyBack();
-
     const cardW = ResourceCardPrintable.w + 2 * bleed.x;
     const cardH = ResourceCardPrintable.h + 2 * bleed.y;
 
@@ -151,24 +144,7 @@ export function createResourcesPrintMode<
     const pagesCount = Object.values(pagesCounts).reduce((s, c) => s + c, 0);
     const papersCount = Math.ceil(pagesCount / cardsPerPaper);
 
-    const [paletteName, setPaletteName] = usePaletteName();
     const palette = palettes[paletteName];
-
-    const paletteNameOptions = usePaletteNameOptions();
-
-    const paperLayoutOptions = useMemo(() => {
-      return paperLayouts.map((paperLayout) => ({
-        label: t(`paper_layout[${paperLayout}]`),
-        value: paperLayout,
-      }));
-    }, [t]);
-
-    const paperTypeOptions = useMemo(() => {
-      return paperTypes.map((paperType) => ({
-        label: t(`paper_type[${paperType}]`),
-        value: paperType,
-      }));
-    }, [t]);
 
     const albumCardCss = useMemo(() => {
       return {
@@ -289,555 +265,41 @@ export function createResourcesPrintMode<
           </VStack>
         </VStack>
 
-        <VStack borderLeftWidth={1} gap={4} h="full" px={6} py={4} w="15em">
-          <HStack justify="space-between" w="full">
-            <Span fontSize="sm" fontWeight="semibold">
-              {t("settings.title")}
-            </Span>
-          </HStack>
-
-          <VStack w="full">
-            <Field label={t("paper_layout.label")}>
-              <Select.Enum
-                onValueChange={setPaperLayout}
-                options={paperLayoutOptions}
-                size="xs"
-                value={paperLayout}
-              />
-            </Field>
-
-            <Field label={t("paper_type.label")}>
-              <Select.Enum
-                onValueChange={setPaperType}
-                options={paperTypeOptions}
-                size="xs"
-                value={paperType}
-              />
-            </Field>
-
-            <Field label={t("bleed.label")}>
-              <HStack>
-                <Checkbox
-                  onValueChange={setBleedVisible}
-                  size="sm"
-                  value={bleedVisible}
-                />
-                <NumberInput
-                  disabled={!bleedVisible}
-                  onValueChange={(x) => setBleedSize((b) => ({ ...b, x }))}
-                  size="xs"
-                  step={0.01}
-                  value={bleedSize.x}
-                />
-                <NumberInput
-                  disabled={!bleedVisible}
-                  onValueChange={(y) => setBleedSize((b) => ({ ...b, y }))}
-                  size="xs"
-                  step={0.01}
-                  value={bleedSize.y}
-                />
-              </HStack>
-            </Field>
-
-            <Field label={t("page_crop_marks.label")}>
-              <HStack>
-                <Checkbox
-                  onValueChange={setPageCropMarksVisible}
-                  size="sm"
-                  value={pageCropMarksVisible}
-                />
-                <NumberInput
-                  disabled={!pageCropMarksVisible}
-                  onValueChange={setPageCropMarksLength}
-                  size="xs"
-                  step={0.05}
-                  value={pageCropMarksLength}
-                />
-                <ColorPicker
-                  onValueChange={setPageCropMarksColor}
-                  value={pageCropMarksColor}
-                />
-              </HStack>
-            </Field>
-
-            <Field label={t("card_crop_marks.label")}>
-              <HStack>
-                <Checkbox
-                  onValueChange={setCardCropMarksVisible}
-                  size="sm"
-                  value={cardCropMarksVisible}
-                />
-                <NumberInput
-                  disabled={!cardCropMarksVisible}
-                  onValueChange={setCardCropMarksLength}
-                  size="xs"
-                  step={0.05}
-                  value={cardCropMarksLength}
-                />
-                <ColorPicker
-                  onValueChange={setCardCropMarksColor}
-                  value={cardCropMarksColor}
-                />
-              </HStack>
-            </Field>
-
-            <Field label={t("palette_name.label")}>
-              <VStack w="full">
-                <Select.Enum
-                  onValueChange={setPaletteName}
-                  options={paletteNameOptions}
-                  size="xs"
-                  value={paletteName}
-                />
-              </VStack>
-            </Field>
-
-            <Field label={t("zoom.label")}>
-              <NumberInput
-                min={1}
-                onValueChange={setZoom}
-                size="xs"
-                value={zoom}
-              />
-            </Field>
-
-            <HStack w="full">
-              <Checkbox
-                onValueChange={setShowImage}
-                size="sm"
-                value={showImage}
-              />
-              <Span fontSize="xs">{t("show_images.label")}</Span>
-            </HStack>
-
-            <HStack w="full">
-              <Checkbox
-                onValueChange={setBackgroundColorVisible}
-                size="sm"
-                value={backgroundColorVisible}
-              />
-              <Span fontSize="xs">{t("background_color_visible.label")}</Span>
-            </HStack>
-
-            <HStack w="full">
-              <Checkbox
-                onValueChange={setIncludeEmptyBack}
-                size="sm"
-                value={includeEmptyBack}
-              />
-              <Span fontSize="xs">{t("include_empty_back.label")}</Span>
-            </HStack>
-          </VStack>
-
-          <HStack justify="flex-end" w="full">
-            <Button
-              onClick={() => context.setPrintMode(false)}
-              size="xs"
-              variant="outline"
-            >
-              {t("close")}
-            </Button>
-
-            <Button onClick={() => window.print()} size="xs">
-              {t("print")}
-            </Button>
-          </HStack>
-        </VStack>
+        <ResourcesPrintModeSettings
+          backgroundColorVisible={backgroundColorVisible}
+          bleedSize={bleedSize}
+          bleedVisible={bleedVisible}
+          cardCropMarksColor={cardCropMarksColor}
+          cardCropMarksLength={cardCropMarksLength}
+          cardCropMarksVisible={cardCropMarksVisible}
+          includeEmptyBack={includeEmptyBack}
+          onBackgroundColorVisibleChange={setBackgroundColorVisible}
+          onBleedSizeChange={setBleedSize}
+          onBleedVisibleChange={setBleedVisible}
+          onCardCropMarksColorChange={setCardCropMarksColor}
+          onCardCropMarksLengthChange={setCardCropMarksLength}
+          onCardCropMarksVisibleChange={setCardCropMarksVisible}
+          onClose={() => context.setPrintMode(false)}
+          onIncludeEmptyBackChange={setIncludeEmptyBack}
+          onPageCropMarksColorChange={setPageCropMarksColor}
+          onPageCropMarksLengthChange={setPageCropMarksLength}
+          onPageCropMarksVisibleChange={setPageCropMarksVisible}
+          onPaletteNameChange={setPaletteName}
+          onPaperLayoutChange={setPaperLayout}
+          onPaperTypeChange={setPaperType}
+          onPrint={() => window.print()}
+          onShowImageChange={setShowImage}
+          onZoomChange={setZoom}
+          pageCropMarksColor={pageCropMarksColor}
+          pageCropMarksLength={pageCropMarksLength}
+          pageCropMarksVisible={pageCropMarksVisible}
+          paletteName={paletteName}
+          paperLayout={paperLayout}
+          paperType={paperType}
+          showImage={showImage}
+          zoom={zoom}
+        />
       </HStack>
     );
   };
 }
-
-//------------------------------------------------------------------------------
-// Crop Marks
-//------------------------------------------------------------------------------
-
-type CropMarksProps = {
-  bleedX: number;
-  bleedY: number;
-  cardH: number;
-  cardW: number;
-  color: string;
-  columns: number;
-  length: number;
-  offsetX: number;
-  offsetY: number;
-  rows: number;
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-function CropMarks({
-  bleedX,
-  bleedY,
-  cardH,
-  cardW,
-  color,
-  columns,
-  length,
-  offsetX,
-  offsetY,
-  rows,
-}: CropMarksProps) {
-  return (
-    <>
-      <CropMarksH
-        bleedY={bleedY}
-        cardH={cardH}
-        color={color}
-        offsetX={offsetX - length}
-        offsetY={offsetY}
-        rows={rows}
-        w={length}
-      />
-
-      <CropMarksH
-        bleedY={bleedY}
-        cardH={cardH}
-        color={color}
-        offsetX={offsetX + columns * cardW}
-        offsetY={offsetY}
-        rows={rows}
-        w={length}
-      />
-
-      <CropMarksV
-        bleedX={bleedX}
-        cardW={cardW}
-        color={color}
-        columns={columns}
-        h={length}
-        offsetX={offsetX}
-        offsetY={offsetY - length}
-      />
-
-      <CropMarksV
-        bleedX={bleedX}
-        cardW={cardW}
-        color={color}
-        columns={columns}
-        h={length}
-        offsetX={offsetX}
-        offsetY={offsetY + rows * cardH}
-      />
-    </>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Crop Marks H
-//------------------------------------------------------------------------------
-
-type CropMarksHProps = {
-  bleedY: number;
-  cardH: number;
-  color: string;
-  offsetX: number;
-  offsetY: number;
-  rows: number;
-  w: number;
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-function CropMarksH({
-  bleedY,
-  cardH,
-  color,
-  offsetX,
-  offsetY,
-  rows,
-  w,
-}: CropMarksHProps) {
-  return (
-    <>
-      {range(rows).map((c) => (
-        <Fragment key={c}>
-          <Box
-            bgColor={color}
-            h="1px"
-            left={`${offsetX}in`}
-            position="absolute"
-            top={`${offsetY + (bleedY - px1) + c * cardH}in`}
-            w={`${w}in`}
-          />
-          <Box
-            bgColor={color}
-            h="1px"
-            left={`${offsetX}in`}
-            position="absolute"
-            top={`${offsetY + (cardH - bleedY) + c * cardH}in`}
-            w={`${w}in`}
-          />
-        </Fragment>
-      ))}
-    </>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Crop Marks V
-//------------------------------------------------------------------------------
-
-type CropMarksVProps = {
-  bleedX: number;
-  cardW: number;
-  color: string;
-  columns: number;
-  h: number;
-  offsetX: number;
-  offsetY: number;
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-function CropMarksV({
-  bleedX,
-  cardW,
-  color,
-  columns,
-  h,
-  offsetX,
-  offsetY,
-}: CropMarksVProps) {
-  return (
-    <Fragment>
-      {range(columns).map((c) => (
-        <Fragment key={c}>
-          <Box
-            bgColor={color}
-            h={`${h}in`}
-            left={`${offsetX + (bleedX - px1) + c * cardW}in`}
-            position="absolute"
-            top={`${offsetY}in`}
-            w="1px"
-          />
-          <Box
-            bgColor={color}
-            h={`${h}in`}
-            left={`${offsetX + (cardW - bleedX) + c * cardW}in`}
-            position="absolute"
-            top={`${offsetY}in`}
-            w="1px"
-          />
-        </Fragment>
-      ))}
-    </Fragment>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Paper Type
-//------------------------------------------------------------------------------
-
-const paperTypeSchema = z.enum([
-  "a3",
-  "a4",
-  "a5",
-  "letter",
-  "legal",
-  "tabloid",
-]);
-
-type PaperType = z.infer<typeof paperTypeSchema>;
-
-const paperTypes = paperTypeSchema.options;
-
-//------------------------------------------------------------------------------
-// Paper Layout
-//------------------------------------------------------------------------------
-
-const paperLayoutSchema = z.enum(["landscape", "portrait"]);
-
-const paperLayouts = paperLayoutSchema.options;
-
-//------------------------------------------------------------------------------
-// Paper Sizes
-//------------------------------------------------------------------------------
-
-const paperSizes: Record<PaperType, { height: number; width: number }> = {
-  a3: { height: 16.54, width: 11.69 },
-  a4: { height: 11.69, width: 8.27 },
-  a5: { height: 8.27, width: 5.83 },
-  legal: { height: 14, width: 8.5 },
-  letter: { height: 11, width: 8.5 },
-  tabloid: { height: 17, width: 11 },
-};
-
-const px1 = 1 / 96;
-
-//------------------------------------------------------------------------------
-// Store
-//------------------------------------------------------------------------------
-
-const useBackgroundColorVisible = createLocalStore(
-  "print_mode.background_color_visible",
-  true,
-  z.boolean().parse,
-).use;
-
-const useBleedSize = createLocalStore(
-  "print_mode.bleed_size",
-  { x: 0.05, y: 0.05 },
-  z.object({ x: z.number(), y: z.number() }).parse,
-).use;
-
-const useBleedVisible = createLocalStore(
-  "print_mode.bleed_visible",
-  true,
-  z.boolean().parse,
-).use;
-
-const useCardCropMarksColor = createLocalStore(
-  "print_mode.card_crop_marks_color",
-  "#ffffff",
-  z.string().parse,
-).use;
-
-const useCardCropMarksLength = createLocalStore(
-  "print_mode.card_crop_marks_length",
-  0.2,
-  z.number().parse,
-).use;
-
-const useCardCropMarksVisible = createLocalStore(
-  "print_mode.card_crop_marks_visible",
-  true,
-  z.boolean().parse,
-).use;
-
-const useIncludeEmptyBack = createLocalStore(
-  "print_mode.include_empty_back",
-  false,
-  z.boolean().parse,
-).use;
-
-const usePageCropMarksColor = createLocalStore(
-  "print_mode.page_crop_marks_color",
-  "#000000",
-  z.string().parse,
-).use;
-
-const usePageCropMarksLength = createLocalStore(
-  "print_mode.page_crop_marks_length",
-  0.2,
-  z.number().parse,
-).use;
-
-const usePageCropMarksVisible = createLocalStore(
-  "print_mode.page_crop_marks_visible",
-  true,
-  z.boolean().parse,
-).use;
-
-const usePaletteName = createLocalStore(
-  "print_mode.palette_name",
-  "gray",
-  paletteNameSchema.parse,
-).use;
-
-const usePaperType = createLocalStore(
-  "print_mode.paper_type",
-  "a4",
-  paperTypeSchema.parse,
-).use;
-
-const usePaperLayout = createLocalStore(
-  "print_mode.paper_layout",
-  "portrait",
-  paperLayoutSchema.parse,
-).use;
-
-const useShowImage = createLocalStore(
-  "print_mode.show_image",
-  true,
-  z.boolean().parse,
-).use;
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  "background_color_visible.label": {
-    en: "Include background",
-    it: "Includi sfondo",
-  },
-  "bleed.label": {
-    en: "Bleed",
-    it: "Bleed",
-  },
-  "card_crop_marks.label": {
-    en: "Crop Marks (Card)",
-    it: "Marchi di Taglio (Carta)",
-  },
-  "close": {
-    en: "Close",
-    it: "Chiudi",
-  },
-  "include_empty_back.label": {
-    en: "Add empty back",
-    it: "Aggiungi retro vuoto",
-  },
-  "page_crop_marks.label": {
-    en: "Crop Marks (Page)",
-    it: "Marchi di Taglio (Pagina)",
-  },
-  "palette_name.label": {
-    en: "Color",
-    it: "Colore",
-  },
-  "paper_layout.label": {
-    en: "Layout",
-    it: "Layout",
-  },
-  "paper_layout[landscape]": {
-    en: "Landscape",
-    it: "Orizzontale",
-  },
-  "paper_layout[portrait]": {
-    en: "Portrait",
-    it: "Verticale",
-  },
-  "paper_type.label": {
-    en: "Paper Size",
-    it: "Dimensione Pagina",
-  },
-  "paper_type[a3]": {
-    en: "A3",
-    it: "A3",
-  },
-  "paper_type[a4]": {
-    en: "A4",
-    it: "A4",
-  },
-  "paper_type[a5]": {
-    en: "A5",
-    it: "A5",
-  },
-  "paper_type[legal]": {
-    en: "Legal",
-    it: "Legale",
-  },
-  "paper_type[letter]": {
-    en: "Letter",
-    it: "Lettera",
-  },
-  "paper_type[tabloid]": {
-    en: "Tabloid",
-    it: "Tabloid",
-  },
-  "print": {
-    en: "Print",
-    it: "Stampa",
-  },
-  "settings.title": {
-    en: "Print Settings",
-    it: "Impostazioni di Stampa",
-  },
-  "show_images.label": {
-    en: "Include image",
-    it: "Includi immagine",
-  },
-  "zoom.label": {
-    en: "Zoom",
-    it: "Zoom",
-  },
-};
