@@ -1,13 +1,17 @@
 import { useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useLangs } from "~/models/lang";
-import Select from "~/ui/select";
+import Select, { type SelectEnumProps } from "~/ui/select";
 
 //------------------------------------------------------------------------------
 // Language Select
 //------------------------------------------------------------------------------
 
-export default function LanguageSelect() {
+export type LanguageSelectProps = {
+  w?: SelectEnumProps<string>["w"];
+};
+
+export default function LanguageSelect(props: LanguageSelectProps) {
   const [language, setLanguage] = useI18nLang();
 
   const languages = useLangs();
@@ -28,6 +32,7 @@ export default function LanguageSelect() {
       size="xs"
       value={language}
       w="5em"
+      {...props}
     />
   );
 }

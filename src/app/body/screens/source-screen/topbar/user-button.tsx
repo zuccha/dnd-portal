@@ -15,7 +15,7 @@ export default function UserButton() {
 
   if (!user)
     return (
-      <HStack fontSize="sm" w="full">
+      <HStack fontSize="sm" ml={2.5}>
         <Link onClick={() => history.pushState({}, "", Route.SignIn)}>
           {t("button.signin")}
         </Link>
@@ -28,7 +28,7 @@ export default function UserButton() {
 
   return (
     <Menu.Root>
-      <Menu.Trigger focusRing="outside" rounded="full">
+      <Menu.Trigger focusRing="outside" ml={2.5} rounded="full">
         <Avatar.Root cursor="pointer" size="2xs">
           <Avatar.Fallback name={user.name} />
           <Avatar.Image src={user.avatarUrl} />

@@ -1,7 +1,6 @@
 import { HStack, Span, type StackProps } from "@chakra-ui/react";
 import ThemeButton from "~/theme/theme-button";
-import LanguageSelect from "./language-select";
-import SystemSelect from "./system-select";
+import I18nButton from "./i18n-button";
 import UserButton from "./user-button";
 
 //------------------------------------------------------------------------------
@@ -16,20 +15,22 @@ export default function Topbar() {
       borderBottomWidth={1}
       h={Topbar.height}
       justify="space-between"
-      px={6}
+      px={{ base: 3, md: 6 }}
       w="full"
     >
-      <Span fontFamily="Title Wave" fontSize="2xl" fontWeight="bold">
+      <HStack
+        flex={1}
+        fontFamily="Title Wave"
+        fontSize={{ base: "md", md: "2xl" }}
+        fontWeight="bold"
+      >
         <Span color="fg.error">D&D</Span> Portal
-      </Span>
+      </HStack>
 
-      <HStack gap={4}>
-        <HStack mr={2}>
-          <LanguageSelect />
-          <SystemSelect />
-        </HStack>
-        <UserButton />
+      <HStack gap={{ base: 1, md: 2 }}>
+        <I18nButton />
         <ThemeButton />
+        <UserButton />
       </HStack>
     </HStack>
   );
