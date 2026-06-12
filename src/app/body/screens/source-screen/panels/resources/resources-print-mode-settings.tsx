@@ -5,6 +5,7 @@ import {
   Image,
   Portal,
   Span,
+  type StackProps,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -36,7 +37,7 @@ import {
 // Resources Print Mode Settings
 //------------------------------------------------------------------------------
 
-export type ResourcesPrintModeSettingsProps = {
+export type ResourcesPrintModeSettingsProps = StackProps & {
   backgroundColorVisible: boolean;
   bleedSize: { x: number; y: number };
   bleedVisible: boolean;
@@ -108,6 +109,7 @@ export default function ResourcesPrintModeSettings({
   printQuality,
   showImage,
   zoom,
+  ...rest
 }: ResourcesPrintModeSettingsProps) {
   const { t } = useI18nLangContext(i18nContext);
   const [standardHelpDismissed, setStandardHelpDismissed] =
@@ -173,7 +175,15 @@ export default function ResourcesPrintModeSettings({
   };
 
   return (
-    <VStack borderLeftWidth={1} gap={4} h="full" px={6} py={4} w="15em">
+    <VStack
+      borderLeftWidth={1}
+      gap={4}
+      h="full"
+      px={6}
+      py={4}
+      w="15em"
+      {...rest}
+    >
       <HStack w="full">
         <IconButton
           Icon={PanelRightIcon}

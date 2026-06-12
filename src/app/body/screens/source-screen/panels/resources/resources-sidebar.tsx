@@ -9,14 +9,13 @@ export type ResourcesSidebarProps = {
 export default function ResourcesSidebar({ children }: ResourcesSidebarProps) {
   const collapsed = useRightPanelCollapsed();
 
-  if (collapsed) return null;
-
   return (
     <VStack
       align="flex-start"
       bg="bg"
       borderLeftWidth={1}
       boxShadow={{ base: "lg", md: "none" }}
+      display={collapsed ? "none" : "flex"}
       gap={4}
       h="full"
       justify="flex-start"
