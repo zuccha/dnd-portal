@@ -4,11 +4,8 @@ import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
 import IconButton from "~/ui/icon-button";
-import {
-  usePrintModeActive,
-  usePrintSettingsCollapsed,
-} from "../panels/resources/resources-print-mode-state";
-import { useResourcesSidebarSetCollapsed } from "../panels/resources/resources-sidebar-toggle-button";
+import { usePrintModeActive } from "../panels/resources/resources-print-mode-state";
+import { useRightPanelSetCollapsed } from "../right-panel-state";
 import { useSidebarSetCollapsed } from "../sidebar/sidebar-state";
 import I18nButton from "./i18n-button";
 import UserButton from "./user-button";
@@ -22,9 +19,8 @@ export type TopbarProps = StackProps;
 export default function Topbar() {
   const route = useRoute();
   const setSidebarCollapsed = useSidebarSetCollapsed();
-  const setResourcesSidebarCollapsed = useResourcesSidebarSetCollapsed();
+  const setRightPanelCollapsed = useRightPanelSetCollapsed();
   const printModeActive = usePrintModeActive();
-  const [, setPrintSettingsCollapsed] = usePrintSettingsCollapsed();
   const hasResourcesSidebar =
     route.startsWith(Route.Resources) && !printModeActive;
 
@@ -58,7 +54,7 @@ export default function Topbar() {
         {hasResourcesSidebar && (
           <IconButton
             Icon={SlidersHorizontalIcon}
-            onClick={() => setResourcesSidebarCollapsed((prev) => !prev)}
+            onClick={() => setRightPanelCollapsed((prev) => !prev)}
             size="sm"
             variant="ghost"
           />
@@ -66,7 +62,7 @@ export default function Topbar() {
         {printModeActive && (
           <IconButton
             Icon={SlidersHorizontalIcon}
-            onClick={() => setPrintSettingsCollapsed((prev) => !prev)}
+            onClick={() => setRightPanelCollapsed((prev) => !prev)}
             size="sm"
             variant="ghost"
           />

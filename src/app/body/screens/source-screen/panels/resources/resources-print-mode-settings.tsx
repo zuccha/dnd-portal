@@ -20,6 +20,7 @@ import NumberInput from "~/ui/number-input";
 import Select, { type SelectOption } from "~/ui/select";
 import { type PaletteName, usePaletteNameOptions } from "~/utils/palette";
 import type { StateSetter } from "~/utils/state";
+import { useRightPanelSetCollapsed } from "../../right-panel-state";
 import {
   type PaperLayout,
   type PaperType,
@@ -28,7 +29,6 @@ import {
   paperTypes,
   printQualities,
   useHighFidelityPrintHelpDismissed,
-  usePrintSettingsCollapsed,
   useStandardPrintHelpDismissed,
 } from "./resources-print-mode-state";
 
@@ -114,7 +114,7 @@ export default function ResourcesPrintModeSettings({
     useStandardPrintHelpDismissed();
   const [highFidelityHelpDismissed, setHighFidelityHelpDismissed] =
     useHighFidelityPrintHelpDismissed();
-  const [, setPrintSettingsCollapsed] = usePrintSettingsCollapsed();
+  const setRightPanelCollapsed = useRightPanelSetCollapsed();
   const [dialogDismiss, setDialogDismiss] = useState(false);
   const [dialogPrint, setDialogPrint] = useState(false);
   const [dialogQuality, setDialogQuality] =
@@ -178,7 +178,7 @@ export default function ResourcesPrintModeSettings({
         <IconButton
           Icon={PanelRightIcon}
           ml={-2}
-          onClick={() => setPrintSettingsCollapsed(true)}
+          onClick={() => setRightPanelCollapsed(true)}
           size="xs"
           variant="ghost"
         />

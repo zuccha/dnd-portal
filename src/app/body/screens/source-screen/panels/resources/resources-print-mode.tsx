@@ -11,6 +11,7 @@ import type { ResourceStore } from "~/models/resources/resource-store";
 import { range } from "~/ui/array";
 import { BleedContext } from "~/ui/bleed-context";
 import { palettes } from "~/utils/palette";
+import { useRightPanelCollapsed } from "../../right-panel-state";
 import {
   type ResourceCardPrintableExtra,
   createResourceCardPrintable,
@@ -36,7 +37,6 @@ import {
   usePaperType,
   usePrintModeActiveSet,
   usePrintQuality,
-  usePrintSettingsCollapsed,
   useShowImage,
 } from "./resources-print-mode-state";
 
@@ -112,7 +112,7 @@ export function createResourcesPrintMode<
     const [includeEmptyBack, setIncludeEmptyBack] = useIncludeEmptyBack();
     const [paletteName, setPaletteName] = usePaletteName();
     const [printQuality, setPrintQuality] = usePrintQuality();
-    const [printSettingsCollapsed] = usePrintSettingsCollapsed();
+    const printSettingsCollapsed = useRightPanelCollapsed();
     const setPrintModeActive = usePrintModeActiveSet();
 
     useEffect(() => {

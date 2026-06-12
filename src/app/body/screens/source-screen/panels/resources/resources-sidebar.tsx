@@ -1,13 +1,13 @@
 import { VStack } from "@chakra-ui/react";
 import type { ReactNode } from "react";
-import { useResourcesSidebarCollapsed } from "./resources-sidebar-toggle-button";
+import { useRightPanelCollapsed } from "../../right-panel-state";
 
 export type ResourcesSidebarProps = {
   children: ReactNode;
 };
 
 export default function ResourcesSidebar({ children }: ResourcesSidebarProps) {
-  const collapsed = useResourcesSidebarCollapsed();
+  const collapsed = useRightPanelCollapsed();
 
   if (collapsed) return null;
 

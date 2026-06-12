@@ -154,12 +154,6 @@ export const useShowImage = createLocalStore(
   z.boolean().parse,
 ).use;
 
-export const usePrintSettingsCollapsed = createLocalStore(
-  "print_mode.settings_collapsed",
-  false,
-  z.boolean().parse,
-).use;
-
 export const useStandardPrintHelpDismissed = createLocalStore(
   "print_mode.standard_print_help_dismissed",
   false,

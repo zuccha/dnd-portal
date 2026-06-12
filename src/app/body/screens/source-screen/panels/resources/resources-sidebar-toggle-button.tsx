@@ -1,7 +1,6 @@
 import { PanelRightIcon } from "lucide-react";
-import { z } from "zod";
-import { createLocalStore } from "~/store/local-store";
 import IconButton, { type IconButtonProps } from "~/ui/icon-button";
+import { useRightPanelSetCollapsed } from "../../right-panel-state";
 
 //------------------------------------------------------------------------------
 // Resource Sidebar Toggle Button
@@ -13,7 +12,7 @@ export default function ResourcesSidebarToggleButton({
   Icon = PanelRightIcon,
   ...props
 }: ResourcesSidebarToggleButtonProps) {
-  const setCollapsed = useResourcesSidebarSetCollapsed();
+  const setCollapsed = useRightPanelSetCollapsed();
 
   return (
     <IconButton
@@ -25,13 +24,3 @@ export default function ResourcesSidebarToggleButton({
     />
   );
 }
-
-//------------------------------------------------------------------------------
-// Use Collapsed
-//------------------------------------------------------------------------------
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const {
-  useSetValue: useResourcesSidebarSetCollapsed,
-  useValue: useResourcesSidebarCollapsed,
-} = createLocalStore("resources_sidebar.collapsed", false, z.boolean().parse);
