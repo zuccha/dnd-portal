@@ -19,7 +19,7 @@ const columns: ResourcesTableExtra<Feat, LocalizedFeat>["columns"] = [
   },
   {
     key: "category",
-    label: { en: "Category", it: "Categories" },
+    label: { en: "Category", it: "Categoria" },
     w: "7em",
   },
   {

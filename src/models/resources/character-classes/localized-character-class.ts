@@ -33,8 +33,11 @@ export const localizedCharacterClassSchema = localizedResourceSchema(
   hp_die: z.string(),
   info: z.string(),
   primary_abilities: z.string(),
+  saving_throw_proficiencies: z.string(),
   skill_proficiencies_pool: z.string(),
   starting_equipment: z.string(),
+  tool_proficiencies: z.string(),
+  weapon_proficiencies: z.string(),
 });
 
 export type LocalizedCharacterClass = z.infer<
@@ -193,8 +196,11 @@ export function useLocalizeCharacterClass(
         hp_die: translateDieType(characterClass.hp_die).label,
         info,
         primary_abilities,
+        saving_throw_proficiencies,
         skill_proficiencies_pool,
         starting_equipment,
+        tool_proficiencies,
+        weapon_proficiencies,
       };
     },
     [

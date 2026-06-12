@@ -1,4 +1,4 @@
-import { WandIcon } from "lucide-react";
+import { FlaskConicalIcon, WandIcon } from "lucide-react";
 import { type Item } from "~/models/resources/equipment/items/item";
 import {
   itemForm,
@@ -22,6 +22,18 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
     label: { en: "Name", it: "Nome" },
   },
   {
+    key: "type",
+    label: { en: "Type", it: "Tipo" },
+    w: "1%",
+    whiteSpace: "nowrap",
+  },
+  {
+    key: "rarity",
+    label: { en: "Rarity", it: "Rarità" },
+    w: "1%",
+    whiteSpace: "nowrap",
+  },
+  {
     icon: WandIcon,
     key: "magic",
     label: { en: "🪄", it: "🪄" },
@@ -41,6 +53,20 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
     textAlign: "right",
     w: "1%",
     whiteSpace: "nowrap",
+  },
+  {
+    key: "charges",
+    label: { en: "Charges", it: "Cariche" },
+    textAlign: "right",
+    w: "1%",
+    whiteSpace: "nowrap",
+  },
+  {
+    icon: FlaskConicalIcon,
+    key: "consumable",
+    label: { en: "🧪", it: "🧪" },
+    textAlign: "center",
+    w: "4em",
   },
 ] as const;
 

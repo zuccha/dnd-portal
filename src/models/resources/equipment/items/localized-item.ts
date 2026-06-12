@@ -12,9 +12,12 @@ import { type Item, itemSchema } from "./item";
 // Localized Item
 //------------------------------------------------------------------------------
 
-export const localizedItemSchema = localizedEquipmentSchema(itemSchema).extend(
-  {},
-);
+export const localizedItemSchema = localizedEquipmentSchema(itemSchema).extend({
+  charges: z.string(),
+  consumable: z.boolean(),
+  rarity: z.string(),
+  type: z.string(),
+});
 
 export type LocalizedItem = z.infer<typeof localizedItemSchema>;
 
@@ -22,7 +25,9 @@ export type LocalizedItem = z.infer<typeof localizedItemSchema>;
 // Use Localized Item
 //------------------------------------------------------------------------------
 
-export function useLocalizeItem(sourceId: string): (item: Item) => LocalizedItem {
+export function useLocalizeItem(
+  sourceId: string,
+): (item: Item) => LocalizedItem {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   const translateType = useTranslateItemType(lang);
@@ -32,15 +37,24 @@ export function useLocalizeItem(sourceId: string): (item: Item) => LocalizedItem
     (item: Item): LocalizedItem => {
       const equipment = localizeEquipment(item);
 
+      const type =
+        item.type === "other" ?
+          item.magic ?
+            ti("wondrous_item")
+          : t("mundane_item")
+        : translateType(item.type).label;
+
+      const rarity = item.magic ? equipment.rarity : "";
+
+      const descriptor = item.magic ? `${type}, ${rarity}` : type;
+
       return {
         ...equipment,
-        descriptor:
-          item.type === "other" ?
-            item.magic ?
-              ti("subtitle[wondrous_item]", equipment.rarity)
-            : t("subtitle[mundane_item]")
-          : item.magic ? ti(`subtitle[${item.type}]`, equipment.rarity)
-          : translateType(item.type).label,
+        charges: item.charges ? `${item.charges}` : "-",
+        consumable: item.consumable,
+        descriptor,
+        rarity,
+        type,
       };
     },
     [localizeEquipment, t, ti, translateType],
@@ -52,35 +66,11 @@ export function useLocalizeItem(sourceId: string): (item: Item) => LocalizedItem
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "subtitle[mundane_item]": {
+  mundane_item: {
     en: "Mundane Item",
     it: "Oggetto Mondano",
   },
-  "subtitle[potion]": {
-    en: "Magic Potion, <1>", // 1 = rarity
-    it: "Pozione Magica, <1>", // 1 = rarity
-  },
-  "subtitle[ring]": {
-    en: "Magic Ring, <1>", // 1 = rarity
-    it: "Anello Magico, <1>", // 1 = rarity
-  },
-  "subtitle[rod]": {
-    en: "Magic Rod, <1>", // 1 = rarity
-    it: "Verga Magica, <1>", // 1 = rarity
-  },
-  "subtitle[scroll]": {
-    en: "Magic Scroll, <1>", // 1 = rarity
-    it: "Pergamena Magica, <1>", // 1 = rarity
-  },
-  "subtitle[staff]": {
-    en: "Magic Staff, <1>", // 1 = rarity
-    it: "Bastone Magico, <1>", // 1 = rarity
-  },
-  "subtitle[wand]": {
-    en: "Magic Wand, <1>", // 1 = rarity
-    it: "Bacchetta Magica, <1>", // 1 = rarity
-  },
-  "subtitle[wondrous_item]": {
+  wondrous_item: {
     en: "Wondrous Item, <1>", // 1 = rarity
     it: "Oggetto Meraviglioso, <1>", // 1 = rarity
   },

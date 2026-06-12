@@ -24,26 +24,29 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
-    maxW: "5em",
+    w: "1%",
   },
   {
     key: "armor_class",
     label: { en: "Armor Class", it: "Classe Armatura" },
+    w: "1%",
   },
   {
     key: "requirements",
     label: { en: "Requirements", it: "Requisiti" },
+    w: "1%",
   },
   {
     key: "stealth",
     label: { en: "Stealth", it: "Furtività" },
+    w: "1%",
   },
   {
     icon: WandIcon,
     key: "magic",
     label: { en: "🪄", it: "🪄" },
     textAlign: "center",
-    w: "4em",
+    w: "1%",
   },
   {
     key: "weight",
