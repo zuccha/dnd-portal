@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS public.resources (
 ALTER TABLE public.resources OWNER TO postgres;
 ALTER TABLE public.resources ENABLE ROW LEVEL SECURITY;
 
+CREATE INDEX idx_resources_source_id_kind_visibility
+  ON public.resources USING btree (source_id, kind, visibility);
+
 GRANT ALL ON TABLE public.resources TO anon;
 GRANT ALL ON TABLE public.resources TO authenticated;
 GRANT ALL ON TABLE public.resources TO service_role;
@@ -69,18 +72,38 @@ CREATE TYPE public.resource_row AS (
 CREATE OR REPLACE FUNCTION public.can_read_resource(p_resource_id uuid)
 RETURNS boolean
 LANGUAGE sql
+STABLE
 SECURITY DEFINER
 SET search_path TO 'public', 'pg_temp'
 AS $$
   SELECT EXISTS (
     SELECT 1
     FROM public.resources r
+    LEFT JOIN public.sources s ON s.id = r.source_id
     WHERE r.id = p_resource_id
       AND (
-        public.can_edit_source_resources(r.source_id)
+        s.creator_id = (SELECT auth.uid() AS uid)
+        OR EXISTS (
+          SELECT 1 FROM public.source_roles sr
+          WHERE sr.source_id = r.source_id
+            AND sr.user_id = (SELECT auth.uid() AS uid)
+            AND sr.role IN ('admin'::public.source_role, 'editor'::public.source_role)
+        )
         OR (
           r.visibility = 'public'::public.resource_visibility
-          AND public.can_read_source(r.source_id)
+          AND (
+            s.visibility IN ('public'::public.source_visibility, 'purchasable'::public.source_visibility)
+            OR EXISTS (
+              SELECT 1 FROM public.source_ownerships so
+              WHERE so.source_id = r.source_id
+                AND so.user_id = (SELECT auth.uid() AS uid)
+            )
+            OR EXISTS (
+              SELECT 1 FROM public.source_roles sr
+              WHERE sr.source_id = r.source_id
+                AND sr.user_id = (SELECT auth.uid() AS uid)
+            )
+          )
         )
       )
   );
