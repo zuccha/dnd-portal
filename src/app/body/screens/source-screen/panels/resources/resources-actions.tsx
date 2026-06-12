@@ -32,14 +32,23 @@ export function createResourcesActions<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
-  const { useSelectedFilteredResourceIds, useLocalizeResource } = store;
+  const {
+    useFilteredResourceIds,
+    useResourcesSelectionMethods,
+    useSelectedFilteredResourceIds,
+    useLocalizeResource,
+  } = store;
 
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
     const { t, tpi } = useI18nLangContext(i18nContext);
     const canEdit = useCanEditSourceResources(sourceId);
+    const filteredResourceIds = useFilteredResourceIds(sourceId);
     const selectedFilteredResourceIds =
       useSelectedFilteredResourceIds(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
+
+    const { deselectAllResources, selectAllResources } =
+      useResourcesSelectionMethods(sourceId);
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);
@@ -127,62 +136,95 @@ export function createResourcesActions<
               <Menu.Positioner>
                 <Menu.Content>
                   {canEdit && (
-                    <Menu.Item onClick={addNew} value="add">
-                      {t("add")}
-                    </Menu.Item>
+                    <>
+                      <Menu.ItemGroup>
+                        <Menu.Item onClick={addNew} value="add">
+                          {t("add")}
+                        </Menu.Item>
+
+                        <Menu.Item
+                          _hover={{ bg: "bg.error", color: "fg.error" }}
+                          color="fg.error"
+                          disabled={disabled}
+                          onClick={removeSelected}
+                          value="remove"
+                        >
+                          {t("remove")}
+                        </Menu.Item>
+                      </Menu.ItemGroup>
+
+                      <Menu.Separator />
+                    </>
                   )}
 
-                  <Menu.Item
-                    disabled={disabled}
-                    onClick={copySelectedAsJson}
-                    value="copy-as-json"
-                  >
-                    {t("copy_as_json")}
-                  </Menu.Item>
-
-                  <Menu.Item
-                    disabled={disabled}
-                    onClick={copySelectedAsYaml}
-                    value="copy-as-yaml"
-                  >
-                    {t("copy_as_yaml")}
-                  </Menu.Item>
-
-                  <Menu.Item
-                    disabled={disabled}
-                    onClick={downloadSelectedAsJson}
-                    value="download-as-json"
-                  >
-                    {t("download_as_json")}
-                  </Menu.Item>
-
-                  <Menu.Item
-                    disabled={disabled}
-                    onClick={downloadSelectedAsYaml}
-                    value="download-as-yaml"
-                  >
-                    {t("download_as_yaml")}
-                  </Menu.Item>
-
-                  <Menu.Item
-                    disabled={disabled}
-                    onClick={printSelected}
-                    value="print"
-                  >
-                    {t("print")}
-                  </Menu.Item>
-
-                  {canEdit && (
+                  <Menu.ItemGroup>
                     <Menu.Item
-                      _hover={{ bg: "bg.error", color: "fg.error" }}
-                      color="fg.error"
-                      disabled={disabled}
-                      onClick={removeSelected}
-                      value="remove"
+                      disabled={
+                        selectedFilteredResourceIds.length ===
+                        filteredResourceIds.length
+                      }
+                      onClick={selectAllResources}
+                      value="select-all"
                     >
-                      {t("remove")}
+                      {t("select_all")}
                     </Menu.Item>
-                  )}
+
+                    <Menu.Item
+                      disabled={selectedFilteredResourceIds.length === 0}
+                      onClick={deselectAllResources}
+                      value="deselect-all"
+                    >
+                      {t("deselect_all")}
+                    </Menu.Item>
+                  </Menu.ItemGroup>
+
+                  <Menu.Separator />
+
+                  <Menu.ItemGroup>
+                    <Menu.Item
+                      disabled={disabled}
+                      onClick={copySelectedAsJson}
+                      value="copy-as-json"
+                    >
+                      {t("copy_as_json")}
+                    </Menu.Item>
+
+                    <Menu.Item
+                      disabled={disabled}
+                      onClick={copySelectedAsYaml}
+                      value="copy-as-yaml"
+                    >
+                      {t("copy_as_yaml")}
+                    </Menu.Item>
+
+                    <Menu.Item
+                      disabled={disabled}
+                      onClick={downloadSelectedAsJson}
+                      value="download-as-json"
+                    >
+                      {t("download_as_json")}
+                    </Menu.Item>
+
+                    <Menu.Item
+                      disabled={disabled}
+                      onClick={downloadSelectedAsYaml}
+                      value="download-as-yaml"
+                    >
+                      {t("download_as_yaml")}
+                    </Menu.Item>
+                  </Menu.ItemGroup>
+
+                  <Menu.Separator />
+
+                  <Menu.ItemGroup>
+                    <Menu.Item
+                      disabled={disabled}
+                      onClick={printSelected}
+                      value="print"
+                    >
+                      {t("print")}
+                    </Menu.Item>
+                  </Menu.ItemGroup>
                 </Menu.Content>
               </Menu.Positioner>
             </Portal>
@@ -224,6 +266,10 @@ const i18nContext = {
     en: "Copy selected as YAML",
     it: "Copia selezionati come YAML",
   },
+  "deselect_all": {
+    en: "Deselect all",
+    it: "Deseleziona tutti",
+  },
   "download_as_json": {
     en: "Download selected as JSON",
     it: "Scarica selezionati come JSON",
@@ -247,5 +293,9 @@ const i18nContext = {
   "remove.confirm/1": {
     en: "Are you sure you want to delete <1> item?",
     it: "Sei sicuro di voler rimuovere <1> elemento?",
+  },
+  "select_all": {
+    en: "Select all",
+    it: "Seleziona tutti",
   },
 };
