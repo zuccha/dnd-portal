@@ -52,7 +52,7 @@ export default function SignInScreen() {
 
   return (
     <Center bgColor="bg.subtle" minH="100vh" position="relative" w="full">
-      <VStack align="flex-start" gap={4} maxW="20em" mt={20} w="full">
+      <VStack align="flex-start" gap={4} maxW="20em" w="full">
         <Heading size="2xl">{t("title")}</Heading>
 
         {/* <Field label={t("username")}>
