@@ -5,9 +5,9 @@ import { type I18nString, translate } from "~/i18n/i18n-string";
 import { createLocalStore } from "~/store/local-store";
 import supabase from "~/supabase";
 import { createCache } from "~/utils/cache";
+import { createUseDerivedData } from "~/utils/derived-data";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
-import { createUseProcessedData } from "~/utils/processed-data";
 import { createCachedRequest, createLockedRequest } from "~/utils/request";
 import { normalizeString } from "~/utils/string";
 import type { ResourceKind } from "../types/resource-kind";
@@ -286,6 +286,31 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Subscribe Resources
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const subscribeResources = (resourceIds: string[], callback: () => void) => {
+    const unsubscribes = resourceIds.map((id) =>
+      resourceCache.cache.subscribe(id, callback),
+    );
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
+  };
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Subscribe Resource Lookups
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const subscribeResourceLookups = (
+    lookupIds: string[],
+    callback: () => void,
+  ) => {
+    const unsubscribes = lookupIds.map((id) =>
+      resourceLookupCache.cache.subscribe(id, callback),
+    );
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
+  };
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Update Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -329,10 +354,10 @@ export function createResourceStore<
   // Use Resources
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [useCachedResources] = createUseProcessedData(
+  const [useCachedResources] = createUseDerivedData(
     (resourceIds: string[]) =>
       resourceIds.map((id) => resourceCache.get(id) ?? defaultResource),
-    resourceCache.cache.subscribe,
+    subscribeResources,
   );
 
   function useResources(resourceIds: string[]): R[] {
@@ -401,7 +426,7 @@ export function createResourceStore<
   // Use Filtered Resource Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [useFilteredResourceIdsWithKey] = createUseProcessedData(
+  const [useFilteredResourceIdsWithKey] = createUseDerivedData(
     (resourceIds: string[], partialName: string) => {
       return resourceIds.filter((resourceId) => {
         const resource = resourceCache.get(resourceId);
@@ -411,7 +436,7 @@ export function createResourceStore<
           .some((name) => normalizeString(name!).includes(partialName));
       });
     },
-    resourceCache.cache.subscribe,
+    subscribeResources,
   );
 
   function useFilteredResourceIdsByParams(
@@ -443,6 +468,20 @@ export function createResourceStore<
   const resourceSelectionCache = createCache<string, boolean>(
     `${storeId}.resource_selection`,
   );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Subscribe Resource Selection
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const subscribeResourceSelections = (
+    resourceIds: string[],
+    callback: () => void,
+  ) => {
+    const unsubscribes = resourceIds.map((id) =>
+      resourceSelectionCache.subscribe(id, callback),
+    );
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
+  };
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resource Selection
@@ -524,9 +563,9 @@ export function createResourceStore<
   // Use Selected Filtered Resources Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [useSelectedFilteredResourceIdsWithKey] = createUseProcessedData(
+  const [useSelectedFilteredResourceIdsWithKey] = createUseDerivedData(
     (resourceIds: string[]) => resourceIds.filter(resourceSelectionCache.get),
-    resourceSelectionCache.subscribe,
+    subscribeResourceSelections,
   );
 
   function useSelectedFilteredResourceIdsByParams(
@@ -613,7 +652,7 @@ export function createResourceStore<
   // Use Resource Options
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [useCachedResourceOptions] = createUseProcessedData(
+  const [useCachedResourceOptions] = createUseDerivedData(
     (lookupIds: string[], lang: string) =>
       lookupIds
         .map((id) => {
@@ -627,7 +666,7 @@ export function createResourceStore<
           };
         })
         .sort(compareObjects("label")),
-    resourceLookupCache.cache.subscribe,
+    subscribeResourceLookups,
   );
 
   function useResourceOptionsByLang(
