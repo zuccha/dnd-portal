@@ -22,13 +22,12 @@ export default function Sidebar() {
   const collapsed = useSidebarCollapsed();
   const setCollapsed = useSidebarSetCollapsed();
 
-  if (collapsed) return null;
-
   return (
     <VStack
       bg="bg"
       borderRightWidth={1}
       boxShadow={{ base: "lg", md: "none" }}
+      display={collapsed ? "none" : "flex"}
       gap={6}
       h="full"
       left={0}
