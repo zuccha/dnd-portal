@@ -84,13 +84,13 @@ export const useBleedVisible = createLocalStore(
 
 export const useCardCropMarksColor = createLocalStore(
   "print_mode.card_crop_marks_color",
-  "#ffffff",
+  "#00ff00",
   z.string().parse,
 ).use;
 
 export const useCardCropMarksLength = createLocalStore(
   "print_mode.card_crop_marks_length",
-  0.2,
+  0.15,
   z.number().parse,
 ).use;
 
