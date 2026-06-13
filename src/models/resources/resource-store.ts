@@ -175,6 +175,7 @@ export function createResourceStore<
       if (!resource)
         throw new Error(`${storeName.s} (${resourceId}) not found`);
 
+      resourceLookupCache.set(resource, resource.id);
       return resource;
     },
   );
@@ -216,6 +217,7 @@ export function createResourceStore<
           };
         }
         resourceCache.set(merged, resource.id);
+        resourceLookupCache.set(merged, merged.id);
       }
 
       return resourceIds;
