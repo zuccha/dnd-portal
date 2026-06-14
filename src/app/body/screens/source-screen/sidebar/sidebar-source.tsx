@@ -1,11 +1,11 @@
 import { Separator, VStack } from "@chakra-ui/react";
 import { SettingsIcon } from "lucide-react";
 import { useMemo } from "react";
+import SectionButton from "~/app/body/screens/source-screen/sidebar/section-button";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useCanEditSourceResources } from "~/models/sources";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
-import SectionButton from "~/ui/section-button";
 import { resourcePanels } from "../panels/panels";
 import SidebarSection from "./sidebar-section";
 

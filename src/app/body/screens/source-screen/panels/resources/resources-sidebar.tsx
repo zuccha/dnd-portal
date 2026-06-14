@@ -58,7 +58,6 @@ export function createResourcesSidebar<
         align="flex-start"
         bg="bg"
         borderLeftWidth={1}
-        boxShadow={{ base: "lg", md: "none" }}
         display={collapsed ? { base: "none", md: "flex" } : "flex"}
         h="full"
         justify="flex-start"

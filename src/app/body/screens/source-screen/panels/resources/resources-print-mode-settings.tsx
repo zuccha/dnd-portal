@@ -9,7 +9,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { HelpCircleIcon, PanelRightIcon } from "lucide-react";
+import { HelpCircleIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Button from "~/ui/button";
@@ -21,7 +21,10 @@ import NumberInput from "~/ui/number-input";
 import Select, { type SelectOption } from "~/ui/select";
 import { type PaletteName, usePaletteNameOptions } from "~/utils/palette";
 import type { StateSetter } from "~/utils/state";
-import { useRightPanelSetCollapsed } from "../../right-panel-state";
+import {
+  useRightPanelCollapsed,
+  useRightPanelSetCollapsed,
+} from "../../right-panel-state";
 import {
   type PaperLayout,
   type PaperType,
@@ -108,6 +111,9 @@ export default function ResourcesPrintModeSettings({
   ...rest
 }: ResourcesPrintModeSettingsProps) {
   const { t } = useI18nLangContext(i18nContext);
+
+  const collapsed = useRightPanelCollapsed();
+
   const [standardHelpDismissed, setStandardHelpDismissed] =
     useStandardPrintHelpDismissed();
   const [highFidelityHelpDismissed, setHighFidelityHelpDismissed] =
@@ -172,29 +178,34 @@ export default function ResourcesPrintModeSettings({
 
   return (
     <VStack
+      bg="bg"
       borderLeftWidth={1}
+      display={collapsed ? { base: "none", md: "flex" } : "flex"}
       gap={4}
       h="full"
-      px={6}
+      position={{ base: "absolute", md: "relative" }}
       py={4}
-      w="15em"
+      right={0}
+      top={0}
+      w={collapsed ? "2rem" : "15rem"}
+      zIndex="modal"
       {...rest}
     >
-      <HStack w="full">
-        <IconButton
-          Icon={PanelRightIcon}
-          ml={-2}
-          onClick={() => setRightPanelCollapsed(true)}
-          size="xs"
-          variant="ghost"
-        />
+      <IconButton
+        Icon={SlidersHorizontalIcon}
+        bgColor="bg"
+        display={{ base: "none", md: "inline-flex" }}
+        left={0}
+        onClick={() => setRightPanelCollapsed((prev) => !prev)}
+        position="absolute"
+        size="xs"
+        top={5}
+        transform="translateX(-50%)"
+        variant="outline"
+        zIndex="modal"
+      />
 
-        <Span fontSize="sm" fontWeight="semibold">
-          {t("settings.title")}
-        </Span>
-      </HStack>
-
-      <VStack w="full">
+      <VStack display={collapsed ? "none" : "flex"} px={6} w="full">
         <Field label={t("paper_layout.label")}>
           <Select.Enum
             onValueChange={onPaperLayoutChange}
@@ -344,7 +355,12 @@ export default function ResourcesPrintModeSettings({
         </HStack>
       </VStack>
 
-      <HStack justify="flex-end" w="full">
+      <HStack
+        display={collapsed ? "none" : "flex"}
+        justify="flex-end"
+        px={6}
+        w="full"
+      >
         <Button onClick={onClose} size="xs" variant="outline">
           {t("close")}
         </Button>

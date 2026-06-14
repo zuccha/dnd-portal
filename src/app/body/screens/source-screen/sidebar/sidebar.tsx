@@ -23,7 +23,6 @@ export default function Sidebar() {
     <VStack
       bg="bg"
       borderRightWidth={1}
-      boxShadow={{ base: "lg", md: "none" }}
       display={collapsed ? { base: "none", md: "flex" } : "flex"}
       h="full"
       left={0}

@@ -1,9 +1,9 @@
 import { VStack } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon, CircleSmallIcon } from "lucide-react";
 import { useState } from "react";
+import SectionButton from "~/app/body/screens/source-screen/sidebar/section-button";
 import Button from "~/ui/button";
 import Icon from "~/ui/icon";
-import SectionButton from "~/ui/section-button";
 import SectionHeading from "~/ui/section-heading";
 
 //------------------------------------------------------------------------------
