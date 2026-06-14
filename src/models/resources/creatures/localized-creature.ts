@@ -181,9 +181,13 @@ export function useLocalizeCreature(
       const speed_climb = convertSpeed(creature.speed_climb);
       const speed_fly = convertSpeed(creature.speed_fly);
       const speed_swim = convertSpeed(creature.speed_swim);
+      const speed_fly_label =
+        speed_fly && creature.hover ? ti("speed.fly_hover", speed_fly)
+        : speed_fly ? ti("speed.fly", speed_fly)
+        : "";
       const speed = [
         ti("speed.walk", speed_walk ?? (system === "metric" ? "0 m" : "0 ft")),
-        speed_fly ? ti("speed.fly", speed_fly) : "",
+        speed_fly_label,
         speed_swim ? ti("speed.swim", speed_swim) : "",
         speed_climb ? ti("speed.climb", speed_climb) : "",
         speed_burrow ? ti("speed.burrow", speed_burrow) : "",
@@ -709,6 +713,10 @@ const i18nContext = {
   "speed.fly": {
     en: "fly <1>",
     it: "volo <1>",
+  },
+  "speed.fly_hover": {
+    en: "fly <1> (hover)",
+    it: "volo <1> (fluttuare)",
   },
   "speed.swim": {
     en: "swim <1>",

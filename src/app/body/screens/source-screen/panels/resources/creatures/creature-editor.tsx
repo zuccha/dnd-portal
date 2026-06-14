@@ -32,6 +32,7 @@ import {
   createResourceSearchField,
   createSelectEnumField,
   createSelectField,
+  createSwitchField,
   createTextareaField,
 } from "../resource-editor-form";
 
@@ -415,6 +416,11 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useField: form.createUseField("speed_fly"),
   });
 
+  const HoverField = createSwitchField({
+    i18nContext: { label: { en: "Hover", it: "Fluttuare" } },
+    useField: form.createUseField("hover"),
+  });
+
   const SpeedSwimField = createDistanceInputField({
     i18nContext: { label: { en: "Swim", it: "Nuotare" } },
     inputProps: { min: 0 },
@@ -570,6 +576,8 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
           <SpeedClimbField defaultValue={resource.speed_climb ?? 0} />
           <SpeedBurrowField defaultValue={resource.speed_burrow ?? 0} />
         </HStack>
+
+        <HoverField defaultValue={resource.hover ?? false} />
 
         {/* Ability Scores */}
         <HStack align="flex-start" gap={4} w="full">

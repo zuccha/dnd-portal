@@ -38,6 +38,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   darkvision: z.number(),
   equipment_entries: z.array(equipmentEntrySchema),
   habitats: z.array(creatureHabitatSchema),
+  hover: z.boolean(),
   hp: z.number(),
   hp_formula: z.string(),
   initiative: z.number(),

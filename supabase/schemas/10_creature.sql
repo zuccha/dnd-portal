@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS public.creatures (
   habitats public.creature_habitat[] NOT NULL,
   hp smallint DEFAULT '10'::smallint NOT NULL,
   hp_formula text DEFAULT ''::text NOT NULL,
+  hover boolean DEFAULT false NOT NULL,
   initiative smallint DEFAULT '0'::smallint NOT NULL,
   language_additional_count smallint DEFAULT '0'::smallint NOT NULL,
   language_scope public.language_scope DEFAULT 'specific'::public.language_scope NOT NULL,

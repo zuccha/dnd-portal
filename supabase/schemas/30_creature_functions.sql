@@ -63,7 +63,8 @@ CREATE TYPE public.creature_row AS (
   gear jsonb,
   legendary_actions jsonb,
   reactions jsonb,
-  traits jsonb
+  traits jsonb,
+  hover boolean
 );
 
 
@@ -95,7 +96,7 @@ BEGIN
 
   INSERT INTO public.creatures (
     resource_id, type, alignment, size, habitats, treasures, cr, ac, hp, hp_formula,
-    speed_walk, speed_fly, speed_swim, speed_climb, speed_burrow,
+    speed_walk, speed_fly, speed_swim, speed_climb, speed_burrow, hover,
     ability_str, ability_dex, ability_con, ability_int, ability_wis, ability_cha,
     initiative, language_additional_count, language_scope, passive_perception,
     ability_proficiencies, skill_proficiencies, skill_expertise,
@@ -104,7 +105,7 @@ BEGIN
     blindsight, darkvision, telepathy_range, tremorsense, truesight
   ) VALUES (
     v_id, r.type, r.alignment, r.size, r.habitats, r.treasures, r.cr, r.ac, r.hp, r.hp_formula,
-    r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow,
+    r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow, coalesce(r.hover, false),
     r.ability_str, r.ability_dex, r.ability_con, r.ability_int, r.ability_wis, r.ability_cha,
     r.initiative, coalesce(r.language_additional_count, 0), r.language_scope, r.passive_perception,
     r.ability_proficiencies, r.skill_proficiencies, r.skill_expertise,
@@ -261,7 +262,8 @@ AS $$
     coalesce(tt.gear, '{}'::jsonb) AS gear,
     coalesce(tt.legendary_actions, '{}'::jsonb) AS legendary_actions,
     coalesce(tt.reactions, '{}'::jsonb) AS reactions,
-    coalesce(tt.traits, '{}'::jsonb) AS traits
+    coalesce(tt.traits, '{}'::jsonb) AS traits,
+    c.hover
   FROM public.fetch_resource(p_id) AS r
   JOIN public.creatures c ON c.resource_id = r.id
   LEFT JOIN (
@@ -433,6 +435,7 @@ src AS (
     c.ac,
     c.hp,
     c.hp_formula,
+    c.hover,
     c.speed_burrow,
     c.speed_walk,
     c.speed_fly,
@@ -600,7 +603,8 @@ SELECT
   coalesce(tt.gear, '{}'::jsonb) AS gear,
   coalesce(tt.legendary_actions, '{}'::jsonb) AS legendary_actions,
   coalesce(tt.reactions, '{}'::jsonb) AS reactions,
-  coalesce(tt.traits, '{}'::jsonb) AS traits
+  coalesce(tt.traits, '{}'::jsonb) AS traits,
+  f.hover
 FROM filtered f
 LEFT JOIN t tt ON tt.id = f.id
 LEFT JOIN eq ON eq.id = f.id
@@ -693,7 +697,7 @@ BEGIN
   UPDATE public.creatures c
   SET (
     type, alignment, size, habitats, treasures, cr, ac, hp, hp_formula,
-    speed_walk, speed_fly, speed_swim, speed_climb, speed_burrow,
+    speed_walk, speed_fly, speed_swim, speed_climb, speed_burrow, hover,
     ability_str, ability_dex, ability_con, ability_int, ability_wis, ability_cha,
     initiative, language_additional_count, language_scope, passive_perception,
     ability_proficiencies, skill_proficiencies, skill_expertise,
@@ -702,7 +706,7 @@ BEGIN
     blindsight, darkvision, telepathy_range, tremorsense, truesight
   ) = (
     SELECT r.type, r.alignment, r.size, r.habitats, r.treasures, r.cr, r.ac, r.hp, r.hp_formula,
-      r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow,
+      r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow, r.hover,
       r.ability_str, r.ability_dex, r.ability_con, r.ability_int, r.ability_wis, r.ability_cha,
       r.initiative, r.language_additional_count, r.language_scope, r.passive_perception,
       r.ability_proficiencies, r.skill_proficiencies, r.skill_expertise,
