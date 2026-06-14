@@ -252,6 +252,7 @@ function Details({ children, palette }: DetailsProps) {
             fontSize={rem1125}
             fontWeight="bold"
             key={paragraphIndex}
+            lineHeight={0.9}
             mb={rem0125}
             w="full"
           >
