@@ -64,7 +64,9 @@ CREATE TYPE public.creature_row AS (
   legendary_actions jsonb,
   reactions jsonb,
   traits jsonb,
-  hover boolean
+  hover boolean,
+  has_lair boolean,
+  lair_effects jsonb
 );
 
 
@@ -96,7 +98,7 @@ BEGIN
 
   INSERT INTO public.creatures (
     resource_id, type, alignment, size, habitats, treasures, cr, ac, hp, hp_formula,
-    speed_walk, speed_fly, speed_swim, speed_climb, speed_burrow, hover,
+    speed_walk, speed_fly, speed_swim, speed_climb, speed_burrow, hover, has_lair,
     ability_str, ability_dex, ability_con, ability_int, ability_wis, ability_cha,
     initiative, language_additional_count, language_scope, passive_perception,
     ability_proficiencies, skill_proficiencies, skill_expertise,
@@ -105,7 +107,7 @@ BEGIN
     blindsight, darkvision, telepathy_range, tremorsense, truesight
   ) VALUES (
     v_id, r.type, r.alignment, r.size, r.habitats, r.treasures, r.cr, r.ac, r.hp, r.hp_formula,
-    r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow, coalesce(r.hover, false),
+    r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow, coalesce(r.hover, false), coalesce(r.has_lair, false),
     r.ability_str, r.ability_dex, r.ability_con, r.ability_int, r.ability_wis, r.ability_cha,
     r.initiative, coalesce(r.language_additional_count, 0), r.language_scope, r.passive_perception,
     r.ability_proficiencies, r.skill_proficiencies, r.skill_expertise,
@@ -276,7 +278,9 @@ AS $$
     coalesce(tt.legendary_actions, '{}'::jsonb) AS legendary_actions,
     coalesce(tt.reactions, '{}'::jsonb) AS reactions,
     coalesce(tt.traits, '{}'::jsonb) AS traits,
-    c.hover
+    c.hover,
+    c.has_lair,
+    coalesce(tt.lair_effects, '{}'::jsonb) AS lair_effects
   FROM public.fetch_resource(p_id) AS r
   JOIN public.creatures c ON c.resource_id = r.id
   LEFT JOIN (
@@ -287,7 +291,8 @@ AS $$
       jsonb_object_agg(t.lang, t.actions)           AS actions,
       jsonb_object_agg(t.lang, t.bonus_actions)     AS bonus_actions,
       jsonb_object_agg(t.lang, t.reactions)         AS reactions,
-      jsonb_object_agg(t.lang, t.legendary_actions) AS legendary_actions
+      jsonb_object_agg(t.lang, t.legendary_actions) AS legendary_actions,
+      jsonb_object_agg(t.lang, t.lair_effects)  AS lair_effects
     FROM public.creatures c
     LEFT JOIN public.creature_translations t ON t.resource_id = c.resource_id
     WHERE c.resource_id = p_id
@@ -474,6 +479,7 @@ src AS (
     c.condition_immunities,
     c.condition_resistances,
     c.condition_vulnerabilities,
+    c.has_lair,
     c.language_scope,
     c.telepathy_range,
     c.tremorsense,
@@ -517,6 +523,7 @@ t AS (
     jsonb_object_agg(t.lang, t.actions)           FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS actions,
     jsonb_object_agg(t.lang, t.bonus_actions)     FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS bonus_actions,
     jsonb_object_agg(t.lang, t.legendary_actions) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS legendary_actions,
+    jsonb_object_agg(t.lang, t.lair_effects)  FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS lair_effects,
     jsonb_object_agg(t.lang, t.reactions)         FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS reactions
   FROM filtered f
   LEFT JOIN public.creature_translations t ON t.resource_id = f.id
@@ -617,7 +624,9 @@ SELECT
   coalesce(tt.legendary_actions, '{}'::jsonb) AS legendary_actions,
   coalesce(tt.reactions, '{}'::jsonb) AS reactions,
   coalesce(tt.traits, '{}'::jsonb) AS traits,
-  f.hover
+  f.hover,
+  f.has_lair,
+  coalesce(tt.lair_effects, '{}'::jsonb) AS lair_effects
 FROM filtered f
 LEFT JOIN t tt ON tt.id = f.id
 LEFT JOIN eq ON eq.id = f.id
@@ -661,10 +670,10 @@ BEGIN
 
   INSERT INTO public.creature_translations AS ct (
     resource_id, lang, gear,
-    traits, actions, bonus_actions, reactions, legendary_actions
+    traits, actions, bonus_actions, reactions, legendary_actions, lair_effects
   ) VALUES (
     p_id, p_lang, r.gear,
-    r.traits, r.actions, r.bonus_actions, r.reactions, r.legendary_actions
+    r.traits, r.actions, r.bonus_actions, r.reactions, r.legendary_actions, r.lair_effects
   )
   ON conflict (resource_id, lang) DO UPDATE
   SET
@@ -673,7 +682,8 @@ BEGIN
     actions = excluded.actions,
     bonus_actions = excluded.bonus_actions,
     reactions = excluded.reactions,
-    legendary_actions = excluded.legendary_actions;
+    legendary_actions = excluded.legendary_actions,
+    lair_effects = excluded.lair_effects;
 END;
 $$;
 
@@ -710,7 +720,7 @@ BEGIN
   UPDATE public.creatures c
   SET (
     type, alignment, size, habitats, treasures, cr, ac, hp, hp_formula,
-    speed_walk, speed_fly, speed_swim, speed_climb, speed_burrow, hover,
+    speed_walk, speed_fly, speed_swim, speed_climb, speed_burrow, hover, has_lair,
     ability_str, ability_dex, ability_con, ability_int, ability_wis, ability_cha,
     initiative, language_additional_count, language_scope, passive_perception,
     ability_proficiencies, skill_proficiencies, skill_expertise,
@@ -719,7 +729,7 @@ BEGIN
     blindsight, darkvision, telepathy_range, tremorsense, truesight
   ) = (
     SELECT r.type, r.alignment, r.size, r.habitats, r.treasures, r.cr, r.ac, r.hp, r.hp_formula,
-      r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow, r.hover,
+      r.speed_walk, r.speed_fly, r.speed_swim, r.speed_climb, r.speed_burrow, r.hover, r.has_lair,
       r.ability_str, r.ability_dex, r.ability_con, r.ability_int, r.ability_wis, r.ability_cha,
       r.initiative, r.language_additional_count, r.language_scope, r.passive_perception,
       r.ability_proficiencies, r.skill_proficiencies, r.skill_expertise,

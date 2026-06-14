@@ -41,10 +41,12 @@ const owlbear: Record<string, LocalizedCreature> = {
       darkvision: 1800,
       gear: { currency: 0, equipments: [] },
       habitats: [],
+      has_lair: false,
       hover: false,
       hp: 59,
       hp_formula: "7d10 + 21",
       initiative: 1,
+      lair_effects: { en: "" },
       language_additional_count: 0,
       language_entries: [],
       language_scope: "none",
@@ -83,10 +85,12 @@ const owlbear: Record<string, LocalizedCreature> = {
     type: "Monstrosity",
 
     habitats: "",
+    has_lair: false,
     treasures: "",
 
     cr: "3",
     exp: "700",
+    lair_exp: "700",
     pb: "+2",
 
     ac: "13",
@@ -130,6 +134,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     actions:
       "**Multiattack.** The owlbear makes two Rend attacks.\n**Rend.** Melee Attack Roll: +7, reach 5 ft. _Hit:_ 14 (2d8 + 5) Slashing damage.",
     bonus_actions: "",
+    lair_effects: "",
     legendary_actions: "",
     reactions: "",
     traits: "",
@@ -170,10 +175,12 @@ const owlbear: Record<string, LocalizedCreature> = {
       darkvision: 1800,
       gear: { currency: 0, equipments: [] },
       habitats: [],
+      has_lair: false,
       hover: false,
       hp: 59,
       hp_formula: "7d10 + 21",
       initiative: 1,
+      lair_effects: { it: "" },
       language_additional_count: 0,
       language_entries: [],
       language_scope: "none",
@@ -212,10 +219,12 @@ const owlbear: Record<string, LocalizedCreature> = {
     type: "Mostruosità",
 
     habitats: "",
+    has_lair: false,
     treasures: "",
 
     cr: "3",
     exp: "700",
+    lair_exp: "700",
     pb: "+2",
 
     ac: "13",
@@ -259,6 +268,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     actions:
       "**Multiattacco.** L'orsogufo effettua due attacchi Squarcio.\n**Squarcio.** _Tiro per colpire in mischia:_ +7, portata 1,5 m. _Colpito:_ 14 (2d8 + 5) danni taglienti.",
     bonus_actions: "",
+    lair_effects: "",
     legendary_actions: "",
     reactions: "",
     traits: "",

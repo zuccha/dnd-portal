@@ -278,6 +278,17 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   });
 
   //----------------------------------------------------------------------------
+  // Lair
+  //----------------------------------------------------------------------------
+
+  const useHasLairField = form.createUseField("has_lair");
+
+  const HasLairField = createSwitchField({
+    i18nContext: { label: { en: "Has Lair", it: "Ha una Tana" } },
+    useField: useHasLairField,
+  });
+
+  //----------------------------------------------------------------------------
   // Language
   //----------------------------------------------------------------------------
 
@@ -490,6 +501,16 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useField: form.createUseField("reactions"),
   });
 
+  const LairEffectsField = createTextareaField({
+    i18nContext: {
+      label: { en: "Lair Effects", it: "Effetti della Tana" },
+      placeholder: { en: "None", it: "Nessuno" },
+    },
+    inputProps: { rows: 5 },
+    translatable: true,
+    useField: form.createUseField("lair_effects"),
+  });
+
   const TraitsField = createTextareaField({
     i18nContext: {
       label: { en: "Traits", it: "Tratti" },
@@ -529,6 +550,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
   return function CreatureEditor({ resource, sourceId }: CreatureEditorProps) {
     const [lang] = useI18nLang();
+    const { value: hasLair } = useHasLairField(resource.has_lair);
     const { value: languageScope } = useLanguageScopeField(
       resource.language_scope,
     );
@@ -547,13 +569,15 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
         {/* Treasures & Habitat */}
         <HStack align="flex-start" gap={4} w="full">
-          <TreasuresField defaultValue={resource.treasures} />
           <HabitatsField defaultValue={resource.habitats} />
           <PlaneIdsField
             defaultValue={resource.plane_ids}
             sourceId={sourceId}
           />
+          <TreasuresField defaultValue={resource.treasures} />
         </HStack>
+
+        <HasLairField defaultValue={resource.has_lair} />
 
         {/* AC and HP */}
         <HStack align="flex-start" gap={4} w="full">
@@ -677,6 +701,9 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         <LegendaryActionsField
           defaultValue={resource.legendary_actions[lang] ?? ""}
         />
+        {hasLair && (
+          <LairEffectsField defaultValue={resource.lair_effects[lang] ?? ""} />
+        )}
       </ResourceEditor>
     );
   };

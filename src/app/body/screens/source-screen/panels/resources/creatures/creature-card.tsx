@@ -166,6 +166,13 @@ export function CreatureCard({
               <Span>
                 <b>{t("exp")}</b> <Span>{localizedResource.exp}</Span>
               </Span>
+              {localizedResource.has_lair &&
+                localizedResource.exp !== localizedResource.lair_exp && (
+                  <Span>
+                    <b>{t("lair_exp")}</b>{" "}
+                    <Span>{localizedResource.lair_exp}</Span>
+                  </Span>
+                )}
             </VStack>
             <StatIcon
               icon={scrollIcon}
@@ -380,6 +387,10 @@ const i18nContext = {
   "initiative": {
     en: "Initiative",
     it: "Iniziativa",
+  },
+  "lair_exp": {
+    en: "Lair XP",
+    it: "PE Tana",
   },
   "perception": {
     en: "Perception",

@@ -45,6 +45,7 @@ export const localizedCreatureSchema = localizedResourceSchema(
 ).extend({
   alignment: z.string(),
   habitats: z.string(),
+  has_lair: z.boolean(),
   size: z.string(),
   tags: z.string(),
   treasures: z.string(),
@@ -52,6 +53,7 @@ export const localizedCreatureSchema = localizedResourceSchema(
 
   cr: z.string(),
   exp: z.string(),
+  lair_exp: z.string(),
   pb: z.string(),
 
   ac: z.string(),
@@ -96,6 +98,7 @@ export const localizedCreatureSchema = localizedResourceSchema(
 
   actions: z.string(),
   bonus_actions: z.string(),
+  lair_effects: z.string(),
   legendary_actions: z.string(),
   reactions: z.string(),
   traits: z.string(),
@@ -169,6 +172,7 @@ export function useLocalizeCreature(
         : creature.cr <= 0.5 ? "½"
         : `${creature.cr}`;
       const exp = crToExp[creature.cr] ?? 0;
+      const lair_exp = crToLairExp[creature.cr] ?? exp;
       const pb = crToPb[creature.cr] ?? 2;
 
       // Speed conversions
@@ -491,6 +495,11 @@ export function useLocalizeCreature(
         );
       }
 
+      const lair_effects = translate(creature.lair_effects, lang);
+      if (lair_effects) {
+        details_parts.push(t("description.lair_effects") + "\r" + lair_effects);
+      }
+
       const details = details_parts.join("\n\n");
 
       return {
@@ -507,10 +516,12 @@ export function useLocalizeCreature(
         type,
 
         habitats,
+        has_lair: creature.has_lair,
         treasures,
 
         cr,
         exp: formatNumber(exp, lang),
+        lair_exp: formatNumber(lair_exp, lang),
         pb: formatSigned(pb),
 
         ac: `${creature.ac}`,
@@ -555,6 +566,7 @@ export function useLocalizeCreature(
 
         actions,
         bonus_actions,
+        lair_effects,
         legendary_actions,
         reactions,
         traits,
@@ -598,6 +610,10 @@ const i18nContext = {
   "description.bonus_actions": {
     en: "##Bonus Actions##",
     it: "##Azioni Bonus##",
+  },
+  "description.lair_effects": {
+    en: "##Lair Effects##",
+    it: "##Effetti della Tana##",
   },
   "description.legendary_actions": {
     en: "##Legendary Actions##",
@@ -807,6 +823,10 @@ const crToExp: Record<number, number> = {
   30: 155000,
 };
 /* eslint-enable sort-keys */
+
+// /* eslint-disable sort-keys */
+const crToLairExp: Record<number, number> = {};
+// /* eslint-enable sort-keys */
 
 /* eslint-disable sort-keys */
 const crToPb: Record<number, number> = {

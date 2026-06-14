@@ -39,6 +39,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   darkvision: z.number(),
   equipment_entries: z.array(equipmentEntrySchema),
   habitats: z.array(creatureHabitatSchema),
+  has_lair: z.boolean(),
   hover: z.boolean(),
   hp: z.number(),
   hp_formula: z.string(),
@@ -73,6 +74,7 @@ export type DBCreature = z.infer<typeof dbCreatureSchema>;
 export const dbCreatureTranslationSchema = dbResourceTranslationSchema.extend({
   actions: z.string().nullish(),
   bonus_actions: z.string().nullish(),
+  lair_effects: z.string().nullish(),
   legendary_actions: z.string().nullish(),
   reactions: z.string().nullish(),
   traits: z.string().nullish(),
