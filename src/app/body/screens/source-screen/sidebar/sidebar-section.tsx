@@ -1,7 +1,8 @@
 import { VStack } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon, CircleSmallIcon } from "lucide-react";
-import { useState } from "react";
+import z from "zod";
 import SectionButton from "~/app/body/screens/source-screen/sidebar/section-button";
+import { createLocalStoreSet } from "~/store/set/local-store-set";
 import Button from "~/ui/button";
 import Icon from "~/ui/icon";
 import SectionHeading from "~/ui/section-heading";
@@ -18,12 +19,17 @@ export type SidebarSectionItem = {
 };
 
 export type SidebarSectionProps = {
+  id: string;
   items: SidebarSectionItem[];
   title: string;
 };
 
-export default function SidebarSection({ items, title }: SidebarSectionProps) {
-  const [visible, setVisible] = useState(true);
+export default function SidebarSection({
+  id,
+  items,
+  title,
+}: SidebarSectionProps) {
+  const [visible, setVisible] = useVisible(id, true);
 
   return (
     <VStack align="flex-start" gap={2} w="full">
@@ -61,3 +67,9 @@ export default function SidebarSection({ items, title }: SidebarSectionProps) {
     </VStack>
   );
 }
+
+const useVisible = createLocalStoreSet(
+  "sidebar.resources.visible",
+  true,
+  z.boolean().parse,
+).use;

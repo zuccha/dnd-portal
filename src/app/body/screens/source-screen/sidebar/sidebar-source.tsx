@@ -48,7 +48,7 @@ export default function SidebarSource({ sourceId }: SidebarSourceProps) {
     >
       <VStack flex={1} separator={<Separator w="full" />} w="full">
         {localizedResourcePanels.map(({ id, items }) => (
-          <SidebarSection items={items} key={id} title={t(id)} />
+          <SidebarSection id={id} items={items} key={id} title={t(id)} />
         ))}
       </VStack>
 
