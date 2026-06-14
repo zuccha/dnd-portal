@@ -16,6 +16,7 @@ import { normalizeString } from "~/utils/string";
 //------------------------------------------------------------------------------
 
 export type ResourceSearchProps = StackProps & {
+  hideFilter?: boolean;
   onValueChange: (value: string[]) => void;
   options: ResourceOption[];
   value: string[];
@@ -23,6 +24,7 @@ export type ResourceSearchProps = StackProps & {
 };
 
 export default function ResourceSearch({
+  hideFilter,
   onValueChange,
   options,
   value,
@@ -65,9 +67,14 @@ export default function ResourceSearch({
           withinDialog={withinDialog}
         />
 
-        <InclusionButton include={showSelected} onValueChange={setShowSelected}>
-          <Icon Icon={icons[`${showSelected}`]} />
-        </InclusionButton>
+        {!hideFilter && (
+          <InclusionButton
+            include={showSelected}
+            onValueChange={setShowSelected}
+          >
+            <Icon Icon={icons[`${showSelected}`]} />
+          </InclusionButton>
+        )}
       </HStack>
 
       {value.length > 0 && (

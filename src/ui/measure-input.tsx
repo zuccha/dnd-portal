@@ -47,6 +47,7 @@ export default function MeasureInput<U extends string>({
         />
       }
       endElementProps={{ px: 0, right: 6 }}
+      minW="8em"
       {...rest}
     >
       <NumberInput

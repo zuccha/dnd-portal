@@ -369,6 +369,7 @@ export function createLanguageEntriesField({
             withinDialog
           />
           <ResourceSearch
+            hideFilter
             onValueChange={handleLanguageIdsChange}
             options={options}
             value={languageIds}

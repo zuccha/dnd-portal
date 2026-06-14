@@ -570,23 +570,31 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         </HStack>
 
         {/* Speed */}
-        <HStack align="flex-start" gap={4} w="full">
-          <SpeedFlyField defaultValue={resource.speed_fly ?? 0} />
-          <SpeedSwimField defaultValue={resource.speed_swim ?? 0} />
-          <SpeedClimbField defaultValue={resource.speed_climb ?? 0} />
-          <SpeedBurrowField defaultValue={resource.speed_burrow ?? 0} />
+        <HStack align="flex-start" gap={4} w="full" wrap="wrap">
+          <HStack flex={1}>
+            <SpeedFlyField defaultValue={resource.speed_fly ?? 0} />
+            <SpeedSwimField defaultValue={resource.speed_swim ?? 0} />
+          </HStack>
+          <HStack flex={1}>
+            <SpeedClimbField defaultValue={resource.speed_climb ?? 0} />
+            <SpeedBurrowField defaultValue={resource.speed_burrow ?? 0} />
+          </HStack>
         </HStack>
 
         <HoverField defaultValue={resource.hover ?? false} />
 
         {/* Ability Scores */}
-        <HStack align="flex-start" gap={4} w="full">
-          <AbilityStrField defaultValue={resource.ability_str} />
-          <AbilityDexField defaultValue={resource.ability_dex} />
-          <AbilityConField defaultValue={resource.ability_con} />
-          <AbilityIntField defaultValue={resource.ability_int} />
-          <AbilityWisField defaultValue={resource.ability_wis} />
-          <AbilityChaField defaultValue={resource.ability_cha} />
+        <HStack align="flex-start" gap={4} w="full" wrap="wrap">
+          <HStack flex={1}>
+            <AbilityStrField defaultValue={resource.ability_str} />
+            <AbilityDexField defaultValue={resource.ability_dex} />
+            <AbilityConField defaultValue={resource.ability_con} />
+          </HStack>
+          <HStack flex={1}>
+            <AbilityIntField defaultValue={resource.ability_int} />
+            <AbilityWisField defaultValue={resource.ability_wis} />
+            <AbilityChaField defaultValue={resource.ability_cha} />
+          </HStack>
         </HStack>
 
         {/* Proficiencies */}
@@ -623,11 +631,15 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         </HStack>
 
         {/* Senses */}
-        <HStack align="flex-start" gap={4} w="full">
-          <BlindsightField defaultValue={resource.blindsight} />
-          <DarkvisionField defaultValue={resource.darkvision} />
-          <TremorsenseField defaultValue={resource.tremorsense} />
-          <TruesightField defaultValue={resource.truesight} />
+        <HStack align="flex-start" gap={4} w="full" wrap="wrap">
+          <HStack flex={1}>
+            <BlindsightField defaultValue={resource.blindsight} />
+            <DarkvisionField defaultValue={resource.darkvision} />
+          </HStack>
+          <HStack flex={1}>
+            <TremorsenseField defaultValue={resource.tremorsense} />
+            <TruesightField defaultValue={resource.truesight} />
+          </HStack>
         </HStack>
 
         {/* Perception and Language */}
