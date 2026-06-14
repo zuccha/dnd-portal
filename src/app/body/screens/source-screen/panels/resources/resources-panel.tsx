@@ -1,4 +1,4 @@
-import { HStack, VStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -16,27 +16,18 @@ import {
   type ResourceDialogUpdaterExtra,
   createResourceDialogUpdater,
 } from "./resource-dialog-updater";
-import { createResourcesActions } from "./resources-actions";
 import {
   type ResourcesAlbumExtra,
   createResourcesAlbum,
 } from "./resources-album";
 import { createResourcesContext } from "./resources-context";
-import { createResourcesCounter } from "./resources-counter";
-import {
-  type ResourcesFiltersExtra,
-  createResourcesFilters,
-} from "./resources-filters";
-import { createResourcesGenericFilters } from "./resources-generic-filters";
+import { type ResourcesFiltersExtra } from "./resources-filters";
 import { createResourcesPrintMode } from "./resources-print-mode";
-import ResourcesSidebar from "./resources-sidebar";
-import ResourcesSidebarToggleButton from "./resources-sidebar-toggle-button";
+import { createResourcesSidebar } from "./resources-sidebar";
 import {
   type ResourcesTableExtra,
   createResourcesTable,
 } from "./resources-table";
-import { createResourcesViewSettings } from "./resources-view-settings";
-import { createResourcesViewSwitch } from "./resources-view-switch";
 
 export function createResourcesPanel<
   R extends Resource,
@@ -67,14 +58,9 @@ export function createResourcesPanel<
 
   const ResourceCreator = createResourceDialogCreator(store, context, form);
   const ResourceUpdater = createResourceDialogUpdater(store, context, form);
-  const ResourcesActions = createResourcesActions(store, context);
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
-  const ResourcesCounter = createResourcesCounter(store, context);
-  const ResourceFilters = createResourcesFilters(store, context, filters);
-  const ResourcesGenericFilters = createResourcesGenericFilters(store, context);
   const ResourcesTable = createResourcesTable(store, context, table);
-  const ResourcesViewSwitch = createResourcesViewSwitch(store, context);
-  const ResourcesViewSettings = createResourcesViewSettings(store, context);
+  const ResourcesSidebar = createResourcesSidebar(store, context, filters);
 
   const ResourcesPrintMode = createResourcesPrintMode(store, context, album);
 
@@ -97,25 +83,7 @@ export function createResourcesPanel<
         {view === "table" && <ResourcesTable sourceId={sourceId} />}
         {view === "cards" && <ResourcesAlbum sourceId={sourceId} />}
 
-        <ResourcesSidebar>
-          <HStack justify="space-between" w="full">
-            <HStack gap={0} ml={-2}>
-              <ResourcesSidebarToggleButton />
-            </HStack>
-            <ResourcesViewSwitch sourceId={sourceId} />
-          </HStack>
-
-          <ResourcesActions sourceId={sourceId} />
-
-          <ResourcesViewSettings sourceId={sourceId} />
-
-          <VStack align="flex-start" gap={3} w="full">
-            <ResourcesGenericFilters sourceId={sourceId} />
-            <ResourceFilters gap={3} sourceId={sourceId} w="full" />
-          </VStack>
-
-          <ResourcesCounter sourceId={sourceId} />
-        </ResourcesSidebar>
+        <ResourcesSidebar sourceId={sourceId} />
 
         <ResourceCreator sourceId={sourceId} />
         <ResourceUpdater sourceId={sourceId} />

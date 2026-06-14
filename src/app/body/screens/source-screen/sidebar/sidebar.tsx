@@ -1,24 +1,21 @@
-import { HStack, Heading, VStack } from "@chakra-ui/react";
-import { PanelLeftIcon } from "lucide-react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { HStack, Separator, VStack } from "@chakra-ui/react";
+import { MenuIcon } from "lucide-react";
 import { useSelectedSourceId } from "~/models/sources";
 import { useSelectedSourceVersion } from "~/models/types/source-version";
 import IconButton from "~/ui/icon-button";
+import LanguageSelect from "./language-select";
 import SidebarSource from "./sidebar-source";
 import SidebarSourceSelector from "./sidebar-source-selector";
-import SidebarSourceVersionsSelector from "./sidebar-source-versions-selector";
 import { useSidebarCollapsed, useSidebarSetCollapsed } from "./sidebar-state";
+import SystemSelect from "./system-select";
 
 //------------------------------------------------------------------------------
 // Sidebar
 //------------------------------------------------------------------------------
 
 export default function Sidebar() {
-  const { t } = useI18nLangContext(i18nContext);
-
   const [sourceId] = useSelectedSourceId();
-  const [selectedSourceVersions, setSelectedSourceVersions] =
-    useSelectedSourceVersion();
+  const [selectedSourceVersions] = useSelectedSourceVersion();
   const collapsed = useSidebarCollapsed();
   const setCollapsed = useSidebarSetCollapsed();
 
@@ -27,52 +24,49 @@ export default function Sidebar() {
       bg="bg"
       borderRightWidth={1}
       boxShadow={{ base: "lg", md: "none" }}
-      display={collapsed ? "none" : "flex"}
-      gap={6}
+      display={collapsed ? { base: "none", md: "flex" } : "flex"}
       h="full"
       left={0}
-      overflow="auto"
-      position={{ base: "absolute", md: "static" }}
-      py={4}
+      position={{ base: "absolute", md: "relative" }}
       top={0}
-      w="15rem"
-      zIndex={{ base: "modal", md: "auto" }}
+      w={collapsed ? "2rem" : "15rem"}
+      zIndex="modal"
     >
-      <VStack gap={2} px={6} w="full">
-        <HStack justify="space-between" py={0.5} w="full">
-          <Heading size="md">{t("heading")}</Heading>
+      <IconButton
+        Icon={MenuIcon}
+        bgColor="bg"
+        display={{ base: "none", md: "inline-flex" }}
+        onClick={() => setCollapsed((prev) => !prev)}
+        position="absolute"
+        right={0}
+        size="xs"
+        top={5}
+        transform="translateX(50%)"
+        variant="outline"
+        zIndex="modal"
+      />
 
-          <HStack gap={0} mr={-2}>
-            <IconButton
-              Icon={PanelLeftIcon}
-              onClick={() => setCollapsed(true)}
-              size="xs"
-              variant="ghost"
-            />
-          </HStack>
+      <VStack
+        display={collapsed ? "none" : "flex"}
+        flex={1}
+        gap={5}
+        overflow="auto"
+        py={5}
+        w="full"
+      >
+        <HStack px={6} w="full" wrap="wrap">
+          <LanguageSelect />
+          <SystemSelect />
         </HStack>
 
-        <HStack w="full">
-          <SidebarSourceVersionsSelector
-            onSourceVersionsChange={setSelectedSourceVersions}
-            sourceVersions={selectedSourceVersions}
-          />
+        <Separator w="full" />
+
+        <HStack gap={2} px={6} w="full">
           <SidebarSourceSelector versions={selectedSourceVersions} />
         </HStack>
-      </VStack>
 
-      {sourceId && <SidebarSource sourceId={sourceId} />}
+        {sourceId && <SidebarSource sourceId={sourceId} />}
+      </VStack>
     </VStack>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  heading: {
-    en: "Resources",
-    it: "Risorse",
-  },
-};

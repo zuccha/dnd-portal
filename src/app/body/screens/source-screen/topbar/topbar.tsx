@@ -1,14 +1,12 @@
 import { HStack, Span, type StackProps } from "@chakra-ui/react";
-import { PanelLeftIcon, SlidersHorizontalIcon } from "lucide-react";
+import { MenuIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
-import { usePrintModeActive } from "../panels/resources/resources-print-mode-state";
 import { useRightPanelSetCollapsed } from "../right-panel-state";
 import { useSidebarSetCollapsed } from "../sidebar/sidebar-state";
-import I18nButton from "./i18n-button";
 import UserButton from "./user-button";
 
 //------------------------------------------------------------------------------
@@ -21,9 +19,7 @@ export default function Topbar() {
   const route = useRoute();
   const setSidebarCollapsed = useSidebarSetCollapsed();
   const setRightPanelCollapsed = useRightPanelSetCollapsed();
-  const printModeActive = usePrintModeActive();
-  const hasResourcesSidebar =
-    route.startsWith(Route.Resources) && !printModeActive;
+  const hasResourcesSidebar = route.startsWith(Route.Resources);
 
   return (
     <HStack
@@ -32,16 +28,17 @@ export default function Topbar() {
       justify="space-between"
       px={{ base: 3, md: 6 }}
       w="full"
+      zIndex="popover"
     >
       <HStack
         flex={1}
         fontFamily="Title Wave"
         fontSize={{ base: "md", md: "2xl" }}
         fontWeight="bold"
-        ml={{ base: 0, md: -3 }}
       >
         <IconButton
-          Icon={PanelLeftIcon}
+          Icon={MenuIcon}
+          display={{ base: "inline-flex", md: "none" }}
           flexShrink={0}
           onClick={() => setSidebarCollapsed((prev) => !prev)}
           size="sm"
@@ -60,22 +57,15 @@ export default function Topbar() {
         {hasResourcesSidebar && (
           <IconButton
             Icon={SlidersHorizontalIcon}
+            display={{ base: "inline-flex", md: "none" }}
             onClick={() => setRightPanelCollapsed((prev) => !prev)}
             size="sm"
             variant="ghost"
           />
         )}
-        {printModeActive && (
-          <IconButton
-            Icon={SlidersHorizontalIcon}
-            onClick={() => setRightPanelCollapsed((prev) => !prev)}
-            size="sm"
-            variant="ghost"
-          />
-        )}
+
         <ThemeButton />
         <UserButton />
-        <I18nButton />
       </HStack>
     </HStack>
   );

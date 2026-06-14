@@ -1,4 +1,4 @@
-import { PanelRightIcon } from "lucide-react";
+import { SlidersHorizontalIcon } from "lucide-react";
 import IconButton, { type IconButtonProps } from "~/ui/icon-button";
 import { useRightPanelSetCollapsed } from "../../right-panel-state";
 
@@ -8,18 +8,24 @@ import { useRightPanelSetCollapsed } from "../../right-panel-state";
 
 export type ResourcesSidebarToggleButtonProps = Partial<IconButtonProps>;
 
-export default function ResourcesSidebarToggleButton({
-  Icon = PanelRightIcon,
-  ...props
-}: ResourcesSidebarToggleButtonProps) {
+export default function ResourcesSidebarToggleButton(
+  props: ResourcesSidebarToggleButtonProps,
+) {
   const setCollapsed = useRightPanelSetCollapsed();
 
   return (
     <IconButton
-      Icon={Icon}
+      Icon={SlidersHorizontalIcon}
+      bgColor="bg"
+      display={{ base: "none", md: "inline-flex" }}
+      left={0}
       onClick={() => setCollapsed((prev) => !prev)}
+      position="absolute"
       size="xs"
-      variant="ghost"
+      top={5}
+      transform="translateX(-50%)"
+      variant="outline"
+      zIndex="modal"
       {...props}
     />
   );

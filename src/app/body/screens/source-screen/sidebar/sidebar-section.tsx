@@ -1,12 +1,10 @@
 import { VStack } from "@chakra-ui/react";
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  CircleSmallIcon,
-} from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, CircleSmallIcon } from "lucide-react";
 import { useState } from "react";
 import Button from "~/ui/button";
 import Icon from "~/ui/icon";
+import SectionButton from "~/ui/section-button";
+import SectionHeading from "~/ui/section-heading";
 
 //------------------------------------------------------------------------------
 // Sidebar Section
@@ -33,43 +31,30 @@ export default function SidebarSection({ items, title }: SidebarSectionProps) {
         alignItems="center"
         cursor="pointer"
         display="flex"
-        fontSize="sm"
-        fontWeight="semibold"
         gap={1}
+        h={8}
         onClick={() => setVisible((prev) => !prev)}
         px={6}
+        textAlign="left"
         unstyled
         w="full"
       >
+        <SectionHeading flex={1}>{title}</SectionHeading>
         {visible ?
-          <Icon Icon={ChevronDownIcon} size="xs" />
-        : <Icon Icon={ChevronRightIcon} size="xs" />}
-        {title}
+          <Icon Icon={ChevronUpIcon} size="sm" />
+        : <Icon Icon={ChevronDownIcon} size="sm" />}
       </Button>
 
       {visible && (
         <VStack gap={0} px={2} w="full">
           {items.map((item) => (
-            <Button
-              _hover={{ bgColor: "bg.subtle", color: "fg" }}
-              bgColor={item.selected ? "bg.muted" : "transparent"}
-              color={item.selected ? "fg" : "fg.muted"}
-              gap={0}
-              justifyContent="flex-start"
+            <SectionButton
+              Icon={CircleSmallIcon}
+              active={item.selected}
               key={item.value}
-              m={0}
+              label={item.label}
               onClick={item.onClick}
-              size="sm"
-              w="full"
-            >
-              <Icon
-                Icon={CircleSmallIcon}
-                fill={item.selected ? "fg" : undefined}
-                mr={1}
-                size="xs"
-              />
-              {item.label}
-            </Button>
+            />
           ))}
         </VStack>
       )}

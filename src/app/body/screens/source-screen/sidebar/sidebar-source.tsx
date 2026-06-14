@@ -1,12 +1,11 @@
-import { VStack } from "@chakra-ui/react";
+import { Separator, VStack } from "@chakra-ui/react";
 import { SettingsIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useCanEditSourceResources } from "~/models/sources";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
-import Button from "~/ui/button";
-import Icon from "~/ui/icon";
+import SectionButton from "~/ui/section-button";
 import { resourcePanels } from "../panels/panels";
 import SidebarSection from "./sidebar-section";
 
@@ -38,22 +37,29 @@ export default function SidebarSource({ sourceId }: SidebarSourceProps) {
   );
 
   return (
-    <VStack align="flex-start" flex={1} gap={4} overflow="auto" w="full">
-      {localizedResourcePanels.map(({ id, items }) => (
-        <SidebarSection items={items} key={id} title={t(id)} />
-      ))}
+    <VStack
+      align="flex-start"
+      borderTopWidth={1}
+      flex={1}
+      gap={5}
+      pt={2}
+      separator={<Separator w="full" />}
+      w="full"
+    >
+      <VStack flex={1} separator={<Separator w="full" />} w="full">
+        {localizedResourcePanels.map(({ id, items }) => (
+          <SidebarSection items={items} key={id} title={t(id)} />
+        ))}
+      </VStack>
 
       {canEdit && (
-        <VStack flex={1} justifyContent="flex-end" px={4} w="full">
-          <Button
-            justifyContent="flex-start"
+        <VStack justifyContent="flex-end" px={2} w="full">
+          <SectionButton
+            Icon={SettingsIcon}
+            active={route === Route.SettingsCampaign}
+            label={t(Route.SettingsCampaign)}
             onClick={() => history.pushState({}, "", Route.SettingsCampaign)}
-            px={2}
-            variant="ghost"
-            w="full"
-          >
-            <Icon Icon={SettingsIcon} size="xs" /> {t(Route.SettingsCampaign)}
-          </Button>
+          />
         </VStack>
       )}
     </VStack>

@@ -135,7 +135,7 @@ const i18nContext = {
     it: "Moduli",
   },
   "sources": {
-    en: "Sources",
-    it: "Fonti",
+    en: "Source",
+    it: "Fonte",
   },
 };

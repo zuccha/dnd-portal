@@ -1,4 +1,4 @@
-import { Heading, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import z from "zod";
 import useDebouncedState from "~/hooks/use-debounced-value";
@@ -17,6 +17,7 @@ import { useSelectedSource } from "~/models/sources";
 import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 import Input from "~/ui/input";
+import SectionHeading from "~/ui/section-heading";
 import Select from "~/ui/select";
 import type { ResourcesContext } from "./resources-context";
 
@@ -68,7 +69,7 @@ export function createResourcesGenericFilters<
     return (
       <>
         <VStack h={8} justify="center">
-          <Heading size="sm">{t("heading")}</Heading>
+          <SectionHeading>{t("heading")}</SectionHeading>
         </VStack>
 
         <CaptionInput caption={t("modules")} w="full">

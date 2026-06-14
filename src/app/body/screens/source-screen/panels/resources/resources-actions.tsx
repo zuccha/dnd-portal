@@ -1,4 +1,4 @@
-import { HStack, Heading, Menu, Portal, VStack } from "@chakra-ui/react";
+import { HStack, Menu, Portal, VStack } from "@chakra-ui/react";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import YAML from "yaml";
@@ -14,6 +14,7 @@ import type { ResourceStore } from "~/models/resources/resource-store";
 import { useCanEditSourceResources } from "~/models/sources";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
+import SectionHeading from "~/ui/section-heading";
 import { downloadFile } from "~/utils/download";
 import type { ResourcesContext } from "./resources-context";
 
@@ -120,9 +121,9 @@ export function createResourcesActions<
     const disabled = !selectedFilteredResourceIds.length;
 
     return (
-      <VStack w="full">
+      <VStack px={6} w="full">
         <HStack h={8} justify="space-between" w="full">
-          <Heading size="sm">{t("actions")}</Heading>
+          <SectionHeading>{t("actions")}</SectionHeading>
 
           <Menu.Root>
             <Menu.Trigger asChild focusRing="outside" mr={-2} rounded="full">
