@@ -1,5 +1,6 @@
 import z from "zod";
 import { equipmentEntrySchema } from "../../other/equipment-bundle";
+import { languageEntrySchema } from "../../other/language-entries";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
 import { creatureChallengeRatingSchema } from "../../types/creature-challenge-rating";
@@ -43,7 +44,7 @@ export const dbCreatureSchema = dbResourceSchema.extend({
   hp_formula: z.string(),
   initiative: z.number(),
   language_additional_count: z.number(),
-  language_ids: z.array(z.uuid()),
+  language_entries: z.array(languageEntrySchema),
   language_scope: languageScopeSchema,
   passive_perception: z.number(),
   plane_ids: z.array(z.uuid()),

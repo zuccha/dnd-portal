@@ -1,4 +1,5 @@
 import { HStack } from "@chakra-ui/react";
+import { PlusIcon } from "lucide-react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { type Creature } from "~/models/resources/creatures/creature";
@@ -20,12 +21,14 @@ import { useCreatureTreasureOptions } from "~/models/types/creature-treasure";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
 import { useLanguageScopeOptions } from "~/models/types/language-scope";
+import Icon from "~/ui/icon";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
   createDistanceInputField,
   createEquipmentBundleField,
   createInputField,
+  createLanguageEntriesField,
   createMultipleSelectEnumField,
   createMultipleSelectIdsField,
   createNumberInputField,
@@ -286,17 +289,14 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useOptions: useLanguageScopeOptions,
   });
 
-  const LanguageIdsField = createResourceSearchField({
-    i18nContext: {
-      label: { en: "these...", it: "queste..." },
-      placeholder: { en: "None", it: "Nessuna" },
-    },
-    useField: form.createUseField("language_ids"),
+  const LanguageEntriesField = createLanguageEntriesField({
+    i18nContext: { label: { en: "", it: "" } },
+    useField: form.createUseField("language_entries"),
     useOptions: languageStore.useResourceOptions,
   });
 
   const LanguageAdditionalCountField = createNumberInputField({
-    i18nContext: { label: { en: "plus...", it: "più..." } },
+    i18nContext: { label: { en: "", it: "" } },
     inputProps: { min: 0 },
     useField: form.createUseField("language_additional_count"),
   });
@@ -639,11 +639,14 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
         {/* Language */}
         {languageScope === "specific" && (
-          <HStack align="flex-start" gap={2} w="full">
-            <LanguageIdsField
-              defaultValue={resource.language_ids}
+          <HStack align="flex-start" gap={2} mt={-1} w="full">
+            <LanguageEntriesField
+              defaultValue={resource.language_entries}
               sourceId={sourceId}
             />
+            <HStack h={10}>
+              <Icon Icon={PlusIcon} size="sm" />
+            </HStack>
             <LanguageAdditionalCountField
               defaultValue={resource.language_additional_count}
               w="5em"

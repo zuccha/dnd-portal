@@ -1,9 +1,15 @@
 import { HStack } from "@chakra-ui/react";
+import { useCallback, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
+import type { LanguageEntry } from "~/models/other/language-entries";
 import type { DBFeatureEntry } from "~/models/resources/features/db-feature";
 import type { ResourceOption } from "~/models/resources/resource";
+import {
+  type CreatureLanguageMode,
+  useCreatureLanguageModeOptions,
+} from "~/models/types/creature-language-mode";
 import Checkbox from "~/ui/checkbox";
 import CostInput from "~/ui/cost-input";
 import DistanceInput from "~/ui/distance-input";
@@ -295,6 +301,85 @@ export function createInputField({
   }
 
   return InputField;
+}
+
+//------------------------------------------------------------------------------
+// Create Language Entries Field
+//------------------------------------------------------------------------------
+
+export type LanguageEntriesFieldProps = Props<LanguageEntry[]> & {
+  sourceId: string;
+};
+
+export function createLanguageEntriesField({
+  i18nContext,
+  i18nContextExtra,
+  useField,
+  useOptions,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  useField: (
+    defaultValue: LanguageEntry[],
+  ) => FieldBag<string, LanguageEntry[]>;
+  useOptions: (sourceId: string) => ResourceOption[];
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function LanguageEntriesField({
+    defaultValue,
+    sourceId,
+    ...rest
+  }: LanguageEntriesFieldProps) {
+    const [mode, setMode] = useState<CreatureLanguageMode>("speaks");
+    const options = useOptions(sourceId);
+    const modeOptions = useCreatureLanguageModeOptions();
+    const { error, onValueChange, value } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    const languageIds = useMemo(
+      () => value.map(({ language_id }) => language_id),
+      [value],
+    );
+
+    const handleLanguageIdsChange = useCallback(
+      (ids: string[]) => {
+        onValueChange(
+          ids.map(
+            (id) =>
+              value.find(({ language_id }) => language_id === id) ?? {
+                language_id: id,
+                mode,
+              },
+          ),
+        );
+      },
+      [mode, onValueChange, value],
+    );
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <HStack align="flex-start" gap={1} w="full">
+          <Select.Enum
+            onValueChange={setMode}
+            options={modeOptions}
+            value={mode}
+            w="11rem"
+            withinDialog
+          />
+          <ResourceSearch
+            onValueChange={handleLanguageIdsChange}
+            options={options}
+            value={languageIds}
+            withinDialog
+          />
+        </HStack>
+      </Field>
+    );
+  }
+
+  return LanguageEntriesField;
 }
 
 //------------------------------------------------------------------------------

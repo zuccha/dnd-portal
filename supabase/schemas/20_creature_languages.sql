@@ -5,6 +5,7 @@
 CREATE TABLE IF NOT EXISTS public.creature_languages (
   creature_id uuid NOT NULL,
   language_id uuid NOT NULL,
+  mode public.creature_language_mode DEFAULT 'speaks'::public.creature_language_mode NOT NULL,
   CONSTRAINT creature_languages_pkey PRIMARY KEY (creature_id, language_id),
   CONSTRAINT creature_languages_creature_id_fkey FOREIGN KEY (creature_id) REFERENCES public.creatures(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT creature_languages_language_id_fkey FOREIGN KEY (language_id) REFERENCES public.languages(resource_id) ON UPDATE CASCADE ON DELETE CASCADE

@@ -5,6 +5,7 @@ import {
   equipmentBundleSchema,
   equipmentBundleToEntries,
 } from "../../other/equipment-bundle";
+import { languageEntrySchema } from "../../other/language-entries";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
 import { creatureChallengeRatingSchema } from "../../types/creature-challenge-rating";
@@ -51,7 +52,7 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
   hp_formula: z.string().default(""),
   initiative: z.number().default(0),
   language_additional_count: z.number().default(0),
-  language_ids: z.array(z.uuid()).default([]),
+  language_entries: z.array(languageEntrySchema).default([]),
   language_scope: languageScopeSchema.default("specific"),
   legendary_actions: z.string().default(""),
   passive_perception: z.number().default(10),
@@ -114,7 +115,7 @@ export function creatureFormDataToDB(data: Partial<CreatureFormData>): {
       hp_formula: data.hp_formula,
       initiative: data.initiative,
       language_additional_count: data.language_additional_count,
-      language_ids: data.language_ids,
+      language_entries: data.language_entries,
       language_scope: data.language_scope,
       passive_perception: data.passive_perception,
       plane_ids: data.plane_ids,

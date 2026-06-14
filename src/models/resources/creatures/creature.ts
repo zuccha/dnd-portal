@@ -5,6 +5,7 @@ import {
   equipmentBundleFromEntries,
   equipmentEntrySchema,
 } from "../../other/equipment-bundle";
+import { languageEntrySchema } from "../../other/language-entries";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
 import { creatureChallengeRatingSchema } from "../../types/creature-challenge-rating";
@@ -56,7 +57,7 @@ export const creatureSchema = resourceSchema
     hp_formula: z.string(),
     initiative: z.number(),
     language_additional_count: z.number(),
-    language_ids: z.array(z.uuid()),
+    language_entries: z.array(languageEntrySchema),
     language_scope: languageScopeSchema,
     legendary_actions: i18nStringSchema,
     passive_perception: z.number(),
@@ -118,7 +119,7 @@ export const defaultCreature: Creature = {
   hp_formula: "2d10",
   initiative: 0,
   language_additional_count: 0,
-  language_ids: [],
+  language_entries: [],
   language_scope: "specific",
   legendary_actions: {},
   passive_perception: 10,

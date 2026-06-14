@@ -370,14 +370,28 @@ export function useLocalizeCreature(
       }
 
       // Languages
+      const spokenLanguageIds = creature.language_entries
+        .filter(({ mode }) => mode === "speaks")
+        .map(({ language_id }) => language_id);
+      const understoodLanguageIds = creature.language_entries
+        .filter(({ mode }) => mode === "understands")
+        .map(({ language_id }) => language_id);
       const baseLanguages =
         creature.language_scope === "all" ? t("languages.all")
         : creature.language_scope === "none" ? ""
-        : creature.language_ids
+        : spokenLanguageIds
             .map(localizeLanguageName)
             .filter(Boolean)
             .sort()
             .join(", ");
+      const understoodLanguages =
+        creature.language_scope === "specific" ?
+          understoodLanguageIds
+            .map(localizeLanguageName)
+            .filter(Boolean)
+            .sort()
+            .join(", ")
+        : "";
       const additionalLanguages =
         (
           creature.language_additional_count > 0 &&
@@ -396,13 +410,20 @@ export function useLocalizeCreature(
       const languages =
         [
           [baseLanguages, additionalLanguages].filter(Boolean).join(" "),
+          understoodLanguages ?
+            tpi(
+              "languages.understands",
+              understoodLanguageIds.length,
+              understoodLanguages,
+            )
+          : "",
           telepathy,
         ]
           .filter(Boolean)
           .join("; ") || t("languages.none");
       if (languages) {
         info_parts.push([
-          tp("info.languages", creature.language_ids.length),
+          tp("info.languages", creature.language_entries.length),
           languages,
         ]);
       }
@@ -685,6 +706,14 @@ const i18nContext = {
   "languages.telepathy": {
     en: "Telepathy <1>",
     it: "Telepatia <1>",
+  },
+  "languages.understands/*": {
+    en: "understands <1> but can't speak",
+    it: "comprende <1> ma non li parla",
+  },
+  "languages.understands/1": {
+    en: "understands <1> but can't speak",
+    it: "comprende <1> ma non lo parla",
   },
   "senses.blindsight": {
     en: "Blindsight <1>",

@@ -49,7 +49,7 @@ CREATE TYPE public.creature_row AS (
   speed_walk integer,
   treasures public.creature_treasure[],
   equipment_entries jsonb,
-  language_ids uuid[],
+  language_entries jsonb,
   language_scope public.language_scope,
   tag_ids uuid[],
   plane_ids uuid[],
@@ -114,18 +114,31 @@ BEGIN
     r.blindsight, r.darkvision, r.telepathy_range, r.tremorsense, r.truesight
   );
 
-  INSERT INTO public.creature_languages (creature_id, language_id)
+  INSERT INTO public.creature_languages (creature_id, language_id, mode)
   SELECT
     v_id,
-    (value)::uuid
-  FROM jsonb_array_elements_text(
-    coalesce(p_creature->'language_ids', '[]'::jsonb)
-  ) v
+    e.language_id,
+    e.mode
+  FROM (
+    SELECT DISTINCT ON (language_id) language_id, mode
+    FROM (
+      SELECT
+        language_id,
+        coalesce(mode, 'speaks'::public.creature_language_mode) AS mode
+      FROM jsonb_to_recordset(
+        coalesce(p_creature->'language_entries', '[]'::jsonb)
+      ) AS e(
+        language_id uuid,
+        mode public.creature_language_mode
+      )
+    ) entries
+    ORDER BY language_id
+  ) e
   WHERE NOT EXISTS (
     SELECT 1
     FROM public.creature_languages cl
     WHERE cl.creature_id = v_id
-      AND cl.language_id = (v.value)::uuid
+      AND cl.language_id = e.language_id
   );
 
   INSERT INTO public.creature_planes (creature_id, plane_id)
@@ -249,7 +262,7 @@ AS $$
     c.speed_walk,
     c.treasures,
     coalesce(eq.equipment_entries, '[]'::jsonb) AS equipment_entries,
-    coalesce(cl.language_ids, '{}'::uuid[]) AS language_ids,
+    coalesce(cl.language_entries, '[]'::jsonb) AS language_entries,
     c.language_scope,
     coalesce(ct.tag_ids, '{}'::uuid[]) AS tag_ids,
     coalesce(cp.plane_ids, '{}'::uuid[]) AS plane_ids,
@@ -283,7 +296,7 @@ AS $$
   LEFT JOIN (
     SELECT
       cl.creature_id AS id,
-      array_agg(cl.language_id ORDER BY cl.language_id) AS language_ids
+      jsonb_agg(jsonb_build_object('language_id', cl.language_id, 'mode', cl.mode) ORDER BY cl.language_id) AS language_entries
     FROM public.creature_languages cl
     WHERE cl.creature_id = p_id
     GROUP BY cl.creature_id
@@ -513,7 +526,7 @@ t AS (
 cl AS (
   SELECT
     cl.creature_id AS id,
-    array_agg(cl.language_id ORDER BY cl.language_id) AS language_ids
+    jsonb_agg(jsonb_build_object('language_id', cl.language_id, 'mode', cl.mode) ORDER BY cl.language_id) AS language_entries
   FROM public.creature_languages cl
   GROUP BY cl.creature_id
 ),
@@ -590,7 +603,7 @@ SELECT
   f.speed_walk,
   f.treasures,
   coalesce(eq.equipment_entries, '[]'::jsonb) AS equipment_entries,
-  coalesce(cl.language_ids, '{}'::uuid[]) AS language_ids,
+  coalesce(cl.language_entries, '[]'::jsonb) AS language_entries,
   f.language_scope,
   coalesce(ct.tag_ids, '{}'::uuid[]) AS tag_ids,
   coalesce(cp.plane_ids, '{}'::uuid[]) AS plane_ids,
@@ -783,10 +796,23 @@ BEGIN
 
   WITH entries AS (
     SELECT
-      (value)::uuid AS language_id
-    FROM jsonb_array_elements_text(
-      coalesce(p_creature->'language_ids', '[]'::jsonb)
-    )
+      language_id,
+      mode
+    FROM (
+      SELECT DISTINCT ON (language_id) language_id, mode
+      FROM (
+        SELECT
+          language_id,
+          coalesce(mode, 'speaks'::public.creature_language_mode) AS mode
+        FROM jsonb_to_recordset(
+          coalesce(p_creature->'language_entries', '[]'::jsonb)
+        ) AS e(
+          language_id uuid,
+          mode public.creature_language_mode
+        )
+      ) raw_entries
+      ORDER BY language_id
+    ) entries
   )
   DELETE FROM public.creature_languages cl
   WHERE cl.creature_id = p_id
@@ -794,27 +820,41 @@ BEGIN
       SELECT 1
       FROM entries e
       WHERE e.language_id = cl.language_id
+        AND e.mode = cl.mode
     );
 
   WITH entries AS (
     SELECT
-      (value)::uuid AS language_id
-    FROM jsonb_array_elements_text(
-      coalesce(p_creature->'language_ids', '[]'::jsonb)
-    )
+      language_id,
+      mode
+    FROM (
+      SELECT DISTINCT ON (language_id) language_id, mode
+      FROM (
+        SELECT
+          language_id,
+          coalesce(mode, 'speaks'::public.creature_language_mode) AS mode
+        FROM jsonb_to_recordset(
+          coalesce(p_creature->'language_entries', '[]'::jsonb)
+        ) AS e(
+          language_id uuid,
+          mode public.creature_language_mode
+        )
+      ) raw_entries
+      ORDER BY language_id
+    ) entries
   )
-  INSERT INTO public.creature_languages (creature_id, language_id)
+  INSERT INTO public.creature_languages (creature_id, language_id, mode)
   SELECT
     p_id,
-    e.language_id
-  FROM (
-    SELECT DISTINCT language_id FROM entries
-  ) e
+    e.language_id,
+    e.mode
+  FROM entries e
   WHERE NOT EXISTS (
     SELECT 1
     FROM public.creature_languages cl
     WHERE cl.creature_id = p_id
       AND cl.language_id = e.language_id
+      AND cl.mode = e.mode
   );
 
   WITH entries AS (
