@@ -1,4 +1,5 @@
 import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
+import { PlusIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import {
@@ -9,6 +10,7 @@ import { equipmentStore } from "~/models/resources/equipment/equipment-store";
 import type { ResourceOption } from "~/models/resources/resource";
 import Button from "~/ui/button";
 import CostInput from "~/ui/cost-input";
+import Icon from "~/ui/icon";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Search, { type SearchRefObject } from "~/ui/search";
@@ -126,37 +128,46 @@ export default function EquipmentBundleEditor({
 
   return (
     <VStack gap={1} {...rest}>
-      <HStack gap={1} w="full">
-        <NumberInput
-          inputProps={{ w: "5em" }}
-          min={1}
-          onValueChange={setEquipmentQuantity}
-          value={equipmentQuantity}
-          w="5em"
-        />
-        <Search
-          emptyLabel={t("no_result")}
-          onFilter={filterResourceOptions}
-          onValueChange={setEquipmentId}
-          options={options}
-          placeholder={t("search")}
-          ref={searchRef}
-          value={equipmentId}
-          withinDialog={withinDialog}
-        />
-        <Button
-          disabled={!equipmentId}
-          onClick={addEquipment}
-          variant="outline"
-        >
-          {t("add")}
-        </Button>
-        :
-        <CostInput
-          onValueChange={(currency) => onValueChange({ ...value, currency })}
-          value={value.currency}
-          w="18em"
-        />
+      <HStack gap={1} w="full" wrap="wrap">
+        <HStack flex={1}>
+          <NumberInput
+            inputProps={{ w: "5em" }}
+            min={1}
+            onValueChange={setEquipmentQuantity}
+            value={equipmentQuantity}
+            w="5em"
+          />
+          <Search
+            emptyLabel={t("no_result")}
+            minW="10em"
+            onFilter={filterResourceOptions}
+            onValueChange={setEquipmentId}
+            options={options}
+            placeholder={t("search")}
+            ref={searchRef}
+            value={equipmentId}
+            withinDialog={withinDialog}
+          />
+          <Button
+            disabled={!equipmentId}
+            onClick={addEquipment}
+            variant="outline"
+          >
+            {t("add")}
+          </Button>
+        </HStack>
+
+        <HStack maxW="11em">
+          <HStack h={10}>
+            <Icon Icon={PlusIcon} size="sm" />
+          </HStack>
+
+          <CostInput
+            onValueChange={(currency) => onValueChange({ ...value, currency })}
+            value={value.currency}
+            w="18em"
+          />
+        </HStack>
       </HStack>
 
       {value.equipments.length > 0 && (

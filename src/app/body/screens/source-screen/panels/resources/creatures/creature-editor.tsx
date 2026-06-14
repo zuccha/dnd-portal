@@ -667,7 +667,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         )}
 
         {/* Gear */}
-        <GearField defaultValue={resource.gear} sourceId={sourceId} />
+        <GearField defaultValue={resource.gear} sourceId={sourceId} w="full" />
 
         {/* Actions and Traits */}
         <TraitsField defaultValue={resource.traits[lang] ?? ""} />

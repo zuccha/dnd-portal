@@ -207,6 +207,7 @@ export function createEquipmentBundleField({
         <EquipmentBundleEditor
           bgColor={translatable ? "bg.info" : undefined}
           sourceId={sourceId}
+          w="full"
           withinDialog
           {...field}
         />
