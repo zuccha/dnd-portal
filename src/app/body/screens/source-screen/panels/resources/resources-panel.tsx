@@ -69,7 +69,7 @@ export function createResourcesPanel<
     const printMode = context.usePrintMode();
 
     if (printMode)
-      return <ResourcesPrintMode h="full" sourceId={sourceId} w="full" />;
+      return <ResourcesPrintMode flex={1} h="full" sourceId={sourceId} />;
 
     return (
       <HStack
