@@ -13,11 +13,12 @@ import { HelpCircleIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Button from "~/ui/button";
+import CaptionInput from "~/ui/caption-input";
 import Checkbox from "~/ui/checkbox";
 import ColorPicker from "~/ui/color-picker";
-import Field from "~/ui/field";
 import IconButton from "~/ui/icon-button";
 import NumberInput from "~/ui/number-input";
+import SectionHeading from "~/ui/section-heading";
 import Select, { type SelectOption } from "~/ui/select";
 import { type PaletteName, usePaletteNameOptions } from "~/utils/palette";
 import type { StateSetter } from "~/utils/state";
@@ -198,161 +199,163 @@ export default function ResourcesPrintModeSettings({
         left={0}
         onClick={() => setRightPanelCollapsed((prev) => !prev)}
         position="absolute"
-        size="xs"
+        size="sm"
         top={5}
         transform="translateX(-50%)"
         variant="outline"
         zIndex="modal"
       />
 
-      <VStack display={collapsed ? "none" : "flex"} px={6} w="full">
-        <Field label={t("paper_layout.label")}>
+      <VStack display={collapsed ? "none" : "flex"} gap={4} px={6} w="full">
+        <HStack h={8} justify="space-between" w="full">
+          <SectionHeading>{t("settings.title")}</SectionHeading>
+        </HStack>
+
+        <CaptionInput caption={t("paper_layout.label")} w="full">
           <Select.Enum
             onValueChange={onPaperLayoutChange}
             options={paperLayoutOptions}
-            size="xs"
+            size="sm"
             value={paperLayout}
           />
-        </Field>
+        </CaptionInput>
 
-        <Field label={t("paper_type.label")}>
+        <CaptionInput caption={t("paper_type.label")} w="full">
           <Select.Enum
             onValueChange={onPaperTypeChange}
             options={paperTypeOptions}
-            size="xs"
+            size="sm"
             value={paperType}
           />
-        </Field>
+        </CaptionInput>
 
-        <Field>
-          <HStack align="center" gap={1} h={5}>
-            <Text fontSize="sm" fontWeight="medium" lineHeight={1.25}>
-              {t("print_quality.label")}
-            </Text>
-            <IconButton
-              Icon={HelpCircleIcon}
-              aria-label={t("help")}
-              h={5}
-              minW={5}
-              onClick={() => openDialog(printQuality, false)}
-              size="2xs"
-              variant="ghost"
-              w={5}
-            />
-          </HStack>
-          <HStack align="flex-start" w="full">
+        <HStack w="full">
+          <CaptionInput caption={t("print_quality.label")} flex={1}>
             <Select.Enum
               onValueChange={onPrintQualityChange}
               options={printQualityOptions}
-              size="xs"
+              size="sm"
               value={printQuality}
             />
-          </HStack>
-        </Field>
+          </CaptionInput>
 
-        <Field label={t("bleed.label")}>
-          <HStack>
-            <Checkbox
-              onValueChange={onBleedVisibleChange}
-              size="sm"
-              value={bleedVisible}
-            />
+          <IconButton
+            Icon={HelpCircleIcon}
+            aria-label={t("help")}
+            h={5}
+            minW={5}
+            onClick={() => openDialog(printQuality, false)}
+            size="xs"
+            variant="ghost"
+            w={5}
+          />
+        </HStack>
+
+        <HStack>
+          <Checkbox
+            onValueChange={onBleedVisibleChange}
+            size="sm"
+            value={bleedVisible}
+          />
+          <CaptionInput caption={t("bleed_x.label")}>
             <NumberInput
               disabled={!bleedVisible}
               onValueChange={(x) => onBleedSizeChange((b) => ({ ...b, x }))}
-              size="xs"
+              size="sm"
               step={0.01}
               value={bleedSize.x}
             />
+          </CaptionInput>
+          <CaptionInput caption={t("bleed_y.label")}>
             <NumberInput
               disabled={!bleedVisible}
               onValueChange={(y) => onBleedSizeChange((b) => ({ ...b, y }))}
-              size="xs"
+              size="sm"
               step={0.01}
               value={bleedSize.y}
             />
-          </HStack>
-        </Field>
+          </CaptionInput>
+        </HStack>
 
-        <Field label={t("page_crop_marks.label")}>
-          <HStack>
-            <Checkbox
-              onValueChange={onPageCropMarksVisibleChange}
-              size="sm"
-              value={pageCropMarksVisible}
-            />
+        <HStack>
+          <Checkbox
+            onValueChange={onPageCropMarksVisibleChange}
+            size="sm"
+            value={pageCropMarksVisible}
+          />
+          <CaptionInput caption={t("page_crop_marks.label")}>
             <NumberInput
               disabled={!pageCropMarksVisible}
               onValueChange={onPageCropMarksLengthChange}
-              size="xs"
+              size="sm"
               step={0.05}
               value={pageCropMarksLength}
             />
-            <ColorPicker
-              onValueChange={onPageCropMarksColorChange}
-              value={pageCropMarksColor}
-            />
-          </HStack>
-        </Field>
+          </CaptionInput>
+          <ColorPicker
+            onValueChange={onPageCropMarksColorChange}
+            value={pageCropMarksColor}
+          />
+        </HStack>
 
-        <Field label={t("card_crop_marks.label")}>
-          <HStack>
-            <Checkbox
-              onValueChange={onCardCropMarksVisibleChange}
-              size="sm"
-              value={cardCropMarksVisible}
-            />
+        <HStack>
+          <Checkbox
+            onValueChange={onCardCropMarksVisibleChange}
+            size="sm"
+            value={cardCropMarksVisible}
+          />
+          <CaptionInput caption={t("card_crop_marks.label")}>
             <NumberInput
               disabled={!cardCropMarksVisible}
               onValueChange={onCardCropMarksLengthChange}
-              size="xs"
+              size="sm"
               step={0.05}
               value={cardCropMarksLength}
             />
-            <ColorPicker
-              onValueChange={onCardCropMarksColorChange}
-              value={cardCropMarksColor}
+          </CaptionInput>
+          <ColorPicker
+            onValueChange={onCardCropMarksColorChange}
+            value={cardCropMarksColor}
+          />
+        </HStack>
+
+        <CaptionInput caption={t("palette_name.label")} w="full">
+          <Select.Enum
+            onValueChange={onPaletteNameChange}
+            options={paletteNameOptions}
+            size="sm"
+            value={paletteName}
+          />
+        </CaptionInput>
+
+        <VStack gap={1} w="full">
+          <HStack w="full">
+            <Checkbox
+              onValueChange={onShowImageChange}
+              size="sm"
+              value={showImage}
             />
+            <Span fontSize="sm">{t("show_images.label")}</Span>
           </HStack>
-        </Field>
 
-        <Field label={t("palette_name.label")}>
-          <VStack w="full">
-            <Select.Enum
-              onValueChange={onPaletteNameChange}
-              options={paletteNameOptions}
-              size="xs"
-              value={paletteName}
+          <HStack w="full">
+            <Checkbox
+              onValueChange={onBackgroundColorVisibleChange}
+              size="sm"
+              value={backgroundColorVisible}
             />
-          </VStack>
-        </Field>
+            <Span fontSize="sm">{t("background_color_visible.label")}</Span>
+          </HStack>
 
-        <HStack w="full">
-          <Checkbox
-            onValueChange={onShowImageChange}
-            size="sm"
-            value={showImage}
-          />
-          <Span fontSize="xs">{t("show_images.label")}</Span>
-        </HStack>
-
-        <HStack w="full">
-          <Checkbox
-            onValueChange={onBackgroundColorVisibleChange}
-            size="sm"
-            value={backgroundColorVisible}
-          />
-          <Span fontSize="xs">{t("background_color_visible.label")}</Span>
-        </HStack>
-
-        <HStack w="full">
-          <Checkbox
-            onValueChange={onIncludeEmptyBackChange}
-            size="sm"
-            value={includeEmptyBack}
-          />
-          <Span fontSize="xs">{t("include_empty_back.label")}</Span>
-        </HStack>
+          <HStack w="full">
+            <Checkbox
+              onValueChange={onIncludeEmptyBackChange}
+              size="sm"
+              value={includeEmptyBack}
+            />
+            <Span fontSize="sm">{t("include_empty_back.label")}</Span>
+          </HStack>
+        </VStack>
       </VStack>
 
       <HStack
@@ -361,11 +364,11 @@ export default function ResourcesPrintModeSettings({
         px={6}
         w="full"
       >
-        <Button onClick={onClose} size="xs" variant="outline">
+        <Button onClick={onClose} size="sm" variant="outline">
           {t("close")}
         </Button>
 
-        <Button onClick={print} size="xs">
+        <Button onClick={print} size="sm">
           {t("print")}
         </Button>
       </HStack>
@@ -480,13 +483,17 @@ const i18nContext = {
     en: "Include background",
     it: "Includi sfondo",
   },
-  "bleed.label": {
-    en: "Bleed",
-    it: "Bleed",
+  "bleed_x.label": {
+    en: "Bleed X",
+    it: "Bleed X",
+  },
+  "bleed_y.label": {
+    en: "Bleed Y",
+    it: "Bleed Y",
   },
   "card_crop_marks.label": {
     en: "Crop Marks (Card)",
-    it: "Marchi di Taglio (Carta)",
+    it: "Marchi (Carta)",
   },
   "close": {
     en: "Close",
@@ -506,7 +513,7 @@ const i18nContext = {
   },
   "page_crop_marks.label": {
     en: "Crop Marks (Page)",
-    it: "Marchi di Taglio (Pagina)",
+    it: "Marchi (Pagina)",
   },
   "palette_name.label": {
     en: "Color",
