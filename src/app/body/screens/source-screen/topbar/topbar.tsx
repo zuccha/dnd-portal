@@ -28,7 +28,7 @@ export default function Topbar() {
       justify="space-between"
       px={{ base: 3, md: 6 }}
       w="full"
-      zIndex="popover"
+      zIndex="docked"
     >
       <HStack
         flex={1}

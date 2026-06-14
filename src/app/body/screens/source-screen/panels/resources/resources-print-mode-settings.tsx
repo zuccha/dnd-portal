@@ -188,7 +188,7 @@ export default function ResourcesPrintModeSettings({
       right={0}
       top={0}
       w={collapsed ? "2rem" : "15rem"}
-      zIndex="modal"
+      zIndex="docked"
       {...rest}
     >
       <IconButton
@@ -202,7 +202,7 @@ export default function ResourcesPrintModeSettings({
         top={5}
         transform="translateX(-50%)"
         variant="outline"
-        zIndex="modal"
+        zIndex="docked"
       />
 
       <VStack display={collapsed ? "none" : "flex"} gap={4} px={6} w="full">

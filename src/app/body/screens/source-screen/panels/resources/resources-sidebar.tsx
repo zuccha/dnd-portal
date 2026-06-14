@@ -65,7 +65,7 @@ export function createResourcesSidebar<
         right={0}
         top={0}
         w={collapsed ? "2rem" : "15rem"}
-        zIndex="modal"
+        zIndex="docked"
       >
         <ResourcesSidebarToggleButton />
 

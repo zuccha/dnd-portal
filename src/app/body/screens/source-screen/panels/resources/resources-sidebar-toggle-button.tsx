@@ -25,7 +25,7 @@ export default function ResourcesSidebarToggleButton(
       top={5}
       transform="translateX(-50%)"
       variant="outline"
-      zIndex="modal"
+      zIndex="docked"
       {...props}
     />
   );

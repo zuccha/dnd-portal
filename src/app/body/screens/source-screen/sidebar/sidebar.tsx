@@ -29,7 +29,7 @@ export default function Sidebar() {
       position={{ base: "absolute", md: "relative" }}
       top={0}
       w={collapsed ? "2rem" : "15rem"}
-      zIndex="modal"
+      zIndex="docked"
     >
       <IconButton
         Icon={MenuIcon}
@@ -42,7 +42,7 @@ export default function Sidebar() {
         top={5}
         transform="translateX(50%)"
         variant="outline"
-        zIndex="modal"
+        zIndex="docked"
       />
 
       <VStack
