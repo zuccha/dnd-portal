@@ -3,6 +3,7 @@ import { PanelLeftIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
+import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import { usePrintModeActive } from "../panels/resources/resources-print-mode-state";
 import { useRightPanelSetCollapsed } from "../right-panel-state";
@@ -46,7 +47,13 @@ export default function Topbar() {
           size="sm"
           variant="ghost"
         />
-        <Span color="fg.error">D&D</Span> Portal
+        <Button
+          cursor="pointer"
+          onClick={() => history.pushState({}, "", Route._)}
+          unstyled
+        >
+          <Span color="fg.error">D&D</Span> Portal
+        </Button>
       </HStack>
 
       <HStack gap={{ base: 1, md: 2 }}>
