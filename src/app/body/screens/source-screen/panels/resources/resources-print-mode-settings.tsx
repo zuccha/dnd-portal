@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { HelpCircleIcon, PanelRightIcon } from "lucide-react";
-import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
@@ -62,7 +62,6 @@ export type ResourcesPrintModeSettingsProps = StackProps & {
   onPrint: (quality: PrintQuality) => void;
   onPrintQualityChange: StateSetter<PrintQuality>;
   onShowImageChange: StateSetter<boolean>;
-  onZoomChange: Dispatch<SetStateAction<number>>;
   showImage: boolean;
   pageCropMarksColor: string;
   pageCropMarksLength: number;
@@ -71,7 +70,6 @@ export type ResourcesPrintModeSettingsProps = StackProps & {
   paperLayout: PaperLayout;
   paperType: PaperType;
   printQuality: PrintQuality;
-  zoom: number;
 };
 
 export default function ResourcesPrintModeSettings({
@@ -99,7 +97,6 @@ export default function ResourcesPrintModeSettings({
   onPrint,
   onPrintQualityChange,
   onShowImageChange,
-  onZoomChange,
   pageCropMarksColor,
   pageCropMarksLength,
   pageCropMarksVisible,
@@ -108,7 +105,6 @@ export default function ResourcesPrintModeSettings({
   paperType,
   printQuality,
   showImage,
-  zoom,
   ...rest
 }: ResourcesPrintModeSettingsProps) {
   const { t } = useI18nLangContext(i18nContext);
@@ -318,15 +314,6 @@ export default function ResourcesPrintModeSettings({
               value={paletteName}
             />
           </VStack>
-        </Field>
-
-        <Field label={t("zoom.label")}>
-          <NumberInput
-            min={1}
-            onValueChange={onZoomChange}
-            size="xs"
-            value={zoom}
-          />
         </Field>
 
         <HStack w="full">
@@ -604,9 +591,5 @@ const i18nContext = {
   "show_images.label": {
     en: "Include image",
     it: "Includi immagine",
-  },
-  "zoom.label": {
-    en: "Zoom",
-    it: "Zoom",
   },
 };

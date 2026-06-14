@@ -204,7 +204,6 @@ export function createResourcesPrintMode<
           h="full"
           overflow="auto"
           p={4}
-          zoom={zoom}
         >
           <VStack
             className="printable"
@@ -213,6 +212,7 @@ export function createResourcesPrintMode<
             pointerEvents="none"
             position="relative"
             w={`${paperWidth}in`}
+            zoom={zoom}
           >
             <VStack gap={0} position="absolute">
               {range(papersCount).map((paperNumber) => (
@@ -325,7 +325,6 @@ export function createResourcesPrintMode<
           onPrint={print}
           onPrintQualityChange={setPrintQuality}
           onShowImageChange={setShowImage}
-          onZoomChange={setZoom}
           pageCropMarksColor={pageCropMarksColor}
           pageCropMarksLength={pageCropMarksLength}
           pageCropMarksVisible={pageCropMarksVisible}
@@ -334,7 +333,6 @@ export function createResourcesPrintMode<
           paperType={paperType}
           printQuality={printQuality}
           showImage={showImage}
-          zoom={zoom}
         />
       </HStack>
     );
