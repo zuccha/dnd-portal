@@ -1,3 +1,5 @@
+import ConcentrationIcon from "~/icons/concentration-icon";
+import RitualIcon from "~/icons/ritual-icon";
 import { type LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import { type Spell } from "~/models/resources/spells/spell";
 import {
@@ -37,6 +39,7 @@ const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
     maxW: "9em",
   },
   {
+    icon: RitualIcon,
     key: "ritual",
     label: { en: "R", it: "R" },
     textAlign: "center",
@@ -53,6 +56,7 @@ const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
     maxW: "9em",
   },
   {
+    icon: ConcentrationIcon,
     key: "concentration",
     label: { en: "C", it: "C" },
     textAlign: "center",

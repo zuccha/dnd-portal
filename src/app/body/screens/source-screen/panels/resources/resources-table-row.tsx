@@ -1,4 +1,4 @@
-import { Table, VStack } from "@chakra-ui/react";
+import { Table, VStack, createIcon } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
@@ -27,7 +27,7 @@ export type ResourcesTableRowExtra<
   L extends LocalizedResource<R>,
 > = {
   columns: (Table.ColumnHeaderProps & {
-    icon?: LucideIcon;
+    icon?: LucideIcon | ReturnType<typeof createIcon>;
     key: keyof L;
     label: I18nString;
   })[];
