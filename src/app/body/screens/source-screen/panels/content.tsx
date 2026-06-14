@@ -1,10 +1,8 @@
-import { MapIcon } from "lucide-react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
 import { useRoute } from "~/navigation/navigation";
 import Redirect from "~/navigation/redirect";
 import { Route } from "~/navigation/routes";
-import EmptyState from "~/ui/empty-state";
+import HomePanel from "./home/home-panel";
 import BackgroundsPanel from "./resources/backgrounds/backgrounds-panel";
 import CharacterClassesPanel from "./resources/character-classes/character-classes-panel";
 import CharacterSubclassesPanel from "./resources/character-subclasses/character-subclasses-panel";
@@ -30,24 +28,12 @@ import CampaignPanel from "./settings/campaign-panel";
 //------------------------------------------------------------------------------
 
 export default function Content() {
-  const { t } = useI18nLangContext(i18nContext);
-
   const route = useRoute();
   const [selectedCampaignId] = useSelectedSourceId();
 
   if (!selectedCampaignId) return null;
 
-  if (route === Route._)
-    return (
-      <EmptyState
-        Icon={MapIcon}
-        alignSelf="center"
-        flex={1}
-        mb="10%"
-        subtitle={t("welcome.subtitle")}
-        title={t("welcome.title")}
-      />
-    );
+  if (route === Route._) return <HomePanel />;
 
   const Panel = panels[route];
   if (Panel) return <Panel sourceId={selectedCampaignId} />;
@@ -79,20 +65,4 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesWorldLanguages]: LanguagesPanel,
   [Route.ResourcesWorldPlanes]: PlanesPanel,
   [Route.SettingsCampaign]: CampaignPanel,
-};
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  "welcome.title": {
-    en: "Welcome to D&D Portal",
-    it: "Benvenutə su D&D Portal",
-  },
-
-  "welcome.subtitle": {
-    en: "Select a resource type from the sidebar",
-    it: "Seleziona un tipo di risorsa dal menu laterale",
-  },
 };
