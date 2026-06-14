@@ -95,6 +95,7 @@ export function createResourcesTableRow<
 
     const toggleSelection = useCallback(
       (e: React.MouseEvent) => {
+        e.preventDefault();
         e.stopPropagation();
         toggleResourceSelection();
       },
@@ -111,7 +112,12 @@ export function createResourcesTableRow<
           }
         >
           <Table.Cell textAlign="center" w="4em">
-            <Checkbox onClick={toggleSelection} size="sm" value={selected} />
+            <Checkbox
+              mt={0.5}
+              onClick={toggleSelection}
+              size="sm"
+              value={selected}
+            />
           </Table.Cell>
 
           <Table.Cell textAlign="center" w="3em">
@@ -139,7 +145,7 @@ export function createResourcesTableRow<
                 {key === "name" && editable ?
                   <Link onClick={edit}>{String(value)}</Link>
                 : typeof value === "boolean" ?
-                  <Checkbox disabled size="sm" value={value} />
+                  <Checkbox disabled mt={0.5} size="sm" value={value} />
                 : String(value) || "-"}
               </Table.Cell>
             );

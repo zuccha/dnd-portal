@@ -1,4 +1,4 @@
-import { Checkbox, HStack, VStack } from "@chakra-ui/react";
+import { HStack, VStack } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
@@ -11,6 +11,7 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";
 import CaptionInput from "~/ui/caption-input";
+import Checkbox from "~/ui/checkbox";
 import NumberInput from "~/ui/number-input";
 import SectionHeading from "~/ui/section-heading";
 import Select from "~/ui/select";
@@ -100,15 +101,11 @@ export function createResourcesViewSettings<
             </CaptionInput>
 
             {cardMode === "paginated" && (
-              <Checkbox.Root
-                checked={showImage}
-                onCheckedChange={(e) => context.setShowImage(!!e.checked)}
-                size="sm"
-              >
-                <Checkbox.HiddenInput />
-                <Checkbox.Control />
-                <Checkbox.Label>{t("show_images")}</Checkbox.Label>
-              </Checkbox.Root>
+              <Checkbox
+                label={t("show_images")}
+                onValueChange={context.setShowImage}
+                value={showImage}
+              />
             )}
           </VStack>
         )}

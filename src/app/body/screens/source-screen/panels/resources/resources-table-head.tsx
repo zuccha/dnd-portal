@@ -11,7 +11,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import Checkbox from "~/ui/checkbox";
+import CheckboxIndeterminate from "~/ui/checkbox-indeterminate";
 import Icon from "~/ui/icon";
 import type { ResourcesContext } from "./resources-context";
 
@@ -67,18 +67,28 @@ export function createResourcesTableHead<
 
     const selected =
       selectedFilteredResourceIds.length === filteredResourceIds.length ? true
-      : selectedFilteredResourceIds.length > 0 ? "-"
+      : selectedFilteredResourceIds.length > 0 ? "indeterminate"
       : false;
 
-    const toggleSelected = useCallback(() => {
-      if (selected === true) deselectAllResources();
-      else selectAllResources();
-    }, [deselectAllResources, selectAllResources, selected]);
+    const toggleSelected = useCallback(
+      (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (selected === true) deselectAllResources();
+        else selectAllResources();
+      },
+      [deselectAllResources, selectAllResources, selected],
+    );
 
     return (
       <Table.Row>
         <Table.ColumnHeader textAlign="center" w="4em">
-          <Checkbox onClick={toggleSelected} size="sm" value={selected} />
+          <CheckboxIndeterminate
+            mt={0.5}
+            onClick={toggleSelected}
+            size="sm"
+            value={selected}
+          />
         </Table.ColumnHeader>
 
         <Table.ColumnHeader textAlign="center" w="3em">

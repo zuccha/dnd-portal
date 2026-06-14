@@ -4,44 +4,37 @@ import {
 } from "@chakra-ui/react";
 
 //------------------------------------------------------------------------------
-// Checkbox
+// Checkbox Indeterminate
 //------------------------------------------------------------------------------
 
-export type CheckboxProps = Omit<
+export type CheckboxIndeterminateProps = Omit<
   ChakraCheckboxRootProps,
   "checked" | "defaultChecked" | "onCheckedChange" | "value"
 > & {
-  defaultValue?: boolean;
+  defaultValue?: boolean | "indeterminate";
   label?: string;
-  onValueChange?: (checked: boolean) => void;
-  value?: boolean;
+  onValueChange?: (checked: boolean | "indeterminate") => void;
+  value: boolean | "indeterminate";
 };
 
-export default function Checkbox({
+export default function CheckboxIndeterminate({
   defaultValue,
   label,
   onValueChange,
   value,
   ...rest
-}: CheckboxProps) {
+}: CheckboxIndeterminateProps) {
   return (
     <ChakraCheckbox.Root
-      _disabled={{ cursor: "disabled" }}
       checked={value}
-      cursor="pointer"
       defaultChecked={defaultValue}
-      onCheckedChange={(e) => onValueChange?.(!!e.checked)}
+      onCheckedChange={(e) => onValueChange?.(e.checked)}
       size="sm"
       {...rest}
     >
       <ChakraCheckbox.HiddenInput />
-      <ChakraCheckbox.Control
-        _disabled={{ cursor: "disabled" }}
-        cursor="pointer"
-      />
-      {label && (
-        <ChakraCheckbox.Label fontWeight="normal">{label}</ChakraCheckbox.Label>
-      )}
+      <ChakraCheckbox.Control />
+      {label && <ChakraCheckbox.Label>{label}</ChakraCheckbox.Label>}
     </ChakraCheckbox.Root>
   );
 }

@@ -4,7 +4,6 @@ import {
   HStack,
   Image,
   Portal,
-  Span,
   type StackProps,
   Text,
   VStack,
@@ -329,32 +328,27 @@ export default function ResourcesPrintModeSettings({
         </CaptionInput>
 
         <VStack gap={1} w="full">
-          <HStack w="full">
-            <Checkbox
-              onValueChange={onShowImageChange}
-              size="sm"
-              value={showImage}
-            />
-            <Span fontSize="sm">{t("show_images.label")}</Span>
-          </HStack>
-
-          <HStack w="full">
-            <Checkbox
-              onValueChange={onBackgroundColorVisibleChange}
-              size="sm"
-              value={backgroundColorVisible}
-            />
-            <Span fontSize="sm">{t("background_color_visible.label")}</Span>
-          </HStack>
-
-          <HStack w="full">
-            <Checkbox
-              onValueChange={onIncludeEmptyBackChange}
-              size="sm"
-              value={includeEmptyBack}
-            />
-            <Span fontSize="sm">{t("include_empty_back.label")}</Span>
-          </HStack>
+          <Checkbox
+            label={t("show_images.label")}
+            onValueChange={onShowImageChange}
+            size="sm"
+            value={showImage}
+            w="full"
+          />
+          <Checkbox
+            label={t("background_color_visible.label")}
+            onValueChange={onBackgroundColorVisibleChange}
+            size="sm"
+            value={backgroundColorVisible}
+            w="full"
+          />
+          <Checkbox
+            label={t("include_empty_back.label")}
+            onValueChange={onIncludeEmptyBackChange}
+            size="sm"
+            value={includeEmptyBack}
+            w="full"
+          />
         </VStack>
       </VStack>
 
@@ -450,14 +444,12 @@ function PrintHelpDialog({
             </Dialog.Body>
 
             <Dialog.Footer justifyContent="space-between">
-              <HStack>
-                <Checkbox
-                  onValueChange={onDismissChange}
-                  size="sm"
-                  value={dismiss}
-                />
-                <Span fontSize="sm">{t("print_help.dismiss")}</Span>
-              </HStack>
+              <Checkbox
+                label={t("print_help.dismiss")}
+                onValueChange={onDismissChange}
+                size="sm"
+                value={dismiss}
+              />
 
               <Button onClick={onConfirm}>
                 {print ? t("ok") : t("close")}
