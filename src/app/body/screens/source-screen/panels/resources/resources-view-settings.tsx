@@ -60,7 +60,7 @@ export function createResourcesViewSettings<
         </HStack>
 
         {view === "cards" && (
-          <VStack pb={3} w="full">
+          <VStack align="flex-start" pb={3} w="full">
             <HStack w="full" wrap="wrap">
               <CaptionInput caption={t("zoom")} flex={1}>
                 <NumberInput
