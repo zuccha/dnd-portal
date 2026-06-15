@@ -5,6 +5,7 @@ CREATE TYPE public.item_type AS ENUM (
   'scroll',
   'staff',
   'wand',
+  'drawn_vehicle',
   'other'
 );
 
