@@ -21,7 +21,9 @@ CREATE TYPE public.equipment_row AS (
   weight integer,
   feature_entries jsonb,
   -- Equipment Translation
-  notes jsonb
+  notes jsonb,
+  required_attunement_slots smallint,
+  attunement_notes jsonb
 );
 
 
@@ -58,9 +60,9 @@ BEGIN
   );
 
   INSERT INTO public.equipments (
-    resource_id, cost, magic, rarity, weight
+    resource_id, cost, magic, rarity, required_attunement_slots, weight
   ) VALUES (
-    v_id, r.cost, r.magic, r.rarity, r.weight
+    v_id, r.cost, r.magic, r.rarity, coalesce(r.required_attunement_slots, 0), r.weight
   );
 
   perform public.replace_resource_feature_entries(
@@ -106,12 +108,15 @@ AS $$
     e.rarity,
     e.weight,
     public.fetch_resource_feature_entries(r.id) AS feature_entries,
-    coalesce(tt.notes, '{}'::jsonb) AS notes
+    coalesce(tt.notes, '{}'::jsonb) AS notes,
+    e.required_attunement_slots,
+    coalesce(tt.attunement_notes, '{}'::jsonb) AS attunement_notes
   FROM public.fetch_resource(p_id) AS r
   JOIN public.equipments e ON e.resource_id = r.id
   LEFT JOIN (
     SELECT
       e.resource_id AS id,
+      jsonb_object_agg(t.lang, t.attunement_notes) AS attunement_notes,
       jsonb_object_agg(t.lang, t.notes) AS notes
     FROM public.equipments e
     LEFT JOIN public.equipment_translations t ON t.resource_id = e.resource_id
@@ -146,6 +151,8 @@ WITH prefs AS (
   SELECT
     (p_filters ? 'magic')::int::boolean   AS has_magic_filter,
     (p_filters->>'magic')::boolean        AS magic_val,
+    (p_filters ? 'requires_attunement')::int::boolean AS has_attunement_filter,
+    (p_filters->>'requires_attunement')::boolean      AS attunement_val,
     (
       SELECT coalesce(array_agg(lower(e.key)::public.equipment_rarity), null)
       FROM jsonb_each_text(p_filters->'rarities') AS e(key, value)
@@ -183,6 +190,7 @@ src AS (
     e.cost,
     e.magic,
     e.rarity,
+    e.required_attunement_slots,
     e.weight
   FROM base b
   JOIN public.equipments e ON e.resource_id = b.id
@@ -192,12 +200,14 @@ filtered AS (
   FROM src s, prefs p
   WHERE
         (not p.has_magic_filter OR s.magic = p.magic_val)
+    AND (not p.has_attunement_filter OR (s.required_attunement_slots > 0) = p.attunement_val)
     AND (p.rarity_inc IS NULL OR s.rarity = any(p.rarity_inc))
     AND (p.rarity_exc IS NULL OR NOT (s.rarity = any(p.rarity_exc)))
 ),
 t AS (
   SELECT
     f.id,
+    jsonb_object_agg(t.lang, t.attunement_notes) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS attunement_notes,
     jsonb_object_agg(t.lang, t.notes) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS notes
   FROM filtered f
   LEFT JOIN public.equipment_translations t ON t.resource_id = f.id
@@ -220,7 +230,9 @@ SELECT
   f.rarity,
   f.weight,
   public.fetch_resource_feature_entries(f.id) AS feature_entries,
-  coalesce(tt.notes, '{}'::jsonb) AS notes
+  coalesce(tt.notes, '{}'::jsonb) AS notes,
+  f.required_attunement_slots,
+  coalesce(tt.attunement_notes, '{}'::jsonb) AS attunement_notes
 FROM filtered f
 LEFT JOIN t tt ON tt.id = f.id
 ORDER BY
@@ -259,12 +271,13 @@ BEGIN
   r := jsonb_populate_record(null::public.equipment_translations, p_equipment_translation);
 
   INSERT INTO public.equipment_translations AS et (
-    resource_id, lang, notes
+    resource_id, lang, attunement_notes, notes
   ) VALUES (
-    p_id, p_lang, r.notes
+    p_id, p_lang, r.attunement_notes, r.notes
   )
   ON conflict (resource_id, lang) DO UPDATE
   SET
+    attunement_notes = excluded.attunement_notes,
     notes = excluded.notes;
 END;
 $$;
@@ -307,9 +320,9 @@ BEGIN
 
   UPDATE public.equipments e
   SET (
-    cost, magic, rarity, weight
+    cost, magic, rarity, required_attunement_slots, weight
   ) = (
-    SELECT r.cost, r.magic, r.rarity, r.weight
+    SELECT r.cost, r.magic, r.rarity, r.required_attunement_slots, r.weight
     FROM jsonb_populate_record(null::public.equipments, to_jsonb(e) || p_equipment) AS r
   )
   WHERE e.resource_id = p_id;

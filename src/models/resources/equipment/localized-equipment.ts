@@ -40,7 +40,7 @@ export function useLocalizeEquipment<E extends Equipment>(
   sourceId: string,
 ): (equipment: E) => LocalizedEquipment<E> {
   const localizeResource = useLocalizeResource<E>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
 
   const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
@@ -50,12 +50,25 @@ export function useLocalizeEquipment<E extends Equipment>(
   return useCallback(
     (equipment: E): LocalizedEquipment<E> => {
       const rarity = translateRarity(equipment.rarity).label;
+      const attunementNotes = translate(equipment.attunement_notes, lang);
+      const attunementSlots = equipment.required_attunement_slots;
+      const attunement =
+        equipment.magic ?
+          attunementNotes ?
+            tpi(
+              "attunement.with_notes",
+              attunementSlots,
+              `${attunementSlots}`,
+              attunementNotes,
+            )
+          : tpi("attunement", attunementSlots, `${attunementSlots}`)
+        : "";
       const notes = translate(equipment.notes, lang);
       const features = formatFeatureEntriesDetails(equipment.feature_entries);
 
       return {
         ...localizeResource(equipment),
-        details: formatDetails(notes, features),
+        details: formatDetails(attunement, notes, features),
 
         cost: formatCost(equipment.cost),
         magic: equipment.magic,
@@ -77,6 +90,7 @@ export function useLocalizeEquipment<E extends Equipment>(
       localizeResource,
       t,
       ti,
+      tpi,
       translateRarity,
     ],
   );
@@ -87,6 +101,22 @@ export function useLocalizeEquipment<E extends Equipment>(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "attunement.with_notes/*": {
+    en: "_Requires attunement <2> (<1> slots)._",
+    it: "_Richiede sintonia <2> (<1> slot)._",
+  },
+  "attunement.with_notes/1": {
+    en: "_Requires attunement <2>._",
+    it: "_Richiede sintonia <2>._",
+  },
+  "attunement/*": {
+    en: "_Requires attunement (<1> slots)._",
+    it: "_Richiede sintonia (<1> slot)._",
+  },
+  "attunement/1": {
+    en: "_Requires attunement._",
+    it: "_Richiede sintonia._",
+  },
   "magic_type.magic": {
     en: "<1> Magic Item",
     it: "Oggetto Magico <1>",

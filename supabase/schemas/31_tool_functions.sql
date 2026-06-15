@@ -26,7 +26,9 @@ CREATE TYPE public.tool_row AS (
   craft_ids uuid[],
   type public.tool_type,
   -- Tool Translation
-  utilize jsonb
+  utilize jsonb,
+  required_attunement_slots smallint,
+  attunement_notes jsonb
 );
 
 
@@ -118,7 +120,9 @@ AS $$
     t.ability,
     coalesce(tc.craft_ids, '{}'::uuid[]) AS craft_ids,
     t.type,
-    coalesce(tt.utilize, '{}'::jsonb) AS utilize
+    coalesce(tt.utilize, '{}'::jsonb) AS utilize,
+    e.required_attunement_slots,
+    e.attunement_notes
   FROM public.fetch_equipment(p_id) AS e
   JOIN public.tools t ON t.resource_id = e.id
   LEFT JOIN (
@@ -210,6 +214,8 @@ src AS (
     b.weight,
     b.feature_entries,
     b.notes,
+    b.required_attunement_slots,
+    b.attunement_notes,
     t.ability,
     t.type
   FROM base b
@@ -260,7 +266,9 @@ SELECT
   f.ability,
   coalesce(tc.craft_ids, '{}'::uuid[]) AS craft_ids,
   f.type,
-  coalesce(tt.utilize, '{}'::jsonb) AS utilize
+  coalesce(tt.utilize, '{}'::jsonb) AS utilize,
+  f.required_attunement_slots,
+  f.attunement_notes
 FROM filtered f
 LEFT JOIN tt ON tt.id = f.id
 LEFT JOIN tc ON tc.id = f.id

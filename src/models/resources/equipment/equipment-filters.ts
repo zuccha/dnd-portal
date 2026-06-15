@@ -20,6 +20,7 @@ export const equipmentFiltersSchema = resourceFiltersSchema.extend({
   rarities: z
     .partialRecord(equipmentRaritySchema, z.boolean().optional())
     .optional(),
+  requires_attunement: z.boolean().optional(),
 });
 
 export type EquipmentFilters = z.infer<typeof equipmentFiltersSchema>;

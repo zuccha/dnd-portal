@@ -10,11 +10,13 @@ import { type DBEquipment, type DBEquipmentTranslation } from "./db-equipment";
 //------------------------------------------------------------------------------
 
 export const equipmentFormDataSchema = resourceFormDataSchema.extend({
+  attunement_notes: z.string().default(""),
   cost: z.number().default(0),
   feature_entries: z.array(dbFeatureEntrySchema).default([]),
   magic: z.boolean().default(false),
   notes: z.string().default(""),
   rarity: equipmentRaritySchema.default("common"),
+  required_attunement_slots: z.number().default(0),
   weight: z.number().default(0),
 });
 
@@ -37,10 +39,12 @@ export function equipmentFormDataToDB(data: Partial<EquipmentFormData>): {
       feature_entries: data.feature_entries,
       magic: data.magic,
       rarity: data.rarity,
+      required_attunement_slots: data.required_attunement_slots,
       weight: data.weight,
     },
     translation: {
       ...translation,
+      attunement_notes: data.attunement_notes,
       notes: data.notes,
     },
   };

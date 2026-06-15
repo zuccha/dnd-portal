@@ -12,6 +12,7 @@ export const dbEquipmentSchema = dbResourceSchema.extend({
   feature_entries: z.array(dbFeatureEntrySchema),
   magic: z.boolean(),
   rarity: equipmentRaritySchema,
+  required_attunement_slots: z.number(),
   weight: z.number(),
 });
 
@@ -22,6 +23,7 @@ export type DBEquipment = z.infer<typeof dbEquipmentSchema>;
 //------------------------------------------------------------------------------
 
 export const dbEquipmentTranslationSchema = dbResourceTranslationSchema.extend({
+  attunement_notes: z.string().nullish(),
   notes: z.string().nullish(),
 });
 

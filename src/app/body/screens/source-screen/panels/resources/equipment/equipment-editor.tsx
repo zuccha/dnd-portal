@@ -10,6 +10,8 @@ import { createResourceEditor } from "../resource-editor";
 import {
   createCostInputField,
   createFeatureEntriesField,
+  createInputField,
+  createNumberInputField,
   createSelectEnumField,
   createSelectField,
   createTextareaField,
@@ -62,14 +64,41 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
     true: { en: "Magic", it: "Magico" },
   };
 
+  const useMagicField = form.createUseField("magic");
+
   const MagicField = createSelectField({
     i18nContext: { label: { en: "Magic", it: "Magico" } },
     inputProps: {
       parse: (value) => value === "true",
       stringify: (value) => `${value}`,
     },
-    useField: form.createUseField("magic"),
+    useField: useMagicField,
     useOptions: () => useBooleanOptions(magicFieldBooleanOptionsI18nContext),
+  });
+
+  //----------------------------------------------------------------------------
+  // Attunement
+  //----------------------------------------------------------------------------
+
+  const useRequiredAttunementSlotsField = form.createUseField(
+    "required_attunement_slots",
+  );
+
+  const RequiredAttunementSlotsField = createNumberInputField({
+    i18nContext: {
+      label: { en: "Attunement Slots", it: "Slot Sintonia" },
+    },
+    inputProps: { min: 0 },
+    useField: useRequiredAttunementSlotsField,
+  });
+
+  const AttunementNotesField = createInputField({
+    i18nContext: {
+      label: { en: "Attunement Notes", it: "Note Sintonia" },
+      placeholder: { en: "None", it: "Nessuna" },
+    },
+    translatable: true,
+    useField: form.createUseField("attunement_notes"),
   });
 
   //----------------------------------------------------------------------------
@@ -115,15 +144,34 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
     sourceId,
   }: EquipmentEditorProps) {
     const [lang] = useI18nLang();
+    const { value: magic } = useMagicField(resource.magic);
+    const { value: requiredAttunementSlots } = useRequiredAttunementSlotsField(
+      resource.required_attunement_slots,
+    );
 
     return (
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
-          <WeightField defaultValue={resource.weight} />
-          <CostField defaultValue={resource.cost} />
           <MagicField defaultValue={resource.magic} />
           <RarityField defaultValue={resource.rarity} />
+          <WeightField defaultValue={resource.weight} />
+          <CostField defaultValue={resource.cost} />
         </HStack>
+
+        {magic && (
+          <HStack align="flex-start" gap={4} w="full">
+            <RequiredAttunementSlotsField
+              defaultValue={resource.required_attunement_slots}
+              maxW="7em"
+            />
+            {requiredAttunementSlots > 0 && (
+              <AttunementNotesField
+                defaultValue={resource.attunement_notes[lang] ?? ""}
+                flex={1}
+              />
+            )}
+          </HStack>
+        )}
 
         {children}
 

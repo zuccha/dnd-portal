@@ -1,5 +1,5 @@
 import { type StackProps, VStack } from "@chakra-ui/react";
-import { WandIcon } from "lucide-react";
+import { LinkIcon, WandIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EquipmentFilters } from "~/models/resources/equipment/equipment-filters";
 import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
@@ -38,6 +38,17 @@ export default function EquipmentFilters({
         <Icon Icon={WandIcon} size="sm" /> {t("magic")}
       </InclusionButton>
 
+      <InclusionButton
+        include={filters.requires_attunement}
+        onValueChange={(requires_attunement) =>
+          onFiltersChange({ requires_attunement })
+        }
+        size="sm"
+        w="full"
+      >
+        <Icon Icon={LinkIcon} size="sm" /> {t("attunement")}
+      </InclusionButton>
+
       <CaptionInput caption={t("rarity")} w="full">
         <InclusionSelect
           includes={filters.rarities ?? {}}
@@ -61,6 +72,10 @@ export default function EquipmentFilters({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  attunement: {
+    en: "Requires Attunement",
+    it: "Richiede Sintonia",
+  },
   magic: {
     en: "Magic",
     it: "Magico",

@@ -14,11 +14,13 @@ import {
 //------------------------------------------------------------------------------
 
 export const equipmentSchema = resourceSchema.extend({
+  attunement_notes: i18nStringSchema,
   cost: z.number(),
   feature_entries: z.array(dbFeatureEntrySchema),
   magic: z.boolean(),
   notes: i18nStringSchema,
   rarity: equipmentRaritySchema,
+  required_attunement_slots: z.number(),
   weight: z.number(),
 });
 
@@ -30,11 +32,13 @@ export type Equipment = z.infer<typeof equipmentSchema>;
 
 export const defaultEquipment: Equipment = {
   ...defaultResource,
+  attunement_notes: {},
   cost: 0,
   feature_entries: [],
   magic: false,
   notes: {},
   rarity: "common",
+  required_attunement_slots: 0,
   weight: 0,
 };
 
@@ -44,5 +48,6 @@ export const defaultEquipment: Equipment = {
 
 export const equipmentTranslationFields: TranslationFields<Equipment>[] = [
   ...resourceTranslationFields,
+  "attunement_notes",
   "notes",
 ];

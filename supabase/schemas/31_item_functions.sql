@@ -24,7 +24,9 @@ CREATE TYPE public.item_row AS (
   type public.item_type,
   charges integer,
   consumable boolean,
-  notes jsonb
+  notes jsonb,
+  required_attunement_slots smallint,
+  attunement_notes jsonb
 );
 
 
@@ -97,7 +99,9 @@ AS $$
     i.type,
     i.charges,
     i.consumable,
-    e.notes
+    e.notes,
+    e.required_attunement_slots,
+    e.attunement_notes
   FROM public.fetch_equipment(p_id) AS e
   JOIN public.items i ON i.resource_id = e.id
   WHERE e.id = p_id;
@@ -162,7 +166,9 @@ src AS (
     i.type,
     i.charges,
     i.consumable,
-    b.notes
+    b.notes,
+    b.required_attunement_slots,
+    b.attunement_notes
   FROM base b
   JOIN public.items i ON i.resource_id = b.id
 ),
@@ -192,7 +198,9 @@ SELECT
   s.type,
   s.charges,
   s.consumable,
-  s.notes
+  s.notes,
+  s.required_attunement_slots,
+  s.attunement_notes
 FROM filtered s
 ORDER BY
   CASE

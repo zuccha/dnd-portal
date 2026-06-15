@@ -38,7 +38,9 @@ CREATE TYPE public.armor_row AS (
   required_wis smallint,
   type public.armor_type,
   -- Translation
-  notes jsonb
+  notes jsonb,
+  required_attunement_slots smallint,
+  attunement_notes jsonb
 );
 
 
@@ -144,7 +146,9 @@ AS $$
     a.required_str,
     a.required_wis,
     a.type,
-    e.notes
+    e.notes,
+    e.required_attunement_slots,
+    e.attunement_notes
   FROM public.fetch_equipment(p_id) AS e
   JOIN public.armors a ON a.resource_id = e.id
   WHERE e.id = p_id;
@@ -202,6 +206,8 @@ src AS (
     b.name_short,
     b.page,
     b.notes,
+    b.required_attunement_slots,
+    b.attunement_notes,
     b.feature_entries,
     a.armor_class_max_cha_modifier,
     a.armor_class_max_con_modifier,
@@ -268,7 +274,9 @@ SELECT
   f.required_str,
   f.required_wis,
   f.type,
-  f.notes                         AS notes
+  f.notes                         AS notes,
+  f.required_attunement_slots,
+  f.attunement_notes
 FROM filtered f
 ORDER BY
   CASE

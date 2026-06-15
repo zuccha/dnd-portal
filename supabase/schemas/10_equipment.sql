@@ -7,7 +7,9 @@ CREATE TABLE IF NOT EXISTS public.equipments (
   cost integer DEFAULT '0'::integer NOT NULL,
   magic boolean DEFAULT 'false'::boolean NOT NULL,
   rarity public.equipment_rarity DEFAULT 'common'::public.equipment_rarity NOT NULL,
+  required_attunement_slots smallint DEFAULT '0'::smallint NOT NULL,
   weight integer DEFAULT '0'::integer NOT NULL,
+  CONSTRAINT equipments_required_attunement_slots_check CHECK (required_attunement_slots >= 0),
   CONSTRAINT equipments_pkey PRIMARY KEY (resource_id),
   CONSTRAINT equipments_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.resources(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -27,6 +29,7 @@ GRANT ALL ON TABLE public.equipments TO service_role;
 CREATE TABLE IF NOT EXISTS public.equipment_translations (
   resource_id uuid NOT NULL,
   lang text NOT NULL,
+  attunement_notes text,
   notes text,
   CONSTRAINT equipment_translations_pkey PRIMARY KEY (resource_id, lang),
   CONSTRAINT equipment_translations_resource_id_fkey FOREIGN KEY (resource_id) REFERENCES public.equipments(resource_id) ON UPDATE CASCADE ON DELETE CASCADE,
