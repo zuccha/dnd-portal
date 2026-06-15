@@ -840,9 +840,43 @@ const crToExp: Record<number, number> = {
 };
 /* eslint-enable sort-keys */
 
-// /* eslint-disable sort-keys */
-const crToLairExp: Record<number, number> = {};
-// /* eslint-enable sort-keys */
+/* eslint-disable sort-keys */
+const crToLairExp: Record<number, number> = {
+  0: 25,
+  0.125: 50,
+  0.25: 100,
+  0.5: 200,
+  1: 450,
+  2: 700,
+  3: 1100,
+  4: 1800,
+  5: 2300,
+  6: 2900,
+  7: 3900,
+  8: 5000,
+  9: 5900,
+  10: 7200,
+  11: 8400,
+  13: 11500,
+  14: 13000,
+  15: 15000,
+  16: 18000,
+  17: 20000,
+  18: 22000,
+  19: 25000,
+  20: 33000,
+  21: 41000,
+  22: 50000,
+  23: 62000,
+  24: 75000,
+  25: 90000,
+  26: 105000,
+  27: 120000,
+  28: 135000,
+  29: 155000,
+  30: 180000,
+};
+/* eslint-enable sort-keys */
 
 /* eslint-disable sort-keys */
 const crToPb: Record<number, number> = {
