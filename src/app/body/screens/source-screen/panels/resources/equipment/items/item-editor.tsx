@@ -64,7 +64,7 @@ export function createItemEditor(form: Form<ItemFormData>) {
       <EquipmentEditor resource={resource} sourceId={sourceId}>
         <HStack align="flex-start" gap={4} w="full">
           <TypeField defaultValue={resource.type} />
-          <VStack align="flex-start" gap={4} w="full">
+          <VStack align="flex-start" gap={2} w="full">
             <ChargesField defaultValue={resource.charges ?? 0} />
             <ConsumableField defaultValue={resource.consumable} flex={1} />
           </VStack>
