@@ -151,6 +151,10 @@ const i18nContext = {
     en: "Tools",
     it: "Strumenti",
   },
+  [Route.ResourcesEquipmentVehicles]: {
+    en: "Vehicles",
+    it: "Veicoli",
+  },
   [Route.ResourcesEquipmentWeapons]: {
     en: "Weapons",
     it: "Armi",

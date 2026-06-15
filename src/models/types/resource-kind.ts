@@ -23,6 +23,7 @@ export const resourceKindSchema = z.enum([
   "species",
   "spell",
   "tool",
+  "vehicle",
   "weapon",
 ]);
 

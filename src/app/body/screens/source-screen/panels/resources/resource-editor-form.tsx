@@ -17,6 +17,7 @@ import Field, { type FieldProps } from "~/ui/field";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select, { type SelectOption } from "~/ui/select";
+import SpeedInput from "~/ui/speed-input";
 import Switch from "~/ui/switch";
 import Textarea from "~/ui/textarea";
 import TimeInput from "~/ui/time-input";
@@ -701,6 +702,46 @@ export function createSelectIdField<T extends string>({
   }
 
   return SelectIdField;
+}
+
+//------------------------------------------------------------------------------
+// Create Speed Input Field
+//------------------------------------------------------------------------------
+
+export type SpeedInputFieldProps = Props<number>;
+
+export function createSpeedInputField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
+  translatable?: boolean;
+  useField: (defaultValue: number) => FieldBag<string, number>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function SpeedInputField({ defaultValue, ...rest }: SpeedInputFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <SpeedInput
+          bgColor={translatable ? "bg.info" : undefined}
+          {...inputProps}
+          {...field}
+        />
+      </Field>
+    );
+  }
+
+  return SpeedInputField;
 }
 
 //------------------------------------------------------------------------------

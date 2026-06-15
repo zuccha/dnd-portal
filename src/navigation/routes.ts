@@ -26,6 +26,7 @@ export const Route = {
   ResourcesEquipmentArmors: "/resources/equipment/armors",
   ResourcesEquipmentItems: "/resources/equipment/items",
   ResourcesEquipmentTools: "/resources/equipment/tools",
+  ResourcesEquipmentVehicles: "/resources/equipment/vehicles",
   ResourcesEquipmentWeapons: "/resources/equipment/weapons",
   ResourcesWorld: "/resources/world",
   ResourcesWorldLanguages: "/resources/world/languages",

@@ -12,6 +12,7 @@ import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-
 import ArmorsPanel from "./resources/equipment/armors/armors-panel";
 import ItemsPanel from "./resources/equipment/items/items-panel";
 import ToolsPanel from "./resources/equipment/tools/tools-panel";
+import VehiclesPanel from "./resources/equipment/vehicles/vehicles-panel";
 import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
 import FeatsPanel from "./resources/feats/feats-panel";
 import FeaturesPanel from "./resources/features/features-panel";
@@ -61,6 +62,7 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesEquipmentArmors]: ArmorsPanel,
   [Route.ResourcesEquipmentItems]: ItemsPanel,
   [Route.ResourcesEquipmentTools]: ToolsPanel,
+  [Route.ResourcesEquipmentVehicles]: VehiclesPanel,
   [Route.ResourcesEquipmentWeapons]: WeaponsPanel,
   [Route.ResourcesWorldLanguages]: LanguagesPanel,
   [Route.ResourcesWorldPlanes]: PlanesPanel,
