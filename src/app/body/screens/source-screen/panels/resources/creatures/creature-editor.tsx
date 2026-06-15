@@ -1,6 +1,7 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import { PlusIcon } from "lucide-react";
 import { useI18nLang } from "~/i18n/i18n-lang";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { type Creature } from "~/models/resources/creatures/creature";
 import type { CreatureFormData } from "~/models/resources/creatures/creature-form";
@@ -9,6 +10,10 @@ import { planeStore } from "~/models/resources/planes/plane-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
 import {
+  type CreatureChallengeRating,
+  inferCreatureExp,
+  inferCreatureLairExp,
+  inferCreaturePb,
   parseCreatureChallengeRating,
   stringifyCreatureChallengeRating,
   useCreatureChallengeRatingOptions,
@@ -21,7 +26,9 @@ import { useCreatureTreasureOptions } from "~/models/types/creature-treasure";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
 import { useLanguageScopeOptions } from "~/models/types/language-scope";
+import Field from "~/ui/field";
 import Icon from "~/ui/icon";
+import Select from "~/ui/select";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
@@ -34,7 +41,6 @@ import {
   createNumberInputField,
   createResourceSearchField,
   createSelectEnumField,
-  createSelectField,
   createSwitchField,
   createTextareaField,
 } from "../resource-editor-form";
@@ -161,14 +167,65 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // CR
   //----------------------------------------------------------------------------
 
-  const CRField = createSelectField({
-    i18nContext: { label: { en: "Challenge Rating", it: "Grado Sfida" } },
-    inputProps: {
-      parse: parseCreatureChallengeRating,
-      stringify: stringifyCreatureChallengeRating,
-    },
-    useField: form.createUseField("cr"),
-    useOptions: useCreatureChallengeRatingOptions,
+  const useCRField = form.createUseField("cr");
+  const useExpField = form.createUseField("exp");
+  const useLairExpField = form.createUseField("lair_exp");
+  const usePBField = form.createUseField("pb");
+
+  const crI18nContext = {
+    label: { en: "Challenge Rating", it: "Grado Sfida" },
+  };
+
+  function CRField({
+    defaultValue,
+    resource,
+  }: {
+    defaultValue: CreatureChallengeRating;
+    resource: Creature;
+  }) {
+    const options = useCreatureChallengeRatingOptions();
+    const { error, onValueChange, ...field } = useCRField(defaultValue);
+    const expField = useExpField(resource.exp);
+    const lairExpField = useLairExpField(resource.lair_exp);
+    const pbField = usePBField(resource.pb);
+    const { t } = useI18nLangContext(crI18nContext);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")}>
+        <Select
+          options={options}
+          parse={parseCreatureChallengeRating}
+          stringify={stringifyCreatureChallengeRating}
+          withinDialog
+          {...field}
+          onValueChange={(cr) => {
+            onValueChange(cr);
+            expField.onValueChange(inferCreatureExp(cr));
+            lairExpField.onValueChange(inferCreatureLairExp(cr));
+            pbField.onValueChange(inferCreaturePb(cr));
+          }}
+        />
+      </Field>
+    );
+  }
+
+  const PBField = createNumberInputField({
+    i18nContext: { label: { en: "PB", it: "BC" } },
+    inputProps: { min: 0 },
+    useField: usePBField,
+  });
+
+  const ExpField = createNumberInputField({
+    i18nContext: { label: { en: "XP", it: "PE" } },
+    inputProps: { min: 0 },
+    useField: useExpField,
+  });
+
+  const LairExpField = createNumberInputField({
+    i18nContext: { label: { en: "Lair XP", it: "PE Tana" } },
+    inputProps: { min: 0 },
+    useField: useLairExpField,
   });
 
   //----------------------------------------------------------------------------
@@ -621,7 +678,13 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
         {/* CR, Initiative, and Speed */}
         <HStack align="flex-start" gap={4} w="full">
-          <CRField defaultValue={resource.cr} />
+          <CRField defaultValue={resource.cr} resource={resource} />
+          <PBField defaultValue={resource.pb} />
+          <ExpField defaultValue={resource.exp} />
+          {hasLair && <LairExpField defaultValue={resource.lair_exp} />}
+        </HStack>
+
+        <HStack align="flex-start" gap={4} w="full">
           <InitiativeField defaultValue={resource.initiative} />
           <SpeedWalkField defaultValue={resource.speed_walk ?? 0} />
         </HStack>
