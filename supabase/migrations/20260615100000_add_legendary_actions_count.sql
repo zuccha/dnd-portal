@@ -1,26 +1,12 @@
 ALTER TABLE public.creatures
-ADD COLUMN has_lair boolean DEFAULT false NOT NULL;
-
-ALTER TABLE public.creature_translations
-ADD COLUMN lair_effects text;
-
-ALTER FUNCTION public.create_creature(uuid, text, jsonb, jsonb)
-RENAME TO create_creature_without_lair;
-
-ALTER FUNCTION public.update_creature(uuid, text, jsonb, jsonb)
-RENAME TO update_creature_without_lair;
-
-ALTER FUNCTION public.fetch_creature(uuid)
-RENAME TO fetch_creature_without_lair;
-
-ALTER FUNCTION public.fetch_creatures(uuid, text[], jsonb, text, text)
-RENAME TO fetch_creatures_without_lair;
+ADD COLUMN lair_legendary_actions_count smallint DEFAULT 0 NOT NULL,
+ADD COLUMN legendary_actions_count smallint DEFAULT 0 NOT NULL;
 
 ALTER TYPE public.creature_row
-ADD ATTRIBUTE has_lair boolean CASCADE;
+ADD ATTRIBUTE lair_legendary_actions_count smallint CASCADE;
 
 ALTER TYPE public.creature_row
-ADD ATTRIBUTE lair_effects jsonb CASCADE;
+ADD ATTRIBUTE legendary_actions_count smallint CASCADE;
 
 CREATE OR REPLACE FUNCTION public.upsert_creature_translation(
   p_id uuid,
@@ -81,7 +67,15 @@ BEGIN
 
   UPDATE public.creatures c
   SET
-    has_lair = coalesce((p_creature->>'has_lair')::boolean, false)
+    has_lair = coalesce((p_creature->>'has_lair')::boolean, false),
+    lair_legendary_actions_count = coalesce(
+      (p_creature->>'lair_legendary_actions_count')::smallint,
+      0
+    ),
+    legendary_actions_count = coalesce(
+      (p_creature->>'legendary_actions_count')::smallint,
+      0
+    )
   WHERE c.resource_id = v_id;
 
   RETURN v_id;
@@ -160,7 +154,9 @@ AS $$
     c.hover,
     coalesce(cl.language_entries, '[]'::jsonb) AS language_entries,
     c.has_lair,
-    coalesce(tt.lair_effects, '{}'::jsonb) AS lair_effects
+    coalesce(tt.lair_effects, '{}'::jsonb) AS lair_effects,
+    c.lair_legendary_actions_count,
+    c.legendary_actions_count
   FROM public.fetch_resource(p_id) AS r
   JOIN public.creatures c ON c.resource_id = r.id
   LEFT JOIN (
@@ -361,7 +357,15 @@ BEGIN
 
   UPDATE public.creatures c
   SET
-    has_lair = coalesce((p_creature->>'has_lair')::boolean, c.has_lair)
+    has_lair = coalesce((p_creature->>'has_lair')::boolean, c.has_lair),
+    lair_legendary_actions_count = coalesce(
+      (p_creature->>'lair_legendary_actions_count')::smallint,
+      c.lair_legendary_actions_count
+    ),
+    legendary_actions_count = coalesce(
+      (p_creature->>'legendary_actions_count')::smallint,
+      c.legendary_actions_count
+    )
   WHERE c.resource_id = p_id;
 END;
 $$;
