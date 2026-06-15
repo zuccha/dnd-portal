@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react";
+import { HStack, VStack } from "@chakra-ui/react";
 import { PlusIcon } from "lucide-react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
@@ -319,6 +319,34 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   });
 
   //----------------------------------------------------------------------------
+  // Legendary Actions Count
+  //----------------------------------------------------------------------------
+
+  const useLegendaryActionsCountField = form.createUseField(
+    "legendary_actions_count",
+  );
+
+  const LegendaryActionsCountField = createNumberInputField({
+    i18nContext: {
+      label: { en: "Legendary Actions", it: "Azioni Leggendarie" },
+    },
+    inputProps: { min: 0 },
+    useField: useLegendaryActionsCountField,
+  });
+
+  const useLairLegendaryActionsCountField = form.createUseField(
+    "lair_legendary_actions_count",
+  );
+
+  const LairLegendaryActionsCountField = createNumberInputField({
+    i18nContext: {
+      label: { en: "...in Lair", it: "...nella Tana" },
+    },
+    inputProps: { min: 0 },
+    useField: useLairLegendaryActionsCountField,
+  });
+
+  //----------------------------------------------------------------------------
   // Passive Perception
   //----------------------------------------------------------------------------
 
@@ -483,7 +511,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
   const LegendaryActionsField = createTextareaField({
     i18nContext: {
-      label: { en: "Legendary Actions", it: "Azioni Leggendarie" },
+      label: { en: "", it: "" },
       placeholder: { en: "None", it: "Nessuna" },
     },
     inputProps: { rows: 5 },
@@ -554,6 +582,11 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     const { value: languageScope } = useLanguageScopeField(
       resource.language_scope,
     );
+    const { value: legendaryActionsCount } = useLegendaryActionsCountField(
+      resource.legendary_actions_count,
+    );
+    const { value: lairLegendaryActionsCount } =
+      useLairLegendaryActionsCountField(resource.lair_legendary_actions_count);
 
     return (
       <ResourceEditor resource={resource}>
@@ -698,9 +731,24 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         <ActionsField defaultValue={resource.actions[lang] ?? ""} />
         <BonusActionsField defaultValue={resource.bonus_actions[lang] ?? ""} />
         <ReactionsField defaultValue={resource.reactions[lang] ?? ""} />
-        <LegendaryActionsField
-          defaultValue={resource.legendary_actions[lang] ?? ""}
-        />
+        <VStack gap={2} w="full">
+          <HStack align="flex-start" gap={4} w="full">
+            <LegendaryActionsCountField
+              defaultValue={resource.legendary_actions_count}
+            />
+            {hasLair && (
+              <LairLegendaryActionsCountField
+                defaultValue={resource.lair_legendary_actions_count}
+              />
+            )}
+          </HStack>
+          {(!!legendaryActionsCount ||
+            (hasLair && !!lairLegendaryActionsCount)) && (
+            <LegendaryActionsField
+              defaultValue={resource.legendary_actions[lang] ?? ""}
+            />
+          )}
+        </VStack>
         {hasLair && (
           <LairEffectsField defaultValue={resource.lair_effects[lang] ?? ""} />
         )}

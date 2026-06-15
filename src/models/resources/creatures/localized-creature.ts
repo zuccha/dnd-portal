@@ -490,8 +490,20 @@ export function useLocalizeCreature(
 
       const legendary_actions = translate(creature.legendary_actions, lang);
       if (legendary_actions) {
+        const lac =
+          creature.legendary_actions_count ?
+            formatNumber(creature.legendary_actions_count, lang)
+          : "";
+        const llac =
+          creature.legendary_actions_count && creature.has_lair ?
+            formatNumber(creature.lair_legendary_actions_count, lang)
+          : "";
+        const title =
+          lac && llac && lac !== llac ?
+            ti("description.legendary_actions_with_lair", lac, llac)
+          : ti("description.legendary_actions", lac);
         details_parts.push(
-          t("description.legendary_actions") + "\r" + legendary_actions,
+          title + (legendary_actions ? "\r" + legendary_actions : ""),
         );
       }
 
@@ -616,8 +628,12 @@ const i18nContext = {
     it: "##Effetti della Tana##",
   },
   "description.legendary_actions": {
-    en: "##Legendary Actions##",
-    it: "##Azioni Leggendarie##",
+    en: "##Legendary Actions (<1>)##", // <1> = count
+    it: "##Azioni Leggendarie (<1>)##", // <1> = count
+  },
+  "description.legendary_actions_with_lair": {
+    en: "##Legendary Actions (<1>, lair: <2>)##", // <1> = count, <2> = count in lair
+    it: "##Azioni Leggendarie (<1>, tana: <2>)##", // <1> = count, <2> = count in lair
   },
   "description.reactions": {
     en: "##Reactions##",
