@@ -8,7 +8,7 @@ import { useI18nSystem } from "../i18n/i18n-system";
 // Weight Unit
 //------------------------------------------------------------------------------
 
-export const weightUnitSchema = z.enum(["g", "kg", "lb"]);
+export const weightUnitSchema = z.enum(["g", "kg", "lb", "ton"]);
 
 export type WeightUnit = z.infer<typeof weightUnitSchema>;
 
@@ -31,11 +31,13 @@ export type Weight = z.infer<typeof weightSchema>;
 
 const gInKg = 1000;
 const gInLb = 500;
+const gInTon = 1000000;
 
 const gIn = {
   g: 1,
   kg: gInKg,
   lb: gInLb,
+  ton: gInTon,
 };
 
 //------------------------------------------------------------------------------
@@ -51,7 +53,8 @@ export function gramsToWeightValue(g: number, unit: WeightUnit): number {
 //------------------------------------------------------------------------------
 
 export function gramsToWeightImp(g: number): Weight {
-  return { unit: "lb", value: g / gInLb };
+  if (g < gInTon) return { unit: "lb", value: g / gInLb };
+  return { unit: "ton", value: g / gInTon };
 }
 
 //------------------------------------------------------------------------------
@@ -60,7 +63,8 @@ export function gramsToWeightImp(g: number): Weight {
 
 export function gramsToWeightMet(g: number): Weight {
   if (g < gInKg) return { unit: "g", value: g };
-  return { unit: "kg", value: g / gInKg };
+  if (g < gInTon) return { unit: "kg", value: g / gInKg };
+  return { unit: "ton", value: g / gInTon };
 }
 
 //------------------------------------------------------------------------------
@@ -128,10 +132,12 @@ const i18nContext = {
   "g.unit.long": { en: "Grams", it: "Grammi" },
   "kg.unit.long": { en: "Kilometers", it: "Chilometri" },
   "lb.unit.long": { en: "Pounds", it: "Libbre" },
+  "ton.unit.long": { en: "Tons", it: "Tonnellate" },
 
   "g.unit.short": { en: "g", it: "g" },
   "kg.unit.short": { en: "kg", it: "kg" },
   "lb.unit.short": { en: "lb", it: "lb" },
+  "ton.unit.short": { en: "t", it: "t" },
 
   "g.long/*": { en: "<1> grams", it: "<1> grammi" },
   "g.long/1": { en: "<1> gram", it: "<1> grammo" },
@@ -139,6 +145,8 @@ const i18nContext = {
   "kg.long/1": { en: "<1> kilometer", it: "<1> chilometro" },
   "lb.long/*": { en: "<1> pounds", it: "<1> libbre" },
   "lb.long/1": { en: "<1> pound", it: "<1> libbra" },
+  "ton.long/*": { en: "<1> tons", it: "<1> tonnellate" },
+  "ton.long/1": { en: "<1> ton", it: "<1> tonnellata" },
 
   "g.short/*": { en: "<1> g", it: "<1> g" },
   "g.short/1": { en: "<1> g", it: "<1> g" },
@@ -146,4 +154,6 @@ const i18nContext = {
   "kg.short/1": { en: "<1> kg", it: "<1> kg" },
   "lb.short/*": { en: "<1> lb", it: "<1> lb" },
   "lb.short/1": { en: "<1> lb", it: "<1> lb" },
+  "ton.short/*": { en: "<1> t", it: "<1> t" },
+  "ton.short/1": { en: "<1> t", it: "<1> t" },
 };
