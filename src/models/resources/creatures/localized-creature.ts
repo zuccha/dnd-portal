@@ -740,12 +740,12 @@ const i18nContext = {
     it: "Telepatia <1>",
   },
   "languages.understands/*": {
-    en: "understands <1> but can't speak",
-    it: "comprende <1> ma non li parla",
+    en: "Understands <1> but can't speak",
+    it: "Comprende <1> ma non li parla",
   },
   "languages.understands/1": {
-    en: "understands <1> but can't speak",
-    it: "comprende <1> ma non lo parla",
+    en: "Understands <1> but can't speak",
+    it: "Comprende <1> ma non lo parla",
   },
   "senses.blindsight": {
     en: "Blindsight <1>",
