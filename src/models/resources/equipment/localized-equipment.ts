@@ -53,7 +53,7 @@ export function useLocalizeEquipment<E extends Equipment>(
       const attunementNotes = translate(equipment.attunement_notes, lang);
       const attunementSlots = equipment.required_attunement_slots;
       const attunement =
-        equipment.magic ?
+        equipment.magic && attunementSlots > 0 ?
           attunementNotes ?
             tpi(
               "attunement.with_notes",
