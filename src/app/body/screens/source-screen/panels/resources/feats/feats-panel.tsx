@@ -25,6 +25,7 @@ const columns: ResourcesTableExtra<Feat, LocalizedFeat>["columns"] = [
   {
     key: "min_level",
     label: { en: "Min. Level", it: "Livello Min." },
+    textAlign: "right",
   },
   {
     key: "prerequisite",

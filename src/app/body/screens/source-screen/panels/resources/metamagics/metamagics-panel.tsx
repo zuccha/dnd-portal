@@ -23,6 +23,7 @@ const columns: ResourcesTableExtra<Metamagic, LocalizedMetamagic>["columns"] = [
   {
     key: "sorcery_points",
     label: { en: "Sorcery Points", it: "Punti Stregoneria" },
+    textAlign: "right",
     w: "8em",
   },
   {

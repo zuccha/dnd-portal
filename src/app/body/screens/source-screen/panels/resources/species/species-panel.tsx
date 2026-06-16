@@ -23,7 +23,6 @@ const columns: ResourcesTableExtra<Species, LocalizedSpecies>["columns"] = [
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
-    w: "7em",
   },
   {
     key: "sizes",
@@ -32,6 +31,7 @@ const columns: ResourcesTableExtra<Species, LocalizedSpecies>["columns"] = [
   {
     key: "speed",
     label: { en: "Speed", it: "Velocità" },
+    textAlign: "right",
   },
 ] as const;
 

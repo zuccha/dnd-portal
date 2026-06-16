@@ -28,6 +28,7 @@ const columns: ResourcesTableExtra<Service, LocalizedService>["columns"] = [
   {
     key: "price",
     label: { en: "Price", it: "Prezzo" },
+    textAlign: "right",
     w: "1%",
   },
   {

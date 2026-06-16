@@ -23,41 +23,49 @@ const columns: ResourcesTableExtra<Vehicle, LocalizedVehicle>["columns"] = [
   {
     key: "cost",
     label: { en: "Cost", it: "Costo" },
+    textAlign: "right",
     w: "1%",
   },
   {
     key: "speed",
     label: { en: "Speed", it: "Velocità" },
+    textAlign: "right",
     w: "1%",
   },
   {
     key: "crew",
     label: { en: "Crew", it: "Equipaggio" },
+    textAlign: "right",
     w: "1%",
   },
   {
     key: "passengers",
     label: { en: "Passengers", it: "Passeggeri" },
+    textAlign: "right",
     w: "1%",
   },
   {
     key: "cargo",
     label: { en: "Cargo", it: "Carico" },
+    textAlign: "right",
     w: "1%",
   },
   {
     key: "hp",
     label: { en: "HP", it: "PF" },
+    textAlign: "right",
     w: "1%",
   },
   {
     key: "ac",
     label: { en: "AC", it: "CA" },
+    textAlign: "right",
     w: "1%",
   },
   {
     key: "damage_threshold",
     label: { en: "DT", it: "SD" },
+    textAlign: "right",
     w: "1%",
   },
 ] as const;
