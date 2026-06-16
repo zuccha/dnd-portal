@@ -20,12 +20,12 @@ const columns: ResourcesTableExtra<Feat, LocalizedFeat>["columns"] = [
   {
     key: "category",
     label: { en: "Category", it: "Categoria" },
-    w: "7em",
   },
   {
     key: "min_level",
     label: { en: "Min. Level", it: "Livello Min." },
     textAlign: "right",
+    w: "1%",
   },
   {
     key: "prerequisite",

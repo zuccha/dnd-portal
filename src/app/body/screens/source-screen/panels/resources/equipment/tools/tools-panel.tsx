@@ -34,7 +34,7 @@ const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
     key: "magic",
     label: { en: "🪄", it: "🪄" },
     textAlign: "center",
-    w: "4em",
+    w: "1%",
   },
   {
     key: "weight",

@@ -27,7 +27,7 @@ const columns: ResourcesTableExtra<
     key: "min_warlock_level",
     label: { en: "Min. Level", it: "Livello Min." },
     textAlign: "right",
-    w: "7em",
+    w: "1%",
   },
   {
     key: "other_prerequisite",

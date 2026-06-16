@@ -25,46 +25,43 @@ const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
   {
     key: "level",
     label: { en: "Lvl", it: "Lvl" },
-    maxW: "5em",
     textAlign: "center",
+    w: "1%",
   },
   {
     key: "school",
     label: { en: "School", it: "Scuola" },
-    maxW: "8em",
   },
   {
     key: "casting_time",
     label: { en: "Cast", it: "Lancio" },
-    maxW: "9em",
   },
   {
     icon: RitualIcon,
     key: "ritual",
     label: { en: "R", it: "R" },
     textAlign: "center",
-    w: "4em",
+    w: "1%",
   },
   {
     key: "range",
     label: { en: "Range", it: "Gittata" },
-    maxW: "8em",
   },
   {
     key: "duration",
     label: { en: "Duration", it: "Durata" },
-    maxW: "9em",
   },
   {
     icon: ConcentrationIcon,
     key: "concentration",
     label: { en: "C", it: "C" },
     textAlign: "center",
-    w: "4em",
+    w: "1%",
   },
   {
     key: "components",
     label: { en: "V, S, M", it: "V, S, M" },
+    w: "1%",
   },
 ] as const;
 

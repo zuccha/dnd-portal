@@ -24,22 +24,18 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
-    w: "1%",
   },
   {
     key: "armor_class",
     label: { en: "Armor Class", it: "Classe Armatura" },
-    w: "1%",
   },
   {
     key: "requirements",
     label: { en: "Requirements", it: "Requisiti" },
-    w: "1%",
   },
   {
     key: "stealth",
     label: { en: "Stealth", it: "Furtività" },
-    w: "1%",
   },
   {
     icon: WandIcon,

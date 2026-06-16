@@ -24,13 +24,11 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
-    w: "1%",
     whiteSpace: "nowrap",
   },
   {
     key: "rarity",
     label: { en: "Rarity", it: "Rarità" },
-    w: "1%",
     whiteSpace: "nowrap",
   },
   {
@@ -38,7 +36,7 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
     key: "magic",
     label: { en: "🪄", it: "🪄" },
     textAlign: "center",
-    w: "4em",
+    w: "1%",
   },
   {
     key: "weight",
@@ -66,7 +64,7 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
     key: "consumable",
     label: { en: "🧪", it: "🧪" },
     textAlign: "center",
-    w: "4em",
+    w: "1%",
   },
 ] as const;
 

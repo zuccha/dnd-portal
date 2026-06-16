@@ -26,31 +26,27 @@ const columns: ResourcesTableExtra<
   {
     key: "primary_abilities",
     label: { en: "Abilities", it: "Abilità" },
-    w: "1%",
   },
   {
     key: "saving_throw_proficiencies",
     label: { en: "Saving Throws", it: "Tiri Salvezza" },
-    w: "1%",
   },
   {
     key: "armor_proficiencies",
     label: { en: "Armors", it: "Armature" },
-    w: "1%",
   },
   {
     key: "weapon_proficiencies",
     label: { en: "Weapons", it: "Armi" },
-    w: "1%",
   },
   {
     key: "tool_proficiencies",
     label: { en: "Tools", it: "Strumenti" },
-    w: "1%",
   },
   {
     key: "hp_die",
-    label: { en: "Hit Point Die", it: "Dado Vita" },
+    label: { en: "HP Die", it: "Dado Vita" },
+    textAlign: "right",
     w: "1%",
   },
 ] as const;

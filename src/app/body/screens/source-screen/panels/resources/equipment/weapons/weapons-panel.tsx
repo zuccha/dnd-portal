@@ -24,22 +24,18 @@ const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
-    w: "1%",
   },
   {
     key: "damage_extended",
     label: { en: "Damage", it: "Danni" },
-    w: "1%",
   },
   {
     key: "properties",
     label: { en: "Properties", it: "Proprietà" },
-    w: "1%",
   },
   {
     key: "mastery",
     label: { en: "Mastery", it: "Padronanza" },
-    w: "1%",
   },
   {
     icon: WandIcon,

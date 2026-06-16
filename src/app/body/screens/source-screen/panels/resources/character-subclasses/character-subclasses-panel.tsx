@@ -26,7 +26,6 @@ const columns: ResourcesTableExtra<
   {
     key: "character_class",
     label: { en: "Class", it: "Classe" },
-    w: "7em",
   },
 ] as const;
 

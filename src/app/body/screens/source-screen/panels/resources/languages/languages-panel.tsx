@@ -23,7 +23,6 @@ const columns: ResourcesTableExtra<Language, LocalizedLanguage>["columns"] = [
   {
     key: "rarity",
     label: { en: "Rarity", it: "Rarità" },
-    w: "7em",
   },
   {
     key: "origin",
