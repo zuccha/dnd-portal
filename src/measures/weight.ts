@@ -68,7 +68,7 @@ export function gramsToWeightMet(g: number): Weight {
 //------------------------------------------------------------------------------
 
 export function weightToGrams(weight: Weight): number {
-  return gIn[weight.unit] * weight.value;
+  return Math.round(gIn[weight.unit] * weight.value);
 }
 
 //------------------------------------------------------------------------------

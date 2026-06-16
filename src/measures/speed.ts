@@ -67,7 +67,7 @@ export function cmhToSpeedMet(cmh: number): Speed {
 //------------------------------------------------------------------------------
 
 export function speedToCmh(speed: Speed): number {
-  return cmhIn[speed.unit] * speed.value;
+  return Math.round(cmhIn[speed.unit] * speed.value);
 }
 
 //------------------------------------------------------------------------------

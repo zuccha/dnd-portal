@@ -67,7 +67,7 @@ export function cpToCost(cp: number): Cost {
 //------------------------------------------------------------------------------
 
 export function costToCp(cost: Cost): number {
-  return cpIn[cost.unit] * cost.value;
+  return Math.round(cpIn[cost.unit] * cost.value);
 }
 
 //------------------------------------------------------------------------------

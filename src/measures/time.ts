@@ -66,7 +66,7 @@ export function secondsToTime(s: number): Time {
 //------------------------------------------------------------------------------
 
 export function timeToSeconds(time: Time): number {
-  return secondsIn[time.unit] * time.value;
+  return Math.round(secondsIn[time.unit] * time.value);
 }
 
 //------------------------------------------------------------------------------

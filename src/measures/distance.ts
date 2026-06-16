@@ -76,7 +76,7 @@ export function cmToDistanceMet(cm: number): Distance {
 //------------------------------------------------------------------------------
 
 export function distanceToCm(distance: Distance): number {
-  return cmIn[distance.unit] * distance.value;
+  return Math.round(cmIn[distance.unit] * distance.value);
 }
 
 //------------------------------------------------------------------------------
