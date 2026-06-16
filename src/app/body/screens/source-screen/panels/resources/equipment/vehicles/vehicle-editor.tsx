@@ -1,4 +1,4 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Vehicle } from "~/models/resources/vehicles/vehicle";
 import type { VehicleFormData } from "~/models/resources/vehicles/vehicle-form";
@@ -100,16 +100,22 @@ export function createVehicleEditor(form: Form<VehicleFormData>) {
 
     return (
       <ResourceEditor resource={resource}>
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} w="full">
+        <HStack w="full">
           <CostField defaultValue={resource.cost} />
           <SpeedField defaultValue={resource.speed} />
+          <CargoField defaultValue={resource.cargo} />
+        </HStack>
+
+        <HStack w="full">
           <CrewField defaultValue={resource.crew_capacity} />
           <PassengersField defaultValue={resource.passenger_capacity} />
-          <CargoField defaultValue={resource.cargo} />
-          <AcField defaultValue={resource.ac} />
+        </HStack>
+
+        <HStack w="full">
           <HpField defaultValue={resource.hp} />
+          <AcField defaultValue={resource.ac} />
           <DamageThresholdField defaultValue={resource.damage_threshold} />
-        </SimpleGrid>
+        </HStack>
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
       </ResourceEditor>
