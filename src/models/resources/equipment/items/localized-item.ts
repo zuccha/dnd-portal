@@ -71,7 +71,7 @@ const i18nContext = {
     it: "Oggetto Mondano",
   },
   wondrous_item: {
-    en: "Wondrous Item, <1>", // 1 = rarity
-    it: "Oggetto Meraviglioso, <1>", // 1 = rarity
+    en: "Wondrous Item", // 1 = rarity
+    it: "Oggetto Meraviglioso", // 1 = rarity
   },
 };
