@@ -18,7 +18,8 @@ CREATE TYPE public.resource_kind AS ENUM (
   'metamagic',
   'maneuver',
   'background',
-  'vehicle'
+  'vehicle',
+  'service'
 );
 
 ALTER TYPE public.resource_kind OWNER TO postgres;

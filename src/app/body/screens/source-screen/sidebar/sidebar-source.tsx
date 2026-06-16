@@ -147,6 +147,10 @@ const i18nContext = {
     en: "Gear",
     it: "Oggetti",
   },
+  [Route.ResourcesEquipmentServices]: {
+    en: "Services",
+    it: "Servizi",
+  },
   [Route.ResourcesEquipmentTools]: {
     en: "Tools",
     it: "Strumenti",

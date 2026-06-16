@@ -56,6 +56,7 @@ export const equipmentPanelIds = [
   Route.ResourcesEquipmentWeapons,
   Route.ResourcesEquipmentTools,
   Route.ResourcesEquipmentVehicles,
+  Route.ResourcesEquipmentServices,
 ] as const;
 
 export type EquipmentPanelId = (typeof equipmentPanelIds)[number];

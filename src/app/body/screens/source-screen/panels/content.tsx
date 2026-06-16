@@ -11,6 +11,7 @@ import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
 import ArmorsPanel from "./resources/equipment/armors/armors-panel";
 import ItemsPanel from "./resources/equipment/items/items-panel";
+import ServicesPanel from "./resources/equipment/services/services-panel";
 import ToolsPanel from "./resources/equipment/tools/tools-panel";
 import VehiclesPanel from "./resources/equipment/vehicles/vehicles-panel";
 import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
@@ -61,6 +62,7 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesCharacterSubclasses]: CharacterSubclassesPanel,
   [Route.ResourcesEquipmentArmors]: ArmorsPanel,
   [Route.ResourcesEquipmentItems]: ItemsPanel,
+  [Route.ResourcesEquipmentServices]: ServicesPanel,
   [Route.ResourcesEquipmentTools]: ToolsPanel,
   [Route.ResourcesEquipmentVehicles]: VehiclesPanel,
   [Route.ResourcesEquipmentWeapons]: WeaponsPanel,
