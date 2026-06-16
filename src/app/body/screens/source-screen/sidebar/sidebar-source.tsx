@@ -135,31 +135,31 @@ const i18nContext = {
     en: "Subclasses",
     it: "Sottoclassi",
   },
-  [Route.ResourcesEquipment]: {
-    en: "Equipment",
-    it: "Equipaggiamento",
+  [Route.ResourcesMarket]: {
+    en: "Market",
+    it: "Mercato",
   },
-  [Route.ResourcesEquipmentArmors]: {
+  [Route.ResourcesMarketArmors]: {
     en: "Armors",
     it: "Armature",
   },
-  [Route.ResourcesEquipmentItems]: {
+  [Route.ResourcesMarketItems]: {
     en: "Gear",
     it: "Oggetti",
   },
-  [Route.ResourcesEquipmentServices]: {
+  [Route.ResourcesMarketServices]: {
     en: "Services",
     it: "Servizi",
   },
-  [Route.ResourcesEquipmentTools]: {
+  [Route.ResourcesMarketTools]: {
     en: "Tools",
     it: "Strumenti",
   },
-  [Route.ResourcesEquipmentVehicles]: {
+  [Route.ResourcesMarketVehicles]: {
     en: "Vehicles",
     it: "Veicoli",
   },
-  [Route.ResourcesEquipmentWeapons]: {
+  [Route.ResourcesMarketWeapons]: {
     en: "Weapons",
     it: "Armi",
   },
