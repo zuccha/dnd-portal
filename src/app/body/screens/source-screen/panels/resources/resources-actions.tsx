@@ -118,7 +118,9 @@ export function createResourcesActions<
       }
     }, [selectedFilteredResourceIds, tpi]);
 
-    const disabled = !selectedFilteredResourceIds.length;
+    const hasSelection = selectedFilteredResourceIds.length > 0;
+    const allFilteredSelected =
+      selectedFilteredResourceIds.length === filteredResourceIds.length;
 
     return (
       <VStack px={6} w="full">
@@ -139,15 +141,15 @@ export function createResourcesActions<
                   {canEdit && (
                     <>
                       <Menu.ItemGroup>
-                        <Menu.Item onClick={addNew} value="add">
+                        <Menu.Item onSelect={addNew} value="add">
                           {t("add")}
                         </Menu.Item>
 
                         <Menu.Item
                           _hover={{ bg: "bg.error", color: "fg.error" }}
                           color="fg.error"
-                          disabled={disabled}
-                          onClick={removeSelected}
+                          disabled={!hasSelection}
+                          onSelect={removeSelected}
                           value="remove"
                         >
                           {t("remove")}
@@ -160,19 +162,16 @@ export function createResourcesActions<
 
                   <Menu.ItemGroup>
                     <Menu.Item
-                      disabled={
-                        selectedFilteredResourceIds.length ===
-                        filteredResourceIds.length
-                      }
-                      onClick={selectAllResources}
+                      disabled={allFilteredSelected}
+                      onSelect={selectAllResources}
                       value="select-all"
                     >
                       {t("select_all")}
                     </Menu.Item>
 
                     <Menu.Item
-                      disabled={selectedFilteredResourceIds.length === 0}
-                      onClick={deselectAllResources}
+                      disabled={!hasSelection}
+                      onSelect={deselectAllResources}
                       value="deselect-all"
                     >
                       {t("deselect_all")}
@@ -183,32 +182,32 @@ export function createResourcesActions<
 
                   <Menu.ItemGroup>
                     <Menu.Item
-                      disabled={disabled}
-                      onClick={copySelectedAsJson}
+                      disabled={!hasSelection}
+                      onSelect={copySelectedAsJson}
                       value="copy-as-json"
                     >
                       {t("copy_as_json")}
                     </Menu.Item>
 
                     <Menu.Item
-                      disabled={disabled}
-                      onClick={copySelectedAsYaml}
+                      disabled={!hasSelection}
+                      onSelect={copySelectedAsYaml}
                       value="copy-as-yaml"
                     >
                       {t("copy_as_yaml")}
                     </Menu.Item>
 
                     <Menu.Item
-                      disabled={disabled}
-                      onClick={downloadSelectedAsJson}
+                      disabled={!hasSelection}
+                      onSelect={downloadSelectedAsJson}
                       value="download-as-json"
                     >
                       {t("download_as_json")}
                     </Menu.Item>
 
                     <Menu.Item
-                      disabled={disabled}
-                      onClick={downloadSelectedAsYaml}
+                      disabled={!hasSelection}
+                      onSelect={downloadSelectedAsYaml}
                       value="download-as-yaml"
                     >
                       {t("download_as_yaml")}
@@ -219,8 +218,8 @@ export function createResourcesActions<
 
                   <Menu.ItemGroup>
                     <Menu.Item
-                      disabled={disabled}
-                      onClick={printSelected}
+                      disabled={!hasSelection}
+                      onSelect={printSelected}
                       value="print"
                     >
                       {t("print")}
@@ -233,7 +232,7 @@ export function createResourcesActions<
         </HStack>
 
         <Button
-          disabled={disabled}
+          disabled={!hasSelection}
           onClick={printSelected}
           size="sm"
           variant="outline"
