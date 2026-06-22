@@ -115,7 +115,9 @@ export function createResourcesPrintMode<
 
     useEffect(() => {
       setPrintModeActive(true);
+      document.body.classList.add("print-mode-active");
       return () => {
+        document.body.classList.remove("print-mode-active");
         setPrintModeActive(false);
       };
     }, [setPrintModeActive]);
@@ -194,10 +196,11 @@ export function createResourcesPrintMode<
     );
 
     return (
-      <HStack gap={0} overflow="hidden" {...rest}>
+      <HStack className="print-mode" gap={0} overflow="hidden" {...rest}>
         <VStack
           align="flex-start"
           bg="bg.subtle"
+          className="print-viewport"
           flex={1}
           h="full"
           overflow="auto"
@@ -304,6 +307,7 @@ export function createResourcesPrintMode<
           cardCropMarksColor={cardCropMarksColor}
           cardCropMarksLength={cardCropMarksLength}
           cardCropMarksVisible={cardCropMarksVisible}
+          className="not-printable"
           includeEmptyBack={includeEmptyBack}
           onBackgroundColorVisibleChange={setBackgroundColorVisible}
           onBleedSizeChange={setBleedSize}
