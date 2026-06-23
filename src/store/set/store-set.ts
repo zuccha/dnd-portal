@@ -112,12 +112,14 @@ export function createStoreSet<K, T>(
   }
 
   function get(key: K, defaultValue: T): T {
-    return cache.get(key) ?? defaultValue;
+    return cache.has(key) ? cache.get(key)! : defaultValue;
   }
 
   function set(key: K, defaultValue: T, update: StateUpdate<T>): T {
     const value =
-      isStateUpdater(update) ? update(cache.get(key) ?? defaultValue) : update;
+      isStateUpdater(update) ?
+        update(cache.has(key) ? cache.get(key)! : defaultValue)
+      : update;
     cache.set(key, value);
     onCacheUpdate(key, value);
     notify(key, value);
