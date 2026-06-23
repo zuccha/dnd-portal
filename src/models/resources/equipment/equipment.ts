@@ -15,13 +15,13 @@ import {
 
 export const equipmentSchema = resourceSchema.extend({
   attunement_notes: i18nStringSchema,
-  cost: z.number(),
+  cost: z.number().nullable(),
   feature_entries: z.array(dbFeatureEntrySchema),
   magic: z.boolean(),
   notes: i18nStringSchema,
   rarity: equipmentRaritySchema,
   required_attunement_slots: z.number(),
-  weight: z.number(),
+  weight: z.number().nullable(),
 });
 
 export type Equipment = z.infer<typeof equipmentSchema>;

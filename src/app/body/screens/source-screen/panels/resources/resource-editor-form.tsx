@@ -93,6 +93,7 @@ export function createConditionalNumberInputField({
 //------------------------------------------------------------------------------
 
 export type CostInputFieldProps = Props<number>;
+export type NullableCostInputFieldProps = Props<number | null>;
 
 export function createCostInputField({
   i18nContext,
@@ -126,6 +127,56 @@ export function createCostInputField({
   }
 
   return CostInputField;
+}
+
+export function createNullableCostInputField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
+  translatable?: boolean;
+  useField: (defaultValue: number | null) => FieldBag<string, number | null>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function NullableCostInputField({
+    defaultValue,
+    ...rest
+  }: NullableCostInputFieldProps) {
+    const { disabled, error, onValueChange, value, ...field } =
+      useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+    const specified = value !== null;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <HStack>
+          <Checkbox
+            disabled={disabled}
+            name={`${field.name}-specified`}
+            onValueChange={(checked) => onValueChange(checked ? 0 : null)}
+            value={specified}
+          />
+          <CostInput
+            bgColor={translatable ? "bg.info" : undefined}
+            disabled={disabled || !specified}
+            {...inputProps}
+            {...field}
+            onValueChange={onValueChange}
+            value={value ?? 0}
+          />
+        </HStack>
+      </Field>
+    );
+  }
+
+  return NullableCostInputField;
 }
 
 //------------------------------------------------------------------------------
@@ -857,6 +908,7 @@ export function createTimeInputField({
 //------------------------------------------------------------------------------
 
 export type WeightInputFieldProps = Props<number>;
+export type NullableWeightInputFieldProps = Props<number | null>;
 
 export function createWeightInputField({
   i18nContext,
@@ -890,4 +942,54 @@ export function createWeightInputField({
   }
 
   return WeightInputField;
+}
+
+export function createNullableWeightInputField({
+  i18nContext,
+  i18nContextExtra,
+  inputProps,
+  translatable,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  inputProps?: { max?: number; min?: number };
+  translatable?: boolean;
+  useField: (defaultValue: number | null) => FieldBag<string, number | null>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function NullableWeightInputField({
+    defaultValue,
+    ...rest
+  }: NullableWeightInputFieldProps) {
+    const { disabled, error, onValueChange, value, ...field } =
+      useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+    const specified = value !== null;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <HStack>
+          <Checkbox
+            disabled={disabled}
+            name={`${field.name}-specified`}
+            onValueChange={(checked) => onValueChange(checked ? 0 : null)}
+            value={specified}
+          />
+          <WeightInput
+            bgColor={translatable ? "bg.info" : undefined}
+            disabled={disabled || !specified}
+            {...inputProps}
+            {...field}
+            onValueChange={onValueChange}
+            value={value ?? 0}
+          />
+        </HStack>
+      </Field>
+    );
+  }
+
+  return NullableWeightInputField;
 }

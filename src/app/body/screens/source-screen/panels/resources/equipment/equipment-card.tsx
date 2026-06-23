@@ -37,15 +37,19 @@ export function EquipmentCard<
       firstPageInfo={
         <HStack justify="space-between" px={PokerCard.rem1000} w="full">
           <VStack align="flex-start" gap={0}>
-            <HStack gap={PokerCard.rem0250}>
-              <Icon Icon={ScaleIcon} size="xs" />
-              <Span>{localizedResource.weight}</Span>
-            </HStack>
+            {localizedResource.weight && (
+              <HStack gap={PokerCard.rem0250}>
+                <Icon Icon={ScaleIcon} size="xs" />
+                <Span>{localizedResource.weight}</Span>
+              </HStack>
+            )}
 
-            <HStack gap={PokerCard.rem0250}>
-              <Icon Icon={CoinsIcon} size="xs" />
-              <Span>{localizedResource.cost}</Span>
-            </HStack>
+            {localizedResource.cost && (
+              <HStack gap={PokerCard.rem0250}>
+                <Icon Icon={CoinsIcon} size="xs" />
+                <Span>{localizedResource.cost}</Span>
+              </HStack>
+            )}
           </VStack>
 
           {firstPageInfoRight}

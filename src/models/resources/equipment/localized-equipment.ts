@@ -70,7 +70,7 @@ export function useLocalizeEquipment<E extends Equipment>(
         ...localizeResource(equipment),
         details: formatDetails(attunement, notes, features),
 
-        cost: formatCost(equipment.cost),
+        cost: equipment.cost === null ? "" : formatCost(equipment.cost),
         magic: equipment.magic,
         magic_type:
           equipment.magic ?
@@ -79,7 +79,7 @@ export function useLocalizeEquipment<E extends Equipment>(
             : ti("magic_type.magic", rarity)
           : t("magic_type.non_magic"),
         rarity,
-        weight: formatWeight(equipment.weight),
+        weight: equipment.weight === null ? "" : formatWeight(equipment.weight),
       };
     },
     [

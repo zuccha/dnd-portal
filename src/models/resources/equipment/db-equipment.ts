@@ -8,12 +8,12 @@ import { dbFeatureEntrySchema } from "../features/db-feature";
 //------------------------------------------------------------------------------
 
 export const dbEquipmentSchema = dbResourceSchema.extend({
-  cost: z.number(),
+  cost: z.number().nullable(),
   feature_entries: z.array(dbFeatureEntrySchema),
   magic: z.boolean(),
   rarity: equipmentRaritySchema,
   required_attunement_slots: z.number(),
-  weight: z.number(),
+  weight: z.number().nullable(),
 });
 
 export type DBEquipment = z.infer<typeof dbEquipmentSchema>;

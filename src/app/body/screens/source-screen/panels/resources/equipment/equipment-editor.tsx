@@ -8,14 +8,14 @@ import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
-  createCostInputField,
   createFeatureEntriesField,
   createInputField,
+  createNullableCostInputField,
+  createNullableWeightInputField,
   createNumberInputField,
   createSelectEnumField,
   createSelectField,
   createTextareaField,
-  createWeightInputField,
 } from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   // Cost
   //----------------------------------------------------------------------------
 
-  const CostField = createCostInputField({
+  const CostField = createNullableCostInputField({
     i18nContext: { label: { en: "Cost", it: "Costo" } },
     useField: form.createUseField("cost"),
   });
@@ -129,7 +129,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   // Weight
   //----------------------------------------------------------------------------
 
-  const WeightField = createWeightInputField({
+  const WeightField = createNullableWeightInputField({
     i18nContext: { label: { en: "Weight", it: "Peso" } },
     useField: form.createUseField("weight"),
   });

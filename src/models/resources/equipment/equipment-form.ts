@@ -11,13 +11,13 @@ import { type DBEquipment, type DBEquipmentTranslation } from "./db-equipment";
 
 export const equipmentFormDataSchema = resourceFormDataSchema.extend({
   attunement_notes: z.string().default(""),
-  cost: z.number().default(0),
+  cost: z.number().nullable().default(0),
   feature_entries: z.array(dbFeatureEntrySchema).default([]),
   magic: z.boolean().default(false),
   notes: z.string().default(""),
   rarity: equipmentRaritySchema.default("common"),
   required_attunement_slots: z.number().default(0),
-  weight: z.number().default(0),
+  weight: z.number().nullable().default(0),
 });
 
 export type EquipmentFormData = z.infer<typeof equipmentFormDataSchema>;
