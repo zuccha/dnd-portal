@@ -10,6 +10,7 @@ export type MeasureInputProps<U extends string> = Omit<
   InputGroupProps,
   "children" | "onChange"
 > & {
+  disabled?: boolean;
   id?: string;
   name?: string;
   max?: number;
@@ -22,6 +23,7 @@ export type MeasureInputProps<U extends string> = Omit<
 };
 
 export default function MeasureInput<U extends string>({
+  disabled,
   id,
   name,
   max,
@@ -38,6 +40,7 @@ export default function MeasureInput<U extends string>({
     <InputGroup
       endElement={
         <SelectNative
+          disabled={disabled}
           id={id ? `${id}-unit` : undefined}
           name={name ? `${name}-unit` : undefined}
           onValueChange={onUnitChange}
@@ -51,6 +54,7 @@ export default function MeasureInput<U extends string>({
       {...rest}
     >
       <NumberInput
+        disabled={disabled}
         id={id ? `${id}-value` : undefined}
         max={max}
         min={min}
