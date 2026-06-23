@@ -6,7 +6,8 @@ CREATE TYPE public.item_type AS ENUM (
   'staff',
   'wand',
   'drawn_vehicle',
-  'other'
+  'other',
+  'poison'
 );
 
 ALTER TYPE public.item_type OWNER TO postgres;

@@ -6,14 +6,15 @@ import { createTypeTranslationHooks } from "./_base";
 //------------------------------------------------------------------------------
 
 export const itemTypeSchema = z.enum([
+  "drawn_vehicle",
+  "other",
+  "poison",
   "potion",
   "ring",
   "rod",
   "scroll",
   "staff",
   "wand",
-  "drawn_vehicle",
-  "other",
 ]);
 
 export const itemTypes = itemTypeSchema.options;
@@ -31,6 +32,7 @@ export const {
 } = createTypeTranslationHooks(itemTypes, {
   drawn_vehicle: { en: "Drawn Vehicle", it: "Veicolo da Traino" },
   other: { en: "Generic", it: "Generico" },
+  poison: { en: "Poison", it: "Veleno" },
   potion: { en: "Potion", it: "Pozione" },
   ring: { en: "Ring", it: "Anello" },
   rod: { en: "Rod", it: "Verga" },
