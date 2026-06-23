@@ -162,7 +162,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
           <HStack align="flex-start" gap={4} w="full">
             <RequiredAttunementSlotsField
               defaultValue={resource.required_attunement_slots}
-              maxW="7em"
+              maxW="10em"
             />
             {requiredAttunementSlots > 0 && (
               <AttunementNotesField
