@@ -35,25 +35,31 @@ export function EquipmentCard<
   return (
     <ResourcePokerCard
       firstPageInfo={
-        <HStack justify="space-between" px={PokerCard.rem1000} w="full">
-          <VStack align="flex-start" gap={0}>
-            {localizedResource.weight && (
-              <HStack gap={PokerCard.rem0250}>
-                <Icon Icon={ScaleIcon} size="xs" />
-                <Span>{localizedResource.weight}</Span>
-              </HStack>
-            )}
+        (
+          localizedResource.cost ||
+          localizedResource.weight ||
+          firstPageInfoRight
+        ) ?
+          <HStack justify="space-between" px={PokerCard.rem1000} w="full">
+            <VStack align="flex-start" gap={0}>
+              {localizedResource.weight && (
+                <HStack gap={PokerCard.rem0250}>
+                  <Icon Icon={ScaleIcon} size="xs" />
+                  <Span>{localizedResource.weight}</Span>
+                </HStack>
+              )}
 
-            {localizedResource.cost && (
-              <HStack gap={PokerCard.rem0250}>
-                <Icon Icon={CoinsIcon} size="xs" />
-                <Span>{localizedResource.cost}</Span>
-              </HStack>
-            )}
-          </VStack>
+              {localizedResource.cost && (
+                <HStack gap={PokerCard.rem0250}>
+                  <Icon Icon={CoinsIcon} size="xs" />
+                  <Span>{localizedResource.cost}</Span>
+                </HStack>
+              )}
+            </VStack>
 
-          {firstPageInfoRight}
-        </HStack>
+            {firstPageInfoRight}
+          </HStack>
+        : undefined
       }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}
