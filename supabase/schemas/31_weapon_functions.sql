@@ -35,7 +35,8 @@ CREATE TYPE public.weapon_row AS (
   ammunition_ids uuid[],
   notes jsonb,
   required_attunement_slots smallint,
-  attunement_notes jsonb
+  attunement_notes jsonb,
+  modifier_ids jsonb
 );
 
 
@@ -140,7 +141,8 @@ AS $$
     coalesce(wa.ammunition_ids, '{}'::uuid[])  AS ammunition_ids,
     e.notes,
     e.required_attunement_slots,
-    e.attunement_notes
+    e.attunement_notes,
+    e.modifier_ids
   FROM public.fetch_equipment(p_id) AS e
   JOIN public.weapons w ON w.resource_id = e.id
   LEFT JOIN (
@@ -252,6 +254,7 @@ src AS (
     b.notes,
     b.required_attunement_slots,
     b.attunement_notes,
+    b.modifier_ids,
     w.type,
     w.damage,
     w.damage_type,
@@ -330,7 +333,8 @@ SELECT
   coalesce(wa.ammunition_ids, '{}'::uuid[])  AS ammunition_ids,
   f.notes                        AS notes,
   f.required_attunement_slots,
-  f.attunement_notes
+  f.attunement_notes,
+  f.modifier_ids
 FROM filtered f
 LEFT JOIN t tt ON tt.id = f.id
 LEFT JOIN wa ON wa.id = f.id

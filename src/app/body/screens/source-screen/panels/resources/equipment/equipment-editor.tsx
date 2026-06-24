@@ -4,6 +4,7 @@ import useBooleanOptions from "~/hooks/use-boolean-options";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { EquipmentFormData } from "~/models/resources/equipment/equipment-form";
+import { equipmentModifierStore } from "~/models/resources/equipment/modifiers/equipment-modifier-store";
 import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
@@ -13,6 +14,7 @@ import {
   createNullableCostInputField,
   createNullableWeightInputField,
   createNumberInputField,
+  createResourceSearchField,
   createSelectEnumField,
   createSelectField,
   createTextareaField,
@@ -44,6 +46,19 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   const FeatureEntriesField = createFeatureEntriesField({
     i18nContext: { label: { en: "Qualities", it: "Qualità" } },
     useField: form.createUseField("feature_entries"),
+  });
+
+  //----------------------------------------------------------------------------
+  // Modifiers
+  //----------------------------------------------------------------------------
+
+  const ModifiersField = createResourceSearchField({
+    i18nContext: {
+      label: { en: "Supported Modifiers", it: "Modificatori Supportati" },
+      placeholder: { en: "Search modifier", it: "Cerca modificatore" },
+    },
+    useField: form.createUseField("modifier_ids"),
+    useOptions: equipmentModifierStore.useResourceOptions,
   });
 
   //----------------------------------------------------------------------------
@@ -174,6 +189,12 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
         )}
 
         {children}
+
+        <ModifiersField
+          defaultValue={resource.modifier_ids}
+          sourceId={sourceId}
+          w="full"
+        />
 
         <NotesField defaultValue={resource.notes[lang] ?? ""} />
 

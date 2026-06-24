@@ -28,7 +28,8 @@ CREATE TYPE public.tool_row AS (
   -- Tool Translation
   utilize jsonb,
   required_attunement_slots smallint,
-  attunement_notes jsonb
+  attunement_notes jsonb,
+  modifier_ids jsonb
 );
 
 
@@ -122,7 +123,8 @@ AS $$
     t.type,
     coalesce(tt.utilize, '{}'::jsonb) AS utilize,
     e.required_attunement_slots,
-    e.attunement_notes
+    e.attunement_notes,
+    e.modifier_ids
   FROM public.fetch_equipment(p_id) AS e
   JOIN public.tools t ON t.resource_id = e.id
   LEFT JOIN (
@@ -216,6 +218,7 @@ src AS (
     b.notes,
     b.required_attunement_slots,
     b.attunement_notes,
+    b.modifier_ids,
     t.ability,
     t.type
   FROM base b
@@ -268,7 +271,8 @@ SELECT
   f.type,
   coalesce(tt.utilize, '{}'::jsonb) AS utilize,
   f.required_attunement_slots,
-  f.attunement_notes
+  f.attunement_notes,
+  f.modifier_ids
 FROM filtered f
 LEFT JOIN tt ON tt.id = f.id
 LEFT JOIN tc ON tc.id = f.id

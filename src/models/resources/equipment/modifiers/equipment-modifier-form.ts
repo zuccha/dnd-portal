@@ -19,6 +19,7 @@ export const equipmentModifierFormDataSchema = resourceFormDataSchema.extend({
   attunement_notes_delta: z.string().default(""),
   composite_name: z.string().default("{base}"),
   cost_delta: z.number().int().default(0),
+  equipment_ids: z.array(z.uuid()).default([]),
   make_magic: z.boolean().default(false),
   notes_delta: z.string().default(""),
   rarity_minimum: equipmentRaritySchema.default("common"),
@@ -46,6 +47,7 @@ export function equipmentModifierFormDataToDB(
     resource: {
       ...resource,
       cost_delta: data.cost_delta,
+      equipment_ids: data.equipment_ids,
       make_magic: data.make_magic,
       rarity_minimum: data.rarity_minimum,
       required_attunement_slots_minimum: data.required_attunement_slots_minimum,

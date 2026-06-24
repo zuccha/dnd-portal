@@ -1,5 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
+import { equipmentStore } from "~/models/resources/equipment/equipment-store";
 import type { EquipmentModifier } from "~/models/resources/equipment/modifiers/equipment-modifier";
 import type { EquipmentModifierFormData } from "~/models/resources/equipment/modifiers/equipment-modifier-form";
 import {
@@ -13,6 +14,7 @@ import {
   createInputField,
   createLargeSwitchField,
   createNumberInputField,
+  createResourceSearchField,
   createSelectEnumField,
   createTextareaField,
   createWeightInputField,
@@ -24,6 +26,7 @@ import {
 
 export type EquipmentModifierEditorProps = {
   resource: EquipmentModifier;
+  sourceId: string;
 };
 
 export function createEquipmentModifierEditor(
@@ -117,6 +120,19 @@ export function createEquipmentModifierEditor(
   });
 
   //----------------------------------------------------------------------------
+  // Equipment
+  //----------------------------------------------------------------------------
+
+  const EquipmentField = createResourceSearchField({
+    i18nContext: {
+      label: { en: "Supported Equipment", it: "Equipaggiamento Supportato" },
+      placeholder: { en: "Search equipment", it: "Cerca equipaggiamento" },
+    },
+    useField: form.createUseField("equipment_ids"),
+    useOptions: equipmentStore.useResourceOptions,
+  });
+
+  //----------------------------------------------------------------------------
   // Notes Delta
   //----------------------------------------------------------------------------
 
@@ -149,6 +165,7 @@ export function createEquipmentModifierEditor(
 
   return function EquipmentModifierEditor({
     resource,
+    sourceId,
   }: EquipmentModifierEditorProps) {
     const [lang] = useI18nLang();
     const { value: makeMagic } = useMakeMagic(resource.make_magic);
@@ -188,6 +205,12 @@ export function createEquipmentModifierEditor(
         )}
 
         <NotesDeltaField defaultValue={resource.notes_delta[lang] ?? ""} />
+
+        <EquipmentField
+          defaultValue={resource.equipment_ids}
+          sourceId={sourceId}
+          w="full"
+        />
       </ResourceEditor>
     );
   };

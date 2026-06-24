@@ -23,7 +23,9 @@ CREATE TYPE public.equipment_row AS (
   -- Equipment Translation
   notes jsonb,
   required_attunement_slots smallint,
-  attunement_notes jsonb
+  attunement_notes jsonb,
+  -- Equipment Modifier Applications
+  modifier_ids jsonb
 );
 
 
@@ -70,6 +72,20 @@ BEGIN
     coalesce(p_equipment->'feature_entries', '[]'::jsonb)
   );
 
+  INSERT INTO public.equipment_modifier_applications (equipment_id, equipment_modifier_id)
+  SELECT
+    v_id,
+    (value)::uuid
+  FROM jsonb_array_elements_text(
+    coalesce(p_equipment->'modifier_ids', '[]'::jsonb)
+  ) v
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM public.equipment_modifier_applications ema
+    WHERE ema.equipment_id = v_id
+      AND ema.equipment_modifier_id = (v.value)::uuid
+  );
+
   perform public.upsert_equipment_translation(v_id, p_lang, p_equipment_translation);
 
   RETURN v_id;
@@ -110,9 +126,18 @@ AS $$
     public.fetch_resource_feature_entries(r.id) AS feature_entries,
     coalesce(tt.notes, '{}'::jsonb) AS notes,
     e.required_attunement_slots,
-    coalesce(tt.attunement_notes, '{}'::jsonb) AS attunement_notes
+    coalesce(tt.attunement_notes, '{}'::jsonb) AS attunement_notes,
+    coalesce(mm.modifier_ids, '[]'::jsonb) AS modifier_ids
   FROM public.fetch_resource(p_id) AS r
   JOIN public.equipments e ON e.resource_id = r.id
+  LEFT JOIN (
+    SELECT
+      ema.equipment_id AS id,
+      jsonb_agg(ema.equipment_modifier_id ORDER BY ema.equipment_modifier_id) AS modifier_ids
+    FROM public.equipment_modifier_applications ema
+    WHERE ema.equipment_id = p_id
+    GROUP BY ema.equipment_id
+  ) mm ON mm.id = r.id
   LEFT JOIN (
     SELECT
       e.resource_id AS id,
@@ -213,6 +238,14 @@ t AS (
   LEFT JOIN public.equipment_translations t ON t.resource_id = f.id
   LEFT JOIN (SELECT 1) _ ON true  -- keep p_langs in scope
   GROUP BY f.id
+),
+m AS (
+  SELECT
+    f.id,
+    jsonb_agg(ema.equipment_modifier_id ORDER BY ema.equipment_modifier_id) FILTER (WHERE ema.equipment_modifier_id IS NOT NULL) AS modifier_ids
+  FROM filtered f
+  LEFT JOIN public.equipment_modifier_applications ema ON ema.equipment_id = f.id
+  GROUP BY f.id
 )
 SELECT
   f.source_id,
@@ -232,9 +265,11 @@ SELECT
   public.fetch_resource_feature_entries(f.id) AS feature_entries,
   coalesce(tt.notes, '{}'::jsonb) AS notes,
   f.required_attunement_slots,
-  coalesce(tt.attunement_notes, '{}'::jsonb) AS attunement_notes
+  coalesce(tt.attunement_notes, '{}'::jsonb) AS attunement_notes,
+  coalesce(m.modifier_ids, '[]'::jsonb) AS modifier_ids
 FROM filtered f
 LEFT JOIN t tt ON tt.id = f.id
+LEFT JOIN m ON m.id = f.id
 ORDER BY
   CASE
     WHEN p_order_by = 'name' AND p_order_dir = 'asc'
@@ -336,6 +371,44 @@ BEGIN
     perform public.replace_resource_feature_entries(
       p_id,
       p_equipment->'feature_entries'
+    );
+  END IF;
+
+  IF p_equipment ? 'modifier_ids' THEN
+    WITH entries AS (
+      SELECT
+        (value)::uuid AS equipment_modifier_id
+      FROM jsonb_array_elements_text(
+        coalesce(p_equipment->'modifier_ids', '[]'::jsonb)
+      )
+    )
+    DELETE FROM public.equipment_modifier_applications ema
+    WHERE ema.equipment_id = p_id
+      AND NOT EXISTS (
+        SELECT 1
+        FROM entries e
+        WHERE e.equipment_modifier_id = ema.equipment_modifier_id
+      );
+
+    WITH entries AS (
+      SELECT
+        (value)::uuid AS equipment_modifier_id
+      FROM jsonb_array_elements_text(
+        coalesce(p_equipment->'modifier_ids', '[]'::jsonb)
+      )
+    )
+    INSERT INTO public.equipment_modifier_applications (equipment_id, equipment_modifier_id)
+    SELECT
+      p_id,
+      e.equipment_modifier_id
+    FROM (
+      SELECT DISTINCT equipment_modifier_id FROM entries
+    ) e
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM public.equipment_modifier_applications ema
+      WHERE ema.equipment_id = p_id
+        AND ema.equipment_modifier_id = e.equipment_modifier_id
     );
   END IF;
 

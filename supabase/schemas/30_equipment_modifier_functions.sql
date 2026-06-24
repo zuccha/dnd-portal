@@ -24,7 +24,9 @@ CREATE TYPE public.equipment_modifier_row AS (
   applies_to jsonb,
   attunement_notes_delta jsonb,
   composite_name jsonb,
-  notes_delta jsonb
+  notes_delta jsonb,
+  -- Equipment Modifier Applications
+  equipment_ids jsonb
 );
 
 
@@ -60,6 +62,20 @@ BEGIN
   ) VALUES (
     v_id, coalesce(r.cost_delta, 0), coalesce(r.make_magic, false), r.rarity_minimum,
     coalesce(r.required_attunement_slots_minimum, 0), coalesce(r.weight_delta, 0)
+  );
+
+  INSERT INTO public.equipment_modifier_applications (equipment_id, equipment_modifier_id)
+  SELECT
+    (value)::uuid,
+    v_id
+  FROM jsonb_array_elements_text(
+    coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
+  ) v
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM public.equipment_modifier_applications ema
+    WHERE ema.equipment_id = (v.value)::uuid
+      AND ema.equipment_modifier_id = v_id
   );
 
   perform public.upsert_equipment_modifier_translation(
@@ -107,9 +123,18 @@ AS $$
     coalesce(tt.applies_to, '{}'::jsonb) AS applies_to,
     coalesce(tt.attunement_notes_delta, '{}'::jsonb) AS attunement_notes_delta,
     coalesce(tt.composite_name, '{}'::jsonb) AS composite_name,
-    coalesce(tt.notes_delta, '{}'::jsonb) AS notes_delta
+    coalesce(tt.notes_delta, '{}'::jsonb) AS notes_delta,
+    coalesce(ee.equipment_ids, '[]'::jsonb) AS equipment_ids
   FROM public.fetch_resource(p_id) AS r
   JOIN public.equipment_modifiers em ON em.resource_id = r.id
+  LEFT JOIN (
+    SELECT
+      ema.equipment_modifier_id AS id,
+      jsonb_agg(ema.equipment_id ORDER BY ema.equipment_id) AS equipment_ids
+    FROM public.equipment_modifier_applications ema
+    WHERE ema.equipment_modifier_id = p_id
+    GROUP BY ema.equipment_modifier_id
+  ) ee ON ee.id = r.id
   LEFT JOIN (
     SELECT
       em.resource_id AS id,
@@ -167,9 +192,17 @@ src AS (
     em.make_magic,
     em.rarity_minimum,
     em.required_attunement_slots_minimum,
-    em.weight_delta
+    em.weight_delta,
+    coalesce(ee.equipment_ids, '[]'::jsonb) AS equipment_ids
   FROM base b
   JOIN public.equipment_modifiers em ON em.resource_id = b.id
+  LEFT JOIN (
+    SELECT
+      ema.equipment_modifier_id AS id,
+      jsonb_agg(ema.equipment_id ORDER BY ema.equipment_id) AS equipment_ids
+    FROM public.equipment_modifier_applications ema
+    GROUP BY ema.equipment_modifier_id
+  ) ee ON ee.id = b.id
 ),
 t AS (
   SELECT
@@ -202,7 +235,8 @@ SELECT
   coalesce(t.applies_to, '{}'::jsonb) AS applies_to,
   coalesce(t.attunement_notes_delta, '{}'::jsonb) AS attunement_notes_delta,
   coalesce(t.composite_name, '{}'::jsonb) AS composite_name,
-  coalesce(t.notes_delta, '{}'::jsonb) AS notes_delta
+  coalesce(t.notes_delta, '{}'::jsonb) AS notes_delta,
+  s.equipment_ids
 FROM src s
 LEFT JOIN t ON t.id = s.id
 ORDER BY
@@ -298,6 +332,44 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_equipment_modifier ? 'equipment_ids' THEN
+    WITH entries AS (
+      SELECT
+        (value)::uuid AS equipment_id
+      FROM jsonb_array_elements_text(
+        coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
+      )
+    )
+    DELETE FROM public.equipment_modifier_applications ema
+    WHERE ema.equipment_modifier_id = p_id
+      AND NOT EXISTS (
+        SELECT 1
+        FROM entries e
+        WHERE e.equipment_id = ema.equipment_id
+      );
+
+    WITH entries AS (
+      SELECT
+        (value)::uuid AS equipment_id
+      FROM jsonb_array_elements_text(
+        coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
+      )
+    )
+    INSERT INTO public.equipment_modifier_applications (equipment_id, equipment_modifier_id)
+    SELECT
+      e.equipment_id,
+      p_id
+    FROM (
+      SELECT DISTINCT equipment_id FROM entries
+    ) e
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM public.equipment_modifier_applications ema
+      WHERE ema.equipment_id = e.equipment_id
+        AND ema.equipment_modifier_id = p_id
+    );
   END IF;
 
   perform public.upsert_equipment_modifier_translation(

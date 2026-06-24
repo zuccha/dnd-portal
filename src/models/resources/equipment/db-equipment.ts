@@ -11,6 +11,7 @@ export const dbEquipmentSchema = dbResourceSchema.extend({
   cost: z.number().nullable(),
   feature_entries: z.array(dbFeatureEntrySchema),
   magic: z.boolean(),
+  modifier_ids: z.array(z.uuid()),
   rarity: equipmentRaritySchema,
   required_attunement_slots: z.number(),
   weight: z.number().nullable(),

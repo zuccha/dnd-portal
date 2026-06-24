@@ -11,6 +11,7 @@ import {
 
 export const dbEquipmentModifierSchema = dbResourceSchema.extend({
   cost_delta: z.number(),
+  equipment_ids: z.array(z.uuid()),
   make_magic: z.boolean(),
   rarity_minimum: equipmentRaritySchema,
   required_attunement_slots_minimum: z.number(),
