@@ -55,6 +55,7 @@ export const marketPanelIds = [
   Route.ResourcesMarketArmors,
   Route.ResourcesMarketWeapons,
   Route.ResourcesMarketTools,
+  Route.ResourcesMarketModifiers,
   Route.ResourcesMarketVehicles,
   Route.ResourcesMarketServices,
 ] as const;

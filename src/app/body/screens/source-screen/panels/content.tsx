@@ -15,6 +15,7 @@ import ServicesPanel from "./resources/equipment/services/services-panel";
 import ToolsPanel from "./resources/equipment/tools/tools-panel";
 import VehiclesPanel from "./resources/equipment/vehicles/vehicles-panel";
 import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
+import EquipmentModifiersPanel from "./resources/equipment-modifiers/equipment-modifiers-panel";
 import FeatsPanel from "./resources/feats/feats-panel";
 import FeaturesPanel from "./resources/features/features-panel";
 import LanguagesPanel from "./resources/languages/languages-panel";
@@ -62,6 +63,7 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesCharacterSubclasses]: CharacterSubclassesPanel,
   [Route.ResourcesMarketArmors]: ArmorsPanel,
   [Route.ResourcesMarketItems]: ItemsPanel,
+  [Route.ResourcesMarketModifiers]: EquipmentModifiersPanel,
   [Route.ResourcesMarketServices]: ServicesPanel,
   [Route.ResourcesMarketTools]: ToolsPanel,
   [Route.ResourcesMarketVehicles]: VehiclesPanel,

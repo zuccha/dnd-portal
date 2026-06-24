@@ -2,6 +2,7 @@ CREATE TYPE public.resource_kind AS ENUM (
   'creature',
   'eldritch_invocation',
   'equipment',
+  'equipment_modifier',
   'spell',
   'character_class',
   'armor',

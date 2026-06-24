@@ -437,6 +437,40 @@ export function createLanguageEntriesField({
 }
 
 //------------------------------------------------------------------------------
+// Create Large Switch Field
+//------------------------------------------------------------------------------
+
+export type LargeSwitchFieldProps = Props<boolean>;
+
+export function createLargeSwitchField({
+  i18nContext,
+  i18nContextExtra,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label">;
+  i18nContextExtra?: Record<string, I18nString>;
+  useField: (defaultValue: boolean) => FieldBag<string, boolean>;
+}) {
+  const context = { ...i18nContext, ...i18nContextExtra };
+
+  function LargeSwitchField({ defaultValue, ...rest }: SwitchFieldProps) {
+    const { error, ...field } = useField(defaultValue);
+    const { t } = useI18nLangContext(context);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <HStack flex={1}>
+          <Switch size="lg" {...field} />
+        </HStack>
+      </Field>
+    );
+  }
+
+  return LargeSwitchField;
+}
+
+//------------------------------------------------------------------------------
 // Create Multiple Select Enum Field
 //------------------------------------------------------------------------------
 
