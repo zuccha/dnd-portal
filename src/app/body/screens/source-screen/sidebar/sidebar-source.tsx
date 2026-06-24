@@ -135,37 +135,41 @@ const i18nContext = {
     en: "Subclasses",
     it: "Sottoclassi",
   },
-  [Route.ResourcesMarket]: {
-    en: "Market",
-    it: "Mercato",
+  [Route.ResourcesEquipment]: {
+    en: "Equipment",
+    it: "Equipaggiamento",
   },
-  [Route.ResourcesMarketArmors]: {
+  [Route.ResourcesEquipmentArmors]: {
     en: "Armors",
     it: "Armature",
   },
-  [Route.ResourcesMarketItems]: {
-    en: "Gear",
-    it: "Oggetti",
+  [Route.ResourcesEquipmentItems]: {
+    en: "Adventuring Gear",
+    it: "Attrezzatura",
   },
-  [Route.ResourcesMarketModifiers]: {
+  [Route.ResourcesEquipmentModifiers]: {
     en: "Modifiers",
     it: "Modificatori",
+  },
+  [Route.ResourcesEquipmentTools]: {
+    en: "Tools",
+    it: "Strumenti",
+  },
+  [Route.ResourcesEquipmentWeapons]: {
+    en: "Weapons",
+    it: "Armi",
+  },
+  [Route.ResourcesMarket]: {
+    en: "Market",
+    it: "Mercato",
   },
   [Route.ResourcesMarketServices]: {
     en: "Services",
     it: "Servizi",
   },
-  [Route.ResourcesMarketTools]: {
-    en: "Tools",
-    it: "Strumenti",
-  },
   [Route.ResourcesMarketVehicles]: {
     en: "Vehicles",
     it: "Veicoli",
-  },
-  [Route.ResourcesMarketWeapons]: {
-    en: "Weapons",
-    it: "Armi",
   },
   [Route.ResourcesWorld]: {
     en: "World",

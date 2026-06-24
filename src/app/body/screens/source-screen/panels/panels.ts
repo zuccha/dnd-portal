@@ -47,15 +47,24 @@ export const blocksPanelIds = [Route.ResourcesBlocksFeatures] as const;
 export type BlocksPanelId = (typeof blocksPanelIds)[number];
 
 //------------------------------------------------------------------------------
+// Equipment Panel Ids
+//------------------------------------------------------------------------------
+
+export const equipmentPanelIds = [
+  Route.ResourcesEquipmentItems,
+  Route.ResourcesEquipmentArmors,
+  Route.ResourcesEquipmentWeapons,
+  Route.ResourcesEquipmentTools,
+  Route.ResourcesEquipmentModifiers,
+] as const;
+
+export type EquipmentPanelId = (typeof equipmentPanelIds)[number];
+
+//------------------------------------------------------------------------------
 // Market Panel Ids
 //------------------------------------------------------------------------------
 
 export const marketPanelIds = [
-  Route.ResourcesMarketItems,
-  Route.ResourcesMarketArmors,
-  Route.ResourcesMarketWeapons,
-  Route.ResourcesMarketTools,
-  Route.ResourcesMarketModifiers,
   Route.ResourcesMarketVehicles,
   Route.ResourcesMarketServices,
 ] as const;
@@ -82,6 +91,7 @@ export const resourcePanels = [
   { id: Route.ResourcesBlocks, items: blocksPanelIds },
   { id: Route.ResourcesAbilities, items: abilitiesPanelIds },
   { id: Route.ResourcesBestiary, items: bestiaryPanelIds },
+  { id: Route.ResourcesEquipment, items: equipmentPanelIds },
   { id: Route.ResourcesMarket, items: marketPanelIds },
   { id: Route.ResourcesWorld, items: worldPanelIds },
 ] as const;
