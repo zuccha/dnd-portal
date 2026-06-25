@@ -190,7 +190,7 @@ export function createResourceCardInteractive<
             visibility="hidden"
             zIndex={2}
           >
-            {editable && (
+            {editable && !localizedResource._raw.virtual && (
               <IconButton
                 Icon={EditIcon}
                 className="light"

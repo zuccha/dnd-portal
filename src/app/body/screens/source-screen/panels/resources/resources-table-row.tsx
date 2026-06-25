@@ -153,7 +153,7 @@ export function createResourcesTableRow<
                 whiteSpace="nowrap"
                 {...rest}
               >
-                {key === "name" && editable ?
+                {key === "name" && editable && !localizedResource._raw.virtual ?
                   <Link onClick={edit}>{String(value)}</Link>
                 : typeof value === "boolean" ?
                   <Checkbox disabled mt={0.5} size="sm" value={value} />
