@@ -1,8 +1,5 @@
 import { BowArrowIcon, LayersIcon, SwordsIcon, WandIcon } from "lucide-react";
-import {
-  addFirstEquipmentVariant,
-  hasAvailableEquipmentModifier,
-} from "~/models/resources/equipment/equipment-variant";
+import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import { type Weapon } from "~/models/resources/equipment/weapons/weapon";
 import {
@@ -12,6 +9,7 @@ import {
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
+import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { WeaponCard } from "./weapon-card";
 import { createWeaponEditor } from "./weapon-editor";
 import WeaponsFilters from "./weapons-filters";
@@ -79,6 +77,12 @@ const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
+// Weapon Variant Dialog
+//------------------------------------------------------------------------------
+
+const weaponVariantDialog = createEquipmentVariantDialog(weaponStore);
+
+//------------------------------------------------------------------------------
 // Actions
 //------------------------------------------------------------------------------
 
@@ -87,8 +91,7 @@ const actions: ResourcesTableExtra<Weapon, LocalizedWeapon>["actions"] = [
     icon: LayersIcon,
     isVisible: hasAvailableEquipmentModifier,
     label: { en: "Add variant", it: "Aggiungi variante" },
-    onClick: (weapon) =>
-      addFirstEquipmentVariant(weaponStore.addVirtualResourceRecipe, weapon),
+    onClick: weaponVariantDialog.open,
   },
 ];
 
@@ -100,6 +103,7 @@ const WeaponsPanel = createResourcesPanel(
   weaponStore,
   { initialPaletteName: "brick" },
   {
+    Extra: weaponVariantDialog.Dialog,
     album: { AlbumCard: WeaponCard, actions },
     filters: { Filters: WeaponsFilters },
     form: {

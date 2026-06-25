@@ -1,8 +1,5 @@
 import { LayersIcon, WandIcon } from "lucide-react";
-import {
-  addFirstEquipmentVariant,
-  hasAvailableEquipmentModifier,
-} from "~/models/resources/equipment/equipment-variant";
+import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import { type Tool } from "~/models/resources/equipment/tools/tool";
 import {
@@ -12,6 +9,7 @@ import {
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
+import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { ToolCard } from "./tool-card";
 import { createToolEditor } from "./tool-editor";
 import ToolsFilters from "./tools-filters";
@@ -57,6 +55,12 @@ const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
+// Tool Variant Dialog
+//------------------------------------------------------------------------------
+
+const toolVariantDialog = createEquipmentVariantDialog(toolStore);
+
+//------------------------------------------------------------------------------
 // Actions
 //------------------------------------------------------------------------------
 
@@ -65,8 +69,7 @@ const actions: ResourcesTableExtra<Tool, LocalizedTool>["actions"] = [
     icon: LayersIcon,
     isVisible: hasAvailableEquipmentModifier,
     label: { en: "Add variant", it: "Aggiungi variante" },
-    onClick: (tool) =>
-      addFirstEquipmentVariant(toolStore.addVirtualResourceRecipe, tool),
+    onClick: toolVariantDialog.open,
   },
 ];
 
@@ -78,6 +81,7 @@ const ToolsPanel = createResourcesPanel(
   toolStore,
   { initialPaletteName: "coral" },
   {
+    Extra: toolVariantDialog.Dialog,
     album: { AlbumCard: ToolCard, actions },
     filters: { Filters: ToolsFilters },
     form: {

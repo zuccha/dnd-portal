@@ -1,8 +1,5 @@
 import { FlaskConicalIcon, LayersIcon, WandIcon } from "lucide-react";
-import {
-  addFirstEquipmentVariant,
-  hasAvailableEquipmentModifier,
-} from "~/models/resources/equipment/equipment-variant";
+import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type Item } from "~/models/resources/equipment/items/item";
 import {
   itemForm,
@@ -12,6 +9,7 @@ import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { type LocalizedItem } from "~/models/resources/equipment/items/localized-item";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
+import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { ItemCard } from "./item-card";
 import { createItemEditor } from "./item-editor";
 import ItemsFilters from "./items-filters";
@@ -73,6 +71,12 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
+// Item Variant Dialog
+//------------------------------------------------------------------------------
+
+const itemVariantDialog = createEquipmentVariantDialog(itemStore);
+
+//------------------------------------------------------------------------------
 // Actions
 //------------------------------------------------------------------------------
 
@@ -81,8 +85,7 @@ const actions: ResourcesTableExtra<Item, LocalizedItem>["actions"] = [
     icon: LayersIcon,
     isVisible: hasAvailableEquipmentModifier,
     label: { en: "Add variant", it: "Aggiungi variante" },
-    onClick: (item) =>
-      addFirstEquipmentVariant(itemStore.addVirtualResourceRecipe, item),
+    onClick: itemVariantDialog.open,
   },
 ];
 
@@ -94,6 +97,7 @@ const ItemsPanel = createResourcesPanel(
   itemStore,
   { initialPaletteName: "teal" },
   {
+    Extra: itemVariantDialog.Dialog,
     album: { AlbumCard: ItemCard, actions },
     filters: { Filters: ItemsFilters },
     form: {

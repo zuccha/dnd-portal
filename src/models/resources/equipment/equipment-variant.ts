@@ -6,47 +6,33 @@ import {
 import type { VirtualResourceRecipe } from "../resource-store";
 import type { Equipment } from "./equipment";
 import type { EquipmentModifier } from "./modifiers/equipment-modifier";
-import { equipmentModifierStore } from "./modifiers/equipment-modifier-store";
 
 //------------------------------------------------------------------------------
-// Add First Equipment Variant
+// Add Equipment Variant
 //------------------------------------------------------------------------------
 
-export async function addFirstEquipmentVariant<E extends Equipment>(
+export function addEquipmentVariant<E extends Equipment>(
   addRecipe: (recipe: VirtualResourceRecipe<E>) => void,
   base: E,
-): Promise<void> {
-  const modifierId = getFirstAvailableModifierId(base);
-  if (!modifierId) return;
+  modifiers: EquipmentModifier[],
+): void {
+  if (modifiers.length === 0) return;
 
   const baseId = base.variant_base_id ?? base.id;
-  const modifierIds = [...(base.variant_modifier_ids ?? []), modifierId];
-  const responses = await Promise.all(
-    modifierIds.map((id) => equipmentModifierStore.fetchResource(id).promise),
-  );
-  if (responses.some(({ status }) => status === "failure")) return;
+  const modifierIds = modifiers.map(({ id }) => id);
 
   addRecipe({
     base_id: baseId,
-    derive: (currentBase, id) => {
-      const modifiers = modifierIds.map((id, index) => {
-        const response = responses[index]!;
-        return (
-          equipmentModifierStore.getResource(id) ??
-          ("error" in response ? undefined : response.data)
-        );
-      });
-      if (modifiers.some((modifier) => !modifier)) return currentBase;
-      return createEquipmentVariant(
-        currentBase,
-        modifiers as EquipmentModifier[],
-        id,
-      );
-    },
+    derive: (currentBase, id) =>
+      createEquipmentVariant(currentBase, modifiers, id),
     modifier_ids: modifierIds,
     source_id: base.source_id,
   });
 }
+
+//------------------------------------------------------------------------------
+// Has Available Equipment Modifier
+//------------------------------------------------------------------------------
 
 export function hasAvailableEquipmentModifier(equipment: Equipment): boolean {
   return !!getFirstAvailableModifierId(equipment);

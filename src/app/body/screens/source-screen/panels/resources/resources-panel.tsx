@@ -1,4 +1,5 @@
 import { HStack } from "@chakra-ui/react";
+import type { ComponentType } from "react";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -43,11 +44,13 @@ export function createResourcesPanel<
   },
   {
     album,
+    Extra,
     filters,
     form,
     table,
   }: {
     album: ResourcesAlbumExtra<R, L>;
+    Extra?: ComponentType<{ sourceId: string }>;
     filters: ResourcesFiltersExtra;
     form: ResourceCreatorExtra<R, DBR, DBT, FF> &
       ResourceDialogUpdaterExtra<R, DBR, DBT, FF>;
@@ -87,6 +90,7 @@ export function createResourcesPanel<
 
         <ResourceCreator sourceId={sourceId} />
         <ResourceUpdater sourceId={sourceId} />
+        {Extra && <Extra sourceId={sourceId} />}
       </HStack>
     );
   };

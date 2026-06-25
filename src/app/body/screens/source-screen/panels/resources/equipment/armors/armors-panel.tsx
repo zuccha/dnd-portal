@@ -6,12 +6,10 @@ import {
 } from "~/models/resources/equipment/armors/armor-form";
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
-import {
-  addFirstEquipmentVariant,
-  hasAvailableEquipmentModifier,
-} from "~/models/resources/equipment/equipment-variant";
+import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
+import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { ArmorCard } from "./armor-card";
 import { createArmorEditor } from "./armor-editor";
 import ArmorsFilters from "./armors-filters";
@@ -65,6 +63,12 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
+// Armor Variant Dialog
+//------------------------------------------------------------------------------
+
+const armorVariantDialog = createEquipmentVariantDialog(armorStore);
+
+//------------------------------------------------------------------------------
 // Actions
 //------------------------------------------------------------------------------
 
@@ -73,8 +77,7 @@ const actions: ResourcesTableExtra<Armor, LocalizedArmor>["actions"] = [
     icon: LayersIcon,
     isVisible: hasAvailableEquipmentModifier,
     label: { en: "Add variant", it: "Aggiungi variante" },
-    onClick: (armor) =>
-      addFirstEquipmentVariant(armorStore.addVirtualResourceRecipe, armor),
+    onClick: armorVariantDialog.open,
   },
 ];
 
@@ -86,6 +89,7 @@ const ArmorsPanel = createResourcesPanel(
   armorStore,
   { initialPaletteName: "gray" },
   {
+    Extra: armorVariantDialog.Dialog,
     album: { AlbumCard: ArmorCard, actions },
     filters: { Filters: ArmorsFilters },
     form: {
