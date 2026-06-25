@@ -3,6 +3,7 @@ import { type ZodType, z } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { createLocalStore } from "~/store/local-store";
+import { createMemoryStore } from "~/store/memory-store";
 import supabase from "~/supabase";
 import { createCache } from "~/utils/cache";
 import { createUseDerivedData } from "~/utils/derived-data";
@@ -94,6 +95,88 @@ export function createResourceStore<
     );
 
     return [filters, setPartialFilters];
+  }
+
+  //----------------------------------------------------------------------------
+  // Virtual Resources
+  //----------------------------------------------------------------------------
+
+  const virtualResourceIdsStore = createMemoryStore<string[]>(
+    `${storeId}.virtual_resource_ids`,
+    [],
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Add Virtual Resource
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function addVirtualResource(resource: R): void {
+    const virtualResource = { ...resource, virtual: true };
+    resourceCache.set(virtualResource, virtualResource.id);
+    virtualResourceIdsStore.set((prev) =>
+      prev.includes(virtualResource.id) ? prev : [...prev, virtualResource.id],
+    );
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Merge Virtual Resource Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function mergeVirtualResourceIds(
+    sourceId: string,
+    resourceIds: string[],
+    virtualResourceIds: string[],
+  ): string[] {
+    if (virtualResourceIds.length === 0) return resourceIds;
+
+    const virtualIdsByBaseId = new Map<string, string[]>();
+    const eligibleVirtualResourceIds: string[] = [];
+    const unmatchedVirtualIds: string[] = [];
+    const consumedVirtualIds = new Set<string>();
+
+    for (const virtualResourceId of virtualResourceIds) {
+      const virtualResource = resourceCache.get(virtualResourceId);
+      if (!virtualResource || virtualResource.source_id !== sourceId) continue;
+      eligibleVirtualResourceIds.push(virtualResourceId);
+
+      const baseId =
+        (
+          "variant_base_id" in virtualResource &&
+          typeof virtualResource.variant_base_id === "string"
+        ) ?
+          virtualResource.variant_base_id
+        : undefined;
+
+      if (!baseId) {
+        unmatchedVirtualIds.push(virtualResourceId);
+        consumedVirtualIds.add(virtualResourceId);
+        continue;
+      }
+
+      const ids = virtualIdsByBaseId.get(baseId) ?? [];
+      ids.push(virtualResourceId);
+      virtualIdsByBaseId.set(baseId, ids);
+    }
+
+    const mergedResourceIds: string[] = [];
+
+    for (const resourceId of resourceIds) {
+      mergedResourceIds.push(resourceId);
+
+      for (const virtualResourceId of virtualIdsByBaseId.get(resourceId) ??
+        []) {
+        mergedResourceIds.push(virtualResourceId);
+        consumedVirtualIds.add(virtualResourceId);
+      }
+    }
+
+    return [
+      ...mergedResourceIds,
+      ...unmatchedVirtualIds,
+      ...eligibleVirtualResourceIds.filter(
+        (virtualResourceId) => !consumedVirtualIds.has(virtualResourceId),
+      ),
+    ];
   }
 
   //----------------------------------------------------------------------------
@@ -348,7 +431,9 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResource(resourceId: string): [R, string] {
-    const { key } = fetchResource(resourceId);
+    if (!resourceCache.get(resourceId)) fetchResource(resourceId);
+
+    const key = hash([resourceId]);
     return [resourceCache.cache.useValue(key) ?? defaultResource, key];
   }
 
@@ -380,7 +465,13 @@ export function createResourceStore<
     lang: string,
   ): [string[], string] {
     const { key } = fetchResourceIds(sourceId, sources, filters, lang);
-    return [resourceIdsCache.cache.useValue(key) ?? emptyIds, key];
+    const resourceIds = resourceIdsCache.cache.useValue(key) ?? emptyIds;
+    const virtualResourceIds = virtualResourceIdsStore.useValue();
+    const mergedResourceIds = useMemo(
+      () => mergeVirtualResourceIds(sourceId, resourceIds, virtualResourceIds),
+      [resourceIds, sourceId, virtualResourceIds],
+    );
+    return [mergedResourceIds, key];
   }
 
   function useResourceIds(sourceId: string): string[] {
@@ -699,6 +790,7 @@ export function createResourceStore<
 
     useFilters,
 
+    addVirtualResource,
     createResource,
     deleteResources,
     fetchResource,

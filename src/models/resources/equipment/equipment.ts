@@ -22,6 +22,8 @@ export const equipmentSchema = resourceSchema.extend({
   notes: i18nStringSchema,
   rarity: equipmentRaritySchema,
   required_attunement_slots: z.number(),
+  variant_base_id: z.uuid().nullish(),
+  variant_modifier_ids: z.array(z.uuid()).default([]),
   weight: z.number().nullable(),
 });
 
@@ -41,6 +43,8 @@ export const defaultEquipment: Equipment = {
   notes: {},
   rarity: "common",
   required_attunement_slots: 0,
+  variant_base_id: undefined,
+  variant_modifier_ids: [],
   weight: 0,
 };
 

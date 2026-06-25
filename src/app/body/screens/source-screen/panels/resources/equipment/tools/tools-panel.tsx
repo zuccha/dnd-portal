@@ -1,4 +1,5 @@
 import { LayersIcon, WandIcon } from "lucide-react";
+import { cloneEquipmentVariant } from "~/models/resources/equipment/equipment-variant";
 import { type LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import { type Tool } from "~/models/resources/equipment/tools/tool";
 import {
@@ -61,7 +62,8 @@ const actions: ResourcesTableExtra<Tool, LocalizedTool>["actions"] = [
     icon: LayersIcon,
     isVisible: (tool) => tool.modifier_ids.length > 0,
     label: { en: "Add variant", it: "Aggiungi variante" },
-    onClick: (tool) => console.log("Add variant", tool),
+    onClick: (tool) =>
+      toolStore.addVirtualResource(cloneEquipmentVariant(tool)),
   },
 ];
 

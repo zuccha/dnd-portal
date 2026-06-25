@@ -15,6 +15,7 @@ export const resourceSchema = z.object({
   source_code: z.string(),
   source_id: z.string(),
   source_version: sourceVersionSchema,
+  virtual: z.boolean().optional(),
 
   image_url: z.string().nullish(),
   visibility: resourceVisibilitySchema,
@@ -39,6 +40,7 @@ export const defaultResource: Resource = {
   source_code: "",
   source_id: "",
   source_version: "dnd5_5",
+  virtual: false,
   visibility: "public",
 };
 
