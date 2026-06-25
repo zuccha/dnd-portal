@@ -14,6 +14,7 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import Checkbox from "~/ui/checkbox";
 import Icon from "~/ui/icon";
+import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
 import type { ResourcesContext } from "./resources-context";
@@ -22,10 +23,18 @@ import type { ResourcesContext } from "./resources-context";
 // Resources Table Row Extra
 //------------------------------------------------------------------------------
 
+export type ResourceAction<R extends Resource> = {
+  icon: LucideIcon | ReturnType<typeof createIcon>;
+  isVisible: (resource: R) => boolean;
+  label: I18nString;
+  onClick: (resource: R) => void;
+};
+
 export type ResourcesTableRowExtra<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
+  actions?: ResourceAction<R>[];
   columns: (Table.ColumnHeaderProps & {
     icon?: LucideIcon | ReturnType<typeof createIcon>;
     key: keyof L;
@@ -102,7 +111,9 @@ export function createResourcesTableRow<
       [toggleResourceSelection],
     );
 
-    const columnCount = extra.columns.length + (editable ? 2 : 1);
+    const hasActions = !!extra.actions?.length;
+    const columnCount =
+      extra.columns.length + (editable ? 2 : 1) + (hasActions ? 1 : 0);
 
     return (
       <>
@@ -150,6 +161,26 @@ export function createResourcesTableRow<
               </Table.Cell>
             );
           })}
+
+          {!!extra.actions?.length && (
+            <Table.Cell textAlign="center" w="1%">
+              {extra.actions.map((action, i) => (
+                <IconButton
+                  Icon={action.icon}
+                  aria-label={translate(action.label, lang)}
+                  disabled={!action.isVisible(localizedResource._raw)}
+                  key={i}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    action.onClick(localizedResource._raw);
+                  }}
+                  size="2xs"
+                  variant="ghost"
+                />
+              ))}
+            </Table.Cell>
+          )}
         </Table.Row>
 
         {extra.detailsKey && expanded && (

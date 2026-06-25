@@ -23,6 +23,7 @@ export type ResourcesTableHeadExtra<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
+  actions?: unknown[];
   columns: (Table.ColumnHeaderProps & {
     icon?: LucideIcon | ReturnType<typeof createIcon>;
     key: keyof L;
@@ -110,6 +111,10 @@ export function createResourcesTableHead<
             </Table.ColumnHeader>
           );
         })}
+
+        {extra.actions?.length && (
+          <Table.ColumnHeader textAlign="center" w="1%" />
+        )}
       </Table.Row>
     );
   };

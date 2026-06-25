@@ -21,6 +21,7 @@ import type {
   ResourcePokerCardProps,
 } from "./resource-poker-card";
 import type { ResourcesContext } from "./resources-context";
+import type { ResourceAction } from "./resources-table-row";
 
 //------------------------------------------------------------------------------
 // Resource Card Interactive Extra
@@ -40,6 +41,7 @@ export type ResourceCardInteractiveExtra<
     h: number;
     w: number;
   };
+  actions?: ResourceAction<R>[];
 };
 
 //------------------------------------------------------------------------------
@@ -91,11 +93,16 @@ export function createResourceCardInteractive<
     resourceId,
     zoom,
   }: ResourceCardInteractiveProps<R, L>) {
+    const [lang] = useI18nLang();
     const [resource] = useResource(resourceId);
     const localizedResource = useMemo(
       () => localizeResource(resource),
       [localizeResource, resource],
     );
+    const visibleActions =
+      extra.actions?.filter(
+        ({ isVisible }) => !isVisible || isVisible(localizedResource._raw),
+      ) ?? [];
 
     const cardMode = useCardMode();
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
@@ -176,6 +183,7 @@ export function createResourceCardInteractive<
         <Theme appearance="light">
           <VStack
             _groupHover={{ visibility: "visible" }}
+            gap={1}
             left={PokerCard.rem0500}
             position="absolute"
             top={PokerCard.rem0500}
@@ -185,16 +193,28 @@ export function createResourceCardInteractive<
             {editable && (
               <IconButton
                 Icon={EditIcon}
-                _hover={{ bgColor: palette[100] }}
                 className="light"
                 onPointerDown={(e) => {
                   e.stopPropagation();
                   edit();
                 }}
                 size="2xs"
-                variant="ghost"
               />
             )}
+
+            {visibleActions.map((action, i) => (
+              <IconButton
+                Icon={action.icon}
+                aria-label={translate(action.label, lang)}
+                className="light"
+                key={i}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  action.onClick(localizedResource._raw);
+                }}
+                size="2xs"
+              />
+            ))}
           </VStack>
 
           <IconButton

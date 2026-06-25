@@ -1,4 +1,4 @@
-import { BowArrowIcon, SwordsIcon, WandIcon } from "lucide-react";
+import { BowArrowIcon, LayersIcon, SwordsIcon, WandIcon } from "lucide-react";
 import { type LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import { type Weapon } from "~/models/resources/equipment/weapons/weapon";
 import {
@@ -75,6 +75,19 @@ const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
+// Actions
+//------------------------------------------------------------------------------
+
+const actions: ResourcesTableExtra<Weapon, LocalizedWeapon>["actions"] = [
+  {
+    icon: LayersIcon,
+    isVisible: (weapon) => weapon.modifier_ids.length > 0,
+    label: { en: "Add variant", it: "Aggiungi variante" },
+    onClick: (weapon) => console.log("Add variant", weapon),
+  },
+];
+
+//------------------------------------------------------------------------------
 // Weapons Panel
 //------------------------------------------------------------------------------
 
@@ -82,14 +95,18 @@ const WeaponsPanel = createResourcesPanel(
   weaponStore,
   { initialPaletteName: "brick" },
   {
-    album: { AlbumCard: WeaponCard },
+    album: { AlbumCard: WeaponCard, actions },
     filters: { Filters: WeaponsFilters },
     form: {
       Editor: createWeaponEditor(weaponForm),
       form: weaponForm,
       parseFormData: weaponFormDataToDB,
     },
-    table: { columns, detailsKey: "details" },
+    table: {
+      actions,
+      columns,
+      detailsKey: "details",
+    },
   },
 );
 

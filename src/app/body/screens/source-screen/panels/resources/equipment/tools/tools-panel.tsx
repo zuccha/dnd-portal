@@ -1,4 +1,4 @@
-import { WandIcon } from "lucide-react";
+import { LayersIcon, WandIcon } from "lucide-react";
 import { type LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import { type Tool } from "~/models/resources/equipment/tools/tool";
 import {
@@ -53,6 +53,19 @@ const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
+// Actions
+//------------------------------------------------------------------------------
+
+const actions: ResourcesTableExtra<Tool, LocalizedTool>["actions"] = [
+  {
+    icon: LayersIcon,
+    isVisible: (tool) => tool.modifier_ids.length > 0,
+    label: { en: "Add variant", it: "Aggiungi variante" },
+    onClick: (tool) => console.log("Add variant", tool),
+  },
+];
+
+//------------------------------------------------------------------------------
 // Tools Panel
 //------------------------------------------------------------------------------
 
@@ -60,14 +73,18 @@ const ToolsPanel = createResourcesPanel(
   toolStore,
   { initialPaletteName: "coral" },
   {
-    album: { AlbumCard: ToolCard },
+    album: { AlbumCard: ToolCard, actions },
     filters: { Filters: ToolsFilters },
     form: {
       Editor: createToolEditor(toolForm),
       form: toolForm,
       parseFormData: toolFormDataToDB,
     },
-    table: { columns, detailsKey: "details" },
+    table: {
+      actions,
+      columns,
+      detailsKey: "details",
+    },
   },
 );
 

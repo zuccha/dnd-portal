@@ -1,4 +1,4 @@
-import { WandIcon } from "lucide-react";
+import { LayersIcon, WandIcon } from "lucide-react";
 import { type Armor } from "~/models/resources/equipment/armors/armor";
 import {
   armorForm,
@@ -61,6 +61,19 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
+// Actions
+//------------------------------------------------------------------------------
+
+const actions: ResourcesTableExtra<Armor, LocalizedArmor>["actions"] = [
+  {
+    icon: LayersIcon,
+    isVisible: (armor) => armor.modifier_ids.length > 0,
+    label: { en: "Add variant", it: "Aggiungi variante" },
+    onClick: (armor) => console.log("Add variant", armor),
+  },
+];
+
+//------------------------------------------------------------------------------
 // Armors Panel
 //------------------------------------------------------------------------------
 
@@ -68,14 +81,18 @@ const ArmorsPanel = createResourcesPanel(
   armorStore,
   { initialPaletteName: "gray" },
   {
-    album: { AlbumCard: ArmorCard },
+    album: { AlbumCard: ArmorCard, actions },
     filters: { Filters: ArmorsFilters },
     form: {
       Editor: createArmorEditor(armorForm),
       form: armorForm,
       parseFormData: armorFormDataToDB,
     },
-    table: { columns, detailsKey: "details" },
+    table: {
+      actions,
+      columns,
+      detailsKey: "details",
+    },
   },
 );
 

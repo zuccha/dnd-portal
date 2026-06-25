@@ -1,4 +1,4 @@
-import { FlaskConicalIcon, WandIcon } from "lucide-react";
+import { FlaskConicalIcon, LayersIcon, WandIcon } from "lucide-react";
 import { type Item } from "~/models/resources/equipment/items/item";
 import {
   itemForm,
@@ -69,6 +69,19 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
 ] as const;
 
 //------------------------------------------------------------------------------
+// Actions
+//------------------------------------------------------------------------------
+
+const actions: ResourcesTableExtra<Item, LocalizedItem>["actions"] = [
+  {
+    icon: LayersIcon,
+    isVisible: (item) => item.modifier_ids.length > 0,
+    label: { en: "Add variant", it: "Aggiungi variante" },
+    onClick: (item) => console.log("Add variant", item),
+  },
+];
+
+//------------------------------------------------------------------------------
 // Items Panel
 //------------------------------------------------------------------------------
 
@@ -76,14 +89,18 @@ const ItemsPanel = createResourcesPanel(
   itemStore,
   { initialPaletteName: "teal" },
   {
-    album: { AlbumCard: ItemCard },
+    album: { AlbumCard: ItemCard, actions },
     filters: { Filters: ItemsFilters },
     form: {
       Editor: createItemEditor(itemForm),
       form: itemForm,
       parseFormData: itemFormDataToDB,
     },
-    table: { columns, detailsKey: "details" },
+    table: {
+      actions,
+      columns,
+      detailsKey: "details",
+    },
   },
 );
 
