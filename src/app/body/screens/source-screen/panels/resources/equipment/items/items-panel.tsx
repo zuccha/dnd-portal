@@ -1,5 +1,8 @@
 import { FlaskConicalIcon, LayersIcon, WandIcon } from "lucide-react";
-import { cloneEquipmentVariant } from "~/models/resources/equipment/equipment-variant";
+import {
+  addFirstEquipmentVariant,
+  hasAvailableEquipmentModifier,
+} from "~/models/resources/equipment/equipment-variant";
 import { type Item } from "~/models/resources/equipment/items/item";
 import {
   itemForm,
@@ -76,10 +79,10 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
 const actions: ResourcesTableExtra<Item, LocalizedItem>["actions"] = [
   {
     icon: LayersIcon,
-    isVisible: (item) => item.modifier_ids.length > 0,
+    isVisible: hasAvailableEquipmentModifier,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: (item) =>
-      itemStore.addVirtualResource(cloneEquipmentVariant(item)),
+      addFirstEquipmentVariant(itemStore.addVirtualResourceRecipe, item),
   },
 ];
 

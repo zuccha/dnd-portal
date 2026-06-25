@@ -6,7 +6,10 @@ import {
 } from "~/models/resources/equipment/armors/armor-form";
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
-import { cloneEquipmentVariant } from "~/models/resources/equipment/equipment-variant";
+import {
+  addFirstEquipmentVariant,
+  hasAvailableEquipmentModifier,
+} from "~/models/resources/equipment/equipment-variant";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
 import { ArmorCard } from "./armor-card";
@@ -68,10 +71,10 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
 const actions: ResourcesTableExtra<Armor, LocalizedArmor>["actions"] = [
   {
     icon: LayersIcon,
-    isVisible: (armor) => armor.modifier_ids.length > 0,
+    isVisible: hasAvailableEquipmentModifier,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: (armor) =>
-      armorStore.addVirtualResource(cloneEquipmentVariant(armor)),
+      addFirstEquipmentVariant(armorStore.addVirtualResourceRecipe, armor),
   },
 ];
 

@@ -38,6 +38,17 @@ export type ResourceStore<
 > = ReturnType<typeof createResourceStore<R, L, F, DBR, DBT>>;
 
 //------------------------------------------------------------------------------
+// Virtual Resource Recipe
+//------------------------------------------------------------------------------
+
+export type VirtualResourceRecipe<R extends Resource> = {
+  base_id: string;
+  derive: (base: R) => R;
+  id: string;
+  source_id: string;
+};
+
+//------------------------------------------------------------------------------
 // Create Resource Store
 //------------------------------------------------------------------------------
 
@@ -101,20 +112,22 @@ export function createResourceStore<
   // Virtual Resources
   //----------------------------------------------------------------------------
 
-  const virtualResourceIdsStore = createMemoryStore<string[]>(
+  const virtualResourceIdsStore = createMemoryStore<Set<string>>(
     `${storeId}.virtual_resource_ids`,
-    [],
+    new Set(),
   );
 
+  const virtualResourceRecipes = new Map<string, VirtualResourceRecipe<R>>();
+
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Add Virtual Resource
+  // Add Virtual Resource Recipe
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function addVirtualResource(resource: R): void {
-    const virtualResource = { ...resource, virtual: true };
-    resourceCache.set(virtualResource, virtualResource.id);
+  function addVirtualResourceRecipe(recipe: VirtualResourceRecipe<R>): void {
+    virtualResourceRecipes.set(recipe.id, recipe);
+    refreshVirtualResource(recipe.id);
     virtualResourceIdsStore.set((prev) =>
-      prev.includes(virtualResource.id) ? prev : [...prev, virtualResource.id],
+      prev.has(recipe.id) ? prev : new Set([...prev, recipe.id]),
     );
   }
 
@@ -125,58 +138,51 @@ export function createResourceStore<
   function mergeVirtualResourceIds(
     sourceId: string,
     resourceIds: string[],
-    virtualResourceIds: string[],
+    virtualResourceIds: Set<string>,
   ): string[] {
-    if (virtualResourceIds.length === 0) return resourceIds;
+    if (virtualResourceIds.size === 0) return resourceIds;
 
-    const virtualIdsByBaseId = new Map<string, string[]>();
+    const virtualIdsByBaseId: Record<string, string[]> = {};
     const eligibleVirtualResourceIds: string[] = [];
-    const unmatchedVirtualIds: string[] = [];
-    const consumedVirtualIds = new Set<string>();
 
     for (const virtualResourceId of virtualResourceIds) {
-      const virtualResource = resourceCache.get(virtualResourceId);
-      if (!virtualResource || virtualResource.source_id !== sourceId) continue;
+      const recipe = virtualResourceRecipes.get(virtualResourceId);
+      if (!recipe || recipe.source_id !== sourceId) continue;
       eligibleVirtualResourceIds.push(virtualResourceId);
 
-      const baseId =
-        (
-          "variant_base_id" in virtualResource &&
-          typeof virtualResource.variant_base_id === "string"
-        ) ?
-          virtualResource.variant_base_id
-        : undefined;
-
-      if (!baseId) {
-        unmatchedVirtualIds.push(virtualResourceId);
-        consumedVirtualIds.add(virtualResourceId);
-        continue;
-      }
-
-      const ids = virtualIdsByBaseId.get(baseId) ?? [];
-      ids.push(virtualResourceId);
-      virtualIdsByBaseId.set(baseId, ids);
+      if (!virtualIdsByBaseId[recipe.base_id])
+        virtualIdsByBaseId[recipe.base_id] = [];
+      virtualIdsByBaseId[recipe.base_id]!.push(virtualResourceId);
     }
 
     const mergedResourceIds: string[] = [];
 
     for (const resourceId of resourceIds) {
       mergedResourceIds.push(resourceId);
-
-      for (const virtualResourceId of virtualIdsByBaseId.get(resourceId) ??
-        []) {
+      for (const virtualResourceId of virtualIdsByBaseId[resourceId] ?? [])
         mergedResourceIds.push(virtualResourceId);
-        consumedVirtualIds.add(virtualResourceId);
-      }
     }
 
-    return [
-      ...mergedResourceIds,
-      ...unmatchedVirtualIds,
-      ...eligibleVirtualResourceIds.filter(
-        (virtualResourceId) => !consumedVirtualIds.has(virtualResourceId),
-      ),
-    ];
+    return mergedResourceIds;
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Refresh Virtual Resource
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function refreshVirtualResource(resourceId: string): void {
+    const recipe = virtualResourceRecipes.get(resourceId);
+    if (!recipe) return;
+
+    const base = resourceCache.get(recipe.base_id);
+    if (!base) {
+      fetchResource(recipe.base_id);
+      return;
+    }
+
+    const resource = recipe.derive(base);
+    resourceCache.set({ ...resource, id: recipe.id, virtual: true }, recipe.id);
+    resourceLookupCache.set({ ...resource, id: recipe.id }, recipe.id);
   }
 
   //----------------------------------------------------------------------------
@@ -301,6 +307,8 @@ export function createResourceStore<
         }
         resourceCache.set(merged, resource.id);
         resourceLookupCache.set(merged, merged.id);
+        for (const recipe of virtualResourceRecipes.values())
+          if (recipe.base_id === merged.id) refreshVirtualResource(recipe.id);
       }
 
       return resourceIds;
@@ -431,7 +439,9 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResource(resourceId: string): [R, string] {
-    if (!resourceCache.get(resourceId)) fetchResource(resourceId);
+    if (virtualResourceRecipes.has(resourceId)) {
+      if (!resourceCache.get(resourceId)) refreshVirtualResource(resourceId);
+    } else if (!resourceCache.get(resourceId)) fetchResource(resourceId);
 
     const key = hash([resourceId]);
     return [resourceCache.cache.useValue(key) ?? defaultResource, key];
@@ -448,7 +458,11 @@ export function createResourceStore<
   );
 
   function useResources(resourceIds: string[]): R[] {
-    for (const resourceId of resourceIds) fetchResource(resourceId);
+    for (const resourceId of resourceIds) {
+      if (virtualResourceRecipes.has(resourceId)) {
+        if (!resourceCache.get(resourceId)) refreshVirtualResource(resourceId);
+      } else fetchResource(resourceId);
+    }
 
     const key = hash(resourceIds);
     return useCachedResources(key, resourceIds)[0];
@@ -495,11 +509,18 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourceLookup(resourceId: string): [ResourceLookup, string] {
+    if (virtualResourceRecipes.has(resourceId)) {
+      if (!resourceLookupCache.get(resourceId))
+        refreshVirtualResource(resourceId);
+
+      const key = hash([resourceId]);
+      const lookup = resourceLookupCache.cache.useValue(key);
+      return [lookup ?? defaultResourceLookup, key];
+    }
+
     const { key } = fetchResourceLookup(resourceId);
-    return [
-      resourceLookupCache.cache.useValue(key) ?? defaultResourceLookup,
-      key,
-    ];
+    const lookup = resourceLookupCache.cache.useValue(key);
+    return [lookup ?? defaultResourceLookup, key];
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -790,7 +811,7 @@ export function createResourceStore<
 
     useFilters,
 
-    addVirtualResource,
+    addVirtualResourceRecipe,
     createResource,
     deleteResources,
     fetchResource,

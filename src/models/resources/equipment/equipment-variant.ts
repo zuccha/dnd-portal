@@ -1,41 +1,173 @@
 import type { I18nString } from "~/i18n/i18n-string";
+import {
+  type EquipmentRarity,
+  equipmentRarities,
+} from "~/models/types/equipment-rarity";
+import type { VirtualResourceRecipe } from "../resource-store";
 import type { Equipment } from "./equipment";
+import type { EquipmentModifier } from "./modifiers/equipment-modifier";
+import { equipmentModifierStore } from "./modifiers/equipment-modifier-store";
 
 //------------------------------------------------------------------------------
-// Clone Equipment Variant
+// Add First Equipment Variant
 //------------------------------------------------------------------------------
 
-export function cloneEquipmentVariant<E extends Equipment>(base: E): E {
+export async function addFirstEquipmentVariant<E extends Equipment>(
+  addRecipe: (recipe: VirtualResourceRecipe<E>) => void,
+  base: E,
+): Promise<void> {
+  const modifierId = getFirstAvailableModifierId(base);
+  if (!modifierId) return;
+
+  const baseId = base.variant_base_id ?? base.id;
+  const id = crypto.randomUUID();
+  const modifierIds = [...(base.variant_modifier_ids ?? []), modifierId];
+  const responses = await Promise.all(
+    modifierIds.map((id) => equipmentModifierStore.fetchResource(id).promise),
+  );
+  if (responses.some(({ status }) => status === "failure")) return;
+
+  addRecipe({
+    base_id: baseId,
+    derive: (currentBase) => {
+      const modifiers = modifierIds.map((id, index) => {
+        const response = responses[index]!;
+        return (
+          equipmentModifierStore.getResource(id) ??
+          ("error" in response ? undefined : response.data)
+        );
+      });
+      if (modifiers.some((modifier) => !modifier)) return currentBase;
+      return createEquipmentVariant(
+        currentBase,
+        modifiers as EquipmentModifier[],
+        id,
+      );
+    },
+    id,
+    source_id: base.source_id,
+  });
+}
+
+export function hasAvailableEquipmentModifier(equipment: Equipment): boolean {
+  return !!getFirstAvailableModifierId(equipment);
+}
+
+//------------------------------------------------------------------------------
+// Create Equipment Variant
+//------------------------------------------------------------------------------
+
+export function createEquipmentVariant<E extends Equipment>(
+  base: E,
+  modifiers: EquipmentModifier[],
+  id: string = crypto.randomUUID(),
+): E {
+  const modifierIds = modifiers.map(({ id }) => id);
+
   return {
     ...base,
-    id: crypto.randomUUID(),
-    name: appendVariantLabel(base.name),
-    name_short: appendVariantLabel(
+    attunement_notes: modifiers.reduce(
+      (notes, modifier) =>
+        appendI18nString(notes, modifier.attunement_notes_delta),
+      base.attunement_notes,
+    ),
+    cost:
+      (base.cost ?? 0) +
+      modifiers.reduce((total, modifier) => total + modifier.cost_delta, 0),
+    id,
+    magic: base.magic || modifiers.some(({ make_magic }) => make_magic),
+    name: modifiers.reduce(
+      (name, modifier) => composeI18nString(modifier.composite_name, name),
+      base.name,
+    ),
+    name_short: modifiers.reduce(
+      (name, modifier) => composeI18nString(modifier.composite_name, name),
       Object.keys(base.name_short).length ? base.name_short : base.name,
     ),
+    notes: modifiers.reduce(
+      (notes, modifier) => appendI18nString(notes, modifier.notes_delta),
+      base.notes,
+    ),
+    rarity: modifiers.reduce(
+      (rarity, modifier) =>
+        getMaxEquipmentRarity(rarity, modifier.rarity_minimum),
+      base.rarity,
+    ),
+    required_attunement_slots: Math.max(
+      base.required_attunement_slots,
+      ...modifiers.map(
+        ({ required_attunement_slots_minimum }) =>
+          required_attunement_slots_minimum,
+      ),
+    ),
     variant_base_id: base.variant_base_id ?? base.id,
-    variant_modifier_ids: [...(base.variant_modifier_ids ?? [])],
+    variant_modifier_ids: [
+      ...(base.variant_modifier_ids ?? []),
+      ...modifierIds,
+    ],
     virtual: true,
+    weight:
+      (base.weight ?? 0) +
+      modifiers.reduce((total, modifier) => total + modifier.weight_delta, 0),
   };
 }
 
 //------------------------------------------------------------------------------
-// Utils
+// Get First Available Modifier Id
 //------------------------------------------------------------------------------
 
-function appendVariantLabel(name: I18nString): I18nString {
-  const result: I18nString = {};
-  const entries = Object.entries(name);
+function getFirstAvailableModifierId(equipment: Equipment): string | undefined {
+  return equipment.modifier_ids.find(
+    (id) => !(equipment.variant_modifier_ids ?? []).includes(id),
+  );
+}
 
-  for (const [lang, value] of entries) {
-    if (!value) continue;
-    result[lang] = `${value} ${variantLabels[lang] ?? variantLabels["en"]}`;
+//------------------------------------------------------------------------------
+// Append I18n String
+//------------------------------------------------------------------------------
+
+function appendI18nString(base: I18nString, delta: I18nString): I18nString {
+  const langs = new Set([...Object.keys(base), ...Object.keys(delta)]);
+  const result: I18nString = {};
+
+  for (const lang of langs) {
+    const baseText = base[lang] ?? "";
+    const deltaText = delta[lang] ?? "";
+    result[lang] =
+      baseText && deltaText ? `${baseText}\n\n${deltaText}`
+      : baseText ? baseText
+      : deltaText || undefined;
   }
 
   return result;
 }
 
-const variantLabels: Record<string, string> = {
-  en: "Variant",
-  it: "Variante",
-};
+//------------------------------------------------------------------------------
+// Compose I18n String
+//------------------------------------------------------------------------------
+
+function composeI18nString(template: I18nString, base: I18nString): I18nString {
+  const langs = new Set([...Object.keys(base), ...Object.keys(template)]);
+  const result: I18nString = {};
+
+  for (const lang of langs) {
+    const baseText = base[lang] ?? base["en"] ?? "";
+    const templateText = template[lang] ?? template["en"] ?? "{base}";
+    result[lang] = templateText
+      .replaceAll("{base}", baseText)
+      .replaceAll("$", baseText);
+  }
+
+  return result;
+}
+
+//------------------------------------------------------------------------------
+// Equipment Rarity Utils
+//------------------------------------------------------------------------------
+
+function getMaxEquipmentRarity(
+  a: EquipmentRarity,
+  b: EquipmentRarity,
+): EquipmentRarity {
+  return equipmentRarities.indexOf(a) >= equipmentRarities.indexOf(b) ? a : b;
+}
