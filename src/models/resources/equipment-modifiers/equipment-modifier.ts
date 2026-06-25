@@ -6,7 +6,7 @@ import {
   defaultResource,
   resourceSchema,
   resourceTranslationFields,
-} from "../../resource";
+} from "../resource";
 
 //------------------------------------------------------------------------------
 // Equipment Modifier

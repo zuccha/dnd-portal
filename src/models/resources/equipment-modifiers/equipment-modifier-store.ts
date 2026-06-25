@@ -1,4 +1,4 @@
-import { createResourceStore } from "../../resource-store";
+import { createResourceStore } from "../resource-store";
 import {
   defaultEquipmentModifier,
   equipmentModifierSchema,

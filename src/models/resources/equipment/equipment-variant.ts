@@ -3,9 +3,9 @@ import {
   type EquipmentRarity,
   equipmentRarities,
 } from "~/models/types/equipment-rarity";
+import type { EquipmentModifier } from "../equipment-modifiers/equipment-modifier";
 import type { VirtualResourceRecipe } from "../resource-store";
 import type { Equipment } from "./equipment";
-import type { EquipmentModifier } from "./modifiers/equipment-modifier";
 
 //------------------------------------------------------------------------------
 // Add Equipment Variant
@@ -45,7 +45,7 @@ export function hasAvailableEquipmentModifier(equipment: Equipment): boolean {
 export function createEquipmentVariant<E extends Equipment>(
   base: E,
   modifiers: EquipmentModifier[],
-  id: string = crypto.randomUUID(),
+  id: string,
 ): E {
   const modifierIds = modifiers.map(({ id }) => id);
 

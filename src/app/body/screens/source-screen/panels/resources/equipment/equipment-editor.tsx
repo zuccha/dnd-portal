@@ -4,7 +4,7 @@ import useBooleanOptions from "~/hooks/use-boolean-options";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { EquipmentFormData } from "~/models/resources/equipment/equipment-form";
-import { equipmentModifierStore } from "~/models/resources/equipment/modifiers/equipment-modifier-store";
+import { equipmentModifierStore } from "~/models/resources/equipment-modifiers/equipment-modifier-store";
 import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";

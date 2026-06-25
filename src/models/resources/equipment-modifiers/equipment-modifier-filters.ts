@@ -2,7 +2,7 @@ import z from "zod";
 import {
   resourceFiltersSchema,
   resourceOrderOptions,
-} from "../../resource-filters";
+} from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Equipment Modifier Order Options

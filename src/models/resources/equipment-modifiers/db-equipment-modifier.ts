@@ -1,9 +1,6 @@
 import z from "zod";
 import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
-import {
-  dbResourceSchema,
-  dbResourceTranslationSchema,
-} from "../../db-resource";
+import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
 
 //------------------------------------------------------------------------------
 // DB Equipment Modifier

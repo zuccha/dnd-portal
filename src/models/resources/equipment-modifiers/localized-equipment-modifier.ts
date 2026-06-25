@@ -9,7 +9,7 @@ import {
   formatDetails,
   localizedResourceSchema,
   useLocalizeResource,
-} from "../../localized-resource";
+} from "../localized-resource";
 import {
   type EquipmentModifier,
   equipmentModifierSchema,

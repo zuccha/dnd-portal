@@ -1,8 +1,8 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { equipmentStore } from "~/models/resources/equipment/equipment-store";
-import type { EquipmentModifier } from "~/models/resources/equipment/modifiers/equipment-modifier";
-import type { EquipmentModifierFormData } from "~/models/resources/equipment/modifiers/equipment-modifier-form";
+import type { EquipmentModifier } from "~/models/resources/equipment-modifiers/equipment-modifier";
+import type { EquipmentModifierFormData } from "~/models/resources/equipment-modifiers/equipment-modifier-form";
 import {
   type EquipmentRarity,
   useEquipmentRarityOptions,

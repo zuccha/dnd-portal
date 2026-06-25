@@ -1,11 +1,11 @@
 import { WandIcon } from "lucide-react";
-import type { EquipmentModifier } from "~/models/resources/equipment/modifiers/equipment-modifier";
+import type { EquipmentModifier } from "~/models/resources/equipment-modifiers/equipment-modifier";
 import {
   equipmentModifierForm,
   equipmentModifierFormDataToDB,
-} from "~/models/resources/equipment/modifiers/equipment-modifier-form";
-import { equipmentModifierStore } from "~/models/resources/equipment/modifiers/equipment-modifier-store";
-import type { LocalizedEquipmentModifier } from "~/models/resources/equipment/modifiers/localized-equipment-modifier";
+} from "~/models/resources/equipment-modifiers/equipment-modifier-form";
+import { equipmentModifierStore } from "~/models/resources/equipment-modifiers/equipment-modifier-store";
+import type { LocalizedEquipmentModifier } from "~/models/resources/equipment-modifiers/localized-equipment-modifier";
 import { createResourcesPanel } from "../resources-panel";
 import type { ResourcesTableExtra } from "../resources-table";
 import { EquipmentModifierCard } from "./equipment-modifier-card";

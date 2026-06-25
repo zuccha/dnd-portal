@@ -23,8 +23,8 @@ import {
   addEquipmentVariant,
   createEquipmentVariant,
 } from "~/models/resources/equipment/equipment-variant";
-import type { EquipmentModifier } from "~/models/resources/equipment/modifiers/equipment-modifier";
-import { equipmentModifierStore } from "~/models/resources/equipment/modifiers/equipment-modifier-store";
+import type { EquipmentModifier } from "~/models/resources/equipment-modifiers/equipment-modifier";
+import { equipmentModifierStore } from "~/models/resources/equipment-modifiers/equipment-modifier-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";

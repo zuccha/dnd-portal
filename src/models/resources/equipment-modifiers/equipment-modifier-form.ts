@@ -1,10 +1,7 @@
 import z from "zod";
 import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
 import { createForm } from "~/utils/form";
-import {
-  resourceFormDataSchema,
-  resourceFormDataToDB,
-} from "../../resource-form";
+import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import type {
   DBEquipmentModifier,
   DBEquipmentModifierTranslation,
