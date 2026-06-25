@@ -5,8 +5,8 @@ import {
   vehicleFormDataToDB,
 } from "~/models/resources/vehicles/vehicle-form";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
-import { createResourcesPanel } from "../../resources-panel";
-import type { ResourcesTableExtra } from "../../resources-table";
+import { createResourcesPanel } from "../resources-panel";
+import type { ResourcesTableExtra } from "../resources-table";
 import { VehicleCard } from "./vehicle-card";
 import { createVehicleEditor } from "./vehicle-editor";
 import VehiclesFilters from "./vehicles-filters";

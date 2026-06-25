@@ -3,14 +3,14 @@ import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Vehicle } from "~/models/resources/vehicles/vehicle";
 import type { VehicleFormData } from "~/models/resources/vehicles/vehicle-form";
 import type { Form } from "~/utils/form";
-import { createResourceEditor } from "../../resource-editor";
+import { createResourceEditor } from "../resource-editor";
 import {
   createCostInputField,
   createNumberInputField,
   createSpeedInputField,
   createTextareaField,
   createWeightInputField,
-} from "../../resource-editor-form";
+} from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
 // Create Vehicle Editor

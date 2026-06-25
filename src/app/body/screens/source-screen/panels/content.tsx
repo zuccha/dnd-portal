@@ -13,7 +13,6 @@ import ArmorsPanel from "./resources/equipment/armors/armors-panel";
 import ItemsPanel from "./resources/equipment/items/items-panel";
 import ServicesPanel from "./resources/equipment/services/services-panel";
 import ToolsPanel from "./resources/equipment/tools/tools-panel";
-import VehiclesPanel from "./resources/equipment/vehicles/vehicles-panel";
 import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
 import EquipmentModifiersPanel from "./resources/equipment-modifiers/equipment-modifiers-panel";
 import FeatsPanel from "./resources/feats/feats-panel";
@@ -24,6 +23,7 @@ import MetamagicsPanel from "./resources/metamagics/metamagics-panel";
 import PlanesPanel from "./resources/planes/planes-panel";
 import SpeciesPanel from "./resources/species/species-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
+import VehiclesPanel from "./resources/vehicles/vehicles-panel";
 import CampaignPanel from "./settings/campaign-panel";
 
 //------------------------------------------------------------------------------
