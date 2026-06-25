@@ -11,6 +11,7 @@ import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { createCachedRequest, createLockedRequest } from "~/utils/request";
 import { normalizeString } from "~/utils/string";
+import { createDeterministicUuid } from "~/utils/uuid";
 import type { ResourceKind } from "../types/resource-kind";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
@@ -43,8 +44,8 @@ export type ResourceStore<
 
 export type VirtualResourceRecipe<R extends Resource> = {
   base_id: string;
-  derive: (base: R) => R;
-  id: string;
+  derive: (base: R, id: string) => R;
+  modifier_ids: string[];
   source_id: string;
 };
 
@@ -117,17 +118,27 @@ export function createResourceStore<
     new Set(),
   );
 
-  const virtualResourceRecipes = new Map<string, VirtualResourceRecipe<R>>();
+  const virtualResourceRecipes = new Map<
+    string,
+    VirtualResourceRecipe<R> & { id: string }
+  >();
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Add Virtual Resource Recipe
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function addVirtualResourceRecipe(recipe: VirtualResourceRecipe<R>): void {
-    virtualResourceRecipes.set(recipe.id, recipe);
-    refreshVirtualResource(recipe.id);
+    const id = createDeterministicUuid([
+      storeId,
+      recipe.source_id,
+      recipe.base_id,
+      recipe.modifier_ids,
+    ]);
+
+    virtualResourceRecipes.set(id, { ...recipe, id });
+    refreshVirtualResource(id);
     virtualResourceIdsStore.set((prev) =>
-      prev.has(recipe.id) ? prev : new Set([...prev, recipe.id]),
+      prev.has(id) ? prev : new Set([...prev, id]),
     );
   }
 
@@ -180,7 +191,7 @@ export function createResourceStore<
       return;
     }
 
-    const resource = recipe.derive(base);
+    const resource = recipe.derive(base, recipe.id);
     resourceCache.set({ ...resource, id: recipe.id, virtual: true }, recipe.id);
     resourceLookupCache.set({ ...resource, id: recipe.id }, recipe.id);
   }

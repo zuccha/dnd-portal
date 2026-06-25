@@ -20,7 +20,6 @@ export async function addFirstEquipmentVariant<E extends Equipment>(
   if (!modifierId) return;
 
   const baseId = base.variant_base_id ?? base.id;
-  const id = crypto.randomUUID();
   const modifierIds = [...(base.variant_modifier_ids ?? []), modifierId];
   const responses = await Promise.all(
     modifierIds.map((id) => equipmentModifierStore.fetchResource(id).promise),
@@ -29,7 +28,7 @@ export async function addFirstEquipmentVariant<E extends Equipment>(
 
   addRecipe({
     base_id: baseId,
-    derive: (currentBase) => {
+    derive: (currentBase, id) => {
       const modifiers = modifierIds.map((id, index) => {
         const response = responses[index]!;
         return (
@@ -44,7 +43,7 @@ export async function addFirstEquipmentVariant<E extends Equipment>(
         id,
       );
     },
-    id,
+    modifier_ids: modifierIds,
     source_id: base.source_id,
   });
 }
