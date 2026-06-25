@@ -65,12 +65,7 @@ export default function UserButton() {
 
   return (
     <Menu.Root>
-      <Menu.Trigger
-        display={{ base: "none", md: "inline-flex" }}
-        focusRing="outside"
-        mx={2.5}
-        rounded="full"
-      >
+      <Menu.Trigger focusRing="outside" mx={2.5} rounded="full">
         <Avatar.Root cursor="pointer" size="2xs">
           <Avatar.Fallback name={user.name} />
           <Avatar.Image src={user.avatarUrl} />
