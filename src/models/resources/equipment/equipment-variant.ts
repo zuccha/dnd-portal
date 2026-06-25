@@ -1,4 +1,4 @@
-import type { I18nString } from "~/i18n/i18n-string";
+import { appendI18nString, composeI18nString } from "~/i18n/i18n-string";
 import {
   type EquipmentRarity,
   equipmentRarities,
@@ -53,7 +53,7 @@ export function createEquipmentVariant<E extends Equipment>(
     ...base,
     attunement_notes: modifiers.reduce(
       (notes, modifier) =>
-        appendI18nString(notes, modifier.attunement_notes_delta),
+        appendI18nString(notes, modifier.attunement_notes_delta, "; "),
       base.attunement_notes,
     ),
     cost:
@@ -62,15 +62,18 @@ export function createEquipmentVariant<E extends Equipment>(
     id,
     magic: base.magic || modifiers.some(({ make_magic }) => make_magic),
     name: modifiers.reduce(
-      (name, modifier) => composeI18nString(modifier.composite_name, name),
+      (name, modifier) =>
+        composeI18nString(modifier.composite_name, name, "$$"),
       base.name,
     ),
     name_short: modifiers.reduce(
-      (name, modifier) => composeI18nString(modifier.composite_name, name),
+      (name, modifier) =>
+        composeI18nString(modifier.composite_name, name, "$$"),
       Object.keys(base.name_short).length ? base.name_short : base.name,
     ),
     notes: modifiers.reduce(
-      (notes, modifier) => appendI18nString(notes, modifier.notes_delta),
+      (notes, modifier) =>
+        appendI18nString(notes, modifier.notes_delta, "\n\n"),
       base.notes,
     ),
     rarity: modifiers.reduce(
@@ -105,45 +108,6 @@ function getFirstAvailableModifierId(equipment: Equipment): string | undefined {
   return equipment.modifier_ids.find(
     (id) => !(equipment.variant_modifier_ids ?? []).includes(id),
   );
-}
-
-//------------------------------------------------------------------------------
-// Append I18n String
-//------------------------------------------------------------------------------
-
-function appendI18nString(base: I18nString, delta: I18nString): I18nString {
-  const langs = new Set([...Object.keys(base), ...Object.keys(delta)]);
-  const result: I18nString = {};
-
-  for (const lang of langs) {
-    const baseText = base[lang] ?? "";
-    const deltaText = delta[lang] ?? "";
-    result[lang] =
-      baseText && deltaText ? `${baseText}\n\n${deltaText}`
-      : baseText ? baseText
-      : deltaText || undefined;
-  }
-
-  return result;
-}
-
-//------------------------------------------------------------------------------
-// Compose I18n String
-//------------------------------------------------------------------------------
-
-function composeI18nString(template: I18nString, base: I18nString): I18nString {
-  const langs = new Set([...Object.keys(base), ...Object.keys(template)]);
-  const result: I18nString = {};
-
-  for (const lang of langs) {
-    const baseText = base[lang] ?? base["en"] ?? "";
-    const templateText = template[lang] ?? template["en"] ?? "{base}";
-    result[lang] = templateText
-      .replaceAll("{base}", baseText)
-      .replaceAll("$", baseText);
-  }
-
-  return result;
 }
 
 //------------------------------------------------------------------------------
