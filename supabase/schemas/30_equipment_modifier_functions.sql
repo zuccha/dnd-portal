@@ -20,21 +20,22 @@ CREATE TYPE public.equipment_modifier_row AS (
   rarity_minimum public.equipment_rarity,
   required_attunement_slots_minimum smallint,
   weight_delta integer,
-  -- Equipment Modifier Translation
+  -- Modifier Translation
   applies_to jsonb,
   attunement_notes_delta jsonb,
   composite_name jsonb,
+  -- Equipment Modifier Translation
   notes_delta jsonb,
-  -- Equipment Modifier Applications
+  -- Concrete Modifier Applications
   equipment_ids jsonb
 );
 
 
 --------------------------------------------------------------------------------
--- CREATE EQUIPMENT MODIFIER
+-- CREATE EQUIPMENT MODIFIER BASE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.create_equipment_modifier(
+CREATE OR REPLACE FUNCTION public.create_equipment_modifier_base(
   p_source_id uuid,
   p_lang text,
   p_equipment_modifier jsonb,
@@ -67,23 +68,6 @@ BEGIN
     coalesce(r.required_attunement_slots_minimum, 0), coalesce(r.weight_delta, 0)
   );
 
-  INSERT INTO public.armor_modifiers (resource_id)
-  VALUES (v_id);
-
-  INSERT INTO public.armor_modifier_applications (armor_id, armor_modifier_id)
-  SELECT
-    (value)::uuid,
-    v_id
-  FROM jsonb_array_elements_text(
-    coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
-  ) v
-  WHERE NOT EXISTS (
-    SELECT 1
-    FROM public.armor_modifier_applications ama
-    WHERE ama.armor_id = (v.value)::uuid
-      AND ama.armor_modifier_id = v_id
-  );
-
   perform public.upsert_equipment_modifier_translation(
     v_id,
     p_lang,
@@ -94,18 +78,18 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.create_equipment_modifier(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.create_equipment_modifier(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_equipment_modifier(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_equipment_modifier(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO service_role;
 
 
 --------------------------------------------------------------------------------
--- FETCH EQUIPMENT MODIFIER
+-- FETCH EQUIPMENT MODIFIER BASE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_equipment_modifier(p_id uuid)
+CREATE OR REPLACE FUNCTION public.fetch_equipment_modifier_base(p_id uuid)
 RETURNS public.equipment_modifier_row
 LANGUAGE sql
 SET search_path TO 'public', 'pg_temp'
@@ -130,23 +114,15 @@ AS $$
     coalesce(tt.attunement_notes_delta, '{}'::jsonb) AS attunement_notes_delta,
     coalesce(tt.composite_name, '{}'::jsonb) AS composite_name,
     coalesce(tt.notes_delta, '{}'::jsonb) AS notes_delta,
-    coalesce(ee.equipment_ids, '[]'::jsonb) AS equipment_ids
+    '[]'::jsonb AS equipment_ids
   FROM public.fetch_resource(p_id) AS r
   JOIN public.equipment_modifiers em ON em.resource_id = r.id
   LEFT JOIN (
     SELECT
-      ama.armor_modifier_id AS id,
-      jsonb_agg(ama.armor_id ORDER BY ama.armor_id) AS equipment_ids
-    FROM public.armor_modifier_applications ama
-    WHERE ama.armor_modifier_id = p_id
-    GROUP BY ama.armor_modifier_id
-  ) ee ON ee.id = r.id
-  LEFT JOIN (
-    SELECT
       em.resource_id AS id,
       jsonb_object_agg(mt.lang, mt.applies_to) AS applies_to,
-      jsonb_object_agg(emt.lang, emt.attunement_notes_delta) AS attunement_notes_delta,
       jsonb_object_agg(mt.lang, mt.composite_name) AS composite_name,
+      jsonb_object_agg(emt.lang, emt.attunement_notes_delta) AS attunement_notes_delta,
       jsonb_object_agg(emt.lang, emt.notes_delta) AS notes_delta
     FROM public.equipment_modifiers em
     LEFT JOIN public.modifier_translations mt ON mt.resource_id = em.resource_id
@@ -159,18 +135,18 @@ AS $$
   WHERE r.id = p_id;
 $$;
 
-ALTER FUNCTION public.fetch_equipment_modifier(p_id uuid) OWNER TO postgres;
+ALTER FUNCTION public.fetch_equipment_modifier_base(p_id uuid) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_equipment_modifier(p_id uuid) TO anon;
-GRANT ALL ON FUNCTION public.fetch_equipment_modifier(p_id uuid) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_equipment_modifier(p_id uuid) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_equipment_modifier_base(p_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.fetch_equipment_modifier_base(p_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_equipment_modifier_base(p_id uuid) TO service_role;
 
 
 --------------------------------------------------------------------------------
--- FETCH EQUIPMENT MODIFIERS
+-- FETCH EQUIPMENT MODIFIERS BASE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.fetch_equipment_modifiers(
+CREATE OR REPLACE FUNCTION public.fetch_equipment_modifiers_base(
   p_source_id uuid,
   p_langs text[],
   p_filters jsonb DEFAULT '{}'::jsonb,
@@ -201,24 +177,16 @@ src AS (
     em.make_magic,
     em.rarity_minimum,
     em.required_attunement_slots_minimum,
-    em.weight_delta,
-    coalesce(ee.equipment_ids, '[]'::jsonb) AS equipment_ids
+    em.weight_delta
   FROM base b
   JOIN public.equipment_modifiers em ON em.resource_id = b.id
-  LEFT JOIN (
-    SELECT
-      ama.armor_modifier_id AS id,
-      jsonb_agg(ama.armor_id ORDER BY ama.armor_id) AS equipment_ids
-    FROM public.armor_modifier_applications ama
-    GROUP BY ama.armor_modifier_id
-  ) ee ON ee.id = b.id
 ),
 t AS (
   SELECT
     s.id,
     jsonb_object_agg(mt.lang, mt.applies_to) FILTER (WHERE array_length(p_langs,1) IS NULL OR mt.lang = any(p_langs)) AS applies_to,
-    jsonb_object_agg(emt.lang, emt.attunement_notes_delta) FILTER (WHERE array_length(p_langs,1) IS NULL OR emt.lang = any(p_langs)) AS attunement_notes_delta,
     jsonb_object_agg(mt.lang, mt.composite_name) FILTER (WHERE array_length(p_langs,1) IS NULL OR mt.lang = any(p_langs)) AS composite_name,
+    jsonb_object_agg(emt.lang, emt.attunement_notes_delta) FILTER (WHERE array_length(p_langs,1) IS NULL OR emt.lang = any(p_langs)) AS attunement_notes_delta,
     jsonb_object_agg(emt.lang, emt.notes_delta) FILTER (WHERE array_length(p_langs,1) IS NULL OR emt.lang = any(p_langs)) AS notes_delta
   FROM src s
   LEFT JOIN public.modifier_translations mt ON mt.resource_id = s.id
@@ -248,7 +216,7 @@ SELECT
   coalesce(t.attunement_notes_delta, '{}'::jsonb) AS attunement_notes_delta,
   coalesce(t.composite_name, '{}'::jsonb) AS composite_name,
   coalesce(t.notes_delta, '{}'::jsonb) AS notes_delta,
-  s.equipment_ids
+  '[]'::jsonb AS equipment_ids
 FROM src s
 LEFT JOIN t ON t.id = s.id
 ORDER BY
@@ -262,11 +230,11 @@ ORDER BY
   END DESC NULLS LAST;
 $$;
 
-ALTER FUNCTION public.fetch_equipment_modifiers(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
+ALTER FUNCTION public.fetch_equipment_modifiers_base(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.fetch_equipment_modifiers(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
-GRANT ALL ON FUNCTION public.fetch_equipment_modifiers(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
-GRANT ALL ON FUNCTION public.fetch_equipment_modifiers(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
+GRANT ALL ON FUNCTION public.fetch_equipment_modifiers_base(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO anon;
+GRANT ALL ON FUNCTION public.fetch_equipment_modifiers_base(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO authenticated;
+GRANT ALL ON FUNCTION public.fetch_equipment_modifiers_base(p_source_id uuid, p_langs text[], p_filters jsonb, p_order_by text, p_order_dir text) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -318,10 +286,10 @@ GRANT ALL ON FUNCTION public.upsert_equipment_modifier_translation(p_id uuid, p_
 
 
 --------------------------------------------------------------------------------
--- UPDATE EQUIPMENT MODIFIER
+-- UPDATE EQUIPMENT MODIFIER BASE
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.update_equipment_modifier(
+CREATE OR REPLACE FUNCTION public.update_equipment_modifier_base(
   p_id uuid,
   p_lang text,
   p_equipment_modifier jsonb,
@@ -356,32 +324,6 @@ BEGIN
     raise exception 'No row with id %', p_id;
   END IF;
 
-  IF p_equipment_modifier ? 'equipment_ids' THEN
-    DELETE FROM public.armor_modifier_applications ama
-    WHERE ama.armor_modifier_id = p_id
-      AND NOT EXISTS (
-        SELECT 1
-        FROM jsonb_array_elements_text(
-          coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
-        ) v
-        WHERE (v.value)::uuid = ama.armor_id
-      );
-
-    INSERT INTO public.armor_modifier_applications (armor_id, armor_modifier_id)
-    SELECT DISTINCT
-      (v.value)::uuid,
-      p_id
-    FROM jsonb_array_elements_text(
-      coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
-    ) v
-    WHERE NOT EXISTS (
-      SELECT 1
-      FROM public.armor_modifier_applications ama
-      WHERE ama.armor_id = (v.value)::uuid
-        AND ama.armor_modifier_id = p_id
-    );
-  END IF;
-
   perform public.upsert_equipment_modifier_translation(
     p_id,
     p_lang,
@@ -390,8 +332,8 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.update_equipment_modifier(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.update_equipment_modifier(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_equipment_modifier(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_equipment_modifier(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO service_role;
