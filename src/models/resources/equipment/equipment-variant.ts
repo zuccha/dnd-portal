@@ -12,17 +12,17 @@ import type { Equipment } from "./equipment";
 //------------------------------------------------------------------------------
 
 export function addEquipmentVariant<E extends Equipment>(
-  addRecipe: (recipe: VirtualResourceRecipe<E>) => void,
+  addRecipe: (recipe: VirtualResourceRecipe<E>) => boolean,
   base: E,
   modifiers: EquipmentModifier[],
-): void {
-  if (base.virtual) return;
-  if (modifiers.length === 0) return;
+): boolean {
+  if (base.virtual) return false;
+  if (modifiers.length === 0) return false;
 
   const baseId = base.variant_base_id ?? base.id;
   const modifierIds = modifiers.map(({ id }) => id);
 
-  addRecipe({
+  return addRecipe({
     base_id: baseId,
     derive: (currentBase, id) =>
       createEquipmentVariant(currentBase, modifiers, id),

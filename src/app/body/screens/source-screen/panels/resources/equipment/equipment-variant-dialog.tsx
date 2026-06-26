@@ -37,6 +37,7 @@ import { createMemoryStore } from "~/store/memory-store";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
 import IconButton from "~/ui/icon-button";
+import { toaster } from "~/ui/toaster";
 
 //------------------------------------------------------------------------------
 // Equipment Variant Request
@@ -253,11 +254,21 @@ export function createEquipmentVariantDialog<
         return;
 
       setSaving(true);
-      addEquipmentVariant(
+      const added = addEquipmentVariant(
         store.addVirtualResourceRecipe,
         request.base,
         selectedModifiers,
       );
+      setSaving(false);
+
+      if (!added) {
+        toaster.warning({
+          description: t("duplicate_variant_description"),
+          title: t("duplicate_variant_title"),
+        });
+        return;
+      }
+
       close();
     };
 
@@ -430,6 +441,14 @@ const i18nContext = {
   create: {
     en: "Add variant",
     it: "Aggiungi variante",
+  },
+  duplicate_variant_description: {
+    en: "The selected modifier composition has already been added.",
+    it: "La composizione di modificatori selezionata e già stata aggiunta.",
+  },
+  duplicate_variant_title: {
+    en: "Variant already exists",
+    it: "La variante esiste già",
   },
   loading: {
     en: "Loading...",

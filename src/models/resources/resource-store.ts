@@ -127,7 +127,7 @@ export function createResourceStore<
   // Add Virtual Resource Recipe
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function addVirtualResourceRecipe(recipe: VirtualResourceRecipe<R>): void {
+  function addVirtualResourceRecipe(recipe: VirtualResourceRecipe<R>): boolean {
     const id = createDeterministicUuid([
       storeId,
       recipe.source_id,
@@ -135,11 +135,14 @@ export function createResourceStore<
       recipe.modifier_ids,
     ]);
 
+    if (virtualResourceRecipes.has(id)) return false;
+
     virtualResourceRecipes.set(id, { ...recipe, id });
     refreshVirtualResource(id);
     virtualResourceIdsStore.set((prev) =>
       prev.has(id) ? prev : new Set([...prev, id]),
     );
+    return true;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
