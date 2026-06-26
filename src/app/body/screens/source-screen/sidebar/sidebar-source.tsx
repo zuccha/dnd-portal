@@ -26,8 +26,9 @@ export default function SidebarSource({ sourceId }: SidebarSourceProps) {
     () =>
       resourcePanels.map(({ id, items }) => ({
         id,
-        items: items.map((value) => ({
+        items: items.map(({ modifier, route: value }) => ({
           label: t(value),
+          modifier,
           onClick: () => history.pushState({}, "", value),
           selected: route === value,
           value,

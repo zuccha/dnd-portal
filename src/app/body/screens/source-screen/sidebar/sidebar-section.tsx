@@ -1,7 +1,12 @@
 import { VStack } from "@chakra-ui/react";
-import { ChevronDownIcon, ChevronUpIcon, CircleSmallIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CornerDownRightIcon,
+} from "lucide-react";
 import z from "zod";
 import SectionButton from "~/app/body/screens/source-screen/sidebar/section-button";
+import DotIcon from "~/icons/dot-icon";
 import { createLocalStoreSet } from "~/store/set/local-store-set";
 import Button from "~/ui/button";
 import Icon from "~/ui/icon";
@@ -13,6 +18,7 @@ import SectionHeading from "~/ui/section-heading";
 
 export type SidebarSectionItem = {
   label: string;
+  modifier?: boolean;
   onClick: () => void;
   selected: boolean;
   value: string;
@@ -55,8 +61,9 @@ export default function SidebarSection({
         <VStack gap={0} px={2} w="full">
           {items.map((item) => (
             <SectionButton
-              Icon={CircleSmallIcon}
+              Icon={item.modifier ? CornerDownRightIcon : DotIcon}
               active={item.selected}
+              indent={item.modifier ? 4 : 0}
               key={item.value}
               label={item.label}
               onClick={item.onClick}

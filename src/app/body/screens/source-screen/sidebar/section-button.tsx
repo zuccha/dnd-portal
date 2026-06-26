@@ -8,6 +8,7 @@ import Icon, { type IconProps } from "~/ui/icon";
 export type SectionButtonProps = {
   Icon: IconProps["Icon"];
   active?: boolean;
+  indent?: number;
   label: string;
   onClick: ButtonProps["onClick"];
 };
@@ -15,6 +16,7 @@ export type SectionButtonProps = {
 export default function SectionButton({
   Icon: icon,
   active,
+  indent = 0,
   label,
   onClick,
 }: SectionButtonProps) {
@@ -24,14 +26,18 @@ export default function SectionButton({
       bgColor={active ? "bg.emphasized" : "transparent"}
       color={active ? "fg" : "fg.muted"}
       gap={0}
+      height={"auto"}
       justifyContent="flex-start"
       m={0}
       onClick={onClick}
+      pl={3 + indent}
+      pr={3}
+      py={1}
       size="sm"
       variant="ghost"
       w="full"
     >
-      <Icon Icon={icon} fill={active ? "fg" : undefined} mr={1} size="xs" />
+      <Icon Icon={icon} mr={1} size="xs" />
       {label}
     </Button>
   );

@@ -1,89 +1,105 @@
 import { Route } from "~/navigation/routes";
 
 //------------------------------------------------------------------------------
+// Panel Item
+//------------------------------------------------------------------------------
+
+export type PanelItem = {
+  modifier?: boolean;
+  route: Route;
+};
+
+const panelItem = <R extends Route>(
+  route: R,
+  extra: Omit<PanelItem, "route"> = {},
+) => ({ route, ...extra });
+
+//------------------------------------------------------------------------------
 // Bestiary Panel Ids
 //------------------------------------------------------------------------------
 
 export const bestiaryPanelIds = [
-  Route.ResourcesBestiaryMonsters,
-  Route.ResourcesBestiaryTags,
+  panelItem(Route.ResourcesBestiaryMonsters),
+  panelItem(Route.ResourcesBestiaryTags),
 ] as const;
 
-export type BestiaryPanelId = (typeof bestiaryPanelIds)[number];
+export type BestiaryPanelId = (typeof bestiaryPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // Character Panel Ids
 //------------------------------------------------------------------------------
 
 export const characterPanelIds = [
-  Route.ResourcesCharacterClasses,
-  Route.ResourcesCharacterSubclasses,
-  Route.ResourcesCharacterBackgrounds,
-  Route.ResourcesCharacterSpecies,
-  Route.ResourcesCharacterFeats,
+  panelItem(Route.ResourcesCharacterClasses),
+  panelItem(Route.ResourcesCharacterSubclasses),
+  panelItem(Route.ResourcesCharacterBackgrounds),
+  panelItem(Route.ResourcesCharacterSpecies),
+  panelItem(Route.ResourcesCharacterFeats),
 ] as const;
 
-export type CharacterPanelId = (typeof characterPanelIds)[number];
+export type CharacterPanelId = (typeof characterPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // Abilities Panel Ids
 //------------------------------------------------------------------------------
 
 export const abilitiesPanelIds = [
-  Route.ResourcesAbilitiesSpells,
-  Route.ResourcesAbilitiesEldritchInvocations,
-  Route.ResourcesAbilitiesManeuvers,
-  Route.ResourcesAbilitiesMetamagic,
+  panelItem(Route.ResourcesAbilitiesSpells),
+  panelItem(Route.ResourcesAbilitiesEldritchInvocations),
+  panelItem(Route.ResourcesAbilitiesManeuvers),
+  panelItem(Route.ResourcesAbilitiesMetamagic),
 ] as const;
 
-export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number];
+export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // Blocks Panel Ids
 //------------------------------------------------------------------------------
 
-export const blocksPanelIds = [Route.ResourcesBlocksFeatures] as const;
+export const blocksPanelIds = [
+  panelItem(Route.ResourcesBlocksFeatures),
+] as const;
 
-export type BlocksPanelId = (typeof blocksPanelIds)[number];
+export type BlocksPanelId = (typeof blocksPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // Equipment Panel Ids
 //------------------------------------------------------------------------------
 
 export const equipmentPanelIds = [
-  Route.ResourcesEquipmentItems,
-  Route.ResourcesEquipmentItemModifiers,
-  Route.ResourcesEquipmentArmors,
-  Route.ResourcesEquipmentArmorModifiers,
-  Route.ResourcesEquipmentWeapons,
-  Route.ResourcesEquipmentWeaponModifiers,
-  Route.ResourcesEquipmentTools,
-  Route.ResourcesEquipmentToolModifiers,
+  panelItem(Route.ResourcesEquipmentItems),
+  panelItem(Route.ResourcesEquipmentItemModifiers, { modifier: true }),
+  panelItem(Route.ResourcesEquipmentArmors),
+  panelItem(Route.ResourcesEquipmentArmorModifiers, { modifier: true }),
+  panelItem(Route.ResourcesEquipmentWeapons),
+  panelItem(Route.ResourcesEquipmentWeaponModifiers, { modifier: true }),
+  panelItem(Route.ResourcesEquipmentTools),
+  panelItem(Route.ResourcesEquipmentToolModifiers, { modifier: true }),
 ] as const;
 
-export type EquipmentPanelId = (typeof equipmentPanelIds)[number];
+export type EquipmentPanelId = (typeof equipmentPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // Market Panel Ids
 //------------------------------------------------------------------------------
 
 export const marketPanelIds = [
-  Route.ResourcesMarketVehicles,
-  Route.ResourcesMarketServices,
+  panelItem(Route.ResourcesMarketVehicles),
+  panelItem(Route.ResourcesMarketServices),
 ] as const;
 
-export type MarketPanelId = (typeof marketPanelIds)[number];
+export type MarketPanelId = (typeof marketPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // World Panel Ids
 //------------------------------------------------------------------------------
 
 export const worldPanelIds = [
-  Route.ResourcesWorldLanguages,
-  Route.ResourcesWorldPlanes,
+  panelItem(Route.ResourcesWorldLanguages),
+  panelItem(Route.ResourcesWorldPlanes),
 ] as const;
 
-export type WorldPanelId = (typeof worldPanelIds)[number];
+export type WorldPanelId = (typeof worldPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // Resource Panels
