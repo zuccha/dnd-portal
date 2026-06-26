@@ -428,8 +428,8 @@ const i18nContext = {
     it: "Cancella",
   },
   create: {
-    en: "Create variant",
-    it: "Crea variante",
+    en: "Add variant",
+    it: "Aggiungi variante",
   },
   loading: {
     en: "Loading...",
@@ -456,8 +456,8 @@ const i18nContext = {
     it: "Non magico",
   },
   title: {
-    en: "Create equipment variant",
-    it: "Crea variante equipaggiamento",
+    en: "Add equipment variant",
+    it: "Aggiungi variante equipaggiamento",
   },
   unspecified: {
     en: "Unspecified",
