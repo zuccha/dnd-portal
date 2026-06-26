@@ -65,6 +65,11 @@ BEGIN
     v_id, r.type, r.ability
   );
 
+  perform public.replace_tool_modifier_applications(
+    v_id,
+    coalesce(p_tool->'modifier_ids', '[]'::jsonb)
+  );
+
   INSERT INTO public.tool_crafts (tool_id, equipment_id)
   SELECT
     v_id,
@@ -367,6 +372,13 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_tool ? 'modifier_ids' THEN
+    perform public.replace_tool_modifier_applications(
+      p_id,
+      p_tool->'modifier_ids'
+    );
   END IF;
 
   WITH entries AS (

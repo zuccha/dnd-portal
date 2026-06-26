@@ -76,6 +76,11 @@ BEGIN
     r.range_short, r.range_long
   );
 
+  perform public.replace_weapon_modifier_applications(
+    v_id,
+    coalesce(p_weapon->'modifier_ids', '[]'::jsonb)
+  );
+
   INSERT INTO public.weapon_ammunitions (weapon_id, equipment_id)
   SELECT
     v_id,
@@ -431,6 +436,13 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_weapon ? 'modifier_ids' THEN
+    perform public.replace_weapon_modifier_applications(
+      p_id,
+      p_weapon->'modifier_ids'
+    );
   END IF;
 
   WITH entries AS (

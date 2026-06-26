@@ -56,6 +56,9 @@ BEGIN
     p_equipment_modifier_translation
   );
 
+  INSERT INTO public.modifiers (resource_id)
+  VALUES (v_id);
+
   INSERT INTO public.equipment_modifiers (
     resource_id, cost_delta, make_magic, rarity_minimum,
     required_attunement_slots_minimum, weight_delta
@@ -64,7 +67,10 @@ BEGIN
     coalesce(r.required_attunement_slots_minimum, 0), coalesce(r.weight_delta, 0)
   );
 
-  INSERT INTO public.equipment_modifier_applications (equipment_id, equipment_modifier_id)
+  INSERT INTO public.armor_modifiers (resource_id)
+  VALUES (v_id);
+
+  INSERT INTO public.armor_modifier_applications (armor_id, armor_modifier_id)
   SELECT
     (value)::uuid,
     v_id
@@ -73,9 +79,9 @@ BEGIN
   ) v
   WHERE NOT EXISTS (
     SELECT 1
-    FROM public.equipment_modifier_applications ema
-    WHERE ema.equipment_id = (v.value)::uuid
-      AND ema.equipment_modifier_id = v_id
+    FROM public.armor_modifier_applications ama
+    WHERE ama.armor_id = (v.value)::uuid
+      AND ama.armor_modifier_id = v_id
   );
 
   perform public.upsert_equipment_modifier_translation(
@@ -129,21 +135,24 @@ AS $$
   JOIN public.equipment_modifiers em ON em.resource_id = r.id
   LEFT JOIN (
     SELECT
-      ema.equipment_modifier_id AS id,
-      jsonb_agg(ema.equipment_id ORDER BY ema.equipment_id) AS equipment_ids
-    FROM public.equipment_modifier_applications ema
-    WHERE ema.equipment_modifier_id = p_id
-    GROUP BY ema.equipment_modifier_id
+      ama.armor_modifier_id AS id,
+      jsonb_agg(ama.armor_id ORDER BY ama.armor_id) AS equipment_ids
+    FROM public.armor_modifier_applications ama
+    WHERE ama.armor_modifier_id = p_id
+    GROUP BY ama.armor_modifier_id
   ) ee ON ee.id = r.id
   LEFT JOIN (
     SELECT
       em.resource_id AS id,
-      jsonb_object_agg(t.lang, t.applies_to) AS applies_to,
-      jsonb_object_agg(t.lang, t.attunement_notes_delta) AS attunement_notes_delta,
-      jsonb_object_agg(t.lang, t.composite_name) AS composite_name,
-      jsonb_object_agg(t.lang, t.notes_delta) AS notes_delta
+      jsonb_object_agg(mt.lang, mt.applies_to) AS applies_to,
+      jsonb_object_agg(emt.lang, emt.attunement_notes_delta) AS attunement_notes_delta,
+      jsonb_object_agg(mt.lang, mt.composite_name) AS composite_name,
+      jsonb_object_agg(emt.lang, emt.notes_delta) AS notes_delta
     FROM public.equipment_modifiers em
-    LEFT JOIN public.equipment_modifier_translations t ON t.resource_id = em.resource_id
+    LEFT JOIN public.modifier_translations mt ON mt.resource_id = em.resource_id
+    LEFT JOIN public.equipment_modifier_translations emt
+      ON emt.resource_id = em.resource_id
+      AND emt.lang = mt.lang
     WHERE em.resource_id = p_id
     GROUP BY em.resource_id
   ) tt ON tt.id = r.id
@@ -198,21 +207,24 @@ src AS (
   JOIN public.equipment_modifiers em ON em.resource_id = b.id
   LEFT JOIN (
     SELECT
-      ema.equipment_modifier_id AS id,
-      jsonb_agg(ema.equipment_id ORDER BY ema.equipment_id) AS equipment_ids
-    FROM public.equipment_modifier_applications ema
-    GROUP BY ema.equipment_modifier_id
+      ama.armor_modifier_id AS id,
+      jsonb_agg(ama.armor_id ORDER BY ama.armor_id) AS equipment_ids
+    FROM public.armor_modifier_applications ama
+    GROUP BY ama.armor_modifier_id
   ) ee ON ee.id = b.id
 ),
 t AS (
   SELECT
     s.id,
-    jsonb_object_agg(t.lang, t.applies_to) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS applies_to,
-    jsonb_object_agg(t.lang, t.attunement_notes_delta) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS attunement_notes_delta,
-    jsonb_object_agg(t.lang, t.composite_name) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS composite_name,
-    jsonb_object_agg(t.lang, t.notes_delta) FILTER (WHERE array_length(p_langs,1) IS NULL OR t.lang = any(p_langs)) AS notes_delta
+    jsonb_object_agg(mt.lang, mt.applies_to) FILTER (WHERE array_length(p_langs,1) IS NULL OR mt.lang = any(p_langs)) AS applies_to,
+    jsonb_object_agg(emt.lang, emt.attunement_notes_delta) FILTER (WHERE array_length(p_langs,1) IS NULL OR emt.lang = any(p_langs)) AS attunement_notes_delta,
+    jsonb_object_agg(mt.lang, mt.composite_name) FILTER (WHERE array_length(p_langs,1) IS NULL OR mt.lang = any(p_langs)) AS composite_name,
+    jsonb_object_agg(emt.lang, emt.notes_delta) FILTER (WHERE array_length(p_langs,1) IS NULL OR emt.lang = any(p_langs)) AS notes_delta
   FROM src s
-  LEFT JOIN public.equipment_modifier_translations t ON t.resource_id = s.id
+  LEFT JOIN public.modifier_translations mt ON mt.resource_id = s.id
+  LEFT JOIN public.equipment_modifier_translations emt
+    ON emt.resource_id = s.id
+    AND emt.lang = mt.lang
   LEFT JOIN (SELECT 1) _ ON true  -- keep p_langs in scope
   GROUP BY s.id
 )
@@ -271,19 +283,29 @@ SET search_path TO 'public', 'pg_temp'
 AS $$
 DECLARE
   r public.equipment_modifier_translations%ROWTYPE;
+  mr public.modifier_translations%ROWTYPE;
 BEGIN
   r := jsonb_populate_record(null::public.equipment_modifier_translations, p_equipment_modifier_translation);
+  mr := jsonb_populate_record(null::public.modifier_translations, p_equipment_modifier_translation);
 
-  INSERT INTO public.equipment_modifier_translations AS emt (
-    resource_id, lang, applies_to, attunement_notes_delta, composite_name, notes_delta
+  INSERT INTO public.modifier_translations AS mt (
+    resource_id, lang, applies_to, composite_name
   ) VALUES (
-    p_id, p_lang, r.applies_to, r.attunement_notes_delta, coalesce(r.composite_name, '{base}'::text), r.notes_delta
+    p_id, p_lang, mr.applies_to, coalesce(mr.composite_name, '{base}'::text)
   )
   ON conflict (resource_id, lang) DO UPDATE
   SET
     applies_to = excluded.applies_to,
+    composite_name = excluded.composite_name;
+
+  INSERT INTO public.equipment_modifier_translations AS emt (
+    resource_id, lang, attunement_notes_delta, notes_delta
+  ) VALUES (
+    p_id, p_lang, r.attunement_notes_delta, r.notes_delta
+  )
+  ON conflict (resource_id, lang) DO UPDATE
+  SET
     attunement_notes_delta = excluded.attunement_notes_delta,
-    composite_name = excluded.composite_name,
     notes_delta = excluded.notes_delta;
 END;
 $$;
@@ -335,40 +357,28 @@ BEGIN
   END IF;
 
   IF p_equipment_modifier ? 'equipment_ids' THEN
-    WITH entries AS (
-      SELECT
-        (value)::uuid AS equipment_id
-      FROM jsonb_array_elements_text(
-        coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
-      )
-    )
-    DELETE FROM public.equipment_modifier_applications ema
-    WHERE ema.equipment_modifier_id = p_id
+    DELETE FROM public.armor_modifier_applications ama
+    WHERE ama.armor_modifier_id = p_id
       AND NOT EXISTS (
         SELECT 1
-        FROM entries e
-        WHERE e.equipment_id = ema.equipment_id
+        FROM jsonb_array_elements_text(
+          coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
+        ) v
+        WHERE (v.value)::uuid = ama.armor_id
       );
 
-    WITH entries AS (
-      SELECT
-        (value)::uuid AS equipment_id
-      FROM jsonb_array_elements_text(
-        coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
-      )
-    )
-    INSERT INTO public.equipment_modifier_applications (equipment_id, equipment_modifier_id)
-    SELECT
-      e.equipment_id,
+    INSERT INTO public.armor_modifier_applications (armor_id, armor_modifier_id)
+    SELECT DISTINCT
+      (v.value)::uuid,
       p_id
-    FROM (
-      SELECT DISTINCT equipment_id FROM entries
-    ) e
+    FROM jsonb_array_elements_text(
+      coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
+    ) v
     WHERE NOT EXISTS (
       SELECT 1
-      FROM public.equipment_modifier_applications ema
-      WHERE ema.equipment_id = e.equipment_id
-        AND ema.equipment_modifier_id = p_id
+      FROM public.armor_modifier_applications ama
+      WHERE ama.armor_id = (v.value)::uuid
+        AND ama.armor_modifier_id = p_id
     );
   END IF;
 

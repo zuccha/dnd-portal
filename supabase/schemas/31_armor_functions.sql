@@ -93,6 +93,11 @@ BEGIN
     r.type
   );
 
+  perform public.replace_armor_modifier_applications(
+    v_id,
+    coalesce(p_armor->'modifier_ids', '[]'::jsonb)
+  );
+
   perform public.upsert_armor_translation(v_id, p_lang, p_armor_translation);
 
   RETURN v_id;
@@ -378,6 +383,13 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_armor ? 'modifier_ids' THEN
+    perform public.replace_armor_modifier_applications(
+      p_id,
+      p_armor->'modifier_ids'
+    );
   END IF;
 
   perform public.upsert_armor_translation(p_id, p_lang, p_armor_translation);

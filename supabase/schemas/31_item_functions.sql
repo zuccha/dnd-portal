@@ -59,6 +59,11 @@ BEGIN
   INSERT INTO public.items (resource_id, type, charges, consumable)
   VALUES (v_id, r.type, r.charges, r.consumable);
 
+  perform public.replace_item_modifier_applications(
+    v_id,
+    coalesce(p_item->'modifier_ids', '[]'::jsonb)
+  );
+
   perform public.upsert_item_translation(v_id, p_lang, p_item_translation);
 
   RETURN v_id;
@@ -291,6 +296,13 @@ BEGIN
   GET diagnostics v_rows = ROW_COUNT;
   IF v_rows = 0 THEN
     raise exception 'No row with id %', p_id;
+  END IF;
+
+  IF p_item ? 'modifier_ids' THEN
+    perform public.replace_item_modifier_applications(
+      p_id,
+      p_item->'modifier_ids'
+    );
   END IF;
 
   perform public.upsert_item_translation(p_id, p_lang, p_item_translation);
