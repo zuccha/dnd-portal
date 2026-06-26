@@ -1,14 +1,14 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
-import { equipmentStore } from "~/models/resources/equipment/equipment-store";
-import type { EquipmentModifier } from "~/models/resources/equipment-modifiers/equipment-modifier";
-import type { EquipmentModifierFormData } from "~/models/resources/equipment-modifiers/equipment-modifier-form";
+import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
+import type { EquipmentModifierFormData } from "~/models/resources/modifiers/equipment/equipment-modifier-form";
+import type { ResourceOption } from "~/models/resources/resource";
 import {
   type EquipmentRarity,
   useEquipmentRarityOptions,
 } from "~/models/types/equipment-rarity";
 import type { Form } from "~/utils/form";
-import { createResourceEditor } from "../resource-editor";
+import { createResourceEditor } from "../../resource-editor";
 import {
   createCostInputField,
   createInputField,
@@ -18,7 +18,7 @@ import {
   createSelectEnumField,
   createTextareaField,
   createWeightInputField,
-} from "../resource-editor-form";
+} from "../../resource-editor-form";
 
 //------------------------------------------------------------------------------
 // Create Equipment Modifier Editor
@@ -29,9 +29,13 @@ export type EquipmentModifierEditorProps = {
   sourceId: string;
 };
 
-export function createEquipmentModifierEditor(
-  form: Form<EquipmentModifierFormData>,
-) {
+type SupportedEquipmentOptionsStore = {
+  useResourceOptions: (sourceId: string) => ResourceOption[];
+};
+
+export function createEquipmentModifierEditor<
+  F extends EquipmentModifierFormData,
+>(form: Form<F>, supportedEquipmentStore: SupportedEquipmentOptionsStore) {
   //----------------------------------------------------------------------------
   // Resource Editor
   //----------------------------------------------------------------------------
@@ -100,7 +104,7 @@ export function createEquipmentModifierEditor(
   const CompositeNameField = createInputField({
     i18nContext: {
       label: { en: "Composite Name", it: "Nome Composito" },
-      placeholder: { en: "{base}", it: "{base}" },
+      placeholder: { en: "{1}", it: "{1}" },
     },
     translatable: true,
     useField: form.createUseField("composite_name"),
@@ -129,7 +133,7 @@ export function createEquipmentModifierEditor(
       placeholder: { en: "Search equipment", it: "Cerca equipaggiamento" },
     },
     useField: form.createUseField("equipment_ids"),
-    useOptions: equipmentStore.useResourceOptions,
+    useOptions: supportedEquipmentStore.useResourceOptions,
   });
 
   //----------------------------------------------------------------------------
@@ -177,7 +181,7 @@ export function createEquipmentModifierEditor(
     return (
       <ResourceEditor resource={resource}>
         <CompositeNameField
-          defaultValue={resource.composite_name[lang] ?? "{base}"}
+          defaultValue={resource.composite_name[lang] ?? "{1}"}
         />
         <AppliesToField defaultValue={resource.applies_to[lang] ?? ""} />
 

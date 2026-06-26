@@ -39,7 +39,8 @@ CREATE OR REPLACE FUNCTION public.create_equipment_modifier_base(
   p_source_id uuid,
   p_lang text,
   p_equipment_modifier jsonb,
-  p_equipment_modifier_translation jsonb)
+  p_equipment_modifier_translation jsonb,
+  p_kind public.resource_kind DEFAULT 'equipment_modifier'::public.resource_kind)
 RETURNS uuid
 LANGUAGE plpgsql
 SET search_path TO 'public', 'pg_temp'
@@ -53,7 +54,7 @@ BEGIN
   v_id := public.create_resource(
     p_source_id,
     p_lang,
-    p_equipment_modifier || jsonb_build_object('kind', 'equipment_modifier'::public.resource_kind),
+    p_equipment_modifier || jsonb_build_object('kind', p_kind),
     p_equipment_modifier_translation
   );
 
@@ -78,11 +79,11 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb, p_kind public.resource_kind) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb, p_kind public.resource_kind) TO anon;
+GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb, p_kind public.resource_kind) TO authenticated;
+GRANT ALL ON FUNCTION public.create_equipment_modifier_base(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb, p_kind public.resource_kind) TO service_role;
 
 
 --------------------------------------------------------------------------------
@@ -159,7 +160,13 @@ AS $$
 WITH base AS (
   SELECT r.*
   FROM public.fetch_resources(p_source_id, p_langs, p_filters, p_order_by, p_order_dir) AS r
-  WHERE r.kind = 'equipment_modifier'::public.resource_kind
+  WHERE r.kind IN (
+    'equipment_modifier'::public.resource_kind,
+    'armor_modifier'::public.resource_kind,
+    'item_modifier'::public.resource_kind,
+    'tool_modifier'::public.resource_kind,
+    'weapon_modifier'::public.resource_kind
+  )
 ),
 src AS (
   SELECT
@@ -293,7 +300,8 @@ CREATE OR REPLACE FUNCTION public.update_equipment_modifier_base(
   p_id uuid,
   p_lang text,
   p_equipment_modifier jsonb,
-  p_equipment_modifier_translation jsonb)
+  p_equipment_modifier_translation jsonb,
+  p_kind public.resource_kind DEFAULT 'equipment_modifier'::public.resource_kind)
 RETURNS void
 LANGUAGE plpgsql
 SET search_path TO 'public', 'pg_temp'
@@ -304,7 +312,7 @@ BEGIN
   perform public.update_resource(
     p_id,
     p_lang,
-    p_equipment_modifier || jsonb_build_object('kind', 'equipment_modifier'::public.resource_kind),
+    p_equipment_modifier || jsonb_build_object('kind', p_kind),
     p_equipment_modifier_translation
   );
 
@@ -332,8 +340,8 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb, p_kind public.resource_kind) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb, p_kind public.resource_kind) TO anon;
+GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb, p_kind public.resource_kind) TO authenticated;
+GRANT ALL ON FUNCTION public.update_equipment_modifier_base(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb, p_kind public.resource_kind) TO service_role;

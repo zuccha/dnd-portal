@@ -52,10 +52,13 @@ export type BlocksPanelId = (typeof blocksPanelIds)[number];
 
 export const equipmentPanelIds = [
   Route.ResourcesEquipmentItems,
+  Route.ResourcesEquipmentItemModifiers,
   Route.ResourcesEquipmentArmors,
+  Route.ResourcesEquipmentArmorModifiers,
   Route.ResourcesEquipmentWeapons,
+  Route.ResourcesEquipmentWeaponModifiers,
   Route.ResourcesEquipmentTools,
-  Route.ResourcesEquipmentModifiers,
+  Route.ResourcesEquipmentToolModifiers,
 ] as const;
 
 export type EquipmentPanelId = (typeof equipmentPanelIds)[number];

@@ -23,9 +23,14 @@ import {
   addEquipmentVariant,
   createEquipmentVariant,
 } from "~/models/resources/equipment/equipment-variant";
-import type { EquipmentModifier } from "~/models/resources/equipment-modifiers/equipment-modifier";
-import { equipmentModifierStore } from "~/models/resources/equipment-modifiers/equipment-modifier-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
+import type {
+  DBEquipmentModifier,
+  DBEquipmentModifierTranslation,
+} from "~/models/resources/modifiers/equipment/db-equipment-modifier";
+import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
+import type { EquipmentModifierFilters } from "~/models/resources/modifiers/equipment/equipment-modifier-filters";
+import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { createMemoryStore } from "~/store/memory-store";
@@ -52,7 +57,16 @@ export function createEquipmentVariantDialog<
   F extends ResourceFilters,
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
->(store: ResourceStore<E, L, F, DBR, DBT>) {
+>(
+  store: ResourceStore<E, L, F, DBR, DBT>,
+  modifierStore: ResourceStore<
+    EquipmentModifier,
+    LocalizedEquipmentModifier,
+    EquipmentModifierFilters,
+    DBEquipmentModifier,
+    DBEquipmentModifierTranslation
+  >,
+) {
   const pendingEquipmentVariantStore =
     createMemoryStore<EquipmentVariantRequest<E> | null>(
       `equipment_variant_dialog[${store.name.p}].pending`,
@@ -133,8 +147,8 @@ export function createEquipmentVariantDialog<
     const { lang } = useI18nLangContext(i18nContext);
 
     const modifierIds = request.base.modifier_ids;
-    const allModifierIds = equipmentModifierStore.useAllResourceIds(sourceId);
-    const allModifiers = equipmentModifierStore.useResources(allModifierIds);
+    const allModifierIds = modifierStore.useAllResourceIds(sourceId);
+    const allModifiers = modifierStore.useResources(allModifierIds);
     const allModifiersById = useMemo(
       () => new Map(allModifiers.map((modifier) => [modifier.id, modifier])),
       [allModifiers],

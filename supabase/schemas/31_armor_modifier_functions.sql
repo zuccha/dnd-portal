@@ -5,8 +5,8 @@
 CREATE OR REPLACE FUNCTION public.create_armor_modifier(
   p_source_id uuid,
   p_lang text,
-  p_equipment_modifier jsonb,
-  p_equipment_modifier_translation jsonb)
+  p_armor_modifier jsonb,
+  p_armor_modifier_translation jsonb)
 RETURNS uuid
 LANGUAGE plpgsql
 SET search_path TO 'public', 'pg_temp'
@@ -17,8 +17,9 @@ BEGIN
   v_id := public.create_equipment_modifier_base(
     p_source_id,
     p_lang,
-    p_equipment_modifier,
-    p_equipment_modifier_translation
+    p_armor_modifier,
+    p_armor_modifier_translation,
+    'armor_modifier'::public.resource_kind
   );
 
   INSERT INTO public.armor_modifiers (resource_id)
@@ -29,7 +30,7 @@ BEGIN
     (value)::uuid,
     v_id
   FROM jsonb_array_elements_text(
-    coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
+    coalesce(p_armor_modifier->'equipment_ids', '[]'::jsonb)
   ) v
   WHERE NOT EXISTS (
     SELECT 1
@@ -42,11 +43,11 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.create_armor_modifier(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.create_armor_modifier(p_source_id uuid, p_lang text, p_armor_modifier jsonb, p_armor_modifier_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.create_armor_modifier(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.create_armor_modifier(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.create_armor_modifier(p_source_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.create_armor_modifier(p_source_id uuid, p_lang text, p_armor_modifier jsonb, p_armor_modifier_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.create_armor_modifier(p_source_id uuid, p_lang text, p_armor_modifier jsonb, p_armor_modifier_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.create_armor_modifier(p_source_id uuid, p_lang text, p_armor_modifier jsonb, p_armor_modifier_translation jsonb) TO service_role;
 
 CREATE OR REPLACE FUNCTION public.create_equipment_modifier(
   p_source_id uuid,
@@ -234,8 +235,8 @@ GRANT ALL ON FUNCTION public.fetch_equipment_modifiers(p_source_id uuid, p_langs
 CREATE OR REPLACE FUNCTION public.update_armor_modifier(
   p_id uuid,
   p_lang text,
-  p_equipment_modifier jsonb,
-  p_equipment_modifier_translation jsonb)
+  p_armor_modifier jsonb,
+  p_armor_modifier_translation jsonb)
 RETURNS void
 LANGUAGE plpgsql
 SET search_path TO 'public', 'pg_temp'
@@ -244,21 +245,22 @@ BEGIN
   perform public.update_equipment_modifier_base(
     p_id,
     p_lang,
-    p_equipment_modifier,
-    p_equipment_modifier_translation
+    p_armor_modifier,
+    p_armor_modifier_translation,
+    'armor_modifier'::public.resource_kind
   );
 
   INSERT INTO public.armor_modifiers (resource_id)
   VALUES (p_id)
   ON CONFLICT (resource_id) DO NOTHING;
 
-  IF p_equipment_modifier ? 'equipment_ids' THEN
+  IF p_armor_modifier ? 'equipment_ids' THEN
     DELETE FROM public.armor_modifier_applications ama
     WHERE ama.armor_modifier_id = p_id
       AND NOT EXISTS (
         SELECT 1
         FROM jsonb_array_elements_text(
-          coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
+          coalesce(p_armor_modifier->'equipment_ids', '[]'::jsonb)
         ) v
         WHERE (v.value)::uuid = ama.armor_id
       );
@@ -268,7 +270,7 @@ BEGIN
       (v.value)::uuid,
       p_id
     FROM jsonb_array_elements_text(
-      coalesce(p_equipment_modifier->'equipment_ids', '[]'::jsonb)
+      coalesce(p_armor_modifier->'equipment_ids', '[]'::jsonb)
     ) v
     WHERE NOT EXISTS (
       SELECT 1
@@ -280,11 +282,11 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.update_armor_modifier(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) OWNER TO postgres;
+ALTER FUNCTION public.update_armor_modifier(p_id uuid, p_lang text, p_armor_modifier jsonb, p_armor_modifier_translation jsonb) OWNER TO postgres;
 
-GRANT ALL ON FUNCTION public.update_armor_modifier(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO anon;
-GRANT ALL ON FUNCTION public.update_armor_modifier(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO authenticated;
-GRANT ALL ON FUNCTION public.update_armor_modifier(p_id uuid, p_lang text, p_equipment_modifier jsonb, p_equipment_modifier_translation jsonb) TO service_role;
+GRANT ALL ON FUNCTION public.update_armor_modifier(p_id uuid, p_lang text, p_armor_modifier jsonb, p_armor_modifier_translation jsonb) TO anon;
+GRANT ALL ON FUNCTION public.update_armor_modifier(p_id uuid, p_lang text, p_armor_modifier jsonb, p_armor_modifier_translation jsonb) TO authenticated;
+GRANT ALL ON FUNCTION public.update_armor_modifier(p_id uuid, p_lang text, p_armor_modifier jsonb, p_armor_modifier_translation jsonb) TO service_role;
 
 CREATE OR REPLACE FUNCTION public.update_equipment_modifier(
   p_id uuid,

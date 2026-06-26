@@ -1,12 +1,12 @@
 import z from "zod";
 import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
-import { dbResourceSchema, dbResourceTranslationSchema } from "../db-resource";
+import { dbModifierSchema, dbModifierTranslationSchema } from "../db-modifier";
 
 //------------------------------------------------------------------------------
 // DB Equipment Modifier
 //------------------------------------------------------------------------------
 
-export const dbEquipmentModifierSchema = dbResourceSchema.extend({
+export const dbEquipmentModifierSchema = dbModifierSchema.extend({
   cost_delta: z.number(),
   equipment_ids: z.array(z.uuid()),
   make_magic: z.boolean(),
@@ -22,10 +22,8 @@ export type DBEquipmentModifier = z.infer<typeof dbEquipmentModifierSchema>;
 //------------------------------------------------------------------------------
 
 export const dbEquipmentModifierTranslationSchema =
-  dbResourceTranslationSchema.extend({
-    applies_to: z.string().nullish(),
+  dbModifierTranslationSchema.extend({
     attunement_notes_delta: z.string().nullish(),
-    composite_name: z.string(),
     notes_delta: z.string().nullish(),
   });
 

@@ -143,21 +143,33 @@ const i18nContext = {
     en: "Armors",
     it: "Armature",
   },
+  [Route.ResourcesEquipmentArmorModifiers]: {
+    en: "Variants",
+    it: "Varianti",
+  },
   [Route.ResourcesEquipmentItems]: {
     en: "Adventuring Gear",
     it: "Attrezzatura",
   },
-  [Route.ResourcesEquipmentModifiers]: {
-    en: "Modifiers",
-    it: "Modificatori",
+  [Route.ResourcesEquipmentItemModifiers]: {
+    en: "Variants",
+    it: "Varianti",
   },
   [Route.ResourcesEquipmentTools]: {
     en: "Tools",
     it: "Strumenti",
   },
+  [Route.ResourcesEquipmentToolModifiers]: {
+    en: "Variants",
+    it: "Varianti",
+  },
   [Route.ResourcesEquipmentWeapons]: {
     en: "Weapons",
     it: "Armi",
+  },
+  [Route.ResourcesEquipmentWeaponModifiers]: {
+    en: "Variants",
+    it: "Varianti",
   },
   [Route.ResourcesMarket]: {
     en: "Market",

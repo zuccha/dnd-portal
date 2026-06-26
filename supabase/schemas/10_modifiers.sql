@@ -52,7 +52,13 @@ BEGIN
     SELECT 1
     FROM public.resources r
     WHERE r.id = NEW.resource_id
-      AND r.kind = 'equipment_modifier'::public.resource_kind
+      AND r.kind IN (
+        'equipment_modifier'::public.resource_kind,
+        'armor_modifier'::public.resource_kind,
+        'item_modifier'::public.resource_kind,
+        'tool_modifier'::public.resource_kind,
+        'weapon_modifier'::public.resource_kind
+      )
   ) THEN
     RAISE EXCEPTION 'Referenced resource % is not a modifier', NEW.resource_id;
   END IF;

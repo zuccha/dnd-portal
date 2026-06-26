@@ -2,6 +2,7 @@ import { HStack } from "@chakra-ui/react";
 import { equipmentStore } from "~/models/resources/equipment/equipment-store";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import type { WeaponFormData } from "~/models/resources/equipment/weapons/weapon-form";
+import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
 import { useWeaponMasteryOptions } from "~/models/types/weapon-mastery";
 import { useWeaponPropertyOptions } from "~/models/types/weapon-property";
@@ -31,7 +32,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
   // Equipment Editor
   //----------------------------------------------------------------------------
 
-  const EquipmentEditor = createEquipmentEditor(form);
+  const EquipmentEditor = createEquipmentEditor(form, weaponModifierStore);
 
   //----------------------------------------------------------------------------
   // Ammunition Ids

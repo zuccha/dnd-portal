@@ -3,6 +3,7 @@ import { useI18nLang } from "~/i18n/i18n-lang";
 import { equipmentStore } from "~/models/resources/equipment/equipment-store";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import type { ToolFormData } from "~/models/resources/equipment/tools/tool-form";
+import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useToolTypeOptions } from "~/models/types/tool-type";
 import type { Form } from "~/utils/form";
@@ -27,7 +28,7 @@ export function createToolEditor(form: Form<ToolFormData>) {
   // Equipment Editor
   //----------------------------------------------------------------------------
 
-  const EquipmentEditor = createEquipmentEditor(form);
+  const EquipmentEditor = createEquipmentEditor(form, toolModifierStore);
 
   //------------------------------------------------------------------------------
   // Ability

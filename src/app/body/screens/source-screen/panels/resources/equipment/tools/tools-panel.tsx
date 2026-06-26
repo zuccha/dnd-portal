@@ -7,6 +7,7 @@ import {
   toolFormDataToDB,
 } from "~/models/resources/equipment/tools/tool-form";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
+import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
@@ -58,7 +59,10 @@ const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
 // Tool Variant Dialog
 //------------------------------------------------------------------------------
 
-const toolVariantDialog = createEquipmentVariantDialog(toolStore);
+const toolVariantDialog = createEquipmentVariantDialog(
+  toolStore,
+  toolModifierStore,
+);
 
 //------------------------------------------------------------------------------
 // Actions

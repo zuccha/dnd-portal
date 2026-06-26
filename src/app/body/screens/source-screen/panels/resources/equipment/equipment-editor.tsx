@@ -4,7 +4,7 @@ import useBooleanOptions from "~/hooks/use-boolean-options";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { EquipmentFormData } from "~/models/resources/equipment/equipment-form";
-import { equipmentModifierStore } from "~/models/resources/equipment-modifiers/equipment-modifier-store";
+import type { ResourceOption } from "~/models/resources/resource";
 import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
@@ -32,6 +32,7 @@ export type EquipmentEditorProps = {
 
 export function createEquipmentEditor<E extends EquipmentFormData>(
   form: Form<E>,
+  modifierStore: { useResourceOptions: (sourceId: string) => ResourceOption[] },
 ) {
   //----------------------------------------------------------------------------
   // Resource Editor
@@ -58,7 +59,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
       placeholder: { en: "Search modifier", it: "Cerca modificatore" },
     },
     useField: form.createUseField("modifier_ids"),
-    useOptions: equipmentModifierStore.useResourceOptions,
+    useOptions: modifierStore.useResourceOptions,
   });
 
   //----------------------------------------------------------------------------

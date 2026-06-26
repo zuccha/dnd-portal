@@ -3,7 +3,7 @@ import {
   type EquipmentRarity,
   equipmentRarities,
 } from "~/models/types/equipment-rarity";
-import type { EquipmentModifier } from "../equipment-modifiers/equipment-modifier";
+import type { EquipmentModifier } from "../modifiers/equipment/equipment-modifier";
 import type { VirtualResourceRecipe } from "../resource-store";
 import type { Equipment } from "./equipment";
 
@@ -63,12 +63,12 @@ export function createEquipmentVariant<E extends Equipment>(
     magic: base.magic || modifiers.some(({ make_magic }) => make_magic),
     name: modifiers.reduce(
       (name, modifier) =>
-        composeI18nString(modifier.composite_name, name, "$$"),
+        composeI18nString(modifier.composite_name, name, "{1}"),
       base.name,
     ),
     name_short: modifiers.reduce(
       (name, modifier) =>
-        composeI18nString(modifier.composite_name, name, "$$"),
+        composeI18nString(modifier.composite_name, name, "{1}"),
       Object.keys(base.name_short).length ? base.name_short : base.name,
     ),
     notes: modifiers.reduce(

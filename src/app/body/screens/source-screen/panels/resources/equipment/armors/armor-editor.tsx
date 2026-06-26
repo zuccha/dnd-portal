@@ -1,6 +1,7 @@
 import { HStack } from "@chakra-ui/react";
 import type { Armor } from "~/models/resources/equipment/armors/armor";
 import type { ArmorFormData } from "~/models/resources/equipment/armors/armor-form";
+import { armorModifierStore } from "~/models/resources/modifiers/equipment/armors/armor-modifier-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
 import type { Form } from "~/utils/form";
 import {
@@ -25,7 +26,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
   // Equipment Editor
   //----------------------------------------------------------------------------
 
-  const EquipmentEditor = createEquipmentEditor(form);
+  const EquipmentEditor = createEquipmentEditor(form, armorModifierStore);
 
   //----------------------------------------------------------------------------
   // Modifiers

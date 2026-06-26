@@ -7,6 +7,7 @@ import {
   weaponFormDataToDB,
 } from "~/models/resources/equipment/weapons/weapon-form";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
+import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
@@ -80,7 +81,10 @@ const columns: ResourcesTableExtra<Weapon, LocalizedWeapon>["columns"] = [
 // Weapon Variant Dialog
 //------------------------------------------------------------------------------
 
-const weaponVariantDialog = createEquipmentVariantDialog(weaponStore);
+const weaponVariantDialog = createEquipmentVariantDialog(
+  weaponStore,
+  weaponModifierStore,
+);
 
 //------------------------------------------------------------------------------
 // Actions

@@ -1,15 +1,15 @@
 import { useCallback } from "react";
-import z from "zod";
+import z, { type ZodType } from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
 import { useTranslateEquipmentRarity } from "~/models/types/equipment-rarity";
+import { formatDetails } from "../../localized-resource";
 import {
-  formatDetails,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+  createLocalizedModifierSchema,
+  useLocalizeModifier,
+} from "../localized-modifier";
 import {
   type EquipmentModifier,
   equipmentModifierSchema,
@@ -19,20 +19,23 @@ import {
 // Localized Equipment Modifier
 //------------------------------------------------------------------------------
 
-export const localizedEquipmentModifierSchema = localizedResourceSchema(
-  equipmentModifierSchema,
-).extend({
-  applies_to: z.string(),
-  attunement_notes_delta: z.string(),
-  composite_name: z.string(),
-  cost_delta: z.string(),
-  magic: z.string(),
-  make_magic: z.boolean(),
-  notes_delta: z.string(),
-  rarity_minimum: z.string(),
-  required_attunement_slots_minimum: z.string(),
-  weight_delta: z.string(),
-});
+export function createLocalizedEquipmentModifierSchema<
+  R extends EquipmentModifier,
+>(schema: ZodType<R>) {
+  return createLocalizedModifierSchema(schema).extend({
+    attunement_notes_delta: z.string(),
+    cost_delta: z.string(),
+    magic: z.string(),
+    make_magic: z.boolean(),
+    notes_delta: z.string(),
+    rarity_minimum: z.string(),
+    required_attunement_slots_minimum: z.string(),
+    weight_delta: z.string(),
+  });
+}
+
+export const localizedEquipmentModifierSchema =
+  createLocalizedEquipmentModifierSchema(equipmentModifierSchema);
 
 export type LocalizedEquipmentModifier = z.infer<
   typeof localizedEquipmentModifierSchema
@@ -42,17 +45,22 @@ export type LocalizedEquipmentModifier = z.infer<
 // Use Localize Equipment Modifier
 //------------------------------------------------------------------------------
 
-export function useLocalizeEquipmentModifier(): (
-  equipmentModifier: EquipmentModifier,
-) => LocalizedEquipmentModifier {
-  const localizeResource = useLocalizeResource<EquipmentModifier>();
+export type LocalizedEquipmentModifierFor<R extends EquipmentModifier> = Omit<
+  LocalizedEquipmentModifier,
+  "_raw"
+> & { _raw: R };
+
+export function useLocalizeEquipmentModifier<
+  R extends EquipmentModifier = EquipmentModifier,
+>(): (equipmentModifier: R) => LocalizedEquipmentModifierFor<R> {
+  const localizeModifier = useLocalizeModifier();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const formatCost = useFormatCp();
   const formatWeight = useFormatGrams();
   const translateRarity = useTranslateEquipmentRarity(lang);
 
   return useCallback(
-    (equipmentModifier: EquipmentModifier): LocalizedEquipmentModifier => {
+    (equipmentModifier: R): LocalizedEquipmentModifierFor<R> => {
       const appliesTo = translate(equipmentModifier.applies_to, lang);
       const attunementNotesDelta = translate(
         equipmentModifier.attunement_notes_delta,
@@ -69,14 +77,13 @@ export function useLocalizeEquipmentModifier(): (
         : "";
 
       return {
-        ...localizeResource(equipmentModifier),
+        ...localizeModifier(equipmentModifier),
+        _raw: equipmentModifier,
         descriptor: appliesTo,
         details: formatDetails(notesDelta, attunementNotesDelta),
 
-        applies_to: appliesTo,
         attunement_notes_delta: attunementNotesDelta,
-        composite_name: translate(equipmentModifier.composite_name, lang),
-        cost_delta: formatSigned(equipmentModifier.cost_delta, formatCost),
+        cost_delta: formatCost(equipmentModifier.cost_delta),
         magic: equipmentModifier.make_magic ? t("magic") : "",
         make_magic: equipmentModifier.make_magic,
         notes_delta: notesDelta,
@@ -85,28 +92,11 @@ export function useLocalizeEquipmentModifier(): (
           requiredAttunementSlotsMinimum ?
             ti("attunement_slots_minimum", requiredAttunementSlotsMinimum)
           : "",
-        weight_delta: formatSigned(
-          equipmentModifier.weight_delta,
-          formatWeight,
-        ),
+        weight_delta: formatWeight(equipmentModifier.weight_delta),
       };
     },
-    [formatCost, formatWeight, lang, localizeResource, t, ti, translateRarity],
+    [formatCost, formatWeight, lang, localizeModifier, t, ti, translateRarity],
   );
-}
-
-//------------------------------------------------------------------------------
-// Format Signed
-//------------------------------------------------------------------------------
-
-function formatSigned(
-  value: number,
-  formatter: (absoluteValue: number) => string,
-): string {
-  if (value === 0) return "";
-
-  const sign = value > 0 ? "+" : "-";
-  return `${sign}${formatter(Math.abs(value))}`;
 }
 
 //------------------------------------------------------------------------------

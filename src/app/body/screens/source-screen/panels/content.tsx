@@ -14,12 +14,15 @@ import ItemsPanel from "./resources/equipment/items/items-panel";
 import ServicesPanel from "./resources/equipment/services/services-panel";
 import ToolsPanel from "./resources/equipment/tools/tools-panel";
 import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
-import EquipmentModifiersPanel from "./resources/equipment-modifiers/equipment-modifiers-panel";
 import FeatsPanel from "./resources/feats/feats-panel";
 import FeaturesPanel from "./resources/features/features-panel";
 import LanguagesPanel from "./resources/languages/languages-panel";
 import ManeuversPanel from "./resources/maneuvers/maneuvers-panel";
 import MetamagicsPanel from "./resources/metamagics/metamagics-panel";
+import ArmorModifiersPanel from "./resources/modifiers/equipment/armors/armor-modifiers-panel";
+import ItemModifiersPanel from "./resources/modifiers/equipment/items/item-modifiers-panel";
+import ToolModifiersPanel from "./resources/modifiers/equipment/tools/tool-modifiers-panel";
+import WeaponModifiersPanel from "./resources/modifiers/equipment/weapons/weapon-modifiers-panel";
 import PlanesPanel from "./resources/planes/planes-panel";
 import SpeciesPanel from "./resources/species/species-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
@@ -62,12 +65,15 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesCharacterSpecies]: SpeciesPanel,
   [Route.ResourcesCharacterSubclasses]: CharacterSubclassesPanel,
   [Route.ResourcesEquipmentArmors]: ArmorsPanel,
+  [Route.ResourcesEquipmentArmorModifiers]: ArmorModifiersPanel,
   [Route.ResourcesEquipmentItems]: ItemsPanel,
-  [Route.ResourcesEquipmentModifiers]: EquipmentModifiersPanel,
+  [Route.ResourcesEquipmentItemModifiers]: ItemModifiersPanel,
   [Route.ResourcesMarketServices]: ServicesPanel,
   [Route.ResourcesEquipmentTools]: ToolsPanel,
+  [Route.ResourcesEquipmentToolModifiers]: ToolModifiersPanel,
   [Route.ResourcesMarketVehicles]: VehiclesPanel,
   [Route.ResourcesEquipmentWeapons]: WeaponsPanel,
+  [Route.ResourcesEquipmentWeaponModifiers]: WeaponModifiersPanel,
   [Route.ResourcesWorldLanguages]: LanguagesPanel,
   [Route.ResourcesWorldPlanes]: PlanesPanel,
   [Route.SettingsCampaign]: CampaignPanel,

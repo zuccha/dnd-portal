@@ -1,7 +1,7 @@
 import z from "zod";
 import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
 import { createForm } from "~/utils/form";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
+import { modifierFormDataSchema, modifierFormDataToDB } from "../modifier-form";
 import type {
   DBEquipmentModifier,
   DBEquipmentModifierTranslation,
@@ -11,10 +11,8 @@ import type {
 // Equipment Modifier Form Data
 //------------------------------------------------------------------------------
 
-export const equipmentModifierFormDataSchema = resourceFormDataSchema.extend({
-  applies_to: z.string().default(""),
+export const equipmentModifierFormDataSchema = modifierFormDataSchema.extend({
   attunement_notes_delta: z.string().default(""),
-  composite_name: z.string().default("{base}"),
   cost_delta: z.number().int().default(0),
   equipment_ids: z.array(z.uuid()).default([]),
   make_magic: z.boolean().default(false),
@@ -38,7 +36,7 @@ export function equipmentModifierFormDataToDB(
   resource: Partial<DBEquipmentModifier>;
   translation: Partial<DBEquipmentModifierTranslation>;
 } {
-  const { resource, translation } = resourceFormDataToDB(data);
+  const { resource, translation } = modifierFormDataToDB(data);
 
   return {
     resource: {
@@ -52,9 +50,7 @@ export function equipmentModifierFormDataToDB(
     },
     translation: {
       ...translation,
-      applies_to: data.applies_to,
       attunement_notes_delta: data.attunement_notes_delta,
-      composite_name: data.composite_name,
       notes_delta: data.notes_delta,
     },
   };

@@ -7,6 +7,7 @@ import {
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
+import { armorModifierStore } from "~/models/resources/modifiers/equipment/armors/armor-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
@@ -66,7 +67,10 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
 // Armor Variant Dialog
 //------------------------------------------------------------------------------
 
-const armorVariantDialog = createEquipmentVariantDialog(armorStore);
+const armorVariantDialog = createEquipmentVariantDialog(
+  armorStore,
+  armorModifierStore,
+);
 
 //------------------------------------------------------------------------------
 // Actions

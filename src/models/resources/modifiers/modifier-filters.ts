@@ -5,26 +5,24 @@ import {
 } from "../resource-filters";
 
 //------------------------------------------------------------------------------
-// Equipment Modifier Order Options
+// Modifier Order Options
 //------------------------------------------------------------------------------
 
-export const equipmentModifierOrderOptions = resourceOrderOptions;
+export const modifierOrderOptions = resourceOrderOptions;
 
 //------------------------------------------------------------------------------
-// Equipment Modifier Filters
+// Modifier Filters
 //------------------------------------------------------------------------------
 
-export const equipmentModifierFiltersSchema = resourceFiltersSchema;
+export const modifierFiltersSchema = resourceFiltersSchema;
 
-export type EquipmentModifierFilters = z.infer<
-  typeof equipmentModifierFiltersSchema
->;
+export type ModifierFilters = z.infer<typeof modifierFiltersSchema>;
 
 //------------------------------------------------------------------------------
-// Default Equipment Modifier Filters
+// Default Modifier Filters
 //------------------------------------------------------------------------------
 
-export const defaultEquipmentModifierFilters: EquipmentModifierFilters = {
+export const defaultModifierFilters: ModifierFilters = {
   name: "",
   order_by: "name",
   order_dir: "asc",

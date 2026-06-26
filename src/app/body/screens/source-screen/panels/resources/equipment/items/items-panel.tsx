@@ -7,6 +7,7 @@ import {
 } from "~/models/resources/equipment/items/item-form";
 import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { type LocalizedItem } from "~/models/resources/equipment/items/localized-item";
+import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/item-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
@@ -74,7 +75,10 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
 // Item Variant Dialog
 //------------------------------------------------------------------------------
 
-const itemVariantDialog = createEquipmentVariantDialog(itemStore);
+const itemVariantDialog = createEquipmentVariantDialog(
+  itemStore,
+  itemModifierStore,
+);
 
 //------------------------------------------------------------------------------
 // Actions

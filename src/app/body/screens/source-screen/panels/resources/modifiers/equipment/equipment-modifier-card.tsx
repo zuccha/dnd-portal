@@ -1,14 +1,14 @@
 import { HStack, Span, VStack } from "@chakra-ui/react";
 import CoinsIcon from "~/icons/coins-icon";
 import ScaleIcon from "~/icons/scale-icon";
-import type { EquipmentModifier } from "~/models/resources/equipment-modifiers/equipment-modifier";
-import type { LocalizedEquipmentModifier } from "~/models/resources/equipment-modifiers/localized-equipment-modifier";
+import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
+import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import Icon from "~/ui/icon";
 import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
   type ResourcePokerCardProps,
-} from "../resource-poker-card";
+} from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Equipment Modifier Card
