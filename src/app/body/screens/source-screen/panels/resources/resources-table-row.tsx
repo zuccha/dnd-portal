@@ -1,4 +1,4 @@
-import { Table, VStack, createIcon } from "@chakra-ui/react";
+import { Badge, HStack, Table, VStack, createIcon } from "@chakra-ui/react";
 import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
@@ -158,8 +158,17 @@ export function createResourcesTableRow<
                 whiteSpace="nowrap"
                 {...rest}
               >
-                {key === "name" && editable && !localizedResource._raw.virtual ?
-                  <Link onClick={edit}>{String(value)}</Link>
+                {key === "name" ?
+                  <HStack gap={2} minW={0}>
+                    {localizedResource._raw.virtual && (
+                      <Badge colorPalette="orange" size="xs" variant="solid">
+                        {translate({ en: "Variant", it: "Variante" }, lang)}
+                      </Badge>
+                    )}
+                    {editable && !localizedResource._raw.virtual ?
+                      <Link onClick={edit}>{String(value)}</Link>
+                    : <span>{String(value) || "-"}</span>}
+                  </HStack>
                 : typeof value === "boolean" ?
                   <Checkbox disabled mt={0.5} size="sm" value={value} />
                 : String(value) || "-"}
