@@ -1,4 +1,10 @@
-import { BowArrowIcon, LayersIcon, SwordsIcon, WandIcon } from "lucide-react";
+import {
+  BowArrowIcon,
+  LayersIcon,
+  SwordsIcon,
+  WandIcon,
+  XIcon,
+} from "lucide-react";
 import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import { type Weapon } from "~/models/resources/equipment/weapons/weapon";
@@ -93,9 +99,16 @@ const weaponVariantDialog = createEquipmentVariantDialog(
 const actions: ResourcesTableExtra<Weapon, LocalizedWeapon>["actions"] = [
   {
     icon: LayersIcon,
-    isVisible: hasAvailableEquipmentModifier,
+    isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
+    isVisible: ({ virtual }) => !virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: weaponVariantDialog.open,
+  },
+  {
+    icon: XIcon,
+    isVisible: ({ virtual }) => !!virtual,
+    label: { en: "Remove variant", it: "Rimuovi variante" },
+    onClick: ({ id }) => weaponStore.removeVirtualResource(id),
   },
 ];
 

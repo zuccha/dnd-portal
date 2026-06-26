@@ -143,6 +143,25 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Remove Virtual Resource
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function removeVirtualResource(resourceId: string): void {
+    if (!virtualResourceRecipes.delete(resourceId)) return;
+
+    resourceCache.cache.remove(hash([resourceId]));
+    resourceLookupCache.cache.remove(hash([resourceId]));
+    resourceSelectionCache.remove(resourceId);
+
+    virtualResourceIdsStore.set((prev) => {
+      if (!prev.has(resourceId)) return prev;
+      const next = new Set(prev);
+      next.delete(resourceId);
+      return next;
+    });
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Merge Virtual Resource Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -831,6 +850,7 @@ export function createResourceStore<
     fetchResourceLookupIds,
     getResource,
     getResourceLookup,
+    removeVirtualResource,
     updateResource,
     useAllResourceIds,
     useResource,

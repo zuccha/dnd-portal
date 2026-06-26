@@ -25,6 +25,7 @@ import type { ResourcesContext } from "./resources-context";
 
 export type ResourceAction<R extends Resource> = {
   icon: LucideIcon | ReturnType<typeof createIcon>;
+  isDisabled?: (resource: R) => boolean;
   isVisible: (resource: R) => boolean;
   label: I18nString;
   onClick: (resource: R) => void;
@@ -92,6 +93,10 @@ export function createResourcesTableRow<
       extra.detailsKey && localizedResource[extra.detailsKey] ?
         resolveSystemText(String(localizedResource[extra.detailsKey]), system)
       : "";
+    const visibleActions =
+      extra.actions?.filter((action) =>
+        action.isVisible(localizedResource._raw),
+      ) ?? [];
 
     const edit = useCallback(
       (e: React.MouseEvent) => {
@@ -164,15 +169,16 @@ export function createResourcesTableRow<
 
           {!!extra.actions?.length && (
             <Table.Cell textAlign="center" w="1%">
-              {extra.actions.map((action, i) => (
+              {visibleActions.map((action, i) => (
                 <IconButton
                   Icon={action.icon}
                   aria-label={translate(action.label, lang)}
-                  disabled={!action.isVisible(localizedResource._raw)}
+                  disabled={action.isDisabled?.(localizedResource._raw)}
                   key={i}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    if (action.isDisabled?.(localizedResource._raw)) return;
                     action.onClick(localizedResource._raw);
                   }}
                   size="2xs"

@@ -207,9 +207,11 @@ export function createResourceCardInteractive<
                 Icon={action.icon}
                 aria-label={translate(action.label, lang)}
                 className="light"
+                disabled={action.isDisabled?.(localizedResource._raw)}
                 key={i}
                 onPointerDown={(e) => {
                   e.stopPropagation();
+                  if (action.isDisabled?.(localizedResource._raw)) return;
                   action.onClick(localizedResource._raw);
                 }}
                 size="2xs"

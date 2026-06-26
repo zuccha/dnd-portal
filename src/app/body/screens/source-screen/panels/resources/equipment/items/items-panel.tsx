@@ -1,4 +1,4 @@
-import { FlaskConicalIcon, LayersIcon, WandIcon } from "lucide-react";
+import { FlaskConicalIcon, LayersIcon, WandIcon, XIcon } from "lucide-react";
 import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type Item } from "~/models/resources/equipment/items/item";
 import {
@@ -87,9 +87,16 @@ const itemVariantDialog = createEquipmentVariantDialog(
 const actions: ResourcesTableExtra<Item, LocalizedItem>["actions"] = [
   {
     icon: LayersIcon,
-    isVisible: hasAvailableEquipmentModifier,
+    isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
+    isVisible: ({ virtual }) => !virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: itemVariantDialog.open,
+  },
+  {
+    icon: XIcon,
+    isVisible: ({ virtual }) => !!virtual,
+    label: { en: "Remove variant", it: "Rimuovi variante" },
+    onClick: ({ id }) => itemStore.removeVirtualResource(id),
   },
 ];
 
