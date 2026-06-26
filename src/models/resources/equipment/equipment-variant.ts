@@ -16,6 +16,7 @@ export function addEquipmentVariant<E extends Equipment>(
   base: E,
   modifiers: EquipmentModifier[],
 ): void {
+  if (base.virtual) return;
   if (modifiers.length === 0) return;
 
   const baseId = base.variant_base_id ?? base.id;
@@ -35,6 +36,7 @@ export function addEquipmentVariant<E extends Equipment>(
 //------------------------------------------------------------------------------
 
 export function hasAvailableEquipmentModifier(equipment: Equipment): boolean {
+  if (equipment.virtual) return false;
   return !!getFirstAvailableModifierId(equipment);
 }
 
