@@ -235,7 +235,12 @@ function Star() {
       position="relative"
       w="full"
     >
-      <Box position="absolute" top="50%" transform="translateY(-50%)">
+      <Box
+        left="50%"
+        position="absolute"
+        top="50%"
+        transform="translate(-50%, -50%)"
+      >
         <svg height={starSize} viewBox="0 0 100 100" width={starSize}>
           <polygon
             fill={PokerCard.separatorColor}
