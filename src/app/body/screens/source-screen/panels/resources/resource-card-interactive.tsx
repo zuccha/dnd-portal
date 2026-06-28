@@ -1,10 +1,11 @@
 import { Badge, Box, Theme, VStack } from "@chakra-ui/react";
-import { EditIcon, SquareIcon } from "lucide-react";
+import { EditIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import SquareCheckIcon from "~/icons/square-check-icon";
+import SquareIcon from "~/icons/square-icon";
 import type {
   DBResource,
   DBResourceTranslation,
