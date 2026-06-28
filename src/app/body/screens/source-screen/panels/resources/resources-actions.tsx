@@ -3,6 +3,7 @@ import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import YAML from "yaml";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { translate } from "~/i18n/i18n-string";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -15,6 +16,7 @@ import { useCanEditSourceResources } from "~/models/sources";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import SectionHeading from "~/ui/section-heading";
+import { toaster } from "~/ui/toaster";
 import { downloadFile } from "~/utils/download";
 import type { ResourcesContext } from "./resources-context";
 
@@ -41,7 +43,7 @@ export function createResourcesActions<
   } = store;
 
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
-    const { t, tpi } = useI18nLangContext(i18nContext);
+    const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
     const canEdit = useCanEditSourceResources(sourceId);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
     const selectedFilteredResourceIds =
@@ -78,14 +80,20 @@ export function createResourcesActions<
     const copySelectedAsJson = useCallback(async () => {
       const json = computeSelectedAsJson();
       await navigator.clipboard.writeText(json);
-      // TODO: Show toast.
-    }, [computeSelectedAsJson]);
+      toaster.info({
+        description: t("copied.description"),
+        title: ti("copied.title", translate(store.displayName, lang)),
+      });
+    }, [computeSelectedAsJson, lang, t, ti]);
 
     const copySelectedAsYaml = useCallback(async () => {
       const json = computeSelectedAsYaml();
       await navigator.clipboard.writeText(json);
-      // TODO: Show toast.
-    }, [computeSelectedAsYaml]);
+      toaster.info({
+        description: t("copied.description"),
+        title: ti("copied.title", translate(store.displayName, lang)),
+      });
+    }, [computeSelectedAsYaml, lang, t, ti]);
 
     const downloadSelectedAsJson = useCallback(async () => {
       const json = computeSelectedAsJson();
@@ -257,6 +265,14 @@ const i18nContext = {
   "add": {
     en: "Add new",
     it: "Crea nuovo",
+  },
+  "copied.description": {
+    en: "Data has been copied to the clipboard",
+    it: "I dati sono stati copiati nella clipboard.",
+  },
+  "copied.title": {
+    en: "<1> copied!",
+    it: "<1> copiati!",
   },
   "copy_as_json": {
     en: "Copy selected as JSON",
