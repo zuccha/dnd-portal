@@ -23,10 +23,11 @@ export default function SectionButton({
   return (
     <Button
       _hover={{ bgColor: "bg.muted", color: "fg" }}
+      _icon={{ boxSize: 3 }}
       bgColor={active ? "bg.emphasized" : "transparent"}
       color={active ? "fg" : "fg.muted"}
       gap={0}
-      height={"auto"}
+      height="auto"
       justifyContent="flex-start"
       m={0}
       onClick={onClick}
@@ -37,7 +38,7 @@ export default function SectionButton({
       variant="ghost"
       w="full"
     >
-      <Icon Icon={icon} mr={1} size="xs" />
+      <Icon Icon={icon} boxSize={3} mr={1} />
       {label}
     </Button>
   );
