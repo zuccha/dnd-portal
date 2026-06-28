@@ -20,6 +20,7 @@ export const eldritchInvocationStore = createResourceStore(
   {
     defaultFilters: defaultEldritchInvocationFilters,
     defaultResource: defaultEldritchInvocation,
+    displayName: { en: "Eldritch Invocations", it: "Suppliche Occulte" },
     filtersSchema: eldritchInvocationFiltersSchema,
     kinds: ["eldritch_invocation"],
     orderOptions: eldritchInvocationOrderOptions,

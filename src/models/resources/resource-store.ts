@@ -64,6 +64,7 @@ export function createResourceStore<
   {
     defaultFilters,
     defaultResource,
+    displayName,
     filtersSchema,
     kinds,
     resourceSchema,
@@ -73,6 +74,7 @@ export function createResourceStore<
   }: {
     defaultFilters: F;
     defaultResource: R;
+    displayName: I18nString;
     filtersSchema: ZodType<F>;
     kinds: ResourceKind[];
     orderOptions: { label: I18nString; value: string }[];
@@ -906,6 +908,7 @@ export function createResourceStore<
     name: storeName,
 
     defaultResource,
+    displayName,
     orderOptions,
 
     useApplyFilters,

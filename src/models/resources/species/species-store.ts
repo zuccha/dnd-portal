@@ -20,6 +20,7 @@ export const speciesStore = createResourceStore(
   {
     defaultFilters: defaultSpeciesFilters,
     defaultResource: defaultSpecies,
+    displayName: { en: "Species", it: "Specie" },
     filtersSchema: speciesFiltersSchema,
     kinds: ["species"],
     orderOptions: speciesOrderOptions,

@@ -20,6 +20,7 @@ export const toolModifierStore = createEquipmentModifierStore(
   {
     defaultFilters: defaultToolModifierFilters,
     defaultModifier: defaultToolModifier,
+    displayName: { en: "Tool Variants", it: "Varianti degli Strumenti" },
     filtersSchema: toolModifierFiltersSchema,
     kinds: ["tool_modifier"],
     modifierSchema: toolModifierSchema,

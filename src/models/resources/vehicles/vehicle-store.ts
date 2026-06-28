@@ -20,6 +20,7 @@ export const vehicleStore = createResourceStore(
   {
     defaultFilters: defaultVehicleFilters,
     defaultResource: defaultVehicle,
+    displayName: { en: "Vehicles", it: "Veicoli" },
     filtersSchema: vehicleFiltersSchema,
     kinds: ["vehicle"],
     orderOptions: vehicleOrderOptions,

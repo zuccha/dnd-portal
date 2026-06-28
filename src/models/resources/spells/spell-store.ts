@@ -16,6 +16,7 @@ export const spellStore = createResourceStore(
   {
     defaultFilters: defaultSpellFilters,
     defaultResource: defaultSpell,
+    displayName: { en: "Spells", it: "Incantesimi" },
     filtersSchema: spellFiltersSchema,
     kinds: ["spell"],
     orderOptions: spellOrderOptions,

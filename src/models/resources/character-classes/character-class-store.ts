@@ -20,6 +20,7 @@ export const characterClassStore = createResourceStore(
   {
     defaultFilters: defaultCharacterClassFilters,
     defaultResource: defaultCharacterClass,
+    displayName: { en: "Classes", it: "Classi" },
     filtersSchema: characterClassFiltersSchema,
     kinds: ["character_class"],
     orderOptions: characterClassOrderOptions,

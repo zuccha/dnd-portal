@@ -20,6 +20,10 @@ export const itemModifierStore = createEquipmentModifierStore(
   {
     defaultFilters: defaultItemModifierFilters,
     defaultModifier: defaultItemModifier,
+    displayName: {
+      en: "Adventuring Gear Variants",
+      it: "Varianti dell'Attrezzatura",
+    },
     filtersSchema: itemModifierFiltersSchema,
     kinds: ["item_modifier"],
     modifierSchema: itemModifierSchema,

@@ -16,6 +16,7 @@ export const planeStore = createResourceStore(
   {
     defaultFilters: defaultPlaneFilters,
     defaultResource: defaultPlane,
+    displayName: { en: "Planes", it: "Piani" },
     filtersSchema: planeFiltersSchema,
     kinds: ["plane"],
     orderOptions: planeOrderOptions,

@@ -20,6 +20,7 @@ export const metamagicStore = createResourceStore(
   {
     defaultFilters: defaultMetamagicFilters,
     defaultResource: defaultMetamagic,
+    displayName: { en: "Metamagic", it: "Metamagic" },
     filtersSchema: metamagicFiltersSchema,
     kinds: ["metamagic"],
     orderOptions: metamagicOrderOptions,

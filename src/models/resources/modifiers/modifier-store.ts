@@ -23,6 +23,7 @@ export function createModifierStore<
   extra: {
     defaultFilters: F;
     defaultModifier: R;
+    displayName: I18nString;
     filtersSchema: ZodType<F>;
     kinds: ResourceKind[];
     modifierSchema: ZodType<R>;
@@ -34,6 +35,7 @@ export function createModifierStore<
   return createResourceStore(name, {
     defaultFilters: extra.defaultFilters,
     defaultResource: extra.defaultModifier,
+    displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
     kinds: extra.kinds,
     orderOptions: extra.orderOptions,

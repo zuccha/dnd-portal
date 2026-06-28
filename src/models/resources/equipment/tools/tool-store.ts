@@ -16,6 +16,7 @@ export const toolStore = createEquipmentStore(
   {
     defaultEquipment: defaultTool,
     defaultFilters: defaultToolFilters,
+    displayName: { en: "Tools", it: "Strumenti" },
     equipmentSchema: toolSchema,
     filtersSchema: toolFiltersSchema,
     kinds: ["tool"],

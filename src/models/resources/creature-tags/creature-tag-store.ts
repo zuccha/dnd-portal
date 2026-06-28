@@ -20,6 +20,7 @@ export const creatureTagStore = createResourceStore(
   {
     defaultFilters: defaultCreatureTagFilters,
     defaultResource: defaultCreatureTag,
+    displayName: { en: "Groups", it: "Gruppi" },
     filtersSchema: creatureTagFiltersSchema,
     kinds: ["creature_tag"],
     orderOptions: creatureTagOrderOptions,

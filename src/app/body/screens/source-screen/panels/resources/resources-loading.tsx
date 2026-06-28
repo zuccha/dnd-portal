@@ -4,17 +4,18 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { type I18nString, translate } from "~/i18n/i18n-string";
 
 //----------------------------------------------------------------------------
 // Resources Loading
 //----------------------------------------------------------------------------
 
 export type ResourcesLoadingProps = {
-  name: string;
+  name: I18nString;
 };
 
 export default function ResourcesLoading({ name }: ResourcesLoadingProps) {
-  const { t, ti } = useI18nLangContext(i18nContext);
+  const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   return (
     <ChakraEmptyState.Root flex={1} mb="10%">
@@ -23,7 +24,9 @@ export default function ResourcesLoading({ name }: ResourcesLoadingProps) {
           <Spinner color="fg.muted" size="xl" />
         </ChakraEmptyState.Indicator>
         <VStack textAlign="center">
-          <ChakraEmptyState.Title>{ti("title", name)}</ChakraEmptyState.Title>
+          <ChakraEmptyState.Title>
+            {ti("title", translate(name, lang))}
+          </ChakraEmptyState.Title>
           <ChakraEmptyState.Description>
             {t("subtitle")}
           </ChakraEmptyState.Description>

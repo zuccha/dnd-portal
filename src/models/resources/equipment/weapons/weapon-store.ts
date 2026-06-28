@@ -16,6 +16,7 @@ export const weaponStore = createEquipmentStore(
   {
     defaultEquipment: defaultWeapon,
     defaultFilters: defaultWeaponFilters,
+    displayName: { en: "Weapons", it: "Armi" },
     equipmentSchema: weaponSchema,
     filtersSchema: weaponFiltersSchema,
     kinds: ["weapon"],

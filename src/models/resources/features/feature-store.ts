@@ -20,6 +20,7 @@ export const featureStore = createResourceStore(
   {
     defaultFilters: defaultFeatureFilters,
     defaultResource: defaultFeature,
+    displayName: { en: "Features", it: "Privilegi" },
     filtersSchema: featureFiltersSchema,
     kinds: ["feature"],
     orderOptions: featureOrderOptions,

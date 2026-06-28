@@ -16,6 +16,7 @@ export const itemStore = createEquipmentStore(
   {
     defaultEquipment: defaultItem,
     defaultFilters: defaultItemFilters,
+    displayName: { en: "Adventuring Gear", it: "Attrezatura" },
     equipmentSchema: itemSchema,
     filtersSchema: itemFiltersSchema,
     kinds: ["item"],

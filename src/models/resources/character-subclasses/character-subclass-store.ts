@@ -20,6 +20,7 @@ export const characterSubclassStore = createResourceStore(
   {
     defaultFilters: defaultCharacterSubclassFilters,
     defaultResource: defaultCharacterSubclass,
+    displayName: { en: "Subclasses", it: "Sottoclassi" },
     filtersSchema: characterSubclassFiltersSchema,
     kinds: ["character_subclass"],
     orderOptions: characterSubclassOrderOptions,

@@ -16,6 +16,7 @@ export const armorStore = createEquipmentStore(
   {
     defaultEquipment: defaultArmor,
     defaultFilters: defaultArmorFilters,
+    displayName: { en: "Armors", it: "Armature" },
     equipmentSchema: armorSchema,
     filtersSchema: armorFiltersSchema,
     kinds: ["armor"],

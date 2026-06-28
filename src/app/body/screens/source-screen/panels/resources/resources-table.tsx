@@ -63,7 +63,7 @@ export function createResourcesTable<
     const localizeResource = useLocalizeResource(sourceId);
     const editable = useCanEditSourceResources(sourceId);
 
-    if (loading) return <ResourcesLoading name={store.name.p} />;
+    if (loading) return <ResourcesLoading name={store.displayName} />;
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (

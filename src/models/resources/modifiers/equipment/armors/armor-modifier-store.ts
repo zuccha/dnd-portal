@@ -20,6 +20,7 @@ export const armorModifierStore = createEquipmentModifierStore(
   {
     defaultFilters: defaultArmorModifierFilters,
     defaultModifier: defaultArmorModifier,
+    displayName: { en: "Armor Variants", it: "Varianti delle Armature" },
     filtersSchema: armorModifierFiltersSchema,
     kinds: ["armor_modifier"],
     modifierSchema: armorModifierSchema,

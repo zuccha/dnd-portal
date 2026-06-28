@@ -20,6 +20,7 @@ export const backgroundStore = createResourceStore(
   {
     defaultFilters: defaultBackgroundFilters,
     defaultResource: defaultBackground,
+    displayName: { en: "Backgrounds", it: "Background" },
     filtersSchema: backgroundFiltersSchema,
     kinds: ["background"],
     orderOptions: backgroundOrderOptions,
@@ -28,4 +29,3 @@ export const backgroundStore = createResourceStore(
     useLocalizeResource: useLocalizeBackground,
   },
 );
-

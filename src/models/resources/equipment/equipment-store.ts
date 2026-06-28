@@ -38,6 +38,7 @@ export function createEquipmentStore<
     filtersSchema: ZodType<F>;
     defaultEquipment: E;
     defaultFilters: F;
+    displayName: I18nString;
     kinds: ResourceKind[];
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<E>[];
@@ -47,6 +48,7 @@ export function createEquipmentStore<
   return createResourceStore(name, {
     defaultFilters: extra.defaultFilters,
     defaultResource: extra.defaultEquipment,
+    displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
     kinds: extra.kinds,
     orderOptions: extra.orderOptions,
@@ -65,6 +67,7 @@ export const equipmentStore = createResourceStore(
   {
     defaultFilters: defaultEquipmentFilters,
     defaultResource: defaultEquipment,
+    displayName: { en: "Equipment", it: "Equipaggiamento" },
     filtersSchema: equipmentFiltersSchema,
     kinds: ["armor", "item", "tool", "weapon"],
     orderOptions: equipmentOrderOptions,

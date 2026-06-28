@@ -117,7 +117,7 @@ export function createResourcesAlbum<
       return () => resizeObserver.disconnect();
     }, [virtualize]);
 
-    if (loading) return <ResourcesLoading name={store.name.p} />;
+    if (loading) return <ResourcesLoading name={store.displayName} />;
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (

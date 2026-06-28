@@ -20,6 +20,7 @@ export const weaponModifierStore = createEquipmentModifierStore(
   {
     defaultFilters: defaultWeaponModifierFilters,
     defaultModifier: defaultWeaponModifier,
+    displayName: { en: "Weapon Variants", it: "Varianti delle Armi" },
     filtersSchema: weaponModifierFiltersSchema,
     kinds: ["weapon_modifier"],
     modifierSchema: weaponModifierSchema,
