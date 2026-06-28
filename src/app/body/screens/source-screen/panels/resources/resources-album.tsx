@@ -22,6 +22,7 @@ import {
 } from "./resource-card-interactive";
 import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
+import ResourcesLoading from "./resources-loading";
 
 //------------------------------------------------------------------------------
 // Resources Album Extra
@@ -57,12 +58,17 @@ export function createResourcesAlbum<
     extra,
   );
 
-  const { useFilteredResourceIds, useLocalizeResource } = store;
+  const {
+    useFilteredResourceIds,
+    useFilteredResourceIdsLoading,
+    useLocalizeResource,
+  } = store;
   const { usePaletteName, useZoom } = context;
 
   function ResourcesAlbum({ sourceId }: ResourcesAlbumProps) {
     const editable = useCanEditSourceResources(sourceId);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
+    const loading = useFilteredResourceIdsLoading(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
     const zoom = useZoom();
@@ -111,6 +117,7 @@ export function createResourcesAlbum<
       return () => resizeObserver.disconnect();
     }, [virtualize]);
 
+    if (loading) return <ResourcesLoading name={store.name.p} />;
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (

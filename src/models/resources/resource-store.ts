@@ -569,6 +569,16 @@ export function createResourceStore<
     return [mergedResourceIds, key];
   }
 
+  function useResourceIdsLoadingByParams(
+    sourceId: string,
+    sources: Record<string, boolean | undefined>,
+    filters: Omit<F, "name">,
+    lang: string,
+  ): boolean {
+    const key = hash([sourceId, sources, filters, lang]);
+    return resourceIdsCache.fetchingCache.useValue(key) ?? false;
+  }
+
   function useResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
     const { name: _name, ...filters } = useAppliedFilters();
@@ -653,6 +663,14 @@ export function createResourceStore<
     const [lang] = useI18nLang();
     const params = [sourceId, sources, filters, lang] as const;
     return useFilteredResourceIdsByParams(...params);
+  }
+
+  function useFilteredResourceIdsLoading(sourceId: string): boolean {
+    const [sources] = useResourcesSourcesFilter(sourceId);
+    const { name: _name, ...filters } = useAppliedFilters();
+    const [lang] = useI18nLang();
+    const params = [sourceId, sources, filters, lang] as const;
+    return useResourceIdsLoadingByParams(...params);
   }
 
   //----------------------------------------------------------------------------
@@ -915,6 +933,7 @@ export function createResourceStore<
     useResources,
 
     useFilteredResourceIds,
+    useFilteredResourceIdsLoading,
 
     useResourceSelection,
     useResourceSelectionMethods,

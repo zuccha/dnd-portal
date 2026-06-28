@@ -65,11 +65,12 @@ export function createCachedRequest<R, Args extends unknown[]>(
     set: (response: R, ...args: Args) => void;
 
     cache: Cache<string, R>;
+    fetchingCache: Cache<string, boolean>;
   },
 ] {
   const cached = new Set<string>();
   const argsCache = new Map<string, Args>();
-  const fetchingCache = new Map<string, boolean>();
+  const fetchingCache = createCache<string, boolean>(`${id}.fetching`);
   const responseCache = createCache<string, R>(`${id}.response`);
 
   async function cachedRequestByKey(
@@ -137,6 +138,7 @@ export function createCachedRequest<R, Args extends unknown[]>(
       set,
 
       cache: responseCache,
+      fetchingCache,
     },
   ];
 }

@@ -10,6 +10,7 @@ import type { ResourceStore } from "~/models/resources/resource-store";
 import { useCanEditSourceResources } from "~/models/sources";
 import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
+import ResourcesLoading from "./resources-loading";
 import {
   type ResourcesTableHeadExtra,
   createResourcesTableHead,
@@ -50,13 +51,19 @@ export function createResourcesTable<
   const ResourcesTableHead = createResourcesTableHead(store, context, extra);
   const ResourcesTableRow = createResourcesTableRow(store, context, extra);
 
-  const { useFilteredResourceIds, useLocalizeResource } = store;
+  const {
+    useFilteredResourceIds,
+    useFilteredResourceIdsLoading,
+    useLocalizeResource,
+  } = store;
 
   return function ResourcesTable({ sourceId }: ResourcesTableProps) {
     const filteredResourceIds = useFilteredResourceIds(sourceId);
+    const loading = useFilteredResourceIdsLoading(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
     const editable = useCanEditSourceResources(sourceId);
 
+    if (loading) return <ResourcesLoading name={store.name.p} />;
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
