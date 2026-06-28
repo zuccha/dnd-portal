@@ -97,12 +97,12 @@ export function createResourcesActions<
 
     const downloadSelectedAsJson = useCallback(async () => {
       const json = computeSelectedAsJson();
-      downloadFile(json, `${store.name.p}.json`, "json"); // TODO: Localize filename
+      downloadFile(json, `${store.displayName}.json`, "json");
     }, [computeSelectedAsJson]);
 
     const downloadSelectedAsYaml = useCallback(async () => {
       const json = computeSelectedAsYaml();
-      downloadFile(json, `${store.name.p}.json`, "json"); // TODO: Localize filename
+      downloadFile(json, `${store.displayName}.json`, "json");
     }, [computeSelectedAsYaml]);
 
     const printSelected = useCallback(async () => {
