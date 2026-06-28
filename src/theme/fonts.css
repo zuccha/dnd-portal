@@ -4,28 +4,28 @@
 
 @font-face {
   font-family: "Bookinsanity";
-  src: url("../assets/fonts/Bookinsanity.ttf") format("truetype");
+  src: url("../assets/fonts/Bookinsanity.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Bookinsanity";
-  src: url("../assets/fonts/Bookinsanity Bold Italic.ttf") format("truetype");
+  src: url("../assets/fonts/Bookinsanity Bold Italic.otf") format("opentype");
   font-weight: bold;
   font-style: italic;
 }
 
 @font-face {
   font-family: "Bookinsanity";
-  src: url("../assets/fonts/Bookinsanity Bold.ttf") format("truetype");
+  src: url("../assets/fonts/Bookinsanity Bold.otf") format("opentype");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Bookinsanity";
-  src: url("../assets/fonts/Bookinsanity Italic.ttf") format("truetype");
+  src: url("../assets/fonts/Bookinsanity Italic.otf") format("opentype");
   font-weight: normal;
   font-style: italic;
 }
@@ -36,14 +36,14 @@
 
 @font-face {
   font-family: "Fira Mono";
-  src: url("../assets/fonts/Fira Mono.ttf") format("truetype");
+  src: url("../assets/fonts/Fira Mono.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Fira Mono";
-  src: url("../assets/fonts/Fira Mono Bold.ttf") format("truetype");
+  src: url("../assets/fonts/Fira Mono Bold.otf") format("opentype");
   font-weight: bold;
   font-style: normal;
 }
