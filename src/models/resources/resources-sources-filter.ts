@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import z from "zod";
 import { createLocalStoreSet } from "~/store/set/local-store-set";
+import { createMemoryStoreSet } from "~/store/set/memory-store-set";
 import { hash } from "~/utils/hash";
 
 //------------------------------------------------------------------------------
@@ -28,12 +29,10 @@ const resourcesSourcesFilterStore = createLocalStoreSet<ResourcesSourcesFilter>(
   resourcesSourcesFilterSchema.parse,
 );
 
-const draftResourcesSourcesFilterStore =
-  createLocalStoreSet<ResourcesSourcesFilter>(
-    "resources.filters.modules.draft",
-    {},
-    resourcesSourcesFilterSchema.parse,
-  );
+const draftResourcesSourcesFilterStore = createMemoryStoreSet<
+  string,
+  ResourcesSourcesFilter
+>("resources.filters.modules.draft");
 
 //------------------------------------------------------------------------------
 // Use Resources Sources Filter

@@ -90,16 +90,15 @@ export function createResourceStore<
   // Filters
   //----------------------------------------------------------------------------
 
-  const filtersStore = createLocalStore<F>(
-    `${storeId}.filters`,
+  const appliedFiltersStore = createLocalStore<F>(
+    `${storeId}.filters.applied`,
     defaultFilters,
     filtersSchema.parse,
   );
 
-  const appliedFiltersStore = createLocalStore<F>(
-    `${storeId}.filters.applied`,
-    filtersStore.get(),
-    filtersSchema.parse,
+  const filtersStore = createMemoryStore<F>(
+    `${storeId}.filters.draft`,
+    appliedFiltersStore.get(),
   );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
