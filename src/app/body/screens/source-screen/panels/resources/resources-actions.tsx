@@ -43,7 +43,7 @@ export function createResourcesActions<
   } = store;
 
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
-    const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
+    const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
     const canEdit = useCanEditSourceResources(sourceId);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
     const selectedFilteredResourceIds =
@@ -110,11 +110,11 @@ export function createResourcesActions<
     }, []);
 
     const removeSelected = useCallback(async () => {
+      const selectedResources = selectedFilteredResourceIds
+        .map(store.getResource)
+        .filter((resource) => resource !== undefined);
+      const count = selectedResources.length;
       try {
-        const selectedResources = selectedFilteredResourceIds
-          .map(store.getResource)
-          .filter((resource) => resource !== undefined);
-        const count = selectedResources.length;
         const ok = confirm(tpi("remove.confirm", count, `${count}`));
         if (ok) {
           const selectedResourceIds = selectedResources.map(({ id }) => id);
@@ -122,9 +122,12 @@ export function createResourcesActions<
         }
       } catch (e) {
         console.error(e);
-        // TODO: Show toast.
+        toaster.error({
+          description: tp("remove.error.description", count),
+          title: t("remove.error.title"),
+        });
       }
-    }, [selectedFilteredResourceIds, tpi]);
+    }, [selectedFilteredResourceIds, t, tp, tpi]);
 
     const hasSelection = selectedFilteredResourceIds.length > 0;
     const allFilteredSelected =
@@ -309,6 +312,19 @@ const i18nContext = {
   "remove.confirm/1": {
     en: "Are you sure you want to delete <1> item?",
     it: "Sei sicuro di voler rimuovere <1> elemento?",
+  },
+  "remove.error.description/*": {
+    en: "An error occurred while deleting the resources.",
+    it: "Si è verificato un errore durante la rimozione delle risorse.",
+  },
+  "remove.error.description/1": {
+    en: "An error occurred while deleting the resource.",
+    it: "Si è verificato un errore durante la rimozione della risorsa.",
+  },
+
+  "remove.error.title": {
+    en: "Remove failed!",
+    it: "Rimozione fallita!",
   },
   "select_all": {
     en: "Select all",
