@@ -1,7 +1,6 @@
 import { Separator, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import z from "zod";
-import useDebouncedState from "~/hooks/use-debounced-value";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import type {
@@ -12,7 +11,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { useResourcesSourcesFilter } from "~/models/resources/resources-sources-filter";
+import { useDraftResourcesSourcesFilter } from "~/models/resources/resources-sources-filter";
 import { useSelectedSource } from "~/models/sources";
 import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
@@ -36,18 +35,13 @@ export function createResourcesGenericFilters<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(store: ResourceStore<R, L, F, DBR, DBT>, _context: ResourcesContext<R>) {
-  return function ResourcesGenericFilters(
-    _props: ResourcesGenericFiltersProps,
-  ) {
+  return function ResourcesGenericFilters({
+    sourceId,
+  }: ResourcesGenericFiltersProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const source = useSelectedSource(); // TODO: Get source from sourceId
-    const [sources, setSources] = useResourcesSourcesFilter(source?.id ?? "");
+    const [sources, setSources] = useDraftResourcesSourcesFilter(sourceId);
     const [filters, setFilters] = store.useFilters();
-    const [tempFilters, setTempFilters] = useDebouncedState(
-      filters,
-      setFilters,
-      200,
-    );
 
     const orderOptions = useMemo(
       () =>
@@ -76,12 +70,10 @@ export function createResourcesGenericFilters<
           <Input
             groupProps={{ w: "full" }}
             id={`filter-${store.name.s}-name`}
-            onValueChange={(name) =>
-              setTempFilters((prev) => ({ ...prev, name }))
-            }
+            onValueChange={(name) => setFilters({ name } as Partial<F>)}
             placeholder={t("name.placeholder")}
             size="sm"
-            value={tempFilters.name}
+            value={filters.name}
           />
         </CaptionInput>
 
@@ -110,11 +102,11 @@ export function createResourcesGenericFilters<
                 .enum(["asc", "desc"])
                 .safeParse(order[1]);
               const order_dir = maybe_order_dir.data ?? "asc";
-              setTempFilters((prev) => ({ ...prev, order_by, order_dir }));
+              setFilters({ order_by, order_dir } as Partial<F>);
             }}
             options={orderOptions}
             size="sm"
-            value={`${tempFilters.order_by}.${tempFilters.order_dir}`}
+            value={`${filters.order_by}.${filters.order_dir}`}
             w="full"
           />
         </CaptionInput>

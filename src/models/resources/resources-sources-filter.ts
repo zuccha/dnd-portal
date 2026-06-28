@@ -1,5 +1,7 @@
+import { useCallback } from "react";
 import z from "zod";
 import { createLocalStoreSet } from "~/store/set/local-store-set";
+import { hash } from "~/utils/hash";
 
 //------------------------------------------------------------------------------
 // Resources Sources Filter
@@ -26,6 +28,13 @@ const resourcesSourcesFilterStore = createLocalStoreSet<ResourcesSourcesFilter>(
   resourcesSourcesFilterSchema.parse,
 );
 
+const draftResourcesSourcesFilterStore =
+  createLocalStoreSet<ResourcesSourcesFilter>(
+    "resources.filters.modules.draft",
+    {},
+    resourcesSourcesFilterSchema.parse,
+  );
+
 //------------------------------------------------------------------------------
 // Use Resources Sources Filter
 //------------------------------------------------------------------------------
@@ -35,4 +44,30 @@ export function useResourcesSourcesFilter(sourceId: string) {
     sourceId,
     defaultResourcesSourcesFilter,
   );
+}
+
+export function useDraftResourcesSourcesFilter(sourceId: string) {
+  const defaultValue = resourcesSourcesFilterStore.get(
+    sourceId,
+    defaultResourcesSourcesFilter,
+  );
+
+  return draftResourcesSourcesFilterStore.use(sourceId, defaultValue);
+}
+
+export function useApplyResourcesSourcesFilter(sourceId: string): () => void {
+  const [draftSources] = useDraftResourcesSourcesFilter(sourceId);
+  const [, setSources] = useResourcesSourcesFilter(sourceId);
+
+  return useCallback(
+    () => setSources(draftSources),
+    [draftSources, setSources],
+  );
+}
+
+export function useHasResourcesSourcesFilterChanges(sourceId: string): boolean {
+  const [draftSources] = useDraftResourcesSourcesFilter(sourceId);
+  const [sources] = useResourcesSourcesFilter(sourceId);
+
+  return hash(draftSources) !== hash(sources);
 }

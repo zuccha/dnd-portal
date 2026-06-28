@@ -94,6 +94,12 @@ export function createResourceStore<
     filtersSchema.parse,
   );
 
+  const appliedFiltersStore = createLocalStore<F>(
+    `${storeId}.filters.applied`,
+    filtersStore.get(),
+    filtersSchema.parse,
+  );
+
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Filters
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -107,6 +113,36 @@ export function createResourceStore<
     );
 
     return [filters, setPartialFilters];
+  }
+
+  function useAppliedFilters(): F {
+    return appliedFiltersStore.useValue();
+  }
+
+  function useEffectiveFilters(): F {
+    const { name } = filtersStore.useValue();
+    const appliedFilters = appliedFiltersStore.useValue();
+
+    return { ...appliedFilters, name };
+  }
+
+  function useApplyFilters(): () => void {
+    const filters = filtersStore.useValue();
+    const setAppliedFilters = appliedFiltersStore.useSetValue();
+
+    return useCallback(
+      () => setAppliedFilters(filters),
+      [filters, setAppliedFilters],
+    );
+  }
+
+  function useHasFilterChanges(): boolean {
+    const filters = filtersStore.useValue();
+    const appliedFilters = appliedFiltersStore.useValue();
+    const { name: _name, ...dbFilters } = filters;
+    const { name: _appliedName, ...appliedDBFilters } = appliedFilters;
+
+    return hash(dbFilters) !== hash(appliedDBFilters);
   }
 
   //----------------------------------------------------------------------------
@@ -523,7 +559,7 @@ export function createResourceStore<
 
   function useResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
-    const [{ name: _name, ...filters }] = useFilters();
+    const { name: _name, ...filters } = useAppliedFilters();
     const [lang] = useI18nLang();
     const params = [sourceId, sources, filters, lang] as const;
     return useResourceIdsByParams(...params)[0];
@@ -601,7 +637,7 @@ export function createResourceStore<
 
   function useFilteredResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
-    const [filters] = useFilters();
+    const filters = useEffectiveFilters();
     const [lang] = useI18nLang();
     const params = [sourceId, sources, filters, lang] as const;
     return useFilteredResourceIdsByParams(...params);
@@ -700,7 +736,7 @@ export function createResourceStore<
 
   function useResourcesSelectionMethods(sourceId: string) {
     const [sources] = useResourcesSourcesFilter(sourceId);
-    const [filters] = useFilters();
+    const filters = useEffectiveFilters();
     const [lang] = useI18nLang();
     const params = [sourceId, sources, filters, lang] as const;
     return useResourcesSelectionMethodsByParams(...params);
@@ -729,7 +765,7 @@ export function createResourceStore<
 
   function useSelectedFilteredResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
-    const [filters] = useFilters();
+    const filters = useEffectiveFilters();
     const [lang] = useI18nLang();
     const params = [sourceId, sources, filters, lang] as const;
     return useSelectedFilteredResourceIdsByParams(...params);
@@ -842,7 +878,9 @@ export function createResourceStore<
     defaultResource,
     orderOptions,
 
+    useApplyFilters,
     useFilters,
+    useHasFilterChanges,
 
     addVirtualResourceRecipe,
     createResource,
