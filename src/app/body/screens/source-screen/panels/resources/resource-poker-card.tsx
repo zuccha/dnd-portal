@@ -162,7 +162,7 @@ function PaginatedResourcePokerCard<
     return pages.map((page) => {
       const text = (page.text + page.textTemp).trim();
       const result = closeRichTextPage(text, state);
-      state = result.state;
+      state = result.state; // eslint-disable-line react-hooks/immutability
       return result.text;
     });
   }, [pages]);
@@ -226,12 +226,13 @@ function PaginatedResourcePokerCard<
             zIndex={adjustedPageIndex === selectedPageIndex ? 1 : 0}
             {...rest}
           >
-            <PokerCard.Separator />
+            <PokerCard.Separator mt={PokerCard.rem0750} />
 
             <VStack
               flex={1}
               gap={PokerCard.rem0750}
               overflow="hidden"
+              py={PokerCard.rem0750}
               ref={page.ref}
               w="full"
             >
@@ -243,10 +244,10 @@ function PaginatedResourcePokerCard<
             </VStack>
 
             {!hasImage && pageIndex === 0 && firstPageInfo && (
-              <>
+              <VStack gap={PokerCard.rem0750} mb={PokerCard.rem0750} w="full">
                 <PokerCard.Separator />
                 {firstPageInfo}
-              </>
+              </VStack>
             )}
           </PokerCard.Frame>
         );
@@ -327,13 +328,14 @@ function ScrollableResourcePokerCard<
       sourceVersion={localizedResource.sourceVersion}
       {...rest}
     >
-      <PokerCard.Separator />
+      <PokerCard.Separator mt={PokerCard.rem0750} />
 
       <VStack
         flex={1}
         gap={PokerCard.rem0750}
         overflowX="hidden"
         overflowY="auto"
+        py={PokerCard.rem0750}
         w="full"
       >
         {beforeDetails}
@@ -344,10 +346,10 @@ function ScrollableResourcePokerCard<
       </VStack>
 
       {firstPageInfo && (
-        <>
+        <VStack gap={PokerCard.rem0750} mb={PokerCard.rem0750} w="full">
           <PokerCard.Separator />
           {firstPageInfo}
-        </>
+        </VStack>
       )}
     </PokerCard.Frame>
   );

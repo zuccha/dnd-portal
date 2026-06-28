@@ -78,7 +78,7 @@ function Frame({
       color="black"
       fontFamily="Bookinsanity"
       fontSize={rem0875}
-      gap={rem0750}
+      gap={0}
       h={`${cardH + 2 * bleed.y}in`}
       lineHeight={1.2}
       overflow="hidden"
@@ -124,7 +124,7 @@ function Frame({
         </VStack>
       }
 
-      <VStack flex={1} gap={rem0750} overflow="hidden" w="full">
+      <VStack flex={1} gap={0} overflow="hidden" w="full">
         {children}
       </VStack>
 
