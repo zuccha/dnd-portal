@@ -1,4 +1,4 @@
-import { VStack } from "@chakra-ui/react";
+import { Separator, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import z from "zod";
 import useDebouncedState from "~/hooks/use-debounced-value";
@@ -72,6 +72,21 @@ export function createResourcesGenericFilters<
           <SectionHeading>{t("heading")}</SectionHeading>
         </VStack>
 
+        <CaptionInput caption={t("name.placeholder")} w="full">
+          <Input
+            groupProps={{ w: "full" }}
+            id={`filter-${store.name.s}-name`}
+            onValueChange={(name) =>
+              setTempFilters((prev) => ({ ...prev, name }))
+            }
+            placeholder={t("name.placeholder")}
+            size="sm"
+            value={tempFilters.name}
+          />
+        </CaptionInput>
+
+        <Separator w="full" />
+
         <CaptionInput caption={t("modules")} w="full">
           <InclusionSelect
             buttonProps={{ disabled: !options.length }}
@@ -101,19 +116,6 @@ export function createResourcesGenericFilters<
             size="sm"
             value={`${tempFilters.order_by}.${tempFilters.order_dir}`}
             w="full"
-          />
-        </CaptionInput>
-
-        <CaptionInput caption={t("name.placeholder")} w="full">
-          <Input
-            groupProps={{ w: "full" }}
-            id={`filter-${store.name.s}-name`}
-            onValueChange={(name) =>
-              setTempFilters((prev) => ({ ...prev, name }))
-            }
-            placeholder={t("name.placeholder")}
-            size="sm"
-            value={tempFilters.name}
           />
         </CaptionInput>
       </>

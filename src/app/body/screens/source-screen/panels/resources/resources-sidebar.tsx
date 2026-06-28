@@ -81,6 +81,7 @@ export function createResourcesSidebar<
           <VStack align="flex-start" gap={3} pb={3} px={6} w="full">
             <ResourcesGenericFilters sourceId={sourceId} />
             <ResourceFilters gap={3} sourceId={sourceId} w="full" />
+            <Separator w="full" />
             <ResourcesCounter sourceId={sourceId} />
           </VStack>
 
