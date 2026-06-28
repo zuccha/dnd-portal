@@ -27,7 +27,7 @@ import PlanesPanel from "./resources/planes/planes-panel";
 import SpeciesPanel from "./resources/species/species-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
 import VehiclesPanel from "./resources/vehicles/vehicles-panel";
-import CampaignPanel from "./settings/campaign-panel";
+import SourceSettingsPanel from "./settings/source-settings-panel";
 
 //------------------------------------------------------------------------------
 // Content
@@ -76,5 +76,5 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesEquipmentWeaponModifiers]: WeaponModifiersPanel,
   [Route.ResourcesWorldLanguages]: LanguagesPanel,
   [Route.ResourcesWorldPlanes]: PlanesPanel,
-  [Route.SettingsCampaign]: CampaignPanel,
+  [Route.SettingsCampaign]: SourceSettingsPanel,
 };

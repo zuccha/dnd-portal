@@ -38,7 +38,7 @@ export const Route = {
   ResourcesWorldLanguages: "/resources/world/languages",
   ResourcesWorldPlanes: "/resources/world/planes",
   Settings: "/settings",
-  SettingsCampaign: "/settings/campaign",
+  SettingsCampaign: "/settings/source",
   SignIn: "/sign-in",
   SignUp: "/sign-up",
 } as const;

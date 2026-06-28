@@ -1,11 +1,11 @@
-//------------------------------------------------------------------------------
-// Campaign Panel
-//------------------------------------------------------------------------------
-
 import { Heading, VStack } from "@chakra-ui/react";
-import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 
-export default function CampaignPanel() {
+//------------------------------------------------------------------------------
+// SourceSettings Panel
+//------------------------------------------------------------------------------
+
+export default function SourceSettingsPanel() {
   const { t } = useI18nLangContext(i18nContext);
 
   return (
@@ -29,7 +29,7 @@ export default function CampaignPanel() {
 
 const i18nContext = {
   title: {
-    en: "Campaign Setting",
-    it: "Impostazioni della Campagna",
+    en: "Source Settings",
+    it: "Impostazioni del Modulo",
   },
 };
