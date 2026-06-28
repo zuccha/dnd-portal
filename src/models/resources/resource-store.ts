@@ -136,6 +136,18 @@ export function createResourceStore<
     );
   }
 
+  function useResetFilters(): () => void {
+    const setFilters = filtersStore.useSetValue();
+
+    return useCallback(() => setFilters(defaultFilters), [setFilters]);
+  }
+
+  function useHasFilters(): boolean {
+    const filters = filtersStore.useValue();
+
+    return hash(filters) !== hash(defaultFilters);
+  }
+
   function useHasFilterChanges(): boolean {
     const filters = filtersStore.useValue();
     const appliedFilters = appliedFiltersStore.useValue();
@@ -881,6 +893,8 @@ export function createResourceStore<
     useApplyFilters,
     useFilters,
     useHasFilterChanges,
+    useHasFilters,
+    useResetFilters,
 
     addVirtualResourceRecipe,
     createResource,

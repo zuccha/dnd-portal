@@ -46,6 +46,10 @@ export function useResourcesSourcesFilter(sourceId: string) {
   );
 }
 
+//------------------------------------------------------------------------------
+// Use Draft Resources Sources Filter
+//------------------------------------------------------------------------------
+
 export function useDraftResourcesSourcesFilter(sourceId: string) {
   const defaultValue = resourcesSourcesFilterStore.get(
     sourceId,
@@ -54,6 +58,10 @@ export function useDraftResourcesSourcesFilter(sourceId: string) {
 
   return draftResourcesSourcesFilterStore.use(sourceId, defaultValue);
 }
+
+//------------------------------------------------------------------------------
+// Use Apply Resources Sources Filter
+//------------------------------------------------------------------------------
 
 export function useApplyResourcesSourcesFilter(sourceId: string): () => void {
   const [draftSources] = useDraftResourcesSourcesFilter(sourceId);
@@ -64,6 +72,35 @@ export function useApplyResourcesSourcesFilter(sourceId: string): () => void {
     [draftSources, setSources],
   );
 }
+
+//------------------------------------------------------------------------------
+// Use Reset Draft Resources Sources Filter
+//------------------------------------------------------------------------------
+
+export function useResetDraftResourcesSourcesFilter(
+  sourceId: string,
+): () => void {
+  const [, setDraftSources] = useDraftResourcesSourcesFilter(sourceId);
+
+  return useCallback(
+    () => setDraftSources(defaultResourcesSourcesFilter),
+    [setDraftSources],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Use Has Draft Resources Sources Filter
+//------------------------------------------------------------------------------
+
+export function useHasDraftResourcesSourcesFilter(sourceId: string): boolean {
+  const [draftSources] = useDraftResourcesSourcesFilter(sourceId);
+
+  return hash(draftSources) !== hash(defaultResourcesSourcesFilter);
+}
+
+//------------------------------------------------------------------------------
+// Use Has Resources Sources Filter
+//------------------------------------------------------------------------------
 
 export function useHasResourcesSourcesFilterChanges(sourceId: string): boolean {
   const [draftSources] = useDraftResourcesSourcesFilter(sourceId);

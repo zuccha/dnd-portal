@@ -1,5 +1,6 @@
-import { Separator, VStack } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { HStack, Separator } from "@chakra-ui/react";
+import { FunnelXIcon } from "lucide-react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
@@ -11,9 +12,14 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { useDraftResourcesSourcesFilter } from "~/models/resources/resources-sources-filter";
+import {
+  useDraftResourcesSourcesFilter,
+  useHasDraftResourcesSourcesFilter,
+  useResetDraftResourcesSourcesFilter,
+} from "~/models/resources/resources-sources-filter";
 import { useSelectedSource } from "~/models/sources";
 import CaptionInput from "~/ui/caption-input";
+import IconButton from "~/ui/icon-button";
 import InclusionSelect from "~/ui/inclusion-select";
 import Input from "~/ui/input";
 import SectionHeading from "~/ui/section-heading";
@@ -42,6 +48,15 @@ export function createResourcesGenericFilters<
     const source = useSelectedSource(); // TODO: Get source from sourceId
     const [sources, setSources] = useDraftResourcesSourcesFilter(sourceId);
     const [filters, setFilters] = store.useFilters();
+    const hasFilters = store.useHasFilters();
+    const hasSourcesFilter = useHasDraftResourcesSourcesFilter(sourceId);
+    const resetFilters = store.useResetFilters();
+    const resetSourcesFilter = useResetDraftResourcesSourcesFilter(sourceId);
+
+    const clearFilters = useCallback(() => {
+      resetFilters();
+      resetSourcesFilter();
+    }, [resetFilters, resetSourcesFilter]);
 
     const orderOptions = useMemo(
       () =>
@@ -62,9 +77,17 @@ export function createResourcesGenericFilters<
 
     return (
       <>
-        <VStack h={8} justify="center">
+        <HStack h={8} justify="space-between" w="full">
           <SectionHeading>{t("heading")}</SectionHeading>
-        </VStack>
+          <IconButton
+            Icon={FunnelXIcon}
+            disabled={!hasFilters && !hasSourcesFilter}
+            onClick={clearFilters}
+            size="xs"
+            title={t("clear")}
+            variant="ghost"
+          />
+        </HStack>
 
         <CaptionInput caption={t("name.placeholder")} w="full">
           <Input
@@ -120,6 +143,10 @@ export function createResourcesGenericFilters<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "clear": {
+    en: "Clear filters",
+    it: "Cancella filtri",
+  },
   "heading": {
     en: "Filters",
     it: "Filtri",
