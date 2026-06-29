@@ -197,8 +197,11 @@ function PaginatedResourcePokerCard<
             bgRepeat="no-repeat"
             bgSize="contain"
             flex={1}
+            mt={PokerCard.rem0750}
           />
-          {firstPageInfo}
+          <Box py={PokerCard.rem0750} w="full">
+            {firstPageInfo}
+          </Box>
         </PokerCard.Frame>
       )}
 
