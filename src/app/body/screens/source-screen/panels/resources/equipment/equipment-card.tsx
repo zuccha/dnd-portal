@@ -40,7 +40,12 @@ export function EquipmentCard<
           localizedResource.weight ||
           firstPageInfoRight
         ) ?
-          <HStack justify="space-between" px={PokerCard.rem1000} w="full">
+          <HStack
+            align="flex-end"
+            justify="space-between"
+            px={PokerCard.rem1000}
+            w="full"
+          >
             <VStack align="flex-start" gap={0}>
               {localizedResource.weight && (
                 <HStack gap={PokerCard.rem0250}>
