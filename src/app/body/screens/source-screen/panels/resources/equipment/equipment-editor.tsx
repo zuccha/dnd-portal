@@ -168,36 +168,36 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
     return (
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
-          <MagicField defaultValue={resource.magic} />
-          <RarityField defaultValue={resource.rarity} />
           <WeightField defaultValue={resource.weight} />
           <CostField defaultValue={resource.cost} />
+          <MagicField defaultValue={resource.magic} />
         </HStack>
 
         {magic && (
-          <HStack align="flex-start" gap={4} w="full">
+          <HStack align="flex-start" gap={4}>
+            <RarityField defaultValue={resource.rarity} />
             <RequiredAttunementSlotsField
               defaultValue={resource.required_attunement_slots}
-              maxW="10em"
             />
-            {requiredAttunementSlots > 0 && (
-              <AttunementNotesField
-                defaultValue={resource.attunement_notes[lang] ?? ""}
-                flex={1}
-              />
-            )}
           </HStack>
         )}
 
+        {magic && requiredAttunementSlots > 0 && (
+          <AttunementNotesField
+            defaultValue={resource.attunement_notes[lang] ?? ""}
+            w="full"
+          />
+        )}
+
         {children}
+
+        <NotesField defaultValue={resource.notes[lang] ?? ""} />
 
         <ModifiersField
           defaultValue={resource.modifier_ids}
           sourceId={sourceId}
           w="full"
         />
-
-        <NotesField defaultValue={resource.notes[lang] ?? ""} />
 
         <FeatureEntriesField
           defaultValue={resource.feature_entries}
