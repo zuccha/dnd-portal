@@ -97,7 +97,7 @@ export default function InclusionSelect({
       <Portal>
         <Popover.Positioner>
           <Popover.Content p={2} width="auto">
-            <VStack align="flex-start" overflow="hidden">
+            <VStack align="flex-start" overflow="auto">
               {options.map(({ label, value }) => (
                 <InclusionButton
                   include={includes[value]}
