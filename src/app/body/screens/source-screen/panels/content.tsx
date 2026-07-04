@@ -3,6 +3,7 @@ import { useRoute } from "~/navigation/navigation";
 import Redirect from "~/navigation/redirect";
 import { Route } from "~/navigation/routes";
 import HomePanel from "./home/home-panel";
+import PrintDeckPanel from "./print-deck/print-deck-panel";
 import BackgroundsPanel from "./resources/backgrounds/backgrounds-panel";
 import CharacterClassesPanel from "./resources/character-classes/character-classes-panel";
 import CharacterSubclassesPanel from "./resources/character-subclasses/character-subclasses-panel";
@@ -40,6 +41,7 @@ export default function Content() {
   if (!selectedCampaignId) return null;
 
   if (route === Route._) return <HomePanel />;
+  if (route === Route.PrintDeck) return <PrintDeckPanel />;
 
   const Panel = panels[route];
   if (Panel) return <Panel sourceId={selectedCampaignId} />;

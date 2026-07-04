@@ -7,6 +7,7 @@ import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import { useRightPanelSetCollapsed } from "../right-panel-state";
 import { useSidebarSetCollapsed } from "../sidebar/sidebar-state";
+import PrintDeckButton from "./print-deck-button";
 import UserButton from "./user-button";
 
 //------------------------------------------------------------------------------
@@ -64,6 +65,7 @@ export default function Topbar() {
           />
         )}
 
+        <PrintDeckButton />
         <ThemeButton />
         <UserButton />
       </HStack>
