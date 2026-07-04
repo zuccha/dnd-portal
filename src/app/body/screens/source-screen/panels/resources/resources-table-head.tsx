@@ -112,9 +112,7 @@ export function createResourcesTableHead<
           );
         })}
 
-        {extra.actions?.length && (
-          <Table.ColumnHeader textAlign="center" w="1%" />
-        )}
+        <Table.ColumnHeader textAlign="center" w="1%" />
       </Table.Row>
     );
   };

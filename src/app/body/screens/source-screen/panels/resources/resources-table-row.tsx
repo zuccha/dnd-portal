@@ -1,9 +1,15 @@
 import { Badge, HStack, Table, VStack, createIcon } from "@chakra-ui/react";
-import { EyeClosedIcon, EyeIcon, type LucideIcon } from "lucide-react";
+import {
+  BookPlusIcon,
+  EyeClosedIcon,
+  EyeIcon,
+  type LucideIcon,
+} from "lucide-react";
 import { useCallback, useMemo } from "react";
-import { useI18nLang } from "~/i18n/i18n-lang";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
+import { printDeck } from "~/models/print-deck/print-deck-store";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -12,11 +18,13 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
 import Checkbox from "~/ui/checkbox";
 import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
+import { toaster } from "~/ui/toaster";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -71,17 +79,18 @@ export function createResourcesTableRow<
   const { useResource, useResourceSelection, useResourceSelectionMethods } =
     store;
 
-  const { useResourceExpansion } = context;
+  const { usePaletteName, useResourceExpansion } = context;
 
   return function ResourcesTableRow({
     editable,
     localizeResource,
     resourceId,
   }: ResourcesTableRowProps<R, L>) {
-    const [lang] = useI18nLang();
+    const { lang, t } = useI18nLangContext(i18nContext);
     const [system] = useI18nSystem();
 
     const [resource] = useResource(resourceId);
+    const paletteName = usePaletteName();
     const localizedResource = useMemo(
       () => localizeResource(resource),
       [localizeResource, resource],
@@ -107,6 +116,26 @@ export function createResourcesTableRow<
       [localizedResource],
     );
 
+    const addToPrintDeck = useCallback(
+      (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        printDeck.addEntry({
+          lang,
+          localized_resource:
+            localizedResourceUnionSchema.parse(localizedResource),
+          palette_name: paletteName,
+        });
+
+        toaster.info({
+          description: localizedResource.name,
+          title: t("print_deck.added"),
+        });
+      },
+      [lang, localizedResource, paletteName, t],
+    );
+
     const toggleSelection = useCallback(
       (e: React.MouseEvent) => {
         e.preventDefault();
@@ -116,7 +145,7 @@ export function createResourcesTableRow<
       [toggleResourceSelection],
     );
 
-    const hasActions = !!extra.actions?.length;
+    const hasActions = true;
     const columnCount =
       extra.columns.length + (editable ? 2 : 1) + (hasActions ? 1 : 0);
 
@@ -176,8 +205,16 @@ export function createResourcesTableRow<
             );
           })}
 
-          {!!extra.actions?.length && (
-            <Table.Cell textAlign="center" w="1%">
+          {hasActions && (
+            <Table.Cell textAlign="center" w="1%" whiteSpace="nowrap">
+              <IconButton
+                Icon={BookPlusIcon}
+                aria-label={t("print_deck.add")}
+                onClick={addToPrintDeck}
+                size="2xs"
+                variant="ghost"
+              />
+
               {visibleActions.map((action, i) => (
                 <IconButton
                   Icon={action.icon}
@@ -223,3 +260,18 @@ export function createResourcesTableRow<
     );
   };
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  "print_deck.add": {
+    en: "Add to print deck",
+    it: "Aggiungi al mazzo di stampa",
+  },
+  "print_deck.added": {
+    en: "Added to print deck",
+    it: "Aggiunto al mazzo di stampa",
+  },
+};

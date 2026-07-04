@@ -59,8 +59,12 @@ function duplicateEntry(entryId: string): string | undefined {
     const index = prev.findIndex((entry) => entry.id === entryId);
     if (index < 0) return prev;
 
-    const entries = [...prev];
-    entries.splice(index + 1, 0, { ...structuredClone(prev[index]!), id });
+    const duplicate = { ...structuredClone(prev[index]!), id };
+    const entries = [
+      ...prev.slice(0, index + 1),
+      duplicate,
+      ...prev.slice(index + 1),
+    ];
     duplicated = true;
     return entries;
   });
@@ -102,7 +106,7 @@ function moveEntry(entryId: string, toIndex: number): void {
 function removeEntry(entryId: string): void {
   printDeckStore.set((prev) => {
     const entries = prev.filter((entry) => entry.id !== entryId);
-    return entries.length === prev.entries.length ? prev : entries;
+    return entries.length === prev.length ? prev : entries;
   });
 }
 

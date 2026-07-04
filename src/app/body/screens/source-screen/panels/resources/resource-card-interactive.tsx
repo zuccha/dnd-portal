@@ -1,11 +1,12 @@
 import { Badge, Box, Theme, VStack } from "@chakra-ui/react";
-import { EditIcon } from "lucide-react";
+import { BookPlusIcon, EditIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import SquareCheckIcon from "~/icons/square-check-icon";
 import SquareIcon from "~/icons/square-icon";
+import { printDeck } from "~/models/print-deck/print-deck-store";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -14,8 +15,10 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
 import IconButton from "~/ui/icon-button";
 import PokerCard from "~/ui/poker-card";
+import { toaster } from "~/ui/toaster";
 import { clamp } from "~/utils/math";
 import { type Palette, defaultPalette } from "~/utils/palette";
 import type {
@@ -86,7 +89,7 @@ export function createResourceCardInteractive<
   } = store;
 
   const AlbumCard = extra.AlbumCard;
-  const { useCardMode, useShowImage } = context;
+  const { useCardMode, usePaletteName, useShowImage } = context;
 
   function ResourcesAlbumCardInteractive({
     editable,
@@ -97,6 +100,7 @@ export function createResourceCardInteractive<
   }: ResourceCardInteractiveProps<R, L>) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const [resource] = useResource(resourceId);
+    const paletteName = usePaletteName();
     const localizedResource = useMemo(
       () => localizeResource(resource),
       [localizeResource, resource],
@@ -139,6 +143,20 @@ export function createResourceCardInteractive<
     const edit = useCallback(() => {
       if (localizedResource) context.setEditedResource(localizedResource._raw);
     }, [localizedResource]);
+
+    const addToPrintDeck = useCallback(() => {
+      printDeck.addEntry({
+        lang,
+        localized_resource:
+          localizedResourceUnionSchema.parse(localizedResource),
+        palette_name: paletteName,
+      });
+
+      toaster.info({
+        description: localizedResource.name,
+        title: t("print_deck.added"),
+      });
+    }, [lang, localizedResource, paletteName, t]);
 
     return (
       <Box
@@ -209,6 +227,7 @@ export function createResourceCardInteractive<
             {editable && !localizedResource._raw.virtual && (
               <IconButton
                 Icon={EditIcon}
+                _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
                 className="light"
                 onPointerDown={(e) => {
                   e.stopPropagation();
@@ -221,6 +240,7 @@ export function createResourceCardInteractive<
             {visibleActions.map((action, i) => (
               <IconButton
                 Icon={action.icon}
+                _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
                 aria-label={translate(action.label, lang)}
                 className="light"
                 disabled={action.isDisabled?.(localizedResource._raw)}
@@ -233,10 +253,23 @@ export function createResourceCardInteractive<
                 size="2xs"
               />
             ))}
+
+            <IconButton
+              Icon={BookPlusIcon}
+              _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
+              aria-label={t("print_deck.add")}
+              className="light"
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                addToPrintDeck();
+              }}
+              size="2xs"
+            />
           </VStack>
 
           <IconButton
             Icon={selected ? SquareCheckIcon : SquareIcon}
+            _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
             _groupHover={{ visibility: "visible" }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -280,7 +313,15 @@ export function createResourceCardInteractive<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  variant: {
+  "print_deck.add": {
+    en: "Add to print deck",
+    it: "Aggiungi al mazzo di stampa",
+  },
+  "print_deck.added": {
+    en: "Added to print deck",
+    it: "Aggiunto al mazzo di stampa",
+  },
+  "variant": {
     en: "Variant",
     it: "Variante",
   },
