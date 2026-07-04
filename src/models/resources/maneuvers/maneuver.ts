@@ -13,6 +13,7 @@ import {
 
 export const maneuverSchema = resourceSchema.extend({
   description: i18nStringSchema,
+  kind: z.literal("maneuver"),
   prerequisite: i18nStringSchema,
 });
 
@@ -25,6 +26,7 @@ export type Maneuver = z.infer<typeof maneuverSchema>;
 export const defaultManeuver: Maneuver = {
   ...defaultResource,
   description: {},
+  kind: "maneuver",
   prerequisite: {},
 };
 

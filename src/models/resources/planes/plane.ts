@@ -15,6 +15,7 @@ import {
 export const planeSchema = resourceSchema.extend({
   alignments: z.array(creatureAlignmentSchema),
   category: planeCategorySchema,
+  kind: z.literal("plane"),
 });
 
 export type Plane = z.infer<typeof planeSchema>;
@@ -27,6 +28,7 @@ export const defaultPlane: Plane = {
   ...defaultResource,
   alignments: [],
   category: "material",
+  kind: "plane",
 };
 
 //------------------------------------------------------------------------------

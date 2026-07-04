@@ -10,7 +10,9 @@ import {
 // Armor Modifier
 //------------------------------------------------------------------------------
 
-export const armorModifierSchema = equipmentModifierSchema.extend({});
+export const armorModifierSchema = equipmentModifierSchema.extend({
+  kind: z.literal("armor_modifier"),
+});
 
 export type ArmorModifier = z.infer<typeof armorModifierSchema>;
 
@@ -20,6 +22,7 @@ export type ArmorModifier = z.infer<typeof armorModifierSchema>;
 
 export const defaultArmorModifier: ArmorModifier = {
   ...defaultEquipmentModifier,
+  kind: "armor_modifier",
 };
 
 //------------------------------------------------------------------------------

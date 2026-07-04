@@ -30,7 +30,7 @@ import type {
 } from "~/models/resources/modifiers/equipment/db-equipment-modifier";
 import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
 import type { EquipmentModifierFilters } from "~/models/resources/modifiers/equipment/equipment-modifier-filters";
-import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
+import type { LocalizedEquipmentModifierFor } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { createMemoryStore } from "~/store/memory-store";
@@ -58,15 +58,14 @@ export function createEquipmentVariantDialog<
   F extends ResourceFilters,
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
+  EM extends EquipmentModifier,
+  EML extends LocalizedEquipmentModifierFor<EM>,
+  EMF extends EquipmentModifierFilters,
+  DBEM extends DBEquipmentModifier,
+  DBTM extends DBEquipmentModifierTranslation,
 >(
   store: ResourceStore<E, L, F, DBR, DBT>,
-  modifierStore: ResourceStore<
-    EquipmentModifier,
-    LocalizedEquipmentModifier,
-    EquipmentModifierFilters,
-    DBEquipmentModifier,
-    DBEquipmentModifierTranslation
-  >,
+  modifierStore: ResourceStore<EM, EML, EMF, DBEM, DBTM>,
 ) {
   const pendingEquipmentVariantStore =
     createMemoryStore<EquipmentVariantRequest<E> | null>(
@@ -156,7 +155,7 @@ export function createEquipmentVariantDialog<
     );
     const modifiers = modifierIds
       .map((id) => allModifiersById.get(id))
-      .filter((modifier): modifier is EquipmentModifier => !!modifier);
+      .filter((modifier): modifier is EM => !!modifier);
 
     if (modifiers.length !== modifierIds.length)
       return <EquipmentVariantDialogLoading modifierIds={modifierIds} />;

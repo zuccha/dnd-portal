@@ -9,6 +9,7 @@ const fireball: Record<string, LocalizedSpell> = {
     _raw: {
       id: "43e42b00-7f98-4d8e-afc9-03d9ca248cc8",
       image_url: null,
+      kind: "spell",
       name: { en: "Fireball", it: "Palla di Fuoco" },
       name_short: { en: "", it: "" },
       page: { en: 131 },
@@ -72,6 +73,7 @@ const fireball: Record<string, LocalizedSpell> = {
     _raw: {
       id: "43e42b00-7f98-4d8e-afc9-03d9ca248cc8",
       image_url: null,
+      kind: "spell",
       name: { en: "Fireball", it: "Palla di Fuoco" },
       name_short: { en: "", it: "" },
       page: { it: 171 },

@@ -17,6 +17,7 @@ import {
 export const speciesSchema = resourceSchema.extend({
   description: i18nStringSchema,
   feature_entries: z.array(dbFeatureEntrySchema),
+  kind: z.literal("species"),
   sizes: z.array(creatureSizeSchema).min(1),
   speed: z.number(),
   type: creatureTypeSchema,
@@ -32,6 +33,7 @@ export const defaultSpecies: Species = {
   ...defaultResource,
   description: {},
   feature_entries: [],
+  kind: "species",
   sizes: ["medium"],
   speed: 900,
   type: "humanoid",

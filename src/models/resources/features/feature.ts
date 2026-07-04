@@ -16,6 +16,7 @@ export const featureSchema = resourceSchema.extend({
   description: i18nStringSchema,
   display_name: i18nStringSchema,
   granted_by: z.array(dbFeatureGrantSchema),
+  kind: z.literal("feature"),
 });
 
 export type Feature = z.infer<typeof featureSchema>;
@@ -29,6 +30,7 @@ export const defaultFeature: Feature = {
   description: {},
   display_name: {},
   granted_by: [],
+  kind: "feature",
 };
 
 //------------------------------------------------------------------------------

@@ -16,6 +16,7 @@ import {
 export const toolSchema = equipmentSchema.extend({
   ability: creatureAbilitySchema,
   craft_ids: z.array(z.uuid()),
+  kind: z.literal("tool"),
   type: toolTypeSchema,
   utilize: i18nStringSchema,
 });
@@ -30,6 +31,7 @@ export const defaultTool: Tool = {
   ...defaultEquipment,
   ability: "strength",
   craft_ids: [],
+  kind: "tool",
   type: "other",
   utilize: {},
 };

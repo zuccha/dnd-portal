@@ -2,6 +2,7 @@ import z from "zod";
 import { type I18nNumber, i18nNumberSchema } from "~/i18n/i18n-number";
 import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
 import type { KeysOfType } from "~/types";
+import { resourceKindSchema } from "../types/resource-kind";
 import { resourceVisibilitySchema } from "../types/resource-visibility";
 import { sourceVersionSchema } from "../types/source-version";
 
@@ -11,6 +12,7 @@ import { sourceVersionSchema } from "../types/source-version";
 
 export const resourceSchema = z.object({
   id: z.uuid(),
+  kind: resourceKindSchema,
 
   source_code: z.string(),
   source_id: z.string(),
@@ -34,6 +36,7 @@ export type Resource = z.infer<typeof resourceSchema>;
 export const defaultResource: Resource = {
   id: "",
   image_url: undefined,
+  kind: "resource",
   name: {},
   name_short: {},
   page: {},

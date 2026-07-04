@@ -19,6 +19,7 @@ export const serviceSchema = resourceSchema.extend({
   cost: z.number(),
   cost_period: serviceCostPeriodSchema,
   description: i18nStringSchema,
+  kind: z.literal("service"),
 });
 
 export type Service = z.infer<typeof serviceSchema>;
@@ -34,6 +35,7 @@ export const defaultService: Service = {
   cost: 0,
   cost_period: "once",
   description: {},
+  kind: "service",
 };
 
 //------------------------------------------------------------------------------

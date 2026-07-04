@@ -9,6 +9,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     _raw: {
       id: "b52fd018-b42b-4022-8c1d-e12b7dcf175a",
       image_url: null,
+      kind: "creature",
       name: { en: "Owlbear", it: "Orsogufo" },
       name_short: { en: "", it: "" },
       page: { en: 313 },
@@ -148,6 +149,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     _raw: {
       id: "b52fd018-b42b-4022-8c1d-e12b7dcf175a",
       image_url: null,
+      kind: "creature",
       name: { en: "Owlbear", it: "Orsogufo" },
       name_short: { en: "", it: "" },
       page: { it: 363 },

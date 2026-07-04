@@ -13,6 +13,7 @@ import {
 //------------------------------------------------------------------------------
 
 export const languageSchema = resourceSchema.extend({
+  kind: z.literal("language"),
   origin: i18nStringSchema,
   rarity: languageRaritySchema,
 });
@@ -25,6 +26,7 @@ export type Language = z.infer<typeof languageSchema>;
 
 export const defaultLanguage: Language = {
   ...defaultResource,
+  kind: "language",
   origin: {},
   rarity: "standard",
 };

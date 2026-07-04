@@ -13,6 +13,7 @@ import {
 
 export const metamagicSchema = resourceSchema.extend({
   description: i18nStringSchema,
+  kind: z.literal("metamagic"),
   prerequisite: i18nStringSchema,
   sorcery_points: z.number().int().min(0),
 });
@@ -26,6 +27,7 @@ export type Metamagic = z.infer<typeof metamagicSchema>;
 export const defaultMetamagic: Metamagic = {
   ...defaultResource,
   description: {},
+  kind: "metamagic",
   prerequisite: {},
   sorcery_points: 1,
 };

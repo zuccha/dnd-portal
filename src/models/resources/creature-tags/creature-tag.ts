@@ -10,7 +10,9 @@ import {
 // Creature Tag
 //------------------------------------------------------------------------------
 
-export const creatureTagSchema = resourceSchema.extend({});
+export const creatureTagSchema = resourceSchema.extend({
+  kind: z.literal("creature_tag"),
+});
 
 export type CreatureTag = z.infer<typeof creatureTagSchema>;
 
@@ -20,6 +22,7 @@ export type CreatureTag = z.infer<typeof creatureTagSchema>;
 
 export const defaultCreatureTag: CreatureTag = {
   ...defaultResource,
+  kind: "creature_tag",
 };
 
 //------------------------------------------------------------------------------

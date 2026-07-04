@@ -19,6 +19,7 @@ export const vehicleSchema = resourceSchema.extend({
   damage_threshold: z.number(),
   description: i18nStringSchema,
   hp: z.number(),
+  kind: z.literal("vehicle"),
   passenger_capacity: z.number(),
   speed: z.number(),
 });
@@ -38,6 +39,7 @@ export const defaultVehicle: Vehicle = {
   damage_threshold: 0,
   description: {},
   hp: 0,
+  kind: "vehicle",
   passenger_capacity: 0,
   speed: 0,
 };

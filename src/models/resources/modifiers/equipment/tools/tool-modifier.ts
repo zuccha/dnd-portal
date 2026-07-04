@@ -10,7 +10,9 @@ import {
 // Tool Modifier
 //------------------------------------------------------------------------------
 
-export const toolModifierSchema = equipmentModifierSchema.extend({});
+export const toolModifierSchema = equipmentModifierSchema.extend({
+  kind: z.literal("tool_modifier"),
+});
 
 export type ToolModifier = z.infer<typeof toolModifierSchema>;
 
@@ -20,6 +22,7 @@ export type ToolModifier = z.infer<typeof toolModifierSchema>;
 
 export const defaultToolModifier: ToolModifier = {
   ...defaultEquipmentModifier,
+  kind: "tool_modifier",
 };
 
 //------------------------------------------------------------------------------

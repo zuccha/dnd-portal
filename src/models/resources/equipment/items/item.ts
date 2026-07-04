@@ -14,6 +14,7 @@ import {
 export const itemSchema = equipmentSchema.extend({
   charges: z.number().nullish(),
   consumable: z.boolean(),
+  kind: z.literal("item"),
   type: itemTypeSchema,
 });
 
@@ -28,6 +29,7 @@ export const defaultItem: Item = {
 
   charges: 0,
   consumable: false,
+  kind: "item",
   type: "other",
 };
 
