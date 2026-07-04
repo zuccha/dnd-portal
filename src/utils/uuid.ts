@@ -1,6 +1,23 @@
 import { hash } from "./hash";
 
 //------------------------------------------------------------------------------
+// Create UUID
+//------------------------------------------------------------------------------
+
+export function createUuid() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+
+  if (globalThis.crypto?.getRandomValues) {
+    const randomValues = globalThis.crypto.getRandomValues(new Uint32Array(4));
+    return Array.from(randomValues, (value) =>
+      value.toString(16).padStart(8, "0"),
+    ).join("-");
+  }
+
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+}
+
+//------------------------------------------------------------------------------
 // Create Deterministic UUID
 //------------------------------------------------------------------------------
 
