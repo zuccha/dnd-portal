@@ -16,7 +16,10 @@ import { type Feat, featSchema } from "./feat";
 // Localized Feat
 //------------------------------------------------------------------------------
 
-export const localizedFeatSchema = localizedResourceSchema(featSchema).extend({
+export const localizedFeatSchema = localizedResourceSchema(
+  featSchema,
+  z.literal("feat"),
+).extend({
   category: z.string(),
   info: z.string(),
   min_level: z.string(),

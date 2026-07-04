@@ -25,6 +25,7 @@ import { type Weapon, weaponSchema } from "./weapon";
 
 export const localizedWeaponSchema = localizedEquipmentSchema(
   weaponSchema,
+  z.literal("weapon"),
 ).extend({
   damage: z.string(),
   damage_extended: z.string(),

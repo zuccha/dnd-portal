@@ -14,6 +14,7 @@ import { type Feature, featureSchema } from "./feature";
 
 export const localizedFeatureSchema = localizedResourceSchema(
   featureSchema,
+  z.literal("feature"),
 );
 
 export type LocalizedFeature = z.infer<typeof localizedFeatureSchema>;

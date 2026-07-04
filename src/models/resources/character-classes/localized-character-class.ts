@@ -28,6 +28,7 @@ import { type CharacterClass, characterClassSchema } from "./character-class";
 
 export const localizedCharacterClassSchema = localizedResourceSchema(
   characterClassSchema,
+  z.literal("character_class"),
 ).extend({
   armor_proficiencies: z.string(),
   hp_die: z.string(),

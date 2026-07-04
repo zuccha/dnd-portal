@@ -10,7 +10,7 @@ import type {
 } from "./db-equipment-modifier";
 import type { EquipmentModifier } from "./equipment-modifier";
 import { type EquipmentModifierFilters } from "./equipment-modifier-filters";
-import { type LocalizedEquipmentModifierFor } from "./localized-equipment-modifier";
+import { type LocalizedEquipmentModifier } from "./localized-equipment-modifier";
 
 //------------------------------------------------------------------------------
 // Create Equipment Modifier Store
@@ -18,7 +18,7 @@ import { type LocalizedEquipmentModifierFor } from "./localized-equipment-modifi
 
 export function createEquipmentModifierStore<
   R extends EquipmentModifier,
-  L extends LocalizedEquipmentModifierFor<R>,
+  L extends LocalizedEquipmentModifier<R>,
   F extends EquipmentModifierFilters,
   DBR extends DBEquipmentModifier,
   DBT extends DBEquipmentModifierTranslation,

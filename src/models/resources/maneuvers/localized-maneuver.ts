@@ -15,6 +15,7 @@ import { type Maneuver, maneuverSchema } from "./maneuver";
 
 export const localizedManeuverSchema = localizedResourceSchema(
   maneuverSchema,
+  z.literal("maneuver"),
 ).extend({
   info: z.string(),
   prerequisite: z.string(),

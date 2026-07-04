@@ -6,38 +6,38 @@ import {
   localizedResourceSchema,
   useLocalizeResource,
 } from "../localized-resource";
-import { type Modifier, modifierSchema } from "./modifier";
+import { type Modifier } from "./modifier";
 
 //------------------------------------------------------------------------------
 // Localized Modifier
 //------------------------------------------------------------------------------
 
-export function createLocalizedModifierSchema<R extends Modifier>(
-  schema: ZodType<R>,
+export function localizedModifierSchema<M extends Modifier>(
+  schema: ZodType<M>,
+  kindSchema: ZodType<M["kind"]>,
 ) {
-  return localizedResourceSchema(schema).extend({
+  return localizedResourceSchema(schema, kindSchema).extend({
     applies_to: z.string(),
     composite_name: z.string(),
   });
 }
 
-export const localizedModifierSchema =
-  createLocalizedModifierSchema(modifierSchema);
-
-export type LocalizedModifier = z.infer<typeof localizedModifierSchema>;
+export type LocalizedModifier<M extends Modifier> = z.infer<
+  ReturnType<typeof localizedModifierSchema<M>>
+>;
 
 //------------------------------------------------------------------------------
 // Use Localize Modifier
 //------------------------------------------------------------------------------
 
-export function useLocalizeModifier(): (
-  modifier: Modifier,
-) => LocalizedModifier {
-  const localizeResource = useLocalizeResource<Modifier>();
+export function useLocalizeModifier<M extends Modifier>(): (
+  modifier: M,
+) => LocalizedModifier<M> {
+  const localizeResource = useLocalizeResource<M>();
   const [lang] = useI18nLang();
 
   return useCallback(
-    (modifier: Modifier): LocalizedModifier => {
+    (modifier: M): LocalizedModifier<M> => {
       const appliesTo = translate(modifier.applies_to, lang);
 
       return {

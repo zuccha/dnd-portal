@@ -12,6 +12,7 @@ import { type CreatureTag, creatureTagSchema } from "./creature-tag";
 
 export const localizedCreatureTagSchema = localizedResourceSchema(
   creatureTagSchema,
+  z.literal("creature_tag"),
 ).extend({});
 
 export type LocalizedCreatureTag = z.infer<typeof localizedCreatureTagSchema>;

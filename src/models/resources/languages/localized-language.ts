@@ -16,6 +16,7 @@ import { type Language, languageSchema } from "./language";
 
 export const localizedLanguageSchema = localizedResourceSchema(
   languageSchema,
+  z.literal("language"),
 ).extend({
   info: z.string(),
   origin: z.string(),

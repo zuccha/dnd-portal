@@ -1,6 +1,6 @@
 import z from "zod";
 import {
-  createLocalizedEquipmentModifierSchema,
+  localizedEquipmentModifierSchema,
   useLocalizeEquipmentModifier,
 } from "../localized-equipment-modifier";
 import { type ArmorModifier, armorModifierSchema } from "./armor-modifier";
@@ -9,8 +9,10 @@ import { type ArmorModifier, armorModifierSchema } from "./armor-modifier";
 // Localized Armor Modifier
 //------------------------------------------------------------------------------
 
-export const localizedArmorModifierSchema =
-  createLocalizedEquipmentModifierSchema(armorModifierSchema).extend({});
+export const localizedArmorModifierSchema = localizedEquipmentModifierSchema(
+  armorModifierSchema,
+  z.literal("armor_modifier"),
+).extend({});
 
 export type LocalizedArmorModifier = z.infer<
   typeof localizedArmorModifierSchema

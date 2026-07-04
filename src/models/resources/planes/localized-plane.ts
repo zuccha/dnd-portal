@@ -14,13 +14,14 @@ import { type Plane, planeSchema } from "./plane";
 // Localized Plane
 //------------------------------------------------------------------------------
 
-export const localizedPlaneSchema = localizedResourceSchema(planeSchema).extend(
-  {
-    alignments: z.string(),
-    category: z.string(),
-    info: z.string(),
-  },
-);
+export const localizedPlaneSchema = localizedResourceSchema(
+  planeSchema,
+  z.literal("plane"),
+).extend({
+  alignments: z.string(),
+  category: z.string(),
+  info: z.string(),
+});
 
 export type LocalizedPlane = z.infer<typeof localizedPlaneSchema>;
 

@@ -18,6 +18,7 @@ import {
 
 export const localizedEldritchInvocationSchema = localizedResourceSchema(
   eldritchInvocationSchema,
+  z.literal("eldritch_invocation"),
 ).extend({
   info: z.string(),
   min_warlock_level: z.string(),

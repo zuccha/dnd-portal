@@ -7,22 +7,20 @@ import { useFormatGrams } from "~/measures/weight";
 import { useTranslateEquipmentRarity } from "~/models/types/equipment-rarity";
 import { formatDetails } from "../../localized-resource";
 import {
-  createLocalizedModifierSchema,
+  localizedModifierSchema,
   useLocalizeModifier,
 } from "../localized-modifier";
-import {
-  type EquipmentModifier,
-  equipmentModifierSchema,
-} from "./equipment-modifier";
+import { type EquipmentModifier } from "./equipment-modifier";
 
 //------------------------------------------------------------------------------
 // Localized Equipment Modifier
 //------------------------------------------------------------------------------
 
-export function createLocalizedEquipmentModifierSchema<
-  R extends EquipmentModifier,
->(schema: ZodType<R>) {
-  return createLocalizedModifierSchema(schema).extend({
+export function localizedEquipmentModifierSchema<EM extends EquipmentModifier>(
+  schema: ZodType<EM>,
+  kindSchema: ZodType<EM["kind"]>,
+) {
+  return localizedModifierSchema(schema, kindSchema).extend({
     attunement_notes_delta: z.string(),
     cost_delta: z.string(),
     magic: z.string(),
@@ -34,33 +32,25 @@ export function createLocalizedEquipmentModifierSchema<
   });
 }
 
-export const localizedEquipmentModifierSchema =
-  createLocalizedEquipmentModifierSchema(equipmentModifierSchema);
-
-export type LocalizedEquipmentModifier = z.infer<
-  typeof localizedEquipmentModifierSchema
+export type LocalizedEquipmentModifier<EM extends EquipmentModifier> = z.infer<
+  ReturnType<typeof localizedEquipmentModifierSchema<EM>>
 >;
 
 //------------------------------------------------------------------------------
 // Use Localize Equipment Modifier
 //------------------------------------------------------------------------------
 
-export type LocalizedEquipmentModifierFor<R extends EquipmentModifier> = Omit<
-  LocalizedEquipmentModifier,
-  "_raw"
-> & { _raw: R };
-
-export function useLocalizeEquipmentModifier<
-  R extends EquipmentModifier = EquipmentModifier,
->(): (equipmentModifier: R) => LocalizedEquipmentModifierFor<R> {
-  const localizeModifier = useLocalizeModifier();
+export function useLocalizeEquipmentModifier<EM extends EquipmentModifier>(): (
+  equipmentModifier: EM,
+) => LocalizedEquipmentModifier<EM> {
+  const localizeModifier = useLocalizeModifier<EM>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const formatCost = useFormatCp();
   const formatWeight = useFormatGrams();
   const translateRarity = useTranslateEquipmentRarity(lang);
 
   return useCallback(
-    (equipmentModifier: R): LocalizedEquipmentModifierFor<R> => {
+    (equipmentModifier: EM): LocalizedEquipmentModifier<EM> => {
       const appliesTo = translate(equipmentModifier.applies_to, lang);
       const attunementNotesDelta = translate(
         equipmentModifier.attunement_notes_delta,

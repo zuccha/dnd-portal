@@ -15,7 +15,10 @@ import { type Tool, toolSchema } from "./tool";
 // Localized Tool
 //------------------------------------------------------------------------------
 
-export const localizedToolSchema = localizedEquipmentSchema(toolSchema).extend({
+export const localizedToolSchema = localizedEquipmentSchema(
+  toolSchema,
+  z.literal("tool"),
+).extend({
   ability: z.string(),
   type: z.string(),
 });

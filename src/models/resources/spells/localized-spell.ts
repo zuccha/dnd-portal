@@ -20,25 +20,26 @@ import { type Spell, spellSchema } from "./spell";
 // Localized Spell
 //------------------------------------------------------------------------------
 
-export const localizedSpellSchema = localizedResourceSchema(spellSchema).extend(
-  {
-    casting_time: z.string(),
-    casting_time_with_ritual: z.string(),
-    character_classes: z.string(),
-    components: z.string(),
-    concentration: z.boolean(),
-    details: z.string(),
-    duration: z.string(),
-    duration_with_concentration: z.string(),
-    info: z.string(),
-    level: z.string(),
-    level_long: z.string(),
-    materials: z.string(),
-    range: z.string(),
-    ritual: z.boolean(),
-    school: z.string(),
-  },
-);
+export const localizedSpellSchema = localizedResourceSchema(
+  spellSchema,
+  z.literal("spell"),
+).extend({
+  casting_time: z.string(),
+  casting_time_with_ritual: z.string(),
+  character_classes: z.string(),
+  components: z.string(),
+  concentration: z.boolean(),
+  details: z.string(),
+  duration: z.string(),
+  duration_with_concentration: z.string(),
+  info: z.string(),
+  level: z.string(),
+  level_long: z.string(),
+  materials: z.string(),
+  range: z.string(),
+  ritual: z.boolean(),
+  school: z.string(),
+});
 
 export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 

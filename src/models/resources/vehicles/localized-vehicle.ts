@@ -19,6 +19,7 @@ import { type Vehicle, vehicleSchema } from "./vehicle";
 
 export const localizedVehicleSchema = localizedResourceSchema(
   vehicleSchema,
+  z.literal("vehicle"),
 ).extend({
   ac: z.string(),
   cargo: z.string(),

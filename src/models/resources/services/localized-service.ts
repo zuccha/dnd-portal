@@ -19,6 +19,7 @@ import { type Service, serviceSchema } from "./service";
 
 export const localizedServiceSchema = localizedResourceSchema(
   serviceSchema,
+  z.literal("service"),
 ).extend({
   availability: z.string(),
   category: z.string(),

@@ -19,8 +19,9 @@ import { type Equipment } from "./equipment";
 
 export const localizedEquipmentSchema = <E extends Equipment>(
   rawSchema: ZodType<E>,
+  kindSchema: ZodType<E["kind"]>,
 ) =>
-  localizedResourceSchema(rawSchema).extend({
+  localizedResourceSchema(rawSchema, kindSchema).extend({
     cost: z.string(),
     magic: z.boolean(),
     magic_type: z.string(),

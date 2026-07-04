@@ -18,6 +18,7 @@ import {
 
 export const localizedCharacterSubclassSchema = localizedResourceSchema(
   characterSubclassSchema,
+  z.literal("character_subclass"),
 ).extend({
   character_class: z.string(),
 });

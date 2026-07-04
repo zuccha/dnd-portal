@@ -12,7 +12,10 @@ import { type Item, itemSchema } from "./item";
 // Localized Item
 //------------------------------------------------------------------------------
 
-export const localizedItemSchema = localizedEquipmentSchema(itemSchema).extend({
+export const localizedItemSchema = localizedEquipmentSchema(
+  itemSchema,
+  z.literal("item"),
+).extend({
   charges: z.string(),
   consumable: z.boolean(),
   rarity: z.string(),

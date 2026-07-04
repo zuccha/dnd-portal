@@ -16,6 +16,7 @@ import { type Armor, armorSchema } from "./armor";
 
 export const localizedArmorSchema = localizedEquipmentSchema(
   armorSchema,
+  z.literal("armor"),
 ).extend({
   armor_class: z.string(),
   cost: z.string(),

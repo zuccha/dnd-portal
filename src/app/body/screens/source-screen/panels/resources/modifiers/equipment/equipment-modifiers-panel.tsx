@@ -10,10 +10,7 @@ import {
   equipmentModifierForm,
   equipmentModifierFormDataToDB,
 } from "~/models/resources/modifiers/equipment/equipment-modifier-form";
-import type {
-  LocalizedEquipmentModifier,
-  LocalizedEquipmentModifierFor,
-} from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
+import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import type { ResourceOption } from "~/models/resources/resource";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import type { Form } from "~/utils/form";
@@ -32,7 +29,7 @@ import EquipmentModifiersFilters from "./equipment-modifiers-filters";
 
 const columns: ResourcesTableExtra<
   EquipmentModifier,
-  LocalizedEquipmentModifier
+  LocalizedEquipmentModifier<EquipmentModifier>
 >["columns"] = [
   {
     key: "name",
@@ -76,7 +73,7 @@ type SupportedEquipmentOptionsStore = {
 
 export function createEquipmentModifiersPanel<
   R extends EquipmentModifier,
-  L extends LocalizedEquipmentModifierFor<R>,
+  L extends LocalizedEquipmentModifier<R>,
   F extends EquipmentModifierFilters,
   DBR extends DBEquipmentModifier,
   DBT extends DBEquipmentModifierTranslation,

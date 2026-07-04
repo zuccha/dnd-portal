@@ -21,6 +21,7 @@ import { type Species, speciesSchema } from "./species";
 
 export const localizedSpeciesSchema = localizedResourceSchema(
   speciesSchema,
+  z.literal("species"),
 ).extend({
   details: z.string(),
   info: z.string(),

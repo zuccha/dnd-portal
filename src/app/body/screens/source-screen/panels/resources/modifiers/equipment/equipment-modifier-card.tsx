@@ -15,7 +15,10 @@ import {
 //------------------------------------------------------------------------------
 
 export type EquipmentModifierCardProps = Omit<
-  ResourcePokerCardProps<EquipmentModifier, LocalizedEquipmentModifier>,
+  ResourcePokerCardProps<
+    EquipmentModifier,
+    LocalizedEquipmentModifier<EquipmentModifier>
+  >,
   "firstPageInfo"
 >;
 

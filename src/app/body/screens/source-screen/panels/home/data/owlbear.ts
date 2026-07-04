@@ -80,6 +80,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     details:
       "##Actions##\r**Multiattack.** The owlbear makes two Rend attacks.\n**Rend.** Melee Attack Roll: +7, reach 5 ft. _Hit:_ 14 (2d8 + 5) Slashing damage.",
     id: "b52fd018-b42b-4022-8c1d-e12b7dcf175a",
+    kind: "creature",
     name: "Owlbear",
     page: "313",
     source: "SRD24",
@@ -220,6 +221,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     details:
       "##Azioni##\r**Multiattacco.** L'orsogufo effettua due attacchi Squarcio.\n**Squarcio.** _Tiro per colpire in mischia:_ +7, portata 1,5 m. _Colpito:_ 14 (2d8 + 5) danni taglienti.",
     id: "b52fd018-b42b-4022-8c1d-e12b7dcf175a",
+    kind: "creature",
     name: "Orsogufo",
     page: "363",
     source: "SRD24",

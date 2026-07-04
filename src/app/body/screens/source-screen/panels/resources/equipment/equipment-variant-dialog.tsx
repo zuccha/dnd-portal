@@ -30,7 +30,7 @@ import type {
 } from "~/models/resources/modifiers/equipment/db-equipment-modifier";
 import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
 import type { EquipmentModifierFilters } from "~/models/resources/modifiers/equipment/equipment-modifier-filters";
-import type { LocalizedEquipmentModifierFor } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
+import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { createMemoryStore } from "~/store/memory-store";
@@ -59,7 +59,7 @@ export function createEquipmentVariantDialog<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
   EM extends EquipmentModifier,
-  EML extends LocalizedEquipmentModifierFor<EM>,
+  EML extends LocalizedEquipmentModifier<EM>,
   EMF extends EquipmentModifierFilters,
   DBEM extends DBEquipmentModifier,
   DBTM extends DBEquipmentModifierTranslation,

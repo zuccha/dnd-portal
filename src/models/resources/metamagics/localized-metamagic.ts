@@ -15,6 +15,7 @@ import { type Metamagic, metamagicSchema } from "./metamagic";
 
 export const localizedMetamagicSchema = localizedResourceSchema(
   metamagicSchema,
+  z.literal("metamagic"),
 ).extend({
   info: z.string(),
   prerequisite: z.string(),

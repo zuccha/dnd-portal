@@ -1,6 +1,6 @@
 import z from "zod";
 import {
-  createLocalizedEquipmentModifierSchema,
+  localizedEquipmentModifierSchema,
   useLocalizeEquipmentModifier,
 } from "../localized-equipment-modifier";
 import { type ToolModifier, toolModifierSchema } from "./tool-modifier";
@@ -9,8 +9,10 @@ import { type ToolModifier, toolModifierSchema } from "./tool-modifier";
 // Localized Tool Modifier
 //------------------------------------------------------------------------------
 
-export const localizedToolModifierSchema =
-  createLocalizedEquipmentModifierSchema(toolModifierSchema).extend({});
+export const localizedToolModifierSchema = localizedEquipmentModifierSchema(
+  toolModifierSchema,
+  z.literal("tool_modifier"),
+).extend({});
 
 export type LocalizedToolModifier = z.infer<typeof localizedToolModifierSchema>;
 

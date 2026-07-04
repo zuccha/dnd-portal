@@ -25,6 +25,7 @@ import { type Background, backgroundSchema } from "./background";
 
 export const localizedBackgroundSchema = localizedResourceSchema(
   backgroundSchema,
+  z.literal("background"),
 ).extend({
   ability_scores: z.string(),
   feat: z.string(),

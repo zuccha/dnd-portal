@@ -42,6 +42,7 @@ import { type Creature, creatureSchema } from "./creature";
 
 export const localizedCreatureSchema = localizedResourceSchema(
   creatureSchema,
+  z.literal("creature"),
 ).extend({
   alignment: z.string(),
   habitats: z.string(),

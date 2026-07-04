@@ -12,12 +12,14 @@ import type { Resource } from "./resource";
 
 export const localizedResourceSchema = <R extends Resource>(
   rawSchema: ZodType<R>,
+  kindSchema: ZodType<R["kind"]>,
 ) =>
   z.object({
     _raw: rawSchema,
     descriptor: z.string(),
     details: z.string(),
     id: z.uuid(),
+    kind: kindSchema,
     name: z.string(),
     page: z.string(),
     source: z.string(),
@@ -46,6 +48,7 @@ export function useLocalizeResource<R extends Resource>(): (
         descriptor: "",
         details: "",
         id: resource.id,
+        kind: resource.kind,
         name: translate(resource.name, lang) || t("name.missing"),
         page: page ? ti("page", `${page}`) : "",
         source: resource.source_code,
