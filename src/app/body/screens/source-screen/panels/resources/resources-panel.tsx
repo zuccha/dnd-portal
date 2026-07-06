@@ -23,7 +23,6 @@ import {
 } from "./resources-album";
 import { createResourcesContext } from "./resources-context";
 import { type ResourcesFiltersExtra } from "./resources-filters";
-import { createResourcesPrintMode } from "./resources-print-mode";
 import { createResourcesSidebar } from "./resources-sidebar";
 import {
   type ResourcesTableExtra,
@@ -65,14 +64,8 @@ export function createResourcesPanel<
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
 
-  const ResourcesPrintMode = createResourcesPrintMode(store, context, album);
-
   return function ResourcesPanel({ sourceId }: { sourceId: string }) {
     const view = context.useView();
-    const printMode = context.usePrintMode();
-
-    if (printMode)
-      return <ResourcesPrintMode flex={1} h="full" sourceId={sourceId} />;
 
     return (
       <HStack

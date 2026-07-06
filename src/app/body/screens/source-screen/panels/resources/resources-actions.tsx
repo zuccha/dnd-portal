@@ -4,6 +4,10 @@ import { useCallback } from "react";
 import YAML from "yaml";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
+import {
+  type PrintDeckEntryInput,
+  printDeck,
+} from "~/models/print-deck/print-deck-store";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -42,6 +46,8 @@ export function createResourcesActions<
     useLocalizeResource,
   } = store;
 
+  const { usePaletteName } = context;
+
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
     const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
     const canEdit = useCanEditSourceResources(sourceId);
@@ -49,6 +55,7 @@ export function createResourcesActions<
     const selectedFilteredResourceIds =
       useSelectedFilteredResourceIds(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
+    const paletteName = usePaletteName();
 
     const { deselectAllResources, selectAllResources } =
       useResourcesSelectionMethods(sourceId);
@@ -106,8 +113,29 @@ export function createResourcesActions<
     }, [computeSelectedAsYaml]);
 
     const printSelected = useCallback(async () => {
-      context.setPrintMode(true);
-    }, []);
+      const entries = selectedFilteredResourceIds
+        .map(store.getResource)
+        .filter((resource) => resource !== undefined)
+        .map(localizeResource)
+        .map((localizedResource) => ({
+          lang,
+          localized_resource: localizedResource,
+          palette_name: paletteName,
+        }));
+      const count = entries.length;
+      printDeck.addEntries(entries as PrintDeckEntryInput[]);
+      toaster.info({
+        description: tpi("print.message.description", count, `${count}`),
+        title: t("print.message.title"),
+      });
+    }, [
+      lang,
+      localizeResource,
+      paletteName,
+      selectedFilteredResourceIds,
+      t,
+      tpi,
+    ]);
 
     const removeSelected = useCallback(async () => {
       const selectedResources = selectedFilteredResourceIds
@@ -301,6 +329,18 @@ const i18nContext = {
     en: "Print selected",
     it: "Stampa selezionati",
   },
+  "print.message.description/*": {
+    en: "<1> resources have been added to the print deck.",
+    it: "<1> risorse sono state aggiunte al mazzo di stampa.",
+  },
+  "print.message.description/1": {
+    en: "<1> resource has been added to the print deck.",
+    it: "<1> risorsa è stata aggiunta al mazzo di stampa.",
+  },
+  "print.message.title": {
+    en: "Added to print deck",
+    it: "Aggiunto al mazzo di stampa.",
+  },
   "remove": {
     en: "Delete selected",
     it: "Elimina selezionati",
@@ -321,7 +361,6 @@ const i18nContext = {
     en: "An error occurred while deleting the resource.",
     it: "Si è verificato un errore durante la rimozione della risorsa.",
   },
-
   "remove.error.title": {
     en: "Remove failed!",
     it: "Rimozione fallita!",

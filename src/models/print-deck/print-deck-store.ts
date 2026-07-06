@@ -30,6 +30,23 @@ const printDeckStore = createLocalStore<PrintDeckEntry[]>(
 );
 
 //------------------------------------------------------------------------------
+// Add Entries
+//------------------------------------------------------------------------------
+
+function addEntries(entries: PrintDeckEntryInput[]): string[] {
+  const ids: string[] = [];
+  printDeckStore.set((prev) => [
+    ...prev,
+    ...entries.map((entry) => {
+      const id = createUuid();
+      ids.push(id);
+      return { ...structuredClone(entry), id };
+    }),
+  ]);
+  return ids;
+}
+
+//------------------------------------------------------------------------------
 // Add Entry
 //------------------------------------------------------------------------------
 
@@ -130,6 +147,7 @@ function updateEntry(entryId: string, nextEntry: PrintDeckEntry): void {
 //------------------------------------------------------------------------------
 
 export const printDeck = {
+  addEntries,
   addEntry,
   clearEntries,
   duplicateEntry,

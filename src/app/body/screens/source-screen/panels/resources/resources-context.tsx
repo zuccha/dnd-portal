@@ -57,8 +57,6 @@ export function createResourcesContext<R extends Resource>(
     resourcesContextCardModeSchema.parse,
   );
 
-  const printModeStore = createMemoryStore<boolean>(`${id}.print_mode`, false);
-
   const resourceExpansionStore = createMemoryStoreSet<string, boolean>(
     `${id}.resource_expansion`,
   );
@@ -82,7 +80,6 @@ export function createResourcesContext<R extends Resource>(
     setCreatedResource: createdResourceStore.set,
     setEditedResource: editedResourceStore.set,
     setPaletteName: paletteNameStore.set,
-    setPrintMode: printModeStore.set,
     setResourceExpansion: resourceExpansionStore.set,
     setShowImage: showImageStore.set,
     setView: viewStore.set,
@@ -91,7 +88,6 @@ export function createResourcesContext<R extends Resource>(
     useCreatedResource: createdResourceStore.useValue,
     useEditedResource: editedResourceStore.useValue,
     usePaletteName: paletteNameStore.useValue,
-    usePrintMode: printModeStore.useValue,
     useResourceExpansion: resourceExpansionStore.useValue,
     useShowImage: showImageStore.useValue,
     useView: viewStore.useValue,
