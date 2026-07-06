@@ -6,6 +6,7 @@ import {
   PrinterIcon,
   Trash2Icon,
 } from "lucide-react";
+import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import Button from "~/ui/button";
@@ -13,6 +14,7 @@ import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
 import SectionHeading from "~/ui/section-heading";
 import { type PaletteName, palettes } from "~/utils/palette";
+import PrintDeckPrintMode from "./print-deck-print-mode";
 
 //------------------------------------------------------------------------------
 // Print Deck Panel
@@ -21,6 +23,7 @@ import { type PaletteName, palettes } from "~/utils/palette";
 export default function PrintDeckPanel() {
   const { t, tpi } = useI18nLangContext(i18nContext);
   const entries = printDeck.useEntries();
+  const [printMode, setPrintMode] = useState(false);
 
   if (!entries.length)
     return (
@@ -31,6 +34,16 @@ export default function PrintDeckPanel() {
         h="full"
         subtitle={t("empty.subtitle")}
         title={t("empty.title")}
+      />
+    );
+
+  if (printMode)
+    return (
+      <PrintDeckPrintMode
+        entries={entries}
+        flex={1}
+        h="full"
+        onClose={() => setPrintMode(false)}
       />
     );
 
@@ -60,7 +73,7 @@ export default function PrintDeckPanel() {
           >
             {t("clear")}
           </Button>
-          <Button disabled size="sm">
+          <Button onClick={() => setPrintMode(true)} size="sm">
             {t("print")}
           </Button>
         </HStack>
