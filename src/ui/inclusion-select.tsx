@@ -83,6 +83,7 @@ export default function InclusionSelect({
             <IconButton
               Icon={XIcon}
               disabled={count === 0}
+              label=""
               onClick={reset}
               position="absolute"
               right={0}

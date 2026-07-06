@@ -30,6 +30,7 @@ export default function Input({
         value.length > 0 && (
           <IconButton
             Icon={XIcon}
+            label=""
             me={-2}
             onClick={() => onValueChange?.("")}
             rounded="full"

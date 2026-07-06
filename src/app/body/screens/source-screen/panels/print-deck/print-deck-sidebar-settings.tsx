@@ -124,6 +124,7 @@ export default function PrintDeckSidebarSettings({
           <IconButton
             Icon={HelpCircleIcon}
             h={5}
+            label={t("help")}
             minW={5}
             onClick={onClickPrintQualityHelp}
             size="xs"

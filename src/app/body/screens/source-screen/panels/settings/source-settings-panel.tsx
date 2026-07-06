@@ -318,6 +318,7 @@ function SourceRelationEditor({
               <IconButton
                 Icon={XIcon}
                 disabled={disabled}
+                label={t("remove")}
                 onClick={() => removeSource(source.id)}
                 size="xs"
                 variant="ghost"
@@ -397,6 +398,10 @@ const i18nContext = {
   "read_only": {
     en: "You can view these relationships, but only source admins can edit them.",
     it: "Puoi visualizzare queste relazioni, ma solo gli amministratori della fonte possono modificarle.",
+  },
+  "remove": {
+    en: "Remove",
+    it: "Rimuovi",
   },
   "requires": {
     en: "Requires",

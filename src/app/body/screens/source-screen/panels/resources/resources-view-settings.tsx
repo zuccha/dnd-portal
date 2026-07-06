@@ -51,6 +51,7 @@ export function createResourcesViewSettings<
       <Section
         action={
           <BinaryButton
+            labels={[t("view.list"), t("view.cards")]}
             onValueChange={context.setView}
             options={viewOptions}
             value={view}
@@ -127,31 +128,39 @@ const viewOptions: BinaryButtonProps<"table", "cards">["options"] = [
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  accent_color: {
+  "accent_color": {
     en: "Color",
     it: "Colore",
   },
-  card_mode: {
+  "card_mode": {
     en: "Cards",
     it: "Carte",
   },
-  card_mode_paginated: {
+  "card_mode_paginated": {
     en: "Paginated",
     it: "Paginate",
   },
-  card_mode_scroll: {
+  "card_mode_scroll": {
     en: "Scrollable",
     it: "Scorrevoli",
   },
-  heading: {
+  "heading": {
     en: "View",
     it: "Vista",
   },
-  show_images: {
+  "show_images": {
     en: "Show images",
     it: "Mostra immagini",
   },
-  zoom: {
+  "view.cards": {
+    en: "Cards",
+    it: "Carte",
+  },
+  "view.list": {
+    en: "List",
+    it: "Lista",
+  },
+  "zoom": {
     en: "Zoom",
     it: "Zoom",
   },

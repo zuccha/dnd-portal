@@ -87,6 +87,7 @@ export function createResourcesFilters<
           <IconButton
             Icon={FunnelXIcon}
             disabled={!hasFilters && !hasSourcesFilter}
+            label={t("clear_filters")}
             onClick={clearFilters}
             size="xs"
             title={t("clear")}
@@ -124,6 +125,10 @@ const i18nContext = {
   apply_filters: {
     en: "Apply Filters",
     it: "Applica filtri",
+  },
+  clear_filters: {
+    en: "Clear Filters",
+    it: "Svuota filtri",
   },
   heading: {
     en: "Filters",

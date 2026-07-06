@@ -229,6 +229,7 @@ export function createResourceCardInteractive<
                 Icon={EditIcon}
                 _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
                 className="light"
+                label={t("edit")}
                 onPointerDown={(e) => {
                   e.stopPropagation();
                   edit();
@@ -241,10 +242,10 @@ export function createResourceCardInteractive<
               <IconButton
                 Icon={action.icon}
                 _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
-                aria-label={translate(action.label, lang)}
                 className="light"
                 disabled={action.isDisabled?.(localizedResource._raw)}
                 key={i}
+                label={translate(action.label, lang)}
                 onPointerDown={(e) => {
                   e.stopPropagation();
                   if (action.isDisabled?.(localizedResource._raw)) return;
@@ -257,8 +258,8 @@ export function createResourceCardInteractive<
             <IconButton
               Icon={PrinterIcon}
               _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
-              aria-label={t("print_deck.add")}
               className="light"
+              label={t("print_deck.add")}
               onPointerDown={(e) => {
                 e.stopPropagation();
                 addToPrintDeck();
@@ -271,6 +272,7 @@ export function createResourceCardInteractive<
             Icon={selected ? SquareCheckIcon : SquareIcon}
             _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
             _groupHover={{ visibility: "visible" }}
+            label={selected ? t("selection.deselect") : t("selection.select")}
             onPointerDown={(e) => {
               e.stopPropagation();
               setResourceSelection(!selected);
@@ -313,6 +315,10 @@ export function createResourceCardInteractive<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "edit": {
+    en: "Edit",
+    it: "Modifica",
+  },
   "print_deck.add": {
     en: "Add to print deck",
     it: "Aggiungi al mazzo di stampa",
@@ -320,6 +326,14 @@ const i18nContext = {
   "print_deck.added": {
     en: "Added to print deck",
     it: "Aggiunto al mazzo di stampa",
+  },
+  "selection.deselect": {
+    en: "Deselect",
+    it: "Deseleziona",
+  },
+  "selection.select": {
+    en: "Select",
+    it: "Seleziona",
   },
   "variant": {
     en: "Variant",

@@ -32,8 +32,8 @@ export default function UserButton() {
           <Menu.Trigger asChild>
             <IconButton
               Icon={EllipsisIcon}
-              aria-label="Settings"
               display={{ base: "inline-flex", md: "none" }}
+              label={t("settings")}
               size="sm"
               variant="ghost"
             />
@@ -101,5 +101,9 @@ const i18nContext = {
   "button.signup": {
     en: "Register",
     it: "Registrati",
+  },
+  "settings": {
+    en: "Settings",
+    it: "Impostazioni",
   },
 };

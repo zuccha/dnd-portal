@@ -132,6 +132,7 @@ function StartingEquipmentGroupEditor({
       >
         {options.map((option, i) => (
           <StartingEquipmentOptionEditor
+            iconLabel={t("remove")}
             key={option.option}
             label={numberToLetter(i)}
             onOptionChange={(o) =>
@@ -154,19 +155,21 @@ function StartingEquipmentGroupEditor({
 //------------------------------------------------------------------------------
 
 type StartingEquipmentOptionEditorProps = {
-  sourceId: string;
+  iconLabel: string;
   label: string;
   onOptionChange: (option: StartingEquipmentOption) => void;
   onOptionRemove: () => void;
   option: StartingEquipmentOption;
+  sourceId: string;
 };
 
 function StartingEquipmentOptionEditor({
-  sourceId,
+  iconLabel,
   label,
   onOptionChange,
   onOptionRemove,
   option,
+  sourceId,
 }: StartingEquipmentOptionEditorProps) {
   return (
     <>
@@ -180,7 +183,12 @@ function StartingEquipmentOptionEditor({
         withinDialog
       />
 
-      <IconButton Icon={XIcon} onClick={onOptionRemove} variant="ghost" />
+      <IconButton
+        Icon={XIcon}
+        label={iconLabel}
+        onClick={onOptionRemove}
+        variant="ghost"
+      />
     </>
   );
 }
@@ -217,5 +225,9 @@ const i18nContext = {
   "option.add": {
     en: "Add Option",
     it: "Aggiungi Opzione",
+  },
+  "remove": {
+    en: "Remove",
+    it: "Rimuovi",
   },
 };

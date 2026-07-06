@@ -122,6 +122,7 @@ export default function SignInScreen() {
 
       <IconButton
         Icon={ArrowLeftIcon}
+        label={t("back")}
         left={4}
         onClick={() => history.pushState({}, "", Route._)}
         position="absolute"
@@ -145,6 +146,10 @@ const i18nContext = {
   "already_registered": {
     en: "Already have an account?",
     it: "Hai già un account?",
+  },
+  "back": {
+    en: "Back to home",
+    it: "Torna alla home",
   },
   "discord": {
     en: "Use Discord",

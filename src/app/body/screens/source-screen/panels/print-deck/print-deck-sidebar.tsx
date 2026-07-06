@@ -95,10 +95,12 @@ export default function PrintDeckSidebar() {
         Icon={SlidersHorizontalIcon}
         bgColor="bg"
         display={{ base: "none", md: "inline-flex" }}
+        label={sidebarCollapsed ? t("sidebar.open") : t("sidebar.close")}
         left={0}
         onClick={() => setSidebarCollapsed((prev) => !prev)}
         position="absolute"
         size="sm"
+        tooltipPositioning={{ placement: "left" }}
         top={5}
         transform="translateX(-50%)"
         variant="outline"
@@ -182,5 +184,13 @@ const i18nContext = {
   "help.print_quality.standard.title": {
     en: "Standard Print",
     it: "Stampa Standard",
+  },
+  "sidebar.close": {
+    en: "Close sidebar",
+    it: "Chiudi sidebar",
+  },
+  "sidebar.open": {
+    en: "Open sidebar",
+    it: "Apri sidebar",
   },
 };

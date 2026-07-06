@@ -301,8 +301,8 @@ export function createEquipmentVariantDialog<
 
                     <IconButton
                       Icon={ArrowUpIcon}
-                      aria-label={t("move_up")}
                       disabled={index <= 0}
+                      label={t("move_up")}
                       onClick={() =>
                         setOrderedIds((prev) =>
                           moveModifier(prev, modifier.id, -1),
@@ -314,8 +314,8 @@ export function createEquipmentVariantDialog<
 
                     <IconButton
                       Icon={ArrowDownIcon}
-                      aria-label={t("move_down")}
                       disabled={index < 0 || index >= orderedIds.length - 1}
+                      label={t("move_down")}
                       onClick={() =>
                         setOrderedIds((prev) =>
                           moveModifier(prev, modifier.id, 1),

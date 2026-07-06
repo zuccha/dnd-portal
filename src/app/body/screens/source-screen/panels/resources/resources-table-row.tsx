@@ -209,7 +209,7 @@ export function createResourcesTableRow<
             <Table.Cell textAlign="center" w="1%" whiteSpace="nowrap">
               <IconButton
                 Icon={PrinterIcon}
-                aria-label={t("print_deck.add")}
+                label={t("print_deck.add")}
                 onClick={addToPrintDeck}
                 size="2xs"
                 variant="ghost"
@@ -218,9 +218,9 @@ export function createResourcesTableRow<
               {visibleActions.map((action, i) => (
                 <IconButton
                   Icon={action.icon}
-                  aria-label={translate(action.label, lang)}
                   disabled={action.isDisabled?.(localizedResource._raw)}
                   key={i}
+                  label={translate(action.label, lang)}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

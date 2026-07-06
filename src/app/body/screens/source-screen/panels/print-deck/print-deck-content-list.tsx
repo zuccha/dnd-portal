@@ -7,7 +7,6 @@ import {
   RatIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import {
@@ -89,7 +88,7 @@ function PrintDeckEntryRow({
   paletteName,
   source,
 }: PrintDeckEntryRowProps) {
-  const [lang] = useI18nLang();
+  const { lang, t } = useI18nLangContext(i18nContext);
   const translateKind = useTranslateResourceKind(lang);
 
   return (
@@ -119,6 +118,7 @@ function PrintDeckEntryRow({
         <IconButton
           Icon={ArrowUpIcon}
           disabled={!canMoveUp}
+          label={t("move_up")}
           onClick={onMoveUp}
           size="xs"
           variant="ghost"
@@ -126,6 +126,7 @@ function PrintDeckEntryRow({
         <IconButton
           Icon={ArrowDownIcon}
           disabled={!canMoveDown}
+          label={t("move_down")}
           onClick={onMoveDown}
           size="xs"
           variant="ghost"
@@ -133,12 +134,14 @@ function PrintDeckEntryRow({
         <IconButton
           Icon={EditIcon}
           disabled
+          label={t("edit")}
           onClick={() => {}}
           size="xs"
           variant="ghost"
         />
         <IconButton
           Icon={CopyPlusIcon}
+          label={t("clone")}
           onClick={onDuplicate}
           size="xs"
           variant="ghost"
@@ -146,6 +149,7 @@ function PrintDeckEntryRow({
         <IconButton
           Icon={Trash2Icon}
           colorPalette="red"
+          label={t("remove")}
           onClick={onRemove}
           size="xs"
           variant="ghost"
@@ -160,6 +164,14 @@ function PrintDeckEntryRow({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "clone": {
+    en: "Clone",
+    it: "Duplica",
+  },
+  "edit": {
+    en: "Edit",
+    it: "Modifica",
+  },
   "empty.subtitle": {
     en: "Add resources to the print deck and they will appear here.",
     it: "Aggiungi risorse alla coda di stampa e visualizzale qui.",
@@ -167,5 +179,17 @@ const i18nContext = {
   "empty.title": {
     en: "The print deck is empty",
     it: "La coda di stampa è vuota",
+  },
+  "move_down": {
+    en: "Move down",
+    it: "Sposta sotto",
+  },
+  "move_up": {
+    en: "Move up",
+    it: "Sposta sopra",
+  },
+  "remove": {
+    en: "Remove",
+    it: "Rimuovi",
   },
 };

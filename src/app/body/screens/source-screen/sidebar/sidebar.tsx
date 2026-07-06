@@ -1,5 +1,6 @@
 import { HStack, Separator, VStack } from "@chakra-ui/react";
 import { MenuIcon } from "lucide-react";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSelectedSourceId } from "~/models/sources";
 import { useSelectedSourceVersion } from "~/models/types/source-version";
 import IconButton from "~/ui/icon-button";
@@ -14,6 +15,7 @@ import SystemSelect from "./system-select";
 //------------------------------------------------------------------------------
 
 export default function Sidebar() {
+  const { t } = useI18nLangContext(i18nContext);
   const [sourceId] = useSelectedSourceId();
   const [selectedSourceVersions] = useSelectedSourceVersion();
   const collapsed = useSidebarCollapsed();
@@ -35,10 +37,12 @@ export default function Sidebar() {
         Icon={MenuIcon}
         bgColor="bg"
         display={{ base: "none", md: "inline-flex" }}
+        label={collapsed ? t("sidebar.open") : t("sidebar.close")}
         onClick={() => setCollapsed((prev) => !prev)}
         position="absolute"
         right={0}
         size="xs"
+        tooltipPositioning={{ placement: "right" }}
         top={5}
         transform="translateX(50%)"
         variant="outline"
@@ -69,3 +73,18 @@ export default function Sidebar() {
     </VStack>
   );
 }
+
+//----------------------------------------------------------------------------
+// I18n Context
+//----------------------------------------------------------------------------
+
+const i18nContext = {
+  "sidebar.close": {
+    en: "Close sidebar",
+    it: "Chiudi sidebar",
+  },
+  "sidebar.open": {
+    en: "Open sidebar",
+    it: "Apri sidebar",
+  },
+};

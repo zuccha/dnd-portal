@@ -10,12 +10,14 @@ export type BinaryButtonProps<
   O1 extends string,
   O2 extends string,
 > = StackProps & {
+  labels: [string, string];
   onValueChange: (value: O1 | O2) => void;
   options: [{ Icon: LucideIcon; value: O1 }, { Icon: LucideIcon; value: O2 }];
   value: O1 | O2;
 };
 
 export default function BinaryButton<O1 extends string, O2 extends string>({
+  labels,
   onValueChange,
   options,
   value,
@@ -39,6 +41,7 @@ export default function BinaryButton<O1 extends string, O2 extends string>({
       />
       <IconButton
         Icon={options[0].Icon}
+        label={labels[0]}
         mr={-1.5}
         onClick={() => onValueChange(options[0].value)}
         size="sm"
@@ -46,6 +49,7 @@ export default function BinaryButton<O1 extends string, O2 extends string>({
       />
       <IconButton
         Icon={options[1].Icon}
+        label={labels[1]}
         ml={-1.5}
         onClick={() => onValueChange(options[1].value)}
         size="sm"

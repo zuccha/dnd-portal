@@ -154,23 +154,23 @@ export default function FeatureEntriesEditor({
               <HStack flexShrink={0} gap={0}>
                 <IconButton
                   Icon={ArrowUpIcon}
-                  aria-label={t("move_up")}
                   disabled={index === 0}
+                  label={t("move_up")}
                   onClick={() => moveFeature(index, -1)}
                   size="xs"
                   variant="ghost"
                 />
                 <IconButton
                   Icon={ArrowDownIcon}
-                  aria-label={t("move_down")}
                   disabled={index === value.length - 1}
+                  label={t("move_down")}
                   onClick={() => moveFeature(index, 1)}
                   size="xs"
                   variant="ghost"
                 />
                 <IconButton
                   Icon={XIcon}
-                  aria-label={t("remove")}
+                  label={t("remove")}
                   onClick={() => removeFeature(index)}
                   size="xs"
                   variant="ghost"

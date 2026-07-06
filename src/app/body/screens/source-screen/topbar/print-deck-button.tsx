@@ -1,5 +1,6 @@
 import { Box, Span } from "@chakra-ui/react";
 import { PrinterIcon } from "lucide-react";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
@@ -12,6 +13,8 @@ import IconButton from "~/ui/icon-button";
 const { useEntries: usePrintDeckEntries } = printDeck;
 
 export default function PrintDeckButton() {
+  const { t } = useI18nLangContext(i18nContext);
+
   const route = useRoute();
   const printDeckEntries = usePrintDeckEntries();
   const printDeckCount = printDeckEntries.length;
@@ -22,6 +25,7 @@ export default function PrintDeckButton() {
       <IconButton
         Icon={PrinterIcon}
         bgColor={Route.PrintDeck === route ? "bg.emphasized" : undefined}
+        label={t("open_print_deck")}
         onClick={() => history.pushState({}, "", Route.PrintDeck)}
         size="sm"
         variant="ghost"
@@ -48,3 +52,14 @@ export default function PrintDeckButton() {
     </Box>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  open_print_deck: {
+    en: "Open print deck",
+    it: "Apri pagina di stampa",
+  },
+};

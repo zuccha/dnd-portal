@@ -1,5 +1,6 @@
 import { HStack, Span, type StackProps } from "@chakra-ui/react";
 import { MenuIcon, SlidersHorizontalIcon } from "lucide-react";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
@@ -17,6 +18,8 @@ import UserButton from "./user-button";
 export type TopbarProps = StackProps;
 
 export default function Topbar() {
+  const { t } = useI18nLangContext(i18nContext);
+
   const route = useRoute();
   const setSidebarCollapsed = useSidebarSetCollapsed();
   const setRightPanelCollapsed = useRightPanelSetCollapsed();
@@ -42,6 +45,7 @@ export default function Topbar() {
           Icon={MenuIcon}
           display={{ base: "inline-flex", md: "none" }}
           flexShrink={0}
+          label={t("menu")}
           onClick={() => setSidebarCollapsed((prev) => !prev)}
           size="sm"
           variant="ghost"
@@ -60,6 +64,7 @@ export default function Topbar() {
           <IconButton
             Icon={SlidersHorizontalIcon}
             display={{ base: "inline-flex", md: "none" }}
+            label={t("sidebar")}
             onClick={() => setRightPanelCollapsed((prev) => !prev)}
             size="sm"
             variant="ghost"
@@ -75,3 +80,22 @@ export default function Topbar() {
 }
 
 Topbar.height = "3em";
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  menu: {
+    en: "Menu",
+    it: "Menu",
+  },
+  open_print_deck: {
+    en: "Open print deck",
+    it: "Apri pagina di stampa",
+  },
+  sidebar: {
+    en: "Sidebar",
+    it: "Sidebar",
+  },
+};

@@ -64,6 +64,7 @@ export default function ResourceDialog({
                 <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
                   <IconButton
                     Icon={EllipsisVerticalIcon}
+                    label={t("actions")}
                     size="xs"
                     variant="ghost"
                   />
@@ -133,6 +134,10 @@ export default function ResourceDialog({
 //----------------------------------------------------------------------------
 
 const i18nContext = {
+  "actions": {
+    en: "Actions",
+    it: "Azioni",
+  },
   "cancel": {
     en: "Cancel",
     it: "Cancella",

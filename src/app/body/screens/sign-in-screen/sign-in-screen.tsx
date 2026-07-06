@@ -106,6 +106,7 @@ export default function SignInScreen() {
       <IconButton
         Icon={ArrowLeftIcon}
         disabled={loading}
+        label={t("back")}
         left={4}
         onClick={() => history.pushState({}, "", Route._)}
         position="absolute"
@@ -126,6 +127,10 @@ const DiscordIcon = chakra(RawDiscordIcon);
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "back": {
+    en: "Back to home",
+    it: "Torna alla home",
+  },
   "discord": {
     en: "Use Discord",
     it: "Usa Discord",
