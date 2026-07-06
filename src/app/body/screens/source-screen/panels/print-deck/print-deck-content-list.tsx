@@ -3,6 +3,7 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   CopyPlusIcon,
+  EditIcon,
   RatIcon,
   Trash2Icon,
 } from "lucide-react";
@@ -126,6 +127,13 @@ function PrintDeckEntryRow({
           Icon={ArrowDownIcon}
           disabled={!canMoveDown}
           onClick={onMoveDown}
+          size="xs"
+          variant="ghost"
+        />
+        <IconButton
+          Icon={EditIcon}
+          disabled
+          onClick={() => {}}
           size="xs"
           variant="ghost"
         />
