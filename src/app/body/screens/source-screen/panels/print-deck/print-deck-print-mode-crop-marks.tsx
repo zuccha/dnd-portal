@@ -3,10 +3,10 @@ import { Fragment } from "react";
 import { range } from "~/ui/array";
 
 //------------------------------------------------------------------------------
-// Print Deck Crop Marks
+// Print Deck Print Mode Crop Marks
 //------------------------------------------------------------------------------
 
-export type PrintDeckCropMarksProps = {
+export type PrintDeckPrintModeCropMarksProps = {
   bleedX: number;
   bleedY: number;
   cardH: number;
@@ -19,7 +19,7 @@ export type PrintDeckCropMarksProps = {
   rows: number;
 };
 
-export default function PrintDeckCropMarks({
+export default function PrintDeckPrintModeCropMarks({
   bleedX,
   bleedY,
   cardH,
@@ -30,7 +30,7 @@ export default function PrintDeckCropMarks({
   offsetX,
   offsetY,
   rows,
-}: PrintDeckCropMarksProps) {
+}: PrintDeckPrintModeCropMarksProps) {
   return (
     <>
       <CropMarksH
@@ -173,5 +173,9 @@ function CropMarksV({
     </Fragment>
   );
 }
+
+//------------------------------------------------------------------------------
+// Constants
+//------------------------------------------------------------------------------
 
 const px1 = 1 / 96;
