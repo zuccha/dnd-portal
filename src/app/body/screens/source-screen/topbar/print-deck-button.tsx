@@ -21,7 +21,7 @@ export default function PrintDeckButton() {
     <Box position="relative">
       <IconButton
         Icon={PrinterIcon}
-        disabled={!printDeckCount || route === Route.PrintDeck}
+        bgColor={Route.PrintDeck === route ? "bg.emphasized" : undefined}
         onClick={() => history.pushState({}, "", Route.PrintDeck)}
         size="sm"
         variant="ghost"
@@ -35,7 +35,6 @@ export default function PrintDeckButton() {
           fontWeight="bold"
           lineHeight={1}
           minW={4}
-          opacity={route === Route.PrintDeck ? 0.6 : 1}
           position="absolute"
           px={1}
           py={0.5}
