@@ -13,7 +13,7 @@ import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";
 import CaptionInput from "~/ui/caption-input";
 import Checkbox from "~/ui/checkbox";
 import NumberInput from "~/ui/number-input";
-import SectionHeading from "~/ui/section-heading";
+import Section from "~/ui/section";
 import Select from "~/ui/select";
 import { usePaletteNameOptions } from "~/utils/palette";
 import type { ResourcesContext } from "./resources-context";
@@ -48,20 +48,19 @@ export function createResourcesViewSettings<
     const paletteNameOptions = usePaletteNameOptions();
 
     return (
-      <VStack align="flex-start" gap={3} px={6} w="full">
-        <HStack h={8} justify="space-between" w="full">
-          <SectionHeading>{t("heading")}</SectionHeading>
-
+      <Section
+        action={
           <BinaryButton
             onValueChange={context.setView}
             options={viewOptions}
             value={view}
             zoom={0.8}
           />
-        </HStack>
-
+        }
+        title={t("heading")}
+      >
         {view === "cards" && (
-          <VStack align="flex-start" pb={3} w="full">
+          <VStack align="flex-start" w="full">
             <HStack w="full" wrap="wrap">
               <CaptionInput caption={t("zoom")} flex={1}>
                 <NumberInput
@@ -109,7 +108,7 @@ export function createResourcesViewSettings<
             )}
           </VStack>
         )}
-      </VStack>
+      </Section>
     );
   };
 }

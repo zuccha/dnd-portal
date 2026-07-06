@@ -1,4 +1,4 @@
-import { HStack, Menu, Portal, VStack } from "@chakra-ui/react";
+import { Menu, Portal } from "@chakra-ui/react";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useCallback } from "react";
 import YAML from "yaml";
@@ -19,7 +19,7 @@ import type { ResourceStore } from "~/models/resources/resource-store";
 import { useCanEditSourceResources } from "~/models/sources";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
-import SectionHeading from "~/ui/section-heading";
+import Section from "~/ui/section";
 import { toaster } from "~/ui/toaster";
 import { downloadFile } from "~/utils/download";
 import type { ResourcesContext } from "./resources-context";
@@ -162,10 +162,8 @@ export function createResourcesActions<
       selectedFilteredResourceIds.length === filteredResourceIds.length;
 
     return (
-      <VStack px={6} w="full">
-        <HStack h={8} justify="space-between" w="full">
-          <SectionHeading>{t("actions")}</SectionHeading>
-
+      <Section
+        action={
           <Menu.Root>
             <Menu.Trigger asChild focusRing="outside" mr={-2} rounded="full">
               <IconButton
@@ -268,8 +266,9 @@ export function createResourcesActions<
               </Menu.Positioner>
             </Portal>
           </Menu.Root>
-        </HStack>
-
+        }
+        title={t("actions")}
+      >
         <Button
           disabled={!hasSelection}
           onClick={printSelected}
@@ -279,7 +278,7 @@ export function createResourcesActions<
         >
           {t("print")}
         </Button>
-      </VStack>
+      </Section>
     );
   };
 }
