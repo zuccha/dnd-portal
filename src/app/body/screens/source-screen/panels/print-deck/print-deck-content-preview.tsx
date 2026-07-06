@@ -1,8 +1,8 @@
 import { Box, Flex, VStack } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { printDeck } from "~/models/print-deck/print-deck-store";
-import { range } from "~/ui/array";
 import { BleedContext } from "~/ui/bleed-context";
+import { range } from "~/utils/array";
 import { palettes } from "~/utils/palette";
 import {
   paperSizes,

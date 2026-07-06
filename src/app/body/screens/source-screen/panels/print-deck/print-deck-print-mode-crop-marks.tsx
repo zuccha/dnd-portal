@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { Fragment } from "react";
-import { range } from "~/ui/array";
+import { range } from "~/utils/array";
 
 //------------------------------------------------------------------------------
 // Print Deck Print Mode Crop Marks

@@ -3,8 +3,8 @@ import { SquareIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Item } from "~/models/resources/equipment/items/item";
 import type { LocalizedItem } from "~/models/resources/equipment/items/localized-item";
-import { range } from "~/ui/array";
 import Icon from "~/ui/icon";
+import { range } from "~/utils/array";
 import type { ResourcePokerCardProps } from "../../resource-poker-card";
 import { EquipmentCard } from "../equipment-card";
 

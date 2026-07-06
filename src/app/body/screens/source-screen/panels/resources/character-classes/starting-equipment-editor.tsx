@@ -6,9 +6,9 @@ import type {
   StartingEquipmentGroup,
   StartingEquipmentOption,
 } from "~/models/resources/character-classes/starting-equipment";
-import { removeItem, replaceItem } from "~/ui/array";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
+import { removeItem, replaceItem } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
 import EquipmentBundleEditor from "../equipment-bundle-editor";
 

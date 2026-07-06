@@ -1,5 +1,5 @@
 import { createRef, useLayoutEffect, useRef, useState } from "react";
-import { dropLast } from "../ui/array";
+import { dropLast } from "../utils/array";
 
 //------------------------------------------------------------------------------
 // Use Paginated Content
