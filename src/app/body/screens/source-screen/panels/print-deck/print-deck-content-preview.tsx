@@ -86,14 +86,16 @@ export default function PrintDeckContentPreview() {
     py: (paperHeight - rows * cardH) / 2,
   };
 
-  const [pagesCounts, setPagesCounts] = useState<Record<string, number>>({});
-
-  const pagesCount = Object.values(pagesCounts).reduce((s, c) => s + c, 0);
-  const papersCount = Math.max(1, Math.ceil(pagesCount / cardsPerPaper));
-
   const [backgroundColorVisible] = useBackgroundColorVisible();
   const [includeEmptyBack] = useIncludeEmptyBack();
   const [showImage] = useShowImage();
+
+  const [pagesCounts, setPagesCounts] = useState<Record<string, number>>({});
+  const pagesCount = entries.reduce((total, entry) => {
+    const count = pagesCounts[entry.id] ?? 0;
+    return total + count + (includeEmptyBack && count % 2 !== 0 ? 1 : 0);
+  }, 0);
+  const papersCount = Math.max(1, Math.ceil(pagesCount / cardsPerPaper));
 
   const albumCardCss = useMemo(() => {
     return {
@@ -210,11 +212,7 @@ export default function PrintDeckContentPreview() {
                   onPageCountChange={(count) => {
                     setPagesCounts((prev) => {
                       const next = { ...prev };
-                      if (count)
-                        next[entry.id] =
-                          count % 2 !== 0 && includeEmptyBack ?
-                            count + 1
-                          : count;
+                      if (count) next[entry.id] = count;
                       else delete next[entry.id];
                       return next;
                     });
