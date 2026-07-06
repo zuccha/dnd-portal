@@ -1,5 +1,5 @@
 import { Badge, Box, Theme, VStack } from "@chakra-ui/react";
-import { BookPlusIcon, EditIcon } from "lucide-react";
+import { EditIcon, PrinterIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -255,7 +255,7 @@ export function createResourceCardInteractive<
             ))}
 
             <IconButton
-              Icon={BookPlusIcon}
+              Icon={PrinterIcon}
               _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
               aria-label={t("print_deck.add")}
               className="light"

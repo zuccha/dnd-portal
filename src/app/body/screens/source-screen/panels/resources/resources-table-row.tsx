@@ -1,9 +1,9 @@
 import { Badge, HStack, Table, VStack, createIcon } from "@chakra-ui/react";
 import {
-  BookPlusIcon,
   EyeClosedIcon,
   EyeIcon,
   type LucideIcon,
+  PrinterIcon,
 } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -208,7 +208,7 @@ export function createResourcesTableRow<
           {hasActions && (
             <Table.Cell textAlign="center" w="1%" whiteSpace="nowrap">
               <IconButton
-                Icon={BookPlusIcon}
+                Icon={PrinterIcon}
                 aria-label={t("print_deck.add")}
                 onClick={addToPrintDeck}
                 size="2xs"
