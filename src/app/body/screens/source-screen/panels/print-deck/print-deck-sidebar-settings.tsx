@@ -92,135 +92,137 @@ export default function PrintDeckSidebarSettings({
 
   return (
     <Section title={t("heading")} w="full">
-      <CaptionInput caption={t("setting.paper_layout.label")} w="full">
-        <Select.Enum
-          onValueChange={setPaperLayout}
-          options={paperLayoutOptions}
-          size="sm"
-          value={paperLayout}
-        />
-      </CaptionInput>
-
-      <CaptionInput caption={t("setting.paper_type.label")} w="full">
-        <Select.Enum
-          onValueChange={setPaperType}
-          options={paperTypeOptions}
-          size="sm"
-          value={paperType}
-        />
-      </CaptionInput>
-
-      <HStack w="full">
-        <CaptionInput caption={t("setting.print_quality.label")} flex={1}>
+      <VStack gap={3} w="full">
+        <CaptionInput caption={t("setting.paper_layout.label")} w="full">
           <Select.Enum
-            onValueChange={setPrintQuality}
-            options={printQualityOptions}
+            onValueChange={setPaperLayout}
+            options={paperLayoutOptions}
             size="sm"
-            value={printQuality}
+            value={paperLayout}
           />
         </CaptionInput>
 
-        <IconButton
-          Icon={HelpCircleIcon}
-          h={5}
-          minW={5}
-          onClick={onClickPrintQualityHelp}
-          size="xs"
-          variant="ghost"
-          w={5}
-        />
-      </HStack>
-
-      <HStack>
-        <Checkbox
-          onValueChange={setBleedVisible}
-          size="sm"
-          value={bleedVisible}
-        />
-        <CaptionInput caption={t("setting.bleed_x.label")}>
-          <NumberInput
-            disabled={!bleedVisible}
-            onValueChange={(x) => setBleedSize((b) => ({ ...b, x }))}
+        <CaptionInput caption={t("setting.paper_type.label")} w="full">
+          <Select.Enum
+            onValueChange={setPaperType}
+            options={paperTypeOptions}
             size="sm"
-            step={0.01}
-            value={bleedSize.x}
+            value={paperType}
           />
         </CaptionInput>
-        <CaptionInput caption={t("setting.bleed_y.label")}>
-          <NumberInput
-            disabled={!bleedVisible}
-            onValueChange={(y) => setBleedSize((b) => ({ ...b, y }))}
-            size="sm"
-            step={0.01}
-            value={bleedSize.y}
-          />
-        </CaptionInput>
-      </HStack>
 
-      <HStack>
-        <Checkbox
-          onValueChange={setPageCropMarksVisible}
-          size="sm"
-          value={pageCropMarksVisible}
-        />
-        <CaptionInput caption={t("setting.page_crop_marks.label")}>
-          <NumberInput
-            disabled={!pageCropMarksVisible}
-            onValueChange={setPageCropMarksLength}
-            size="sm"
-            step={0.05}
-            value={pageCropMarksLength}
-          />
-        </CaptionInput>
-        <ColorPicker
-          onValueChange={setPageCropMarksColor}
-          value={pageCropMarksColor}
-        />
-      </HStack>
+        <HStack w="full">
+          <CaptionInput caption={t("setting.print_quality.label")} flex={1}>
+            <Select.Enum
+              onValueChange={setPrintQuality}
+              options={printQualityOptions}
+              size="sm"
+              value={printQuality}
+            />
+          </CaptionInput>
 
-      <HStack>
-        <Checkbox
-          onValueChange={setCardCropMarksVisible}
-          size="sm"
-          value={cardCropMarksVisible}
-        />
-        <CaptionInput caption={t("setting.card_crop_marks.label")}>
-          <NumberInput
-            disabled={!cardCropMarksVisible}
-            onValueChange={setCardCropMarksLength}
-            size="sm"
-            step={0.05}
-            value={cardCropMarksLength}
+          <IconButton
+            Icon={HelpCircleIcon}
+            h={5}
+            minW={5}
+            onClick={onClickPrintQualityHelp}
+            size="xs"
+            variant="ghost"
+            w={5}
           />
-        </CaptionInput>
-        <ColorPicker
-          onValueChange={setCardCropMarksColor}
-          value={cardCropMarksColor}
-        />
-      </HStack>
+        </HStack>
 
-      <VStack gap={1} w="full">
-        <Checkbox
-          label={t("setting.show_images.label")}
-          onValueChange={setShowImage}
-          size="sm"
-          value={showImage}
-          w="full"
-        />
-        <Checkbox
-          label={t("setting.background_color_visible.label")}
-          onValueChange={setBackgroundColorVisible}
-          size="sm"
-          value={backgroundColorVisible}
-          w="full"
-        />
-        <Checkbox
-          label={t("setting.include_empty_back.label")}
-          onValueChange={setIncludeEmptyBack}
-          size="sm"
-          value={includeEmptyBack}
-          w="full"
-        />
+        <HStack>
+          <Checkbox
+            onValueChange={setBleedVisible}
+            size="sm"
+            value={bleedVisible}
+          />
+          <CaptionInput caption={t("setting.bleed_x.label")}>
+            <NumberInput
+              disabled={!bleedVisible}
+              onValueChange={(x) => setBleedSize((b) => ({ ...b, x }))}
+              size="sm"
+              step={0.01}
+              value={bleedSize.x}
+            />
+          </CaptionInput>
+          <CaptionInput caption={t("setting.bleed_y.label")}>
+            <NumberInput
+              disabled={!bleedVisible}
+              onValueChange={(y) => setBleedSize((b) => ({ ...b, y }))}
+              size="sm"
+              step={0.01}
+              value={bleedSize.y}
+            />
+          </CaptionInput>
+        </HStack>
+
+        <HStack>
+          <Checkbox
+            onValueChange={setPageCropMarksVisible}
+            size="sm"
+            value={pageCropMarksVisible}
+          />
+          <CaptionInput caption={t("setting.page_crop_marks.label")}>
+            <NumberInput
+              disabled={!pageCropMarksVisible}
+              onValueChange={setPageCropMarksLength}
+              size="sm"
+              step={0.05}
+              value={pageCropMarksLength}
+            />
+          </CaptionInput>
+          <ColorPicker
+            onValueChange={setPageCropMarksColor}
+            value={pageCropMarksColor}
+          />
+        </HStack>
+
+        <HStack>
+          <Checkbox
+            onValueChange={setCardCropMarksVisible}
+            size="sm"
+            value={cardCropMarksVisible}
+          />
+          <CaptionInput caption={t("setting.card_crop_marks.label")}>
+            <NumberInput
+              disabled={!cardCropMarksVisible}
+              onValueChange={setCardCropMarksLength}
+              size="sm"
+              step={0.05}
+              value={cardCropMarksLength}
+            />
+          </CaptionInput>
+          <ColorPicker
+            onValueChange={setCardCropMarksColor}
+            value={cardCropMarksColor}
+          />
+        </HStack>
+
+        <VStack gap={1} w="full">
+          <Checkbox
+            label={t("setting.show_images.label")}
+            onValueChange={setShowImage}
+            size="sm"
+            value={showImage}
+            w="full"
+          />
+          <Checkbox
+            label={t("setting.background_color_visible.label")}
+            onValueChange={setBackgroundColorVisible}
+            size="sm"
+            value={backgroundColorVisible}
+            w="full"
+          />
+          <Checkbox
+            label={t("setting.include_empty_back.label")}
+            onValueChange={setIncludeEmptyBack}
+            size="sm"
+            value={includeEmptyBack}
+            w="full"
+          />
+        </VStack>
       </VStack>
     </Section>
   );
