@@ -1,6 +1,4 @@
 import { Separator, VStack } from "@chakra-ui/react";
-import { useCallback } from "react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
   DBResource,
   DBResourceTranslation,
@@ -9,20 +7,13 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import {
-  useApplyResourcesSourcesFilter,
-  useHasResourcesSourcesFilterChanges,
-} from "~/models/resources/resources-sources-filter";
-import Button from "~/ui/button";
 import { useRightPanelCollapsed } from "../../right-panel-state";
 import { createResourcesActions } from "./resources-actions";
 import type { ResourcesContext } from "./resources-context";
-import { createResourcesCounter } from "./resources-counter";
 import {
   type ResourcesFiltersExtra,
   createResourcesFilters,
 } from "./resources-filters";
-import { createResourcesGenericFilters } from "./resources-generic-filters";
 import ResourcesSidebarToggleButton from "./resources-sidebar-toggle-button";
 import { createResourcesViewSettings } from "./resources-view-settings";
 
@@ -52,24 +43,11 @@ export function createResourcesSidebar<
   extra: ResourcesSidebarExtra,
 ) {
   const ResourcesActions = createResourcesActions(store, context);
-  const ResourcesCounter = createResourcesCounter(store, context);
-  const ResourceFilters = createResourcesFilters(store, context, extra);
-  const ResourcesGenericFilters = createResourcesGenericFilters(store, context);
+  const ResourcesFilters = createResourcesFilters(store, context, extra);
   const ResourcesViewSettings = createResourcesViewSettings(store, context);
 
   return function ResourcesSidebar({ sourceId }: ResourcesSidebarProps) {
-    const { t } = useI18nLangContext(i18nContext);
     const collapsed = useRightPanelCollapsed();
-    const applyFilters = store.useApplyFilters();
-    const applySourcesFilter = useApplyResourcesSourcesFilter(sourceId);
-    const hasFilterChanges = store.useHasFilterChanges();
-    const hasSourcesFilterChanges =
-      useHasResourcesSourcesFilterChanges(sourceId);
-
-    const applyAllFilters = useCallback(() => {
-      applyFilters();
-      applySourcesFilter();
-    }, [applyFilters, applySourcesFilter]);
 
     return (
       <VStack
@@ -95,36 +73,10 @@ export function createResourcesSidebar<
           w="full"
         >
           <ResourcesViewSettings sourceId={sourceId} />
-
-          <VStack align="flex-start" gap={3} pb={3} px={6} w="full">
-            <ResourcesGenericFilters sourceId={sourceId} />
-            <ResourceFilters gap={3} sourceId={sourceId} w="full" />
-            <Button
-              disabled={!hasFilterChanges && !hasSourcesFilterChanges}
-              onClick={applyAllFilters}
-              size="sm"
-              w="full"
-            >
-              {t("apply_filters")}
-            </Button>
-            <Separator w="full" />
-            <ResourcesCounter sourceId={sourceId} />
-          </VStack>
-
+          <ResourcesFilters sourceId={sourceId} />
           <ResourcesActions sourceId={sourceId} />
         </VStack>
       </VStack>
     );
   };
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  apply_filters: {
-    en: "Apply Filters",
-    it: "Applica filtri",
-  },
-};
