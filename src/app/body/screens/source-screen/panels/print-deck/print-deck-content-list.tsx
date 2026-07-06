@@ -3,14 +3,17 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   CopyPlusIcon,
+  RatIcon,
   Trash2Icon,
 } from "lucide-react";
 import { useI18nLang } from "~/i18n/i18n-lang";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import {
   type ResourceKind,
   useTranslateResourceKind,
 } from "~/models/types/resource-kind";
+import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
 import { type PaletteName, palettes } from "~/utils/palette";
 
@@ -22,6 +25,18 @@ const { useEntries } = printDeck;
 
 export default function PrintDeckContentList() {
   const entries = useEntries();
+  const { t } = useI18nLangContext(i18nContext);
+
+  if (entries.length === 0) {
+    return (
+      <EmptyState
+        Icon={RatIcon}
+        h="full"
+        subtitle={t("empty.subtitle")}
+        title={t("empty.title")}
+      />
+    );
+  }
 
   return (
     <VStack bgColor="bg.subtle" flex={1} gap={2} h="full" overflow="auto" p={4}>
@@ -131,3 +146,18 @@ function PrintDeckEntryRow({
     </HStack>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  "empty.subtitle": {
+    en: "Add resources to the print deck and they will appear here.",
+    it: "Aggiungi risorse alla coda di stampa e visualizzale qui.",
+  },
+  "empty.title": {
+    en: "The print deck is empty",
+    it: "La coda di stampa è vuota",
+  },
+};

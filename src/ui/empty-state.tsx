@@ -23,7 +23,7 @@ export default function EmptyState({
 }: EmptyStateProps) {
   return (
     <ChakraEmptyState.Root {...rest}>
-      <ChakraEmptyState.Content>
+      <ChakraEmptyState.Content h="full">
         <ChakraEmptyState.Indicator>
           <Icon />
         </ChakraEmptyState.Indicator>

@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
 import { usePrintDeckMode } from "./print-deck";
 import PrintDeckContentList from "./print-deck-content-list";
 import PrintDeckContentPreview from "./print-deck-content-preview";
@@ -20,9 +20,21 @@ export default function PrintDeckPanel() {
       h="full"
       overflow="hidden"
     >
-      {mode === "edit" ?
-        <PrintDeckContentList />
-      : <PrintDeckContentPreview />}
+      <Box flex={1} h="full" overflow="hidden" position="relative">
+        <PrintDeckContentPreview />
+        <Box
+          bgColor="bg.subtle"
+          bottom={0}
+          hidden={mode !== "list"}
+          left={0}
+          position="absolute"
+          right={0}
+          top={0}
+          zIndex={1}
+        >
+          <PrintDeckContentList />
+        </Box>
+      </Box>
 
       <PrintDeckSidebar />
     </HStack>

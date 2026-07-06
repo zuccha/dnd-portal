@@ -1,18 +1,18 @@
 import z from "zod";
 import { createLocalStore } from "~/store/local-store";
-import { createMemoryStore } from "../../../../../../store/memory-store";
+import { createMemoryStore } from "~/store/memory-store";
 
 //------------------------------------------------------------------------------
 // Print Deck Mode
 //------------------------------------------------------------------------------
 
-export const printDeckModeSchema = z.enum(["edit", "print"]);
+export const printDeckModeSchema = z.enum(["list", "preview"]);
 
 export type PrintDeckMode = z.infer<typeof printDeckModeSchema>;
 
 export const { use: usePrintDeckMode } = createLocalStore<PrintDeckMode>(
   "print_deck.mode",
-  "print",
+  "preview",
   printDeckModeSchema.parse,
 );
 
