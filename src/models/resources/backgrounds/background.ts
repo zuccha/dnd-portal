@@ -5,6 +5,7 @@ import { creatureSkillSchema } from "../../types/creature-skill";
 import {
   startingEquipmentEntrySchema,
   startingEquipmentFromEntries,
+  startingEquipmentGroupSchema,
 } from "../character-classes/starting-equipment";
 import {
   type TranslationFields,
@@ -17,16 +18,19 @@ import {
 // Background
 //------------------------------------------------------------------------------
 
-export const backgroundSchema = resourceSchema
+export const backgroundBaseSchema = resourceSchema.extend({
+  ability_scores: z.array(creatureAbilitySchema),
+  feat_id: z.uuid().nullable(),
+  feat_notes: i18nStringSchema,
+  kind: z.literal("background"),
+  skill_proficiencies: z.array(creatureSkillSchema),
+  tool_notes: i18nStringSchema,
+  tool_proficiency_id: z.uuid().nullable(),
+});
+
+export const backgroundRawSchema = backgroundBaseSchema
   .extend({
-    ability_scores: z.array(creatureAbilitySchema),
-    feat_id: z.uuid().nullable(),
-    feat_notes: i18nStringSchema,
-    kind: z.literal("background"),
-    skill_proficiencies: z.array(creatureSkillSchema),
     starting_equipment_entries: z.array(startingEquipmentEntrySchema),
-    tool_notes: i18nStringSchema,
-    tool_proficiency_id: z.uuid().nullable(),
   })
   .transform(({ starting_equipment_entries, ...rest }) => ({
     ...rest,
@@ -34,6 +38,10 @@ export const backgroundSchema = resourceSchema
       starting_equipment_entries,
     ),
   }));
+
+export const backgroundSchema = backgroundBaseSchema.extend({
+  starting_equipment: z.array(startingEquipmentGroupSchema),
+});
 
 export type Background = z.infer<typeof backgroundSchema>;
 

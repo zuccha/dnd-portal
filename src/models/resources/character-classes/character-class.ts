@@ -15,28 +15,32 @@ import {
 import {
   startingEquipmentEntrySchema,
   startingEquipmentFromEntries,
+  startingEquipmentGroupSchema,
 } from "./starting-equipment";
 
 //------------------------------------------------------------------------------
 // Character Class
 //------------------------------------------------------------------------------
 
-export const characterClassSchema = resourceSchema
+export const characterClassBaseSchema = resourceSchema.extend({
+  armor_proficiencies: z.array(armorTypeSchema),
+  armor_proficiencies_extra: i18nStringSchema,
+  feature_entries: z.array(dbFeatureEntrySchema),
+  hp_die: dieTypeSchema,
+  kind: z.literal("character_class"),
+  primary_abilities: z.array(creatureAbilitySchema),
+  saving_throw_proficiencies: z.array(creatureAbilitySchema),
+  skill_proficiencies_pool: z.array(creatureSkillSchema),
+  skill_proficiencies_pool_quantity: z.number(),
+  spell_ids: z.array(z.uuid()),
+  tool_proficiency_ids: z.array(z.uuid()),
+  weapon_proficiencies: z.array(weaponTypeSchema),
+  weapon_proficiencies_extra: i18nStringSchema,
+});
+
+export const characterClassRawSchema = characterClassBaseSchema
   .extend({
-    armor_proficiencies: z.array(armorTypeSchema),
-    armor_proficiencies_extra: i18nStringSchema,
-    feature_entries: z.array(dbFeatureEntrySchema),
-    hp_die: dieTypeSchema,
-    kind: z.literal("character_class"),
-    primary_abilities: z.array(creatureAbilitySchema),
-    saving_throw_proficiencies: z.array(creatureAbilitySchema),
-    skill_proficiencies_pool: z.array(creatureSkillSchema),
-    skill_proficiencies_pool_quantity: z.number(),
-    spell_ids: z.array(z.uuid()),
     starting_equipment_entries: z.array(startingEquipmentEntrySchema),
-    tool_proficiency_ids: z.array(z.uuid()),
-    weapon_proficiencies: z.array(weaponTypeSchema),
-    weapon_proficiencies_extra: i18nStringSchema,
   })
   .transform(({ starting_equipment_entries, ...rest }) => ({
     ...rest,
@@ -44,6 +48,10 @@ export const characterClassSchema = resourceSchema
       starting_equipment_entries,
     ),
   }));
+
+export const characterClassSchema = characterClassBaseSchema.extend({
+  starting_equipment: z.array(startingEquipmentGroupSchema),
+});
 
 export type CharacterClass = z.infer<typeof characterClassSchema>;
 
