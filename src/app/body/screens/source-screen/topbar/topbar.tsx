@@ -20,7 +20,8 @@ export default function Topbar() {
   const route = useRoute();
   const setSidebarCollapsed = useSidebarSetCollapsed();
   const setRightPanelCollapsed = useRightPanelSetCollapsed();
-  const hasResourcesSidebar = route.startsWith(Route.Resources);
+  const hasResourcesSidebar =
+    route.startsWith(Route.Resources) || route === Route.PrintDeck;
 
   return (
     <HStack
