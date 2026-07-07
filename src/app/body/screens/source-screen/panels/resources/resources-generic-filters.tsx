@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import z from "zod";
+import useDebouncedCallback from "~/hooks/use-debounced-callback";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import type {
@@ -33,13 +34,18 @@ export function createResourcesGenericFilters<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(store: ResourceStore<R, L, F, DBR, DBT>, _context: ResourcesContext<R>) {
+  const { useFilters } = store;
+
   return function ResourcesGenericFilters({
     sourceId,
   }: ResourcesGenericFiltersProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const source = useSelectedSource(); // TODO: Get source from sourceId
     const [sources, setSources] = useDraftResourcesSourcesFilter(sourceId);
-    const [filters, setFilters] = store.useFilters();
+    const [filters, setFilters] = useFilters();
+    const [name, setName] = useState("");
+
+    const setFiltersDebounced = useDebouncedCallback(setFilters, 200);
 
     const orderOptions = useMemo(
       () =>
@@ -58,16 +64,20 @@ export function createResourcesGenericFilters<
       ];
     }, [source]);
 
+    useLayoutEffect(() => {
+      setFiltersDebounced({ name } as Partial<F>);
+    }, [name, setFiltersDebounced]);
+
     return (
       <>
         <CaptionInput caption={t("name.placeholder")} w="full">
           <Input
             groupProps={{ w: "full" }}
             id={`filter-${store.name.s}-name`}
-            onValueChange={(name) => setFilters({ name } as Partial<F>)}
+            onValueChange={setName}
             placeholder={t("name.placeholder")}
             size="sm"
-            value={filters.name}
+            value={name}
           />
         </CaptionInput>
 
