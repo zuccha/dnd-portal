@@ -47,6 +47,7 @@ export default tseslint.config(
       "no-irregular-whitespace": "off",
       "quote-props": ["error", "consistent"],
       "react/jsx-sort-props": ["error"],
+      "react-hooks/set-state-in-effect": ["off"],
       "react-refresh/only-export-components": [
         "error",
         { allowConstantExport: true },
