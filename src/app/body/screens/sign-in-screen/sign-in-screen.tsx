@@ -143,6 +143,10 @@ const i18nContext = {
     en: "The email address cannot be empty",
     it: "L'indirizzo email non può essere vuoto",
   },
+  "error.generic": {
+    en: "Something went wrong",
+    it: "Qualcosa è andato storto",
+  },
   "error.password.empty": {
     en: "The password cannot be empty",
     it: "La password non può essere vuota",
