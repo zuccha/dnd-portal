@@ -15,7 +15,8 @@ import {
 } from "~/models/types/resource-kind";
 import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
-import { type PaletteName, palettes } from "~/utils/palette";
+import PalettePicker from "~/ui/palette-picker";
+import { type PaletteName } from "~/utils/palette";
 
 //------------------------------------------------------------------------------
 // Print Deck Content List
@@ -50,6 +51,9 @@ export default function PrintDeckContentList() {
           onDuplicate={() => printDeck.duplicateEntry(entry.id)}
           onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
           onMoveUp={() => printDeck.moveEntry(entry.id, index - 1)}
+          onPaletteChange={(paletteName) =>
+            printDeck.setEntryPalette(entry.id, paletteName)
+          }
           onRemove={() => printDeck.removeEntry(entry.id)}
           paletteName={entry.palette_name}
           source={entry.localized_resource.source}
@@ -71,6 +75,7 @@ type PrintDeckEntryRowProps = {
   onDuplicate: () => void;
   onMoveDown: () => void;
   onMoveUp: () => void;
+  onPaletteChange: (paletteName: PaletteName) => void;
   onRemove: () => void;
   paletteName: PaletteName;
   source: string;
@@ -84,6 +89,7 @@ function PrintDeckEntryRow({
   onDuplicate,
   onMoveDown,
   onMoveUp,
+  onPaletteChange,
   onRemove,
   paletteName,
   source,
@@ -94,17 +100,19 @@ function PrintDeckEntryRow({
   return (
     <HStack
       bgColor="bg"
-      borderLeftColor={palettes[paletteName][700]}
-      borderLeftWidth={4}
       borderRadius="sm"
-      borderRightWidth={1}
-      borderYWidth={1}
+      borderWidth={1}
       gap={3}
       minH={14}
       px={3}
       py={2}
       w="full"
     >
+      <PalettePicker
+        onPaletteChange={onPaletteChange}
+        paletteName={paletteName}
+      />
+
       <VStack align="flex-start" flex={1} gap={0} minW={0}>
         <Text fontWeight="semibold" truncate>
           {name}
@@ -187,6 +195,10 @@ const i18nContext = {
   "move_up": {
     en: "Move up",
     it: "Sposta sopra",
+  },
+  "palette": {
+    en: "Change palette",
+    it: "Cambia palette",
   },
   "remove": {
     en: "Remove",

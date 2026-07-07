@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createLocalStore } from "~/store/local-store";
-import { paletteNameSchema } from "~/utils/palette";
+import { type PaletteName, paletteNameSchema } from "~/utils/palette";
 import { createUuid } from "~/utils/uuid";
 import { localizedResourceUnionSchema } from "../resources/resource-union";
 
@@ -128,6 +128,21 @@ function removeEntry(entryId: string): void {
 }
 
 //------------------------------------------------------------------------------
+// Set Entry Palette
+//------------------------------------------------------------------------------
+
+function setEntryPalette(entryId: string, paletteName: PaletteName): void {
+  printDeckStore.set((prev) => {
+    const index = prev.findIndex((entry) => entry.id === entryId);
+    if (index < 0) return prev;
+
+    const entries = [...prev];
+    entries[index] = { ...prev[index]!, palette_name: paletteName };
+    return entries;
+  });
+}
+
+//------------------------------------------------------------------------------
 // Update Entry
 //------------------------------------------------------------------------------
 
@@ -154,6 +169,7 @@ export const printDeck = {
   getEntry,
   moveEntry,
   removeEntry,
+  setEntryPalette,
   updateEntry,
   useEntries: printDeckStore.useValue,
 };
