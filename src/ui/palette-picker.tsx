@@ -1,4 +1,12 @@
-import { Box, ColorSwatch, HStack, Menu, Portal, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  ColorSwatch,
+  HStack,
+  Menu,
+  Portal,
+  Text,
+} from "@chakra-ui/react";
 import { CheckIcon } from "lucide-react";
 import {
   type PaletteName,
@@ -12,24 +20,26 @@ import Icon from "./icon";
 //------------------------------------------------------------------------------
 
 type PalettePickerProps = {
-  onPaletteChange: (paletteName: PaletteName) => void;
-  paletteName: PaletteName;
+  onValueChange: (paletteName: PaletteName) => void;
+  value: PaletteName;
 };
 
 export default function PalettePicker({
-  onPaletteChange,
-  paletteName,
+  onValueChange,
+  value,
 }: PalettePickerProps) {
   const paletteNameOptions = usePaletteNameOptions();
 
   return (
     <Menu.Root>
       <Menu.Trigger asChild focusRing="outside">
-        <ColorSwatch
-          cursor="pointer"
-          tabIndex={0}
-          value={palettes[paletteName][700]}
-        />
+        <Center borderWidth={1} h={9} rounded="sm" tabIndex={0} w={9}>
+          <ColorSwatch
+            cursor="pointer"
+            size="lg"
+            value={palettes[value][700]}
+          />
+        </Center>
       </Menu.Trigger>
 
       <Portal>
@@ -39,7 +49,7 @@ export default function PalettePicker({
               {paletteNameOptions.map((option) => (
                 <Menu.Item
                   key={option.value}
-                  onSelect={() => onPaletteChange(option.value)}
+                  onSelect={() => onValueChange(option.value)}
                   value={option.value}
                 >
                   <HStack gap={2} minW={36}>
@@ -52,7 +62,7 @@ export default function PalettePicker({
                       w={4}
                     />
                     <Text flex={1}>{option.label}</Text>
-                    {option.value === paletteName && (
+                    {option.value === value && (
                       <Icon Icon={CheckIcon} color="fg.muted" size="xs" />
                     )}
                   </HStack>

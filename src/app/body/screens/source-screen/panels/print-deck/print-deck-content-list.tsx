@@ -108,10 +108,7 @@ function PrintDeckEntryRow({
       py={2}
       w="full"
     >
-      <PalettePicker
-        onPaletteChange={onPaletteChange}
-        paletteName={paletteName}
-      />
+      <PalettePicker onValueChange={onPaletteChange} value={paletteName} />
 
       <VStack align="flex-start" flex={1} gap={0} minW={0}>
         <Text fontWeight="semibold" truncate>

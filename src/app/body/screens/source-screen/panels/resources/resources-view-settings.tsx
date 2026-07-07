@@ -13,9 +13,9 @@ import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";
 import CaptionInput from "~/ui/caption-input";
 import Checkbox from "~/ui/checkbox";
 import NumberInput from "~/ui/number-input";
+import PalettePicker from "~/ui/palette-picker";
 import Section from "~/ui/section";
 import Select from "~/ui/select";
-import { usePaletteNameOptions } from "~/utils/palette";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -44,8 +44,6 @@ export function createResourcesViewSettings<
     const showImage = useShowImage();
     const view = useView();
     const zoom = useZoom();
-
-    const paletteNameOptions = usePaletteNameOptions();
 
     return (
       <Section
@@ -76,15 +74,10 @@ export function createResourcesViewSettings<
                 />
               </CaptionInput>
 
-              <CaptionInput caption={t("accent_color")} flex={1} minW="6.5em">
-                <Select.Enum
-                  onValueChange={context.setPaletteName}
-                  options={paletteNameOptions}
-                  size="sm"
-                  value={paletteName}
-                  w="full"
-                />
-              </CaptionInput>
+              <PalettePicker
+                onValueChange={context.setPaletteName}
+                value={paletteName}
+              />
             </HStack>
 
             <CaptionInput caption={t("card_mode")} w="full">
