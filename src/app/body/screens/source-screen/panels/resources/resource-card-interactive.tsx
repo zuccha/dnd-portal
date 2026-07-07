@@ -235,6 +235,7 @@ export function createResourceCardInteractive<
                   edit();
                 }}
                 size="2xs"
+                tooltipPositioning={{ placement: "right" }}
               />
             )}
 
@@ -252,6 +253,7 @@ export function createResourceCardInteractive<
                   action.onClick(localizedResource._raw);
                 }}
                 size="2xs"
+                tooltipPositioning={{ placement: "right" }}
               />
             ))}
 
@@ -265,6 +267,7 @@ export function createResourceCardInteractive<
                 addToPrintDeck();
               }}
               size="2xs"
+              tooltipPositioning={{ placement: "right" }}
             />
           </VStack>
 
