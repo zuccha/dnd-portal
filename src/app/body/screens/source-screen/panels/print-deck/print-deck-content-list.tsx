@@ -7,7 +7,9 @@ import {
   RatIcon,
   Trash2Icon,
 } from "lucide-react";
+import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import type { PrintDeckEntry } from "~/models/print-deck/print-deck-store";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import {
   type ResourceKind,
@@ -17,6 +19,7 @@ import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
 import PalettePicker from "~/ui/palette-picker";
 import { type PaletteName } from "~/utils/palette";
+import PrintDeckEditorDialog from "./print-deck-editor-dialog";
 
 //------------------------------------------------------------------------------
 // Print Deck Content List
@@ -26,7 +29,9 @@ const { useEntries } = printDeck;
 
 export default function PrintDeckContentList() {
   const entries = useEntries();
+  const [editedEntryId, setEditedEntryId] = useState<string>();
   const { t } = useI18nLangContext(i18nContext);
+  const editedEntry = entries.find((entry) => entry.id === editedEntryId);
 
   if (entries.length === 0) {
     return (
@@ -40,26 +45,41 @@ export default function PrintDeckContentList() {
   }
 
   return (
-    <VStack bgColor="bg.subtle" flex={1} gap={2} h="full" overflow="auto" p={4}>
-      {entries.map((entry, index) => (
-        <PrintDeckEntryRow
-          canMoveDown={index < entries.length - 1}
-          canMoveUp={index > 0}
-          key={entry.id}
-          kind={entry.localized_resource.kind}
-          name={entry.localized_resource.name}
-          onDuplicate={() => printDeck.duplicateEntry(entry.id)}
-          onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
-          onMoveUp={() => printDeck.moveEntry(entry.id, index - 1)}
-          onPaletteChange={(paletteName) =>
-            printDeck.setEntryPalette(entry.id, paletteName)
-          }
-          onRemove={() => printDeck.removeEntry(entry.id)}
-          paletteName={entry.palette_name}
-          source={entry.localized_resource.source}
-        />
-      ))}
-    </VStack>
+    <>
+      <VStack
+        bgColor="bg.subtle"
+        flex={1}
+        gap={2}
+        h="full"
+        overflow="auto"
+        p={4}
+      >
+        {entries.map((entry, index) => (
+          <PrintDeckEntryRow
+            canMoveDown={index < entries.length - 1}
+            canMoveUp={index > 0}
+            key={entry.id}
+            kind={entry.localized_resource.kind}
+            name={entry.localized_resource.name}
+            onDuplicate={() => printDeck.duplicateEntry(entry.id)}
+            onEdit={() => setEditedEntryId(entry.id)}
+            onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
+            onMoveUp={() => printDeck.moveEntry(entry.id, index - 1)}
+            onPaletteChange={(paletteName) =>
+              printDeck.setEntryPalette(entry.id, paletteName)
+            }
+            onRemove={() => printDeck.removeEntry(entry.id)}
+            paletteName={entry.palette_name}
+            source={entry.localized_resource.source}
+          />
+        ))}
+      </VStack>
+
+      <PrintDeckEditorDialog
+        entry={editedEntry as PrintDeckEntry | undefined}
+        onClose={() => setEditedEntryId(undefined)}
+      />
+    </>
   );
 }
 
@@ -73,6 +93,7 @@ type PrintDeckEntryRowProps = {
   kind: ResourceKind;
   name: string;
   onDuplicate: () => void;
+  onEdit: () => void;
   onMoveDown: () => void;
   onMoveUp: () => void;
   onPaletteChange: (paletteName: PaletteName) => void;
@@ -87,6 +108,7 @@ function PrintDeckEntryRow({
   kind,
   name,
   onDuplicate,
+  onEdit,
   onMoveDown,
   onMoveUp,
   onPaletteChange,
@@ -138,9 +160,8 @@ function PrintDeckEntryRow({
         />
         <IconButton
           Icon={EditIcon}
-          disabled
           label={t("edit")}
-          onClick={() => {}}
+          onClick={onEdit}
           size="xs"
           variant="ghost"
         />
