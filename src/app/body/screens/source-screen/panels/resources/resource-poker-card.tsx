@@ -1,4 +1,10 @@
-import { Box, type StackProps, VStack } from "@chakra-ui/react";
+import {
+  AbsoluteCenter,
+  Box,
+  Spinner,
+  type StackProps,
+  VStack,
+} from "@chakra-ui/react";
 import {
   type ReactNode,
   useCallback,
@@ -238,6 +244,7 @@ function PaginatedResourcePokerCard<
             name={localizedResource.name}
             pageIndicator={`${adjustedPageIndex + 1} / ${pageCount}`}
             palette={palette}
+            position="relative"
             shadow={adjustedPageIndex === selectedPageIndex ? "sm" : undefined}
             sourceName={localizedResource.source}
             sourcePage={localizedResource.page}
@@ -268,6 +275,12 @@ function PaginatedResourcePokerCard<
                 <PokerCard.Separator />
                 {firstPageInfo}
               </VStack>
+            )}
+
+            {rendering && (
+              <AbsoluteCenter bgColor="#00000022" h="full" w="full" zIndex={1}>
+                <Spinner />
+              </AbsoluteCenter>
             )}
           </PokerCard.Frame>
         );
@@ -399,10 +412,15 @@ export function ResourcePokerCardPlaceholder({
       name={name}
       pageIndicator=""
       palette={palette}
+      position="relative"
       sourceName=""
       sourcePage=""
       sourceVersion=""
       {...rest}
-    />
+    >
+      <AbsoluteCenter bgColor="#00000022" h="full" w="full" zIndex={1}>
+        <Spinner />
+      </AbsoluteCenter>
+    </PokerCard.Frame>
   );
 }
