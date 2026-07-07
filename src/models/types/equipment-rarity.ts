@@ -12,6 +12,7 @@ export const equipmentRaritySchema = z.enum([
   "very_rare",
   "legendary",
   "artifact",
+  "various",
 ]);
 
 export const equipmentRarities = equipmentRaritySchema.options;
@@ -32,5 +33,6 @@ export const {
   legendary: { en: "Legendary", it: "Leggendario" },
   rare: { en: "Rare", it: "Raro" },
   uncommon: { en: "Uncommon", it: "Non Comune" },
+  various: { en: "Various", it: "Variabile" },
   very_rare: { en: "Very Rare", it: "Molto Raro" },
 });

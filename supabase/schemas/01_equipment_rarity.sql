@@ -8,7 +8,8 @@ CREATE TYPE public.equipment_rarity AS ENUM (
   'rare',
   'very_rare',
   'legendary',
-  'artifact'
+  'artifact',
+  'various'
 );
 
 ALTER TYPE public.equipment_rarity OWNER TO postgres;
