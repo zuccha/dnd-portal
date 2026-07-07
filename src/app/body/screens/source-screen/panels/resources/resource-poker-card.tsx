@@ -413,9 +413,9 @@ export function ResourcePokerCardPlaceholder({
       pageIndicator=""
       palette={palette}
       position="relative"
-      sourceName=""
+      sourceName=" "
       sourcePage=""
-      sourceVersion=""
+      sourceVersion=" "
       {...rest}
     >
       <AbsoluteCenter bgColor="#00000022" h="full" w="full" zIndex={1}>
