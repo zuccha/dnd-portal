@@ -1,5 +1,11 @@
 import { Box, type StackProps, VStack } from "@chakra-ui/react";
-import { type ReactNode, useCallback, useEffect, useMemo } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import usePaginatedContent from "~/hooks/use-paginated-content";
 import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
@@ -152,7 +158,17 @@ function PaginatedResourcePokerCard<
   startDetailsOnSecondPage,
   ...rest
 }: PaginatedResourcePokerCardProps<R, L>) {
-  const pages = usePaginatedContent(details, onPageCountChange, {
+  const [rendering, setRendering] = useState(true);
+
+  const handlePageCountChange = useCallback(
+    (count: number | undefined, firstPageOverflow: boolean) => {
+      setRendering(count === undefined);
+      onPageCountChange(count, firstPageOverflow);
+    },
+    [onPageCountChange],
+  );
+
+  const pages = usePaginatedContent(details, handlePageCountChange, {
     firstPageReserved: startDetailsOnSecondPage,
   });
 
@@ -237,6 +253,7 @@ function PaginatedResourcePokerCard<
               overflow="hidden"
               py={PokerCard.rem0750}
               ref={page.ref}
+              visibility={rendering ? "hidden" : "visible"}
               w="full"
             >
               {pageIndex === 0 && beforeDetails}

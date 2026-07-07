@@ -1,4 +1,4 @@
-import { createRef, useLayoutEffect, useRef, useState } from "react";
+import { createRef, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { dropLast } from "../utils/array";
 
 //------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ export default function usePaginatedContent(
     );
   }, [content, options.firstPageReserved]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (renderCountRef.current > 45) {
       renderCountRef.current = 0;
       requestAnimationFrame(() => setPages([...pages]));
