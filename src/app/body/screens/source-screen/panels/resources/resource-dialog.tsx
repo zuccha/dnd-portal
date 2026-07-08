@@ -101,7 +101,7 @@ export default function ResourceDialog({
             </Dialog.Header>
 
             <Dialog.Body>
-              <Box overflow="hidden" position="relative">
+              <Box position="relative">
                 <Box
                   aria-hidden={previewVisible}
                   opacity={previewVisible ? 0 : 1}
