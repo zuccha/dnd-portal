@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import {
   type PrintDeckEntry,
@@ -8,10 +8,8 @@ import { resourceUnionSchema } from "~/models/resources/resource-union";
 import { palettes } from "~/utils/palette";
 import ResourceCardPreview from "../resources/resource-card-preview";
 import ResourceDialog from "../resources/resource-dialog";
-import {
-  type PrintDeckEditorPatch,
-  getPrintDeckEditorRegistryEntry,
-} from "./print-deck-editor-registry";
+import { applyResourceEditorPreviewPatch } from "../resources/resource-editor-preview";
+import { getPrintDeckEditorRegistryEntry } from "./print-deck-editor-registry";
 import { getPrintDeckRegistryEntry } from "./print-deck-registry";
 
 //------------------------------------------------------------------------------
@@ -59,7 +57,6 @@ function PrintDeckEditorDialogLoaded({
   const localizeResource = registryEntry.useLocalizeResource(
     entry.localized_resource._raw.source_id,
   );
-  const { Card } = getPrintDeckRegistryEntry(entry.localized_resource.kind);
   const { Editor, form, parseFormData } = registryEntry;
 
   useEffect(() => {
@@ -72,7 +69,7 @@ function PrintDeckEditorDialogLoaded({
       if (typeof errorOrPatch === "string") return errorOrPatch;
 
       const nextRawResource = resourceUnionSchema.parse(
-        applyPrintDeckEditorPatch(
+        applyResourceEditorPreviewPatch(
           entry.localized_resource._raw,
           entry.lang,
           errorOrPatch,
@@ -112,14 +109,7 @@ function PrintDeckEditorDialogLoaded({
       onPrimaryAction={save}
       onSecondaryAction={saveAndClose}
       open
-      preview={
-        <ResourceCardPreview
-          Card={Card}
-          localizedResource={entry.localized_resource}
-          palette={palettes[entry.palette_name]}
-          showImage
-        />
-      }
+      preview={<PrintDeckEditorDialogPreview entry={entry} />}
       primaryActionText={t("save")}
       saving={saving}
       secondaryActionText={t("save_and_close")}
@@ -135,34 +125,45 @@ function PrintDeckEditorDialogLoaded({
 }
 
 //------------------------------------------------------------------------------
-// Apply Print Deck Editor Patch
+// Print Deck Editor Dialog Preview
 //------------------------------------------------------------------------------
 
-function applyPrintDeckEditorPatch(
-  resource: PrintDeckEntry["localized_resource"]["_raw"],
-  lang: string,
-  patch: PrintDeckEditorPatch,
-) {
-  const nextResource: Record<string, unknown> = structuredClone(resource);
+function PrintDeckEditorDialogPreview({ entry }: { entry: PrintDeckEntry }) {
+  const registryEntry = getPrintDeckEditorRegistryEntry(
+    entry.localized_resource.kind,
+  );
+  if (!registryEntry)
+    throw new Error("Missing print deck editor registry entry");
 
-  for (const [key, value] of Object.entries(patch.resource)) {
-    if (value !== undefined) nextResource[key] = value;
-  }
+  const localizeResource = registryEntry.useLocalizeResource(
+    entry.localized_resource._raw.source_id,
+  );
+  const { Card } = getPrintDeckRegistryEntry(entry.localized_resource.kind);
+  const { form, parseFormData } = registryEntry;
+  const formData = form.useData();
 
-  for (const [key, value] of Object.entries(patch.translation)) {
-    if (value === undefined) continue;
+  const previewLocalizedResource = useMemo(() => {
+    const errorOrPatch = parseFormData(formData);
+    if (typeof errorOrPatch === "string") return entry.localized_resource;
 
-    const previous = nextResource[key];
-    const translations =
-      previous && typeof previous === "object" && !Array.isArray(previous) ?
-        { ...(previous as Record<string, unknown>) }
-      : {};
+    const nextRawResource = resourceUnionSchema.parse(
+      applyResourceEditorPreviewPatch(
+        entry.localized_resource._raw,
+        entry.lang,
+        errorOrPatch,
+      ),
+    );
+    return localizeResource(nextRawResource);
+  }, [entry, formData, localizeResource, parseFormData]);
 
-    translations[lang] = value;
-    nextResource[key] = translations;
-  }
-
-  return nextResource;
+  return (
+    <ResourceCardPreview
+      Card={Card}
+      localizedResource={previewLocalizedResource}
+      palette={palettes[entry.palette_name]}
+      showImage
+    />
+  );
 }
 
 //------------------------------------------------------------------------------

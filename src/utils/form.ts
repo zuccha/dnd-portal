@@ -30,6 +30,7 @@ export type Form<Fields extends Record<string, unknown>> = {
   ) => (defaultValue: Fields[Name]) => FieldBag<Name, Fields[Name]>;
   pasteDataFromClipboard: () => Promise<void>;
   reset: () => void;
+  useData: () => Partial<Fields>;
   useField: <Name extends keyof Fields>(
     name: Name,
     defaultValue: Fields[Name],
@@ -201,6 +202,19 @@ export function createForm<Fields extends Record<string, unknown>>(
   }
 
   //----------------------------------------------------------------------------
+  // Use Data
+  //----------------------------------------------------------------------------
+
+  function useData(): Partial<Fields> {
+    const [data, setData] = useState(buildData);
+    useLayoutEffect(
+      () => valuesStore.subscribeAny(() => setData(buildData())),
+      [],
+    );
+    return data;
+  }
+
+  //----------------------------------------------------------------------------
   // Use Valid
   //----------------------------------------------------------------------------
 
@@ -276,6 +290,7 @@ export function createForm<Fields extends Record<string, unknown>>(
     createUseField,
     pasteDataFromClipboard,
     reset,
+    useData,
     useField,
     useFieldError,
     useSubmit,

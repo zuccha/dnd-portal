@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type {
   DBResource,
@@ -12,6 +12,10 @@ import type { Form } from "~/utils/form";
 import { palettes } from "~/utils/palette";
 import ResourceCardPreview from "./resource-card-preview";
 import ResourceDialog from "./resource-dialog";
+import {
+  type ResourceEditorPreviewPatch,
+  applyResourceEditorPreviewPatch,
+} from "./resource-editor-preview";
 import type { ResourcesAlbumExtra } from "./resources-album";
 import type { ResourcesContext } from "./resources-context";
 
@@ -84,9 +88,52 @@ export function createResourceDialogCreator<
     return undefined;
   }
 
+  //----------------------------------------------------------------------------
+  // Preview
+  //----------------------------------------------------------------------------
+
+  function Preview({
+    lang,
+    paletteName,
+    resource,
+    showImage,
+    sourceId,
+  }: {
+    lang: string;
+    paletteName: keyof typeof palettes;
+    resource: R;
+    showImage: boolean;
+    sourceId: string;
+  }) {
+    const localizeResource = store.useLocalizeResource(sourceId);
+    const formData = form.useData();
+
+    const previewResource = useMemo(() => {
+      const errorOrData = parseFormData(formData);
+      if (typeof errorOrData === "string") return resource;
+      return applyResourceEditorPreviewPatch(
+        resource,
+        lang,
+        errorOrData as ResourceEditorPreviewPatch,
+      );
+    }, [formData, lang, resource]);
+
+    return (
+      <ResourceCardPreview
+        Card={PreviewCard}
+        localizedResource={localizeResource(previewResource)}
+        palette={palettes[paletteName]}
+        showImage={showImage}
+      />
+    );
+  }
+
+  //----------------------------------------------------------------------------
+  // Resources Creator
+  //----------------------------------------------------------------------------
+
   return function ResourcesCreator({ sourceId }: ResourceDialogCreatorProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
-    const localizeResource = store.useLocalizeResource(sourceId);
 
     const createdResource = context.useCreatedResource();
     const resource = createdResource ?? store.defaultResource;
@@ -127,11 +174,12 @@ export function createResourceDialogCreator<
         onSecondaryAction={createAndClose}
         open={!!createdResource}
         preview={
-          <ResourceCardPreview
-            Card={PreviewCard}
-            localizedResource={localizeResource(resource)}
-            palette={palettes[paletteName]}
+          <Preview
+            lang={lang}
+            paletteName={paletteName}
+            resource={resource}
             showImage={showImage}
+            sourceId={sourceId}
           />
         }
         primaryActionText={t("create_and_add_more")}
