@@ -9,7 +9,10 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import type { Form } from "~/utils/form";
+import { palettes } from "~/utils/palette";
+import ResourceCardPreview from "./resource-card-preview";
 import ResourceDialog from "./resource-dialog";
+import type { ResourcesAlbumExtra } from "./resources-album";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -37,6 +40,13 @@ export type ResourceDialogUpdaterProps = {
   sourceId: string;
 };
 
+export type ResourceDialogUpdaterPreviewExtra<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+> = {
+  PreviewCard: ResourcesAlbumExtra<R, L>["AlbumCard"];
+};
+
 export function createResourceDialogUpdater<
   R extends Resource,
   L extends LocalizedResource<R>,
@@ -48,6 +58,7 @@ export function createResourceDialogUpdater<
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
   { Editor, form, parseFormData }: ResourceDialogUpdaterExtra<R, DBR, DBT, FF>,
+  { PreviewCard }: ResourceDialogUpdaterPreviewExtra<R, L>,
 ) {
   async function submitForm(
     data: Partial<FF>,
@@ -70,9 +81,13 @@ export function createResourceDialogUpdater<
 
   return function ResourcesUpdater({ sourceId }: ResourceDialogUpdaterProps) {
     const { lang, t, ti } = useI18nLangContext(i18nContext);
+    const localizeResource = store.useLocalizeResource(sourceId);
 
     const editedResource = context.useEditedResource();
     const editedResourceId = editedResource?.id ?? "";
+    const resource = editedResource ?? store.defaultResource;
+    const paletteName = context.usePaletteName();
+    const showImage = context.useShowImage();
 
     const [submit, saving] = form.useSubmit(
       useCallback(
@@ -107,6 +122,14 @@ export function createResourceDialogUpdater<
         onPrimaryAction={save}
         onSecondaryAction={saveAndClose}
         open={!!editedResource}
+        preview={
+          <ResourceCardPreview
+            Card={PreviewCard}
+            localizedResource={localizeResource(resource)}
+            palette={palettes[paletteName]}
+            showImage={showImage}
+          />
+        }
         primaryActionText={t("save")}
         saving={saving}
         secondaryActionText={t("save_and_close")}

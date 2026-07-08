@@ -1,6 +1,6 @@
-import { CloseButton, Dialog, Menu, Portal, Text } from "@chakra-ui/react";
-import { EllipsisVerticalIcon } from "lucide-react";
-import { type ReactNode } from "react";
+import { Box, CloseButton, Dialog, Menu, Portal, Text } from "@chakra-ui/react";
+import { EllipsisVerticalIcon, EyeIcon, PencilIcon } from "lucide-react";
+import { type ReactNode, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
@@ -20,6 +20,7 @@ export type ResourceDialogProps = {
   onSecondaryAction: () => void;
   open: boolean;
   primaryActionText: string;
+  preview: ReactNode;
   saving: boolean;
   secondaryActionText: string;
   valid: boolean;
@@ -35,6 +36,7 @@ export default function ResourceDialog({
   onSecondaryAction,
   open,
   primaryActionText,
+  preview,
   saving,
   secondaryActionText,
   title,
@@ -43,6 +45,7 @@ export default function ResourceDialog({
   const { t } = useI18nLangContext(i18nContext);
 
   const disabled = !valid || saving;
+  const [previewVisible, setPreviewVisible] = useState(false);
 
   return (
     <Dialog.Root
@@ -59,12 +62,12 @@ export default function ResourceDialog({
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
-            <Dialog.Header alignItems="center">
+            <Dialog.Header alignItems="center" gap={0}>
               <Menu.Root>
-                <Menu.Trigger asChild focusRing="outside" mr={2} rounded="full">
+                <Menu.Trigger asChild focusRing="outside" rounded="full">
                   <IconButton
                     Icon={EllipsisVerticalIcon}
-                    label={t("actions")}
+                    label={""}
                     size="xs"
                     variant="ghost"
                   />
@@ -84,11 +87,42 @@ export default function ResourceDialog({
                 </Menu.Positioner>
               </Menu.Root>
 
-              <Dialog.Title>{title}</Dialog.Title>
+              <IconButton
+                Icon={previewVisible ? PencilIcon : EyeIcon}
+                label={previewVisible ? t("edit") : t("preview")}
+                onClick={() => setPreviewVisible((visible) => !visible)}
+                size="xs"
+                variant="ghost"
+              />
+
+              <Dialog.Title flex={1} minW={0} ml={2}>
+                {title}
+              </Dialog.Title>
             </Dialog.Header>
 
             <Dialog.Body>
-              {children}
+              <Box overflow="hidden" position="relative">
+                <Box
+                  aria-hidden={previewVisible}
+                  opacity={previewVisible ? 0 : 1}
+                  pointerEvents={previewVisible ? "none" : undefined}
+                  position={previewVisible ? "absolute" : "relative"}
+                  w="full"
+                >
+                  {children}
+                </Box>
+                <Box
+                  aria-hidden={!previewVisible}
+                  inset={0}
+                  opacity={previewVisible ? 1 : 0}
+                  pointerEvents={previewVisible ? undefined : "none"}
+                  position={previewVisible ? "relative" : "absolute"}
+                  w="full"
+                >
+                  {preview}
+                </Box>
+              </Box>
+
               {error && (
                 <Text color="fg.error" fontSize="md" mt={4} w="full">
                   {t(error)}
@@ -150,6 +184,10 @@ const i18nContext = {
     en: "Paste data",
     it: "Incolla dati",
   },
+  "edit": {
+    en: "Edit",
+    it: "Modifica",
+  },
   "form.error.creation_failure": {
     en: "Failed to create the resource.",
     it: "Errore durante la creazione.",
@@ -165,6 +203,10 @@ const i18nContext = {
   "form.error.update_failure": {
     en: "Failed to update the resource.",
     it: "Errore durante il salvataggio.",
+  },
+  "preview": {
+    en: "Preview",
+    it: "Anteprima",
   },
   "save": {
     en: "Save",

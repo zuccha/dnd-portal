@@ -5,11 +5,14 @@ import {
   printDeck,
 } from "~/models/print-deck/print-deck-store";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
+import { palettes } from "~/utils/palette";
+import ResourceCardPreview from "../resources/resource-card-preview";
 import ResourceDialog from "../resources/resource-dialog";
 import {
   type PrintDeckEditorPatch,
   getPrintDeckEditorRegistryEntry,
 } from "./print-deck-editor-registry";
+import { getPrintDeckRegistryEntry } from "./print-deck-registry";
 
 //------------------------------------------------------------------------------
 // Print Deck Editor Dialog Props
@@ -56,6 +59,7 @@ function PrintDeckEditorDialogLoaded({
   const localizeResource = registryEntry.useLocalizeResource(
     entry.localized_resource._raw.source_id,
   );
+  const { Card } = getPrintDeckRegistryEntry(entry.localized_resource.kind);
   const { Editor, form, parseFormData } = registryEntry;
 
   useEffect(() => {
@@ -108,6 +112,14 @@ function PrintDeckEditorDialogLoaded({
       onPrimaryAction={save}
       onSecondaryAction={saveAndClose}
       open
+      preview={
+        <ResourceCardPreview
+          Card={Card}
+          localizedResource={entry.localized_resource}
+          palette={palettes[entry.palette_name]}
+          showImage
+        />
+      }
       primaryActionText={t("save")}
       saving={saving}
       secondaryActionText={t("save_and_close")}

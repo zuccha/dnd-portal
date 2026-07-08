@@ -9,7 +9,10 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import type { Form } from "~/utils/form";
+import { palettes } from "~/utils/palette";
+import ResourceCardPreview from "./resource-card-preview";
 import ResourceDialog from "./resource-dialog";
+import type { ResourcesAlbumExtra } from "./resources-album";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
@@ -37,6 +40,13 @@ export type ResourceDialogCreatorProps = {
   sourceId: string;
 };
 
+export type ResourceDialogCreatorPreviewExtra<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+> = {
+  PreviewCard: ResourcesAlbumExtra<R, L>["AlbumCard"];
+};
+
 export function createResourceDialogCreator<
   R extends Resource,
   L extends LocalizedResource<R>,
@@ -48,6 +58,7 @@ export function createResourceDialogCreator<
   store: ResourceStore<R, L, F, DBR, DBT>,
   context: ResourcesContext<R>,
   { Editor, form, parseFormData }: ResourceCreatorExtra<R, DBR, DBT, FF>,
+  { PreviewCard }: ResourceDialogCreatorPreviewExtra<R, L>,
 ) {
   async function submitForm(
     sourceId: string,
@@ -75,8 +86,12 @@ export function createResourceDialogCreator<
 
   return function ResourcesCreator({ sourceId }: ResourceDialogCreatorProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
+    const localizeResource = store.useLocalizeResource(sourceId);
 
     const createdResource = context.useCreatedResource();
+    const resource = createdResource ?? store.defaultResource;
+    const paletteName = context.usePaletteName();
+    const showImage = context.useShowImage();
 
     const [submit, saving] = form.useSubmit(
       useCallback(
@@ -111,16 +126,21 @@ export function createResourceDialogCreator<
         onPrimaryAction={createAndAddMore}
         onSecondaryAction={createAndClose}
         open={!!createdResource}
+        preview={
+          <ResourceCardPreview
+            Card={PreviewCard}
+            localizedResource={localizeResource(resource)}
+            palette={palettes[paletteName]}
+            showImage={showImage}
+          />
+        }
         primaryActionText={t("create_and_add_more")}
         saving={saving}
         secondaryActionText={t("create_and_close")}
         title={t("title")}
         valid={valid}
       >
-        <Editor
-          resource={createdResource ?? store.defaultResource}
-          sourceId={sourceId}
-        />
+        <Editor resource={resource} sourceId={sourceId} />
       </ResourceDialog>
     );
   };

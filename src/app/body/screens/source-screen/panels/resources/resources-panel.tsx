@@ -58,8 +58,12 @@ export function createResourcesPanel<
 ) {
   const context = createResourcesContext<R>(store.id, contextOptions);
 
-  const ResourceCreator = createResourceDialogCreator(store, context, form);
-  const ResourceUpdater = createResourceDialogUpdater(store, context, form);
+  const ResourceCreator = createResourceDialogCreator(store, context, form, {
+    PreviewCard: album.AlbumCard,
+  });
+  const ResourceUpdater = createResourceDialogUpdater(store, context, form, {
+    PreviewCard: album.AlbumCard,
+  });
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
