@@ -107,10 +107,17 @@ export function createResourceStore<
 
   function useFilters(): [F, (partial: Partial<F>) => void] {
     const [filters, setFilters] = filtersStore.use();
+    const setAppliedFilters = appliedFiltersStore.useSetValue();
 
     const setPartialFilters = useCallback(
-      (partial: Partial<F>) => setFilters((prev) => ({ ...prev, ...partial })),
-      [setFilters],
+      (partial: Partial<F>) => {
+        if (partial.name !== undefined) {
+          setAppliedFilters((prev) => ({ ...prev, name: partial.name! }));
+        }
+
+        setFilters((prev) => ({ ...prev, ...partial }));
+      },
+      [setAppliedFilters, setFilters],
     );
 
     return [filters, setPartialFilters];

@@ -43,7 +43,7 @@ export function createResourcesGenericFilters<
     const source = useSelectedSource(); // TODO: Get source from sourceId
     const [sources, setSources] = useDraftResourcesSourcesFilter(sourceId);
     const [filters, setFilters] = useFilters();
-    const [name, setName] = useState("");
+    const [name, setName] = useState(filters.name);
 
     const setFiltersDebounced = useDebouncedCallback(setFilters, 200);
 
@@ -67,6 +67,10 @@ export function createResourcesGenericFilters<
     useLayoutEffect(() => {
       setFiltersDebounced({ name } as Partial<F>);
     }, [name, setFiltersDebounced]);
+
+    useLayoutEffect(() => {
+      setName(filters.name);
+    }, [filters.name]);
 
     return (
       <>
