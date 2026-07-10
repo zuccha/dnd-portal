@@ -23,6 +23,7 @@ import {
 import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
 import ResourcesLoading from "./resources-loading";
+import ResourcesRefreshing from "./resources-refreshing";
 
 //------------------------------------------------------------------------------
 // Resources Album Extra
@@ -117,45 +118,60 @@ export function createResourcesAlbum<
       return () => resizeObserver.disconnect();
     }, [virtualize]);
 
-    if (loading) return <ResourcesLoading name={store.displayName} />;
-    if (!filteredResourceIds.length) return <ResourcesEmpty />;
+    if (!filteredResourceIds.length)
+      return loading ?
+          <ResourcesLoading name={store.displayName} />
+        : <ResourcesEmpty />;
 
     return (
-      <Flex
-        flex={1}
-        h="full"
-        onScroll={virtualize}
-        overflow="scroll"
-        ref={containerRef}
-      >
-        <Box bgColor="bg.subtle" w="full">
-          <Wrap
-            bgColor="bg.subtle"
-            gap={`${gap}px`}
-            justify="center"
-            p={`${gap}px`}
-            w="full"
+      <Box flex={1} h="full" position="relative">
+        {loading && (
+          <Box
+            pointerEvents="none"
+            position="absolute"
+            right={4}
+            top={2}
+            zIndex={2}
           >
-            {filteredResourceIds.map((id) => {
-              return visibleById[id] ?
-                  <ResourceCardInteractive
-                    editable={editable}
-                    key={id}
-                    localizeResource={localizeResource}
-                    palette={palettes[paletteName]}
-                    resourceId={id}
-                    zoom={zoom}
-                  />
-                : <ResourceCardInteractive.Placeholder
-                    key={id}
-                    palette={palettes[paletteName]}
-                    resourceId={id}
-                    zoom={zoom}
-                  />;
-            })}
-          </Wrap>
-        </Box>
-      </Flex>
+            <ResourcesRefreshing />
+          </Box>
+        )}
+
+        <Flex
+          h="full"
+          onScroll={virtualize}
+          overflow="scroll"
+          ref={containerRef}
+        >
+          <Box bgColor="bg.subtle" w="full">
+            <Wrap
+              bgColor="bg.subtle"
+              gap={`${gap}px`}
+              justify="center"
+              p={`${gap}px`}
+              w="full"
+            >
+              {filteredResourceIds.map((id) => {
+                return visibleById[id] ?
+                    <ResourceCardInteractive
+                      editable={editable}
+                      key={id}
+                      localizeResource={localizeResource}
+                      palette={palettes[paletteName]}
+                      resourceId={id}
+                      zoom={zoom}
+                    />
+                  : <ResourceCardInteractive.Placeholder
+                      key={id}
+                      palette={palettes[paletteName]}
+                      resourceId={id}
+                      zoom={zoom}
+                    />;
+              })}
+            </Wrap>
+          </Box>
+        </Flex>
+      </Box>
     );
   }
 

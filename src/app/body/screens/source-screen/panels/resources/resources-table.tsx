@@ -11,6 +11,7 @@ import { useCanEditSourceResources } from "~/models/sources";
 import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
 import ResourcesLoading from "./resources-loading";
+import ResourcesRefreshing from "./resources-refreshing";
 import {
   type ResourcesTableHeadExtra,
   createResourcesTableHead,
@@ -63,36 +64,52 @@ export function createResourcesTable<
     const localizeResource = useLocalizeResource(sourceId);
     const editable = useCanEditSourceResources(sourceId);
 
-    if (loading) return <ResourcesLoading name={store.displayName} />;
-    if (!filteredResourceIds.length) return <ResourcesEmpty />;
+    if (!filteredResourceIds.length)
+      return loading ?
+          <ResourcesLoading name={store.displayName} />
+        : <ResourcesEmpty />;
 
     return (
-      <Flex bgColor="bg.subtle" flex={1} h="full" overflow="scroll">
-        <Box bgColor="bg.subtle" w="full">
-          <Table.Root
-            borderCollapse="separate"
-            borderSpacing={0}
-            showColumnBorder
-            stickyHeader
-            variant="line"
+      <Box flex={1} h="full" position="relative">
+        {loading && (
+          <Box
+            pointerEvents="none"
+            position="absolute"
+            right={4}
+            top={2}
+            zIndex={1}
           >
-            <Table.Header>
-              <ResourcesTableHead sourceId={sourceId} />
-            </Table.Header>
+            <ResourcesRefreshing />
+          </Box>
+        )}
 
-            <Table.Body>
-              {filteredResourceIds.map((id) => (
-                <ResourcesTableRow
-                  editable={editable}
-                  key={id}
-                  localizeResource={localizeResource}
-                  resourceId={id}
-                />
-              ))}
-            </Table.Body>
-          </Table.Root>
-        </Box>
-      </Flex>
+        <Flex bgColor="bg.subtle" h="full" overflow="scroll">
+          <Box bgColor="bg.subtle" w="full">
+            <Table.Root
+              borderCollapse="separate"
+              borderSpacing={0}
+              showColumnBorder
+              stickyHeader
+              variant="line"
+            >
+              <Table.Header>
+                <ResourcesTableHead sourceId={sourceId} />
+              </Table.Header>
+
+              <Table.Body>
+                {filteredResourceIds.map((id) => (
+                  <ResourcesTableRow
+                    editable={editable}
+                    key={id}
+                    localizeResource={localizeResource}
+                    resourceId={id}
+                  />
+                ))}
+              </Table.Body>
+            </Table.Root>
+          </Box>
+        </Flex>
+      </Box>
     );
   };
 }
