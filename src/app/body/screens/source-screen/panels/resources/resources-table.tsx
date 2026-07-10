@@ -70,21 +70,21 @@ export function createResourcesTable<
         : <ResourcesEmpty />;
 
     return (
-      <Box flex={1} h="full" position="relative">
+      <Box flex={1} h="full" minW={0} position="relative">
         {loading && (
           <Box
             pointerEvents="none"
             position="absolute"
             right={4}
             top={2}
-            zIndex={1}
+            zIndex={2}
           >
             <ResourcesRefreshing />
           </Box>
         )}
 
-        <Flex bgColor="bg.subtle" h="full" overflow="scroll">
-          <Box bgColor="bg.subtle" w="full">
+        <Flex bgColor="bg.subtle" h="full" minW={0} overflow="scroll">
+          <Box bgColor="bg.subtle" minW="max-content" w="full">
             <Table.Root
               borderCollapse="separate"
               borderSpacing={0}
