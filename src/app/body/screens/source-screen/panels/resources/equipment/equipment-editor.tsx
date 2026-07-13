@@ -136,7 +136,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
       label: { en: "Notes", it: "Note" },
       placeholder: { en: "None", it: "Nessuna" },
     },
-    inputProps: { rows: 4 },
+    inputProps: { rows: 10 },
     translatable: true,
     useField: form.createUseField("notes"),
   });
