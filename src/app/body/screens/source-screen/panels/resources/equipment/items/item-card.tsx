@@ -23,7 +23,7 @@ export function ItemCard({
   palette,
   ...rest
 }: ItemCardProps) {
-  const { t, ti, tpi } = useI18nLangContext(i18nContext);
+  const { t, ti, tp } = useI18nLangContext(i18nContext);
 
   const charges = localizedResource._raw.charges ?? 0;
   const consumable = localizedResource._raw.consumable;
@@ -31,39 +31,27 @@ export function ItemCard({
   return (
     <EquipmentCard
       firstPageInfoRight={
-        consumable ?
-          charges === 1 ?
-            <Span alignSelf="flex-end" fontStyle="italic" fontWeight="bold">
-              {t("consumable")}
-            </Span>
-          : charges > 1 ?
-            <VStack align="flex-end" alignSelf="flex-end" gap={0}>
-              <Span fontStyle="italic" fontWeight="bold">
-                {ti("usages", `${charges}`)}
-              </Span>
-              {charges <= 10 && (
-                <HStack gap={0}>
-                  {range(charges).map((c) => (
-                    <Icon Icon={SquareIcon} key={c} size="xs" />
-                  ))}
-                </HStack>
-              )}
-            </VStack>
-          : null
-        : charges > 0 ?
-          <VStack align="flex-end" alignSelf="flex-end" gap={0}>
+        charges <= 0 ? null
+        : charges === 1 && consumable ?
+          <Span alignSelf="flex-end" fontStyle="italic" fontWeight="bold">
+            {t("consumable")}
+          </Span>
+        : <VStack align="flex-end" alignSelf="flex-end" gap={0}>
             <Span fontStyle="italic" fontWeight="bold">
-              {tpi("charges", charges, `${charges}`)}
+              {consumable ? ti("usages") : tp("charges", charges)}
             </Span>
-            {charges <= 10 && (
+            {charges <= 10 ?
               <HStack gap={0}>
                 {range(charges).map((c) => (
                   <Icon Icon={SquareIcon} key={c} size="xs" />
                 ))}
               </HStack>
-            )}
+            : <Span fontStyle="normal" fontWeight="bold">
+                {`${"___"} / ${charges}`}
+              </Span>
+            }
           </VStack>
-        : null
+
       }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}
@@ -83,19 +71,19 @@ ItemCard.w = EquipmentCard.w;
 
 const i18nContext = {
   "charges/*": {
-    en: "<1> Charges",
-    it: "<1> Cariche",
+    en: "Charges",
+    it: "Cariche",
   },
   "charges/1": {
-    en: "<1> Charge",
-    it: "<1> Carica",
+    en: "Charge",
+    it: "Carica",
   },
   "consumable": {
     en: "Consumable",
     it: "Consumabile",
   },
   "usages": {
-    en: "<1> Usages",
-    it: "<1> Usi",
+    en: "Usages",
+    it: "Usi",
   },
 };
