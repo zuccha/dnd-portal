@@ -40,7 +40,7 @@ export function ItemCard({
             <Span fontStyle="italic" fontWeight="bold">
               {consumable ? ti("usages") : tp("charges", charges)}
             </Span>
-            {charges <= 10 ?
+            {charges <= 5 ?
               <HStack gap={0}>
                 {range(charges).map((c) => (
                   <Icon Icon={SquareIcon} key={c} size="xs" />
