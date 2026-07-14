@@ -1,4 +1,11 @@
-import { Badge, HStack, Table, VStack, createIcon } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  HStack,
+  Table,
+  VStack,
+  createIcon,
+} from "@chakra-ui/react";
 import {
   EyeClosedIcon,
   EyeIcon,
@@ -238,21 +245,32 @@ export function createResourcesTableRow<
         {extra.detailsKey && expanded && (
           <Table.Row bgColor="bg.muted" w="full">
             <Table.Cell colSpan={columnCount}>
-              <VStack align="flex-start" gap={1} w="full">
-                {details ?
-                  details
-                    .split(/[\n\r]/)
-                    .map((paragraph, i) => (
-                      <RichText key={i} text={paragraph} />
-                    ))
-                : <RichText
-                    text={translate(
-                      { en: "_No details._", it: "_Nessuna descrizione._" },
-                      lang,
-                    )}
-                  />
-                }
-              </VStack>
+              <Box contain="inline-size" w="full">
+                <VStack align="flex-start" gap={1} minW={0} w="full">
+                  {details ?
+                    details
+                      .split(/[\n\r]/)
+                      .map((paragraph, i) => (
+                        <RichText
+                          display="block"
+                          key={i}
+                          overflowWrap="anywhere"
+                          text={paragraph}
+                          whiteSpace="normal"
+                        />
+                      ))
+                  : <RichText
+                      display="block"
+                      overflowWrap="anywhere"
+                      text={translate(
+                        { en: "_No details._", it: "_Nessuna descrizione._" },
+                        lang,
+                      )}
+                      whiteSpace="normal"
+                    />
+                  }
+                </VStack>
+              </Box>
             </Table.Cell>
           </Table.Row>
         )}
