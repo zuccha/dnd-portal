@@ -147,7 +147,14 @@ WITH prefs AS (
       SELECT coalesce(array_agg((e.key)::public.item_type), null)
       FROM jsonb_each_text(p_filters->'types') AS e(key, value)
       WHERE e.value = 'false'
-    ) AS types_exc
+    ) AS types_exc,
+
+    -- consumable
+    (p_filters ? 'consumable')::int::boolean AS has_consumable_filter,
+    (p_filters->>'consumable')::boolean AS consumable_val,
+
+    -- charges
+    coalesce((p_filters->>'charges_min')::int, 0) AS charges_min
 ),
 base AS (
   SELECT e.*
@@ -186,6 +193,8 @@ filtered AS (
   WHERE
         (p.types_inc IS NULL OR s.type = any(p.types_inc))
     AND (p.types_exc IS NULL OR NOT (s.type = any(p.types_exc)))
+    AND (NOT p.has_consumable_filter OR s.consumable = p.consumable_val)
+    AND (p.charges_min <= 0 OR s.charges >= p.charges_min)
 )
 SELECT
   s.source_id,
