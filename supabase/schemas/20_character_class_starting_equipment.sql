@@ -36,6 +36,16 @@ CREATE INDEX idx_character_class_starting_equipment_equipment_id
 
 
 --------------------------------------------------------------------------------
+-- CHARACTER CLASS STARTING EQUIPMENT SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_character_class_starting_equipment_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.character_class_starting_equipment
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'character_class_id');
+
+
+--------------------------------------------------------------------------------
 -- CHARACTER CLASS STARTING EQUIPMENT POLICIES
 --------------------------------------------------------------------------------
 

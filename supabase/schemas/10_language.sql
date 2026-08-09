@@ -41,6 +41,21 @@ GRANT ALL ON TABLE public.language_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- LANGUAGE SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_languages_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.languages
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_language_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.language_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- LANGUAGE RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

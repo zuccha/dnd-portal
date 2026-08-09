@@ -39,6 +39,21 @@ GRANT ALL ON TABLE public.character_subclass_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- CHARACTER SUBCLASS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_character_subclasses_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.character_subclasses
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_character_subclass_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.character_subclass_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- CHARACTER SUBCLASS RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

@@ -23,6 +23,17 @@ CREATE INDEX idx_tool_modifier_applications_tool_id
 CREATE INDEX idx_tool_modifier_applications_modifier_id
   ON public.tool_modifier_applications USING btree (tool_modifier_id);
 
+
+--------------------------------------------------------------------------------
+-- TOOL MODIFIER APPLICATIONS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_tool_modifier_applications_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.tool_modifier_applications
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'tool_id', 'tool_modifier_id');
+
+
 CREATE POLICY "Users can read tool modifier applications"
 ON public.tool_modifier_applications
 FOR SELECT TO anon, authenticated

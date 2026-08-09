@@ -238,6 +238,146 @@ GRANT ALL ON FUNCTION public.can_edit_source_resources(p_source_id uuid) TO serv
 
 
 --------------------------------------------------------------------------------
+-- BUMP SOURCE SYNC VERSION ONCE
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.bump_source_sync_version_once(p_source_id uuid)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
+  v_inserted integer;
+BEGIN
+  IF p_source_id IS NULL THEN RETURN; END IF;
+
+  CREATE TEMP TABLE IF NOT EXISTS bumped_source_sync_versions (source_id uuid PRIMARY KEY) ON COMMIT DROP;
+  INSERT INTO pg_temp.bumped_source_sync_versions (source_id) VALUES (p_source_id) ON CONFLICT DO NOTHING;
+  GET DIAGNOSTICS v_inserted = ROW_COUNT;
+
+  IF v_inserted > 0 THEN
+    UPDATE public.sources SET sync_version = sync_version + 1 WHERE id = p_source_id;
+  END IF;
+END;
+$$;
+
+ALTER FUNCTION public.bump_source_sync_version_once(p_source_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.bump_source_sync_version_once(p_source_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.bump_source_sync_version_once(p_source_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.bump_source_sync_version_once(p_source_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- BUMP SOURCE SYNC VERSION FOR RESOURCE
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.bump_source_sync_version_for_resource(p_resource_id uuid)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
+  v_source_id uuid;
+BEGIN
+  IF p_resource_id IS NULL THEN RETURN; END IF;
+
+  SELECT r.source_id INTO v_source_id FROM public.resources r WHERE r.id = p_resource_id;
+  PERFORM public.bump_source_sync_version_once(v_source_id);
+END;
+$$;
+
+ALTER FUNCTION public.bump_source_sync_version_for_resource(p_resource_id uuid) OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.bump_source_sync_version_for_resource(p_resource_id uuid) TO anon;
+GRANT ALL ON FUNCTION public.bump_source_sync_version_for_resource(p_resource_id uuid) TO authenticated;
+GRANT ALL ON FUNCTION public.bump_source_sync_version_for_resource(p_resource_id uuid) TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- BUMP SOURCE SYNC VERSION TRIGGER
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.bump_source_sync_version_trigger()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public', 'pg_temp'
+AS $$
+DECLARE
+  v_id_kind text := TG_ARGV[0];
+  v_column_index integer;
+  v_column_name text;
+  v_new_id uuid;
+  v_old_id uuid;
+BEGIN
+  IF v_id_kind NOT IN ('source', 'resource') THEN RAISE EXCEPTION 'Unsupported sync version id kind: %', v_id_kind; END IF;
+
+  FOR v_column_index IN 1..(TG_NARGS - 1) LOOP
+    v_column_name := TG_ARGV[v_column_index];
+    v_new_id := null;
+    v_old_id := null;
+
+    IF TG_OP IN ('INSERT', 'UPDATE') THEN
+      v_new_id := (to_jsonb(NEW)->>v_column_name)::uuid;
+
+      IF v_id_kind = 'source' THEN PERFORM public.bump_source_sync_version_once(v_new_id);
+      ELSE PERFORM public.bump_source_sync_version_for_resource(v_new_id);
+      END IF;
+    END IF;
+
+    IF TG_OP IN ('UPDATE', 'DELETE') THEN
+      v_old_id := (to_jsonb(OLD)->>v_column_name)::uuid;
+
+      IF TG_OP <> 'UPDATE' OR v_old_id IS DISTINCT FROM v_new_id THEN
+        IF v_id_kind = 'source' THEN PERFORM public.bump_source_sync_version_once(v_old_id);
+        ELSE PERFORM public.bump_source_sync_version_for_resource(v_old_id);
+        END IF;
+      END IF;
+    END IF;
+  END LOOP;
+
+  IF TG_OP = 'DELETE' THEN RETURN OLD; END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+ALTER FUNCTION public.bump_source_sync_version_trigger() OWNER TO postgres;
+
+GRANT ALL ON FUNCTION public.bump_source_sync_version_trigger() TO anon;
+GRANT ALL ON FUNCTION public.bump_source_sync_version_trigger() TO authenticated;
+GRANT ALL ON FUNCTION public.bump_source_sync_version_trigger() TO service_role;
+
+
+--------------------------------------------------------------------------------
+-- SOURCE SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_source_sync_version
+  AFTER UPDATE OF code, creator_id, type, version, visibility ON public.sources
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('source', 'id');
+
+CREATE TRIGGER bump_source_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.source_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('source', 'source_id');
+
+CREATE TRIGGER bump_source_includes_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.source_includes
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('source', 'source_id');
+
+CREATE TRIGGER bump_source_requires_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.source_requires
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('source', 'source_id');
+
+
+--------------------------------------------------------------------------------
 -- SOURCES POLICIES
 --------------------------------------------------------------------------------
 

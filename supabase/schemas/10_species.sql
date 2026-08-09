@@ -44,6 +44,21 @@ GRANT ALL ON TABLE public.species_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- SPECIES SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_species_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.species
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_species_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.species_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- SPECIES RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

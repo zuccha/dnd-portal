@@ -32,6 +32,21 @@ GRANT ALL ON TABLE public.armor_modifier_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- ARMOR MODIFIER SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_armor_modifiers_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.armor_modifiers
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_armor_modifier_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.armor_modifier_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- POLICIES
 --------------------------------------------------------------------------------
 

@@ -41,6 +41,21 @@ GRANT ALL ON TABLE public.feature_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- FEATURE SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_features_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.features
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_feature_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.feature_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- FEATURE RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

@@ -25,6 +25,16 @@ CREATE INDEX idx_tool_crafts_equipment_id
 
 
 --------------------------------------------------------------------------------
+-- TOOL CRAFTS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_tool_crafts_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.tool_crafts
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'tool_id');
+
+
+--------------------------------------------------------------------------------
 -- TOOL CRAFTS POLICIES
 --------------------------------------------------------------------------------
 

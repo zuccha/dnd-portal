@@ -39,6 +39,21 @@ GRANT ALL ON TABLE public.plane_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- PLANE SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_planes_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.planes
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_plane_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.plane_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- PLANE RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

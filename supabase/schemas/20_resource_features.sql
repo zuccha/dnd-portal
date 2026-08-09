@@ -26,6 +26,16 @@ CREATE INDEX idx_resource_features_feature_id ON public.resource_features USING 
 
 
 --------------------------------------------------------------------------------
+-- RESOURCE FEATURES SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_resource_features_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.resource_features
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- RESOURCE FEATURES RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

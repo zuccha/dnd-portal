@@ -41,6 +41,21 @@ GRANT ALL ON TABLE public.item_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- ITEM SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_items_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.items
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_item_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.item_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- ITEMS POLICIES
 --------------------------------------------------------------------------------
 

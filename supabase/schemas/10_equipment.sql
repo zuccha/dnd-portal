@@ -45,6 +45,21 @@ GRANT ALL ON TABLE public.equipment_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- EQUIPMENT SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_equipments_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.equipments
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_equipment_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.equipment_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- EQUIPMENT RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

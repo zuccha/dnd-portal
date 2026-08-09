@@ -22,6 +22,16 @@ CREATE INDEX idx_character_class_spells_spell_id ON public.character_class_spell
 
 
 --------------------------------------------------------------------------------
+-- CHARACTER CLASS SPELLS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_character_class_spells_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.character_class_spells
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'character_class_id');
+
+
+--------------------------------------------------------------------------------
 -- CHARACTER CLASS SPELLS POLICIES
 --------------------------------------------------------------------------------
 

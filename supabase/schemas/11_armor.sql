@@ -53,6 +53,21 @@ GRANT ALL ON TABLE public.armor_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- ARMOR SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_armors_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.armors
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_armor_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.armor_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- ARMORS POLICIES
 --------------------------------------------------------------------------------
 
@@ -102,4 +117,3 @@ CREATE POLICY "Creators and GMs can delete armor translations"
 ON public.armor_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-

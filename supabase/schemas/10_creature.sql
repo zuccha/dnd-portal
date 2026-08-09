@@ -89,6 +89,21 @@ GRANT ALL ON TABLE public.creature_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- CREATURE SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_creatures_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.creatures
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_creature_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.creature_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- CREATURE RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

@@ -25,6 +25,16 @@ CREATE INDEX idx_weapon_ammunitions_equipment_id
 
 
 --------------------------------------------------------------------------------
+-- WEAPON AMMUNITIONS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_weapon_ammunitions_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.weapon_ammunitions
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'weapon_id');
+
+
+--------------------------------------------------------------------------------
 -- WEAPON AMMUNITIONS POLICIES
 --------------------------------------------------------------------------------
 

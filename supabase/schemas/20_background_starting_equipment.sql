@@ -36,6 +36,16 @@ CREATE INDEX idx_background_starting_equipment_equipment_id
 
 
 --------------------------------------------------------------------------------
+-- BACKGROUND STARTING EQUIPMENT SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_background_starting_equipment_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.background_starting_equipment
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'background_id');
+
+
+--------------------------------------------------------------------------------
 -- BACKGROUND STARTING EQUIPMENT POLICIES
 --------------------------------------------------------------------------------
 

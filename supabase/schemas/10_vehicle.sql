@@ -54,6 +54,21 @@ GRANT ALL ON TABLE public.vehicle_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- VEHICLE SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_vehicles_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.vehicles
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_vehicle_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.vehicle_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- VEHICLE RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

@@ -44,6 +44,21 @@ GRANT ALL ON TABLE public.feat_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- FEAT SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_feats_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.feats
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_feat_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.feat_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- FEAT RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

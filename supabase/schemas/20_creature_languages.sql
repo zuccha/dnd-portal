@@ -26,6 +26,16 @@ CREATE INDEX idx_creature_languages_language_id
 
 
 --------------------------------------------------------------------------------
+-- CREATURE LANGUAGES SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_creature_languages_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.creature_languages
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'creature_id');
+
+
+--------------------------------------------------------------------------------
 -- CREATURE LANGUAGES POLICIES
 --------------------------------------------------------------------------------
 

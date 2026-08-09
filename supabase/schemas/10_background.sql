@@ -48,6 +48,21 @@ GRANT ALL ON TABLE public.background_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- BACKGROUND SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_backgrounds_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.backgrounds
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_background_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.background_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- BACKGROUND RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 
@@ -143,4 +158,3 @@ CREATE POLICY "Creators and GMs can delete background translations"
 ON public.background_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-

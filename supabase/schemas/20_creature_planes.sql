@@ -25,6 +25,16 @@ CREATE INDEX idx_creature_planes_plane_id
 
 
 --------------------------------------------------------------------------------
+-- CREATURE PLANES SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_creature_planes_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.creature_planes
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'creature_id');
+
+
+--------------------------------------------------------------------------------
 -- CREATURE PLANES POLICIES
 --------------------------------------------------------------------------------
 

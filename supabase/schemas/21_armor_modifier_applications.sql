@@ -23,6 +23,17 @@ CREATE INDEX idx_armor_modifier_applications_armor_id
 CREATE INDEX idx_armor_modifier_applications_modifier_id
   ON public.armor_modifier_applications USING btree (armor_modifier_id);
 
+
+--------------------------------------------------------------------------------
+-- ARMOR MODIFIER APPLICATIONS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_armor_modifier_applications_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.armor_modifier_applications
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'armor_id', 'armor_modifier_id');
+
+
 CREATE POLICY "Users can read armor modifier applications"
 ON public.armor_modifier_applications
 FOR SELECT TO anon, authenticated
@@ -80,5 +91,4 @@ ALTER FUNCTION public.replace_armor_modifier_applications(p_armor_id uuid, p_mod
 GRANT ALL ON FUNCTION public.replace_armor_modifier_applications(p_armor_id uuid, p_modifier_ids jsonb) TO anon;
 GRANT ALL ON FUNCTION public.replace_armor_modifier_applications(p_armor_id uuid, p_modifier_ids jsonb) TO authenticated;
 GRANT ALL ON FUNCTION public.replace_armor_modifier_applications(p_armor_id uuid, p_modifier_ids jsonb) TO service_role;
-
 

@@ -59,6 +59,21 @@ GRANT ALL ON TABLE public.spell_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- SPELL SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_spells_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.spells
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_spell_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.spell_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- SPELL RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

@@ -25,6 +25,16 @@ CREATE INDEX idx_creature_creature_tags_creature_tag_id
 
 
 --------------------------------------------------------------------------------
+-- CREATURE CREATURE TAGS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_creature_creature_tags_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.creature_creature_tags
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'creature_id');
+
+
+--------------------------------------------------------------------------------
 -- CREATURE CREATURE TAGS POLICIES
 --------------------------------------------------------------------------------
 

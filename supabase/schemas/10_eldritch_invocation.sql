@@ -41,6 +41,21 @@ GRANT ALL ON TABLE public.eldritch_invocation_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- ELDRITCH INVOCATION SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_eldritch_invocations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.eldritch_invocations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_eldritch_invocation_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.eldritch_invocation_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- ELDRITCH INVOCATION RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 
@@ -124,4 +139,3 @@ CREATE POLICY "Creators and GMs can delete eldritch invocation translations"
 ON public.eldritch_invocation_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-

@@ -39,6 +39,21 @@ GRANT ALL ON TABLE public.maneuver_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- MANEUVER SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_maneuvers_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.maneuvers
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_maneuver_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.maneuver_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- MANEUVER RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 
@@ -122,4 +137,3 @@ CREATE POLICY "Creators and GMs can delete maneuver translations"
 ON public.maneuver_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-

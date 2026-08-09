@@ -32,6 +32,21 @@ GRANT ALL ON TABLE public.weapon_modifier_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- WEAPON MODIFIER SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_weapon_modifiers_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.weapon_modifiers
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_weapon_modifier_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.weapon_modifier_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- POLICIES
 --------------------------------------------------------------------------------
 

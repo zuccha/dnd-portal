@@ -44,6 +44,22 @@ GRANT ALL ON TABLE public.character_class_translations TO anon;
 GRANT ALL ON TABLE public.character_class_translations TO authenticated;
 GRANT ALL ON TABLE public.character_class_translations TO service_role;
 
+
+--------------------------------------------------------------------------------
+-- CHARACTER CLASS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_character_classes_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.character_classes
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_character_class_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.character_class_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
 --------------------------------------------------------------------------------
 -- CHARACTER CLASS RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------

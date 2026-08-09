@@ -23,6 +23,17 @@ CREATE INDEX idx_item_modifier_applications_item_id
 CREATE INDEX idx_item_modifier_applications_modifier_id
   ON public.item_modifier_applications USING btree (item_modifier_id);
 
+
+--------------------------------------------------------------------------------
+-- ITEM MODIFIER APPLICATIONS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_item_modifier_applications_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.item_modifier_applications
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'item_id', 'item_modifier_id');
+
+
 CREATE POLICY "Users can read item modifier applications"
 ON public.item_modifier_applications
 FOR SELECT TO anon, authenticated

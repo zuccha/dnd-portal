@@ -23,6 +23,17 @@ CREATE INDEX idx_weapon_modifier_applications_weapon_id
 CREATE INDEX idx_weapon_modifier_applications_modifier_id
   ON public.weapon_modifier_applications USING btree (weapon_modifier_id);
 
+
+--------------------------------------------------------------------------------
+-- WEAPON MODIFIER APPLICATIONS SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_weapon_modifier_applications_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.weapon_modifier_applications
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'weapon_id', 'weapon_modifier_id');
+
+
 CREATE POLICY "Users can read weapon modifier applications"
 ON public.weapon_modifier_applications
 FOR SELECT TO anon, authenticated

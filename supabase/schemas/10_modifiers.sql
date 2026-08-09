@@ -39,6 +39,21 @@ GRANT ALL ON TABLE public.modifier_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- MODIFIER SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_modifiers_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.modifiers
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_modifier_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.modifier_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- MODIFIER RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

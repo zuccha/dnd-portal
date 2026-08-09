@@ -217,6 +217,21 @@ USING (public.can_edit_resource(resource_id));
 
 
 --------------------------------------------------------------------------------
+-- RESOURCE SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_resources_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.resources
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('source', 'source_id');
+
+CREATE TRIGGER bump_resource_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.resource_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- CREATE RESOURCE
 --------------------------------------------------------------------------------
 

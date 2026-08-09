@@ -43,6 +43,21 @@ GRANT ALL ON TABLE public.service_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- SERVICE SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_services_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.services
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_service_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.service_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- SERVICE RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

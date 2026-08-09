@@ -32,6 +32,21 @@ GRANT ALL ON TABLE public.tool_modifier_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- TOOL MODIFIER SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_tool_modifiers_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.tool_modifiers
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_tool_modifier_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.tool_modifier_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- POLICIES
 --------------------------------------------------------------------------------
 

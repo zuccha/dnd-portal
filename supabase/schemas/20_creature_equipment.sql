@@ -29,6 +29,16 @@ CREATE INDEX idx_creature_equipment_equipment_id
 
 
 --------------------------------------------------------------------------------
+-- CREATURE EQUIPMENT SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_creature_equipment_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.creature_equipment
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'creature_id');
+
+
+--------------------------------------------------------------------------------
 -- CREATURE EQUIPMENT POLICIES
 --------------------------------------------------------------------------------
 

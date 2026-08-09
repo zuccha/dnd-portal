@@ -37,6 +37,21 @@ GRANT ALL ON TABLE public.creature_tag_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- CREATURE TAG SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_creature_tags_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.creature_tags
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_creature_tag_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.creature_tag_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- CREATURE TAG RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 

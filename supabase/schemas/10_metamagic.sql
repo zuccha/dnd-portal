@@ -41,6 +41,21 @@ GRANT ALL ON TABLE public.metamagic_translations TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- METAMAGIC SYNC VERSION TRIGGERS
+--------------------------------------------------------------------------------
+
+CREATE TRIGGER bump_metamagics_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.metamagics
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+CREATE TRIGGER bump_metamagic_translations_sync_version
+  AFTER INSERT OR UPDATE OR DELETE ON public.metamagic_translations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.bump_source_sync_version_trigger('resource', 'resource_id');
+
+
+--------------------------------------------------------------------------------
 -- METAMAGIC RESOURCE KIND VALIDATION TRIGGER
 --------------------------------------------------------------------------------
 
@@ -124,4 +139,3 @@ CREATE POLICY "Creators and GMs can delete metamagic translations"
 ON public.metamagic_translations
 FOR DELETE TO authenticated
 USING (public.can_edit_resource(resource_id));
-
