@@ -15,6 +15,7 @@ export const sourceSchema = z.object({
   code: z.string(),
   id: z.uuid(),
   name: i18nStringSchema,
+  sync_version: z.number(),
   type: sourceTypeSchema,
   version: sourceVersionSchema,
 
@@ -24,6 +25,7 @@ export const sourceSchema = z.object({
         code: z.string(),
         id: z.uuid(),
         name: i18nStringSchema,
+        sync_version: z.number(),
         type: sourceTypeSchema,
         version: sourceVersionSchema,
       }),

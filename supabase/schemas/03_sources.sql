@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.sources (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   code text DEFAULT ''::text NOT NULL,
   creator_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  sync_version bigint DEFAULT 1 NOT NULL,
   type public.source_type DEFAULT 'campaign'::public.source_type NOT NULL,
   version public.source_version DEFAULT 'dnd5_5'::public.source_version NOT NULL,
   visibility public.source_visibility DEFAULT 'private'::public.source_visibility NOT NULL,
@@ -594,7 +595,7 @@ GRANT ALL ON FUNCTION public.source_ids_with_includes_and_requires(p_source_id u
 --------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION public.fetch_sources(p_types public.source_type[] DEFAULT NULL)
-RETURNS TABLE(id uuid, code text, type public.source_type, version public.source_version, name jsonb, includes jsonb)
+RETURNS TABLE(id uuid, code text, sync_version bigint, type public.source_type, version public.source_version, name jsonb, includes jsonb)
 LANGUAGE sql STABLE
 SET search_path TO 'public', 'pg_temp'
 AS $$
@@ -609,6 +610,7 @@ AS $$
     SELECT
       s.id,
       s.code,
+      s.sync_version,
       s.type,
       s.version,
       coalesce(n.name, '{}'::jsonb) AS name
@@ -620,6 +622,7 @@ AS $$
   SELECT
     v.id,
     v.code,
+    v.sync_version,
     v.type,
     v.version,
     v.name,
@@ -628,6 +631,7 @@ AS $$
         jsonb_build_object(
           'id', d.id,
           'code', ds.code,
+          'sync_version', ds.sync_version,
           'type', ds.type,
           'version', ds.version,
           'name', coalesce(dn.name, '{}'::jsonb)
@@ -654,7 +658,7 @@ AS $$
   ) d ON true
   LEFT JOIN public.sources ds ON ds.id = d.id
   LEFT JOIN names dn ON dn.id = d.id
-  GROUP BY v.id, v.code, v.type, v.version, v.name
+  GROUP BY v.id, v.code, v.sync_version, v.type, v.version, v.name
   ORDER BY v.code;
 $$;
 
