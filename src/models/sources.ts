@@ -36,6 +36,14 @@ export const sourceSchema = z.object({
 export type Source = z.infer<typeof sourceSchema>;
 
 //------------------------------------------------------------------------------
+// Source Metadata
+//------------------------------------------------------------------------------
+
+export const sourceMetadataSchema = sourceSchema.omit({ includes: true });
+
+export type SourceMetadata = z.infer<typeof sourceMetadataSchema>;
+
+//------------------------------------------------------------------------------
 // Source Relations
 //------------------------------------------------------------------------------
 
@@ -62,6 +70,32 @@ export function useSources(types?: SourceType[]) {
       return z.array(sourceSchema).parse(data);
     },
     queryKey: ["sources/sources", types],
+  });
+}
+
+//------------------------------------------------------------------------------
+// Fetch Source Metadata
+//------------------------------------------------------------------------------
+
+export async function fetchSourceMetadata(
+  sourceId: string,
+): Promise<SourceMetadata[]> {
+  const { data } = await supabase.rpc("fetch_source_metadata", {
+    p_source_id: sourceId,
+  });
+
+  return z.array(sourceMetadataSchema).parse(data);
+}
+
+//------------------------------------------------------------------------------
+// Use Source Metadata
+//------------------------------------------------------------------------------
+
+export function useSourceMetadata(sourceId: string | undefined) {
+  return useQuery<SourceMetadata[]>({
+    enabled: !!sourceId,
+    queryFn: () => fetchSourceMetadata(sourceId!),
+    queryKey: ["sources/metadata", sourceId],
   });
 }
 
