@@ -28,6 +28,7 @@ supabase/seed.sql
 
 # Local files
 *.env
+data/
 db.dump.*
 db-dump/
 _local/
