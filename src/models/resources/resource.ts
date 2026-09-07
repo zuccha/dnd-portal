@@ -63,24 +63,6 @@ export const resourceTranslationFields: TranslationFields<Resource>[] = [
 ];
 
 //------------------------------------------------------------------------------
-// Resource Lookup
-//------------------------------------------------------------------------------
-
-export const resourceLookupSchema = z.object({
-  id: z.uuid(),
-  name: i18nStringSchema,
-  name_short: i18nStringSchema,
-});
-
-export type ResourceLookup = z.infer<typeof resourceLookupSchema>;
-
-export const defaultResourceLookup: ResourceLookup = {
-  id: "",
-  name: {},
-  name_short: {},
-};
-
-//------------------------------------------------------------------------------
 // Resource Option
 //------------------------------------------------------------------------------
 

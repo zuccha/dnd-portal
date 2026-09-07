@@ -81,12 +81,8 @@ export function createResourceCardInteractive<
   context: ResourcesContext<R>,
   extra: ResourceCardInteractiveExtra<R, L>,
 ) {
-  const {
-    useResource,
-    useResourceLookup,
-    useResourceSelection,
-    useResourceSelectionMethods,
-  } = store;
+  const { useResource, useResourceSelection, useResourceSelectionMethods } =
+    store;
 
   const AlbumCard = extra.AlbumCard;
   const { useCardMode, usePaletteName, useShowImage } = context;
@@ -299,8 +295,8 @@ export function createResourceCardInteractive<
     zoom,
   }: ResourceCardInteractivePlaceholderProps) {
     const [lang] = useI18nLang();
-    const [lookup] = useResourceLookup(resourceId);
-    const name = translate(lookup.name, lang);
+    const [resource] = useResource(resourceId);
+    const name = translate(resource.name, lang);
 
     return <AlbumCard.Placeholder name={name} palette={palette} zoom={zoom} />;
   }

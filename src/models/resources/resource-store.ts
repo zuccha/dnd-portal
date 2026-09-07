@@ -9,7 +9,7 @@ import { createCache } from "~/utils/cache";
 import { createUseDerivedData } from "~/utils/derived-data";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
-import { createLockedRequest, success } from "~/utils/request";
+import { createLockedRequest } from "~/utils/request";
 import { normalizeString } from "~/utils/string";
 import { createDeterministicUuid } from "~/utils/uuid";
 import type { ResourceKind } from "../types/resource-kind";
@@ -17,10 +17,8 @@ import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
 import {
   type Resource,
-  type ResourceLookup,
   type ResourceOption,
   type TranslationFields,
-  defaultResourceLookup,
 } from "./resource";
 import type { ResourceFilters } from "./resource-filters";
 import { useResourcesSourcesFilter } from "./resources-sources-filter";
@@ -208,7 +206,6 @@ export function createResourceStore<
     if (!virtualResourceRecipes.delete(resourceId)) return;
 
     resourceCache.remove(resourceId);
-    resourceLookupCache.remove(resourceId);
     resourceSelectionCache.remove(resourceId);
 
     virtualResourceIdsStore.set((prev) => {
@@ -267,7 +264,6 @@ export function createResourceStore<
 
     const resource = recipe.derive(base, recipe.id);
     resourceCache.set(recipe.id, { ...resource, id: recipe.id, virtual: true });
-    resourceLookupCache.set(recipe.id, { ...resource, id: recipe.id });
   }
 
   //----------------------------------------------------------------------------
@@ -299,7 +295,6 @@ export function createResourceStore<
     async (resourceIds: string[]): Promise<string | undefined> => {
       for (const resourceId of resourceIds) {
         resourceCache.remove(resourceId);
-        resourceLookupCache.remove(resourceId);
       }
 
       return undefined;
@@ -307,61 +302,10 @@ export function createResourceStore<
   );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Fetch Resource
+  // Resource Cache
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   const resourceCache = createCache<string, R>(`${storeId}.resource`);
-  const resourceLookupCache = createCache<string, ResourceLookup>(
-    `${storeId}.resource_lookup`,
-  );
-
-  function fetchResource(resourceId: string) {
-    const key = hash([resourceId]);
-    const data = getResource(resourceId) ?? defaultResource;
-    return { key, promise: Promise.resolve(success(data)) };
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Fetch Resource Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function fetchResourceIds(
-    sourceId: string,
-    _sources: Record<string, boolean | undefined>,
-    _filters: Omit<F, "name">,
-    _lang: string,
-  ) {
-    const key = hash([sourceId]);
-    const data = catalogueResources.getResourceIds([
-      sourceId,
-      ...catalogue.getActiveIncludedSourceIds(),
-    ]);
-    return { key, promise: Promise.resolve(success(data)) };
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Fetch Resource Lookup
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function fetchResourceLookup(resourceId: string) {
-    const key = hash([resourceId]);
-    const data = getResourceLookup(resourceId) ?? defaultResourceLookup;
-    return { key, promise: Promise.resolve(success(data)) };
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Fetch Resource Lookup Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function fetchResourceLookupIds(sourceId: string) {
-    const key = hash([sourceId]);
-    const data = catalogueResources.getResourceIds([
-      sourceId,
-      ...catalogue.getActiveIncludedSourceIds(),
-      ...catalogue.getActiveRequiredSourceIds(),
-    ]);
-    return { key, promise: Promise.resolve(success(data)) };
-  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Get Resource
@@ -372,14 +316,6 @@ export function createResourceStore<
       resourceCache.get(resourceId) ??
       (catalogueResources.getResource(resourceId) as R | undefined)
     );
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Get Resource Lookup
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function getResourceLookup(resourceId: string): ResourceLookup | undefined {
-    return resourceLookupCache.get(resourceId) ?? getResource(resourceId);
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -488,37 +424,6 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resource Lookup
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useResourceLookup(resourceId: string): [ResourceLookup, string] {
-    if (virtualResourceRecipes.has(resourceId)) {
-      if (!resourceLookupCache.get(resourceId))
-        refreshVirtualResource(resourceId);
-
-      const key = hash([resourceId]);
-      const lookup = resourceLookupCache.useValue(resourceId);
-      return [lookup ?? defaultResourceLookup, key];
-    }
-
-    const key = hash([resourceId]);
-    const lookup = catalogueResources.useResource(resourceId);
-    return [lookup ?? defaultResourceLookup, key];
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resource Lookup Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useResourceLookupIds(sourceId: string): [string[], string] {
-    const includedIds = catalogue.useActiveIncludedSourceIds();
-    const requiredIds = catalogue.useActiveRequiredSourceIds();
-    const sourceIds = [sourceId, ...includedIds, ...requiredIds];
-    const key = hash(sourceIds);
-    return [catalogueResources.useResourceIds(sourceIds), key];
-  }
-
-  //----------------------------------------------------------------------------
   // Filtered Resources
   //----------------------------------------------------------------------------
 
@@ -705,15 +610,20 @@ export function createResourceStore<
     sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const [lookupIds] = useResourceLookupIds(sourceId);
+    const includedIds = catalogue.useActiveIncludedSourceIds();
+    const requiredIds = catalogue.useActiveRequiredSourceIds();
+    const resourceIds = catalogueResources.useResourceIds([
+      sourceId,
+      ...includedIds,
+      ...requiredIds,
+    ]);
 
     return useCallback(
       (resourceId: string) => {
-        const lookup =
-          resourceLookupCache.get(resourceId) ?? defaultResourceLookup;
-        return translate(lookup.name, lang);
+        const resource = getResource(resourceId) ?? defaultResource;
+        return translate(resource.name, lang);
       },
-      [lang, lookupIds], // eslint-disable-line react-hooks/exhaustive-deps
+      [lang, resourceIds], // eslint-disable-line react-hooks/exhaustive-deps
     );
   }
 
@@ -725,15 +635,20 @@ export function createResourceStore<
     sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const [lookupIds] = useResourceLookupIds(sourceId);
+    const includedIds = catalogue.useActiveIncludedSourceIds();
+    const requiredIds = catalogue.useActiveRequiredSourceIds();
+    const resourceIds = catalogueResources.useResourceIds([
+      sourceId,
+      ...includedIds,
+      ...requiredIds,
+    ]);
 
     return useCallback(
       (resourceId: string) => {
-        const lookup =
-          resourceLookupCache.get(resourceId) ?? defaultResourceLookup;
-        return translate(lookup.name_short, lang);
+        const resource = getResource(resourceId) ?? defaultResource;
+        return translate(resource.name_short, lang);
       },
-      [lang, lookupIds], // eslint-disable-line react-hooks/exhaustive-deps
+      [lang, resourceIds], // eslint-disable-line react-hooks/exhaustive-deps
     );
   }
 
@@ -761,19 +676,25 @@ export function createResourceStore<
     sourceId: string,
     lang: string,
   ): [ResourceOption[], string] {
-    const [lookupIds, lookupIdsKey] = useResourceLookupIds(sourceId);
-    const key = hash([lookupIdsKey, lang]);
+    const includedIds = catalogue.useActiveIncludedSourceIds();
+    const requiredIds = catalogue.useActiveRequiredSourceIds();
+    const resourceIds = catalogueResources.useResourceIds([
+      sourceId,
+      ...includedIds,
+      ...requiredIds,
+    ]);
+    const key = hash([resourceIds, lang]);
 
     return [
-      lookupIds
+      resourceIds
         .map((id) => {
-          const lookup = getResourceLookup(id) ?? defaultResourceLookup;
-          const label = translate(lookup.name, lang);
+          const resource = getResource(id) ?? defaultResource;
+          const label = translate(resource.name, lang);
           return {
             label,
-            name: lookup.name,
-            name_short: lookup.name_short,
-            value: lookup.id,
+            name: resource.name,
+            name_short: resource.name_short,
+            value: resource.id,
           };
         })
         .sort(compareObjects("label")),
@@ -807,19 +728,12 @@ export function createResourceStore<
     addVirtualResourceRecipe,
     createResource,
     deleteResources,
-    fetchResource,
-    fetchResourceIds,
-    fetchResourceLookup,
-    fetchResourceLookupIds,
     getResource,
-    getResourceLookup,
     removeVirtualResource,
     updateResource,
     useAllResourceIds,
     useResource,
     useResourceIds,
-    useResourceLookup,
-    useResourceLookupIds,
     useResources,
 
     useFilteredResourceIds,
