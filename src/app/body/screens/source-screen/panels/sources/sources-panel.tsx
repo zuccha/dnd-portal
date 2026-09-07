@@ -1,28 +1,22 @@
-import { HStack, Heading, Input, Text, VStack } from "@chakra-ui/react";
-// import { DownloadIcon, Trash2Icon } from "lucide-react";
+import { Grid, HStack, Heading, Input, Text, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-// import { useSelectedSourceId } from "~/models/sources";
-// import {
-//   deleteLocalSourceBundle,
-//   importLocalSourceBundle,
-//   useLocalSourceBundles,
-// } from "~/models/sources/source-catalogue";
-// import { useTranslateSourceVersion } from "~/models/types/source-version";
+import {
+  importSourceBundle,
+  useCatalogueSources,
+} from "~/models/catalogue/catalogue";
+import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
-// import IconButton from "~/ui/icon-button";
-// import SectionHeading from "~/ui/section-heading";
-// import { downloadFile } from "~/utils/download";
+import SectionHeading from "~/ui/section-heading";
 
 //------------------------------------------------------------------------------
 // Sources Panel
 //------------------------------------------------------------------------------
 
 export default function SourcesPanel() {
-  const { t } = useI18nLangContext(i18nContext);
-  // const bundles = useLocalSourceBundles();
-  // const [selectedSourceId, setSelectedSourceId] = useSelectedSourceId();
-  // const translateSourceVersion = useTranslateSourceVersion(lang);
+  const { lang, t } = useI18nLangContext(i18nContext);
+  const sources = useCatalogueSources();
+  const translateSourceVersion = useTranslateSourceVersion(lang);
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>();
 
@@ -31,8 +25,8 @@ export default function SourcesPanel() {
     setError(undefined);
 
     try {
-      // const text = await file.text();
-      // await importLocalSourceBundle(JSON.parse(text));
+      const text = await file.text();
+      importSourceBundle(JSON.parse(text));
     } catch (e) {
       console.error(e);
       setError(t("error.import"));
@@ -68,63 +62,34 @@ export default function SourcesPanel() {
         </Text>
       )}
 
-      {/* {bundles.length ?
+      {sources.length ?
         <Grid
           gap={4}
           gridTemplateColumns="repeat(auto-fill, minmax(16rem, 1fr))"
           w="full"
         >
-          {bundles.map((bundle) => {
-            const name = bundle.source.name[lang] || bundle.source.code;
+          {sources.map((source) => {
+            const name = source.name[lang] || source.code;
             return (
               <VStack
                 align="flex-start"
                 borderWidth={1}
-                gap={4}
-                key={bundle.source.id}
+                gap={1}
+                key={source.id}
                 p={4}
-                rounded="md"
+                rounded="sm"
               >
-                <VStack align="flex-start" gap={1} w="full">
-                  <SectionHeading>{bundle.source.code}</SectionHeading>
-                  <Text fontWeight="medium">{name}</Text>
-                  <Text color="fg.muted" fontSize="sm">
-                    {t(bundle.source.type)} ·{" "}
-                    {translateSourceVersion(bundle.source.version).label}
-                  </Text>
-                </VStack>
-
-                <HStack justify="flex-end" w="full">
-                  <IconButton
-                    Icon={DownloadIcon}
-                    label={t("export")}
-                    onClick={() =>
-                      downloadFile(
-                        JSON.stringify(bundle, null, 2),
-                        `${bundle.source.code}.json`,
-                        "json",
-                      )
-                    }
-                    size="sm"
-                    variant="ghost"
-                  />
-                  <IconButton
-                    Icon={Trash2Icon}
-                    label={t("remove")}
-                    onClick={() => {
-                      deleteLocalSourceBundle(bundle.source.id);
-                      if (selectedSourceId === bundle.source.id)
-                        setSelectedSourceId(undefined);
-                    }}
-                    size="sm"
-                    variant="ghost"
-                  />
-                </HStack>
+                <SectionHeading>{source.code}</SectionHeading>
+                <Text fontWeight="medium">{name}</Text>
+                <Text color="fg.muted" fontSize="sm">
+                  {t(source.type)} ·{" "}
+                  {translateSourceVersion(source.version).label}
+                </Text>
               </VStack>
             );
           })}
         </Grid>
-      : null} */}
+      : null}
     </VStack>
   );
 }
@@ -146,10 +111,6 @@ const i18nContext = {
     en: "The selected file is not a valid source JSON.",
     it: "Il file selezionato non è una fonte JSON valida.",
   },
-  "export": {
-    en: "Export",
-    it: "Esporta",
-  },
   "import": {
     en: "Import",
     it: "Importa",
@@ -157,10 +118,6 @@ const i18nContext = {
   "module": {
     en: "Module",
     it: "Modulo",
-  },
-  "remove": {
-    en: "Remove",
-    it: "Rimuovi",
   },
   "subtitle": {
     en: "Import, export, and remove local sources.",
