@@ -1,7 +1,8 @@
 import { FolderIcon } from "lucide-react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { type Source, useSelectedSourceId, useSources } from "~/models/sources";
+import catalogue from "~/models/catalogue/catalogue";
+import { type SourceMetadata, useSelectedSourceId } from "~/models/sources";
 import {
   type SourceVersion,
   useTranslateSourceVersion,
@@ -25,28 +26,29 @@ export default function SidebarSourceSelector({
 }: SidebarSourceSelectorProps) {
   const [selectedSourceId, setSelectedSourceId] = useSelectedSourceId();
 
-  const campaigns = useSources(["campaign"]);
-  const modules = useSources(["module"]);
-  const cores = useSources(["core"]);
+  const sources = catalogue.useSourceMetadataList();
 
   const { lang, t } = useI18nLangContext(i18nContext);
   const translateSourceVersion = useTranslateSourceVersion(lang);
 
   const [sourceOptions, sourceCategories] = useMemo(() => {
+    const cores = sources.filter(({ type }) => type === "core");
+    const modules = sources.filter(({ type }) => type === "module");
+    const campaigns = sources.filter(({ type }) => type === "campaign");
     const coreItems = itemizeSources(
-      cores.data ?? [],
+      cores,
       versions,
       lang,
       translateSourceVersion,
     );
     const moduleItems = itemizeSources(
-      modules.data ?? [],
+      modules,
       versions,
       lang,
       translateSourceVersion,
     );
     const campaignItems = itemizeSources(
-      campaigns.data ?? [],
+      campaigns,
       versions,
       lang,
       translateSourceVersion,
@@ -81,26 +83,16 @@ export default function SidebarSourceSelector({
       });
 
     return [items, categories];
-  }, [
-    cores.data,
-    versions,
-    lang,
-    translateSourceVersion,
-    modules.data,
-    campaigns.data,
-    t,
-  ]);
-
-  const fetched = campaigns.isFetched && modules.isFetched && cores.isFetched;
+  }, [sources, versions, lang, translateSourceVersion, t]);
 
   useLayoutEffect(() => {
-    if (fetched && sourceOptions.length)
+    if (sourceOptions.length)
       setSelectedSourceId((prev) =>
         sourceOptions.every(({ value }) => value !== prev) ?
           sourceOptions[0]?.value
         : prev,
       );
-  }, [fetched, setSelectedSourceId, sourceOptions]);
+  }, [setSelectedSourceId, sourceOptions]);
 
   return (
     <>
@@ -134,7 +126,7 @@ export default function SidebarSourceSelector({
 //------------------------------------------------------------------------------
 
 function itemizeSources(
-  sources: Source[],
+  sources: SourceMetadata[],
   versions: SourceVersion[],
   lang: string,
   translateSourceVersion: (version: SourceVersion) => { label: string },
@@ -150,7 +142,7 @@ function itemizeSources(
 //------------------------------------------------------------------------------
 
 function sourceToOption(
-  source: Source,
+  source: SourceMetadata,
   lang: string,
   translateSourceVersion: (version: SourceVersion) => { label: string },
 ): SelectOption<string> {
