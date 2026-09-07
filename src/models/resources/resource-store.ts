@@ -1,15 +1,15 @@
 import { useCallback, useMemo } from "react";
-import { type ZodType, z } from "zod";
+import type { ZodType } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
+import catalogue from "~/models/catalogue/catalogue";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStore } from "~/store/memory-store";
-import supabase from "~/supabase";
 import { createCache } from "~/utils/cache";
 import { createUseDerivedData } from "~/utils/derived-data";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
-import { createCachedRequest, createLockedRequest } from "~/utils/request";
+import { createLockedRequest, success } from "~/utils/request";
 import { normalizeString } from "~/utils/string";
 import { createDeterministicUuid } from "~/utils/uuid";
 import type { ResourceKind } from "../types/resource-kind";
@@ -21,7 +21,6 @@ import {
   type ResourceOption,
   type TranslationFields,
   defaultResourceLookup,
-  resourceLookupSchema,
 } from "./resource";
 import type { ResourceFilters } from "./resource-filters";
 import { useResourcesSourcesFilter } from "./resources-sources-filter";
@@ -67,9 +66,9 @@ export function createResourceStore<
     displayName,
     filtersSchema,
     kinds,
-    resourceSchema,
+    resourceSchema: _resourceSchema,
     orderOptions,
-    translationFields,
+    translationFields: _translationFields,
     useLocalizeResource,
   }: {
     defaultFilters: F;
@@ -84,7 +83,7 @@ export function createResourceStore<
   },
 ) {
   const storeId = `resources[${storeName.p}]`;
-  const emptyIds: string[] = [];
+  const catalogueResources = catalogue.createResourceStore(kinds);
 
   //----------------------------------------------------------------------------
   // Filters
@@ -208,8 +207,8 @@ export function createResourceStore<
   function removeVirtualResource(resourceId: string): void {
     if (!virtualResourceRecipes.delete(resourceId)) return;
 
-    resourceCache.cache.remove(hash([resourceId]));
-    resourceLookupCache.cache.remove(hash([resourceId]));
+    resourceCache.remove(resourceId);
+    resourceLookupCache.remove(resourceId);
     resourceSelectionCache.remove(resourceId);
 
     virtualResourceIdsStore.set((prev) => {
@@ -263,15 +262,12 @@ export function createResourceStore<
     const recipe = virtualResourceRecipes.get(resourceId);
     if (!recipe) return;
 
-    const base = resourceCache.get(recipe.base_id);
-    if (!base) {
-      fetchResource(recipe.base_id);
-      return;
-    }
+    const base = getResource(recipe.base_id);
+    if (!base) return;
 
     const resource = recipe.derive(base, recipe.id);
-    resourceCache.set({ ...resource, id: recipe.id, virtual: true }, recipe.id);
-    resourceLookupCache.set({ ...resource, id: recipe.id }, recipe.id);
+    resourceCache.set(recipe.id, { ...resource, id: recipe.id, virtual: true });
+    resourceLookupCache.set(recipe.id, { ...resource, id: recipe.id });
   }
 
   //----------------------------------------------------------------------------
@@ -286,25 +282,11 @@ export function createResourceStore<
     `${storeId}.create_resource`,
     undefined,
     async (
-      sourceId: string,
-      lang: string,
-      resource: Partial<DBR>,
-      translation: Partial<DBT>,
-    ): Promise<string | undefined> => {
-      const { error } = await supabase.rpc(`create_${storeName.s}`, {
-        p_lang: lang,
-        p_source_id: sourceId,
-        [`p_${storeName.s}`]: resource,
-        [`p_${storeName.s}_translation`]: translation,
-      });
-
-      if (error) throw error;
-
-      resourceIdsCache.invalidateAll();
-      resourceLookupIdsCache.invalidateAll();
-
-      return undefined;
-    },
+      _sourceId: string,
+      _lang: string,
+      _resource: Partial<DBR>,
+      _translation: Partial<DBT>,
+    ): Promise<string | undefined> => undefined,
   );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -315,19 +297,9 @@ export function createResourceStore<
     `${storeId}.delete_resources`,
     undefined,
     async (resourceIds: string[]): Promise<string | undefined> => {
-      const { error } = await supabase
-        .from("resources")
-        .delete()
-        .in("id", resourceIds);
-
-      if (error) throw error;
-
-      resourceIdsCache.invalidateAll();
-      resourceLookupIdsCache.invalidateAll();
-
       for (const resourceId of resourceIds) {
-        resourceCache.invalidate(resourceId);
-        resourceLookupCache.invalidate(resourceId);
+        resourceCache.remove(resourceId);
+        resourceLookupCache.remove(resourceId);
       }
 
       return undefined;
@@ -338,125 +310,68 @@ export function createResourceStore<
   // Fetch Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  // TODO: Fetch resource by lang, and check if the given lang exists.
-  const [fetchResource, resourceCache] = createCachedRequest(
-    `${storeId}.resource`,
-    defaultResource,
-    async (resourceId: string): Promise<R> => {
-      const { data, error } = await supabase.rpc(`fetch_${storeName.s}`, {
-        p_id: resourceId,
-      });
-
-      if (error) throw error;
-
-      const resource = resourceSchema.optional().parse(data);
-      if (!resource)
-        throw new Error(`${storeName.s} (${resourceId}) not found`);
-
-      resourceLookupCache.set(resource, resource.id);
-      return resource;
-    },
+  const resourceCache = createCache<string, R>(`${storeId}.resource`);
+  const resourceLookupCache = createCache<string, ResourceLookup>(
+    `${storeId}.resource_lookup`,
   );
+
+  function fetchResource(resourceId: string) {
+    const key = hash([resourceId]);
+    const data = getResource(resourceId) ?? defaultResource;
+    return { key, promise: Promise.resolve(success(data)) };
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Fetch Resource Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [fetchResourceIds, resourceIdsCache] = createCachedRequest(
-    `${storeId}.resource_ids`,
-    [],
-    async (
-      sourceId: string,
-      sources: Record<string, boolean | undefined>,
-      filters: Omit<F, "name">,
-      lang: string,
-    ): Promise<string[]> => {
-      const { order_by, order_dir, ...other } = filters;
-      const { data, error } = await supabase.rpc(`fetch_${storeName.p}`, {
-        p_filters: { ...other, sources },
-        p_langs: [lang],
-        p_order_by: order_by,
-        p_order_dir: order_dir,
-        p_source_id: sourceId,
-      });
-
-      if (error) throw error;
-
-      const resources = z.array(resourceSchema).parse(data);
-      const resourceIds = resources.map(({ id }) => id);
-
-      for (const resource of resources) {
-        const prev = resourceCache.get(resource.id) ?? defaultResource;
-        const merged = { ...prev, ...resource };
-        for (const translationField of translationFields) {
-          merged[translationField] = {
-            ...prev[translationField],
-            ...resource[translationField],
-          };
-        }
-        resourceCache.set(merged, resource.id);
-        resourceLookupCache.set(merged, merged.id);
-        for (const recipe of virtualResourceRecipes.values())
-          if (recipe.base_id === merged.id) refreshVirtualResource(recipe.id);
-      }
-
-      return resourceIds;
-    },
-  );
+  function fetchResourceIds(
+    sourceId: string,
+    _sources: Record<string, boolean | undefined>,
+    _filters: Omit<F, "name">,
+    _lang: string,
+  ) {
+    const key = hash([sourceId]);
+    const data = catalogueResources.getResourceIds([
+      sourceId,
+      ...catalogue.getActiveIncludedSourceIds(),
+    ]);
+    return { key, promise: Promise.resolve(success(data)) };
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Fetch Resource Lookup
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [fetchResourceLookup, resourceLookupCache] = createCachedRequest(
-    `${storeId}.resource_lookup`,
-    defaultResourceLookup,
-    async (resourceId: string): Promise<ResourceLookup> => {
-      const { data, error } = await supabase.rpc(`fetch_resource_lookup`, {
-        p_id: resourceId,
-      });
-
-      if (error) throw error;
-
-      const lookup = z.array(resourceLookupSchema).parse(data);
-      if (!lookup.length)
-        throw new Error(`${storeName.s} lookup (${resourceId}) not found`);
-
-      return lookup[0]!;
-    },
-  );
+  function fetchResourceLookup(resourceId: string) {
+    const key = hash([resourceId]);
+    const data = getResourceLookup(resourceId) ?? defaultResourceLookup;
+    return { key, promise: Promise.resolve(success(data)) };
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Fetch Resource Lookup Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [fetchResourceLookupIds, resourceLookupIdsCache] = createCachedRequest(
-    `${storeId}.lookup_ids`,
-    [],
-    async (sourceId: string): Promise<string[]> => {
-      if (!sourceId) return [];
-
-      const { data, error } = await supabase.rpc(`fetch_resource_lookups`, {
-        p_resource_kinds: kinds,
-        p_source_id: sourceId,
-      });
-
-      if (error) throw error;
-
-      const lookups = z.array(resourceLookupSchema).parse(data);
-      const lookupIds = lookups.map((lookup) => lookup.id);
-      for (const lookup of lookups) resourceLookupCache.set(lookup, lookup.id);
-
-      return lookupIds;
-    },
-  );
+  function fetchResourceLookupIds(sourceId: string) {
+    const key = hash([sourceId]);
+    const data = catalogueResources.getResourceIds([
+      sourceId,
+      ...catalogue.getActiveIncludedSourceIds(),
+      ...catalogue.getActiveRequiredSourceIds(),
+    ]);
+    return { key, promise: Promise.resolve(success(data)) };
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Get Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function getResource(resourceId: string): R | undefined {
-    return resourceCache.get(resourceId);
+    return (
+      resourceCache.get(resourceId) ??
+      (catalogueResources.getResource(resourceId) as R | undefined)
+    );
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -464,33 +379,8 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function getResourceLookup(resourceId: string): ResourceLookup | undefined {
-    return resourceLookupCache.get(resourceId);
+    return resourceLookupCache.get(resourceId) ?? getResource(resourceId);
   }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Subscribe Resources
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  const subscribeResources = (resourceIds: string[], callback: () => void) => {
-    const unsubscribes = resourceIds.map((id) =>
-      resourceCache.cache.subscribe(id, callback),
-    );
-    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
-  };
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Subscribe Resource Lookups
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  const subscribeResourceLookups = (
-    lookupIds: string[],
-    callback: () => void,
-  ) => {
-    const unsubscribes = lookupIds.map((id) =>
-      resourceLookupCache.cache.subscribe(id, callback),
-    );
-    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
-  };
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Update Resource
@@ -500,27 +390,11 @@ export function createResourceStore<
     `${storeId}.update_resource`,
     undefined,
     async (
-      resourceId: string,
-      lang: string,
-      resource: Partial<DBR>,
-      translation: Partial<DBT>,
-    ): Promise<string | undefined> => {
-      const { error } = await supabase.rpc(`update_${storeName.s}`, {
-        p_id: resourceId,
-        p_lang: lang,
-        [`p_${storeName.s}`]: resource,
-        [`p_${storeName.s}_translation`]: translation,
-      });
-
-      if (error) throw error;
-
-      resourceCache.invalidate(resourceId);
-      resourceIdsCache.invalidateAll();
-      resourceLookupCache.invalidate(resourceId);
-      resourceLookupIdsCache.invalidateAll();
-
-      return undefined;
-    },
+      _resourceId: string,
+      _lang: string,
+      _resource: Partial<DBR>,
+      _translation: Partial<DBT>,
+    ): Promise<string | undefined> => undefined,
   );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -530,31 +404,38 @@ export function createResourceStore<
   function useResource(resourceId: string): [R, string] {
     if (virtualResourceRecipes.has(resourceId)) {
       if (!resourceCache.get(resourceId)) refreshVirtualResource(resourceId);
-    } else if (!resourceCache.get(resourceId)) fetchResource(resourceId);
+    }
 
     const key = hash([resourceId]);
-    return [resourceCache.cache.useValue(key) ?? defaultResource, key];
+    const virtualResource = resourceCache.useValue(resourceId);
+    const resource = catalogueResources.useResource(resourceId);
+    const result = [
+      (virtualResource ?? resource ?? defaultResource) as R,
+      key,
+    ] as [R, string];
+    return result;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resources
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [useCachedResources] = createUseDerivedData(
-    (resourceIds: string[]) =>
-      resourceIds.map((id) => resourceCache.get(id) ?? defaultResource),
-    subscribeResources,
-  );
-
   function useResources(resourceIds: string[]): R[] {
     for (const resourceId of resourceIds) {
       if (virtualResourceRecipes.has(resourceId)) {
         if (!resourceCache.get(resourceId)) refreshVirtualResource(resourceId);
-      } else fetchResource(resourceId);
+      }
     }
 
-    const key = hash(resourceIds);
-    return useCachedResources(key, resourceIds)[0];
+    const resources = catalogueResources.useResources(resourceIds);
+    const resourcesById = useMemo(
+      () => new Map(resources.map((resource) => [resource.id, resource])),
+      [resources],
+    );
+    const result = resourceIds.map(
+      (id) => resourceCache.get(id) ?? resourcesById.get(id) ?? defaultResource,
+    ) as R[];
+    return result;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -563,12 +444,16 @@ export function createResourceStore<
 
   function useResourceIdsByParams(
     sourceId: string,
-    sources: Record<string, boolean | undefined>,
-    filters: Omit<F, "name">,
-    lang: string,
+    _sources: Record<string, boolean | undefined>,
+    _filters: Omit<F, "name">,
+    _lang: string,
   ): [string[], string] {
-    const { key } = fetchResourceIds(sourceId, sources, filters, lang);
-    const resourceIds = resourceIdsCache.cache.useValue(key) ?? emptyIds;
+    const includedIds = catalogue.useActiveIncludedSourceIds();
+    const key = hash([sourceId, includedIds]);
+    const resourceIds = catalogueResources.useResourceIds([
+      sourceId,
+      ...includedIds,
+    ]);
     const virtualResourceIds = virtualResourceIdsStore.useValue();
     const mergedResourceIds = useMemo(
       () => mergeVirtualResourceIds(sourceId, resourceIds, virtualResourceIds),
@@ -578,13 +463,12 @@ export function createResourceStore<
   }
 
   function useResourceIdsLoadingByParams(
-    sourceId: string,
-    sources: Record<string, boolean | undefined>,
-    filters: Omit<F, "name">,
-    lang: string,
+    _sourceId: string,
+    _sources: Record<string, boolean | undefined>,
+    _filters: Omit<F, "name">,
+    _lang: string,
   ): boolean {
-    const key = hash([sourceId, sources, filters, lang]);
-    return resourceIdsCache.fetchingCache.useValue(key) ?? false;
+    return false;
   }
 
   function useResourceIds(sourceId: string): string[] {
@@ -613,12 +497,12 @@ export function createResourceStore<
         refreshVirtualResource(resourceId);
 
       const key = hash([resourceId]);
-      const lookup = resourceLookupCache.cache.useValue(key);
+      const lookup = resourceLookupCache.useValue(resourceId);
       return [lookup ?? defaultResourceLookup, key];
     }
 
-    const { key } = fetchResourceLookup(resourceId);
-    const lookup = resourceLookupCache.cache.useValue(key);
+    const key = hash([resourceId]);
+    const lookup = catalogueResources.useResource(resourceId);
     return [lookup ?? defaultResourceLookup, key];
   }
 
@@ -627,8 +511,11 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourceLookupIds(sourceId: string): [string[], string] {
-    const { key } = fetchResourceLookupIds(sourceId);
-    return [resourceLookupIdsCache.cache.useValue(key) ?? emptyIds, key];
+    const includedIds = catalogue.useActiveIncludedSourceIds();
+    const requiredIds = catalogue.useActiveRequiredSourceIds();
+    const sourceIds = [sourceId, ...includedIds, ...requiredIds];
+    const key = hash(sourceIds);
+    return [catalogueResources.useResourceIds(sourceIds), key];
   }
 
   //----------------------------------------------------------------------------
@@ -639,19 +526,6 @@ export function createResourceStore<
   // Use Filtered Resource Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [useFilteredResourceIdsWithKey] = createUseDerivedData(
-    (resourceIds: string[], partialName: string) => {
-      return resourceIds.filter((resourceId) => {
-        const resource = resourceCache.get(resourceId);
-        if (!resource) return false;
-        return Object.values(resource.name)
-          .filter((name) => name)
-          .some((name) => normalizeString(name!).includes(partialName));
-      });
-    },
-    subscribeResources,
-  );
-
   function useFilteredResourceIdsByParams(
     sourceId: string,
     sources: Record<string, boolean | undefined>,
@@ -661,8 +535,18 @@ export function createResourceStore<
     const normalizedName = normalizeString(name);
     const params = [sourceId, sources, filters, lang] as const;
     const [resourceIds] = useResourceIdsByParams(...params);
-    const key = sourceId;
-    return useFilteredResourceIdsWithKey(key, resourceIds, normalizedName)[0];
+
+    const filteredResourceIds = useMemo(() => {
+      const result = resourceIds.filter((resourceId) => {
+        const resource = getResource(resourceId);
+        if (!resource) return false;
+        return Object.values(resource.name)
+          .filter((name) => name)
+          .some((name) => normalizeString(name!).includes(normalizedName));
+      });
+      return result;
+    }, [normalizedName, resourceIds]);
+    return filteredResourceIds;
   }
 
   function useFilteredResourceIds(sourceId: string): string[] {
@@ -873,11 +757,17 @@ export function createResourceStore<
   // Use Resource Options
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [useCachedResourceOptions] = createUseDerivedData(
-    (lookupIds: string[], lang: string) =>
+  function useResourceOptionsByLang(
+    sourceId: string,
+    lang: string,
+  ): [ResourceOption[], string] {
+    const [lookupIds, lookupIdsKey] = useResourceLookupIds(sourceId);
+    const key = hash([lookupIdsKey, lang]);
+
+    return [
       lookupIds
         .map((id) => {
-          const lookup = resourceLookupCache.get(id) ?? defaultResourceLookup;
+          const lookup = getResourceLookup(id) ?? defaultResourceLookup;
           const label = translate(lookup.name, lang);
           return {
             label,
@@ -887,17 +777,8 @@ export function createResourceStore<
           };
         })
         .sort(compareObjects("label")),
-    subscribeResourceLookups,
-  );
-
-  function useResourceOptionsByLang(
-    sourceId: string,
-    lang: string,
-  ): [ResourceOption[], string] {
-    const [lookupIds, lookupIdsKey] = useResourceLookupIds(sourceId);
-    const key = hash([lookupIdsKey, lang]);
-
-    return useCachedResourceOptions(key, lookupIds, lang);
+      key,
+    ];
   }
 
   function useResourceOptions(sourceId: string): ResourceOption[] {

@@ -1,4 +1,7 @@
-import { createMemoryStore } from "~/store/memory-store";
+import { useLayoutEffect, useRef, useState } from "react";
+import { createMemoryStore } from "../../store/memory-store";
+import { createMemoryStoreSet } from "../../store/set/memory-store-set";
+import type { StoreSet } from "../../store/set/store-set";
 import type { Background } from "../resources/backgrounds/background";
 import type { CharacterClass } from "../resources/character-classes/character-class";
 import type { CharacterSubclass } from "../resources/character-subclasses/character-subclass";
@@ -22,268 +25,454 @@ import type { ToolModifier } from "../resources/modifiers/equipment/tools/tool-m
 import type { WeaponModifier } from "../resources/modifiers/equipment/weapons/weapon-modifier";
 import type { Modifier } from "../resources/modifiers/modifier";
 import type { Plane } from "../resources/planes/plane";
+import type { Resource } from "../resources/resource";
 import type { Service } from "../resources/services/service";
 import type { Species } from "../resources/species/species";
 import type { Spell } from "../resources/spells/spell";
 import type { Vehicle } from "../resources/vehicles/vehicle";
 import type { SourceMetadata } from "../sources";
+import type { ResourceKind } from "../types/resource-kind";
 import { type SourceBundle, sourceBundleSchema } from "./source-bundle";
 
 //------------------------------------------------------------------------------
-// Catalogue Resources By Id
+// Create Catalogue
 //------------------------------------------------------------------------------
 
-export type CatalogueResourcesById = {
-  armor_modifiers: Record<string, ArmorModifier>;
-  armors: Record<string, Armor>;
-  backgrounds: Record<string, Background>;
-  character_classes: Record<string, CharacterClass>;
-  character_subclasses: Record<string, CharacterSubclass>;
-  creature_tags: Record<string, CreatureTag>;
-  creatures: Record<string, Creature>;
-  eldritch_invocations: Record<string, EldritchInvocation>;
-  equipment_modifiers: Record<string, EquipmentModifier>;
-  equipments: Record<string, Equipment>;
-  feats: Record<string, Feat>;
-  features: Record<string, Feature>;
-  item_modifiers: Record<string, ItemModifier>;
-  items: Record<string, Item>;
-  languages: Record<string, Language>;
-  maneuvers: Record<string, Maneuver>;
-  metamagics: Record<string, Metamagic>;
-  modifiers: Record<string, Modifier>;
-  planes: Record<string, Plane>;
-  services: Record<string, Service>;
-  species: Record<string, Species>;
-  spells: Record<string, Spell>;
-  tool_modifiers: Record<string, ToolModifier>;
-  tools: Record<string, Tool>;
-  vehicles: Record<string, Vehicle>;
-  weapon_modifiers: Record<string, WeaponModifier>;
-  weapons: Record<string, Weapon>;
-};
+export function createCatalogue(id: string) {
+  //----------------------------------------------------------------------------
+  // Store Utils
+  //----------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// Catalogue Resource Ids
-//------------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Create Resources By Id
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export type CatalogueResourceIds = {
-  [R in keyof CatalogueResourcesById]: string[];
-};
+  function createResourcesById<R extends Resource>(kind: Resource["kind"]) {
+    return createMemoryStoreSet<string, R>(`${id}/resources-by-id/${kind}`);
+  }
 
-//------------------------------------------------------------------------------
-// Catalogue Resource Kinds
-//------------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Create Resources Ids By Source Id
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export const catalogueResourceKinds = [
-  "armor_modifiers",
-  "armors",
-  "backgrounds",
-  "character_classes",
-  "character_subclasses",
-  "creature_tags",
-  "creatures",
-  "eldritch_invocations",
-  "equipment_modifiers",
-  "equipments",
-  "feats",
-  "features",
-  "item_modifiers",
-  "items",
-  "languages",
-  "maneuvers",
-  "metamagics",
-  "modifiers",
-  "planes",
-  "services",
-  "species",
-  "spells",
-  "tool_modifiers",
-  "tools",
-  "vehicles",
-  "weapon_modifiers",
-  "weapons",
-] as const satisfies readonly (keyof CatalogueResourcesById)[];
+  function createResourcesIdsBySourceId(kind: Resource["kind"]) {
+    return createMemoryStoreSet<string, string[]>(
+      `${id}/resources-ids-by-source-id/${kind}`,
+    );
+  }
+
+  //----------------------------------------------------------------------------
+  // Stores
+  //----------------------------------------------------------------------------
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Active Source Id
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const activeSourceId = createMemoryStore<string | undefined>(
+    `${id}/active-source-id`,
+    undefined,
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Active Source Included Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const activeSourceIncludedSourceIds = createMemoryStore<string[]>(
+    `${id}/active-source-included-source-ids`,
+    [],
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Active Source Required Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const activeSourceRequiredSourceIds = createMemoryStore<string[]>(
+    `${id}/active-source-required-source-ids`,
+    [],
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Source Metadata By Id
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const sourceMetadataById = createMemoryStoreSet<
+    string,
+    SourceMetadata | undefined
+  >(`${id}/source-metadata-by-id`);
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Source Metadata Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const sourceMetadataIds = createMemoryStore<string[]>(
+    `${id}/source-metadata-ids`,
+    [],
+  );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Resources By Id
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const resourcesByIdByKind = {
+    armor: createResourcesById<Armor>("armor"),
+    armor_modifier: createResourcesById<ArmorModifier>("armor_modifier"),
+    background: createResourcesById<Background>("background"),
+    character_class: createResourcesById<CharacterClass>("character_class"),
+    character_subclass:
+      createResourcesById<CharacterSubclass>("character_subclass"),
+    creature: createResourcesById<Creature>("creature"),
+    creature_tag: createResourcesById<CreatureTag>("creature_tag"),
+    eldritch_invocation: createResourcesById<EldritchInvocation>(
+      "eldritch_invocation",
+    ),
+    equipment: createResourcesById<Equipment>("equipment"),
+    equipment_modifier:
+      createResourcesById<EquipmentModifier>("equipment_modifier"),
+    feat: createResourcesById<Feat>("feat"),
+    feature: createResourcesById<Feature>("feature"),
+    item: createResourcesById<Item>("item"),
+    item_modifier: createResourcesById<ItemModifier>("item_modifier"),
+    language: createResourcesById<Language>("language"),
+    maneuver: createResourcesById<Maneuver>("maneuver"),
+    metamagic: createResourcesById<Metamagic>("metamagic"),
+    modifier: createResourcesById<Modifier>("modifier"),
+    plane: createResourcesById<Plane>("plane"),
+    resource: createResourcesById<Resource>("resource"),
+    service: createResourcesById<Service>("service"),
+    species: createResourcesById<Species>("species"),
+    spell: createResourcesById<Spell>("spell"),
+    tool: createResourcesById<Tool>("tool"),
+    tool_modifier: createResourcesById<ToolModifier>("tool_modifier"),
+    vehicle: createResourcesById<Vehicle>("vehicle"),
+    weapon: createResourcesById<Weapon>("weapon"),
+    weapon_modifier: createResourcesById<WeaponModifier>("weapon_modifier"),
+  };
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Resources Ids By Source Id
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const resourceIdsBySourceIdByKind = {
+    armor: createResourcesIdsBySourceId("armor"),
+    armor_modifier: createResourcesIdsBySourceId("armor_modifier"),
+    background: createResourcesIdsBySourceId("background"),
+    character_class: createResourcesIdsBySourceId("character_class"),
+    character_subclass: createResourcesIdsBySourceId("character_subclass"),
+    creature: createResourcesIdsBySourceId("creature"),
+    creature_tag: createResourcesIdsBySourceId("creature_tag"),
+    eldritch_invocation: createResourcesIdsBySourceId("eldritch_invocation"),
+    equipment: createResourcesIdsBySourceId("equipment"),
+    equipment_modifier: createResourcesIdsBySourceId("equipment_modifier"),
+    feat: createResourcesIdsBySourceId("feat"),
+    feature: createResourcesIdsBySourceId("feature"),
+    item: createResourcesIdsBySourceId("item"),
+    item_modifier: createResourcesIdsBySourceId("item_modifier"),
+    language: createResourcesIdsBySourceId("language"),
+    maneuver: createResourcesIdsBySourceId("maneuver"),
+    metamagic: createResourcesIdsBySourceId("metamagic"),
+    modifier: createResourcesIdsBySourceId("modifier"),
+    plane: createResourcesIdsBySourceId("plane"),
+    resource: createResourcesIdsBySourceId("resource"),
+    service: createResourcesIdsBySourceId("service"),
+    species: createResourcesIdsBySourceId("species"),
+    spell: createResourcesIdsBySourceId("spell"),
+    tool: createResourcesIdsBySourceId("tool"),
+    tool_modifier: createResourcesIdsBySourceId("tool_modifier"),
+    vehicle: createResourcesIdsBySourceId("vehicle"),
+    weapon: createResourcesIdsBySourceId("weapon"),
+    weapon_modifier: createResourcesIdsBySourceId("weapon_modifier"),
+  };
+
+  //----------------------------------------------------------------------------
+  // Use Source Metadata List
+  //----------------------------------------------------------------------------
+
+  function useSourceMetadataList(): SourceMetadata[] {
+    const sourceIds = sourceMetadataIds.useValue();
+    return sourceIds.flatMap((id) => {
+      const source = sourceMetadataById.get(id, undefined);
+      return source ? [source] : [];
+    });
+  }
+
+  //----------------------------------------------------------------------------
+  // Create Resource Store
+  //----------------------------------------------------------------------------
+
+  type ResourceForKinds<K extends readonly ResourceKind[]> = Extract<
+    Resource,
+    { kind: K[number] }
+  >;
+
+  function createResourceStore<const K extends readonly ResourceKind[]>(
+    kinds: K,
+  ) {
+    type R = ResourceForKinds<K>;
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Get Resource
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function getResource(resourceId: string): R | undefined {
+      for (const kind of kinds) {
+        const resource = resourcesByIdByKind[kind].getOrUndefined(resourceId);
+        if (resource) return resource as R;
+      }
+      return undefined;
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Get Resource Ids
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function getResourceIds(sourceIds: string[]): string[] {
+      const resourceIds = [
+        ...new Set(
+          sourceIds.flatMap((sourceId) =>
+            kinds.flatMap((kind) =>
+              resourceIdsBySourceIdByKind[kind].get(sourceId, []),
+            ),
+          ),
+        ),
+      ];
+      return resourceIds;
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Get Resources
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function getResources(resourceIds: string[]): R[] {
+      const resources = resourceIds.flatMap((id) => {
+        const resource = getResource(id);
+        return resource ? [resource] : [];
+      });
+      return resources;
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Use Resource
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function useResource(resourceId: string): R | undefined {
+      const [resource, setResource] = useState(() => getResource(resourceId));
+
+      useLayoutEffect(() => {
+        setResource(getResource(resourceId));
+
+        const subscriptions = kinds.map((kind) => {
+          const callback = () => setResource(getResource(resourceId));
+          resourcesByIdByKind[kind].subscribe(resourceId, callback);
+          return { callback, kind };
+        });
+
+        return () =>
+          subscriptions.forEach(({ callback, kind }) =>
+            resourcesByIdByKind[kind].unsubscribe(resourceId, callback),
+          );
+      }, [resourceId]);
+
+      return resource as R | undefined;
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Use Resource Ids
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function useResourceIds(sourceIds: string[]): string[] {
+      const keys = sourceIds.join(",");
+      const sourceIdsRef = useRef(sourceIds);
+      sourceIdsRef.current = sourceIds;
+      const [resourceIds, setResourceIds] = useState(() =>
+        getResourceIds(sourceIds),
+      );
+
+      useLayoutEffect(() => {
+        const currentSourceIds = sourceIdsRef.current;
+        setResourceIds((prev) => {
+          const next = getResourceIds(currentSourceIds);
+          return (
+              prev.length === next.length &&
+                prev.every((resourceId, index) => resourceId === next[index])
+            ) ?
+              prev
+            : next;
+        });
+
+        const subscriptions = currentSourceIds.flatMap((sourceId) =>
+          kinds.map((kind) => {
+            const callback = () =>
+              setResourceIds((prev) => {
+                const next = getResourceIds(sourceIdsRef.current);
+                return (
+                    prev.length === next.length &&
+                      prev.every(
+                        (resourceId, index) => resourceId === next[index],
+                      )
+                  ) ?
+                    prev
+                  : next;
+              });
+            resourceIdsBySourceIdByKind[kind].subscribe(sourceId, callback);
+            return { callback, kind, sourceId };
+          }),
+        );
+
+        return () =>
+          subscriptions.forEach(({ callback, kind, sourceId }) =>
+            resourceIdsBySourceIdByKind[kind].unsubscribe(sourceId, callback),
+          );
+      }, [keys]);
+
+      return resourceIds;
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Use Resources
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function useResources(resourceIds: string[]): R[] {
+      const idsKey = resourceIds.join(",");
+      const resourceIdsRef = useRef(resourceIds);
+      resourceIdsRef.current = resourceIds;
+      const [resources, setResources] = useState(() =>
+        getResources(resourceIds),
+      );
+
+      useLayoutEffect(() => {
+        const currentResourceIds = resourceIdsRef.current;
+        setResources((prev) => {
+          const next = getResources(currentResourceIds);
+          return (
+              prev.length === next.length &&
+                prev.every((resource, index) => resource.id === next[index]?.id)
+            ) ?
+              prev
+            : next;
+        });
+
+        const subscriptions = currentResourceIds.flatMap((resourceId) =>
+          kinds.map((kind) => {
+            const callback = () =>
+              setResources((prev) => {
+                const next = getResources(resourceIdsRef.current);
+                return (
+                    prev.length === next.length &&
+                      prev.every(
+                        (resource, index) => resource.id === next[index]?.id,
+                      )
+                  ) ?
+                    prev
+                  : next;
+              });
+            resourcesByIdByKind[kind].subscribe(resourceId, callback);
+            return { callback, kind, resourceId };
+          }),
+        );
+
+        return () =>
+          subscriptions.forEach(({ callback, kind, resourceId }) =>
+            resourcesByIdByKind[kind].unsubscribe(resourceId, callback),
+          );
+      }, [idsKey]);
+
+      return resources;
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Return
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    return {
+      getResource,
+      getResourceIds,
+      useResource,
+      useResourceIds,
+      useResources,
+    };
+  }
+
+  //----------------------------------------------------------------------------
+  // Import Source Bundle
+  //----------------------------------------------------------------------------
+
+  function importSourceBundle(maybeBundle: unknown): SourceBundle {
+    const bundle = sourceBundleSchema.parse(maybeBundle);
+    const { include_ids, required_ids, ...source } = bundle.source;
+    const resourceImports = [
+      ["armor", bundle.resources.armors],
+      ["armor_modifier", bundle.resources.armor_modifiers],
+      ["background", bundle.resources.backgrounds],
+      ["character_class", bundle.resources.character_classes],
+      ["character_subclass", bundle.resources.character_subclasses],
+      ["creature", bundle.resources.creatures],
+      ["creature_tag", bundle.resources.creature_tags],
+      ["eldritch_invocation", bundle.resources.eldritch_invocations],
+      ["equipment", bundle.resources.equipments],
+      ["equipment_modifier", bundle.resources.equipment_modifiers],
+      ["feat", bundle.resources.feats],
+      ["feature", bundle.resources.features],
+      ["item", bundle.resources.items],
+      ["item_modifier", bundle.resources.item_modifiers],
+      ["language", bundle.resources.languages],
+      ["maneuver", bundle.resources.maneuvers],
+      ["metamagic", bundle.resources.metamagics],
+      ["modifier", bundle.resources.modifiers],
+      ["plane", bundle.resources.planes],
+      ["service", bundle.resources.services],
+      ["species", bundle.resources.species],
+      ["spell", bundle.resources.spells],
+      ["tool", bundle.resources.tools],
+      ["tool_modifier", bundle.resources.tool_modifiers],
+      ["vehicle", bundle.resources.vehicles],
+      ["weapon", bundle.resources.weapons],
+      ["weapon_modifier", bundle.resources.weapon_modifiers],
+    ] as const satisfies readonly [ResourceKind, readonly Resource[]][];
+
+    sourceMetadataById.set(source.id, source, source);
+    sourceMetadataIds.set((prev) =>
+      prev.includes(source.id) ? prev : [...prev, source.id],
+    );
+    activeSourceId.set(source.id);
+    activeSourceIncludedSourceIds.set(include_ids);
+    activeSourceRequiredSourceIds.set(required_ids);
+
+    for (const [kind, resources] of resourceImports) {
+      type ResourceStoreSet = StoreSet<string, Resource>;
+      const resourcesById = resourcesByIdByKind[kind] as ResourceStoreSet;
+
+      for (const resource of resources)
+        resourcesById.set(resource.id, resource, resource);
+
+      const resourceIds = resources.map(({ id }) => id);
+      resourceIdsBySourceIdByKind[kind].set(source.id, [], resourceIds);
+    }
+
+    return bundle;
+  }
+
+  //----------------------------------------------------------------------------
+  // Return
+  //----------------------------------------------------------------------------
+
+  return {
+    createResourceStore,
+    getActiveIncludedSourceIds: activeSourceIncludedSourceIds.get,
+    getActiveRequiredSourceIds: activeSourceRequiredSourceIds.get,
+    getActiveSourceId: activeSourceId.get,
+    importSourceBundle,
+    useActiveIncludedSourceIds: activeSourceIncludedSourceIds.useValue,
+    useActiveRequiredSourceIds: activeSourceRequiredSourceIds.useValue,
+    useActiveSourceId: activeSourceId.useValue,
+    useSourceMetadataList,
+  };
+}
 
 //------------------------------------------------------------------------------
 // Catalogue
 //------------------------------------------------------------------------------
 
-export type Catalogue = {
-  resources: {
-    byId: CatalogueResourcesById;
-    idsBySourceId: Record<string, CatalogueResourceIds>;
-  };
-  sources: {
-    byId: Record<string, SourceMetadata>;
-    active: {
-      id: string | undefined;
-      includedIds: string[];
-      requiredIds: string[];
-    };
-  };
-};
+const catalogue = createCatalogue("catalogue");
 
-//------------------------------------------------------------------------------
-// Create Empty Catalogue Resources By Id
-//------------------------------------------------------------------------------
-
-export function createEmptyCatalogueResourcesById(): CatalogueResourcesById {
-  return {
-    armor_modifiers: {},
-    armors: {},
-    backgrounds: {},
-    character_classes: {},
-    character_subclasses: {},
-    creature_tags: {},
-    creatures: {},
-    eldritch_invocations: {},
-    equipment_modifiers: {},
-    equipments: {},
-    feats: {},
-    features: {},
-    item_modifiers: {},
-    items: {},
-    languages: {},
-    maneuvers: {},
-    metamagics: {},
-    modifiers: {},
-    planes: {},
-    services: {},
-    species: {},
-    spells: {},
-    tool_modifiers: {},
-    tools: {},
-    vehicles: {},
-    weapon_modifiers: {},
-    weapons: {},
-  };
-}
-
-//------------------------------------------------------------------------------
-// Create Empty Catalogue Resource Id
-//------------------------------------------------------------------------------
-
-export function createEmptyCatalogueResourceIds(): CatalogueResourceIds {
-  return {
-    armor_modifiers: [],
-    armors: [],
-    backgrounds: [],
-    character_classes: [],
-    character_subclasses: [],
-    creature_tags: [],
-    creatures: [],
-    eldritch_invocations: [],
-    equipment_modifiers: [],
-    equipments: [],
-    feats: [],
-    features: [],
-    item_modifiers: [],
-    items: [],
-    languages: [],
-    maneuvers: [],
-    metamagics: [],
-    modifiers: [],
-    planes: [],
-    services: [],
-    species: [],
-    spells: [],
-    tool_modifiers: [],
-    tools: [],
-    vehicles: [],
-    weapon_modifiers: [],
-    weapons: [],
-  };
-}
-
-//------------------------------------------------------------------------------
-// Create Empty Catalogue
-//------------------------------------------------------------------------------
-
-export function createEmptyCatalogue(): Catalogue {
-  return {
-    resources: {
-      byId: createEmptyCatalogueResourcesById(),
-      idsBySourceId: {},
-    },
-    sources: {
-      active: {
-        id: undefined,
-        includedIds: [],
-        requiredIds: [],
-      },
-      byId: {},
-    },
-  };
-}
-
-//------------------------------------------------------------------------------
-// Catalogue Store
-//------------------------------------------------------------------------------
-
-export const catalogueStore = createMemoryStore<Catalogue>(
-  "catalogue",
-  createEmptyCatalogue(),
-);
-
-export const useCatalogue = catalogueStore.useValue;
-
-//------------------------------------------------------------------------------
-// Import Source Bundle
-//------------------------------------------------------------------------------
-
-export function importSourceBundle(maybeBundle: unknown): SourceBundle {
-  const bundle = sourceBundleSchema.parse(maybeBundle);
-  const { include_ids, required_ids, ...source } = bundle.source;
-
-  catalogueStore.set((prev) => {
-    const byId = { ...prev.resources.byId };
-    const sourceIds = createEmptyCatalogueResourceIds();
-    const prevSourceIds = prev.resources.idsBySourceId[source.id];
-
-    for (const kind of catalogueResourceKinds) {
-      byId[kind] = { ...byId[kind] } as never;
-
-      for (const resourceId of prevSourceIds?.[kind] ?? []) {
-        delete byId[kind][resourceId];
-      }
-
-      for (const resource of bundle.resources[kind]) {
-        byId[kind][resource.id] = resource as never;
-        sourceIds[kind].push(resource.id);
-      }
-    }
-
-    return {
-      resources: {
-        byId,
-        idsBySourceId: {
-          ...prev.resources.idsBySourceId,
-          [source.id]: sourceIds,
-        },
-      },
-      sources: {
-        active: {
-          id: source.id,
-          includedIds: include_ids,
-          requiredIds: required_ids,
-        },
-        byId: {
-          ...prev.sources.byId,
-          [source.id]: source,
-        },
-      },
-    };
-  });
-
-  return bundle;
-}
-
-//------------------------------------------------------------------------------
-// Use Catalogue Sources
-//------------------------------------------------------------------------------
-
-export function useCatalogueSources(): SourceMetadata[] {
-  const catalogue = useCatalogue();
-  return Object.values(catalogue.sources.byId);
-}
+export default catalogue;
