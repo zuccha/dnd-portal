@@ -29,6 +29,7 @@ import SpeciesPanel from "./resources/species/species-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
 import VehiclesPanel from "./resources/vehicles/vehicles-panel";
 import SourceSettingsPanel from "./settings/source-settings-panel";
+import SourcesPanel from "./sources/sources-panel";
 
 //------------------------------------------------------------------------------
 // Content
@@ -36,15 +37,17 @@ import SourceSettingsPanel from "./settings/source-settings-panel";
 
 export default function Content() {
   const route = useRoute();
-  const [selectedCampaignId] = useSelectedSourceId();
+  const [selectedSourceId] = useSelectedSourceId();
 
-  if (!selectedCampaignId) return null;
+  if (route === Route.Sources) return <SourcesPanel />;
+
+  if (!selectedSourceId) return <SourcesPanel />;
 
   if (route === Route._) return <HomePanel />;
   if (route === Route.PrintDeck) return <PrintDeckPanel />;
 
   const Panel = panels[route];
-  if (Panel) return <Panel sourceId={selectedCampaignId} />;
+  if (Panel) return <Panel sourceId={selectedSourceId} />;
 
   return <Redirect route={Route._} />;
 }

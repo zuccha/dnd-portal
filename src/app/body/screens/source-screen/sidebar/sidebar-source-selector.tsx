@@ -1,8 +1,14 @@
+import { FolderIcon } from "lucide-react";
 import { useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type Source, useSelectedSourceId, useSources } from "~/models/sources";
-import type { SourceVersion } from "~/models/types/source-version";
+import {
+  type SourceVersion,
+  useTranslateSourceVersion,
+} from "~/models/types/source-version";
+import { Route } from "~/navigation/routes";
 import CaptionInput from "~/ui/caption-input";
+import IconButton from "~/ui/icon-button";
 import Select, { type SelectOption } from "~/ui/select";
 import { compareObjects } from "~/utils/object";
 
@@ -24,11 +30,27 @@ export default function SidebarSourceSelector({
   const cores = useSources(["core"]);
 
   const { lang, t } = useI18nLangContext(i18nContext);
+  const translateSourceVersion = useTranslateSourceVersion(lang);
 
   const [sourceOptions, sourceCategories] = useMemo(() => {
-    const coreItems = itemizeSources(cores.data ?? [], versions, lang);
-    const moduleItems = itemizeSources(modules.data ?? [], versions, lang);
-    const campaignItems = itemizeSources(campaigns.data ?? [], versions, lang);
+    const coreItems = itemizeSources(
+      cores.data ?? [],
+      versions,
+      lang,
+      translateSourceVersion,
+    );
+    const moduleItems = itemizeSources(
+      modules.data ?? [],
+      versions,
+      lang,
+      translateSourceVersion,
+    );
+    const campaignItems = itemizeSources(
+      campaigns.data ?? [],
+      versions,
+      lang,
+      translateSourceVersion,
+    );
     const items = [...coreItems, ...moduleItems, ...campaignItems];
 
     const categories: {
@@ -59,7 +81,15 @@ export default function SidebarSourceSelector({
       });
 
     return [items, categories];
-  }, [cores.data, versions, lang, modules.data, campaigns.data, t]);
+  }, [
+    cores.data,
+    versions,
+    lang,
+    translateSourceVersion,
+    modules.data,
+    campaigns.data,
+    t,
+  ]);
 
   const fetched = campaigns.isFetched && modules.isFetched && cores.isFetched;
 
@@ -73,17 +103,29 @@ export default function SidebarSourceSelector({
   }, [fetched, setSelectedSourceId, sourceOptions]);
 
   return (
-    <CaptionInput caption={t("sources")} flex={1}>
-      <Select.Enum
-        categories={sourceCategories}
-        disabled={!sourceOptions.length}
-        onValueChange={setSelectedSourceId}
-        options={sourceOptions}
-        positioning={{ slide: true }}
+    <>
+      <CaptionInput caption={t("sources")} flex={1}>
+        <Select.Enum
+          categories={sourceCategories}
+          disabled={!sourceOptions.length}
+          onValueChange={setSelectedSourceId}
+          options={sourceOptions}
+          positioning={{ slide: true }}
+          size="sm"
+          value={selectedSourceId ?? ""}
+        />
+      </CaptionInput>
+
+      <IconButton
+        Icon={FolderIcon}
+        alignSelf="flex-end"
+        label={t(Route.Sources)}
+        onClick={() => history.pushState({}, "", Route.Sources)}
+        rounded="sm"
         size="sm"
-        value={selectedSourceId ?? ""}
+        variant="outline"
       />
-    </CaptionInput>
+    </>
   );
 }
 
@@ -95,10 +137,11 @@ function itemizeSources(
   sources: Source[],
   versions: SourceVersion[],
   lang: string,
+  translateSourceVersion: (version: SourceVersion) => { label: string },
 ): SelectOption<string>[] {
   return sources
     .filter((source) => versions.includes(source.version))
-    .map((source) => sourceToOption(source, lang))
+    .map((source) => sourceToOption(source, lang, translateSourceVersion))
     .sort(compareObjects("label"));
 }
 
@@ -106,9 +149,13 @@ function itemizeSources(
 // Source To Option
 //------------------------------------------------------------------------------
 
-function sourceToOption(source: Source, lang: string): SelectOption<string> {
+function sourceToOption(
+  source: Source,
+  lang: string,
+  translateSourceVersion: (version: SourceVersion) => { label: string },
+): SelectOption<string> {
   const name = source.name[lang];
-  const version = { dnd5_0: "5.0", dnd5_5: "5.5" }[source.version];
+  const version = translateSourceVersion(source.version).label;
 
   return {
     dropdownLabel: name ? `${version} • ${name}` : source.code,
@@ -137,5 +184,9 @@ const i18nContext = {
   "sources": {
     en: "Source",
     it: "Fonte",
+  },
+  [Route.Sources]: {
+    en: "Sources",
+    it: "Fonti",
   },
 };
