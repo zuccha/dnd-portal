@@ -39,6 +39,8 @@ import { type SourceBundle, sourceBundleSchema } from "./source-bundle";
 //------------------------------------------------------------------------------
 
 export function createCatalogue(id: string) {
+  const emptyIds: string[] = [];
+
   //----------------------------------------------------------------------------
   // Store Utils
   //----------------------------------------------------------------------------
@@ -74,25 +76,6 @@ export function createCatalogue(id: string) {
     undefined,
   );
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Active Source Included Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  const activeSourceIncludedSourceIds = createMemoryStore<string[]>(
-    `${id}/active-source-included-source-ids`,
-    [],
-  );
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Active Source Required Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  const activeSourceRequiredSourceIds = createMemoryStore<string[]>(
-    `${id}/active-source-required-source-ids`,
-    [],
-  );
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Source Metadata By Id
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -240,6 +223,28 @@ export function createCatalogue(id: string) {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Get Source Resource Ids
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function getSourceResourceIds(sourceId: string): string[] {
+      const source = sourceMetadataById.get(sourceId, undefined);
+      return getResourceIds([sourceId, ...(source?.include_ids ?? emptyIds)]);
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Get Source Reference Resource Ids
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function getSourceReferenceResourceIds(sourceId: string): string[] {
+      const source = sourceMetadataById.get(sourceId, undefined);
+      return getResourceIds([
+        sourceId,
+        ...(source?.include_ids ?? emptyIds),
+        ...(source?.required_ids ?? emptyIds),
+      ]);
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Get Resources
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -329,6 +334,28 @@ export function createCatalogue(id: string) {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Use Source Resource Ids
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function useSourceResourceIds(sourceId: string): string[] {
+      const source = sourceMetadataById.useValue(sourceId, undefined);
+      return useResourceIds([sourceId, ...(source?.include_ids ?? emptyIds)]);
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Use Source Reference Resource Ids
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function useSourceReferenceResourceIds(sourceId: string): string[] {
+      const source = sourceMetadataById.useValue(sourceId, undefined);
+      return useResourceIds([
+        sourceId,
+        ...(source?.include_ids ?? emptyIds),
+        ...(source?.required_ids ?? emptyIds),
+      ]);
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Use Resources
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -387,9 +414,13 @@ export function createCatalogue(id: string) {
     return {
       getResource,
       getResourceIds,
+      getSourceReferenceResourceIds,
+      getSourceResourceIds,
       useResource,
       useResourceIds,
       useResources,
+      useSourceReferenceResourceIds,
+      useSourceResourceIds,
     };
   }
 
@@ -399,7 +430,7 @@ export function createCatalogue(id: string) {
 
   function importSourceBundle(maybeBundle: unknown): SourceBundle {
     const bundle = sourceBundleSchema.parse(maybeBundle);
-    const { include_ids, required_ids, ...source } = bundle.source;
+    const source = bundle.source;
     const resourceImports = [
       ["armor", bundle.resources.armors],
       ["armor_modifier", bundle.resources.armor_modifiers],
@@ -435,8 +466,6 @@ export function createCatalogue(id: string) {
       prev.includes(source.id) ? prev : [...prev, source.id],
     );
     activeSourceId.set(source.id);
-    activeSourceIncludedSourceIds.set(include_ids);
-    activeSourceRequiredSourceIds.set(required_ids);
 
     for (const [kind, resources] of resourceImports) {
       type ResourceStoreSet = StoreSet<string, Resource>;
@@ -458,12 +487,8 @@ export function createCatalogue(id: string) {
 
   return {
     createResourceStore,
-    getActiveIncludedSourceIds: activeSourceIncludedSourceIds.get,
-    getActiveRequiredSourceIds: activeSourceRequiredSourceIds.get,
     getActiveSourceId: activeSourceId.get,
     importSourceBundle,
-    useActiveIncludedSourceIds: activeSourceIncludedSourceIds.useValue,
-    useActiveRequiredSourceIds: activeSourceRequiredSourceIds.useValue,
     useActiveSourceId: activeSourceId.useValue,
     useSourceMetadataList,
   };

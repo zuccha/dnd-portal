@@ -384,12 +384,8 @@ export function createResourceStore<
     _filters: Omit<F, "name">,
     _lang: string,
   ): [string[], string] {
-    const includedIds = catalogue.useActiveIncludedSourceIds();
-    const key = hash([sourceId, includedIds]);
-    const resourceIds = catalogueResources.useResourceIds([
-      sourceId,
-      ...includedIds,
-    ]);
+    const resourceIds = catalogueResources.useSourceResourceIds(sourceId);
+    const key = hash([sourceId, resourceIds]);
     const virtualResourceIds = virtualResourceIdsStore.useValue();
     const mergedResourceIds = useMemo(
       () => mergeVirtualResourceIds(sourceId, resourceIds, virtualResourceIds),
@@ -425,7 +421,7 @@ export function createResourceStore<
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Filtered Resources
-  //----------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Filtered Resource Ids
@@ -610,13 +606,8 @@ export function createResourceStore<
     sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const includedIds = catalogue.useActiveIncludedSourceIds();
-    const requiredIds = catalogue.useActiveRequiredSourceIds();
-    const resourceIds = catalogueResources.useResourceIds([
-      sourceId,
-      ...includedIds,
-      ...requiredIds,
-    ]);
+    const resourceIds =
+      catalogueResources.useSourceReferenceResourceIds(sourceId);
 
     return useCallback(
       (resourceId: string) => {
@@ -635,13 +626,8 @@ export function createResourceStore<
     sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const includedIds = catalogue.useActiveIncludedSourceIds();
-    const requiredIds = catalogue.useActiveRequiredSourceIds();
-    const resourceIds = catalogueResources.useResourceIds([
-      sourceId,
-      ...includedIds,
-      ...requiredIds,
-    ]);
+    const resourceIds =
+      catalogueResources.useSourceReferenceResourceIds(sourceId);
 
     return useCallback(
       (resourceId: string) => {
@@ -676,13 +662,8 @@ export function createResourceStore<
     sourceId: string,
     lang: string,
   ): [ResourceOption[], string] {
-    const includedIds = catalogue.useActiveIncludedSourceIds();
-    const requiredIds = catalogue.useActiveRequiredSourceIds();
-    const resourceIds = catalogueResources.useResourceIds([
-      sourceId,
-      ...includedIds,
-      ...requiredIds,
-    ]);
+    const resourceIds =
+      catalogueResources.useSourceReferenceResourceIds(sourceId);
     const key = hash([resourceIds, lang]);
 
     return [

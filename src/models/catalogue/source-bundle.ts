@@ -68,10 +68,7 @@ export const sourceBundleResourcesSchema = z.object({
 
 export const sourceBundleSchema = z.object({
   resources: sourceBundleResourcesSchema,
-  source: sourceMetadataSchema.extend({
-    include_ids: z.array(z.uuid()).default([]),
-    required_ids: z.array(z.uuid()).default([]),
-  }),
+  source: sourceMetadataSchema,
 });
 
 export type SourceBundle = z.infer<typeof sourceBundleSchema>;

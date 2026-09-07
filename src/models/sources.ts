@@ -8,17 +8,27 @@ import { sourceTypeSchema } from "./types/source-type";
 import { sourceVersionSchema } from "./types/source-version";
 
 //------------------------------------------------------------------------------
-// Source
+// Source Metadata
 //------------------------------------------------------------------------------
 
-export const sourceSchema = z.object({
+export const sourceMetadataSchema = z.object({
   code: z.string(),
   id: z.uuid(),
+  include_ids: z.array(z.uuid()).default([]),
   name: i18nStringSchema,
+  required_ids: z.array(z.uuid()).default([]),
   sync_version: z.number(),
   type: sourceTypeSchema,
   version: sourceVersionSchema,
+});
 
+export type SourceMetadata = z.infer<typeof sourceMetadataSchema>;
+
+//------------------------------------------------------------------------------
+// Source
+//------------------------------------------------------------------------------
+
+export const sourceSchema = sourceMetadataSchema.extend({
   includes: z
     .array(
       z.object({
@@ -34,14 +44,6 @@ export const sourceSchema = z.object({
 });
 
 export type Source = z.infer<typeof sourceSchema>;
-
-//------------------------------------------------------------------------------
-// Source Metadata
-//------------------------------------------------------------------------------
-
-export const sourceMetadataSchema = sourceSchema.omit({ includes: true });
-
-export type SourceMetadata = z.infer<typeof sourceMetadataSchema>;
 
 //------------------------------------------------------------------------------
 // Source Relations
