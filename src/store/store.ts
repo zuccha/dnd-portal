@@ -19,7 +19,7 @@ export type Store<T> = {
   useSetValue: () => StateSetter<T>;
   useValue: () => T;
 
-  subscribe: (callback: Callback1<T>) => void;
+  subscribe: (callback: Callback1<T>) => () => void;
   unsubscribe: (callback: Callback1<T>) => void;
 };
 

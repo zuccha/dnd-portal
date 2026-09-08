@@ -21,8 +21,8 @@ export type StoreSet<K, T> = {
   useSetValue: (key: K, defaultValue: T) => StateSetter<T>;
   useValue: (key: K, defaultValue: T) => T;
 
-  subscribe: (key: K, callback: Callback2<T, K>) => void;
-  subscribeAny: (callback: Callback2<T, K>) => void;
+  subscribe: (key: K, callback: Callback2<T, K>) => () => void;
+  subscribeAny: (callback: Callback2<T, K>) => () => void;
   unsubscribe: (key: K, callback: Callback2<T, K>) => void;
   unsubscribeAny: (callback: Callback2<T, K>) => void;
 };
