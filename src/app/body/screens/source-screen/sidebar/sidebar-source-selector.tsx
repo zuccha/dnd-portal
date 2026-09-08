@@ -1,5 +1,5 @@
 import { FolderIcon } from "lucide-react";
-import { useLayoutEffect, useMemo } from "react";
+import { useCallback, useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import { type SourceMetadata, useSelectedSourceId } from "~/models/sources";
@@ -25,6 +25,14 @@ export default function SidebarSourceSelector({
   versions,
 }: SidebarSourceSelectorProps) {
   const [selectedSourceId, setSelectedSourceId] = useSelectedSourceId();
+
+  const setSourceId = useCallback(
+    (sourceId: string | undefined) => {
+      setSelectedSourceId(sourceId);
+      catalogue.setActiveSourceId(sourceId);
+    },
+    [setSelectedSourceId],
+  );
 
   const sources = catalogue.useSourceMetadataList();
 
@@ -85,14 +93,27 @@ export default function SidebarSourceSelector({
     return [items, categories];
   }, [sources, versions, lang, translateSourceVersion, t]);
 
+  const sourceOptionIdsKey = useMemo(
+    () => sourceOptions.map(({ value }) => value).join(","),
+    [sourceOptions],
+  );
+
   useLayoutEffect(() => {
-    if (sourceOptions.length)
-      setSelectedSourceId((prev) =>
-        sourceOptions.every(({ value }) => value !== prev) ?
-          sourceOptions[0]?.value
-        : prev,
-      );
-  }, [setSelectedSourceId, sourceOptions]);
+    const sourceOptionIds =
+      sourceOptionIdsKey ? sourceOptionIdsKey.split(",") : [];
+    if (!sourceOptionIds.length) {
+      catalogue.setActiveSourceId(undefined);
+      return;
+    }
+
+    const next =
+      selectedSourceId && sourceOptionIds.includes(selectedSourceId) ?
+        selectedSourceId
+      : sourceOptionIds[0];
+
+    if (next !== selectedSourceId) setSelectedSourceId(next);
+    catalogue.setActiveSourceId(next);
+  }, [selectedSourceId, setSelectedSourceId, sourceOptionIdsKey]);
 
   return (
     <>
@@ -100,7 +121,7 @@ export default function SidebarSourceSelector({
         <Select.Enum
           categories={sourceCategories}
           disabled={!sourceOptions.length}
-          onValueChange={setSelectedSourceId}
+          onValueChange={setSourceId}
           options={sourceOptions}
           positioning={{ slide: true }}
           size="sm"

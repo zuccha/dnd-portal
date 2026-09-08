@@ -384,7 +384,7 @@ export function createResourceStore<
     _filters: Omit<F, "name">,
     _lang: string,
   ): [string[], string] {
-    const resourceIds = catalogueResources.useSourceResourceIds(sourceId);
+    const resourceIds = catalogueResources.useActiveSourceResourceIds();
     const key = hash([sourceId, resourceIds]);
     const virtualResourceIds = virtualResourceIdsStore.useValue();
     const mergedResourceIds = useMemo(
@@ -603,11 +603,11 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizeResourceName(
-    sourceId: string,
+    _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
     const resourceIds =
-      catalogueResources.useSourceReferenceResourceIds(sourceId);
+      catalogueResources.useActiveSourceReferenceResourceIds();
 
     return useCallback(
       (resourceId: string) => {
@@ -623,11 +623,11 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizeResourceNameShort(
-    sourceId: string,
+    _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
     const resourceIds =
-      catalogueResources.useSourceReferenceResourceIds(sourceId);
+      catalogueResources.useActiveSourceReferenceResourceIds();
 
     return useCallback(
       (resourceId: string) => {
@@ -659,11 +659,11 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourceOptionsByLang(
-    sourceId: string,
+    _sourceId: string,
     lang: string,
   ): [ResourceOption[], string] {
     const resourceIds =
-      catalogueResources.useSourceReferenceResourceIds(sourceId);
+      catalogueResources.useActiveSourceReferenceResourceIds();
     const key = hash([resourceIds, lang]);
 
     return [

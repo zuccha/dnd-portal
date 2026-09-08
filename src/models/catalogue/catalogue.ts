@@ -1,7 +1,8 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createMemoryStore } from "../../store/memory-store";
 import { createMemoryStoreSet } from "../../store/set/memory-store-set";
 import type { StoreSet } from "../../store/set/store-set";
+import { objectKeys } from "../../utils/object";
 import type { Background } from "../resources/backgrounds/background";
 import type { CharacterClass } from "../resources/character-classes/character-class";
 import type { CharacterSubclass } from "../resources/character-subclasses/character-subclass";
@@ -167,6 +168,79 @@ export function createCatalogue(id: string) {
     weapon_modifier: createResourcesIdsBySourceId("weapon_modifier"),
   };
 
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Active Source Resource Ids By Kind
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const activeSourceResourceIdsByKind = createMemoryStoreSet<
+    ResourceKind,
+    string[]
+  >(`${id}/active-source-resource-ids-by-kind`);
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Active Source Reference Resource Ids By Kind
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const activeSourceReferenceResourceIdsByKind = createMemoryStoreSet<
+    ResourceKind,
+    string[]
+  >(`${id}/active-source-reference-resource-ids-by-kind`);
+
+  //----------------------------------------------------------------------------
+  // Active Source Resource Ids
+  //----------------------------------------------------------------------------
+
+  function getResourceIdsByKind(
+    kind: ResourceKind,
+    sourceIds: string[],
+  ): string[] {
+    return [
+      ...new Set(
+        sourceIds.flatMap((sourceId) =>
+          resourceIdsBySourceIdByKind[kind].get(sourceId, emptyIds),
+        ),
+      ),
+    ];
+  }
+
+  //----------------------------------------------------------------------------
+  // Set Active Source Resource Ids
+  //----------------------------------------------------------------------------
+
+  function setActiveSourceResourceIds(sourceId: string | undefined): void {
+    const source =
+      sourceId ? sourceMetadataById.get(sourceId, undefined) : undefined;
+
+    const includedIds = source?.include_ids ?? emptyIds;
+    const requiredIds = source?.required_ids ?? emptyIds;
+
+    const resourceSourceIds = sourceId ? [sourceId, ...includedIds] : emptyIds;
+    const referenceSourceIds = [...resourceSourceIds, ...requiredIds];
+
+    for (const kind of objectKeys(resourceIdsBySourceIdByKind)) {
+      activeSourceResourceIdsByKind.set(
+        kind,
+        emptyIds,
+        getResourceIdsByKind(kind, resourceSourceIds),
+      );
+
+      activeSourceReferenceResourceIdsByKind.set(
+        kind,
+        emptyIds,
+        getResourceIdsByKind(kind, referenceSourceIds),
+      );
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Set Active Source Id
+  //----------------------------------------------------------------------------
+
+  function setActiveSourceId(sourceId: string | undefined): void {
+    activeSourceId.set(sourceId);
+    setActiveSourceResourceIds(sourceId);
+  }
+
   //----------------------------------------------------------------------------
   // Use Source Metadata List
   //----------------------------------------------------------------------------
@@ -203,45 +277,6 @@ export function createCatalogue(id: string) {
         if (resource) return resource as R;
       }
       return undefined;
-    }
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Get Resource Ids
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    function getResourceIds(sourceIds: string[]): string[] {
-      const resourceIds = [
-        ...new Set(
-          sourceIds.flatMap((sourceId) =>
-            kinds.flatMap((kind) =>
-              resourceIdsBySourceIdByKind[kind].get(sourceId, []),
-            ),
-          ),
-        ),
-      ];
-      return resourceIds;
-    }
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Get Source Resource Ids
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    function getSourceResourceIds(sourceId: string): string[] {
-      const source = sourceMetadataById.get(sourceId, undefined);
-      return getResourceIds([sourceId, ...(source?.include_ids ?? emptyIds)]);
-    }
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Get Source Reference Resource Ids
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    function getSourceReferenceResourceIds(sourceId: string): string[] {
-      const source = sourceMetadataById.get(sourceId, undefined);
-      return getResourceIds([
-        sourceId,
-        ...(source?.include_ids ?? emptyIds),
-        ...(source?.required_ids ?? emptyIds),
-      ]);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -282,77 +317,33 @@ export function createCatalogue(id: string) {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Use Resource Ids
+    // Use Active Source Resource Ids
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    function useResourceIds(sourceIds: string[]): string[] {
-      const keys = sourceIds.join(",");
-      const sourceIdsRef = useRef(sourceIds);
-      sourceIdsRef.current = sourceIds;
-      const [resourceIds, setResourceIds] = useState(() =>
-        getResourceIds(sourceIds),
+    function useActiveSourceResourceIds(): string[] {
+      const resourceIdsByKind = kinds.map((kind) =>
+        activeSourceResourceIdsByKind.useValue(kind, emptyIds),
       );
-
-      useLayoutEffect(() => {
-        const currentSourceIds = sourceIdsRef.current;
-        setResourceIds((prev) => {
-          const next = getResourceIds(currentSourceIds);
-          return (
-              prev.length === next.length &&
-                prev.every((resourceId, index) => resourceId === next[index])
-            ) ?
-              prev
-            : next;
-        });
-
-        const subscriptions = currentSourceIds.flatMap((sourceId) =>
-          kinds.map((kind) => {
-            const callback = () =>
-              setResourceIds((prev) => {
-                const next = getResourceIds(sourceIdsRef.current);
-                return (
-                    prev.length === next.length &&
-                      prev.every(
-                        (resourceId, index) => resourceId === next[index],
-                      )
-                  ) ?
-                    prev
-                  : next;
-              });
-            resourceIdsBySourceIdByKind[kind].subscribe(sourceId, callback);
-            return { callback, kind, sourceId };
-          }),
-        );
-
-        return () =>
-          subscriptions.forEach(({ callback, kind, sourceId }) =>
-            resourceIdsBySourceIdByKind[kind].unsubscribe(sourceId, callback),
-          );
-      }, [keys]);
-
-      return resourceIds;
+      const key = resourceIdsByKind.map((ids) => ids.join(",")).join("|");
+      return useMemo(
+        () => [...new Set(resourceIdsByKind.flat())],
+        [key], // eslint-disable-line react-hooks/exhaustive-deps
+      );
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Use Source Resource Ids
+    // Use Active Source Reference Resource Ids
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    function useSourceResourceIds(sourceId: string): string[] {
-      const source = sourceMetadataById.useValue(sourceId, undefined);
-      return useResourceIds([sourceId, ...(source?.include_ids ?? emptyIds)]);
-    }
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Use Source Reference Resource Ids
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    function useSourceReferenceResourceIds(sourceId: string): string[] {
-      const source = sourceMetadataById.useValue(sourceId, undefined);
-      return useResourceIds([
-        sourceId,
-        ...(source?.include_ids ?? emptyIds),
-        ...(source?.required_ids ?? emptyIds),
-      ]);
+    function useActiveSourceReferenceResourceIds(): string[] {
+      const resourceIdsByKind = kinds.map((kind) =>
+        activeSourceReferenceResourceIdsByKind.useValue(kind, emptyIds),
+      );
+      const key = resourceIdsByKind.map((ids) => ids.join(",")).join("|");
+      return useMemo(
+        () => [...new Set(resourceIdsByKind.flat())],
+        [key], // eslint-disable-line react-hooks/exhaustive-deps
+      );
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -373,34 +364,30 @@ export function createCatalogue(id: string) {
           const next = getResources(currentResourceIds);
           return (
               prev.length === next.length &&
-                prev.every((resource, index) => resource.id === next[index]?.id)
+                prev.every((resource, index) => resource === next[index])
             ) ?
               prev
             : next;
         });
 
-        const subscriptions = currentResourceIds.flatMap((resourceId) =>
-          kinds.map((kind) => {
-            const callback = () =>
-              setResources((prev) => {
-                const next = getResources(resourceIdsRef.current);
-                return (
-                    prev.length === next.length &&
-                      prev.every(
-                        (resource, index) => resource.id === next[index]?.id,
-                      )
-                  ) ?
-                    prev
-                  : next;
-              });
-            resourcesByIdByKind[kind].subscribe(resourceId, callback);
-            return { callback, kind, resourceId };
-          }),
+        const callback = () =>
+          setResources((prev) => {
+            const next = getResources(resourceIdsRef.current);
+            return (
+                prev.length === next.length &&
+                  prev.every((resource, index) => resource === next[index])
+              ) ?
+                prev
+              : next;
+          });
+
+        kinds.forEach((kind) =>
+          resourcesByIdByKind[kind].subscribeAny(callback),
         );
 
         return () =>
-          subscriptions.forEach(({ callback, kind, resourceId }) =>
-            resourcesByIdByKind[kind].unsubscribe(resourceId, callback),
+          kinds.forEach((kind) =>
+            resourcesByIdByKind[kind].unsubscribeAny(callback),
           );
       }, [idsKey]);
 
@@ -413,14 +400,10 @@ export function createCatalogue(id: string) {
 
     return {
       getResource,
-      getResourceIds,
-      getSourceReferenceResourceIds,
-      getSourceResourceIds,
+      useActiveSourceReferenceResourceIds,
+      useActiveSourceResourceIds,
       useResource,
-      useResourceIds,
       useResources,
-      useSourceReferenceResourceIds,
-      useSourceResourceIds,
     };
   }
 
@@ -465,7 +448,6 @@ export function createCatalogue(id: string) {
     sourceMetadataIds.set((prev) =>
       prev.includes(source.id) ? prev : [...prev, source.id],
     );
-    activeSourceId.set(source.id);
 
     for (const [kind, resources] of resourceImports) {
       type ResourceStoreSet = StoreSet<string, Resource>;
@@ -478,6 +460,8 @@ export function createCatalogue(id: string) {
       resourceIdsBySourceIdByKind[kind].set(source.id, [], resourceIds);
     }
 
+    setActiveSourceId(source.id);
+
     return bundle;
   }
 
@@ -489,6 +473,7 @@ export function createCatalogue(id: string) {
     createResourceStore,
     getActiveSourceId: activeSourceId.get,
     importSourceBundle,
+    setActiveSourceId,
     useActiveSourceId: activeSourceId.useValue,
     useSourceMetadataList,
   };
