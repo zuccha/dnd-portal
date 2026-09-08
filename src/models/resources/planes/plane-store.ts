@@ -18,7 +18,7 @@ export const planeStore = createResourceStore(
     defaultResource: defaultPlane,
     displayName: { en: "Planes", it: "Piani" },
     filtersSchema: planeFiltersSchema,
-    kinds: ["plane"],
+    kind: "plane",
     orderOptions: planeOrderOptions,
     resourceSchema: planeSchema,
     translationFields: planeTranslationFields,

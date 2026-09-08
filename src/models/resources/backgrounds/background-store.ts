@@ -22,7 +22,7 @@ export const backgroundStore = createResourceStore(
     defaultResource: defaultBackground,
     displayName: { en: "Backgrounds", it: "Background" },
     filtersSchema: backgroundFiltersSchema,
-    kinds: ["background"],
+    kind: "background",
     orderOptions: backgroundOrderOptions,
     resourceSchema: backgroundRawSchema,
     translationFields: backgroundTranslationFields,

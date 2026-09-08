@@ -22,7 +22,7 @@ export const languageStore = createResourceStore(
     defaultResource: defaultLanguage,
     displayName: { en: "Languages", it: "Lingue" },
     filtersSchema: languageFiltersSchema,
-    kinds: ["language"],
+    kind: "language",
     orderOptions: languageOrderOptions,
     resourceSchema: languageSchema,
     translationFields: languageTranslationFields,

@@ -25,7 +25,7 @@ export const itemModifierStore = createEquipmentModifierStore(
       it: "Varianti dell'Attrezzatura",
     },
     filtersSchema: itemModifierFiltersSchema,
-    kinds: ["item_modifier"],
+    kind: "item_modifier",
     modifierSchema: itemModifierSchema,
     orderOptions: itemModifierOrderOptions,
     translationFields: itemModifierTranslationFields,

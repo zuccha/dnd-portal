@@ -6,7 +6,7 @@ import {
   type EquipmentBundle,
   formatEquipmentNameWithNotes,
 } from "~/models/other/equipment-bundle";
-import { equipmentStore } from "~/models/resources/equipment/equipment-store";
+import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import type { ResourceOption } from "~/models/resources/resource";
 import Button from "~/ui/button";
 import CostInput from "~/ui/cost-input";
@@ -45,8 +45,11 @@ export default function EquipmentBundleEditor({
     null,
   );
 
-  const options = equipmentStore.useResourceOptions(sourceId);
-  const localize = equipmentStore.useLocalizeResourceName(sourceId, lang);
+  const options = equipmentReferenceStore.useResourceOptions(sourceId);
+  const localize = equipmentReferenceStore.useLocalizeResourceName(
+    sourceId,
+    lang,
+  );
 
   const filterResourceOptions = useCallback(
     (option: ResourceOption, search: string): boolean => {

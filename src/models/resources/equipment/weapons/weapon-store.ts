@@ -19,7 +19,7 @@ export const weaponStore = createEquipmentStore(
     displayName: { en: "Weapons", it: "Armi" },
     equipmentSchema: weaponSchema,
     filtersSchema: weaponFiltersSchema,
-    kinds: ["weapon"],
+    kind: "weapon",
     orderOptions: weaponOrderOptions,
     translationFields: weaponTranslationFields,
     useLocalizeEquipment: useLocalizeWeapon,

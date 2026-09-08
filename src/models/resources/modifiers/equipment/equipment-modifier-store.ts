@@ -29,7 +29,7 @@ export function createEquipmentModifierStore<
     defaultModifier: R;
     displayName: I18nString;
     filtersSchema: ZodType<F>;
-    kinds: ResourceKind[];
+    kind: ResourceKind;
     modifierSchema: ZodType<R>;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<R>[];
@@ -41,7 +41,7 @@ export function createEquipmentModifierStore<
     defaultModifier: extra.defaultModifier,
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
-    kinds: extra.kinds,
+    kind: extra.kind,
     modifierSchema: extra.modifierSchema,
     orderOptions: extra.orderOptions,
     translationFields: extra.translationFields,

@@ -25,7 +25,7 @@ export function createModifierStore<
     defaultModifier: R;
     displayName: I18nString;
     filtersSchema: ZodType<F>;
-    kinds: ResourceKind[];
+    kind: ResourceKind;
     modifierSchema: ZodType<R>;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<R>[];
@@ -37,7 +37,7 @@ export function createModifierStore<
     defaultResource: extra.defaultModifier,
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
-    kinds: extra.kinds,
+    kind: extra.kind,
     orderOptions: extra.orderOptions,
     resourceSchema: extra.modifierSchema,
     translationFields: extra.translationFields,

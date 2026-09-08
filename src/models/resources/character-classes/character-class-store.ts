@@ -22,7 +22,7 @@ export const characterClassStore = createResourceStore(
     defaultResource: defaultCharacterClass,
     displayName: { en: "Classes", it: "Classi" },
     filtersSchema: characterClassFiltersSchema,
-    kinds: ["character_class"],
+    kind: "character_class",
     orderOptions: characterClassOrderOptions,
     resourceSchema: characterClassRawSchema,
     translationFields: characterClassTranslationFields,

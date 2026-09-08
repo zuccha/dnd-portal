@@ -22,7 +22,7 @@ export const speciesStore = createResourceStore(
     defaultResource: defaultSpecies,
     displayName: { en: "Species", it: "Specie" },
     filtersSchema: speciesFiltersSchema,
-    kinds: ["species"],
+    kind: "species",
     orderOptions: speciesOrderOptions,
     resourceSchema: speciesSchema,
     translationFields: speciesTranslationFields,

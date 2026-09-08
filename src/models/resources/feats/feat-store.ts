@@ -18,7 +18,7 @@ export const featStore = createResourceStore(
     defaultResource: defaultFeat,
     displayName: { en: "Feats", it: "Talenti" },
     filtersSchema: featFiltersSchema,
-    kinds: ["feat"],
+    kind: "feat",
     orderOptions: featOrderOptions,
     resourceSchema: featSchema,
     translationFields: featTranslationFields,

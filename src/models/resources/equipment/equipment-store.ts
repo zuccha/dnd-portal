@@ -4,22 +4,9 @@ import type { ResourceKind } from "../../types/resource-kind";
 import { type TranslationFields } from "../resource";
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import type { DBEquipment, DBEquipmentTranslation } from "./db-equipment";
-import {
-  type Equipment,
-  defaultEquipment,
-  equipmentSchema,
-  equipmentTranslationFields,
-} from "./equipment";
-import {
-  type EquipmentFilters,
-  defaultEquipmentFilters,
-  equipmentFiltersSchema,
-  equipmentOrderOptions,
-} from "./equipment-filters";
-import {
-  type LocalizedEquipment,
-  useLocalizeEquipment,
-} from "./localized-equipment";
+import { type Equipment } from "./equipment";
+import { type EquipmentFilters } from "./equipment-filters";
+import { type LocalizedEquipment } from "./localized-equipment";
 
 //------------------------------------------------------------------------------
 // Create Equipment Store
@@ -39,7 +26,7 @@ export function createEquipmentStore<
     defaultEquipment: E;
     defaultFilters: F;
     displayName: I18nString;
-    kinds: ResourceKind[];
+    kind: ResourceKind;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<E>[];
     useLocalizeEquipment: (sourceId: string) => (equipment: E) => L;
@@ -50,29 +37,10 @@ export function createEquipmentStore<
     defaultResource: extra.defaultEquipment,
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
-    kinds: extra.kinds,
+    kind: extra.kind,
     orderOptions: extra.orderOptions,
     resourceSchema: extra.equipmentSchema,
     translationFields: extra.translationFields,
     useLocalizeResource: extra.useLocalizeEquipment,
   });
 }
-
-//------------------------------------------------------------------------------
-// Equipment Store
-//------------------------------------------------------------------------------
-
-export const equipmentStore = createResourceStore(
-  { p: "equipments", s: "equipment" },
-  {
-    defaultFilters: defaultEquipmentFilters,
-    defaultResource: defaultEquipment,
-    displayName: { en: "Equipment", it: "Equipaggiamento" },
-    filtersSchema: equipmentFiltersSchema,
-    kinds: ["armor", "item", "tool", "weapon"],
-    orderOptions: equipmentOrderOptions,
-    resourceSchema: equipmentSchema,
-    translationFields: equipmentTranslationFields,
-    useLocalizeResource: useLocalizeEquipment,
-  },
-);

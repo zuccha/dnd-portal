@@ -26,7 +26,7 @@ import {
   useTranslateDamageType,
 } from "../../types/damage-type";
 import { creatureTagStore } from "../creature-tags/creature-tag-store";
-import { equipmentStore } from "../equipment/equipment-store";
+import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
 import { languageStore } from "../languages/language-store";
 import {
   formatInfo,
@@ -126,7 +126,7 @@ export function useLocalizeCreature(
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateCreatureCondition = useTranslateCreatureCondition(lang);
   const translateDamageType = useTranslateDamageType(lang);
-  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
     sourceId,
     lang,
   );

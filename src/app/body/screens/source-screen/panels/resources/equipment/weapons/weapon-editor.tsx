@@ -1,5 +1,5 @@
 import { HStack } from "@chakra-ui/react";
-import { equipmentStore } from "~/models/resources/equipment/equipment-store";
+import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import type { WeaponFormData } from "~/models/resources/equipment/weapons/weapon-form";
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
@@ -52,7 +52,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
     useField: form.createUseField("ammunition_ids", (ammunition_ids) =>
       ammunition_ids.length > 0 ? undefined : "error.empty",
     ),
-    useOptions: equipmentStore.useResourceOptions,
+    useOptions: equipmentReferenceStore.useResourceOptions,
   });
 
   //----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
-import { equipmentStore } from "~/models/resources/equipment/equipment-store";
+import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import type { ToolFormData } from "~/models/resources/equipment/tools/tool-form";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
@@ -50,7 +50,7 @@ export function createToolEditor(form: Form<ToolFormData>) {
       placeholder: { en: "None", it: "Nessuna" },
     },
     useField: form.createUseField("craft_ids"),
-    useOptions: equipmentStore.useResourceOptions,
+    useOptions: equipmentReferenceStore.useResourceOptions,
   });
 
   //------------------------------------------------------------------------------

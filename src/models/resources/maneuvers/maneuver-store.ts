@@ -22,7 +22,7 @@ export const maneuverStore = createResourceStore(
     defaultResource: defaultManeuver,
     displayName: { en: "Maneuvers", it: "Manovre" },
     filtersSchema: maneuverFiltersSchema,
-    kinds: ["maneuver"],
+    kind: "maneuver",
     orderOptions: maneuverOrderOptions,
     resourceSchema: maneuverSchema,
     translationFields: maneuverTranslationFields,

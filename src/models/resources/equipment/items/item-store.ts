@@ -19,7 +19,7 @@ export const itemStore = createEquipmentStore(
     displayName: { en: "Adventuring Gear", it: "Attrezatura" },
     equipmentSchema: itemSchema,
     filtersSchema: itemFiltersSchema,
-    kinds: ["item"],
+    kind: "item",
     orderOptions: itemOrderOptions,
     translationFields: itemTranslationFields,
     useLocalizeEquipment: useLocalizeItem,

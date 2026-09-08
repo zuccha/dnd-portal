@@ -12,7 +12,7 @@ import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
 import { useTranslateDieType } from "../../types/die_type";
 import { useTranslateWeaponType } from "../../types/weapon-type";
-import { equipmentStore } from "../equipment/equipment-store";
+import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
 import { toolStore } from "../equipment/tools/tool-store";
 import {
   formatDetails,
@@ -60,7 +60,7 @@ export function useLocalizeCharacterClass(
   const translateDieType = useTranslateDieType(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
   const localizeToolName = toolStore.useLocalizeResourceName(sourceId, lang);
-  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
     sourceId,
     lang,
   );

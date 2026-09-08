@@ -4,7 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
 import { useTranslateToolType } from "../../../types/tool-type";
-import { equipmentStore } from "../equipment-store";
+import { equipmentReferenceStore } from "../equipment-reference-store";
 import {
   localizedEquipmentSchema,
   useLocalizeEquipment,
@@ -37,7 +37,7 @@ export function useLocalizeTool(
 
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateToolType = useTranslateToolType(lang);
-  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
     sourceId,
     lang,
   );

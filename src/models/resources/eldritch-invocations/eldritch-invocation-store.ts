@@ -22,7 +22,7 @@ export const eldritchInvocationStore = createResourceStore(
     defaultResource: defaultEldritchInvocation,
     displayName: { en: "Eldritch Invocations", it: "Suppliche Occulte" },
     filtersSchema: eldritchInvocationFiltersSchema,
-    kinds: ["eldritch_invocation"],
+    kind: "eldritch_invocation",
     orderOptions: eldritchInvocationOrderOptions,
     resourceSchema: eldritchInvocationSchema,
     translationFields: eldritchInvocationTranslationFields,

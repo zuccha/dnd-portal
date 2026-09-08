@@ -22,7 +22,7 @@ export const creatureStore = createResourceStore(
     defaultResource: defaultCreature,
     displayName: { en: "Creatures", it: "Creature" },
     filtersSchema: creatureFiltersSchema,
-    kinds: ["creature"],
+    kind: "creature",
     orderOptions: creatureOrderOptions,
     resourceSchema: creatureRawSchema,
     translationFields: creatureTranslationFields,

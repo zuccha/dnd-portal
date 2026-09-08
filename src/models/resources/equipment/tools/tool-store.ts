@@ -19,7 +19,7 @@ export const toolStore = createEquipmentStore(
     displayName: { en: "Tools", it: "Strumenti" },
     equipmentSchema: toolSchema,
     filtersSchema: toolFiltersSchema,
-    kinds: ["tool"],
+    kind: "tool",
     orderOptions: toolOrderOptions,
     translationFields: toolTranslationFields,
     useLocalizeEquipment: useLocalizeTool,

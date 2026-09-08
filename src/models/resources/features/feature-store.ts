@@ -22,7 +22,7 @@ export const featureStore = createResourceStore(
     defaultResource: defaultFeature,
     displayName: { en: "Features", it: "Privilegi" },
     filtersSchema: featureFiltersSchema,
-    kinds: ["feature"],
+    kind: "feature",
     orderOptions: featureOrderOptions,
     resourceSchema: featureSchema,
     translationFields: featureTranslationFields,

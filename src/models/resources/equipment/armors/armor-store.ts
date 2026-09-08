@@ -19,7 +19,7 @@ export const armorStore = createEquipmentStore(
     displayName: { en: "Armors", it: "Armature" },
     equipmentSchema: armorSchema,
     filtersSchema: armorFiltersSchema,
-    kinds: ["armor"],
+    kind: "armor",
     orderOptions: armorOrderOptions,
     translationFields: armorTranslationFields,
     useLocalizeEquipment: useLocalizeArmor,

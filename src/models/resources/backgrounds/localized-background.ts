@@ -8,7 +8,7 @@ import { joinWith } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
 import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
-import { equipmentStore } from "../equipment/equipment-store";
+import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
 import { toolStore } from "../equipment/tools/tool-store";
 import { featStore } from "../feats/feat-store";
 import {
@@ -48,7 +48,7 @@ export function useLocalizeBackground(
   const localizeResource = useLocalizeResource<Background>();
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
-  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
     sourceId,
     lang,
   );

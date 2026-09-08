@@ -12,7 +12,7 @@ import {
 import { useTranslateWeaponProperty } from "../../../types/weapon-property";
 import { useTranslateWeaponType } from "../../../types/weapon-type";
 import { formatInfo } from "../../localized-resource";
-import { equipmentStore } from "../equipment-store";
+import { equipmentReferenceStore } from "../equipment-reference-store";
 import {
   localizedEquipmentSchema,
   useLocalizeEquipment,
@@ -59,7 +59,7 @@ export function useLocalizeWeapon(
   const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(lang);
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeEquipmentName = equipmentStore.useLocalizeResourceName(
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
     sourceId,
     lang,
   );

@@ -22,7 +22,7 @@ export const serviceStore = createResourceStore(
     defaultResource: defaultService,
     displayName: { en: "Services", it: "Servizi" },
     filtersSchema: serviceFiltersSchema,
-    kinds: ["service"],
+    kind: "service",
     orderOptions: serviceOrderOptions,
     resourceSchema: serviceSchema,
     translationFields: serviceTranslationFields,
