@@ -43,3 +43,14 @@ export function replaceItem<T>(items: T[], index: number, item: T): T[] {
 export function dropLast<T>(items: T[]): T[] {
   return items.slice(0, items.length - 1);
 }
+
+//------------------------------------------------------------------------------
+// Are Same Array
+//------------------------------------------------------------------------------
+
+export function areSameArray<T>(items1: T[], items2: T[]): boolean {
+  return (
+    items1.length === items2.length &&
+    items1.every((item, index) => item === items2[index])
+  );
+}
