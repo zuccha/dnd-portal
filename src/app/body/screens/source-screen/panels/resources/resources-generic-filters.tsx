@@ -77,7 +77,7 @@ export function createResourcesGenericFilters<
         <CaptionInput caption={t("name.placeholder")} w="full">
           <Input
             groupProps={{ w: "full" }}
-            id={`filter-${store.name.s}-name`}
+            id={`filter-${store.kind}-name`}
             onValueChange={setName}
             placeholder={t("name.placeholder")}
             size="sm"

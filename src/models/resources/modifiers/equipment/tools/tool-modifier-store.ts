@@ -15,17 +15,13 @@ import {
 // Tool Modifier Store
 //------------------------------------------------------------------------------
 
-export const toolModifierStore = createEquipmentModifierStore(
-  { p: "tool_modifiers", s: "tool_modifier" },
-  {
-    defaultFilters: defaultToolModifierFilters,
-    defaultModifier: defaultToolModifier,
-    displayName: { en: "Tool Variants", it: "Varianti degli Strumenti" },
-    filtersSchema: toolModifierFiltersSchema,
-    kind: "tool_modifier",
-    modifierSchema: toolModifierSchema,
-    orderOptions: toolModifierOrderOptions,
-    translationFields: toolModifierTranslationFields,
-    useLocalizeModifier: useLocalizeToolModifier,
-  },
-);
+export const toolModifierStore = createEquipmentModifierStore("tool_modifier", {
+  defaultFilters: defaultToolModifierFilters,
+  defaultModifier: defaultToolModifier,
+  displayName: { en: "Tool Variants", it: "Varianti degli Strumenti" },
+  filtersSchema: toolModifierFiltersSchema,
+  modifierSchema: toolModifierSchema,
+  orderOptions: toolModifierOrderOptions,
+  translationFields: toolModifierTranslationFields,
+  useLocalizeModifier: useLocalizeToolModifier,
+});

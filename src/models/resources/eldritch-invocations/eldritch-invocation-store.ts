@@ -16,13 +16,12 @@ import { useLocalizeEldritchInvocation } from "./localized-eldritch-invocation";
 //------------------------------------------------------------------------------
 
 export const eldritchInvocationStore = createResourceStore(
-  { p: "eldritch_invocations", s: "eldritch_invocation" },
+  "eldritch_invocation",
   {
     defaultFilters: defaultEldritchInvocationFilters,
     defaultResource: defaultEldritchInvocation,
     displayName: { en: "Eldritch Invocations", it: "Suppliche Occulte" },
     filtersSchema: eldritchInvocationFiltersSchema,
-    kind: "eldritch_invocation",
     orderOptions: eldritchInvocationOrderOptions,
     resourceSchema: eldritchInvocationSchema,
     translationFields: eldritchInvocationTranslationFields,

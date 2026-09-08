@@ -19,25 +19,23 @@ export function createModifierStore<
   DBR extends DBModifier,
   DBT extends DBModifierTranslation,
 >(
-  name: { p: string; s: string },
+  kind: ResourceKind,
   extra: {
     defaultFilters: F;
     defaultModifier: R;
     displayName: I18nString;
     filtersSchema: ZodType<F>;
-    kind: ResourceKind;
     modifierSchema: ZodType<R>;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<R>[];
     useLocalizeModifier: (sourceId: string) => (modifier: R) => L;
   },
 ): ResourceStore<R, L, F, DBR, DBT> {
-  return createResourceStore(name, {
+  return createResourceStore(kind, {
     defaultFilters: extra.defaultFilters,
     defaultResource: extra.defaultModifier,
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
-    kind: extra.kind,
     orderOptions: extra.orderOptions,
     resourceSchema: extra.modifierSchema,
     translationFields: extra.translationFields,

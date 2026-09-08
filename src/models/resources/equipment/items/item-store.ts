@@ -11,17 +11,13 @@ import { useLocalizeItem } from "./localized-item";
 // Item Store
 //------------------------------------------------------------------------------
 
-export const itemStore = createEquipmentStore(
-  { p: "items", s: "item" },
-  {
-    defaultEquipment: defaultItem,
-    defaultFilters: defaultItemFilters,
-    displayName: { en: "Adventuring Gear", it: "Attrezatura" },
-    equipmentSchema: itemSchema,
-    filtersSchema: itemFiltersSchema,
-    kind: "item",
-    orderOptions: itemOrderOptions,
-    translationFields: itemTranslationFields,
-    useLocalizeEquipment: useLocalizeItem,
-  },
-);
+export const itemStore = createEquipmentStore("item", {
+  defaultEquipment: defaultItem,
+  defaultFilters: defaultItemFilters,
+  displayName: { en: "Adventuring Gear", it: "Attrezatura" },
+  equipmentSchema: itemSchema,
+  filtersSchema: itemFiltersSchema,
+  orderOptions: itemOrderOptions,
+  translationFields: itemTranslationFields,
+  useLocalizeEquipment: useLocalizeItem,
+});

@@ -15,17 +15,13 @@ import { useLocalizeCharacterClass } from "./localized-character-class";
 // Character Class Store
 //------------------------------------------------------------------------------
 
-export const characterClassStore = createResourceStore(
-  { p: "character_classes", s: "character_class" },
-  {
-    defaultFilters: defaultCharacterClassFilters,
-    defaultResource: defaultCharacterClass,
-    displayName: { en: "Classes", it: "Classi" },
-    filtersSchema: characterClassFiltersSchema,
-    kind: "character_class",
-    orderOptions: characterClassOrderOptions,
-    resourceSchema: characterClassRawSchema,
-    translationFields: characterClassTranslationFields,
-    useLocalizeResource: useLocalizeCharacterClass,
-  },
-);
+export const characterClassStore = createResourceStore("character_class", {
+  defaultFilters: defaultCharacterClassFilters,
+  defaultResource: defaultCharacterClass,
+  displayName: { en: "Classes", it: "Classi" },
+  filtersSchema: characterClassFiltersSchema,
+  orderOptions: characterClassOrderOptions,
+  resourceSchema: characterClassRawSchema,
+  translationFields: characterClassTranslationFields,
+  useLocalizeResource: useLocalizeCharacterClass,
+});

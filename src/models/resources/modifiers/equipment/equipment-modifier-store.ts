@@ -23,25 +23,23 @@ export function createEquipmentModifierStore<
   DBR extends DBEquipmentModifier,
   DBT extends DBEquipmentModifierTranslation,
 >(
-  name: { p: string; s: string },
+  kind: ResourceKind,
   extra: {
     defaultFilters: F;
     defaultModifier: R;
     displayName: I18nString;
     filtersSchema: ZodType<F>;
-    kind: ResourceKind;
     modifierSchema: ZodType<R>;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<R>[];
     useLocalizeModifier: (sourceId: string) => (modifier: R) => L;
   },
 ): ResourceStore<R, L, F, DBR, DBT> {
-  return createModifierStore<R, L, F, DBR, DBT>(name, {
+  return createModifierStore<R, L, F, DBR, DBT>(kind, {
     defaultFilters: extra.defaultFilters,
     defaultModifier: extra.defaultModifier,
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
-    kind: extra.kind,
     modifierSchema: extra.modifierSchema,
     orderOptions: extra.orderOptions,
     translationFields: extra.translationFields,

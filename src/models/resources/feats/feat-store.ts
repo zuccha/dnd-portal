@@ -11,17 +11,13 @@ import { useLocalizeFeat } from "./localized-feat";
 // Feat Store
 //------------------------------------------------------------------------------
 
-export const featStore = createResourceStore(
-  { p: "feats", s: "feat" },
-  {
-    defaultFilters: defaultFeatFilters,
-    defaultResource: defaultFeat,
-    displayName: { en: "Feats", it: "Talenti" },
-    filtersSchema: featFiltersSchema,
-    kind: "feat",
-    orderOptions: featOrderOptions,
-    resourceSchema: featSchema,
-    translationFields: featTranslationFields,
-    useLocalizeResource: useLocalizeFeat,
-  },
-);
+export const featStore = createResourceStore("feat", {
+  defaultFilters: defaultFeatFilters,
+  defaultResource: defaultFeat,
+  displayName: { en: "Feats", it: "Talenti" },
+  filtersSchema: featFiltersSchema,
+  orderOptions: featOrderOptions,
+  resourceSchema: featSchema,
+  translationFields: featTranslationFields,
+  useLocalizeResource: useLocalizeFeat,
+});

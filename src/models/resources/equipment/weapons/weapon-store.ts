@@ -11,17 +11,13 @@ import {
 // Weapon Store
 //------------------------------------------------------------------------------
 
-export const weaponStore = createEquipmentStore(
-  { p: "weapons", s: "weapon" },
-  {
-    defaultEquipment: defaultWeapon,
-    defaultFilters: defaultWeaponFilters,
-    displayName: { en: "Weapons", it: "Armi" },
-    equipmentSchema: weaponSchema,
-    filtersSchema: weaponFiltersSchema,
-    kind: "weapon",
-    orderOptions: weaponOrderOptions,
-    translationFields: weaponTranslationFields,
-    useLocalizeEquipment: useLocalizeWeapon,
-  },
-);
+export const weaponStore = createEquipmentStore("weapon", {
+  defaultEquipment: defaultWeapon,
+  defaultFilters: defaultWeaponFilters,
+  displayName: { en: "Weapons", it: "Armi" },
+  equipmentSchema: weaponSchema,
+  filtersSchema: weaponFiltersSchema,
+  orderOptions: weaponOrderOptions,
+  translationFields: weaponTranslationFields,
+  useLocalizeEquipment: useLocalizeWeapon,
+});

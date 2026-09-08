@@ -15,17 +15,13 @@ import {
 // Species Store
 //------------------------------------------------------------------------------
 
-export const speciesStore = createResourceStore(
-  { p: "species", s: "species" },
-  {
-    defaultFilters: defaultSpeciesFilters,
-    defaultResource: defaultSpecies,
-    displayName: { en: "Species", it: "Specie" },
-    filtersSchema: speciesFiltersSchema,
-    kind: "species",
-    orderOptions: speciesOrderOptions,
-    resourceSchema: speciesSchema,
-    translationFields: speciesTranslationFields,
-    useLocalizeResource: useLocalizeSpecies,
-  },
-);
+export const speciesStore = createResourceStore("species", {
+  defaultFilters: defaultSpeciesFilters,
+  defaultResource: defaultSpecies,
+  displayName: { en: "Species", it: "Specie" },
+  filtersSchema: speciesFiltersSchema,
+  orderOptions: speciesOrderOptions,
+  resourceSchema: speciesSchema,
+  translationFields: speciesTranslationFields,
+  useLocalizeResource: useLocalizeSpecies,
+});

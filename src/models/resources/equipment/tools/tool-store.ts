@@ -11,17 +11,13 @@ import {
 // Tool Store
 //------------------------------------------------------------------------------
 
-export const toolStore = createEquipmentStore(
-  { p: "tools", s: "tool" },
-  {
-    defaultEquipment: defaultTool,
-    defaultFilters: defaultToolFilters,
-    displayName: { en: "Tools", it: "Strumenti" },
-    equipmentSchema: toolSchema,
-    filtersSchema: toolFiltersSchema,
-    kind: "tool",
-    orderOptions: toolOrderOptions,
-    translationFields: toolTranslationFields,
-    useLocalizeEquipment: useLocalizeTool,
-  },
-);
+export const toolStore = createEquipmentStore("tool", {
+  defaultEquipment: defaultTool,
+  defaultFilters: defaultToolFilters,
+  displayName: { en: "Tools", it: "Strumenti" },
+  equipmentSchema: toolSchema,
+  filtersSchema: toolFiltersSchema,
+  orderOptions: toolOrderOptions,
+  translationFields: toolTranslationFields,
+  useLocalizeEquipment: useLocalizeTool,
+});

@@ -19,25 +19,23 @@ export function createEquipmentStore<
   DBR extends DBEquipment,
   DBT extends DBEquipmentTranslation,
 >(
-  name: { s: string; p: string },
+  kind: ResourceKind,
   extra: {
     equipmentSchema: ZodType<E>;
     filtersSchema: ZodType<F>;
     defaultEquipment: E;
     defaultFilters: F;
     displayName: I18nString;
-    kind: ResourceKind;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<E>[];
     useLocalizeEquipment: (sourceId: string) => (equipment: E) => L;
   },
 ): ResourceStore<E, L, F, DBR, DBT> {
-  return createResourceStore(name, {
+  return createResourceStore(kind, {
     defaultFilters: extra.defaultFilters,
     defaultResource: extra.defaultEquipment,
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
-    kind: extra.kind,
     orderOptions: extra.orderOptions,
     resourceSchema: extra.equipmentSchema,
     translationFields: extra.translationFields,

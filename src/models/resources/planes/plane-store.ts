@@ -11,17 +11,13 @@ import {
 // Plane Store
 //------------------------------------------------------------------------------
 
-export const planeStore = createResourceStore(
-  { p: "planes", s: "plane" },
-  {
-    defaultFilters: defaultPlaneFilters,
-    defaultResource: defaultPlane,
-    displayName: { en: "Planes", it: "Piani" },
-    filtersSchema: planeFiltersSchema,
-    kind: "plane",
-    orderOptions: planeOrderOptions,
-    resourceSchema: planeSchema,
-    translationFields: planeTranslationFields,
-    useLocalizeResource: useLocalizePlane,
-  },
-);
+export const planeStore = createResourceStore("plane", {
+  defaultFilters: defaultPlaneFilters,
+  defaultResource: defaultPlane,
+  displayName: { en: "Planes", it: "Piani" },
+  filtersSchema: planeFiltersSchema,
+  orderOptions: planeOrderOptions,
+  resourceSchema: planeSchema,
+  translationFields: planeTranslationFields,
+  useLocalizeResource: useLocalizePlane,
+});

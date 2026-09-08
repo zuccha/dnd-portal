@@ -11,17 +11,13 @@ import {
 // Spell Store
 //------------------------------------------------------------------------------
 
-export const spellStore = createResourceStore(
-  { p: "spells", s: "spell" },
-  {
-    defaultFilters: defaultSpellFilters,
-    defaultResource: defaultSpell,
-    displayName: { en: "Spells", it: "Incantesimi" },
-    filtersSchema: spellFiltersSchema,
-    kind: "spell",
-    orderOptions: spellOrderOptions,
-    resourceSchema: spellSchema,
-    translationFields: spellTranslationFields,
-    useLocalizeResource: useLocalizeSpell,
-  },
-);
+export const spellStore = createResourceStore("spell", {
+  defaultFilters: defaultSpellFilters,
+  defaultResource: defaultSpell,
+  displayName: { en: "Spells", it: "Incantesimi" },
+  filtersSchema: spellFiltersSchema,
+  orderOptions: spellOrderOptions,
+  resourceSchema: spellSchema,
+  translationFields: spellTranslationFields,
+  useLocalizeResource: useLocalizeSpell,
+});

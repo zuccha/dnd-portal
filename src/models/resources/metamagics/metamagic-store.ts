@@ -15,17 +15,13 @@ import {
 // Metamagic Store
 //------------------------------------------------------------------------------
 
-export const metamagicStore = createResourceStore(
-  { p: "metamagics", s: "metamagic" },
-  {
-    defaultFilters: defaultMetamagicFilters,
-    defaultResource: defaultMetamagic,
-    displayName: { en: "Metamagic", it: "Metamagic" },
-    filtersSchema: metamagicFiltersSchema,
-    kind: "metamagic",
-    orderOptions: metamagicOrderOptions,
-    resourceSchema: metamagicSchema,
-    translationFields: metamagicTranslationFields,
-    useLocalizeResource: useLocalizeMetamagic,
-  },
-);
+export const metamagicStore = createResourceStore("metamagic", {
+  defaultFilters: defaultMetamagicFilters,
+  defaultResource: defaultMetamagic,
+  displayName: { en: "Metamagic", it: "Metamagic" },
+  filtersSchema: metamagicFiltersSchema,
+  orderOptions: metamagicOrderOptions,
+  resourceSchema: metamagicSchema,
+  translationFields: metamagicTranslationFields,
+  useLocalizeResource: useLocalizeMetamagic,
+});

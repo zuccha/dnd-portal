@@ -15,17 +15,13 @@ import { useLocalizeLanguage } from "./localized-language";
 // Language Store
 //------------------------------------------------------------------------------
 
-export const languageStore = createResourceStore(
-  { p: "languages", s: "language" },
-  {
-    defaultFilters: defaultLanguageFilters,
-    defaultResource: defaultLanguage,
-    displayName: { en: "Languages", it: "Lingue" },
-    filtersSchema: languageFiltersSchema,
-    kind: "language",
-    orderOptions: languageOrderOptions,
-    resourceSchema: languageSchema,
-    translationFields: languageTranslationFields,
-    useLocalizeResource: useLocalizeLanguage,
-  },
-);
+export const languageStore = createResourceStore("language", {
+  defaultFilters: defaultLanguageFilters,
+  defaultResource: defaultLanguage,
+  displayName: { en: "Languages", it: "Lingue" },
+  filtersSchema: languageFiltersSchema,
+  orderOptions: languageOrderOptions,
+  resourceSchema: languageSchema,
+  translationFields: languageTranslationFields,
+  useLocalizeResource: useLocalizeLanguage,
+});

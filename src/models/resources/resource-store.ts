@@ -57,13 +57,12 @@ export function createResourceStore<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 >(
-  storeName: { p: string; s: string },
+  kind: ResourceKind,
   {
     defaultFilters,
     defaultResource,
     displayName,
     filtersSchema,
-    kind,
     resourceSchema: _resourceSchema,
     orderOptions,
     translationFields: _translationFields,
@@ -73,14 +72,13 @@ export function createResourceStore<
     defaultResource: R;
     displayName: I18nString;
     filtersSchema: ZodType<F>;
-    kind: ResourceKind;
     orderOptions: { label: I18nString; value: string }[];
     resourceSchema: ZodType<R>;
     translationFields: TranslationFields<R>[];
     useLocalizeResource: (sourceId: string) => (resource: R) => L;
   },
 ) {
-  const storeId = `resources[${storeName.p}]`;
+  const storeId = `resources[${kind}]`;
   const catalogueResourceStore = catalogue.createResourceStore(kind);
 
   //----------------------------------------------------------------------------
@@ -694,7 +692,7 @@ export function createResourceStore<
 
   return {
     id: storeId,
-    name: storeName,
+    kind,
 
     defaultResource,
     displayName,

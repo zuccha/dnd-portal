@@ -15,17 +15,13 @@ import { useLocalizeFeature } from "./localized-feature";
 // Feature Store
 //------------------------------------------------------------------------------
 
-export const featureStore = createResourceStore(
-  { p: "features", s: "feature" },
-  {
-    defaultFilters: defaultFeatureFilters,
-    defaultResource: defaultFeature,
-    displayName: { en: "Features", it: "Privilegi" },
-    filtersSchema: featureFiltersSchema,
-    kind: "feature",
-    orderOptions: featureOrderOptions,
-    resourceSchema: featureSchema,
-    translationFields: featureTranslationFields,
-    useLocalizeResource: useLocalizeFeature,
-  },
-);
+export const featureStore = createResourceStore("feature", {
+  defaultFilters: defaultFeatureFilters,
+  defaultResource: defaultFeature,
+  displayName: { en: "Features", it: "Privilegi" },
+  filtersSchema: featureFiltersSchema,
+  orderOptions: featureOrderOptions,
+  resourceSchema: featureSchema,
+  translationFields: featureTranslationFields,
+  useLocalizeResource: useLocalizeFeature,
+});

@@ -15,17 +15,13 @@ import {
 // Service Store
 //------------------------------------------------------------------------------
 
-export const serviceStore = createResourceStore(
-  { p: "services", s: "service" },
-  {
-    defaultFilters: defaultServiceFilters,
-    defaultResource: defaultService,
-    displayName: { en: "Services", it: "Servizi" },
-    filtersSchema: serviceFiltersSchema,
-    kind: "service",
-    orderOptions: serviceOrderOptions,
-    resourceSchema: serviceSchema,
-    translationFields: serviceTranslationFields,
-    useLocalizeResource: useLocalizeService,
-  },
-);
+export const serviceStore = createResourceStore("service", {
+  defaultFilters: defaultServiceFilters,
+  defaultResource: defaultService,
+  displayName: { en: "Services", it: "Servizi" },
+  filtersSchema: serviceFiltersSchema,
+  orderOptions: serviceOrderOptions,
+  resourceSchema: serviceSchema,
+  translationFields: serviceTranslationFields,
+  useLocalizeResource: useLocalizeService,
+});

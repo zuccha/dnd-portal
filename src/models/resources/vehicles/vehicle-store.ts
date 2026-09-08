@@ -15,17 +15,13 @@ import {
 // Vehicle Store
 //------------------------------------------------------------------------------
 
-export const vehicleStore = createResourceStore(
-  { p: "vehicles", s: "vehicle" },
-  {
-    defaultFilters: defaultVehicleFilters,
-    defaultResource: defaultVehicle,
-    displayName: { en: "Vehicles", it: "Veicoli" },
-    filtersSchema: vehicleFiltersSchema,
-    kind: "vehicle",
-    orderOptions: vehicleOrderOptions,
-    resourceSchema: vehicleSchema,
-    translationFields: vehicleTranslationFields,
-    useLocalizeResource: useLocalizeVehicle,
-  },
-);
+export const vehicleStore = createResourceStore("vehicle", {
+  defaultFilters: defaultVehicleFilters,
+  defaultResource: defaultVehicle,
+  displayName: { en: "Vehicles", it: "Veicoli" },
+  filtersSchema: vehicleFiltersSchema,
+  orderOptions: vehicleOrderOptions,
+  resourceSchema: vehicleSchema,
+  translationFields: vehicleTranslationFields,
+  useLocalizeResource: useLocalizeVehicle,
+});

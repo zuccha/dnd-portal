@@ -16,13 +16,12 @@ import { useLocalizeCharacterSubclass } from "./localized-character-subclass";
 //------------------------------------------------------------------------------
 
 export const characterSubclassStore = createResourceStore(
-  { p: "character_subclasses", s: "character_subclass" },
+  "character_subclass",
   {
     defaultFilters: defaultCharacterSubclassFilters,
     defaultResource: defaultCharacterSubclass,
     displayName: { en: "Subclasses", it: "Sottoclassi" },
     filtersSchema: characterSubclassFiltersSchema,
-    kind: "character_subclass",
     orderOptions: characterSubclassOrderOptions,
     resourceSchema: characterSubclassSchema,
     translationFields: characterSubclassTranslationFields,

@@ -15,20 +15,16 @@ import { useLocalizeItemModifier } from "./localized-item-modifier";
 // Item Modifier Store
 //------------------------------------------------------------------------------
 
-export const itemModifierStore = createEquipmentModifierStore(
-  { p: "item_modifiers", s: "item_modifier" },
-  {
-    defaultFilters: defaultItemModifierFilters,
-    defaultModifier: defaultItemModifier,
-    displayName: {
-      en: "Adventuring Gear Variants",
-      it: "Varianti dell'Attrezzatura",
-    },
-    filtersSchema: itemModifierFiltersSchema,
-    kind: "item_modifier",
-    modifierSchema: itemModifierSchema,
-    orderOptions: itemModifierOrderOptions,
-    translationFields: itemModifierTranslationFields,
-    useLocalizeModifier: useLocalizeItemModifier,
+export const itemModifierStore = createEquipmentModifierStore("item_modifier", {
+  defaultFilters: defaultItemModifierFilters,
+  defaultModifier: defaultItemModifier,
+  displayName: {
+    en: "Adventuring Gear Variants",
+    it: "Varianti dell'Attrezzatura",
   },
-);
+  filtersSchema: itemModifierFiltersSchema,
+  modifierSchema: itemModifierSchema,
+  orderOptions: itemModifierOrderOptions,
+  translationFields: itemModifierTranslationFields,
+  useLocalizeModifier: useLocalizeItemModifier,
+});

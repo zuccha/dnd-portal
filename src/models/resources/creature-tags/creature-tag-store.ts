@@ -15,17 +15,13 @@ import { useLocalizeCreatureTag } from "./localized-creature-tag";
 // Creature Tag Store
 //------------------------------------------------------------------------------
 
-export const creatureTagStore = createResourceStore(
-  { p: "creature_tags", s: "creature_tag" },
-  {
-    defaultFilters: defaultCreatureTagFilters,
-    defaultResource: defaultCreatureTag,
-    displayName: { en: "Groups", it: "Gruppi" },
-    filtersSchema: creatureTagFiltersSchema,
-    kind: "creature_tag",
-    orderOptions: creatureTagOrderOptions,
-    resourceSchema: creatureTagSchema,
-    translationFields: creatureTagTranslationFields,
-    useLocalizeResource: useLocalizeCreatureTag,
-  },
-);
+export const creatureTagStore = createResourceStore("creature_tag", {
+  defaultFilters: defaultCreatureTagFilters,
+  defaultResource: defaultCreatureTag,
+  displayName: { en: "Groups", it: "Gruppi" },
+  filtersSchema: creatureTagFiltersSchema,
+  orderOptions: creatureTagOrderOptions,
+  resourceSchema: creatureTagSchema,
+  translationFields: creatureTagTranslationFields,
+  useLocalizeResource: useLocalizeCreatureTag,
+});

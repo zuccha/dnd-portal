@@ -69,7 +69,7 @@ export function createEquipmentVariantDialog<
 ) {
   const pendingEquipmentVariantStore =
     createMemoryStore<EquipmentVariantRequest<E> | null>(
-      `equipment_variant_dialog[${store.name.p}].pending`,
+      `equipment_variant_dialog[${store.kind}].pending`,
       null,
     );
 

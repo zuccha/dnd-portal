@@ -11,17 +11,13 @@ import { useLocalizeArmor } from "./localized-armor";
 // Armor Store
 //------------------------------------------------------------------------------
 
-export const armorStore = createEquipmentStore(
-  { p: "armors", s: "armor" },
-  {
-    defaultEquipment: defaultArmor,
-    defaultFilters: defaultArmorFilters,
-    displayName: { en: "Armors", it: "Armature" },
-    equipmentSchema: armorSchema,
-    filtersSchema: armorFiltersSchema,
-    kind: "armor",
-    orderOptions: armorOrderOptions,
-    translationFields: armorTranslationFields,
-    useLocalizeEquipment: useLocalizeArmor,
-  },
-);
+export const armorStore = createEquipmentStore("armor", {
+  defaultEquipment: defaultArmor,
+  defaultFilters: defaultArmorFilters,
+  displayName: { en: "Armors", it: "Armature" },
+  equipmentSchema: armorSchema,
+  filtersSchema: armorFiltersSchema,
+  orderOptions: armorOrderOptions,
+  translationFields: armorTranslationFields,
+  useLocalizeEquipment: useLocalizeArmor,
+});

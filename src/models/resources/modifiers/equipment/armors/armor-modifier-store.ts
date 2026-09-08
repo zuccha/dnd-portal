@@ -16,13 +16,12 @@ import { useLocalizeArmorModifier } from "./localized-armor-modifier";
 //------------------------------------------------------------------------------
 
 export const armorModifierStore = createEquipmentModifierStore(
-  { p: "armor_modifiers", s: "armor_modifier" },
+  "armor_modifier",
   {
     defaultFilters: defaultArmorModifierFilters,
     defaultModifier: defaultArmorModifier,
     displayName: { en: "Armor Variants", it: "Varianti delle Armature" },
     filtersSchema: armorModifierFiltersSchema,
-    kind: "armor_modifier",
     modifierSchema: armorModifierSchema,
     orderOptions: armorModifierOrderOptions,
     translationFields: armorModifierTranslationFields,

@@ -15,17 +15,13 @@ import {
 // Maneuver Store
 //------------------------------------------------------------------------------
 
-export const maneuverStore = createResourceStore(
-  { p: "maneuvers", s: "maneuver" },
-  {
-    defaultFilters: defaultManeuverFilters,
-    defaultResource: defaultManeuver,
-    displayName: { en: "Maneuvers", it: "Manovre" },
-    filtersSchema: maneuverFiltersSchema,
-    kind: "maneuver",
-    orderOptions: maneuverOrderOptions,
-    resourceSchema: maneuverSchema,
-    translationFields: maneuverTranslationFields,
-    useLocalizeResource: useLocalizeManeuver,
-  },
-);
+export const maneuverStore = createResourceStore("maneuver", {
+  defaultFilters: defaultManeuverFilters,
+  defaultResource: defaultManeuver,
+  displayName: { en: "Maneuvers", it: "Manovre" },
+  filtersSchema: maneuverFiltersSchema,
+  orderOptions: maneuverOrderOptions,
+  resourceSchema: maneuverSchema,
+  translationFields: maneuverTranslationFields,
+  useLocalizeResource: useLocalizeManeuver,
+});

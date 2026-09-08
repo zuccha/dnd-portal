@@ -16,13 +16,12 @@ import {
 //------------------------------------------------------------------------------
 
 export const weaponModifierStore = createEquipmentModifierStore(
-  { p: "weapon_modifiers", s: "weapon_modifier" },
+  "weapon_modifier",
   {
     defaultFilters: defaultWeaponModifierFilters,
     defaultModifier: defaultWeaponModifier,
     displayName: { en: "Weapon Variants", it: "Varianti delle Armi" },
     filtersSchema: weaponModifierFiltersSchema,
-    kind: "weapon_modifier",
     modifierSchema: weaponModifierSchema,
     orderOptions: weaponModifierOrderOptions,
     translationFields: weaponModifierTranslationFields,
