@@ -81,7 +81,9 @@ export function createResourceStore<
   },
 ) {
   const storeId = `resources[${storeName.p}]`;
-  const catalogueResources = catalogue.createResourceStore(kinds);
+  const catalogueResourceStores = kinds.map((kind) =>
+    catalogue.createResourceStore(kind),
+  );
 
   //----------------------------------------------------------------------------
   // Filters
@@ -312,10 +314,12 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function getResource(resourceId: string): R | undefined {
-    return (
+    const resource =
       resourceCache.get(resourceId) ??
-      (catalogueResources.getResource(resourceId) as R | undefined)
-    );
+      catalogueResourceStores
+        .map((store) => store.getResource(resourceId))
+        .find((resource) => resource);
+    return resource as R | undefined;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -344,7 +348,10 @@ export function createResourceStore<
 
     const key = hash([resourceId]);
     const virtualResource = resourceCache.useValue(resourceId);
-    const resource = catalogueResources.useResource(resourceId);
+    const resources = catalogueResourceStores.map((store) =>
+      store.useResource(resourceId),
+    );
+    const resource = resources.find((resource) => resource);
     const result = [
       (virtualResource ?? resource ?? defaultResource) as R,
       key,
@@ -363,7 +370,9 @@ export function createResourceStore<
       }
     }
 
-    const resources = catalogueResources.useResources(resourceIds);
+    const resources = catalogueResourceStores
+      .map((store) => store.useResources(resourceIds))
+      .flat();
     const resourcesById = useMemo(
       () => new Map(resources.map((resource) => [resource.id, resource])),
       [resources],
@@ -384,7 +393,16 @@ export function createResourceStore<
     _filters: Omit<F, "name">,
     _lang: string,
   ): [string[], string] {
-    const resourceIds = catalogueResources.useActiveSourceResourceIds();
+    const resourceIdsByKind = catalogueResourceStores.map((store) =>
+      store.useActiveSourceResourceIds(),
+    );
+    const resourceIdsKey = resourceIdsByKind
+      .map((resourceIds) => resourceIds.join(","))
+      .join("|");
+    const resourceIds = useMemo(
+      () => [...new Set(resourceIdsByKind.flat())],
+      [resourceIdsKey], // eslint-disable-line react-hooks/exhaustive-deps
+    );
     const key = hash([sourceId, resourceIds]);
     const virtualResourceIds = virtualResourceIdsStore.useValue();
     const mergedResourceIds = useMemo(
@@ -606,8 +624,16 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const resourceIds =
-      catalogueResources.useActiveSourceReferenceResourceIds();
+    const resourceIdsByKind = catalogueResourceStores.map((store) =>
+      store.useActiveSourceReferenceResourceIds(),
+    );
+    const resourceIdsKey = resourceIdsByKind
+      .map((resourceIds) => resourceIds.join(","))
+      .join("|");
+    const resourceIds = useMemo(
+      () => [...new Set(resourceIdsByKind.flat())],
+      [resourceIdsKey], // eslint-disable-line react-hooks/exhaustive-deps
+    );
 
     return useCallback(
       (resourceId: string) => {
@@ -626,8 +652,16 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const resourceIds =
-      catalogueResources.useActiveSourceReferenceResourceIds();
+    const resourceIdsByKind = catalogueResourceStores.map((store) =>
+      store.useActiveSourceReferenceResourceIds(),
+    );
+    const resourceIdsKey = resourceIdsByKind
+      .map((resourceIds) => resourceIds.join(","))
+      .join("|");
+    const resourceIds = useMemo(
+      () => [...new Set(resourceIdsByKind.flat())],
+      [resourceIdsKey], // eslint-disable-line react-hooks/exhaustive-deps
+    );
 
     return useCallback(
       (resourceId: string) => {
@@ -662,8 +696,16 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): [ResourceOption[], string] {
-    const resourceIds =
-      catalogueResources.useActiveSourceReferenceResourceIds();
+    const resourceIdsByKind = catalogueResourceStores.map((store) =>
+      store.useActiveSourceReferenceResourceIds(),
+    );
+    const resourceIdsKey = resourceIdsByKind
+      .map((resourceIds) => resourceIds.join(","))
+      .join("|");
+    const resourceIds = useMemo(
+      () => [...new Set(resourceIdsByKind.flat())],
+      [resourceIdsKey], // eslint-disable-line react-hooks/exhaustive-deps
+    );
     const key = hash([resourceIds, lang]);
 
     return [
