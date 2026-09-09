@@ -1,3 +1,4 @@
+import { matchesInclusion } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
 import { useLocalizeService } from "./localized-service";
 import {
@@ -20,6 +21,8 @@ export const serviceStore = createResourceStore("service", {
   defaultResource: defaultService,
   displayName: { en: "Services", it: "Servizi" },
   filtersSchema: serviceFiltersSchema,
+  matchesResource: (service, filters) =>
+    matchesInclusion(service.category, filters.categories),
   orderOptions: serviceOrderOptions,
   resourceSchema: serviceSchema,
   translationFields: serviceTranslationFields,

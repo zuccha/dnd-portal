@@ -27,4 +27,3 @@ export const defaultBackgroundFilters: BackgroundFilters = {
   order_by: "name",
   order_dir: "asc",
 };
-

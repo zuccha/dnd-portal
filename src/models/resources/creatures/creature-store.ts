@@ -1,3 +1,4 @@
+import { matchesInclusion, matchesInclusionList } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
 import {
   creatureRawSchema,
@@ -20,6 +21,14 @@ export const creatureStore = createResourceStore("creature", {
   defaultResource: defaultCreature,
   displayName: { en: "Creatures", it: "Creature" },
   filtersSchema: creatureFiltersSchema,
+  matchesResource: (creature, filters) =>
+    creature.cr >= filters.cr_min &&
+    creature.cr <= filters.cr_max &&
+    matchesInclusion(creature.alignment, filters.alignment) &&
+    matchesInclusion(creature.size, filters.size) &&
+    matchesInclusion(creature.type, filters.types) &&
+    matchesInclusionList(creature.habitats, filters.habitats) &&
+    matchesInclusionList(creature.treasures, filters.treasures),
   orderOptions: creatureOrderOptions,
   resourceSchema: creatureRawSchema,
   translationFields: creatureTranslationFields,

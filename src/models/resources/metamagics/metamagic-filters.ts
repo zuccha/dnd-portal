@@ -27,4 +27,3 @@ export const defaultMetamagicFilters: MetamagicFilters = {
   order_by: "name",
   order_dir: "asc",
 };
-

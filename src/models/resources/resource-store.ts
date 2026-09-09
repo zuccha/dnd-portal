@@ -20,6 +20,13 @@ import {
   type ResourceOption,
   type TranslationFields,
 } from "./resource";
+import {
+  type ResourceComparator,
+  type ResourceMatcher,
+  compareResources,
+  matchesInclusion,
+  matchesName,
+} from "./resource-filtering";
 import type { ResourceFilters } from "./resource-filters";
 import { useResourcesSourcesFilter } from "./resources-sources-filter";
 
@@ -63,6 +70,8 @@ export function createResourceStore<
     defaultResource,
     displayName,
     filtersSchema,
+    matchesResource = () => true,
+    compareResources: compareStoreResources = compareResources,
     resourceSchema: _resourceSchema,
     orderOptions,
     translationFields: _translationFields,
@@ -72,6 +81,8 @@ export function createResourceStore<
     defaultResource: R;
     displayName: I18nString;
     filtersSchema: ZodType<F>;
+    matchesResource?: ResourceMatcher<R, F>;
+    compareResources?: ResourceComparator<R, F>;
     orderOptions: { label: I18nString; value: string }[];
     resourceSchema: ZodType<R>;
     translationFields: TranslationFields<R>[];
@@ -118,15 +129,11 @@ export function createResourceStore<
     return [filters, setPartialFilters];
   }
 
-  function useAppliedFilters(): F {
-    return appliedFiltersStore.useValue();
-  }
-
   function useEffectiveFilters(): F {
     const { name } = filtersStore.useValue();
     const appliedFilters = appliedFiltersStore.useValue();
 
-    return { ...appliedFilters, name };
+    return useMemo(() => ({ ...appliedFilters, name }), [appliedFilters, name]);
   }
 
   function useApplyFilters(): () => void {
@@ -373,53 +380,66 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resource Ids
+  // Use Resource Ids By Params
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourceIdsByParams(
     sourceId: string,
-    _sources: Record<string, boolean | undefined>,
-    _filters: Omit<F, "name">,
-    _lang: string,
+    sources: Record<string, boolean | undefined>,
   ): [string[], string] {
     const resourceIds = catalogueResourceStore.useActiveSourceResourceIds();
-    const key = hash([sourceId, resourceIds]);
+    const sourceFilteredResourceIds = useMemo(
+      () =>
+        resourceIds.filter((resourceId) => {
+          const resource = getResource(resourceId);
+          return resource && matchesInclusion(resource.source_id, sources);
+        }),
+      [resourceIds, sources],
+    );
+    const key = hash([sourceId, sourceFilteredResourceIds]);
     const virtualResourceIds = virtualResourceIdsStore.useValue();
     const mergedResourceIds = useMemo(
-      () => mergeVirtualResourceIds(sourceId, resourceIds, virtualResourceIds),
-      [resourceIds, sourceId, virtualResourceIds],
+      () =>
+        mergeVirtualResourceIds(
+          sourceId,
+          sourceFilteredResourceIds,
+          virtualResourceIds,
+        ),
+      [sourceFilteredResourceIds, sourceId, virtualResourceIds],
     );
     return [mergedResourceIds, key];
   }
 
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource Ids Loading By Params
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   function useResourceIdsLoadingByParams(
     _sourceId: string,
     _sources: Record<string, boolean | undefined>,
-    _filters: Omit<F, "name">,
-    _lang: string,
   ): boolean {
     return false;
   }
 
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Resource Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   function useResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
-    const { name: _name, ...filters } = useAppliedFilters();
-    const [lang] = useI18nLang();
-    const params = [sourceId, sources, filters, lang] as const;
+    const params = [sourceId, sources] as const;
     return useResourceIdsByParams(...params)[0];
   }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use All Resource Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useAllResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
-    const { name: _name, ...filters } = defaultFilters;
-    const [lang] = useI18nLang();
-    const params = [sourceId, sources, filters, lang] as const;
+    const params = [sourceId, sources] as const;
     return useResourceIdsByParams(...params)[0];
   }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Filtered Resources
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Filtered Resource Ids
@@ -428,23 +448,31 @@ export function createResourceStore<
   function useFilteredResourceIdsByParams(
     sourceId: string,
     sources: Record<string, boolean | undefined>,
-    { name, ...filters }: F,
+    filters: F,
     lang: string,
   ): string[] {
-    const normalizedName = normalizeString(name);
-    const params = [sourceId, sources, filters, lang] as const;
+    const normalizedName = normalizeString(filters.name);
+    const params = [sourceId, sources] as const;
     const [resourceIds] = useResourceIdsByParams(...params);
 
     const filteredResourceIds = useMemo(() => {
-      const result = resourceIds.filter((resourceId) => {
-        const resource = getResource(resourceId);
-        if (!resource) return false;
-        return Object.values(resource.name)
-          .filter((name) => name)
-          .some((name) => normalizeString(name!).includes(normalizedName));
-      });
+      const result = resourceIds
+        .filter((resourceId) => {
+          const resource = getResource(resourceId);
+          if (!resource) return false;
+          return (
+            matchesName(resource, normalizedName) &&
+            matchesResource(resource, filters)
+          );
+        })
+        .sort((aId, bId) => {
+          const a = getResource(aId);
+          const b = getResource(bId);
+          if (!a || !b) return 0;
+          return compareStoreResources(a, b, filters, lang);
+        });
       return result;
-    }, [normalizedName, resourceIds]);
+    }, [filters, lang, normalizedName, resourceIds]);
     return filteredResourceIds;
   }
 
@@ -458,9 +486,7 @@ export function createResourceStore<
 
   function useFilteredResourceIdsLoading(sourceId: string): boolean {
     const [sources] = useResourcesSourcesFilter(sourceId);
-    const { name: _name, ...filters } = useAppliedFilters();
-    const [lang] = useI18nLang();
-    const params = [sourceId, sources, filters, lang] as const;
+    const params = [sourceId, sources] as const;
     return useResourceIdsLoadingByParams(...params);
   }
 

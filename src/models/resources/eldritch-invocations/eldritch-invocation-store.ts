@@ -22,6 +22,8 @@ export const eldritchInvocationStore = createResourceStore(
     defaultResource: defaultEldritchInvocation,
     displayName: { en: "Eldritch Invocations", it: "Suppliche Occulte" },
     filtersSchema: eldritchInvocationFiltersSchema,
+    matchesResource: (eldritchInvocation, filters) =>
+      eldritchInvocation.min_warlock_level <= (filters.warlock_level ?? 20),
     orderOptions: eldritchInvocationOrderOptions,
     resourceSchema: eldritchInvocationSchema,
     translationFields: eldritchInvocationTranslationFields,

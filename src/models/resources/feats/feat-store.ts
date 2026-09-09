@@ -1,3 +1,4 @@
+import { matchesInclusion } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
 import { defaultFeat, featSchema, featTranslationFields } from "./feat";
 import {
@@ -16,6 +17,9 @@ export const featStore = createResourceStore("feat", {
   defaultResource: defaultFeat,
   displayName: { en: "Feats", it: "Talenti" },
   filtersSchema: featFiltersSchema,
+  matchesResource: (feat, filters) =>
+    feat.min_level <= filters.level &&
+    matchesInclusion(feat.category, filters.categories),
   orderOptions: featOrderOptions,
   resourceSchema: featSchema,
   translationFields: featTranslationFields,

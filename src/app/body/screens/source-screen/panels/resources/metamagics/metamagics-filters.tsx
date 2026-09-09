@@ -7,4 +7,3 @@ import type { StackProps } from "@chakra-ui/react";
 export default function MetamagicsFilters(_props: StackProps) {
   return null;
 }
-
