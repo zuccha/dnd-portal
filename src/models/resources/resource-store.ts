@@ -9,7 +9,6 @@ import { createCache } from "~/utils/cache";
 import { createUseDerivedData } from "~/utils/derived-data";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
-import type { RequestResponse } from "~/utils/request";
 import { normalizeString } from "~/utils/string";
 import { createDeterministicUuid } from "~/utils/uuid";
 import type { ResourceKind } from "../types/resource-kind";
@@ -47,15 +46,6 @@ export type VirtualResourceRecipe<R extends Resource> = {
   derive: (base: R, id: string) => R;
   modifier_ids: string[];
   source_id: string;
-};
-
-//------------------------------------------------------------------------------
-// Resource Request
-//------------------------------------------------------------------------------
-
-type ResourceRequest<R> = {
-  key: string;
-  promise: Promise<RequestResponse<R>>;
 };
 
 //------------------------------------------------------------------------------
@@ -281,32 +271,24 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function createResource(
-    sourceId: string,
-    lang: string,
-    resource: Partial<DBR>,
-    translation: Partial<DBT>,
-  ): ResourceRequest<string | undefined> {
-    return {
-      key: hash([sourceId, lang, resource, translation]),
-      promise: Promise.resolve({ data: undefined, status: "success" }),
-    };
+    _sourceId: string,
+    _lang: string,
+    _resource: Partial<DBR>,
+    _translation: Partial<DBT>,
+  ): Promise<string | undefined> {
+    return Promise.resolve(undefined);
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Delete Resources
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function deleteResources(
-    resourceIds: string[],
-  ): ResourceRequest<string | undefined> {
+  function deleteResources(resourceIds: string[]): Promise<string | undefined> {
     for (const resourceId of resourceIds) {
       resourceCache.remove(resourceId);
     }
 
-    return {
-      key: hash([resourceIds]),
-      promise: Promise.resolve({ data: undefined, status: "success" }),
-    };
+    return Promise.resolve(undefined);
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -331,15 +313,12 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function updateResource(
-    resourceId: string,
-    lang: string,
-    resource: Partial<DBR>,
-    translation: Partial<DBT>,
-  ): ResourceRequest<string | undefined> {
-    return {
-      key: hash([resourceId, lang, resource, translation]),
-      promise: Promise.resolve({ data: undefined, status: "success" }),
-    };
+    _resourceId: string,
+    _lang: string,
+    _resource: Partial<DBR>,
+    _translation: Partial<DBT>,
+  ): Promise<string | undefined> {
+    return Promise.resolve(undefined);
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

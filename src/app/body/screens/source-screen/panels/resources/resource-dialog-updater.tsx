@@ -72,15 +72,7 @@ export function createResourceDialogUpdater<
     if (typeof errorOrData === "string") return errorOrData;
 
     const { resource, translation } = errorOrData;
-    const response = await store.updateResource(id, lang, resource, translation)
-      .promise;
-
-    if (response.status === "failure") {
-      console.error(response.error);
-      return "form.error.update_failure";
-    }
-
-    return undefined;
+    return store.updateResource(id, lang, resource, translation);
   }
 
   //----------------------------------------------------------------------------
