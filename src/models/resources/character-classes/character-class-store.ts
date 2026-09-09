@@ -1,6 +1,6 @@
 import { createResourceStore } from "../resource-store";
 import {
-  characterClassRawSchema,
+  characterClassSchema,
   characterClassTranslationFields,
   defaultCharacterClass,
 } from "./character-class";
@@ -21,7 +21,7 @@ export const characterClassStore = createResourceStore("character_class", {
   displayName: { en: "Classes", it: "Classi" },
   filtersSchema: characterClassFiltersSchema,
   orderOptions: characterClassOrderOptions,
-  resourceSchema: characterClassRawSchema,
+  resourceSchema: characterClassSchema,
   translationFields: characterClassTranslationFields,
   useLocalizeResource: useLocalizeCharacterClass,
 });

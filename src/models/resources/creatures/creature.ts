@@ -2,9 +2,7 @@ import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import {
   defaultEquipmentBundle,
-  equipmentBundleFromEntries,
   equipmentBundleSchema,
-  equipmentEntrySchema,
 } from "../../other/equipment-bundle";
 import { languageEntrySchema } from "../../other/language-entries";
 import { creatureAbilitySchema } from "../../types/creature-ability";
@@ -86,15 +84,6 @@ export const creatureBaseSchema = resourceSchema.extend({
   truesight: z.number(),
   type: creatureTypeSchema,
 });
-
-export const creatureRawSchema = creatureBaseSchema
-  .extend({
-    equipment_entries: z.array(equipmentEntrySchema),
-  })
-  .transform(({ equipment_entries, ...rest }) => ({
-    ...rest,
-    gear: equipmentBundleFromEntries(equipment_entries),
-  }));
 
 export const creatureSchema = creatureBaseSchema.extend({
   gear: equipmentBundleSchema,

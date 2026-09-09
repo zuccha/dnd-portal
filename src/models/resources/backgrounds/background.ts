@@ -2,11 +2,7 @@ import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
-import {
-  startingEquipmentEntrySchema,
-  startingEquipmentFromEntries,
-  startingEquipmentGroupSchema,
-} from "../character-classes/starting-equipment";
+import { startingEquipmentGroupSchema } from "../character-classes/starting-equipment";
 import {
   type TranslationFields,
   defaultResource,
@@ -27,17 +23,6 @@ export const backgroundBaseSchema = resourceSchema.extend({
   tool_notes: i18nStringSchema,
   tool_proficiency_id: z.uuid().nullable(),
 });
-
-export const backgroundRawSchema = backgroundBaseSchema
-  .extend({
-    starting_equipment_entries: z.array(startingEquipmentEntrySchema),
-  })
-  .transform(({ starting_equipment_entries, ...rest }) => ({
-    ...rest,
-    starting_equipment: startingEquipmentFromEntries(
-      starting_equipment_entries,
-    ),
-  }));
 
 export const backgroundSchema = backgroundBaseSchema.extend({
   starting_equipment: z.array(startingEquipmentGroupSchema),

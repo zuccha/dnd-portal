@@ -11,11 +11,11 @@ import type { Resource } from "./resource";
 //------------------------------------------------------------------------------
 
 export const localizedResourceSchema = <R extends Resource>(
-  rawSchema: ZodType<R>,
+  resourceSchema: ZodType<R>,
   kindSchema: ZodType<R["kind"]>,
 ) =>
   z.object({
-    _raw: rawSchema,
+    _raw: resourceSchema,
     descriptor: z.string(),
     details: z.string(),
     id: z.uuid(),

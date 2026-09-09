@@ -1,5 +1,4 @@
 import Dexie, { type Table } from "dexie";
-import type { z } from "zod";
 import type { SourceMetadata } from "../sources";
 import { type SourceBundle, sourceBundleSchema } from "./source-bundle";
 
@@ -16,7 +15,7 @@ export type PersistedSourceMetadata = SourceMetadata & {
 //------------------------------------------------------------------------------
 
 export type PersistedSourceBundle = {
-  bundle: z.input<typeof sourceBundleSchema>;
+  bundle: SourceBundle;
   source_id: string;
 };
 
@@ -57,7 +56,7 @@ export async function saveSourceBundle(
     });
 
     await db.source_bundles.put({
-      bundle: maybeBundle as z.input<typeof sourceBundleSchema>,
+      bundle: parsedBundle,
       source_id: parsedBundle.source.id,
     });
   });

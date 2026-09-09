@@ -10,14 +10,16 @@ import {
 //------------------------------------------------------------------------------
 
 export const equipmentBundleSchema = z.object({
-  currency: z.number(),
-  equipments: z.array(
-    z.object({
-      id: z.uuid(),
-      notes: i18nStringSchema.default({}),
-      quantity: z.number(),
-    }),
-  ),
+  currency: z.number().default(0),
+  equipments: z
+    .array(
+      z.object({
+        id: z.uuid(),
+        notes: i18nStringSchema.default({}),
+        quantity: z.number(),
+      }),
+    )
+    .default([]),
 });
 
 export type EquipmentBundle = z.infer<typeof equipmentBundleSchema>;

@@ -12,11 +12,7 @@ import {
   resourceSchema,
   resourceTranslationFields,
 } from "../resource";
-import {
-  startingEquipmentEntrySchema,
-  startingEquipmentFromEntries,
-  startingEquipmentGroupSchema,
-} from "./starting-equipment";
+import { startingEquipmentGroupSchema } from "./starting-equipment";
 
 //------------------------------------------------------------------------------
 // Character Class
@@ -37,17 +33,6 @@ export const characterClassBaseSchema = resourceSchema.extend({
   weapon_proficiencies: z.array(weaponTypeSchema),
   weapon_proficiencies_extra: i18nStringSchema,
 });
-
-export const characterClassRawSchema = characterClassBaseSchema
-  .extend({
-    starting_equipment_entries: z.array(startingEquipmentEntrySchema),
-  })
-  .transform(({ starting_equipment_entries, ...rest }) => ({
-    ...rest,
-    starting_equipment: startingEquipmentFromEntries(
-      starting_equipment_entries,
-    ),
-  }));
 
 export const characterClassSchema = characterClassBaseSchema.extend({
   starting_equipment: z.array(startingEquipmentGroupSchema),

@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { backgroundRawSchema } from "../resources/backgrounds/background";
-import { characterClassRawSchema } from "../resources/character-classes/character-class";
+import { backgroundSchema } from "../resources/backgrounds/background";
+import { characterClassSchema } from "../resources/character-classes/character-class";
 import { characterSubclassSchema } from "../resources/character-subclasses/character-subclass";
 import { creatureTagSchema } from "../resources/creature-tags/creature-tag";
-import { creatureRawSchema } from "../resources/creatures/creature";
+import { creatureSchema } from "../resources/creatures/creature";
 import { eldritchInvocationSchema } from "../resources/eldritch-invocations/eldritch-invocation";
 import { armorSchema } from "../resources/equipment/armors/armor";
 import { equipmentSchema } from "../resources/equipment/equipment";
@@ -35,11 +35,11 @@ import { sourceMetadataSchema } from "../sources";
 export const sourceBundleResourcesSchema = z.object({
   armor_modifiers: armorModifierSchema.array().default([]),
   armors: armorSchema.array().default([]),
-  backgrounds: backgroundRawSchema.array().default([]),
-  character_classes: characterClassRawSchema.array().default([]),
+  backgrounds: backgroundSchema.array().default([]),
+  character_classes: characterClassSchema.array().default([]),
   character_subclasses: characterSubclassSchema.array().default([]),
   creature_tags: creatureTagSchema.array().default([]),
-  creatures: creatureRawSchema.array().default([]),
+  creatures: creatureSchema.array().default([]),
   eldritch_invocations: eldritchInvocationSchema.array().default([]),
   equipment_modifiers: equipmentModifierSchema.array().default([]),
   equipments: equipmentSchema.array().default([]),
