@@ -1,9 +1,5 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
-import {
-  defaultItemModifier,
-  itemModifierSchema,
-  itemModifierTranslationFields,
-} from "./item-modifier";
+import { defaultItemModifier } from "./item-modifier";
 import {
   defaultItemModifierFilters,
   itemModifierFiltersSchema,
@@ -23,8 +19,6 @@ export const itemModifierStore = createEquipmentModifierStore("item_modifier", {
     it: "Varianti dell'Attrezzatura",
   },
   filtersSchema: itemModifierFiltersSchema,
-  modifierSchema: itemModifierSchema,
   orderOptions: itemModifierOrderOptions,
-  translationFields: itemModifierTranslationFields,
   useLocalizeModifier: useLocalizeItemModifier,
 });

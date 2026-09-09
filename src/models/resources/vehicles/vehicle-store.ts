@@ -1,10 +1,6 @@
 import { createResourceStore } from "../resource-store";
 import { useLocalizeVehicle } from "./localized-vehicle";
-import {
-  defaultVehicle,
-  vehicleSchema,
-  vehicleTranslationFields,
-} from "./vehicle";
+import { defaultVehicle } from "./vehicle";
 import {
   defaultVehicleFilters,
   vehicleFiltersSchema,
@@ -21,7 +17,5 @@ export const vehicleStore = createResourceStore("vehicle", {
   displayName: { en: "Vehicles", it: "Veicoli" },
   filtersSchema: vehicleFiltersSchema,
   orderOptions: vehicleOrderOptions,
-  resourceSchema: vehicleSchema,
-  translationFields: vehicleTranslationFields,
   useLocalizeResource: useLocalizeVehicle,
 });

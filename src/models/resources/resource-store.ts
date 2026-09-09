@@ -9,17 +9,13 @@ import { createCache } from "~/utils/cache";
 import { createUseDerivedData } from "~/utils/derived-data";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
-import { createLockedRequest } from "~/utils/request";
+import type { RequestResponse } from "~/utils/request";
 import { normalizeString } from "~/utils/string";
 import { createDeterministicUuid } from "~/utils/uuid";
 import type { ResourceKind } from "../types/resource-kind";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
-import {
-  type Resource,
-  type ResourceOption,
-  type TranslationFields,
-} from "./resource";
+import { type Resource, type ResourceOption } from "./resource";
 import {
   type ResourceComparator,
   type ResourceMatcher,
@@ -54,6 +50,15 @@ export type VirtualResourceRecipe<R extends Resource> = {
 };
 
 //------------------------------------------------------------------------------
+// Resource Request
+//------------------------------------------------------------------------------
+
+type ResourceRequest<R> = {
+  key: string;
+  promise: Promise<RequestResponse<R>>;
+};
+
+//------------------------------------------------------------------------------
 // Create Resource Store
 //------------------------------------------------------------------------------
 
@@ -72,9 +77,7 @@ export function createResourceStore<
     filtersSchema,
     matchesResource = () => true,
     compareResources: compareStoreResources = compareResources,
-    resourceSchema: _resourceSchema,
     orderOptions,
-    translationFields: _translationFields,
     useLocalizeResource,
   }: {
     defaultFilters: F;
@@ -84,8 +87,6 @@ export function createResourceStore<
     matchesResource?: ResourceMatcher<R, F>;
     compareResources?: ResourceComparator<R, F>;
     orderOptions: { label: I18nString; value: string }[];
-    resourceSchema: ZodType<R>;
-    translationFields: TranslationFields<R>[];
     useLocalizeResource: (sourceId: string) => (resource: R) => L;
   },
 ) {
@@ -279,32 +280,34 @@ export function createResourceStore<
   // Create Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [createResource] = createLockedRequest(
-    `${storeId}.create_resource`,
-    undefined,
-    async (
-      _sourceId: string,
-      _lang: string,
-      _resource: Partial<DBR>,
-      _translation: Partial<DBT>,
-    ): Promise<string | undefined> => undefined,
-  );
+  function createResource(
+    sourceId: string,
+    lang: string,
+    resource: Partial<DBR>,
+    translation: Partial<DBT>,
+  ): ResourceRequest<string | undefined> {
+    return {
+      key: hash([sourceId, lang, resource, translation]),
+      promise: Promise.resolve({ data: undefined, status: "success" }),
+    };
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Delete Resources
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [deleteResources] = createLockedRequest(
-    `${storeId}.delete_resources`,
-    undefined,
-    async (resourceIds: string[]): Promise<string | undefined> => {
-      for (const resourceId of resourceIds) {
-        resourceCache.remove(resourceId);
-      }
+  function deleteResources(
+    resourceIds: string[],
+  ): ResourceRequest<string | undefined> {
+    for (const resourceId of resourceIds) {
+      resourceCache.remove(resourceId);
+    }
 
-      return undefined;
-    },
-  );
+    return {
+      key: hash([resourceIds]),
+      promise: Promise.resolve({ data: undefined, status: "success" }),
+    };
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Resource Cache
@@ -327,16 +330,17 @@ export function createResourceStore<
   // Update Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const [updateResource] = createLockedRequest(
-    `${storeId}.update_resource`,
-    undefined,
-    async (
-      _resourceId: string,
-      _lang: string,
-      _resource: Partial<DBR>,
-      _translation: Partial<DBT>,
-    ): Promise<string | undefined> => undefined,
-  );
+  function updateResource(
+    resourceId: string,
+    lang: string,
+    resource: Partial<DBR>,
+    translation: Partial<DBT>,
+  ): ResourceRequest<string | undefined> {
+    return {
+      key: hash([resourceId, lang, resource, translation]),
+      promise: Promise.resolve({ data: undefined, status: "success" }),
+    };
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resource

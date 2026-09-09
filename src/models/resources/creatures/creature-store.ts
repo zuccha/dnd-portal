@@ -1,10 +1,6 @@
 import { matchesInclusion, matchesInclusionList } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
-import {
-  creatureSchema,
-  creatureTranslationFields,
-  defaultCreature,
-} from "./creature";
+import { defaultCreature } from "./creature";
 import {
   creatureFiltersSchema,
   creatureOrderOptions,
@@ -30,7 +26,5 @@ export const creatureStore = createResourceStore("creature", {
     matchesInclusionList(creature.habitats, filters.habitats) &&
     matchesInclusionList(creature.treasures, filters.treasures),
   orderOptions: creatureOrderOptions,
-  resourceSchema: creatureSchema,
-  translationFields: creatureTranslationFields,
   useLocalizeResource: useLocalizeCreature,
 });

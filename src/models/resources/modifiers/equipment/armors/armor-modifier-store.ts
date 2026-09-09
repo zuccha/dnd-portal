@@ -1,9 +1,5 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
-import {
-  armorModifierSchema,
-  armorModifierTranslationFields,
-  defaultArmorModifier,
-} from "./armor-modifier";
+import { defaultArmorModifier } from "./armor-modifier";
 import {
   armorModifierFiltersSchema,
   armorModifierOrderOptions,
@@ -22,9 +18,7 @@ export const armorModifierStore = createEquipmentModifierStore(
     defaultModifier: defaultArmorModifier,
     displayName: { en: "Armor Variants", it: "Varianti delle Armature" },
     filtersSchema: armorModifierFiltersSchema,
-    modifierSchema: armorModifierSchema,
     orderOptions: armorModifierOrderOptions,
-    translationFields: armorModifierTranslationFields,
     useLocalizeModifier: useLocalizeArmorModifier,
   },
 );

@@ -1,9 +1,5 @@
 import { createResourceStore } from "../resource-store";
-import {
-  creatureTagSchema,
-  creatureTagTranslationFields,
-  defaultCreatureTag,
-} from "./creature-tag";
+import { defaultCreatureTag } from "./creature-tag";
 import {
   creatureTagFiltersSchema,
   creatureTagOrderOptions,
@@ -21,7 +17,5 @@ export const creatureTagStore = createResourceStore("creature_tag", {
   displayName: { en: "Groups", it: "Gruppi" },
   filtersSchema: creatureTagFiltersSchema,
   orderOptions: creatureTagOrderOptions,
-  resourceSchema: creatureTagSchema,
-  translationFields: creatureTagTranslationFields,
   useLocalizeResource: useLocalizeCreatureTag,
 });

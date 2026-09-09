@@ -1,10 +1,6 @@
 import { matchesInclusion } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
-import {
-  characterSubclassSchema,
-  characterSubclassTranslationFields,
-  defaultCharacterSubclass,
-} from "./character-subclass";
+import { defaultCharacterSubclass } from "./character-subclass";
 import {
   characterSubclassFiltersSchema,
   characterSubclassOrderOptions,
@@ -29,8 +25,6 @@ export const characterSubclassStore = createResourceStore(
         filters.character_class_ids,
       ),
     orderOptions: characterSubclassOrderOptions,
-    resourceSchema: characterSubclassSchema,
-    translationFields: characterSubclassTranslationFields,
     useLocalizeResource: useLocalizeCharacterSubclass,
   },
 );

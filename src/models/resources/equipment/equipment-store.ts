@@ -1,7 +1,6 @@
 import { type ZodType } from "zod";
 import { type I18nString } from "~/i18n/i18n-string";
 import type { ResourceKind } from "../../types/resource-kind";
-import { type TranslationFields } from "../resource";
 import {
   type ResourceMatcher,
   matchesBoolean,
@@ -26,13 +25,11 @@ export function createEquipmentStore<
 >(
   kind: ResourceKind,
   extra: {
-    equipmentSchema: ZodType<E>;
     filtersSchema: ZodType<F>;
     defaultEquipment: E;
     defaultFilters: F;
     displayName: I18nString;
     orderOptions: { label: I18nString; value: string }[];
-    translationFields: TranslationFields<E>[];
     useLocalizeEquipment: (sourceId: string) => (equipment: E) => L;
     matchesEquipment?: ResourceMatcher<E, F>;
   },
@@ -44,8 +41,6 @@ export function createEquipmentStore<
     filtersSchema: extra.filtersSchema,
     matchesResource: extra.matchesEquipment ?? matchesEquipment,
     orderOptions: extra.orderOptions,
-    resourceSchema: extra.equipmentSchema,
-    translationFields: extra.translationFields,
     useLocalizeResource: extra.useLocalizeEquipment,
   });
 }

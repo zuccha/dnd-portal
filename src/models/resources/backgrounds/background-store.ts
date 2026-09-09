@@ -1,9 +1,5 @@
 import { createResourceStore } from "../resource-store";
-import {
-  backgroundSchema,
-  backgroundTranslationFields,
-  defaultBackground,
-} from "./background";
+import { defaultBackground } from "./background";
 import {
   backgroundFiltersSchema,
   backgroundOrderOptions,
@@ -21,7 +17,5 @@ export const backgroundStore = createResourceStore("background", {
   displayName: { en: "Backgrounds", it: "Background" },
   filtersSchema: backgroundFiltersSchema,
   orderOptions: backgroundOrderOptions,
-  resourceSchema: backgroundSchema,
-  translationFields: backgroundTranslationFields,
   useLocalizeResource: useLocalizeBackground,
 });

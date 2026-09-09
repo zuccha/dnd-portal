@@ -2,7 +2,6 @@ import type { ZodType } from "zod";
 import type { I18nString } from "~/i18n/i18n-string";
 import type { ResourceKind } from "../../types/resource-kind";
 import type { LocalizedResource } from "../localized-resource";
-import type { TranslationFields } from "../resource";
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import type { DBModifier, DBModifierTranslation } from "./db-modifier";
 import type { Modifier } from "./modifier";
@@ -25,9 +24,7 @@ export function createModifierStore<
     defaultModifier: R;
     displayName: I18nString;
     filtersSchema: ZodType<F>;
-    modifierSchema: ZodType<R>;
     orderOptions: { label: I18nString; value: string }[];
-    translationFields: TranslationFields<R>[];
     useLocalizeModifier: (sourceId: string) => (modifier: R) => L;
   },
 ): ResourceStore<R, L, F, DBR, DBT> {
@@ -37,8 +34,6 @@ export function createModifierStore<
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
     orderOptions: extra.orderOptions,
-    resourceSchema: extra.modifierSchema,
-    translationFields: extra.translationFields,
     useLocalizeResource: extra.useLocalizeModifier,
   });
 }

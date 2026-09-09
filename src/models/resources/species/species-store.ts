@@ -1,11 +1,7 @@
 import { matchesInclusion, matchesInclusionList } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
 import { useLocalizeSpecies } from "./localized-species";
-import {
-  defaultSpecies,
-  speciesSchema,
-  speciesTranslationFields,
-} from "./species";
+import { defaultSpecies } from "./species";
 import {
   defaultSpeciesFilters,
   speciesFiltersSchema,
@@ -25,7 +21,5 @@ export const speciesStore = createResourceStore("species", {
     matchesInclusion(species.type, filters.types) &&
     matchesInclusionList(species.sizes, filters.sizes),
   orderOptions: speciesOrderOptions,
-  resourceSchema: speciesSchema,
-  translationFields: speciesTranslationFields,
   useLocalizeResource: useLocalizeSpecies,
 });
