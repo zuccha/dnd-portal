@@ -606,13 +606,20 @@ export function createResourceStore<
   ): (resourceId: string) => string {
     const resourceIds =
       catalogueResourceStore.useActiveSourceReferenceResourceIds();
+    const resourcesById = useMemo(
+      () =>
+        new Map(
+          resourceIds.map((id) => [id, getResource(id) ?? defaultResource]),
+        ),
+      [resourceIds],
+    );
 
     return useCallback(
       (resourceId: string) => {
-        const resource = getResource(resourceId) ?? defaultResource;
+        const resource = resourcesById.get(resourceId) ?? defaultResource;
         return translate(resource.name, lang);
       },
-      [lang, resourceIds], // eslint-disable-line react-hooks/exhaustive-deps
+      [lang, resourcesById],
     );
   }
 
@@ -626,13 +633,20 @@ export function createResourceStore<
   ): (resourceId: string) => string {
     const resourceIds =
       catalogueResourceStore.useActiveSourceReferenceResourceIds();
+    const resourcesById = useMemo(
+      () =>
+        new Map(
+          resourceIds.map((id) => [id, getResource(id) ?? defaultResource]),
+        ),
+      [resourceIds],
+    );
 
     return useCallback(
       (resourceId: string) => {
-        const resource = getResource(resourceId) ?? defaultResource;
+        const resource = resourcesById.get(resourceId) ?? defaultResource;
         return translate(resource.name_short, lang);
       },
-      [lang, resourceIds], // eslint-disable-line react-hooks/exhaustive-deps
+      [lang, resourcesById],
     );
   }
 

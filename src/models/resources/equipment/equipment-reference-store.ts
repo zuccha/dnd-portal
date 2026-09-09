@@ -53,13 +53,23 @@ function useLocalizeResourceName(
   lang: string,
 ): (resourceId: string) => string {
   const resourceIds = useEquipmentReferenceIds();
+  const equipmentById = useMemo(
+    () =>
+      new Map(
+        resourceIds
+          .map((id) => getEquipment(id))
+          .filter((equipment) => !!equipment)
+          .map((equipment) => [equipment.id, equipment]),
+      ),
+    [resourceIds],
+  );
 
   return useCallback(
     (resourceId: string) => {
-      const equipment = getEquipment(resourceId);
+      const equipment = equipmentById.get(resourceId);
       return equipment ? translate(equipment.name, lang) : "";
     },
-    [lang, resourceIds], // eslint-disable-line react-hooks/exhaustive-deps
+    [equipmentById, lang],
   );
 }
 
