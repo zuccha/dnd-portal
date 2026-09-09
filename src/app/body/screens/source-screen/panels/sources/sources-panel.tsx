@@ -62,7 +62,7 @@ export default function SourcesPanel() {
   };
 
   return (
-    <Box bgColor="bg.subtle" h="full" w="full">
+    <Box bgColor="bg.subtle" flex={1} h="full">
       <VStack flex={1} gap={6} h="full" overflow="auto" p={10} w="full">
         <HStack align="flex-start" justify="space-between" w="full">
           <VStack align="flex-start" gap={1}>
