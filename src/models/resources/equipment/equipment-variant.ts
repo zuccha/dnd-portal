@@ -3,8 +3,8 @@ import {
   type EquipmentRarity,
   equipmentRarities,
 } from "~/models/types/equipment-rarity";
+import { createDeterministicUuid } from "~/utils/uuid";
 import type { EquipmentModifier } from "../modifiers/equipment/equipment-modifier";
-import type { VirtualResourceRecipe } from "../resource-store";
 import type { Equipment } from "./equipment";
 
 //------------------------------------------------------------------------------
@@ -12,7 +12,7 @@ import type { Equipment } from "./equipment";
 //------------------------------------------------------------------------------
 
 export function addEquipmentVariant<E extends Equipment>(
-  addRecipe: (recipe: VirtualResourceRecipe<E>) => boolean,
+  addResource: (resource: E) => boolean,
   base: E,
   modifiers: EquipmentModifier[],
 ): boolean {
@@ -21,14 +21,14 @@ export function addEquipmentVariant<E extends Equipment>(
 
   const baseId = base.variant_base_id ?? base.id;
   const modifierIds = modifiers.map(({ id }) => id);
+  const id = createDeterministicUuid([
+    base.kind,
+    base.source_id,
+    baseId,
+    modifierIds,
+  ]);
 
-  return addRecipe({
-    base_id: baseId,
-    derive: (currentBase, id) =>
-      createEquipmentVariant(currentBase, modifiers, id),
-    modifier_ids: modifierIds,
-    source_id: base.source_id,
-  });
+  return addResource(createEquipmentVariant(base, modifiers, id));
 }
 
 //------------------------------------------------------------------------------

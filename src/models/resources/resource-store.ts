@@ -10,7 +10,6 @@ import { createUseDerivedData } from "~/utils/derived-data";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
-import { createDeterministicUuid } from "~/utils/uuid";
 import type { ResourceKind } from "../types/resource-kind";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
@@ -36,17 +35,6 @@ export type ResourceStore<
   DBR extends DBResource,
   DBT extends DBResourceTranslation,
 > = ReturnType<typeof createResourceStore<R, L, F, DBR, DBT>>;
-
-//------------------------------------------------------------------------------
-// Virtual Resource Recipe
-//------------------------------------------------------------------------------
-
-export type VirtualResourceRecipe<R extends Resource> = {
-  base_id: string;
-  derive: (base: R, id: string) => R;
-  modifier_ids: string[];
-  source_id: string;
-};
 
 //------------------------------------------------------------------------------
 // Create Resource Store
@@ -158,39 +146,14 @@ export function createResourceStore<
     return hash(dbFilters) !== hash(appliedDBFilters);
   }
 
-  //----------------------------------------------------------------------------
-  // Virtual Resources
-  //----------------------------------------------------------------------------
-
-  const virtualResourceIdsStore = createMemoryStore<Set<string>>(
-    `${storeId}.virtual_resource_ids`,
-    new Set(),
-  );
-
-  const virtualResourceRecipes = new Map<
-    string,
-    VirtualResourceRecipe<R> & { id: string }
-  >();
-
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Add Virtual Resource Recipe
+  // Add Virtual Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function addVirtualResourceRecipe(recipe: VirtualResourceRecipe<R>): boolean {
-    const id = createDeterministicUuid([
-      storeId,
-      recipe.source_id,
-      recipe.base_id,
-      recipe.modifier_ids,
-    ]);
+  function addVirtualResource(resource: R): boolean {
+    if (getResource(resource.id)) return false;
 
-    if (virtualResourceRecipes.has(id)) return false;
-
-    virtualResourceRecipes.set(id, { ...recipe, id });
-    refreshVirtualResource(id);
-    virtualResourceIdsStore.set((prev) =>
-      prev.has(id) ? prev : new Set([...prev, id]),
-    );
+    catalogueResourceStore.upsertResource({ ...resource, virtual: true });
     return true;
   }
 
@@ -199,67 +162,11 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function removeVirtualResource(resourceId: string): void {
-    if (!virtualResourceRecipes.delete(resourceId)) return;
+    const resource = getResource(resourceId);
+    if (!resource?.virtual) return;
 
-    resourceCache.remove(resourceId);
+    catalogueResourceStore.removeResource(resourceId);
     resourceSelectionCache.remove(resourceId);
-
-    virtualResourceIdsStore.set((prev) => {
-      if (!prev.has(resourceId)) return prev;
-      const next = new Set(prev);
-      next.delete(resourceId);
-      return next;
-    });
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Merge Virtual Resource Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function mergeVirtualResourceIds(
-    sourceId: string,
-    resourceIds: string[],
-    virtualResourceIds: Set<string>,
-  ): string[] {
-    if (virtualResourceIds.size === 0) return resourceIds;
-
-    const virtualIdsByBaseId: Record<string, string[]> = {};
-    const eligibleVirtualResourceIds: string[] = [];
-
-    for (const virtualResourceId of virtualResourceIds) {
-      const recipe = virtualResourceRecipes.get(virtualResourceId);
-      if (!recipe || recipe.source_id !== sourceId) continue;
-      eligibleVirtualResourceIds.push(virtualResourceId);
-
-      if (!virtualIdsByBaseId[recipe.base_id])
-        virtualIdsByBaseId[recipe.base_id] = [];
-      virtualIdsByBaseId[recipe.base_id]!.push(virtualResourceId);
-    }
-
-    const mergedResourceIds: string[] = [];
-
-    for (const resourceId of resourceIds) {
-      mergedResourceIds.push(resourceId);
-      for (const virtualResourceId of virtualIdsByBaseId[resourceId] ?? [])
-        mergedResourceIds.push(virtualResourceId);
-    }
-
-    return mergedResourceIds;
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Refresh Virtual Resource
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function refreshVirtualResource(resourceId: string): void {
-    const recipe = virtualResourceRecipes.get(resourceId);
-    if (!recipe) return;
-
-    const base = getResource(recipe.base_id);
-    if (!base) return;
-
-    const resource = recipe.derive(base, recipe.id);
-    resourceCache.set(recipe.id, { ...resource, id: recipe.id, virtual: true });
   }
 
   //----------------------------------------------------------------------------
@@ -285,27 +192,18 @@ export function createResourceStore<
 
   function deleteResources(resourceIds: string[]): Promise<string | undefined> {
     for (const resourceId of resourceIds) {
-      resourceCache.remove(resourceId);
+      catalogueResourceStore.removeResource(resourceId);
     }
 
     return Promise.resolve(undefined);
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Resource Cache
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  const resourceCache = createCache<string, R>(`${storeId}.resource`);
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Get Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function getResource(resourceId: string): R | undefined {
-    const resource =
-      resourceCache.get(resourceId) ??
-      catalogueResourceStore.getResource(resourceId);
-    return resource as R | undefined;
+    return catalogueResourceStore.getResource(resourceId) as R | undefined;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -326,17 +224,9 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResource(resourceId: string): [R, string] {
-    if (virtualResourceRecipes.has(resourceId)) {
-      if (!resourceCache.get(resourceId)) refreshVirtualResource(resourceId);
-    }
-
     const key = hash([resourceId]);
-    const virtualResource = resourceCache.useValue(resourceId);
     const resource = catalogueResourceStore.useResource(resourceId);
-    const result = [
-      (virtualResource ?? resource ?? defaultResource) as R,
-      key,
-    ] as [R, string];
+    const result = [(resource ?? defaultResource) as R, key] as [R, string];
     return result;
   }
 
@@ -345,19 +235,13 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResources(resourceIds: string[]): R[] {
-    for (const resourceId of resourceIds) {
-      if (virtualResourceRecipes.has(resourceId)) {
-        if (!resourceCache.get(resourceId)) refreshVirtualResource(resourceId);
-      }
-    }
-
     const resources = catalogueResourceStore.useResources(resourceIds);
     const resourcesById = useMemo(
       () => new Map(resources.map((resource) => [resource.id, resource])),
       [resources],
     );
     const result = resourceIds.map(
-      (id) => resourceCache.get(id) ?? resourcesById.get(id) ?? defaultResource,
+      (id) => resourcesById.get(id) ?? defaultResource,
     ) as R[];
     return result;
   }
@@ -380,17 +264,7 @@ export function createResourceStore<
       [resourceIds, sources],
     );
     const key = hash([sourceId, sourceFilteredResourceIds]);
-    const virtualResourceIds = virtualResourceIdsStore.useValue();
-    const mergedResourceIds = useMemo(
-      () =>
-        mergeVirtualResourceIds(
-          sourceId,
-          sourceFilteredResourceIds,
-          virtualResourceIds,
-        ),
-      [sourceFilteredResourceIds, sourceId, virtualResourceIds],
-    );
-    return [mergedResourceIds, key];
+    return [sourceFilteredResourceIds, key];
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -727,7 +601,7 @@ export function createResourceStore<
     useHasFilters,
     useResetFilters,
 
-    addVirtualResourceRecipe,
+    addVirtualResource,
     createResource,
     deleteResources,
     getResource,

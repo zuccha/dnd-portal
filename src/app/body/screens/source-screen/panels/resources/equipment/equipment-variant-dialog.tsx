@@ -254,7 +254,7 @@ export function createEquipmentVariantDialog<
 
       setSaving(true);
       const added = addEquipmentVariant(
-        store.addVirtualResourceRecipe,
+        store.addVirtualResource,
         request.base,
         selectedModifiers,
       );

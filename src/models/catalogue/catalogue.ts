@@ -3,6 +3,7 @@ import { createMemoryStore } from "../../store/memory-store";
 import { createOptionalMemoryStoreSet } from "../../store/optional-set/optional-memory-store-set";
 import type { OptionalStoreSet } from "../../store/optional-set/optional-store-set";
 import { createMemoryStoreSet } from "../../store/set/memory-store-set";
+import type { StoreSet } from "../../store/set/store-set";
 import { areSameArray } from "../../utils/array";
 import { objectKeys } from "../../utils/object";
 import type { Background } from "../resources/backgrounds/background";
@@ -284,6 +285,47 @@ export function createCatalogue(id: string) {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Upsert Resource
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function upsertResource(resource: R): void {
+      const resourcesById = resourcesByIdByKind[
+        kind
+      ] as unknown as OptionalStoreSet<string, R>;
+      const resourceIdsBySourceId = resourceIdsBySourceIdByKind[
+        kind
+      ] as StoreSet<string, string[]>;
+
+      resourcesById.set(resource.id, resource);
+      resourceIdsBySourceId.set(resource.source_id, emptyIds, (prev) =>
+        prev.includes(resource.id) ? prev : [...prev, resource.id],
+      );
+      setActiveSourceResourceIds(activeSourceId.get());
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Remove Resource
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    function removeResource(resourceId: string): void {
+      const resource = getResource(resourceId);
+      if (!resource) return;
+
+      const resourcesById = resourcesByIdByKind[
+        kind
+      ] as unknown as OptionalStoreSet<string, R>;
+      const resourceIdsBySourceId = resourceIdsBySourceIdByKind[
+        kind
+      ] as StoreSet<string, string[]>;
+
+      resourcesById.clear(resourceId);
+      resourceIdsBySourceId.set(resource.source_id, emptyIds, (prev) =>
+        prev.filter((id) => id !== resourceId),
+      );
+      setActiveSourceResourceIds(activeSourceId.get());
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Use Resource
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -341,6 +383,8 @@ export function createCatalogue(id: string) {
 
     return {
       getResource,
+      removeResource,
+      upsertResource,
       useActiveSourceReferenceResourceIds,
       useActiveSourceResourceIds,
       useResource,
