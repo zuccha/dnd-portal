@@ -1,4 +1,5 @@
-import { Grid, HStack, Heading, Input, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Heading, Input, Text, VStack } from "@chakra-ui/react";
+import { Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
@@ -6,10 +7,11 @@ import {
   deleteSourceBundle,
   saveSourceBundle,
 } from "~/models/catalogue/source-bundle-indexed-db";
-import { useSelectedSourceId } from "~/models/sources";
+import { type SourceMetadata, useSelectedSourceId } from "~/models/sources";
+import type { SourceType } from "~/models/types/source-type";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
-import SectionHeading from "~/ui/section-heading";
+import IconButton from "~/ui/icon-button";
 
 //------------------------------------------------------------------------------
 // Sources Panel
@@ -22,6 +24,7 @@ export default function SourcesPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>();
   const [selectedSourceId, setSelectedSourceId] = useSelectedSourceId();
+  const sourceGroups = groupSourcesByType(sources, lang);
 
   const importSource = async (file: File | undefined) => {
     if (!file) return;
@@ -59,72 +62,108 @@ export default function SourcesPanel() {
   };
 
   return (
-    <VStack align="flex-start" flex={1} gap={6} minH="full" p={10} w="full">
-      <HStack align="flex-start" justify="space-between" w="full">
-        <VStack align="flex-start" gap={1}>
-          <Heading>{t("title")}</Heading>
-          <Text color="fg.muted">{t("subtitle")}</Text>
-        </VStack>
+    <Box bgColor="bg.subtle" h="full" w="full">
+      <VStack flex={1} gap={6} h="full" overflow="auto" p={10} w="full">
+        <HStack align="flex-start" justify="space-between" w="full">
+          <VStack align="flex-start" gap={1}>
+            <Heading>{t("title")}</Heading>
+            <Text color="fg.muted">{t("subtitle")}</Text>
+          </VStack>
 
-        <Button onClick={() => inputRef.current?.click()} size="sm">
-          {t("import")}
-        </Button>
-      </HStack>
+          <Button onClick={() => inputRef.current?.click()} size="sm">
+            {t("import")}
+          </Button>
+        </HStack>
 
-      <Input
-        accept="application/json,.json"
-        display="none"
-        onChange={(event) => importSource(event.target.files?.[0])}
-        ref={inputRef}
-        type="file"
-      />
+        <Input
+          accept="application/json,.json"
+          display="none"
+          onChange={(event) => importSource(event.target.files?.[0])}
+          ref={inputRef}
+          type="file"
+        />
 
-      {error && (
-        <Text color="fg.error" fontSize="sm">
-          {error}
-        </Text>
-      )}
+        {error && (
+          <Text color="fg.error" fontSize="sm">
+            {error}
+          </Text>
+        )}
 
-      {sources.length ?
-        <Grid
-          gap={4}
-          gridTemplateColumns="repeat(auto-fill, minmax(16rem, 1fr))"
-          w="full"
-        >
-          {sources.map((source) => {
-            const name = source.name[lang] || source.code;
-            return (
-              <VStack
-                align="flex-start"
-                borderWidth={1}
-                gap={1}
-                key={source.id}
-                p={4}
-                rounded="sm"
-              >
-                <SectionHeading>{source.code}</SectionHeading>
-                <Text fontWeight="medium">{name}</Text>
-                <HStack justify="space-between" w="full">
-                  <Text color="fg.muted" fontSize="sm">
-                    {t(source.type)} ·{" "}
-                    {translateSourceVersion(source.version).label}
-                  </Text>
+        {sources.length ?
+          <VStack gap={5} w="full">
+            {sourceGroups.map(({ sources, type }) => (
+              <VStack align="flex-start" gap={2} key={type} w="full">
+                <Text color="fg.muted" fontSize="sm" fontWeight="semibold">
+                  {t(type)}
+                </Text>
 
-                  <Button
-                    onClick={() => removeSource(source.id)}
-                    size="xs"
-                    variant="ghost"
-                  >
-                    {t("remove")}
-                  </Button>
-                </HStack>
+                <VStack gap={2} w="full">
+                  {sources.map((source) => {
+                    const name = source.name[lang] || source.code;
+                    return (
+                      <HStack
+                        bgColor="bg"
+                        borderRadius="sm"
+                        borderWidth={1}
+                        gap={3}
+                        key={source.id}
+                        minH={14}
+                        px={3}
+                        py={2}
+                        w="full"
+                      >
+                        <VStack align="flex-start" flex={1} gap={0}>
+                          <Text fontWeight="semibold" truncate>
+                            {name}
+                          </Text>
+                          <Text color="fg.muted" fontSize="sm" truncate>
+                            {source.code} ·{" "}
+                            {translateSourceVersion(source.version).label}
+                          </Text>
+                        </VStack>
+
+                        <IconButton
+                          Icon={Trash2Icon}
+                          colorPalette="red"
+                          label={t("remove")}
+                          onClick={() => removeSource(source.id)}
+                          size="xs"
+                          variant="ghost"
+                        />
+                      </HStack>
+                    );
+                  })}
+                </VStack>
               </VStack>
-            );
-          })}
-        </Grid>
-      : null}
-    </VStack>
+            ))}
+          </VStack>
+        : null}
+      </VStack>
+    </Box>
   );
+}
+
+//------------------------------------------------------------------------------
+// Group Sources By Type
+//------------------------------------------------------------------------------
+
+function groupSourcesByType(
+  sources: SourceMetadata[],
+  lang: string,
+): { sources: SourceMetadata[]; type: SourceType }[] {
+  const sourceTypes: SourceType[] = ["core", "module", "campaign"];
+
+  return sourceTypes.flatMap((type) => {
+    const groupSources = sources
+      .filter((source) => source.type === type)
+      .sort((a, b) => {
+        const nameA = a.name[lang] || a.code;
+        const nameB = b.name[lang] || b.code;
+        return nameA.localeCompare(nameB) || a.code.localeCompare(b.code);
+      });
+
+    return groupSources.length ? [{ sources: groupSources, type }] : [];
+  });
 }
 
 //------------------------------------------------------------------------------
