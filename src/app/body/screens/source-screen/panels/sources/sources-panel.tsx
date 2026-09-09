@@ -2,6 +2,7 @@ import { Grid, HStack, Heading, Input, Text, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
+import { saveSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
 import SectionHeading from "~/ui/section-heading";
@@ -23,7 +24,8 @@ export default function SourcesPanel() {
 
     try {
       const text = await file.text();
-      catalogue.importSourceBundle(JSON.parse(text));
+      const bundle = await saveSourceBundle(JSON.parse(text));
+      catalogue.importSourceBundle(bundle);
     } catch (e) {
       console.error(e);
       setError(t("error.import"));

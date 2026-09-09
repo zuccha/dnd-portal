@@ -35,7 +35,7 @@ import type { Spell } from "../resources/spells/spell";
 import type { Vehicle } from "../resources/vehicles/vehicle";
 import type { SourceMetadata } from "../sources";
 import type { ResourceKind } from "../types/resource-kind";
-import { type SourceBundle, sourceBundleSchema } from "./source-bundle";
+import type { SourceBundle } from "./source-bundle";
 
 //------------------------------------------------------------------------------
 // Create Catalogue
@@ -352,8 +352,10 @@ export function createCatalogue(id: string) {
   // Import Source Bundle
   //----------------------------------------------------------------------------
 
-  function importSourceBundle(maybeBundle: unknown): SourceBundle {
-    const bundle = sourceBundleSchema.parse(maybeBundle);
+  function importSourceBundle(
+    bundle: SourceBundle,
+    { activate = true }: { activate?: boolean } = {},
+  ): SourceBundle {
     const source = bundle.source;
     const resourceImports = [
       ["armor", bundle.resources.armors],
@@ -401,7 +403,7 @@ export function createCatalogue(id: string) {
       resourceIdsBySourceIdByKind[kind].set(source.id, [], resourceIds);
     }
 
-    setActiveSourceId(source.id);
+    if (activate) setActiveSourceId(source.id);
 
     return bundle;
   }

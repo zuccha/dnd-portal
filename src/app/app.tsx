@@ -1,5 +1,7 @@
 import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useState } from "react";
+import catalogue from "~/models/catalogue/catalogue";
+import { loadSourceBundles } from "~/models/catalogue/source-bundle-indexed-db";
 import { useRoute } from "../navigation/navigation";
 import { Route } from "../navigation/routes";
 import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
@@ -14,17 +16,38 @@ export default function App() {
   const [ready, setReady] = useState(false);
 
   useLayoutEffect(() => {
-    Promise.all([
-      document.fonts.load('16px "Bookinsanity"'),
-      document.fonts.load('italic 16px "Bookinsanity"'),
-      document.fonts.load('bold 16px "Bookinsanity"'),
-      document.fonts.load('bold italic 16px "Bookinsanity"'),
-      document.fonts.load('16px "Fira Mono"'),
-      document.fonts.load('bold 16px "Fira Mono"'),
-      document.fonts.load('16px "Mr Eaves"'),
-      document.fonts.load('16px "Mr Eaves Alt"'),
-      document.fonts.load('16px "Title Wave"'),
-    ]).then(() => setReady(true));
+    let cancelled = false;
+
+    async function initializeApp(): Promise<void> {
+      const [bundles] = await Promise.all([
+        loadSourceBundles().catch((error) => {
+          console.error("Unable to load persisted source bundles", error);
+          return [];
+        }),
+        document.fonts.load('16px "Bookinsanity"'),
+        document.fonts.load('italic 16px "Bookinsanity"'),
+        document.fonts.load('bold 16px "Bookinsanity"'),
+        document.fonts.load('bold italic 16px "Bookinsanity"'),
+        document.fonts.load('16px "Fira Mono"'),
+        document.fonts.load('bold 16px "Fira Mono"'),
+        document.fonts.load('16px "Mr Eaves"'),
+        document.fonts.load('16px "Mr Eaves Alt"'),
+        document.fonts.load('16px "Title Wave"'),
+      ]);
+
+      if (cancelled) return;
+
+      for (const bundle of bundles)
+        catalogue.importSourceBundle(bundle, { activate: false });
+
+      setReady(true);
+    }
+
+    void initializeApp();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (!ready) return null;
