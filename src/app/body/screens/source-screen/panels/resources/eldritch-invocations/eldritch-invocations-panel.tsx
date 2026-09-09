@@ -1,7 +1,7 @@
 import { type EldritchInvocation } from "~/models/resources/eldritch-invocations/eldritch-invocation";
 import {
   eldritchInvocationForm,
-  eldritchInvocationFormDataToDB,
+  eldritchInvocationFormDataToResource,
 } from "~/models/resources/eldritch-invocations/eldritch-invocation-form";
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
 import { type LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
@@ -48,7 +48,7 @@ const EldritchInvocationsPanel = createResourcesPanel(
     form: {
       Editor: createEldritchInvocationEditor(eldritchInvocationForm),
       form: eldritchInvocationForm,
-      parseFormData: eldritchInvocationFormDataToDB,
+      parseFormData: eldritchInvocationFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

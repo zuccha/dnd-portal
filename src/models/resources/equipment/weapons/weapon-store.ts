@@ -5,7 +5,7 @@ import {
 } from "../../resource-filtering";
 import { createEquipmentStore, matchesEquipment } from "../equipment-store";
 import { useLocalizeWeapon } from "./localized-weapon";
-import { defaultWeapon } from "./weapon";
+import { defaultWeapon, weaponTranslationFields } from "./weapon";
 import {
   defaultWeaponFilters,
   weaponFiltersSchema,
@@ -29,5 +29,6 @@ export const weaponStore = createEquipmentStore("weapon", {
     matchesInclusion(weapon.type, filters.types) &&
     matchesInclusionList(weapon.properties, filters.properties),
   orderOptions: weaponOrderOptions,
+  translationFields: weaponTranslationFields,
   useLocalizeEquipment: useLocalizeWeapon,
 });

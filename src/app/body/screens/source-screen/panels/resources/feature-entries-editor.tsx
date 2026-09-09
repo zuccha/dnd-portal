@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { DBFeatureEntry } from "~/models/resources/features/db-feature";
+import type { FeatureEntry } from "~/models/resources/features/feature-entry";
 import { featureStore } from "~/models/resources/features/feature-store";
 import type { ResourceOption } from "~/models/resources/resource";
 import Button from "~/ui/button";
@@ -21,9 +21,9 @@ import { normalizeString } from "~/utils/string";
 //------------------------------------------------------------------------------
 
 export type FeatureEntriesEditorProps = StackProps & {
-  onValueChange: (featureEntries: DBFeatureEntry[]) => void;
+  onValueChange: (featureEntries: FeatureEntry[]) => void;
   sourceId: string;
-  value: DBFeatureEntry[];
+  value: FeatureEntry[];
   withinDialog?: boolean;
 };
 

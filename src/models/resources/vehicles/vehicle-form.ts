@@ -1,7 +1,12 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import { type DBVehicle, type DBVehicleTranslation } from "./db-vehicle";
+import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Vehicle } from "./vehicle";
 
 //------------------------------------------------------------------------------
 // Vehicle Form Data
@@ -24,32 +29,25 @@ export const vehicleFormDataSchema = resourceFormDataSchema.extend({
 export type VehicleFormData = z.infer<typeof vehicleFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Vehicle Form Data To DB
+// Vehicle Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function vehicleFormDataToDB(data: Partial<VehicleFormData>): {
-  resource: Partial<DBVehicle>;
-  translation: Partial<DBVehicleTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      ac: data.ac,
-      cargo: data.cargo,
-      cost: data.cost,
-      crew_capacity: data.crew_capacity,
-      damage_threshold: data.damage_threshold,
-      hp: data.hp,
-      passenger_capacity: data.passenger_capacity,
-      speed: data.speed,
-    },
-    translation: {
-      ...translation,
-      description: data.description,
-    },
-  };
+export function vehicleFormDataToResource(
+  data: Partial<VehicleFormData>,
+  lang: string,
+): Partial<Vehicle> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    ac: data.ac,
+    cargo: data.cargo,
+    cost: data.cost,
+    crew_capacity: data.crew_capacity,
+    damage_threshold: data.damage_threshold,
+    description: createResourceFormDataI18nValue(data.description, lang),
+    hp: data.hp,
+    passenger_capacity: data.passenger_capacity,
+    speed: data.speed,
+  });
 }
 
 //------------------------------------------------------------------------------

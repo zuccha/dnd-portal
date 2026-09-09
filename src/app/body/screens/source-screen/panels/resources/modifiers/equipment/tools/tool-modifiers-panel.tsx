@@ -1,7 +1,7 @@
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import {
   toolModifierForm,
-  toolModifierFormDataToDB,
+  toolModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/tools/tool-modifier-form";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import { createEquipmentModifiersPanel } from "../equipment-modifiers-panel";
@@ -19,7 +19,7 @@ const ToolModifiersPanel = createEquipmentModifiersPanel(
   "coral",
   {
     form: toolModifierForm,
-    parseFormData: toolModifierFormDataToDB,
+    parseFormData: toolModifierFormDataToResource,
   },
   {
     AlbumCard: ToolModifierCard,

@@ -1,9 +1,5 @@
 import { HStack } from "@chakra-ui/react";
 import type { ComponentType } from "react";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -33,11 +29,9 @@ export function createResourcesPanel<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
   FF extends Record<string, unknown>,
 >(
-  store: ResourceStore<R, L, F, DBR, DBT>,
+  store: ResourceStore<R, L, F>,
   contextOptions: {
     initialPaletteName: PaletteName;
   },
@@ -51,8 +45,7 @@ export function createResourcesPanel<
     album: ResourcesAlbumExtra<R, L>;
     Extra?: ComponentType<{ sourceId: string }>;
     filters: ResourcesFiltersExtra;
-    form: ResourceCreatorExtra<R, DBR, DBT, FF> &
-      ResourceDialogUpdaterExtra<R, DBR, DBT, FF>;
+    form: ResourceCreatorExtra<R, FF> & ResourceDialogUpdaterExtra<R, FF>;
     table: ResourcesTableExtra<R, L>;
   },
 ) {

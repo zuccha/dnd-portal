@@ -1,8 +1,4 @@
 import { useMemo } from "react";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -50,10 +46,8 @@ export function createResourceCardPrintable<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
 >(
-  store: ResourceStore<R, L, F, DBR, DBT>,
+  store: ResourceStore<R, L, F>,
   _context: ResourcesContext<R>,
   extra: ResourceCardPrintableExtra<R, L>,
 ) {

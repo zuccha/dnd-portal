@@ -1,7 +1,7 @@
 import { type Background } from "~/models/resources/backgrounds/background";
 import {
   backgroundForm,
-  backgroundFormDataToDB,
+  backgroundFormDataToResource,
 } from "~/models/resources/backgrounds/background-form";
 import { backgroundStore } from "~/models/resources/backgrounds/background-store";
 import { type LocalizedBackground } from "~/models/resources/backgrounds/localized-background";
@@ -52,7 +52,7 @@ const BackgroundsPanel = createResourcesPanel(
     form: {
       Editor: createBackgroundEditor(backgroundForm),
       form: backgroundForm,
-      parseFormData: backgroundFormDataToDB,
+      parseFormData: backgroundFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

@@ -1,5 +1,5 @@
 import { createResourceStore } from "../resource-store";
-import { defaultFeature } from "./feature";
+import { defaultFeature, featureTranslationFields } from "./feature";
 import {
   defaultFeatureFilters,
   featureFiltersSchema,
@@ -17,5 +17,6 @@ export const featureStore = createResourceStore("feature", {
   displayName: { en: "Features", it: "Privilegi" },
   filtersSchema: featureFiltersSchema,
   orderOptions: featureOrderOptions,
+  translationFields: featureTranslationFields,
   useLocalizeResource: useLocalizeFeature,
 });

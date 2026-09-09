@@ -2,10 +2,6 @@ import { type StackProps, VStack } from "@chakra-ui/react";
 import { FunnelXIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -43,10 +39,8 @@ export function createResourcesFilters<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
 >(
-  store: ResourceStore<R, L, F, DBR, DBT>,
+  store: ResourceStore<R, L, F>,
   context: ResourcesContext<R>,
   extra: ResourcesFiltersExtra,
 ) {

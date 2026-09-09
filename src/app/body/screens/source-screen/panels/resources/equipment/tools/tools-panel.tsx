@@ -4,7 +4,7 @@ import { type LocalizedTool } from "~/models/resources/equipment/tools/localized
 import { type Tool } from "~/models/resources/equipment/tools/tool";
 import {
   toolForm,
-  toolFormDataToDB,
+  toolFormDataToResource,
 } from "~/models/resources/equipment/tools/tool-form";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
@@ -98,7 +98,7 @@ const ToolsPanel = createResourcesPanel(
     form: {
       Editor: createToolEditor(toolForm),
       form: toolForm,
-      parseFormData: toolFormDataToDB,
+      parseFormData: toolFormDataToResource,
     },
     table: {
       actions,

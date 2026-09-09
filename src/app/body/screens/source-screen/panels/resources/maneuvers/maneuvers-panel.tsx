@@ -2,7 +2,7 @@ import { type LocalizedManeuver } from "~/models/resources/maneuvers/localized-m
 import { type Maneuver } from "~/models/resources/maneuvers/maneuver";
 import {
   maneuverForm,
-  maneuverFormDataToDB,
+  maneuverFormDataToResource,
 } from "~/models/resources/maneuvers/maneuver-form";
 import { maneuverStore } from "~/models/resources/maneuvers/maneuver-store";
 import { createResourcesPanel } from "../resources-panel";
@@ -39,7 +39,7 @@ const ManeuversPanel = createResourcesPanel(
     form: {
       Editor: createManeuverEditor(maneuverForm),
       form: maneuverForm,
-      parseFormData: maneuverFormDataToDB,
+      parseFormData: maneuverFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

@@ -10,7 +10,7 @@ import { type LocalizedWeapon } from "~/models/resources/equipment/weapons/local
 import { type Weapon } from "~/models/resources/equipment/weapons/weapon";
 import {
   weaponForm,
-  weaponFormDataToDB,
+  weaponFormDataToResource,
 } from "~/models/resources/equipment/weapons/weapon-form";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
@@ -126,7 +126,7 @@ const WeaponsPanel = createResourcesPanel(
     form: {
       Editor: createWeaponEditor(weaponForm),
       form: weaponForm,
-      parseFormData: weaponFormDataToDB,
+      parseFormData: weaponFormDataToResource,
     },
     table: {
       actions,

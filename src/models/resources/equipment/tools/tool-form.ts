@@ -3,10 +3,14 @@ import { createForm } from "~/utils/form";
 import { creatureAbilitySchema } from "../../../types/creature-ability";
 import { toolTypeSchema } from "../../../types/tool-type";
 import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+} from "../../resource-form";
+import {
   equipmentFormDataSchema,
-  equipmentFormDataToDB,
+  equipmentFormDataToResource,
 } from "../equipment-form";
-import { type DBTool, type DBToolTranslation } from "./db-tool";
+import type { Tool } from "./tool";
 
 //------------------------------------------------------------------------------
 // Tool Form Data
@@ -22,27 +26,20 @@ export const toolFormDataSchema = equipmentFormDataSchema.extend({
 export type ToolFormData = z.infer<typeof toolFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Tool Form Data To DB
+// Tool Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function toolFormDataToDB(data: Partial<ToolFormData>): {
-  resource: Partial<DBTool>;
-  translation: Partial<DBToolTranslation>;
-} {
-  const { resource, translation } = equipmentFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      ability: data.ability,
-      craft_ids: data.craft_ids,
-      type: data.type,
-    },
-    translation: {
-      ...translation,
-      utilize: data.utilize,
-    },
-  };
+export function toolFormDataToResource(
+  data: Partial<ToolFormData>,
+  lang: string,
+): Partial<Tool> {
+  return createResourceFormDataPatch({
+    ...equipmentFormDataToResource(data, lang),
+    ability: data.ability,
+    craft_ids: data.craft_ids,
+    type: data.type,
+    utilize: createResourceFormDataI18nValue(data.utilize, lang),
+  });
 }
 
 //------------------------------------------------------------------------------

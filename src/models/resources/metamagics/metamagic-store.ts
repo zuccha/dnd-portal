@@ -1,6 +1,6 @@
 import { createResourceStore } from "../resource-store";
 import { useLocalizeMetamagic } from "./localized-metamagic";
-import { defaultMetamagic } from "./metamagic";
+import { defaultMetamagic, metamagicTranslationFields } from "./metamagic";
 import {
   defaultMetamagicFilters,
   metamagicFiltersSchema,
@@ -17,5 +17,6 @@ export const metamagicStore = createResourceStore("metamagic", {
   displayName: { en: "Metamagic", it: "Metamagic" },
   filtersSchema: metamagicFiltersSchema,
   orderOptions: metamagicOrderOptions,
+  translationFields: metamagicTranslationFields,
   useLocalizeResource: useLocalizeMetamagic,
 });

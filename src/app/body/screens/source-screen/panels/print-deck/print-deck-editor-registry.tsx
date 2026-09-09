@@ -1,119 +1,126 @@
 import {
   backgroundForm,
-  backgroundFormDataToDB,
+  backgroundFormDataToResource,
 } from "~/models/resources/backgrounds/background-form";
 import { backgroundStore } from "~/models/resources/backgrounds/background-store";
 import {
   characterClassForm,
-  characterClassFormDataToDB,
+  characterClassFormDataToResource,
 } from "~/models/resources/character-classes/character-class-form";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import {
   characterSubclassForm,
-  characterSubclassFormDataToDB,
+  characterSubclassFormDataToResource,
 } from "~/models/resources/character-subclasses/character-subclass-form";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import {
   creatureTagForm,
-  creatureTagFormDataToDB,
+  creatureTagFormDataToResource,
 } from "~/models/resources/creature-tags/creature-tag-form";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import {
   creatureForm,
-  creatureFormDataToDB,
+  creatureFormDataToResource,
 } from "~/models/resources/creatures/creature-form";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import {
   eldritchInvocationForm,
-  eldritchInvocationFormDataToDB,
+  eldritchInvocationFormDataToResource,
 } from "~/models/resources/eldritch-invocations/eldritch-invocation-form";
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
 import {
   armorForm,
-  armorFormDataToDB,
+  armorFormDataToResource,
 } from "~/models/resources/equipment/armors/armor-form";
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import {
   itemForm,
-  itemFormDataToDB,
+  itemFormDataToResource,
 } from "~/models/resources/equipment/items/item-form";
 import { itemStore } from "~/models/resources/equipment/items/item-store";
 import {
   toolForm,
-  toolFormDataToDB,
+  toolFormDataToResource,
 } from "~/models/resources/equipment/tools/tool-form";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import {
   weaponForm,
-  weaponFormDataToDB,
+  weaponFormDataToResource,
 } from "~/models/resources/equipment/weapons/weapon-form";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
-import { featForm, featFormDataToDB } from "~/models/resources/feats/feat-form";
+import {
+  featForm,
+  featFormDataToResource,
+} from "~/models/resources/feats/feat-form";
 import { featStore } from "~/models/resources/feats/feat-store";
 import {
   featureForm,
-  featureFormDataToDB,
+  featureFormDataToResource,
 } from "~/models/resources/features/feature-form";
 import { featureStore } from "~/models/resources/features/feature-store";
 import {
   languageForm,
-  languageFormDataToDB,
+  languageFormDataToResource,
 } from "~/models/resources/languages/language-form";
 import { languageStore } from "~/models/resources/languages/language-store";
 import {
   maneuverForm,
-  maneuverFormDataToDB,
+  maneuverFormDataToResource,
 } from "~/models/resources/maneuvers/maneuver-form";
 import { maneuverStore } from "~/models/resources/maneuvers/maneuver-store";
 import {
   metamagicForm,
-  metamagicFormDataToDB,
+  metamagicFormDataToResource,
 } from "~/models/resources/metamagics/metamagic-form";
 import { metamagicStore } from "~/models/resources/metamagics/metamagic-store";
 import {
   armorModifierForm,
-  armorModifierFormDataToDB,
+  armorModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/armors/armor-modifier-form";
 import { armorModifierStore } from "~/models/resources/modifiers/equipment/armors/armor-modifier-store";
 import {
   itemModifierForm,
-  itemModifierFormDataToDB,
+  itemModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/items/item-modifier-form";
 import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/item-modifier-store";
 import {
   toolModifierForm,
-  toolModifierFormDataToDB,
+  toolModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/tools/tool-modifier-form";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import {
   weaponModifierForm,
-  weaponModifierFormDataToDB,
+  weaponModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-form";
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
 import {
   planeForm,
-  planeFormDataToDB,
+  planeFormDataToResource,
 } from "~/models/resources/planes/plane-form";
 import { planeStore } from "~/models/resources/planes/plane-store";
-import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
+import type { TranslationFields } from "~/models/resources/resource";
+import type {
+  LocalizedResourceUnion,
+  ResourceUnion,
+} from "~/models/resources/resource-union";
 import {
   serviceForm,
-  serviceFormDataToDB,
+  serviceFormDataToResource,
 } from "~/models/resources/services/service-form";
 import { serviceStore } from "~/models/resources/services/service-store";
 import {
   speciesForm,
-  speciesFormDataToDB,
+  speciesFormDataToResource,
 } from "~/models/resources/species/species-form";
 import { speciesStore } from "~/models/resources/species/species-store";
 import {
   spellForm,
-  spellFormDataToDB,
+  spellFormDataToResource,
 } from "~/models/resources/spells/spell-form";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import {
   vehicleForm,
-  vehicleFormDataToDB,
+  vehicleFormDataToResource,
 } from "~/models/resources/vehicles/vehicle-form";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
 import type { Form } from "~/utils/form";
@@ -147,10 +154,7 @@ import type { PrintDeckResourceKind } from "./print-deck-registry";
 // Print Deck Editor Patch
 //------------------------------------------------------------------------------
 
-export type PrintDeckEditorPatch = {
-  resource: Record<string, unknown>;
-  translation: Record<string, unknown>;
-};
+export type PrintDeckEditorPatch = Partial<ResourceUnion>;
 
 //------------------------------------------------------------------------------
 // Print Deck Editor Registry Entry
@@ -161,7 +165,9 @@ export type PrintDeckEditorRegistryEntry = {
   form: Form<Record<string, unknown>>;
   parseFormData: (
     data: Partial<Record<string, unknown>>,
+    lang: string,
   ) => PrintDeckEditorPatch | string;
+  translationFields: TranslationFields<ResourceUnion>[];
   useLocalizeResource: (
     sourceId: string,
   ) => (resource: unknown) => LocalizedResourceUnion;
@@ -187,145 +193,169 @@ export const printDeckEditorRegistry = {
   armor: castEntry({
     Editor: createArmorEditor(armorForm),
     form: armorForm,
-    parseFormData: armorFormDataToDB,
+    parseFormData: armorFormDataToResource,
+    translationFields: armorStore.translationFields,
     useLocalizeResource: armorStore.useLocalizeResource,
   }),
   armor_modifier: castEntry({
     Editor: createArmorModifierEditor(armorModifierForm, armorStore),
     form: armorModifierForm,
-    parseFormData: armorModifierFormDataToDB,
+    parseFormData: armorModifierFormDataToResource,
+    translationFields: armorModifierStore.translationFields,
     useLocalizeResource: armorModifierStore.useLocalizeResource,
   }),
   background: castEntry({
     Editor: createBackgroundEditor(backgroundForm),
     form: backgroundForm,
-    parseFormData: backgroundFormDataToDB,
+    parseFormData: backgroundFormDataToResource,
+    translationFields: backgroundStore.translationFields,
     useLocalizeResource: backgroundStore.useLocalizeResource,
   }),
   character_class: castEntry({
     Editor: createCharacterClassEditor(characterClassForm),
     form: characterClassForm,
-    parseFormData: characterClassFormDataToDB,
+    parseFormData: characterClassFormDataToResource,
+    translationFields: characterClassStore.translationFields,
     useLocalizeResource: characterClassStore.useLocalizeResource,
   }),
   character_subclass: castEntry({
     Editor: createCharacterSubclassEditor(characterSubclassForm),
     form: characterSubclassForm,
-    parseFormData: characterSubclassFormDataToDB,
+    parseFormData: characterSubclassFormDataToResource,
+    translationFields: characterSubclassStore.translationFields,
     useLocalizeResource: characterSubclassStore.useLocalizeResource,
   }),
   creature: castEntry({
     Editor: createCreatureEditor(creatureForm),
     form: creatureForm,
-    parseFormData: creatureFormDataToDB,
+    parseFormData: creatureFormDataToResource,
+    translationFields: creatureStore.translationFields,
     useLocalizeResource: creatureStore.useLocalizeResource,
   }),
   creature_tag: castEntry({
     Editor: createCreatureTagEditor(creatureTagForm),
     form: creatureTagForm,
-    parseFormData: creatureTagFormDataToDB,
+    parseFormData: creatureTagFormDataToResource,
+    translationFields: creatureTagStore.translationFields,
     useLocalizeResource: creatureTagStore.useLocalizeResource,
   }),
   eldritch_invocation: castEntry({
     Editor: createEldritchInvocationEditor(eldritchInvocationForm),
     form: eldritchInvocationForm,
-    parseFormData: eldritchInvocationFormDataToDB,
+    parseFormData: eldritchInvocationFormDataToResource,
+    translationFields: eldritchInvocationStore.translationFields,
     useLocalizeResource: eldritchInvocationStore.useLocalizeResource,
   }),
   feat: castEntry({
     Editor: createFeatEditor(featForm),
     form: featForm,
-    parseFormData: featFormDataToDB,
+    parseFormData: featFormDataToResource,
+    translationFields: featStore.translationFields,
     useLocalizeResource: featStore.useLocalizeResource,
   }),
   feature: castEntry({
     Editor: createFeatureEditor(featureForm),
     form: featureForm,
-    parseFormData: featureFormDataToDB,
+    parseFormData: featureFormDataToResource,
+    translationFields: featureStore.translationFields,
     useLocalizeResource: featureStore.useLocalizeResource,
   }),
   item: castEntry({
     Editor: createItemEditor(itemForm),
     form: itemForm,
-    parseFormData: itemFormDataToDB,
+    parseFormData: itemFormDataToResource,
+    translationFields: itemStore.translationFields,
     useLocalizeResource: itemStore.useLocalizeResource,
   }),
   item_modifier: castEntry({
     Editor: createItemModifierEditor(itemModifierForm, itemStore),
     form: itemModifierForm,
-    parseFormData: itemModifierFormDataToDB,
+    parseFormData: itemModifierFormDataToResource,
+    translationFields: itemModifierStore.translationFields,
     useLocalizeResource: itemModifierStore.useLocalizeResource,
   }),
   language: castEntry({
     Editor: createLanguageEditor(languageForm),
     form: languageForm,
-    parseFormData: languageFormDataToDB,
+    parseFormData: languageFormDataToResource,
+    translationFields: languageStore.translationFields,
     useLocalizeResource: languageStore.useLocalizeResource,
   }),
   maneuver: castEntry({
     Editor: createManeuverEditor(maneuverForm),
     form: maneuverForm,
-    parseFormData: maneuverFormDataToDB,
+    parseFormData: maneuverFormDataToResource,
+    translationFields: maneuverStore.translationFields,
     useLocalizeResource: maneuverStore.useLocalizeResource,
   }),
   metamagic: castEntry({
     Editor: createMetamagicEditor(metamagicForm),
     form: metamagicForm,
-    parseFormData: metamagicFormDataToDB,
+    parseFormData: metamagicFormDataToResource,
+    translationFields: metamagicStore.translationFields,
     useLocalizeResource: metamagicStore.useLocalizeResource,
   }),
   plane: castEntry({
     Editor: createPlaneEditor(planeForm),
     form: planeForm,
-    parseFormData: planeFormDataToDB,
+    parseFormData: planeFormDataToResource,
+    translationFields: planeStore.translationFields,
     useLocalizeResource: planeStore.useLocalizeResource,
   }),
   service: castEntry({
     Editor: createServiceEditor(serviceForm),
     form: serviceForm,
-    parseFormData: serviceFormDataToDB,
+    parseFormData: serviceFormDataToResource,
+    translationFields: serviceStore.translationFields,
     useLocalizeResource: serviceStore.useLocalizeResource,
   }),
   species: castEntry({
     Editor: createSpeciesEditor(speciesForm),
     form: speciesForm,
-    parseFormData: speciesFormDataToDB,
+    parseFormData: speciesFormDataToResource,
+    translationFields: speciesStore.translationFields,
     useLocalizeResource: speciesStore.useLocalizeResource,
   }),
   spell: castEntry({
     Editor: createSpellEditor(spellForm),
     form: spellForm,
-    parseFormData: spellFormDataToDB,
+    parseFormData: spellFormDataToResource,
+    translationFields: spellStore.translationFields,
     useLocalizeResource: spellStore.useLocalizeResource,
   }),
   tool: castEntry({
     Editor: createToolEditor(toolForm),
     form: toolForm,
-    parseFormData: toolFormDataToDB,
+    parseFormData: toolFormDataToResource,
+    translationFields: toolStore.translationFields,
     useLocalizeResource: toolStore.useLocalizeResource,
   }),
   tool_modifier: castEntry({
     Editor: createToolModifierEditor(toolModifierForm, toolStore),
     form: toolModifierForm,
-    parseFormData: toolModifierFormDataToDB,
+    parseFormData: toolModifierFormDataToResource,
+    translationFields: toolModifierStore.translationFields,
     useLocalizeResource: toolModifierStore.useLocalizeResource,
   }),
   vehicle: castEntry({
     Editor: createVehicleEditor(vehicleForm),
     form: vehicleForm,
-    parseFormData: vehicleFormDataToDB,
+    parseFormData: vehicleFormDataToResource,
+    translationFields: vehicleStore.translationFields,
     useLocalizeResource: vehicleStore.useLocalizeResource,
   }),
   weapon: castEntry({
     Editor: createWeaponEditor(weaponForm),
     form: weaponForm,
-    parseFormData: weaponFormDataToDB,
+    parseFormData: weaponFormDataToResource,
+    translationFields: weaponStore.translationFields,
     useLocalizeResource: weaponStore.useLocalizeResource,
   }),
   weapon_modifier: castEntry({
     Editor: createWeaponModifierEditor(weaponModifierForm, weaponStore),
     form: weaponModifierForm,
-    parseFormData: weaponModifierFormDataToDB,
+    parseFormData: weaponModifierFormDataToResource,
+    translationFields: weaponModifierStore.translationFields,
     useLocalizeResource: weaponModifierStore.useLocalizeResource,
   }),
 } satisfies PrintDeckEditorRegistry;

@@ -7,10 +7,6 @@ import { translate } from "~/i18n/i18n-string";
 import SquareCheckIcon from "~/icons/square-check-icon";
 import SquareIcon from "~/icons/square-icon";
 import { printDeck } from "~/models/print-deck/print-deck-store";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -74,10 +70,8 @@ export function createResourceCardInteractive<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
 >(
-  store: ResourceStore<R, L, F, DBR, DBT>,
+  store: ResourceStore<R, L, F>,
   context: ResourcesContext<R>,
   extra: ResourceCardInteractiveExtra<R, L>,
 ) {

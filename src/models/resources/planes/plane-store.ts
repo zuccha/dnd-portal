@@ -1,7 +1,7 @@
 import { matchesInclusion, matchesInclusionList } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
 import { useLocalizePlane } from "./localized-plane";
-import { defaultPlane } from "./plane";
+import { defaultPlane, planeTranslationFields } from "./plane";
 import {
   defaultPlaneFilters,
   planeFiltersSchema,
@@ -21,5 +21,6 @@ export const planeStore = createResourceStore("plane", {
     matchesInclusion(plane.category, filters.categories) &&
     matchesInclusionList(plane.alignments, filters.alignments),
   orderOptions: planeOrderOptions,
+  translationFields: planeTranslationFields,
   useLocalizeResource: useLocalizePlane,
 });

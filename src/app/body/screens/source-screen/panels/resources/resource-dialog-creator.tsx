@@ -1,9 +1,5 @@
 import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -25,15 +21,11 @@ import type { ResourcesContext } from "./resources-context";
 
 export type ResourceCreatorExtra<
   R extends Resource,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
   FF extends Record<string, unknown>,
 > = {
   Editor: React.FC<{ resource: R; sourceId: string }>;
   form: Form<FF>;
-  parseFormData: (
-    data: Partial<FF>,
-  ) => { resource: Partial<DBR>; translation: Partial<DBT> } | string;
+  parseFormData: (data: Partial<FF>, lang: string) => Partial<R> | string;
 };
 
 //------------------------------------------------------------------------------
@@ -55,13 +47,11 @@ export function createResourceDialogCreator<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
   FF extends Record<string, unknown>,
 >(
-  store: ResourceStore<R, L, F, DBR, DBT>,
+  store: ResourceStore<R, L, F>,
   context: ResourcesContext<R>,
-  { Editor, form, parseFormData }: ResourceCreatorExtra<R, DBR, DBT, FF>,
+  { Editor, form, parseFormData }: ResourceCreatorExtra<R, FF>,
   { PreviewCard }: ResourceDialogCreatorPreviewExtra<R, L>,
 ) {
   async function submitForm(
@@ -69,16 +59,10 @@ export function createResourceDialogCreator<
     data: Partial<FF>,
     { lang }: { lang: string },
   ) {
-    const errorOrData = parseFormData(data);
+    const errorOrData = parseFormData(data, lang);
     if (typeof errorOrData === "string") return errorOrData;
 
-    const { resource, translation } = errorOrData;
-    const error = await store.createResource(
-      sourceId,
-      lang,
-      resource,
-      translation,
-    );
+    const error = await store.createResource(sourceId, errorOrData);
 
     return error;
   }
@@ -104,12 +88,12 @@ export function createResourceDialogCreator<
     const formData = form.useData();
 
     const previewResource = useMemo(() => {
-      const errorOrData = parseFormData(formData);
+      const errorOrData = parseFormData(formData, lang);
       if (typeof errorOrData === "string") return resource;
       return applyResourceEditorPreviewPatch(
         resource,
-        lang,
-        errorOrData as ResourceEditorPreviewPatch,
+        errorOrData as ResourceEditorPreviewPatch<R>,
+        store.translationFields,
       );
     }, [formData, lang, resource]);
 

@@ -1,6 +1,9 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
 import { useLocalizeToolModifier } from "./localized-tool-modifier";
-import { defaultToolModifier } from "./tool-modifier";
+import {
+  defaultToolModifier,
+  toolModifierTranslationFields,
+} from "./tool-modifier";
 import {
   defaultToolModifierFilters,
   toolModifierFiltersSchema,
@@ -17,5 +20,6 @@ export const toolModifierStore = createEquipmentModifierStore("tool_modifier", {
   displayName: { en: "Tool Variants", it: "Varianti degli Strumenti" },
   filtersSchema: toolModifierFiltersSchema,
   orderOptions: toolModifierOrderOptions,
+  translationFields: toolModifierTranslationFields,
   useLocalizeModifier: useLocalizeToolModifier,
 });

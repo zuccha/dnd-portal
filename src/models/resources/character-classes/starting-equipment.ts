@@ -71,7 +71,11 @@ export function startingEquipmentFromEntries(
     if (equipment_id) {
       const index = option.equipments.findIndex((e) => e.id === equipment_id);
       if (index === -1) {
-        option.equipments.push({ id: equipment_id, notes: entry.notes, quantity });
+        option.equipments.push({
+          id: equipment_id,
+          notes: entry.notes,
+          quantity,
+        });
       } else {
         const equipment = option.equipments[index]!;
         option.equipments[index] = {

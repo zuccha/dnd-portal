@@ -1,9 +1,5 @@
 import { Flex } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -22,9 +18,7 @@ export function createResourcesCounter<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
->(store: ResourceStore<R, L, F, DBR, DBT>, _context: ResourcesContext<R>) {
+>(store: ResourceStore<R, L, F>, _context: ResourcesContext<R>) {
   return function ResourcesCounter({ sourceId }: ResourcesCounterProps) {
     const { tpi } = useI18nLangContext(i18nContext);
     const filteredResourceIds = store.useFilteredResourceIds(sourceId);

@@ -2,7 +2,7 @@ import { LayersIcon, WandIcon, XIcon } from "lucide-react";
 import { type Armor } from "~/models/resources/equipment/armors/armor";
 import {
   armorForm,
-  armorFormDataToDB,
+  armorFormDataToResource,
 } from "~/models/resources/equipment/armors/armor-form";
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import { type LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
@@ -106,7 +106,7 @@ const ArmorsPanel = createResourcesPanel(
     form: {
       Editor: createArmorEditor(armorForm),
       form: armorForm,
-      parseFormData: armorFormDataToDB,
+      parseFormData: armorFormDataToResource,
     },
     table: {
       actions,

@@ -2,12 +2,9 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import {
   equipmentModifierFormDataSchema,
-  equipmentModifierFormDataToDB,
+  equipmentModifierFormDataToResource,
 } from "../equipment-modifier-form";
-import type {
-  DBArmorModifier,
-  DBArmorModifierTranslation,
-} from "./db-armor-modifier";
+import type { ArmorModifier } from "./armor-modifier";
 
 //------------------------------------------------------------------------------
 // Armor Modifier Form Data
@@ -19,16 +16,17 @@ export const armorModifierFormDataSchema =
 export type ArmorModifierFormData = z.infer<typeof armorModifierFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Armor Modifier Form Data To DB
+// Armor Modifier Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function armorModifierFormDataToDB(
+export function armorModifierFormDataToResource(
   data: Partial<ArmorModifierFormData>,
-): {
-  resource: Partial<DBArmorModifier>;
-  translation: Partial<DBArmorModifierTranslation>;
-} {
-  return equipmentModifierFormDataToDB(data);
+  lang: string,
+): Partial<ArmorModifier> {
+  return equipmentModifierFormDataToResource(
+    data,
+    lang,
+  ) as Partial<ArmorModifier>;
 }
 
 //------------------------------------------------------------------------------

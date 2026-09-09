@@ -2,7 +2,7 @@ import { type LocalizedSpecies } from "~/models/resources/species/localized-spec
 import { type Species } from "~/models/resources/species/species";
 import {
   speciesForm,
-  speciesFormDataToDB,
+  speciesFormDataToResource,
 } from "~/models/resources/species/species-form";
 import { speciesStore } from "~/models/resources/species/species-store";
 import { createResourcesPanel } from "../resources-panel";
@@ -49,7 +49,7 @@ const SpeciesPanel = createResourcesPanel(
     form: {
       Editor: createSpeciesEditor(speciesForm),
       form: speciesForm,
-      parseFormData: speciesFormDataToDB,
+      parseFormData: speciesFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

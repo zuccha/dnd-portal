@@ -1,10 +1,10 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import {
-  type DBCreatureTag,
-  type DBCreatureTagTranslation,
-} from "./db-creature-tag";
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { CreatureTag } from "./creature-tag";
 
 //------------------------------------------------------------------------------
 // Creature Tag Form Data
@@ -15,23 +15,14 @@ export const creatureTagFormDataSchema = resourceFormDataSchema.extend({});
 export type CreatureTagFormData = z.infer<typeof creatureTagFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Creature Tag Form Data To DB
+// Creature Tag Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function creatureTagFormDataToDB(data: Partial<CreatureTagFormData>): {
-  resource: Partial<DBCreatureTag>;
-  translation: Partial<DBCreatureTagTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-    },
-    translation: {
-      ...translation,
-    },
-  };
+export function creatureTagFormDataToResource(
+  data: Partial<CreatureTagFormData>,
+  lang: string,
+): Partial<CreatureTag> {
+  return resourceFormDataToResource(data, lang);
 }
 
 //------------------------------------------------------------------------------

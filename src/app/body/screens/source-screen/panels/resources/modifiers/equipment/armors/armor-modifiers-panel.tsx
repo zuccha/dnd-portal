@@ -1,7 +1,7 @@
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import {
   armorModifierForm,
-  armorModifierFormDataToDB,
+  armorModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/armors/armor-modifier-form";
 import { armorModifierStore } from "~/models/resources/modifiers/equipment/armors/armor-modifier-store";
 import { createEquipmentModifiersPanel } from "../equipment-modifiers-panel";
@@ -19,7 +19,7 @@ const ArmorModifiersPanel = createEquipmentModifiersPanel(
   "gray",
   {
     form: armorModifierForm,
-    parseFormData: armorModifierFormDataToDB,
+    parseFormData: armorModifierFormDataToResource,
   },
   {
     AlbumCard: ArmorModifierCard,

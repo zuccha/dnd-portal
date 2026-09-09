@@ -2,8 +2,12 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
 import { planeCategorySchema } from "../../types/plane-category";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import { type DBPlane, type DBPlaneTranslation } from "./db-plane";
+import {
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Plane } from "./plane";
 
 //------------------------------------------------------------------------------
 // Plane Form Data
@@ -17,25 +21,18 @@ export const planeFormDataSchema = resourceFormDataSchema.extend({
 export type PlaneFormData = z.infer<typeof planeFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Plane Form Data To DB
+// Plane Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function planeFormDataToDB(data: Partial<PlaneFormData>): {
-  resource: Partial<DBPlane>;
-  translation: Partial<DBPlaneTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      alignments: data.alignments,
-      category: data.category,
-    },
-    translation: {
-      ...translation,
-    },
-  };
+export function planeFormDataToResource(
+  data: Partial<PlaneFormData>,
+  lang: string,
+): Partial<Plane> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    alignments: data.alignments,
+    category: data.category,
+  });
 }
 
 //------------------------------------------------------------------------------

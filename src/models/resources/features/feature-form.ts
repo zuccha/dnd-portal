@@ -1,8 +1,13 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import { dbFeatureGrantSchema } from "./db-feature";
-import type { DBFeature, DBFeatureTranslation } from "./db-feature";
+import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Feature } from "./feature";
+import { featureGrantSchema } from "./feature-entry";
 
 //------------------------------------------------------------------------------
 // Feature Form Data
@@ -11,32 +16,25 @@ import type { DBFeature, DBFeatureTranslation } from "./db-feature";
 export const featureFormDataSchema = resourceFormDataSchema.extend({
   description: z.string().default(""),
   display_name: z.string().default(""),
-  granted_by: z.array(dbFeatureGrantSchema).default([]),
+  granted_by: z.array(featureGrantSchema).default([]),
 });
 
 export type FeatureFormData = z.infer<typeof featureFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Feature Form Data To DB
+// Feature Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function featureFormDataToDB(data: Partial<FeatureFormData>): {
-  resource: Partial<DBFeature>;
-  translation: Partial<DBFeatureTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      granted_by: data.granted_by,
-    },
-    translation: {
-      ...translation,
-      description: data.description,
-      display_name: data.display_name,
-    },
-  };
+export function featureFormDataToResource(
+  data: Partial<FeatureFormData>,
+  lang: string,
+): Partial<Feature> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    description: createResourceFormDataI18nValue(data.description, lang),
+    display_name: createResourceFormDataI18nValue(data.display_name, lang),
+    granted_by: data.granted_by,
+  });
 }
 
 //------------------------------------------------------------------------------

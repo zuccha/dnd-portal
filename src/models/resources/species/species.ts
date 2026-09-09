@@ -2,7 +2,7 @@ import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { creatureSizeSchema } from "../../types/creature-size";
 import { creatureTypeSchema } from "../../types/creature-type";
-import { dbFeatureEntrySchema } from "../features/db-feature";
+import { featureEntrySchema } from "../features/feature-entry";
 import {
   type TranslationFields,
   defaultResource,
@@ -16,7 +16,7 @@ import {
 
 export const speciesSchema = resourceSchema.extend({
   description: i18nStringSchema,
-  feature_entries: z.array(dbFeatureEntrySchema),
+  feature_entries: z.array(featureEntrySchema),
   kind: z.literal("species"),
   sizes: z.array(creatureSizeSchema).min(1),
   speed: z.number(),

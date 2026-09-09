@@ -4,7 +4,7 @@ import { type LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import { type Spell } from "~/models/resources/spells/spell";
 import {
   spellForm,
-  spellFormDataToDB,
+  spellFormDataToResource,
 } from "~/models/resources/spells/spell-form";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { createResourcesPanel } from "../resources-panel";
@@ -78,7 +78,7 @@ const SpellsPanel = createResourcesPanel(
     form: {
       Editor: createSpellEditor(spellForm),
       form: spellForm,
-      parseFormData: spellFormDataToDB,
+      parseFormData: spellFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

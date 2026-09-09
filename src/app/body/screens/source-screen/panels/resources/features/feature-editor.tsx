@@ -70,9 +70,7 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
 
     return (
       <ResourceEditor resource={resource}>
-        <DisplayNameField
-          defaultValue={resource.display_name?.[lang] ?? ""}
-        />
+        <DisplayNameField defaultValue={resource.display_name?.[lang] ?? ""} />
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
 

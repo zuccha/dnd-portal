@@ -1,11 +1,13 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
 import { characterLevelSchema } from "../../types/character-level";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import {
-  type DBEldritchInvocation,
-  type DBEldritchInvocationTranslation,
-} from "./db-eldritch-invocation";
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { EldritchInvocation } from "./eldritch-invocation";
 
 //------------------------------------------------------------------------------
 // Character Class Form Data
@@ -24,28 +26,19 @@ export type EldritchInvocationFormData = z.infer<
 >;
 
 //------------------------------------------------------------------------------
-// Character Class Form Data To DB
+// Character Class Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function eldritchInvocationFormDataToDB(
+export function eldritchInvocationFormDataToResource(
   data: Partial<EldritchInvocationFormData>,
-): {
-  resource: Partial<DBEldritchInvocation>;
-  translation: Partial<DBEldritchInvocationTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      min_warlock_level: data.min_warlock_level,
-    },
-    translation: {
-      ...translation,
-      description: data.description,
-      prerequisite: data.prerequisite,
-    },
-  };
+  lang: string,
+): Partial<EldritchInvocation> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    description: createResourceFormDataI18nValue(data.description, lang),
+    min_warlock_level: data.min_warlock_level,
+    prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
+  });
 }
 
 //------------------------------------------------------------------------------

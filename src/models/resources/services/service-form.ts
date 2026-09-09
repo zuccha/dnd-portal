@@ -2,8 +2,13 @@ import z from "zod";
 import { serviceCategorySchema } from "~/models/types/service-category";
 import { serviceCostPeriodSchema } from "~/models/types/service-cost-period";
 import { createForm } from "~/utils/form";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import { type DBService, type DBServiceTranslation } from "./db-service";
+import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Service } from "./service";
 
 //------------------------------------------------------------------------------
 // Service Form Data
@@ -22,28 +27,21 @@ export const serviceFormDataSchema = resourceFormDataSchema.extend({
 export type ServiceFormData = z.infer<typeof serviceFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Service Form Data To DB
+// Service Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function serviceFormDataToDB(data: Partial<ServiceFormData>): {
-  resource: Partial<DBService>;
-  translation: Partial<DBServiceTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      category: data.category,
-      cost: data.cost,
-      cost_period: data.cost_period,
-    },
-    translation: {
-      ...translation,
-      availability: data.availability,
-      description: data.description,
-    },
-  };
+export function serviceFormDataToResource(
+  data: Partial<ServiceFormData>,
+  lang: string,
+): Partial<Service> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    availability: createResourceFormDataI18nValue(data.availability, lang),
+    category: data.category,
+    cost: data.cost,
+    cost_period: data.cost_period,
+    description: createResourceFormDataI18nValue(data.description, lang),
+  });
 }
 
 //------------------------------------------------------------------------------

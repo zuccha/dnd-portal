@@ -4,11 +4,12 @@ import { damageTypeSchema } from "../../../types/damage-type";
 import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
 import { weaponTypeSchema } from "../../../types/weapon-type";
+import { createResourceFormDataPatch } from "../../resource-form";
 import {
   equipmentFormDataSchema,
-  equipmentFormDataToDB,
+  equipmentFormDataToResource,
 } from "../equipment-form";
-import { type DBWeapon, type DBWeaponTranslation } from "./db-weapon";
+import type { Weapon } from "./weapon";
 
 //------------------------------------------------------------------------------
 // Weapon Form Data
@@ -31,35 +32,27 @@ export const weaponFormDataSchema = equipmentFormDataSchema.extend({
 export type WeaponFormData = z.infer<typeof weaponFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Weapon Form Data To DB
+// Weapon Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function weaponFormDataToDB(data: Partial<WeaponFormData>): {
-  resource: Partial<DBWeapon>;
-  translation: Partial<DBWeaponTranslation>;
-} {
-  const { resource, translation } = equipmentFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      ammunition_ids: data.ammunition_ids,
-      damage: data.damage,
-      damage_type: data.damage_type,
-      damage_versatile: data.damage_versatile,
-      mastery: data.mastery,
-      melee: data.melee,
-      properties: data.properties,
-      range_long: data.range_long,
-      range_short: data.range_short,
-      ranged: data.ranged,
-      rarity: data.rarity,
-      type: data.type,
-    },
-    translation: {
-      ...translation,
-    },
-  };
+export function weaponFormDataToResource(
+  data: Partial<WeaponFormData>,
+  lang: string,
+): Partial<Weapon> {
+  return createResourceFormDataPatch({
+    ...equipmentFormDataToResource(data, lang),
+    ammunition_ids: data.ammunition_ids,
+    damage: data.damage,
+    damage_type: data.damage_type,
+    damage_versatile: data.damage_versatile,
+    mastery: data.mastery,
+    melee: data.melee,
+    properties: data.properties,
+    range_long: data.range_long,
+    range_short: data.range_short,
+    ranged: data.ranged,
+    type: data.type,
+  });
 }
 
 //------------------------------------------------------------------------------

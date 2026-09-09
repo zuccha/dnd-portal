@@ -1,11 +1,12 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
 import { itemTypeSchema } from "../../../types/item-type";
+import { createResourceFormDataPatch } from "../../resource-form";
 import {
   equipmentFormDataSchema,
-  equipmentFormDataToDB,
+  equipmentFormDataToResource,
 } from "../equipment-form";
-import { type DBItem, type DBItemTranslation } from "./db-item";
+import type { Item } from "./item";
 
 //------------------------------------------------------------------------------
 // Item Form Data
@@ -20,26 +21,19 @@ export const itemFormDataSchema = equipmentFormDataSchema.extend({
 export type ItemFormData = z.infer<typeof itemFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Item Form Data To DB
+// Item Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function itemFormDataToDB(data: Partial<ItemFormData>): {
-  resource: Partial<DBItem>;
-  translation: Partial<DBItemTranslation>;
-} {
-  const { resource, translation } = equipmentFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      charges: data.charges ?? null,
-      consumable: data.consumable,
-      type: data.type,
-    },
-    translation: {
-      ...translation,
-    },
-  };
+export function itemFormDataToResource(
+  data: Partial<ItemFormData>,
+  lang: string,
+): Partial<Item> {
+  return createResourceFormDataPatch({
+    ...equipmentFormDataToResource(data, lang),
+    charges: data.charges === undefined ? undefined : (data.charges ?? null),
+    consumable: data.consumable,
+    type: data.type,
+  });
 }
 
 //------------------------------------------------------------------------------

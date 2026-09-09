@@ -2,7 +2,7 @@ import { type LocalizedVehicle } from "~/models/resources/vehicles/localized-veh
 import { type Vehicle } from "~/models/resources/vehicles/vehicle";
 import {
   vehicleForm,
-  vehicleFormDataToDB,
+  vehicleFormDataToResource,
 } from "~/models/resources/vehicles/vehicle-form";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
 import { createResourcesPanel } from "../resources-panel";
@@ -79,7 +79,7 @@ const VehiclesPanel = createResourcesPanel(
     form: {
       Editor: createVehicleEditor(vehicleForm),
       form: vehicleForm,
-      parseFormData: vehicleFormDataToDB,
+      parseFormData: vehicleFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

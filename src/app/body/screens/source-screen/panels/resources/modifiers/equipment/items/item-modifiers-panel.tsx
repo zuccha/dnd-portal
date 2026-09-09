@@ -1,7 +1,7 @@
 import { itemStore } from "~/models/resources/equipment/items/item-store";
 import {
   itemModifierForm,
-  itemModifierFormDataToDB,
+  itemModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/items/item-modifier-form";
 import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/item-modifier-store";
 import { createEquipmentModifiersPanel } from "../equipment-modifiers-panel";
@@ -19,7 +19,7 @@ const ItemModifiersPanel = createEquipmentModifiersPanel(
   "teal",
   {
     form: itemModifierForm,
-    parseFormData: itemModifierFormDataToDB,
+    parseFormData: itemModifierFormDataToResource,
   },
   {
     AlbumCard: ItemModifierCard,

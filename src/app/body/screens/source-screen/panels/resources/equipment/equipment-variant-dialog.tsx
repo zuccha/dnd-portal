@@ -14,20 +14,12 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import {
   addEquipmentVariant,
   createEquipmentVariant,
 } from "~/models/resources/equipment/equipment-variant";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
-import type {
-  DBEquipmentModifier,
-  DBEquipmentModifierTranslation,
-} from "~/models/resources/modifiers/equipment/db-equipment-modifier";
 import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
 import type { EquipmentModifierFilters } from "~/models/resources/modifiers/equipment/equipment-modifier-filters";
 import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
@@ -56,17 +48,10 @@ export function createEquipmentVariantDialog<
   E extends Equipment,
   L extends LocalizedResource<E>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
   EM extends EquipmentModifier,
   EML extends LocalizedEquipmentModifier<EM>,
   EMF extends EquipmentModifierFilters,
-  DBEM extends DBEquipmentModifier,
-  DBTM extends DBEquipmentModifierTranslation,
->(
-  store: ResourceStore<E, L, F, DBR, DBT>,
-  modifierStore: ResourceStore<EM, EML, EMF, DBEM, DBTM>,
-) {
+>(store: ResourceStore<E, L, F>, modifierStore: ResourceStore<EM, EML, EMF>) {
   const pendingEquipmentVariantStore =
     createMemoryStore<EquipmentVariantRequest<E> | null>(
       `equipment_variant_dialog[${store.kind}].pending`,

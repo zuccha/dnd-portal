@@ -8,10 +8,6 @@ import {
   type PrintDeckEntryInput,
   printDeck,
 } from "~/models/print-deck/print-deck-store";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -36,9 +32,7 @@ export function createResourcesActions<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
->(store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
+>(store: ResourceStore<R, L, F>, context: ResourcesContext<R>) {
   const {
     useFilteredResourceIds,
     useResourcesSelectionMethods,

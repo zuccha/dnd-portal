@@ -1,7 +1,7 @@
 import { type Language } from "~/models/resources/languages/language";
 import {
   languageForm,
-  languageFormDataToDB,
+  languageFormDataToResource,
 } from "~/models/resources/languages/language-form";
 import { languageStore } from "~/models/resources/languages/language-store";
 import { type LocalizedLanguage } from "~/models/resources/languages/localized-language";
@@ -43,7 +43,7 @@ const LanguagesPanel = createResourcesPanel(
     form: {
       Editor: createLanguageEditor(languageForm),
       form: languageForm,
-      parseFormData: languageFormDataToDB,
+      parseFormData: languageFormDataToResource,
     },
     table: { columns },
   },

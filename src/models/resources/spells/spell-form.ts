@@ -5,8 +5,13 @@ import { spellDurationSchema } from "../../types/spell-duration";
 import { spellLevelSchema } from "../../types/spell-level";
 import { spellRangeSchema } from "../../types/spell-range";
 import { spellSchoolSchema } from "../../types/spell-school";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import { type DBSpell, type DBSpellTranslation } from "./db-spell";
+import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Spell } from "./spell";
 
 //------------------------------------------------------------------------------
 // Spell Form Data
@@ -35,40 +40,33 @@ export const spellFormDataSchema = resourceFormDataSchema.extend({
 export type SpellFormData = z.infer<typeof spellFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Spell Form Data To DB
+// Spell Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function spellFormDataToDB(data: Partial<SpellFormData>): {
-  resource: Partial<DBSpell>;
-  translation: Partial<DBSpellTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      casting_time: data.casting_time,
-      casting_time_value: data.casting_time_value,
-      character_class_ids: data.character_class_ids,
-      concentration: data.concentration,
-      duration: data.duration,
-      duration_value: data.duration_value,
-      level: data.level,
-      material: data.material,
-      range: data.range,
-      range_value: data.range_value,
-      ritual: data.ritual,
-      school: data.school,
-      somatic: data.somatic,
-      verbal: data.verbal,
-    },
-    translation: {
-      ...translation,
-      description: data.description,
-      materials: data.materials,
-      upgrade: data.upgrade,
-    },
-  };
+export function spellFormDataToResource(
+  data: Partial<SpellFormData>,
+  lang: string,
+): Partial<Spell> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    casting_time: data.casting_time,
+    casting_time_value: data.casting_time_value,
+    character_class_ids: data.character_class_ids,
+    concentration: data.concentration,
+    description: createResourceFormDataI18nValue(data.description, lang),
+    duration: data.duration,
+    duration_value: data.duration_value,
+    level: data.level,
+    material: data.material,
+    materials: createResourceFormDataI18nValue(data.materials, lang),
+    range: data.range,
+    range_value: data.range_value,
+    ritual: data.ritual,
+    school: data.school,
+    somatic: data.somatic,
+    upgrade: createResourceFormDataI18nValue(data.upgrade, lang),
+    verbal: data.verbal,
+  });
 }
 
 //------------------------------------------------------------------------------

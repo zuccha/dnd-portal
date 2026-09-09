@@ -7,7 +7,7 @@ import {
 } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
 import { useLocalizeSpell } from "./localized-spell";
-import { defaultSpell } from "./spell";
+import { defaultSpell, spellTranslationFields } from "./spell";
 import {
   defaultSpellFilters,
   spellFiltersSchema,
@@ -42,5 +42,6 @@ export const spellStore = createResourceStore("spell", {
       filters.character_class_ids,
     ),
   orderOptions: spellOrderOptions,
+  translationFields: spellTranslationFields,
   useLocalizeResource: useLocalizeSpell,
 });

@@ -8,7 +8,7 @@ import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { featStore } from "~/models/resources/feats/feat-store";
-import type { DBFeatureGrant } from "~/models/resources/features/db-feature";
+import type { FeatureGrant } from "~/models/resources/features/feature-entry";
 import type { ResourceOption } from "~/models/resources/resource";
 import { speciesStore } from "~/models/resources/species/species-store";
 import {
@@ -28,9 +28,9 @@ import { normalizeString } from "~/utils/string";
 //------------------------------------------------------------------------------
 
 export type FeatureGrantedByEditorProps = StackProps & {
-  onValueChange: (grantedBy: DBFeatureGrant[]) => void;
+  onValueChange: (grantedBy: FeatureGrant[]) => void;
   sourceId: string;
-  value: DBFeatureGrant[];
+  value: FeatureGrant[];
   withinDialog?: boolean;
 };
 

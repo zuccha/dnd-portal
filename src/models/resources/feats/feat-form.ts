@@ -2,9 +2,14 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import { characterLevelSchema } from "../../types/character-level";
 import { featCategorySchema } from "../../types/feat-category";
-import { dbFeatureEntrySchema } from "../features/db-feature";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import type { DBFeat, DBFeatTranslation } from "./db-feat";
+import { featureEntrySchema } from "../features/feature-entry";
+import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Feat } from "./feat";
 
 //------------------------------------------------------------------------------
 // Feat Form Data
@@ -13,7 +18,7 @@ import type { DBFeat, DBFeatTranslation } from "./db-feat";
 export const featFormDataSchema = resourceFormDataSchema.extend({
   category: featCategorySchema.default("general"),
   description: z.string().default(""),
-  feature_entries: z.array(dbFeatureEntrySchema).default([]),
+  feature_entries: z.array(featureEntrySchema).default([]),
   min_level: characterLevelSchema.default(0),
   prerequisite: z.string().default(""),
 });
@@ -21,28 +26,21 @@ export const featFormDataSchema = resourceFormDataSchema.extend({
 export type FeatFormData = z.infer<typeof featFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Feat Form Data To DB
+// Feat Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function featFormDataToDB(data: Partial<FeatFormData>): {
-  resource: Partial<DBFeat>;
-  translation: Partial<DBFeatTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      category: data.category,
-      feature_entries: data.feature_entries,
-      min_level: data.min_level,
-    },
-    translation: {
-      ...translation,
-      description: data.description,
-      prerequisite: data.prerequisite,
-    },
-  };
+export function featFormDataToResource(
+  data: Partial<FeatFormData>,
+  lang: string,
+): Partial<Feat> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    category: data.category,
+    description: createResourceFormDataI18nValue(data.description, lang),
+    feature_entries: data.feature_entries,
+    min_level: data.min_level,
+    prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
+  });
 }
 
 //------------------------------------------------------------------------------

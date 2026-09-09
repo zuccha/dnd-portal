@@ -1,7 +1,7 @@
 import { matchesInclusion } from "../../resource-filtering";
 import { createEquipmentStore, matchesEquipment } from "../equipment-store";
 import { useLocalizeTool } from "./localized-tool";
-import { defaultTool } from "./tool";
+import { defaultTool, toolTranslationFields } from "./tool";
 import {
   defaultToolFilters,
   toolFiltersSchema,
@@ -22,5 +22,6 @@ export const toolStore = createEquipmentStore("tool", {
     matchesInclusion(tool.ability, filters.abilities) &&
     matchesInclusion(tool.type, filters.types),
   orderOptions: toolOrderOptions,
+  translationFields: toolTranslationFields,
   useLocalizeEquipment: useLocalizeTool,
 });

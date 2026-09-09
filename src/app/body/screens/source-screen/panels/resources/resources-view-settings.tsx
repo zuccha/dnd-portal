@@ -1,10 +1,6 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type {
-  DBResource,
-  DBResourceTranslation,
-} from "~/models/resources/db-resource";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -30,9 +26,7 @@ export function createResourcesViewSettings<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
->(_store: ResourceStore<R, L, F, DBR, DBT>, context: ResourcesContext<R>) {
+>(_store: ResourceStore<R, L, F>, context: ResourcesContext<R>) {
   const { useCardMode, usePaletteName, useShowImage, useView, useZoom } =
     context;
 

@@ -1,13 +1,12 @@
 import type { Resource } from "~/models/resources/resource";
+import type { TranslationFields } from "~/models/resources/resource";
+import { mergeResourcePatch } from "~/models/resources/resource-patch";
 
 //------------------------------------------------------------------------------
 // Resource Editor Preview Patch
 //------------------------------------------------------------------------------
 
-export type ResourceEditorPreviewPatch = {
-  resource: Record<string, unknown>;
-  translation: Record<string, unknown>;
-};
+export type ResourceEditorPreviewPatch<R extends Resource> = Partial<R>;
 
 //------------------------------------------------------------------------------
 // Apply Resource Editor Preview Patch
@@ -15,27 +14,8 @@ export type ResourceEditorPreviewPatch = {
 
 export function applyResourceEditorPreviewPatch<R extends Resource>(
   resource: R,
-  lang: string,
-  patch: ResourceEditorPreviewPatch,
+  patch: ResourceEditorPreviewPatch<R>,
+  translationFields: TranslationFields<R>[],
 ): R {
-  const nextResource: Record<string, unknown> = structuredClone(resource);
-
-  for (const [key, value] of Object.entries(patch.resource)) {
-    if (value !== undefined) nextResource[key] = value;
-  }
-
-  for (const [key, value] of Object.entries(patch.translation)) {
-    if (value === undefined) continue;
-
-    const previous = nextResource[key];
-    const translations =
-      previous && typeof previous === "object" && !Array.isArray(previous) ?
-        { ...(previous as Record<string, unknown>) }
-      : {};
-
-    translations[lang] = value;
-    nextResource[key] = translations;
-  }
-
-  return nextResource as R;
+  return mergeResourcePatch(resource, patch, translationFields);
 }

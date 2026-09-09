@@ -1,7 +1,7 @@
 import { type CharacterClass } from "~/models/resources/character-classes/character-class";
 import {
   characterClassForm,
-  characterClassFormDataToDB,
+  characterClassFormDataToResource,
 } from "~/models/resources/character-classes/character-class-form";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { type LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
@@ -64,7 +64,7 @@ const CharacterClassesPanel = createResourcesPanel(
     form: {
       Editor: createCharacterClassEditor(characterClassForm),
       form: characterClassForm,
-      parseFormData: characterClassFormDataToDB,
+      parseFormData: characterClassFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

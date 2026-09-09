@@ -65,14 +65,14 @@ function PrintDeckEditorDialogLoaded({
 
   const updateEntry = useCallback(
     async (data: Partial<Record<string, unknown>>) => {
-      const errorOrPatch = parseFormData(data);
+      const errorOrPatch = parseFormData(data, entry.lang);
       if (typeof errorOrPatch === "string") return errorOrPatch;
 
       const nextRawResource = resourceUnionSchema.parse(
         applyResourceEditorPreviewPatch(
           entry.localized_resource._raw,
-          entry.lang,
           errorOrPatch,
+          registryEntry.translationFields,
         ),
       );
       const nextLocalizedResource = localizeResource(nextRawResource);
@@ -84,7 +84,7 @@ function PrintDeckEditorDialogLoaded({
 
       return undefined;
     },
-    [entry, localizeResource, parseFormData],
+    [entry, localizeResource, parseFormData, registryEntry.translationFields],
   );
 
   const [submit, saving] = form.useSubmit(updateEntry);
@@ -143,18 +143,24 @@ function PrintDeckEditorDialogPreview({ entry }: { entry: PrintDeckEntry }) {
   const formData = form.useData();
 
   const previewLocalizedResource = useMemo(() => {
-    const errorOrPatch = parseFormData(formData);
+    const errorOrPatch = parseFormData(formData, entry.lang);
     if (typeof errorOrPatch === "string") return entry.localized_resource;
 
     const nextRawResource = resourceUnionSchema.parse(
       applyResourceEditorPreviewPatch(
         entry.localized_resource._raw,
-        entry.lang,
         errorOrPatch,
+        registryEntry.translationFields,
       ),
     );
     return localizeResource(nextRawResource);
-  }, [entry, formData, localizeResource, parseFormData]);
+  }, [
+    entry,
+    formData,
+    localizeResource,
+    parseFormData,
+    registryEntry.translationFields,
+  ]);
 
   return (
     <ResourceCardPreview

@@ -3,7 +3,6 @@ import { createForm } from "~/utils/form";
 import {
   defaultEquipmentBundle,
   equipmentBundleSchema,
-  equipmentBundleToEntries,
 } from "../../other/equipment-bundle";
 import { languageEntrySchema } from "../../other/language-entries";
 import { creatureAbilitySchema } from "../../types/creature-ability";
@@ -17,8 +16,13 @@ import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { damageTypeSchema } from "../../types/damage-type";
 import { languageScopeSchema } from "../../types/language-scope";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import { type DBCreature, type DBCreatureTranslation } from "./db-creature";
+import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Creature } from "./creature";
 
 //------------------------------------------------------------------------------
 // Creature Form Data
@@ -85,78 +89,74 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
 export type CreatureFormData = z.infer<typeof creatureFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Creature Form Data To DB
+// Creature Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function creatureFormDataToDB(data: Partial<CreatureFormData>): {
-  resource: Partial<DBCreature>;
-  translation: Partial<DBCreatureTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      ability_cha: data.ability_cha,
-      ability_con: data.ability_con,
-      ability_dex: data.ability_dex,
-      ability_int: data.ability_int,
-      ability_proficiencies: data.ability_proficiencies,
-      ability_str: data.ability_str,
-      ability_wis: data.ability_wis,
-      ac: data.ac,
-      alignment: data.alignment,
-      blindsight: data.blindsight,
-      condition_immunities: data.condition_immunities,
-      condition_resistances: data.condition_resistances,
-      condition_vulnerabilities: data.condition_vulnerabilities,
-      cr: data.cr,
-      damage_immunities: data.damage_immunities,
-      damage_resistances: data.damage_resistances,
-      damage_vulnerabilities: data.damage_vulnerabilities,
-      darkvision: data.darkvision,
-      equipment_entries: data.gear && equipmentBundleToEntries(data.gear),
-      exp: data.exp,
-      habitats: data.habitats,
-      has_lair: data.has_lair,
-      hover: data.hover,
-      hp: data.hp,
-      hp_formula: data.hp_formula,
-      initiative: data.initiative,
-      lair_exp: data.lair_exp,
-      lair_legendary_actions_count: data.lair_legendary_actions_count,
-      language_additional_count: data.language_additional_count,
-      language_entries: data.language_entries,
-      language_scope: data.language_scope,
-      legendary_actions_count: data.legendary_actions_count,
-      passive_perception: data.passive_perception,
-      pb: data.pb,
-      plane_ids: data.plane_ids,
-      size: data.size,
-      skill_expertise: data.skill_expertise,
-      skill_proficiencies: data.skill_proficiencies,
-      speed_burrow: data.speed_burrow,
-      speed_climb: data.speed_climb,
-      speed_fly: data.speed_fly,
-      speed_swim: data.speed_swim,
-      speed_walk: data.speed_walk,
-      tag_ids: data.tag_ids,
-      telepathy_range: data.telepathy_range,
-      treasures: data.treasures,
-      tremorsense: data.tremorsense,
-      truesight: data.truesight,
-      type: data.type,
-    },
-    translation: {
-      ...translation,
-      actions: data.actions,
-      bonus_actions: data.bonus_actions,
-      lair_effects: data.lair_effects,
-      legendary_actions: data.legendary_actions,
-      reactions: data.reactions,
-      traits: data.traits,
-    },
-  };
+export function creatureFormDataToResource(
+  data: Partial<CreatureFormData>,
+  lang: string,
+): Partial<Creature> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    ability_cha: data.ability_cha,
+    ability_con: data.ability_con,
+    ability_dex: data.ability_dex,
+    ability_int: data.ability_int,
+    ability_proficiencies: data.ability_proficiencies,
+    ability_str: data.ability_str,
+    ability_wis: data.ability_wis,
+    ac: data.ac,
+    actions: createResourceFormDataI18nValue(data.actions, lang),
+    alignment: data.alignment,
+    blindsight: data.blindsight,
+    bonus_actions: createResourceFormDataI18nValue(data.bonus_actions, lang),
+    condition_immunities: data.condition_immunities,
+    condition_resistances: data.condition_resistances,
+    condition_vulnerabilities: data.condition_vulnerabilities,
+    cr: data.cr,
+    damage_immunities: data.damage_immunities,
+    damage_resistances: data.damage_resistances,
+    damage_vulnerabilities: data.damage_vulnerabilities,
+    darkvision: data.darkvision,
+    exp: data.exp,
+    gear: data.gear,
+    habitats: data.habitats,
+    has_lair: data.has_lair,
+    hover: data.hover,
+    hp: data.hp,
+    hp_formula: data.hp_formula,
+    initiative: data.initiative,
+    lair_effects: createResourceFormDataI18nValue(data.lair_effects, lang),
+    lair_exp: data.lair_exp,
+    lair_legendary_actions_count: data.lair_legendary_actions_count,
+    language_additional_count: data.language_additional_count,
+    language_entries: data.language_entries,
+    language_scope: data.language_scope,
+    legendary_actions: createResourceFormDataI18nValue(
+      data.legendary_actions,
+      lang,
+    ),
+    legendary_actions_count: data.legendary_actions_count,
+    passive_perception: data.passive_perception,
+    pb: data.pb,
+    plane_ids: data.plane_ids,
+    reactions: createResourceFormDataI18nValue(data.reactions, lang),
+    size: data.size,
+    skill_expertise: data.skill_expertise,
+    skill_proficiencies: data.skill_proficiencies,
+    speed_burrow: data.speed_burrow,
+    speed_climb: data.speed_climb,
+    speed_fly: data.speed_fly,
+    speed_swim: data.speed_swim,
+    speed_walk: data.speed_walk,
+    tag_ids: data.tag_ids,
+    telepathy_range: data.telepathy_range,
+    traits: createResourceFormDataI18nValue(data.traits, lang),
+    treasures: data.treasures,
+    tremorsense: data.tremorsense,
+    truesight: data.truesight,
+    type: data.type,
+  });
 }
 
 //------------------------------------------------------------------------------

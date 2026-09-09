@@ -1,7 +1,7 @@
 import type { Feature } from "~/models/resources/features/feature";
 import {
   featureForm,
-  featureFormDataToDB,
+  featureFormDataToResource,
 } from "~/models/resources/features/feature-form";
 import { featureStore } from "~/models/resources/features/feature-store";
 import type { LocalizedFeature } from "~/models/resources/features/localized-feature";
@@ -35,7 +35,7 @@ const FeaturesPanel = createResourcesPanel(
     form: {
       Editor: createFeatureEditor(featureForm),
       form: featureForm,
-      parseFormData: featureFormDataToDB,
+      parseFormData: featureFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

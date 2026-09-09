@@ -1,10 +1,12 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
 import {
-  type DBMetamagic,
-  type DBMetamagicTranslation,
-} from "./db-metamagic";
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Metamagic } from "./metamagic";
 
 //------------------------------------------------------------------------------
 // Metamagic Form Data
@@ -21,26 +23,19 @@ export const metamagicFormDataSchema = resourceFormDataSchema.extend({
 export type MetamagicFormData = z.infer<typeof metamagicFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Metamagic Form Data To DB
+// Metamagic Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function metamagicFormDataToDB(data: Partial<MetamagicFormData>): {
-  resource: Partial<DBMetamagic>;
-  translation: Partial<DBMetamagicTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      sorcery_points: data.sorcery_points,
-    },
-    translation: {
-      ...translation,
-      description: data.description,
-      prerequisite: data.prerequisite,
-    },
-  };
+export function metamagicFormDataToResource(
+  data: Partial<MetamagicFormData>,
+  lang: string,
+): Partial<Metamagic> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    description: createResourceFormDataI18nValue(data.description, lang),
+    prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
+    sorcery_points: data.sorcery_points,
+  });
 }
 
 //------------------------------------------------------------------------------

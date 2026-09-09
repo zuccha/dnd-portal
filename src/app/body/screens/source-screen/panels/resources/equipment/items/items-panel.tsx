@@ -3,7 +3,7 @@ import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equi
 import { type Item } from "~/models/resources/equipment/items/item";
 import {
   itemForm,
-  itemFormDataToDB,
+  itemFormDataToResource,
 } from "~/models/resources/equipment/items/item-form";
 import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { type LocalizedItem } from "~/models/resources/equipment/items/localized-item";
@@ -114,7 +114,7 @@ const ItemsPanel = createResourcesPanel(
     form: {
       Editor: createItemEditor(itemForm),
       form: itemForm,
-      parseFormData: itemFormDataToDB,
+      parseFormData: itemFormDataToResource,
     },
     table: {
       actions,

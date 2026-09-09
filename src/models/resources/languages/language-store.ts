@@ -1,6 +1,6 @@
 import { matchesInclusion } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
-import { defaultLanguage } from "./language";
+import { defaultLanguage, languageTranslationFields } from "./language";
 import {
   defaultLanguageFilters,
   languageFiltersSchema,
@@ -20,5 +20,6 @@ export const languageStore = createResourceStore("language", {
   matchesResource: (language, filters) =>
     matchesInclusion(language.rarity, filters.rarity),
   orderOptions: languageOrderOptions,
+  translationFields: languageTranslationFields,
   useLocalizeResource: useLocalizeLanguage,
 });

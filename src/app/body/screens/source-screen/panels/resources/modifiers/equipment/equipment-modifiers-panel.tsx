@@ -1,14 +1,10 @@
 import { WandIcon } from "lucide-react";
-import type {
-  DBEquipmentModifier,
-  DBEquipmentModifierTranslation,
-} from "~/models/resources/modifiers/equipment/db-equipment-modifier";
 import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
 import type { EquipmentModifierFilters } from "~/models/resources/modifiers/equipment/equipment-modifier-filters";
 import {
   type EquipmentModifierFormData,
   equipmentModifierForm,
-  equipmentModifierFormDataToDB,
+  equipmentModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/equipment-modifier-form";
 import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import type { ResourceOption } from "~/models/resources/resource";
@@ -75,27 +71,20 @@ export function createEquipmentModifiersPanel<
   R extends EquipmentModifier,
   L extends LocalizedEquipmentModifier<R>,
   F extends EquipmentModifierFilters,
-  DBR extends DBEquipmentModifier,
-  DBT extends DBEquipmentModifierTranslation,
   FF extends EquipmentModifierFormData,
 >(
-  modifierStore: ResourceStore<R, L, F, DBR, DBT>,
+  modifierStore: ResourceStore<R, L, F>,
   supportedEquipmentStore: SupportedEquipmentOptionsStore,
   initialPaletteName: PaletteName,
   formOptions: {
     form: Form<FF>;
-    parseFormData: (data: Partial<FF>) => {
-      resource: Partial<DBR>;
-      translation: Partial<DBT>;
-    };
+    parseFormData: (data: Partial<FF>, lang: string) => Partial<R>;
   } = {
     form: equipmentModifierForm as unknown as Form<FF>,
-    parseFormData: equipmentModifierFormDataToDB as unknown as (
+    parseFormData: equipmentModifierFormDataToResource as unknown as (
       data: Partial<FF>,
-    ) => {
-      resource: Partial<DBR>;
-      translation: Partial<DBT>;
-    },
+      lang: string,
+    ) => Partial<R>,
   },
   uiOptions: {
     AlbumCard?: ResourcesAlbumExtra<R, L>["AlbumCard"];

@@ -1,7 +1,7 @@
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import {
   weaponModifierForm,
-  weaponModifierFormDataToDB,
+  weaponModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-form";
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
 import { createEquipmentModifiersPanel } from "../equipment-modifiers-panel";
@@ -19,7 +19,7 @@ const WeaponModifiersPanel = createEquipmentModifiersPanel(
   "brick",
   {
     form: weaponModifierForm,
-    parseFormData: weaponModifierFormDataToDB,
+    parseFormData: weaponModifierFormDataToResource,
   },
   {
     AlbumCard: WeaponModifierCard,

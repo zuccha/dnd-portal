@@ -1,6 +1,6 @@
 import { createResourceStore } from "../resource-store";
 import { useLocalizeManeuver } from "./localized-maneuver";
-import { defaultManeuver } from "./maneuver";
+import { defaultManeuver, maneuverTranslationFields } from "./maneuver";
 import {
   defaultManeuverFilters,
   maneuverFiltersSchema,
@@ -17,5 +17,6 @@ export const maneuverStore = createResourceStore("maneuver", {
   displayName: { en: "Maneuvers", it: "Manovre" },
   filtersSchema: maneuverFiltersSchema,
   orderOptions: maneuverOrderOptions,
+  translationFields: maneuverTranslationFields,
   useLocalizeResource: useLocalizeManeuver,
 });

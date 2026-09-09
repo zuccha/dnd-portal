@@ -1,11 +1,23 @@
 import z from "zod";
 import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
 import { createForm } from "~/utils/form";
-import { modifierFormDataSchema, modifierFormDataToDB } from "../modifier-form";
-import type {
-  DBEquipmentModifier,
-  DBEquipmentModifierTranslation,
-} from "./db-equipment-modifier";
+import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+} from "../../resource-form";
+import {
+  modifierFormDataSchema,
+  modifierFormDataToResource,
+} from "../modifier-form";
+import type { EquipmentModifier } from "./equipment-modifier";
+
+//------------------------------------------------------------------------------
+// Equipment Modifier Form Data Patch
+//------------------------------------------------------------------------------
+
+export type EquipmentModifierFormDataPatch = Partial<
+  Omit<EquipmentModifier, "kind">
+>;
 
 //------------------------------------------------------------------------------
 // Equipment Modifier Form Data
@@ -27,33 +39,27 @@ export type EquipmentModifierFormData = z.infer<
 >;
 
 //------------------------------------------------------------------------------
-// Equipment Modifier Form Data To DB
+// Equipment Modifier Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function equipmentModifierFormDataToDB(
+export function equipmentModifierFormDataToResource(
   data: Partial<EquipmentModifierFormData>,
-): {
-  resource: Partial<DBEquipmentModifier>;
-  translation: Partial<DBEquipmentModifierTranslation>;
-} {
-  const { resource, translation } = modifierFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      cost_delta: data.cost_delta,
-      equipment_ids: data.equipment_ids,
-      make_magic: data.make_magic,
-      rarity_minimum: data.rarity_minimum,
-      required_attunement_slots_minimum: data.required_attunement_slots_minimum,
-      weight_delta: data.weight_delta,
-    },
-    translation: {
-      ...translation,
-      attunement_notes_delta: data.attunement_notes_delta,
-      notes_delta: data.notes_delta,
-    },
-  };
+  lang: string,
+): EquipmentModifierFormDataPatch {
+  return createResourceFormDataPatch({
+    ...modifierFormDataToResource(data, lang),
+    attunement_notes_delta: createResourceFormDataI18nValue(
+      data.attunement_notes_delta,
+      lang,
+    ),
+    cost_delta: data.cost_delta,
+    equipment_ids: data.equipment_ids,
+    make_magic: data.make_magic,
+    notes_delta: createResourceFormDataI18nValue(data.notes_delta, lang),
+    rarity_minimum: data.rarity_minimum,
+    required_attunement_slots_minimum: data.required_attunement_slots_minimum,
+    weight_delta: data.weight_delta,
+  });
 }
 
 //------------------------------------------------------------------------------

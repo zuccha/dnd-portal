@@ -1,11 +1,12 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
 import { armorTypeSchema } from "../../../types/armor-type";
+import { createResourceFormDataPatch } from "../../resource-form";
 import {
   equipmentFormDataSchema,
-  equipmentFormDataToDB,
+  equipmentFormDataToResource,
 } from "../equipment-form";
-import { type DBArmor, type DBArmorTranslation } from "./db-armor";
+import type { Armor } from "./armor";
 
 //------------------------------------------------------------------------------
 // Armor Form Data
@@ -39,57 +40,56 @@ export const armorFormDataSchema = equipmentFormDataSchema.extend({
 export type ArmorFormData = z.infer<typeof armorFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Armor Form Data To DB
+// Armor Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function armorFormDataToDB(data: Partial<ArmorFormData>): {
-  resource: Partial<DBArmor>;
-  translation: Partial<DBArmorTranslation>;
-} {
-  const { resource, translation } = equipmentFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      armor_class_max_cha_modifier:
-        data.armor_class_includes_cha_modifier ?
-          data.armor_class_max_cha_modifier
-        : null,
-      armor_class_max_con_modifier:
-        data.armor_class_includes_con_modifier ?
-          data.armor_class_max_con_modifier
-        : null,
-      armor_class_max_dex_modifier:
-        data.armor_class_includes_dex_modifier ?
-          data.armor_class_max_dex_modifier
-        : null,
-      armor_class_max_int_modifier:
-        data.armor_class_includes_int_modifier ?
-          data.armor_class_max_int_modifier
-        : null,
-      armor_class_max_str_modifier:
-        data.armor_class_includes_str_modifier ?
-          data.armor_class_max_str_modifier
-        : null,
-      armor_class_max_wis_modifier:
-        data.armor_class_includes_wis_modifier ?
-          data.armor_class_max_wis_modifier
-        : null,
-      armor_class_modifier: data.armor_class_modifier,
-      base_armor_class: data.base_armor_class,
-      disadvantage_on_stealth: data.disadvantage_on_stealth,
-      required_cha: data.required_cha,
-      required_con: data.required_con,
-      required_dex: data.required_dex,
-      required_int: data.required_int,
-      required_str: data.required_str,
-      required_wis: data.required_wis,
-      type: data.type,
-    },
-    translation: {
-      ...translation,
-    },
-  };
+export function armorFormDataToResource(
+  data: Partial<ArmorFormData>,
+  lang: string,
+): Partial<Armor> {
+  return createResourceFormDataPatch({
+    ...equipmentFormDataToResource(data, lang),
+    armor_class_max_cha_modifier:
+      data.armor_class_includes_cha_modifier === undefined ? undefined
+      : data.armor_class_includes_cha_modifier ?
+        data.armor_class_max_cha_modifier
+      : null,
+    armor_class_max_con_modifier:
+      data.armor_class_includes_con_modifier === undefined ? undefined
+      : data.armor_class_includes_con_modifier ?
+        data.armor_class_max_con_modifier
+      : null,
+    armor_class_max_dex_modifier:
+      data.armor_class_includes_dex_modifier === undefined ? undefined
+      : data.armor_class_includes_dex_modifier ?
+        data.armor_class_max_dex_modifier
+      : null,
+    armor_class_max_int_modifier:
+      data.armor_class_includes_int_modifier === undefined ? undefined
+      : data.armor_class_includes_int_modifier ?
+        data.armor_class_max_int_modifier
+      : null,
+    armor_class_max_str_modifier:
+      data.armor_class_includes_str_modifier === undefined ? undefined
+      : data.armor_class_includes_str_modifier ?
+        data.armor_class_max_str_modifier
+      : null,
+    armor_class_max_wis_modifier:
+      data.armor_class_includes_wis_modifier === undefined ? undefined
+      : data.armor_class_includes_wis_modifier ?
+        data.armor_class_max_wis_modifier
+      : null,
+    armor_class_modifier: data.armor_class_modifier,
+    base_armor_class: data.base_armor_class,
+    disadvantage_on_stealth: data.disadvantage_on_stealth,
+    required_cha: data.required_cha,
+    required_con: data.required_con,
+    required_dex: data.required_dex,
+    required_int: data.required_int,
+    required_str: data.required_str,
+    required_wis: data.required_wis,
+    type: data.type,
+  });
 }
 
 //------------------------------------------------------------------------------

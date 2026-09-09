@@ -1,11 +1,12 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import { dbFeatureEntrySchema } from "../features/db-feature";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import type {
-  DBCharacterSubclass,
-  DBCharacterSubclassTranslation,
-} from "./db-character-subclass";
+import { featureEntrySchema } from "../features/feature-entry";
+import {
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { CharacterSubclass } from "./character-subclass";
 
 //------------------------------------------------------------------------------
 // Character Subclass Form Data
@@ -13,7 +14,7 @@ import type {
 
 export const characterSubclassFormDataSchema = resourceFormDataSchema.extend({
   character_class_id: z.uuid(),
-  feature_entries: z.array(dbFeatureEntrySchema).default([]),
+  feature_entries: z.array(featureEntrySchema).default([]),
 });
 
 export type CharacterSubclassFormData = z.infer<
@@ -21,27 +22,18 @@ export type CharacterSubclassFormData = z.infer<
 >;
 
 //------------------------------------------------------------------------------
-// Character Subclass Form Data To DB
+// Character Subclass Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function characterSubclassFormDataToDB(
+export function characterSubclassFormDataToResource(
   data: Partial<CharacterSubclassFormData>,
-): {
-  resource: Partial<DBCharacterSubclass>;
-  translation: Partial<DBCharacterSubclassTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      character_class_id: data.character_class_id,
-      feature_entries: data.feature_entries,
-    },
-    translation: {
-      ...translation,
-    },
-  };
+  lang: string,
+): Partial<CharacterSubclass> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    character_class_id: data.character_class_id,
+    feature_entries: data.feature_entries,
+  });
 }
 
 //------------------------------------------------------------------------------

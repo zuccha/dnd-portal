@@ -1,5 +1,8 @@
 import { type Feat } from "~/models/resources/feats/feat";
-import { featForm, featFormDataToDB } from "~/models/resources/feats/feat-form";
+import {
+  featForm,
+  featFormDataToResource,
+} from "~/models/resources/feats/feat-form";
 import { featStore } from "~/models/resources/feats/feat-store";
 import { type LocalizedFeat } from "~/models/resources/feats/localized-feat";
 import { createResourcesPanel } from "../resources-panel";
@@ -46,7 +49,7 @@ const FeatsPanel = createResourcesPanel(
     form: {
       Editor: createFeatEditor(featForm),
       form: featForm,
-      parseFormData: featFormDataToDB,
+      parseFormData: featFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

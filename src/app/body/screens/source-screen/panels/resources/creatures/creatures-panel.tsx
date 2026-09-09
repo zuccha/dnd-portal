@@ -1,7 +1,7 @@
 import { type Creature } from "~/models/resources/creatures/creature";
 import {
   creatureForm,
-  creatureFormDataToDB,
+  creatureFormDataToResource,
 } from "~/models/resources/creatures/creature-form";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { type LocalizedCreature } from "~/models/resources/creatures/localized-creature";
@@ -69,7 +69,7 @@ const CreaturesPanel = createResourcesPanel(
     form: {
       Editor: createCreatureEditor(creatureForm),
       form: creatureForm,
-      parseFormData: creatureFormDataToDB,
+      parseFormData: creatureFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

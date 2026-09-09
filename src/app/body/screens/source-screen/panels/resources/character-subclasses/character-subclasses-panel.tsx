@@ -1,7 +1,7 @@
 import { type CharacterSubclass } from "~/models/resources/character-subclasses/character-subclass";
 import {
   characterSubclassForm,
-  characterSubclassFormDataToDB,
+  characterSubclassFormDataToResource,
 } from "~/models/resources/character-subclasses/character-subclass-form";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import { type LocalizedCharacterSubclass } from "~/models/resources/character-subclasses/localized-character-subclass";
@@ -42,7 +42,7 @@ const CharacterSubclassesPanel = createResourcesPanel(
     form: {
       Editor: createCharacterSubclassEditor(characterSubclassForm),
       form: characterSubclassForm,
-      parseFormData: characterSubclassFormDataToDB,
+      parseFormData: characterSubclassFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

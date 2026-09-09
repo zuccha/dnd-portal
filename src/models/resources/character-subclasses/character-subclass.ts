@@ -1,5 +1,5 @@
 import z from "zod";
-import { dbFeatureEntrySchema } from "../features/db-feature";
+import { featureEntrySchema } from "../features/feature-entry";
 import {
   type TranslationFields,
   defaultResource,
@@ -13,7 +13,7 @@ import {
 
 export const characterSubclassSchema = resourceSchema.extend({
   character_class_id: z.uuid(),
-  feature_entries: z.array(dbFeatureEntrySchema),
+  feature_entries: z.array(featureEntrySchema),
   kind: z.literal("character_subclass"),
 });
 

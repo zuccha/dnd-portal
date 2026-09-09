@@ -1,5 +1,8 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
-import { defaultItemModifier } from "./item-modifier";
+import {
+  defaultItemModifier,
+  itemModifierTranslationFields,
+} from "./item-modifier";
 import {
   defaultItemModifierFilters,
   itemModifierFiltersSchema,
@@ -20,5 +23,6 @@ export const itemModifierStore = createEquipmentModifierStore("item_modifier", {
   },
   filtersSchema: itemModifierFiltersSchema,
   orderOptions: itemModifierOrderOptions,
+  translationFields: itemModifierTranslationFields,
   useLocalizeModifier: useLocalizeItemModifier,
 });

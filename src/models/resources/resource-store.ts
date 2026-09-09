@@ -17,18 +17,13 @@ import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
 import { createUuid } from "~/utils/uuid";
-import {
-  type EquipmentEntry,
-  equipmentBundleFromEntries,
-} from "../other/equipment-bundle";
 import type { ResourceKind } from "../types/resource-kind";
-import {
-  type StartingEquipmentEntry,
-  startingEquipmentFromEntries,
-} from "./character-classes/starting-equipment";
-import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
-import { type Resource, type ResourceOption } from "./resource";
+import {
+  type Resource,
+  type ResourceOption,
+  type TranslationFields,
+} from "./resource";
 import {
   type ResourceComparator,
   type ResourceMatcher,
@@ -37,6 +32,7 @@ import {
   matchesName,
 } from "./resource-filtering";
 import type { ResourceFilters } from "./resource-filters";
+import { mergeResourcePatch } from "./resource-patch";
 import { useResourcesSourcesFilter } from "./resources-sources-filter";
 
 //------------------------------------------------------------------------------
@@ -47,9 +43,7 @@ export type ResourceStore<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
-> = ReturnType<typeof createResourceStore<R, L, F, DBR, DBT>>;
+> = ReturnType<typeof createResourceStore<R, L, F>>;
 
 //------------------------------------------------------------------------------
 // Create Resource Store
@@ -59,8 +53,6 @@ export function createResourceStore<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-  DBR extends DBResource,
-  DBT extends DBResourceTranslation,
 >(
   kind: ResourceKind,
   {
@@ -71,6 +63,7 @@ export function createResourceStore<
     matchesResource = () => true,
     compareResources: compareStoreResources = compareResources,
     orderOptions,
+    translationFields,
     useLocalizeResource,
   }: {
     defaultFilters: F;
@@ -80,6 +73,7 @@ export function createResourceStore<
     matchesResource?: ResourceMatcher<R, F>;
     compareResources?: ResourceComparator<R, F>;
     orderOptions: { label: I18nString; value: string }[];
+    translationFields: TranslationFields<R>[];
     useLocalizeResource: (sourceId: string) => (resource: R) => L;
   },
 ) {
@@ -155,10 +149,10 @@ export function createResourceStore<
   function useHasFilterChanges(): boolean {
     const filters = filtersStore.useValue();
     const appliedFilters = appliedFiltersStore.useValue();
-    const { name: _name, ...dbFilters } = filters;
-    const { name: _appliedName, ...appliedDBFilters } = appliedFilters;
+    const { name: _name, ...deferredFilters } = filters;
+    const { name: _appliedName, ...appliedDeferredFilters } = appliedFilters;
 
-    return hash(dbFilters) !== hash(appliedDBFilters);
+    return hash(deferredFilters) !== hash(appliedDeferredFilters);
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -188,93 +182,47 @@ export function createResourceStore<
   // Resources
   //----------------------------------------------------------------------------
 
-  function applyResourceMutationPatch(
-    base: R,
-    lang: string,
-    resourcePatch: Partial<DBR>,
-    translationPatch: Partial<DBT>,
-  ): R {
-    const resource = { ...base } as Record<string, unknown>;
-
-    for (const [key, value] of Object.entries(resourcePatch)) {
-      if (value === undefined) continue;
-
-      if (key === "equipment_entries") {
-        resource["gear"] = equipmentBundleFromEntries(
-          value as EquipmentEntry[],
-        );
-      } else if (key === "starting_equipment_entries") {
-        resource["starting_equipment"] = startingEquipmentFromEntries(
-          value as StartingEquipmentEntry[],
-        );
-      } else {
-        resource[key] = value;
-      }
-    }
-
-    for (const [key, value] of Object.entries(translationPatch)) {
-      if (value === undefined) continue;
-
-      const current = resource[key];
-      resource[key] = {
-        ...(isI18nValue(current) ? current : {}),
-        [lang]: value,
-      };
-    }
-
-    return resource as R;
-  }
-
-  function isI18nValue(value: unknown): value is Record<string, unknown> {
-    return !!value && typeof value === "object" && !Array.isArray(value);
-  }
-
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Create Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function createResource(
+  async function createResource(
     sourceId: string,
-    lang: string,
-    resourcePatch: Partial<DBR>,
-    translationPatch: Partial<DBT>,
+    resourcePatch: Partial<R>,
   ): Promise<string | undefined> {
     const source = catalogue.getSourceMetadata(sourceId);
-    if (!source) return Promise.resolve("form.error.update_failure");
+    if (!source) return "form.error.update_failure";
 
-    const resource = applyResourceMutationPatch(
-      {
-        ...defaultResource,
-        id: createUuid(),
-        kind,
-        source_code: source.code,
-        source_id: source.id,
-        source_version: source.version,
-        virtual: false,
-      },
-      lang,
-      resourcePatch,
-      translationPatch,
-    );
+    const resource = {
+      ...defaultResource,
+      ...resourcePatch,
+      id: createUuid(),
+      kind,
+      source_code: source.code,
+      source_id: source.id,
+      source_version: source.version,
+      virtual: false,
+    } as R;
 
-    return updateSourceBundle(source.id, (bundle) =>
-      upsertSourceBundleResource(bundle, resource),
-    )
-      .then(() => {
-        catalogueResourceStore.upsertResource(resource);
-        return undefined;
-      })
-      .catch((error) => {
-        console.error(`${storeId}.create_resource`, error);
-        return "form.error.update_failure";
-      });
+    try {
+      await updateSourceBundle(source.id, (bundle) =>
+        upsertSourceBundleResource(bundle, resource),
+      );
+      catalogueResourceStore.upsertResource(resource);
+      return undefined;
+    } catch (error) {
+      console.error(`${storeId}.create_resource`, error);
+      return "form.error.update_failure";
+    }
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Delete Resources
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function deleteResources(resourceIds: string[]): Promise<string | undefined> {
+  async function deleteResources(
+    resourceIds: string[],
+  ): Promise<string | undefined> {
     const resources = resourceIds
       .map(getResource)
       .filter((resource): resource is R => resource !== undefined);
@@ -287,33 +235,31 @@ export function createResourceStore<
       ),
     ];
 
-    const updatePromise = Promise.all(
-      sourceIds.map((sourceId) => {
-        const ids = resources
-          .filter((resource) => resource.source_id === sourceId)
-          .map(({ id }) => id);
+    try {
+      await Promise.all(
+        sourceIds.map((sourceId) => {
+          const ids = resources
+            .filter((resource) => resource.source_id === sourceId)
+            .map(({ id }) => id);
 
-        return updateSourceBundle(sourceId, (bundle) =>
-          removeSourceBundleResources(
-            bundle,
-            kind as SourceBundleResourceKind,
-            ids,
-          ),
-        );
-      }),
-    );
+          return updateSourceBundle(sourceId, (bundle) =>
+            removeSourceBundleResources(
+              bundle,
+              kind as SourceBundleResourceKind,
+              ids,
+            ),
+          );
+        }),
+      );
 
-    return updatePromise
-      .then(() => {
-        for (const resource of resources)
-          catalogueResourceStore.removeResource(resource.id);
+      for (const resource of resources)
+        catalogueResourceStore.removeResource(resource.id);
 
-        return undefined;
-      })
-      .catch((error) => {
-        console.error(`${storeId}.delete_resources`, error);
-        return "form.error.update_failure";
-      });
+      return undefined;
+    } catch (error) {
+      console.error(`${storeId}.delete_resources`, error);
+      return "form.error.update_failure";
+    }
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -328,38 +274,41 @@ export function createResourceStore<
   // Update Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function updateResource(
+  async function updateResource(
     resourceId: string,
-    lang: string,
-    resourcePatch: Partial<DBR>,
-    translationPatch: Partial<DBT>,
+    resourcePatch: Partial<R>,
   ): Promise<string | undefined> {
     const current = getResource(resourceId);
-    if (!current) return Promise.resolve("form.error.update_failure");
+    if (!current) return "form.error.update_failure";
 
-    const resource = applyResourceMutationPatch(
+    const resource = mergeResourcePatch(
       current,
-      lang,
-      resourcePatch,
-      translationPatch,
+      {
+        ...resourcePatch,
+        id: current.id,
+        kind: current.kind,
+        source_code: current.source_code,
+        source_id: current.source_id,
+        source_version: current.source_version,
+      },
+      translationFields,
     );
 
     if (resource.virtual) {
       catalogueResourceStore.upsertResource(resource);
-      return Promise.resolve(undefined);
+      return undefined;
     }
 
-    return updateSourceBundle(resource.source_id, (bundle) =>
-      upsertSourceBundleResource(bundle, resource),
-    )
-      .then(() => {
-        catalogueResourceStore.upsertResource(resource);
-        return undefined;
-      })
-      .catch((error) => {
-        console.error(`${storeId}.update_resource`, error);
-        return "form.error.update_failure";
-      });
+    try {
+      await updateSourceBundle(resource.source_id, (bundle) =>
+        upsertSourceBundleResource(bundle, resource),
+      );
+      catalogueResourceStore.upsertResource(resource);
+      return undefined;
+    } catch (error) {
+      console.error(`${storeId}.update_resource`, error);
+      return "form.error.update_failure";
+    }
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -737,6 +686,7 @@ export function createResourceStore<
     defaultResource,
     displayName,
     orderOptions,
+    translationFields,
 
     useApplyFilters,
     useFilters,

@@ -4,7 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { LanguageEntry } from "~/models/other/language-entries";
-import type { DBFeatureEntry } from "~/models/resources/features/db-feature";
+import type { FeatureEntry } from "~/models/resources/features/feature-entry";
 import type { ResourceOption } from "~/models/resources/resource";
 import {
   type CreatureLanguageMode,
@@ -274,7 +274,7 @@ export function createEquipmentBundleField({
 // Create Feature Entries Field
 //------------------------------------------------------------------------------
 
-export type FeatureEntriesFieldProps = Props<DBFeatureEntry[]> & {
+export type FeatureEntriesFieldProps = Props<FeatureEntry[]> & {
   sourceId: string;
 };
 
@@ -287,9 +287,7 @@ export function createFeatureEntriesField({
   i18nContext: I18nFieldContext<"label">;
   i18nContextExtra?: Record<string, I18nString>;
   translatable?: boolean;
-  useField: (
-    defaultValue: DBFeatureEntry[],
-  ) => FieldBag<string, DBFeatureEntry[]>;
+  useField: (defaultValue: FeatureEntry[]) => FieldBag<string, FeatureEntry[]>;
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 

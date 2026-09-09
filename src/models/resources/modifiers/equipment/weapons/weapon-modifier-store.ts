@@ -1,6 +1,9 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
 import { useLocalizeWeaponModifier } from "./localized-weapon-modifier";
-import { defaultWeaponModifier } from "./weapon-modifier";
+import {
+  defaultWeaponModifier,
+  weaponModifierTranslationFields,
+} from "./weapon-modifier";
 import {
   defaultWeaponModifierFilters,
   weaponModifierFiltersSchema,
@@ -19,6 +22,7 @@ export const weaponModifierStore = createEquipmentModifierStore(
     displayName: { en: "Weapon Variants", it: "Varianti delle Armi" },
     filtersSchema: weaponModifierFiltersSchema,
     orderOptions: weaponModifierOrderOptions,
+    translationFields: weaponModifierTranslationFields,
     useLocalizeModifier: useLocalizeWeaponModifier,
   },
 );

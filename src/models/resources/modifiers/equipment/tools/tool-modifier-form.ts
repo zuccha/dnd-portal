@@ -2,12 +2,9 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import {
   equipmentModifierFormDataSchema,
-  equipmentModifierFormDataToDB,
+  equipmentModifierFormDataToResource,
 } from "../equipment-modifier-form";
-import type {
-  DBToolModifier,
-  DBToolModifierTranslation,
-} from "./db-tool-modifier";
+import type { ToolModifier } from "./tool-modifier";
 
 //------------------------------------------------------------------------------
 // Tool Modifier Form Data
@@ -19,14 +16,17 @@ export const toolModifierFormDataSchema =
 export type ToolModifierFormData = z.infer<typeof toolModifierFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Tool Modifier Form Data To DB
+// Tool Modifier Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function toolModifierFormDataToDB(data: Partial<ToolModifierFormData>): {
-  resource: Partial<DBToolModifier>;
-  translation: Partial<DBToolModifierTranslation>;
-} {
-  return equipmentModifierFormDataToDB(data);
+export function toolModifierFormDataToResource(
+  data: Partial<ToolModifierFormData>,
+  lang: string,
+): Partial<ToolModifier> {
+  return equipmentModifierFormDataToResource(
+    data,
+    lang,
+  ) as Partial<ToolModifier>;
 }
 
 //------------------------------------------------------------------------------

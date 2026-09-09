@@ -1,7 +1,12 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
-import { type DBManeuver, type DBManeuverTranslation } from "./db-maneuver";
+import {
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { Maneuver } from "./maneuver";
 
 //------------------------------------------------------------------------------
 // Maneuver Form Data
@@ -17,23 +22,18 @@ export const maneuverFormDataSchema = resourceFormDataSchema.extend({
 export type ManeuverFormData = z.infer<typeof maneuverFormDataSchema>;
 
 //------------------------------------------------------------------------------
-// Maneuver Form Data To DB
+// Maneuver Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function maneuverFormDataToDB(data: Partial<ManeuverFormData>): {
-  resource: Partial<DBManeuver>;
-  translation: Partial<DBManeuverTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource,
-    translation: {
-      ...translation,
-      description: data.description,
-      prerequisite: data.prerequisite,
-    },
-  };
+export function maneuverFormDataToResource(
+  data: Partial<ManeuverFormData>,
+  lang: string,
+): Partial<Maneuver> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    description: createResourceFormDataI18nValue(data.description, lang),
+    prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
+  });
 }
 
 //------------------------------------------------------------------------------

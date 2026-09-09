@@ -1,5 +1,8 @@
 import { createResourceStore } from "../resource-store";
-import { defaultEldritchInvocation } from "./eldritch-invocation";
+import {
+  defaultEldritchInvocation,
+  eldritchInvocationTranslationFields,
+} from "./eldritch-invocation";
 import {
   defaultEldritchInvocationFilters,
   eldritchInvocationFiltersSchema,
@@ -21,6 +24,7 @@ export const eldritchInvocationStore = createResourceStore(
     matchesResource: (eldritchInvocation, filters) =>
       eldritchInvocation.min_warlock_level <= (filters.warlock_level ?? 20),
     orderOptions: eldritchInvocationOrderOptions,
+    translationFields: eldritchInvocationTranslationFields,
     useLocalizeResource: useLocalizeEldritchInvocation,
   },
 );

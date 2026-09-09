@@ -2,7 +2,7 @@ import { type LocalizedService } from "~/models/resources/services/localized-ser
 import { type Service } from "~/models/resources/services/service";
 import {
   serviceForm,
-  serviceFormDataToDB,
+  serviceFormDataToResource,
 } from "~/models/resources/services/service-form";
 import { serviceStore } from "~/models/resources/services/service-store";
 import { createResourcesPanel } from "../../resources-panel";
@@ -49,7 +49,7 @@ const ServicesPanel = createResourcesPanel(
     form: {
       Editor: createServiceEditor(serviceForm),
       form: serviceForm,
-      parseFormData: serviceFormDataToDB,
+      parseFormData: serviceFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },

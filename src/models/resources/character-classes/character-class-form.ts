@@ -5,16 +5,15 @@ import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
 import { dieTypeSchema } from "../../types/die_type";
 import { weaponTypeSchema } from "../../types/weapon-type";
-import { dbFeatureEntrySchema } from "../features/db-feature";
-import { resourceFormDataSchema, resourceFormDataToDB } from "../resource-form";
+import { featureEntrySchema } from "../features/feature-entry";
 import {
-  type DBCharacterClass,
-  type DBCharacterClassTranslation,
-} from "./db-character-class";
-import {
-  startingEquipmentGroupSchema,
-  startingEquipmentToEntries,
-} from "./starting-equipment";
+  createResourceFormDataI18nValue,
+  createResourceFormDataPatch,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
+import type { CharacterClass } from "./character-class";
+import { startingEquipmentGroupSchema } from "./starting-equipment";
 
 //------------------------------------------------------------------------------
 // Character Class Form Data
@@ -23,7 +22,7 @@ import {
 export const characterClassFormDataSchema = resourceFormDataSchema.extend({
   armor_proficiencies: z.array(armorTypeSchema).default([]),
   armor_proficiencies_extra: z.string().default(""),
-  feature_entries: z.array(dbFeatureEntrySchema).default([]),
+  feature_entries: z.array(featureEntrySchema).default([]),
   hp_die: dieTypeSchema.default("d8"),
   primary_abilities: z.array(creatureAbilitySchema).default([]),
   saving_throw_proficiencies: z.array(creatureAbilitySchema).default([]),
@@ -41,41 +40,35 @@ export type CharacterClassFormData = z.infer<
 >;
 
 //------------------------------------------------------------------------------
-// Character Class Form Data To DB
+// Character Class Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function characterClassFormDataToDB(
+export function characterClassFormDataToResource(
   data: Partial<CharacterClassFormData>,
-): {
-  resource: Partial<DBCharacterClass>;
-  translation: Partial<DBCharacterClassTranslation>;
-} {
-  const { resource, translation } = resourceFormDataToDB(data);
-
-  return {
-    resource: {
-      ...resource,
-      armor_proficiencies: data.armor_proficiencies,
-      feature_entries: data.feature_entries,
-      hp_die: data.hp_die,
-      primary_abilities: data.primary_abilities,
-      saving_throw_proficiencies: data.saving_throw_proficiencies,
-      skill_proficiencies_pool: data.skill_proficiencies_pool,
-      skill_proficiencies_pool_quantity: data.skill_proficiencies_pool_quantity,
-      spell_ids: data.spell_ids,
-      starting_equipment_entries:
-        data.starting_equipment ?
-          startingEquipmentToEntries(data.starting_equipment)
-        : undefined,
-      tool_proficiency_ids: data.tool_proficiency_ids,
-      weapon_proficiencies: data.weapon_proficiencies,
-    },
-    translation: {
-      ...translation,
-      armor_proficiencies_extra: data.armor_proficiencies_extra,
-      weapon_proficiencies_extra: data.weapon_proficiencies_extra,
-    },
-  };
+  lang: string,
+): Partial<CharacterClass> {
+  return createResourceFormDataPatch({
+    ...resourceFormDataToResource(data, lang),
+    armor_proficiencies: data.armor_proficiencies,
+    armor_proficiencies_extra: createResourceFormDataI18nValue(
+      data.armor_proficiencies_extra,
+      lang,
+    ),
+    feature_entries: data.feature_entries,
+    hp_die: data.hp_die,
+    primary_abilities: data.primary_abilities,
+    saving_throw_proficiencies: data.saving_throw_proficiencies,
+    skill_proficiencies_pool: data.skill_proficiencies_pool,
+    skill_proficiencies_pool_quantity: data.skill_proficiencies_pool_quantity,
+    spell_ids: data.spell_ids,
+    starting_equipment: data.starting_equipment,
+    tool_proficiency_ids: data.tool_proficiency_ids,
+    weapon_proficiencies: data.weapon_proficiencies,
+    weapon_proficiencies_extra: createResourceFormDataI18nValue(
+      data.weapon_proficiencies_extra,
+      lang,
+    ),
+  });
 }
 
 //------------------------------------------------------------------------------

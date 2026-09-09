@@ -1,7 +1,7 @@
 import { type CreatureTag } from "~/models/resources/creature-tags/creature-tag";
 import {
   creatureTagForm,
-  creatureTagFormDataToDB,
+  creatureTagFormDataToResource,
 } from "~/models/resources/creature-tags/creature-tag-form";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { type LocalizedCreatureTag } from "~/models/resources/creature-tags/localized-creature-tag";
@@ -38,7 +38,7 @@ const CreatureTagsPanel = createResourcesPanel(
     form: {
       Editor: createCreatureTagEditor(creatureTagForm),
       form: creatureTagForm,
-      parseFormData: creatureTagFormDataToDB,
+      parseFormData: creatureTagFormDataToResource,
     },
     table: { columns },
   },

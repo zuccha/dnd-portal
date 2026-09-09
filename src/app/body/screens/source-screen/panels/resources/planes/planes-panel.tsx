@@ -2,7 +2,7 @@ import { type LocalizedPlane } from "~/models/resources/planes/localized-plane";
 import { type Plane } from "~/models/resources/planes/plane";
 import {
   planeForm,
-  planeFormDataToDB,
+  planeFormDataToResource,
 } from "~/models/resources/planes/plane-form";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { createResourcesPanel } from "../resources-panel";
@@ -43,7 +43,7 @@ const PlanesPanel = createResourcesPanel(
     form: {
       Editor: createPlaneEditor(planeForm),
       form: planeForm,
-      parseFormData: planeFormDataToDB,
+      parseFormData: planeFormDataToResource,
     },
     table: { columns },
   },

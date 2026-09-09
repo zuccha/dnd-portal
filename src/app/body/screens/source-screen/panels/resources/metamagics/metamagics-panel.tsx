@@ -2,7 +2,7 @@ import { type LocalizedMetamagic } from "~/models/resources/metamagics/localized
 import { type Metamagic } from "~/models/resources/metamagics/metamagic";
 import {
   metamagicForm,
-  metamagicFormDataToDB,
+  metamagicFormDataToResource,
 } from "~/models/resources/metamagics/metamagic-form";
 import { metamagicStore } from "~/models/resources/metamagics/metamagic-store";
 import { createResourcesPanel } from "../resources-panel";
@@ -45,7 +45,7 @@ const MetamagicsPanel = createResourcesPanel(
     form: {
       Editor: createMetamagicEditor(metamagicForm),
       form: metamagicForm,
-      parseFormData: metamagicFormDataToDB,
+      parseFormData: metamagicFormDataToResource,
     },
     table: { columns, detailsKey: "details" },
   },
