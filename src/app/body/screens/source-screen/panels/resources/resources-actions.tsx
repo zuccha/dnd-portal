@@ -146,7 +146,8 @@ export function createResourcesActions<
         const ok = confirm(tpi("remove.confirm", count, `${count}`));
         if (ok) {
           const selectedResourceIds = selectedResources.map(({ id }) => id);
-          store.deleteResources(selectedResourceIds);
+          const error = await store.deleteResources(selectedResourceIds);
+          if (error) throw new Error(error);
         }
       } catch (e) {
         console.error(e);

@@ -87,6 +87,35 @@ export async function loadSourceBundles(): Promise<SourceBundle[]> {
 }
 
 //------------------------------------------------------------------------------
+// Update Source Bundle
+//------------------------------------------------------------------------------
+
+export async function updateSourceBundle(
+  sourceId: string,
+  update: (bundle: SourceBundle) => SourceBundle,
+): Promise<SourceBundle> {
+  return db.transaction("rw", db.sources, db.source_bundles, async () => {
+    const record = await db.source_bundles.get(sourceId);
+    if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
+
+    const bundle = sourceBundleSchema.parse(update(record.bundle));
+    const importedAt = new Date().toISOString();
+
+    await db.sources.put({
+      ...bundle.source,
+      imported_at: importedAt,
+    });
+
+    await db.source_bundles.put({
+      bundle,
+      source_id: bundle.source.id,
+    });
+
+    return bundle;
+  });
+}
+
+//------------------------------------------------------------------------------
 // Delete Source Bundle
 //------------------------------------------------------------------------------
 

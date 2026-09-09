@@ -22,11 +22,19 @@ import { toolModifierSchema } from "../resources/modifiers/equipment/tools/tool-
 import { weaponModifierSchema } from "../resources/modifiers/equipment/weapons/weapon-modifier";
 import { modifierSchema } from "../resources/modifiers/modifier";
 import { planeSchema } from "../resources/planes/plane";
+import type { Resource } from "../resources/resource";
 import { serviceSchema } from "../resources/services/service";
 import { speciesSchema } from "../resources/species/species";
 import { spellSchema } from "../resources/spells/spell";
 import { vehicleSchema } from "../resources/vehicles/vehicle";
 import { sourceMetadataSchema } from "../sources";
+import type { ResourceKind } from "../types/resource-kind";
+
+//------------------------------------------------------------------------------
+// Source Bundle Resource Kind
+//------------------------------------------------------------------------------
+
+export type SourceBundleResourceKind = Exclude<ResourceKind, "resource">;
 
 //------------------------------------------------------------------------------
 // Source Bundle Resources
@@ -72,3 +80,92 @@ export const sourceBundleSchema = z.object({
 });
 
 export type SourceBundle = z.infer<typeof sourceBundleSchema>;
+
+//------------------------------------------------------------------------------
+// Source Bundle Resource Key By Kind
+//------------------------------------------------------------------------------
+
+export const sourceBundleResourceKeyByKind = {
+  armor: "armors",
+  armor_modifier: "armor_modifiers",
+  background: "backgrounds",
+  character_class: "character_classes",
+  character_subclass: "character_subclasses",
+  creature: "creatures",
+  creature_tag: "creature_tags",
+  eldritch_invocation: "eldritch_invocations",
+  equipment: "equipments",
+  equipment_modifier: "equipment_modifiers",
+  feat: "feats",
+  feature: "features",
+  item: "items",
+  item_modifier: "item_modifiers",
+  language: "languages",
+  maneuver: "maneuvers",
+  metamagic: "metamagics",
+  modifier: "modifiers",
+  plane: "planes",
+  service: "services",
+  species: "species",
+  spell: "spells",
+  tool: "tools",
+  tool_modifier: "tool_modifiers",
+  vehicle: "vehicles",
+  weapon: "weapons",
+  weapon_modifier: "weapon_modifiers",
+} as const satisfies Record<
+  SourceBundleResourceKind,
+  keyof SourceBundle["resources"]
+>;
+
+//------------------------------------------------------------------------------
+// Upsert Source Bundle Resource
+//------------------------------------------------------------------------------
+
+export function upsertSourceBundleResource<R extends Resource>(
+  bundle: SourceBundle,
+  resource: R,
+  { includeVirtual = false }: { includeVirtual?: boolean } = {},
+): SourceBundle {
+  if (resource.virtual && !includeVirtual) return bundle;
+  if (resource.kind === "resource") return bundle;
+
+  const key = sourceBundleResourceKeyByKind[resource.kind];
+  const resources = bundle.resources[key] as Resource[];
+  const nextResources =
+    resources.some(({ id }) => id === resource.id) ?
+      resources.map((current) =>
+        current.id === resource.id ? resource : current,
+      )
+    : [...resources, resource];
+
+  return {
+    ...bundle,
+    resources: {
+      ...bundle.resources,
+      [key]: nextResources,
+    },
+  };
+}
+
+//------------------------------------------------------------------------------
+// Remove Source Bundle Resources
+//------------------------------------------------------------------------------
+
+export function removeSourceBundleResources(
+  bundle: SourceBundle,
+  kind: SourceBundleResourceKind,
+  resourceIds: string[],
+): SourceBundle {
+  const key = sourceBundleResourceKeyByKind[kind];
+  const resourceIdSet = new Set(resourceIds);
+  const resources = bundle.resources[key] as Resource[];
+
+  return {
+    ...bundle,
+    resources: {
+      ...bundle.resources,
+      [key]: resources.filter(({ id }) => !resourceIdSet.has(id)),
+    },
+  };
+}

@@ -246,6 +246,14 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
+  // Get Source Metadata
+  //----------------------------------------------------------------------------
+
+  function getSourceMetadata(sourceId: string): SourceMetadata | undefined {
+    return sourceMetadataById.get(sourceId);
+  }
+
+  //----------------------------------------------------------------------------
   // Use Source Metadata List
   //----------------------------------------------------------------------------
 
@@ -483,6 +491,7 @@ export function createCatalogue(id: string) {
   return {
     createResourceStore,
     getActiveSourceId: activeSourceId.get,
+    getSourceMetadata,
     importSourceBundle,
     removeSourceBundle,
     setActiveSourceId,

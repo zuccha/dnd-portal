@@ -3,6 +3,12 @@ import type { ZodType } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
+import {
+  type SourceBundleResourceKind,
+  removeSourceBundleResources,
+  upsertSourceBundleResource,
+} from "~/models/catalogue/source-bundle";
+import { updateSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStore } from "~/store/memory-store";
 import { createCache } from "~/utils/cache";
@@ -10,7 +16,16 @@ import { createUseDerivedData } from "~/utils/derived-data";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
+import { createUuid } from "~/utils/uuid";
+import {
+  type EquipmentEntry,
+  equipmentBundleFromEntries,
+} from "../other/equipment-bundle";
 import type { ResourceKind } from "../types/resource-kind";
+import {
+  type StartingEquipmentEntry,
+  startingEquipmentFromEntries,
+} from "./character-classes/starting-equipment";
 import type { DBResource, DBResourceTranslation } from "./db-resource";
 import type { LocalizedResource } from "./localized-resource";
 import { type Resource, type ResourceOption } from "./resource";
@@ -173,17 +188,86 @@ export function createResourceStore<
   // Resources
   //----------------------------------------------------------------------------
 
+  function applyResourceMutationPatch(
+    base: R,
+    lang: string,
+    resourcePatch: Partial<DBR>,
+    translationPatch: Partial<DBT>,
+  ): R {
+    const resource = { ...base } as Record<string, unknown>;
+
+    for (const [key, value] of Object.entries(resourcePatch)) {
+      if (value === undefined) continue;
+
+      if (key === "equipment_entries") {
+        resource["gear"] = equipmentBundleFromEntries(
+          value as EquipmentEntry[],
+        );
+      } else if (key === "starting_equipment_entries") {
+        resource["starting_equipment"] = startingEquipmentFromEntries(
+          value as StartingEquipmentEntry[],
+        );
+      } else {
+        resource[key] = value;
+      }
+    }
+
+    for (const [key, value] of Object.entries(translationPatch)) {
+      if (value === undefined) continue;
+
+      const current = resource[key];
+      resource[key] = {
+        ...(isI18nValue(current) ? current : {}),
+        [lang]: value,
+      };
+    }
+
+    return resource as R;
+  }
+
+  function isI18nValue(value: unknown): value is Record<string, unknown> {
+    return !!value && typeof value === "object" && !Array.isArray(value);
+  }
+
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Create Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function createResource(
-    _sourceId: string,
-    _lang: string,
-    _resource: Partial<DBR>,
-    _translation: Partial<DBT>,
+    sourceId: string,
+    lang: string,
+    resourcePatch: Partial<DBR>,
+    translationPatch: Partial<DBT>,
   ): Promise<string | undefined> {
-    return Promise.resolve(undefined);
+    const source = catalogue.getSourceMetadata(sourceId);
+    if (!source) return Promise.resolve("form.error.update_failure");
+
+    const resource = applyResourceMutationPatch(
+      {
+        ...defaultResource,
+        id: createUuid(),
+        kind,
+        source_code: source.code,
+        source_id: source.id,
+        source_version: source.version,
+        virtual: false,
+      },
+      lang,
+      resourcePatch,
+      translationPatch,
+    );
+
+    return updateSourceBundle(source.id, (bundle) =>
+      upsertSourceBundleResource(bundle, resource),
+    )
+      .then(() => {
+        catalogueResourceStore.upsertResource(resource);
+        return undefined;
+      })
+      .catch((error) => {
+        console.error(`${storeId}.create_resource`, error);
+        return "form.error.update_failure";
+      });
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -191,11 +275,45 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function deleteResources(resourceIds: string[]): Promise<string | undefined> {
-    for (const resourceId of resourceIds) {
-      catalogueResourceStore.removeResource(resourceId);
-    }
+    const resources = resourceIds
+      .map(getResource)
+      .filter((resource): resource is R => resource !== undefined);
 
-    return Promise.resolve(undefined);
+    const sourceIds = [
+      ...new Set(
+        resources
+          .filter((resource) => !resource.virtual)
+          .map(({ source_id }) => source_id),
+      ),
+    ];
+
+    const updatePromise = Promise.all(
+      sourceIds.map((sourceId) => {
+        const ids = resources
+          .filter((resource) => resource.source_id === sourceId)
+          .map(({ id }) => id);
+
+        return updateSourceBundle(sourceId, (bundle) =>
+          removeSourceBundleResources(
+            bundle,
+            kind as SourceBundleResourceKind,
+            ids,
+          ),
+        );
+      }),
+    );
+
+    return updatePromise
+      .then(() => {
+        for (const resource of resources)
+          catalogueResourceStore.removeResource(resource.id);
+
+        return undefined;
+      })
+      .catch((error) => {
+        console.error(`${storeId}.delete_resources`, error);
+        return "form.error.update_failure";
+      });
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -211,12 +329,37 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function updateResource(
-    _resourceId: string,
-    _lang: string,
-    _resource: Partial<DBR>,
-    _translation: Partial<DBT>,
+    resourceId: string,
+    lang: string,
+    resourcePatch: Partial<DBR>,
+    translationPatch: Partial<DBT>,
   ): Promise<string | undefined> {
-    return Promise.resolve(undefined);
+    const current = getResource(resourceId);
+    if (!current) return Promise.resolve("form.error.update_failure");
+
+    const resource = applyResourceMutationPatch(
+      current,
+      lang,
+      resourcePatch,
+      translationPatch,
+    );
+
+    if (resource.virtual) {
+      catalogueResourceStore.upsertResource(resource);
+      return Promise.resolve(undefined);
+    }
+
+    return updateSourceBundle(resource.source_id, (bundle) =>
+      upsertSourceBundleResource(bundle, resource),
+    )
+      .then(() => {
+        catalogueResourceStore.upsertResource(resource);
+        return undefined;
+      })
+      .catch((error) => {
+        console.error(`${storeId}.update_resource`, error);
+        return "form.error.update_failure";
+      });
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
