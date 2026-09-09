@@ -409,6 +409,30 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
+  // Remove Source Bundle
+  //----------------------------------------------------------------------------
+
+  function removeSourceBundle(sourceId: string): void {
+    for (const kind of objectKeys(resourceIdsBySourceIdByKind)) {
+      const resourceIds = resourceIdsBySourceIdByKind[kind].get(
+        sourceId,
+        emptyIds,
+      );
+
+      for (const resourceId of resourceIds)
+        resourcesByIdByKind[kind].clear(resourceId);
+
+      resourceIdsBySourceIdByKind[kind].set(sourceId, emptyIds, emptyIds);
+    }
+
+    sourceMetadataById.clear(sourceId);
+    sourceMetadataIds.set((prev) => prev.filter((id) => id !== sourceId));
+
+    if (activeSourceId.get() === sourceId) activeSourceId.set(undefined);
+    setActiveSourceResourceIds(activeSourceId.get());
+  }
+
+  //----------------------------------------------------------------------------
   // Return
   //----------------------------------------------------------------------------
 
@@ -416,6 +440,7 @@ export function createCatalogue(id: string) {
     createResourceStore,
     getActiveSourceId: activeSourceId.get,
     importSourceBundle,
+    removeSourceBundle,
     setActiveSourceId,
     useActiveSourceId: activeSourceId.useValue,
     useSourceMetadataList,

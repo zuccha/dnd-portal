@@ -2,7 +2,11 @@ import { Grid, HStack, Heading, Input, Text, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
-import { saveSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
+import {
+  deleteSourceBundle,
+  saveSourceBundle,
+} from "~/models/catalogue/source-bundle-indexed-db";
+import { useSelectedSourceId } from "~/models/sources";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
 import SectionHeading from "~/ui/section-heading";
@@ -12,11 +16,12 @@ import SectionHeading from "~/ui/section-heading";
 //------------------------------------------------------------------------------
 
 export default function SourcesPanel() {
-  const { lang, t } = useI18nLangContext(i18nContext);
+  const { lang, t, ti } = useI18nLangContext(i18nContext);
   const sources = catalogue.useSourceMetadataList();
   const translateSourceVersion = useTranslateSourceVersion(lang);
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>();
+  const [selectedSourceId, setSelectedSourceId] = useSelectedSourceId();
 
   const importSource = async (file: File | undefined) => {
     if (!file) return;
@@ -31,6 +36,25 @@ export default function SourcesPanel() {
       setError(t("error.import"));
     } finally {
       if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  const removeSource = async (sourceId: string) => {
+    const source = sources.find((source) => source.id === sourceId);
+    if (!source) return;
+
+    const ok = confirm(ti("remove.confirm", source.code));
+    if (!ok) return;
+
+    setError(undefined);
+
+    try {
+      await deleteSourceBundle(sourceId);
+      catalogue.removeSourceBundle(sourceId);
+      if (selectedSourceId === sourceId) setSelectedSourceId(undefined);
+    } catch (e) {
+      console.error(e);
+      setError(t("error.remove"));
     }
   };
 
@@ -80,10 +104,20 @@ export default function SourcesPanel() {
               >
                 <SectionHeading>{source.code}</SectionHeading>
                 <Text fontWeight="medium">{name}</Text>
-                <Text color="fg.muted" fontSize="sm">
-                  {t(source.type)} ·{" "}
-                  {translateSourceVersion(source.version).label}
-                </Text>
+                <HStack justify="space-between" w="full">
+                  <Text color="fg.muted" fontSize="sm">
+                    {t(source.type)} ·{" "}
+                    {translateSourceVersion(source.version).label}
+                  </Text>
+
+                  <Button
+                    onClick={() => removeSource(source.id)}
+                    size="xs"
+                    variant="ghost"
+                  >
+                    {t("remove")}
+                  </Button>
+                </HStack>
               </VStack>
             );
           })}
@@ -110,6 +144,10 @@ const i18nContext = {
     en: "The selected file is not a valid source JSON.",
     it: "Il file selezionato non è una fonte JSON valida.",
   },
+  "error.remove": {
+    en: "The selected source could not be removed.",
+    it: "La fonte selezionata non può essere rimossa.",
+  },
   "import": {
     en: "Import",
     it: "Importa",
@@ -117,6 +155,14 @@ const i18nContext = {
   "module": {
     en: "Module",
     it: "Modulo",
+  },
+  "remove": {
+    en: "Remove",
+    it: "Rimuovi",
+  },
+  "remove.confirm": {
+    en: "Remove <1> from this device?",
+    it: "Rimuovere <1> da questo dispositivo?",
   },
   "subtitle": {
     en: "Import, export, and remove local sources.",
