@@ -35,7 +35,12 @@ import type { Spell } from "../resources/spells/spell";
 import type { Vehicle } from "../resources/vehicles/vehicle";
 import type { ResourceKind } from "../types/resource-kind";
 import type { Source } from "./source";
-import type { SourceBundle } from "./source-bundle";
+import {
+  type SourceBundle,
+  type SourceBundleExportOptions,
+  filterSourceBundleResources,
+  sourceBundleResourceKeyByKind,
+} from "./source-bundle";
 
 //------------------------------------------------------------------------------
 // Create Catalogue
@@ -278,6 +283,37 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
+  // Get Source Bundle
+  //----------------------------------------------------------------------------
+
+  function getSourceBundle(
+    sourceId: string,
+    options?: SourceBundleExportOptions,
+  ): SourceBundle | undefined {
+    const source = sourceById.get(sourceId);
+    if (!source) return undefined;
+
+    const resources = Object.fromEntries(
+      objectKeys(sourceBundleResourceKeyByKind).map((kind) => {
+        const resourceIds = resourceIdsBySourceIdByKind[kind].get(
+          sourceId,
+          emptyIds,
+        );
+
+        return [
+          sourceBundleResourceKeyByKind[kind],
+          resourceIds.flatMap((resourceId) => {
+            const resource = resourcesByIdByKind[kind].get(resourceId);
+            return resource ? [resource] : [];
+          }),
+        ];
+      }),
+    ) as SourceBundle["resources"];
+
+    return filterSourceBundleResources({ resources, source }, options);
+  }
+
+  //----------------------------------------------------------------------------
   // Create Resource Store
   //----------------------------------------------------------------------------
 
@@ -504,6 +540,7 @@ export function createCatalogue(id: string) {
     getActiveSource,
     getActiveSourceId: activeSourceId.get,
     getSource,
+    getSourceBundle,
     importSourceBundle,
     removeSourceBundle,
     setActiveSourceId,

@@ -1,6 +1,11 @@
 import Dexie, { type Table } from "dexie";
 import type { Source } from "./source";
-import { type SourceBundle, sourceBundleSchema } from "./source-bundle";
+import {
+  type SourceBundle,
+  type SourceBundleExportOptions,
+  filterSourceBundleResources,
+  sourceBundleSchema,
+} from "./source-bundle";
 
 //------------------------------------------------------------------------------
 // Persisted Source
@@ -84,6 +89,21 @@ export async function loadSourceBundles(): Promise<SourceBundle[]> {
   }
 
   return bundles;
+}
+
+//------------------------------------------------------------------------------
+// Load Source Bundle
+//------------------------------------------------------------------------------
+
+export async function loadSourceBundle(
+  sourceId: string,
+  options?: SourceBundleExportOptions,
+): Promise<SourceBundle> {
+  const record = await db.source_bundles.get(sourceId);
+  if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
+
+  const bundle = sourceBundleSchema.parse(record.bundle);
+  return filterSourceBundleResources(bundle, options);
 }
 
 //------------------------------------------------------------------------------

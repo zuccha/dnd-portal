@@ -1,5 +1,15 @@
-import { Box, HStack, Heading, Input, Text, VStack } from "@chakra-ui/react";
-import { Trash2Icon } from "lucide-react";
+import {
+  Box,
+  CloseButton,
+  Dialog,
+  HStack,
+  Heading,
+  Input,
+  Portal,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { DownloadIcon, Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
@@ -11,7 +21,9 @@ import {
 import type { SourceType } from "~/models/types/source-type";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
+import Checkbox from "~/ui/checkbox";
 import IconButton from "~/ui/icon-button";
+import { downloadFile } from "~/utils/download";
 
 //------------------------------------------------------------------------------
 // Sources Panel
@@ -23,6 +35,9 @@ export default function SourcesPanel() {
   const translateSourceVersion = useTranslateSourceVersion(lang);
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>();
+  const [exportSource, setExportSource] = useState<Source>();
+  const [includePrivate, setIncludePrivate] = useState(true);
+  const [includeVirtual, setIncludeVirtual] = useState(false);
   const sourceGroups = groupSourcesByType(sources, lang);
 
   const importSource = async (file: File | undefined) => {
@@ -56,6 +71,38 @@ export default function SourcesPanel() {
     } catch (e) {
       console.error(e);
       setError(t("error.remove"));
+    }
+  };
+
+  const openExportDialog = (source: Source) => {
+    setError(undefined);
+    setExportSource(source);
+    setIncludePrivate(true);
+    setIncludeVirtual(false);
+  };
+
+  const closeExportDialog = () => {
+    setExportSource(undefined);
+  };
+
+  const exportSelectedSource = async () => {
+    if (!exportSource) return;
+
+    setError(undefined);
+
+    try {
+      const bundle = catalogue.getSourceBundle(exportSource.id, {
+        includePrivate,
+        includeVirtual,
+      });
+      if (!bundle) throw new Error(`Source not found: ${exportSource.id}`);
+
+      const json = JSON.stringify(bundle, null, 2);
+      downloadFile(json, `${exportSource.code}.json`, "json");
+      closeExportDialog();
+    } catch (e) {
+      console.error(e);
+      setError(t("error.export"));
     }
   };
 
@@ -121,6 +168,14 @@ export default function SourcesPanel() {
                         </VStack>
 
                         <IconButton
+                          Icon={DownloadIcon}
+                          label={t("export")}
+                          onClick={() => openExportDialog(source)}
+                          size="xs"
+                          variant="ghost"
+                        />
+
+                        <IconButton
                           Icon={Trash2Icon}
                           colorPalette="red"
                           label={t("remove")}
@@ -137,6 +192,60 @@ export default function SourcesPanel() {
           </VStack>
         : null}
       </VStack>
+
+      <Dialog.Root
+        lazyMount
+        onOpenChange={({ open }) => {
+          if (!open) closeExportDialog();
+        }}
+        open={!!exportSource}
+        size="sm"
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>{t("export")}</Dialog.Title>
+              </Dialog.Header>
+
+              <Dialog.Body>
+                <VStack align="flex-start" gap={4}>
+                  <Text color="fg.muted" fontSize="sm">
+                    {exportSource ?
+                      ti("export.description", exportSource.code)
+                    : ""}
+                  </Text>
+
+                  <Checkbox
+                    label={t("export.include_private")}
+                    onValueChange={setIncludePrivate}
+                    value={includePrivate}
+                  />
+
+                  <Checkbox
+                    label={t("export.include_virtual")}
+                    onValueChange={setIncludeVirtual}
+                    value={includeVirtual}
+                  />
+                </VStack>
+              </Dialog.Body>
+
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button variant="outline">{t("cancel")}</Button>
+                </Dialog.ActionTrigger>
+
+                <Button onClick={exportSelectedSource}>{t("export")}</Button>
+              </Dialog.Footer>
+
+              <Dialog.CloseTrigger asChild>
+                <CloseButton position="absolute" right={2} top={2} />
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </Box>
   );
 }
@@ -173,9 +282,17 @@ const i18nContext = {
     en: "Campaign",
     it: "Campagna",
   },
+  "cancel": {
+    en: "Cancel",
+    it: "Annulla",
+  },
   "core": {
     en: "Core",
     it: "Core",
+  },
+  "error.export": {
+    en: "The selected source could not be exported.",
+    it: "La fonte selezionata non può essere esportata.",
   },
   "error.import": {
     en: "The selected file is not a valid source JSON.",
@@ -184,6 +301,22 @@ const i18nContext = {
   "error.remove": {
     en: "The selected source could not be removed.",
     it: "La fonte selezionata non può essere rimossa.",
+  },
+  "export": {
+    en: "Export",
+    it: "Esporta",
+  },
+  "export.description": {
+    en: "Export <1> as a JSON source bundle.",
+    it: "Esporta <1> come fonte JSON.",
+  },
+  "export.include_private": {
+    en: "Include private resources",
+    it: "Includi risorse private",
+  },
+  "export.include_virtual": {
+    en: "Include virtual resources",
+    it: "Includi risorse virtuali",
   },
   "import": {
     en: "Import",

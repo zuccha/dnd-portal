@@ -70,6 +70,15 @@ export const sourceBundleSchema = z.object({
 export type SourceBundle = z.infer<typeof sourceBundleSchema>;
 
 //------------------------------------------------------------------------------
+// Source Bundle Export Options
+//------------------------------------------------------------------------------
+
+export type SourceBundleExportOptions = {
+  includePrivate?: boolean;
+  includeVirtual?: boolean;
+};
+
+//------------------------------------------------------------------------------
 // Source Bundle Resource Key By Kind
 //------------------------------------------------------------------------------
 
@@ -99,6 +108,31 @@ export const sourceBundleResourceKeyByKind = {
   weapon: "weapons",
   weapon_modifier: "weapon_modifiers",
 } as const satisfies Record<ResourceKind, keyof SourceBundle["resources"]>;
+
+//------------------------------------------------------------------------------
+// Filter Source Bundle Resources
+//------------------------------------------------------------------------------
+
+export function filterSourceBundleResources(
+  bundle: SourceBundle,
+  {
+    includePrivate = true,
+    includeVirtual = false,
+  }: SourceBundleExportOptions = {},
+): SourceBundle {
+  const resources = Object.fromEntries(
+    Object.entries(bundle.resources).map(([key, resources]) => [
+      key,
+      resources.filter(
+        (resource) =>
+          (includePrivate || resource.visibility !== "private") &&
+          (includeVirtual || !resource.virtual),
+      ),
+    ]),
+  ) as SourceBundle["resources"];
+
+  return { ...bundle, resources };
+}
 
 //------------------------------------------------------------------------------
 // Upsert Source Bundle Resource
