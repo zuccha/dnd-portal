@@ -5,8 +5,8 @@ import {
   serviceFormDataToResource,
 } from "~/models/resources/services/service-form";
 import { serviceStore } from "~/models/resources/services/service-store";
-import { createResourcesPanel } from "../../resources-panel";
-import { createResourcesTableColumns } from "../../resources-table-columns";
+import { createResourcesPanel } from "../resources-panel";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { ServiceCard } from "./service-card";
 import { createServiceEditor } from "./service-editor";
 import ServicesFilters from "./services-filters";

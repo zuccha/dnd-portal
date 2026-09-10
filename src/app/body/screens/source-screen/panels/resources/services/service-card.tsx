@@ -7,7 +7,7 @@ import PokerCard from "~/ui/poker-card";
 import {
   ResourcePokerCard,
   type ResourcePokerCardProps,
-} from "../../resource-poker-card";
+} from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Service Card

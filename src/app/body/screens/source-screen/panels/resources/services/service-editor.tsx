@@ -5,13 +5,13 @@ import type { ServiceFormData } from "~/models/resources/services/service-form";
 import { useServiceCategoryOptions } from "~/models/types/service-category";
 import { useServiceCostPeriodOptions } from "~/models/types/service-cost-period";
 import type { Form } from "~/utils/form";
-import { createResourceEditor } from "../../resource-editor";
+import { createResourceEditor } from "../resource-editor";
 import {
   createCostInputField,
   createInputField,
   createSelectEnumField,
   createTextareaField,
-} from "../../resource-editor-form";
+} from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
 // Create Service Editor

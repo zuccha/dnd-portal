@@ -132,7 +132,6 @@ import { createCreatureEditor } from "../resources/creatures/creature-editor";
 import { createEldritchInvocationEditor } from "../resources/eldritch-invocations/eldritch-invocation-editor";
 import { createArmorEditor } from "../resources/equipment/armors/armor-editor";
 import { createItemEditor } from "../resources/equipment/items/item-editor";
-import { createServiceEditor } from "../resources/equipment/services/service-editor";
 import { createToolEditor } from "../resources/equipment/tools/tool-editor";
 import { createWeaponEditor } from "../resources/equipment/weapons/weapon-editor";
 import { createFeatEditor } from "../resources/feats/feat-editor";
@@ -145,6 +144,7 @@ import { createItemModifierEditor } from "../resources/modifiers/equipment/items
 import { createToolModifierEditor } from "../resources/modifiers/equipment/tools/tool-modifier-editor";
 import { createWeaponModifierEditor } from "../resources/modifiers/equipment/weapons/weapon-modifier-editor";
 import { createPlaneEditor } from "../resources/planes/plane-editor";
+import { createServiceEditor } from "../resources/services/service-editor";
 import { createSpeciesEditor } from "../resources/species/species-editor";
 import { createSpellEditor } from "../resources/spells/spell-editor";
 import { createVehicleEditor } from "../resources/vehicles/vehicle-editor";

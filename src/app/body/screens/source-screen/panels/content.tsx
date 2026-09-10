@@ -12,7 +12,6 @@ import CreaturesPanel from "./resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./resources/eldritch-invocations/eldritch-invocations-panel";
 import ArmorsPanel from "./resources/equipment/armors/armors-panel";
 import ItemsPanel from "./resources/equipment/items/items-panel";
-import ServicesPanel from "./resources/equipment/services/services-panel";
 import ToolsPanel from "./resources/equipment/tools/tools-panel";
 import WeaponsPanel from "./resources/equipment/weapons/weapons-panel";
 import FeatsPanel from "./resources/feats/feats-panel";
@@ -25,6 +24,7 @@ import ItemModifiersPanel from "./resources/modifiers/equipment/items/item-modif
 import ToolModifiersPanel from "./resources/modifiers/equipment/tools/tool-modifiers-panel";
 import WeaponModifiersPanel from "./resources/modifiers/equipment/weapons/weapon-modifiers-panel";
 import PlanesPanel from "./resources/planes/planes-panel";
+import ServicesPanel from "./resources/services/services-panel";
 import SpeciesPanel from "./resources/species/species-panel";
 import SpellsPanel from "./resources/spells/spells-panel";
 import VehiclesPanel from "./resources/vehicles/vehicles-panel";

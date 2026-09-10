@@ -32,7 +32,6 @@ import { CreatureCard } from "../resources/creatures/creature-card";
 import { EldritchInvocationCard } from "../resources/eldritch-invocations/eldritch-invocation-card";
 import { ArmorCard } from "../resources/equipment/armors/armor-card";
 import { ItemCard } from "../resources/equipment/items/item-card";
-import { ServiceCard } from "../resources/equipment/services/service-card";
 import { ToolCard } from "../resources/equipment/tools/tool-card";
 import { WeaponCard } from "../resources/equipment/weapons/weapon-card";
 import { FeatCard } from "../resources/feats/feat-card";
@@ -46,6 +45,7 @@ import { ToolModifierCard } from "../resources/modifiers/equipment/tools/tool-mo
 import { WeaponModifierCard } from "../resources/modifiers/equipment/weapons/weapon-modifier-card";
 import { PlaneCard } from "../resources/planes/plane-card";
 import type { ResourcePokerCardProps } from "../resources/resource-poker-card";
+import { ServiceCard } from "../resources/services/service-card";
 import { SpeciesCard } from "../resources/species/species-card";
 import { SpellCard } from "../resources/spells/spell-card";
 import { VehicleCard } from "../resources/vehicles/vehicle-card";
