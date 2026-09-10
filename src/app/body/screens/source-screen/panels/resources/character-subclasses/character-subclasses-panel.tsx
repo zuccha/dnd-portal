@@ -6,7 +6,7 @@ import {
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import { type LocalizedCharacterSubclass } from "~/models/resources/character-subclasses/localized-character-subclass";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { CharacterSubclassCard } from "./character-subclass-card";
 import { createCharacterSubclassEditor } from "./character-subclass-editor";
 import CharacterSubclassesFilters from "./character-subclasses-filters";
@@ -15,19 +15,15 @@ import CharacterSubclassesFilters from "./character-subclasses-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<
+const columns = createResourcesTableColumns<
   CharacterSubclass,
   LocalizedCharacterSubclass
->["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+>([
   {
     key: "character_class",
     label: { en: "Class", it: "Classe" },
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // CharacterSubclasses Panel

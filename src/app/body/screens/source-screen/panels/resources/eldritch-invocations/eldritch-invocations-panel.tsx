@@ -6,7 +6,7 @@ import {
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
 import { type LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { EldritchInvocationCard } from "./eldritch-invocation-card";
 import { createEldritchInvocationEditor } from "./eldritch-invocation-editor";
 import EldritchInvocationsFilters from "./eldritch-invocations-filters";
@@ -15,14 +15,10 @@ import EldritchInvocationsFilters from "./eldritch-invocations-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<
+const columns = createResourcesTableColumns<
   EldritchInvocation,
   LocalizedEldritchInvocation
->["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+>([
   {
     key: "min_warlock_level",
     label: { en: "Min. Level", it: "Livello Min." },
@@ -33,7 +29,7 @@ const columns: ResourcesTableExtra<
     key: "other_prerequisite",
     label: { en: "Other Prerequisite", it: "Altro Prerequisito" },
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Eldritch Invocations Panel

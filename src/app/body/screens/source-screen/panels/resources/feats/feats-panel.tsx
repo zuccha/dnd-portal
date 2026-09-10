@@ -6,7 +6,7 @@ import {
 import { featStore } from "~/models/resources/feats/feat-store";
 import { type LocalizedFeat } from "~/models/resources/feats/localized-feat";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { FeatCard } from "./feat-card";
 import { createFeatEditor } from "./feat-editor";
 import FeatsFilters from "./feats-filters";
@@ -15,11 +15,7 @@ import FeatsFilters from "./feats-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Feat, LocalizedFeat>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createResourcesTableColumns<Feat, LocalizedFeat>([
   {
     key: "category",
     label: { en: "Category", it: "Categoria" },
@@ -34,7 +30,7 @@ const columns: ResourcesTableExtra<Feat, LocalizedFeat>["columns"] = [
     key: "prerequisite",
     label: { en: "Other Prerequisite", it: "Altro Prerequisito" },
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Feats Panel

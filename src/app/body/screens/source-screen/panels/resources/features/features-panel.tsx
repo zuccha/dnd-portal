@@ -6,7 +6,7 @@ import {
 import { featureStore } from "~/models/resources/features/feature-store";
 import type { LocalizedFeature } from "~/models/resources/features/localized-feature";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { FeatureCard } from "./feature-card";
 import { createFeatureEditor } from "./feature-editor";
 import FeaturesFilters from "./features-filters";
@@ -15,12 +15,7 @@ import FeaturesFilters from "./features-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Feature, LocalizedFeature>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
-] as const;
+const columns = createResourcesTableColumns<Feature, LocalizedFeature>([]);
 
 //------------------------------------------------------------------------------
 // Features Panel

@@ -6,7 +6,7 @@ import {
 } from "~/models/resources/services/service-form";
 import { serviceStore } from "~/models/resources/services/service-store";
 import { createResourcesPanel } from "../../resources-panel";
-import type { ResourcesTableExtra } from "../../resources-table";
+import { createResourcesTableColumns } from "../../resources-table-columns";
 import { ServiceCard } from "./service-card";
 import { createServiceEditor } from "./service-editor";
 import ServicesFilters from "./services-filters";
@@ -15,11 +15,7 @@ import ServicesFilters from "./services-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Service, LocalizedService>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createResourcesTableColumns<Service, LocalizedService>([
   {
     key: "category",
     label: { en: "Category", it: "Categoria" },
@@ -34,7 +30,7 @@ const columns: ResourcesTableExtra<Service, LocalizedService>["columns"] = [
     textAlign: "right",
     w: "1%",
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Services Panel

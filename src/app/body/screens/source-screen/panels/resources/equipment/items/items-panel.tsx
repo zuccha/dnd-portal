@@ -1,4 +1,4 @@
-import { FlaskConicalIcon, LayersIcon, WandIcon } from "lucide-react";
+import { FlaskConicalIcon, LayersIcon } from "lucide-react";
 import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type Item } from "~/models/resources/equipment/items/item";
 import {
@@ -10,6 +10,7 @@ import { type LocalizedItem } from "~/models/resources/equipment/items/localized
 import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/item-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
+import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { ItemCard } from "./item-card";
 import { createItemEditor } from "./item-editor";
@@ -19,11 +20,7 @@ import ItemsFilters from "./items-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createEquipmentTableColumns<Item, LocalizedItem>([
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
@@ -32,27 +29,6 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
   {
     key: "rarity",
     label: { en: "Rarity", it: "Rarità" },
-    whiteSpace: "nowrap",
-  },
-  {
-    icon: WandIcon,
-    key: "magic",
-    label: { en: "🪄", it: "🪄" },
-    textAlign: "center",
-    w: "1%",
-  },
-  {
-    key: "weight",
-    label: { en: "Weight", it: "Peso" },
-    textAlign: "right",
-    w: "1%",
-    whiteSpace: "nowrap",
-  },
-  {
-    key: "cost",
-    label: { en: "Cost", it: "Costo" },
-    textAlign: "right",
-    w: "1%",
     whiteSpace: "nowrap",
   },
   {
@@ -69,7 +45,7 @@ const columns: ResourcesTableExtra<Item, LocalizedItem>["columns"] = [
     textAlign: "center",
     w: "1%",
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Item Variant Dialog

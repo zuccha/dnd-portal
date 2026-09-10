@@ -6,7 +6,7 @@ import {
 } from "~/models/resources/metamagics/metamagic-form";
 import { metamagicStore } from "~/models/resources/metamagics/metamagic-store";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { MetamagicCard } from "./metamagic-card";
 import { createMetamagicEditor } from "./metamagic-editor";
 import MetamagicsFilters from "./metamagics-filters";
@@ -15,11 +15,7 @@ import MetamagicsFilters from "./metamagics-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Metamagic, LocalizedMetamagic>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createResourcesTableColumns<Metamagic, LocalizedMetamagic>([
   {
     key: "sorcery_points",
     label: { en: "Sorcery Points", it: "Punti Stregoneria" },
@@ -30,7 +26,7 @@ const columns: ResourcesTableExtra<Metamagic, LocalizedMetamagic>["columns"] = [
     key: "prerequisite",
     label: { en: "Prerequisite", it: "Prerequisito" },
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Metamagics Panel

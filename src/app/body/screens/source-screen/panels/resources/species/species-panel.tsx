@@ -6,20 +6,16 @@ import {
 } from "~/models/resources/species/species-form";
 import { speciesStore } from "~/models/resources/species/species-store";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { SpeciesCard } from "./species-card";
 import { createSpeciesEditor } from "./species-editor";
-import SpeciessFilters from "./species-filters";
+import SpeciesFilters from "./species-filters";
 
 //------------------------------------------------------------------------------
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Species, LocalizedSpecies>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createResourcesTableColumns<Species, LocalizedSpecies>([
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
@@ -34,7 +30,7 @@ const columns: ResourcesTableExtra<Species, LocalizedSpecies>["columns"] = [
     textAlign: "right",
     w: "1%",
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Eldritch Invocations Panel
@@ -45,7 +41,7 @@ const SpeciesPanel = createResourcesPanel(
   { initialPaletteName: "green" },
   {
     album: { AlbumCard: SpeciesCard },
-    filters: { Filters: SpeciessFilters },
+    filters: { Filters: SpeciesFilters },
     form: {
       Editor: createSpeciesEditor(speciesForm),
       form: speciesForm,

@@ -8,7 +8,7 @@ import {
 } from "~/models/resources/spells/spell-form";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { SpellCard } from "./spell-card";
 import { createSpellEditor } from "./spell-editor";
 import SpellsFilters from "./spells-filters";
@@ -17,11 +17,7 @@ import SpellsFilters from "./spells-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createResourcesTableColumns<Spell, LocalizedSpell>([
   {
     key: "level",
     label: { en: "Lvl", it: "Lvl" },
@@ -63,7 +59,7 @@ const columns: ResourcesTableExtra<Spell, LocalizedSpell>["columns"] = [
     label: { en: "V, S, M", it: "V, S, M" },
     w: "1%",
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Spells Panel

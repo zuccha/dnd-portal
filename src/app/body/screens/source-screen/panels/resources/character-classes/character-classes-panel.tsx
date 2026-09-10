@@ -6,7 +6,7 @@ import {
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { type LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { CharacterClassCard } from "./character-class-card";
 import { createCharacterClassEditor } from "./character-class-editor";
 import CharacterClassesFilters from "./character-classes-filters";
@@ -15,14 +15,10 @@ import CharacterClassesFilters from "./character-classes-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<
+const columns = createResourcesTableColumns<
   CharacterClass,
   LocalizedCharacterClass
->["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+>([
   {
     key: "primary_abilities",
     label: { en: "Abilities", it: "Abilità" },
@@ -49,7 +45,7 @@ const columns: ResourcesTableExtra<
     textAlign: "right",
     w: "1%",
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Character Classes Panel

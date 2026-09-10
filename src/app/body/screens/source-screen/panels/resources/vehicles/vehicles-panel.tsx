@@ -6,7 +6,7 @@ import {
 } from "~/models/resources/vehicles/vehicle-form";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { VehicleCard } from "./vehicle-card";
 import { createVehicleEditor } from "./vehicle-editor";
 import VehiclesFilters from "./vehicles-filters";
@@ -15,11 +15,7 @@ import VehiclesFilters from "./vehicles-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Vehicle, LocalizedVehicle>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createResourcesTableColumns<Vehicle, LocalizedVehicle>([
   {
     key: "speed",
     label: { en: "Speed", it: "Velocità" },
@@ -64,7 +60,7 @@ const columns: ResourcesTableExtra<Vehicle, LocalizedVehicle>["columns"] = [
     textAlign: "right",
     w: "1%",
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Vehicles Panel

@@ -6,7 +6,7 @@ import {
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { type LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { CreatureCard } from "./creature-card";
 import { createCreatureEditor } from "./creature-editor";
 import CreaturesFilters from "./creatures-filters";
@@ -15,11 +15,7 @@ import CreaturesFilters from "./creatures-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Creature, LocalizedCreature>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createResourcesTableColumns<Creature, LocalizedCreature>([
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
@@ -54,7 +50,7 @@ const columns: ResourcesTableExtra<Creature, LocalizedCreature>["columns"] = [
     key: "habitats",
     label: { en: "Habitat", it: "Habitat" },
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Creatures Panel

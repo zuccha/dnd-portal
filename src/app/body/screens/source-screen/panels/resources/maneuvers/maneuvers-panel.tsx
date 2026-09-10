@@ -6,7 +6,7 @@ import {
 } from "~/models/resources/maneuvers/maneuver-form";
 import { maneuverStore } from "~/models/resources/maneuvers/maneuver-store";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { ManeuverCard } from "./maneuver-card";
 import { createManeuverEditor } from "./maneuver-editor";
 import ManeuversFilters from "./maneuvers-filters";
@@ -15,16 +15,12 @@ import ManeuversFilters from "./maneuvers-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Maneuver, LocalizedManeuver>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createResourcesTableColumns<Maneuver, LocalizedManeuver>([
   {
     key: "prerequisite",
     label: { en: "Prerequisite", it: "Prerequisito" },
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Maneuvers Panel

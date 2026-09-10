@@ -1,4 +1,4 @@
-import { LayersIcon, WandIcon } from "lucide-react";
+import { LayersIcon } from "lucide-react";
 import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import { type Tool } from "~/models/resources/equipment/tools/tool";
@@ -10,6 +10,7 @@ import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
+import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { ToolCard } from "./tool-card";
 import { createToolEditor } from "./tool-editor";
@@ -19,11 +20,7 @@ import ToolsFilters from "./tools-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createEquipmentTableColumns<Tool, LocalizedTool>([
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
@@ -32,28 +29,7 @@ const columns: ResourcesTableExtra<Tool, LocalizedTool>["columns"] = [
     key: "ability",
     label: { en: "Ability", it: "Abilità" },
   },
-  {
-    icon: WandIcon,
-    key: "magic",
-    label: { en: "🪄", it: "🪄" },
-    textAlign: "center",
-    w: "1%",
-  },
-  {
-    key: "weight",
-    label: { en: "Weight", it: "Peso" },
-    textAlign: "right",
-    w: "1%",
-    whiteSpace: "nowrap",
-  },
-  {
-    key: "cost",
-    label: { en: "Cost", it: "Costo" },
-    textAlign: "right",
-    w: "1%",
-    whiteSpace: "nowrap",
-  },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Tool Variant Dialog

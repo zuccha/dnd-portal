@@ -1,4 +1,4 @@
-import { LayersIcon, WandIcon } from "lucide-react";
+import { LayersIcon } from "lucide-react";
 import { type Armor } from "~/models/resources/equipment/armors/armor";
 import {
   armorForm,
@@ -10,6 +10,7 @@ import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equi
 import { armorModifierStore } from "~/models/resources/modifiers/equipment/armors/armor-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
 import type { ResourcesTableExtra } from "../../resources-table";
+import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { ArmorCard } from "./armor-card";
 import { createArmorEditor } from "./armor-editor";
@@ -19,11 +20,7 @@ import ArmorsFilters from "./armors-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+const columns = createEquipmentTableColumns<Armor, LocalizedArmor>([
   {
     key: "type",
     label: { en: "Type", it: "Tipo" },
@@ -40,28 +37,7 @@ const columns: ResourcesTableExtra<Armor, LocalizedArmor>["columns"] = [
     key: "stealth",
     label: { en: "Stealth", it: "Furtività" },
   },
-  {
-    icon: WandIcon,
-    key: "magic",
-    label: { en: "🪄", it: "🪄" },
-    textAlign: "center",
-    w: "1%",
-  },
-  {
-    key: "weight",
-    label: { en: "Weight", it: "Peso" },
-    textAlign: "right",
-    w: "1%",
-    whiteSpace: "nowrap",
-  },
-  {
-    key: "cost",
-    label: { en: "Cost", it: "Costo" },
-    textAlign: "right",
-    w: "1%",
-    whiteSpace: "nowrap",
-  },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Armor Variant Dialog

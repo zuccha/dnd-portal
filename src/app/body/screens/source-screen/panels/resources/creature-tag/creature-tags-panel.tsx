@@ -6,7 +6,7 @@ import {
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { type LocalizedCreatureTag } from "~/models/resources/creature-tags/localized-creature-tag";
 import { createResourcesPanel } from "../resources-panel";
-import type { ResourcesTableExtra } from "../resources-table";
+import { createResourcesTableColumns } from "../resources-table-columns";
 import { CreatureTagCard } from "./creature-tag-card";
 import { createCreatureTagEditor } from "./creature-tag-editor";
 import CreatureTagsFilters from "./creature-tags-filters";
@@ -15,15 +15,9 @@ import CreatureTagsFilters from "./creature-tags-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<
-  CreatureTag,
-  LocalizedCreatureTag
->["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
-] as const;
+const columns = createResourcesTableColumns<CreatureTag, LocalizedCreatureTag>(
+  [],
+);
 
 //------------------------------------------------------------------------------
 // Creature Tags Panel
