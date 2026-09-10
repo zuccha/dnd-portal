@@ -13,18 +13,21 @@ import Tooltip, { type TooltipProps } from "./tooltip";
 export type IconButtonProps = Omit<ChakraIconButtonProps, "children"> & {
   Icon: LucideIcon | ReturnType<typeof createIcon>;
   label: string;
+  tooltipIds?: TooltipProps["ids"];
   tooltipPositioning?: TooltipProps["positioning"];
 };
 
 export default function IconButton({
   Icon,
   label,
+  tooltipIds,
   tooltipPositioning,
   ...rest
 }: IconButtonProps) {
   return (
     <Tooltip
       content={label}
+      ids={tooltipIds}
       openDelay={600}
       positioning={tooltipPositioning}
       showArrow

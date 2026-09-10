@@ -456,32 +456,33 @@ export function createCatalogue(id: string) {
     bundle: SourceBundle,
     { activate = true }: { activate?: boolean } = {},
   ): SourceBundle {
-    const source = bundle.source;
+    const importedBundle = filterSourceBundleResources(bundle);
+    const source = importedBundle.source;
     const resourceImports = [
-      ["armor", bundle.resources.armors],
-      ["armor_modifier", bundle.resources.armor_modifiers],
-      ["background", bundle.resources.backgrounds],
-      ["character_class", bundle.resources.character_classes],
-      ["character_subclass", bundle.resources.character_subclasses],
-      ["creature", bundle.resources.creatures],
-      ["creature_tag", bundle.resources.creature_tags],
-      ["eldritch_invocation", bundle.resources.eldritch_invocations],
-      ["feat", bundle.resources.feats],
-      ["feature", bundle.resources.features],
-      ["item", bundle.resources.items],
-      ["item_modifier", bundle.resources.item_modifiers],
-      ["language", bundle.resources.languages],
-      ["maneuver", bundle.resources.maneuvers],
-      ["metamagic", bundle.resources.metamagics],
-      ["plane", bundle.resources.planes],
-      ["service", bundle.resources.services],
-      ["species", bundle.resources.species],
-      ["spell", bundle.resources.spells],
-      ["tool", bundle.resources.tools],
-      ["tool_modifier", bundle.resources.tool_modifiers],
-      ["vehicle", bundle.resources.vehicles],
-      ["weapon", bundle.resources.weapons],
-      ["weapon_modifier", bundle.resources.weapon_modifiers],
+      ["armor", importedBundle.resources.armors],
+      ["armor_modifier", importedBundle.resources.armor_modifiers],
+      ["background", importedBundle.resources.backgrounds],
+      ["character_class", importedBundle.resources.character_classes],
+      ["character_subclass", importedBundle.resources.character_subclasses],
+      ["creature", importedBundle.resources.creatures],
+      ["creature_tag", importedBundle.resources.creature_tags],
+      ["eldritch_invocation", importedBundle.resources.eldritch_invocations],
+      ["feat", importedBundle.resources.feats],
+      ["feature", importedBundle.resources.features],
+      ["item", importedBundle.resources.items],
+      ["item_modifier", importedBundle.resources.item_modifiers],
+      ["language", importedBundle.resources.languages],
+      ["maneuver", importedBundle.resources.maneuvers],
+      ["metamagic", importedBundle.resources.metamagics],
+      ["plane", importedBundle.resources.planes],
+      ["service", importedBundle.resources.services],
+      ["species", importedBundle.resources.species],
+      ["spell", importedBundle.resources.spells],
+      ["tool", importedBundle.resources.tools],
+      ["tool_modifier", importedBundle.resources.tool_modifiers],
+      ["vehicle", importedBundle.resources.vehicles],
+      ["weapon", importedBundle.resources.weapons],
+      ["weapon_modifier", importedBundle.resources.weapon_modifiers],
     ] as const satisfies readonly [ResourceKind, readonly Resource[]][];
 
     sourceById.set(source.id, source);
@@ -510,7 +511,7 @@ export function createCatalogue(id: string) {
     else if (activeSourceId.get() === source.id)
       setActiveSourceResourceIds(source.id);
 
-    return bundle;
+    return importedBundle;
   }
 
   //----------------------------------------------------------------------------

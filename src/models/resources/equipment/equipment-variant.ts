@@ -12,10 +12,11 @@ import type { Equipment } from "./equipment";
 //------------------------------------------------------------------------------
 
 export function addEquipmentVariant<E extends Equipment>(
-  addResource: (resource: E) => boolean,
+  addResource: (resource: E) => boolean | Promise<boolean>,
   base: E,
   modifiers: EquipmentModifier[],
-): boolean {
+  { temporary = true }: { temporary?: boolean } = {},
+): boolean | Promise<boolean> {
   if (base.virtual) return false;
   if (modifiers.length === 0) return false;
 
@@ -28,7 +29,9 @@ export function addEquipmentVariant<E extends Equipment>(
     modifierIds,
   ]);
 
-  return addResource(createEquipmentVariant(base, modifiers, id));
+  return addResource(
+    createEquipmentVariant(base, modifiers, id, { temporary }),
+  );
 }
 
 //------------------------------------------------------------------------------
@@ -48,6 +51,7 @@ export function createEquipmentVariant<E extends Equipment>(
   base: E,
   modifiers: EquipmentModifier[],
   id: string,
+  { temporary = true }: { temporary?: boolean } = {},
 ): E {
   const modifierIds = modifiers.map(({ id }) => id);
 
@@ -95,7 +99,7 @@ export function createEquipmentVariant<E extends Equipment>(
       ...(base.variant_modifier_ids ?? []),
       ...modifierIds,
     ],
-    virtual: true,
+    virtual: temporary,
     weight:
       (base.weight ?? 0) +
       modifiers.reduce((total, modifier) => total + modifier.weight_delta, 0),

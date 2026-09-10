@@ -155,10 +155,10 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Add Virtual Resource
+  // Add Temporary Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function addVirtualResource(resource: R): boolean {
+  function addTemporaryResource(resource: R): boolean {
     if (getResource(resource.id)) return false;
 
     catalogueResourceStore.upsertResource({ ...resource, virtual: true });
@@ -166,15 +166,28 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Remove Virtual Resource
+  // Make Resource Persistent
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function removeVirtualResource(resourceId: string): void {
+  async function makeResourcePersistent(
+    resourceId: string,
+  ): Promise<string | undefined> {
     const resource = getResource(resourceId);
-    if (!resource?.virtual) return;
+    if (!resource) return "form.error.update_failure";
+    if (!resource.virtual) return undefined;
 
-    catalogueResourceStore.removeResource(resourceId);
-    resourceSelectionCache.remove(resourceId);
+    const persistentResource = { ...resource, virtual: false };
+
+    try {
+      await updateSourceBundle(resource.source_id, (bundle) =>
+        upsertSourceBundleResource(bundle, persistentResource),
+      );
+      catalogueResourceStore.upsertResource(persistentResource);
+      return undefined;
+    } catch (error) {
+      console.error(`${storeId}.make_resource_persistent`, error);
+      return "form.error.update_failure";
+    }
   }
 
   //----------------------------------------------------------------------------
@@ -195,7 +208,7 @@ export function createResourceStore<
     const resource = {
       ...defaultResource,
       ...resourcePatch,
-      id: createUuid(),
+      id: resourcePatch.id ?? createUuid(),
       kind,
       source_code: source.code,
       source_id: source.id,
@@ -204,10 +217,10 @@ export function createResourceStore<
     } as R;
 
     try {
-      const bundle = await updateSourceBundle(source.id, (bundle) =>
+      await updateSourceBundle(source.id, (bundle) =>
         upsertSourceBundleResource(bundle, resource),
       );
-      catalogue.importSourceBundle(bundle, { activate: false });
+      catalogueResourceStore.upsertResource(resource);
       return undefined;
     } catch (error) {
       console.error(`${storeId}.create_resource`, error);
@@ -235,7 +248,7 @@ export function createResourceStore<
     ];
 
     try {
-      const bundles = await Promise.all(
+      await Promise.all(
         sourceIds.map((sourceId) => {
           const ids = resources
             .filter((resource) => resource.source_id === sourceId)
@@ -247,10 +260,10 @@ export function createResourceStore<
         }),
       );
 
-      for (const bundle of bundles)
-        catalogue.importSourceBundle(bundle, { activate: false });
-      for (const resource of resources.filter((resource) => resource.virtual))
+      for (const resource of resources)
         catalogueResourceStore.removeResource(resource.id);
+      for (const resource of resources)
+        resourceSelectionCache.remove(resource.id);
 
       return undefined;
     } catch (error) {
@@ -297,10 +310,10 @@ export function createResourceStore<
     }
 
     try {
-      const bundle = await updateSourceBundle(resource.source_id, (bundle) =>
+      await updateSourceBundle(resource.source_id, (bundle) =>
         upsertSourceBundleResource(bundle, resource),
       );
-      catalogue.importSourceBundle(bundle, { activate: false });
+      catalogueResourceStore.upsertResource(resource);
       return undefined;
     } catch (error) {
       console.error(`${storeId}.update_resource`, error);
@@ -674,11 +687,11 @@ export function createResourceStore<
     useHasFilters,
     useResetFilters,
 
-    addVirtualResource,
+    addTemporaryResource,
     createResource,
     deleteResources,
     getResource,
-    removeVirtualResource,
+    makeResourcePersistent,
     updateResource,
     useAllResourceIds,
     useResource,

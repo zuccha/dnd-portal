@@ -75,7 +75,6 @@ export type SourceBundle = z.infer<typeof sourceBundleSchema>;
 
 export type SourceBundleExportOptions = {
   includePrivate?: boolean;
-  includeVirtual?: boolean;
 };
 
 //------------------------------------------------------------------------------
@@ -115,10 +114,7 @@ export const sourceBundleResourceKeyByKind = {
 
 export function filterSourceBundleResources(
   bundle: SourceBundle,
-  {
-    includePrivate = true,
-    includeVirtual = false,
-  }: SourceBundleExportOptions = {},
+  { includePrivate = true }: SourceBundleExportOptions = {},
 ): SourceBundle {
   const resources = Object.fromEntries(
     Object.entries(bundle.resources).map(([key, resources]) => [
@@ -126,7 +122,7 @@ export function filterSourceBundleResources(
       resources.filter(
         (resource) =>
           (includePrivate || resource.visibility !== "private") &&
-          (includeVirtual || !resource.virtual),
+          !resource.virtual,
       ),
     ]),
   ) as SourceBundle["resources"];
@@ -141,9 +137,8 @@ export function filterSourceBundleResources(
 export function upsertSourceBundleResource<R extends Resource>(
   bundle: SourceBundle,
   resource: R,
-  { includeVirtual = false }: { includeVirtual?: boolean } = {},
 ): SourceBundle {
-  if (resource.virtual && !includeVirtual) return bundle;
+  if (resource.virtual) return bundle;
 
   const key = sourceBundleResourceKeyByKind[resource.kind];
   const resources = bundle.resources[key] as Resource[];

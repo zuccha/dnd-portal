@@ -37,7 +37,6 @@ export default function SourcesPanel() {
   const [error, setError] = useState<string>();
   const [exportSource, setExportSource] = useState<Source>();
   const [includePrivate, setIncludePrivate] = useState(true);
-  const [includeVirtual, setIncludeVirtual] = useState(false);
   const sourceGroups = groupSourcesByType(sources, lang);
 
   const importSource = async (file: File | undefined) => {
@@ -78,7 +77,6 @@ export default function SourcesPanel() {
     setError(undefined);
     setExportSource(source);
     setIncludePrivate(true);
-    setIncludeVirtual(false);
   };
 
   const closeExportDialog = () => {
@@ -93,7 +91,6 @@ export default function SourcesPanel() {
     try {
       const bundle = catalogue.getSourceBundle(exportSource.id, {
         includePrivate,
-        includeVirtual,
       });
       if (!bundle) throw new Error(`Source not found: ${exportSource.id}`);
 
@@ -222,12 +219,6 @@ export default function SourcesPanel() {
                     onValueChange={setIncludePrivate}
                     value={includePrivate}
                   />
-
-                  <Checkbox
-                    label={t("export.include_virtual")}
-                    onValueChange={setIncludeVirtual}
-                    value={includeVirtual}
-                  />
                 </VStack>
               </Dialog.Body>
 
@@ -313,10 +304,6 @@ const i18nContext = {
   "export.include_private": {
     en: "Include private resources",
     it: "Includi risorse private",
-  },
-  "export.include_virtual": {
-    en: "Include temporary resources",
-    it: "Includi risorse temporanee",
   },
   "import": {
     en: "Import",

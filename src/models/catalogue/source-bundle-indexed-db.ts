@@ -51,7 +51,9 @@ const db = new SourceBundleIndexedDb();
 export async function saveSourceBundle(
   maybeBundle: unknown,
 ): Promise<SourceBundle> {
-  const parsedBundle = sourceBundleSchema.parse(maybeBundle);
+  const parsedBundle = filterSourceBundleResources(
+    sourceBundleSchema.parse(maybeBundle),
+  );
   const importedAt = new Date().toISOString();
 
   await db.transaction("rw", db.sources, db.source_bundles, async () => {

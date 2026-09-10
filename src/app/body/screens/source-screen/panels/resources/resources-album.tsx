@@ -124,7 +124,6 @@ export function createResourcesAlbum<
               {filteredResourceIds.map((id) => {
                 return visibleById[id] ?
                     <ResourceCardInteractive
-                      editable
                       key={id}
                       localizeResource={localizeResource}
                       palette={palettes[paletteName]}

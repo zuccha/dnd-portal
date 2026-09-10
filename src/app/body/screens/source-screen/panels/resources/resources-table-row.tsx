@@ -2,15 +2,19 @@ import {
   Badge,
   Box,
   HStack,
+  Menu,
+  Portal,
   Table,
   VStack,
   createIcon,
 } from "@chakra-ui/react";
 import {
+  EllipsisVerticalIcon,
   EyeClosedIcon,
   EyeIcon,
   type LucideIcon,
   PrinterIcon,
+  SaveIcon,
 } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -39,7 +43,7 @@ export type ResourceAction<R extends Resource> = {
   isDisabled?: (resource: R) => boolean;
   isVisible: (resource: R) => boolean;
   label: I18nString;
-  onClick: (resource: R) => void;
+  onClick: (resource: R) => void | Promise<void>;
 };
 
 export type ResourcesTableRowExtra<
@@ -115,25 +119,32 @@ export function createResourcesTableRow<
       [localizedResource],
     );
 
-    const addToPrintDeck = useCallback(
-      (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const addToPrintDeck = useCallback(() => {
+      printDeck.addEntry({
+        lang,
+        localized_resource:
+          localizedResourceUnionSchema.parse(localizedResource),
+        palette_name: paletteName,
+      });
 
-        printDeck.addEntry({
-          lang,
-          localized_resource:
-            localizedResourceUnionSchema.parse(localizedResource),
-          palette_name: paletteName,
-        });
+      toaster.info({
+        description: localizedResource.name,
+        title: t("print_deck.added"),
+      });
+    }, [lang, localizedResource, paletteName, t]);
 
-        toaster.info({
-          description: localizedResource.name,
-          title: t("print_deck.added"),
-        });
-      },
-      [lang, localizedResource, paletteName, t],
-    );
+    const makePersistent = useCallback(async () => {
+      const error = await store.makeResourcePersistent(localizedResource.id);
+      return error ?
+          toaster.error({
+            description: t("persistent.error.description"),
+            title: t("persistent.error.title"),
+          })
+        : toaster.info({
+            description: localizedResource.name,
+            title: t("persistent.done"),
+          });
+    }, [localizedResource.id, localizedResource.name, t]);
 
     const toggleSelection = useCallback(
       (e: React.MouseEvent) => {
@@ -189,12 +200,10 @@ export function createResourcesTableRow<
                   <HStack gap={2} minW={0}>
                     {localizedResource._raw.virtual && (
                       <Badge colorPalette="orange" size="xs" variant="solid">
-                        {translate({ en: "Variant", it: "Variante" }, lang)}
+                        {translate({ en: "Temporary", it: "Temporanea" }, lang)}
                       </Badge>
                     )}
-                    {!localizedResource._raw.virtual ?
-                      <Link onClick={edit}>{String(value)}</Link>
-                    : <span>{String(value) || "-"}</span>}
+                    <Link onClick={edit}>{String(value)}</Link>
                   </HStack>
                 : typeof value === "boolean" ?
                   <Checkbox disabled mt={0.5} size="sm" value={value} />
@@ -205,30 +214,63 @@ export function createResourcesTableRow<
 
           {hasActions && (
             <Table.Cell textAlign="center" w="1%" whiteSpace="nowrap">
-              <IconButton
-                Icon={PrinterIcon}
-                label={t("print_deck.add")}
-                onClick={addToPrintDeck}
-                size="2xs"
-                variant="ghost"
-              />
+              <Menu.Root ids={{ trigger: `actions-${resourceId}` }}>
+                <Menu.Trigger asChild>
+                  <IconButton
+                    Icon={EllipsisVerticalIcon}
+                    label={t("actions")}
+                    onClick={(e) => e.stopPropagation()}
+                    size="2xs"
+                    tooltipIds={{ trigger: `actions-${resourceId}` }}
+                    variant="ghost"
+                  />
+                </Menu.Trigger>
 
-              {visibleActions.map((action, i) => (
-                <IconButton
-                  Icon={action.icon}
-                  disabled={action.isDisabled?.(localizedResource._raw)}
-                  key={i}
-                  label={translate(action.label, lang)}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (action.isDisabled?.(localizedResource._raw)) return;
-                    action.onClick(localizedResource._raw);
-                  }}
-                  size="2xs"
-                  variant="ghost"
-                />
-              ))}
+                <Portal>
+                  <Menu.Positioner>
+                    <Menu.Content>
+                      <Menu.Item
+                        onSelect={addToPrintDeck}
+                        value="print-deck-add"
+                      >
+                        <Icon Icon={PrinterIcon} size="xs" />
+                        {t("print_deck.add")}
+                      </Menu.Item>
+
+                      {localizedResource._raw.virtual && (
+                        <Menu.Item
+                          onSelect={makePersistent}
+                          value="make-persistent"
+                        >
+                          <Icon Icon={SaveIcon} size="xs" />
+                          {t("persistent.make")}
+                        </Menu.Item>
+                      )}
+
+                      {visibleActions.map((action, i) => {
+                        const ActionIcon = action.icon;
+                        return (
+                          <Menu.Item
+                            disabled={action.isDisabled?.(
+                              localizedResource._raw,
+                            )}
+                            key={i}
+                            onSelect={() => {
+                              if (action.isDisabled?.(localizedResource._raw))
+                                return;
+                              void action.onClick(localizedResource._raw);
+                            }}
+                            value={`action-${i}`}
+                          >
+                            <Icon Icon={ActionIcon} size="xs" />
+                            {translate(action.label, lang)}
+                          </Menu.Item>
+                        );
+                      })}
+                    </Menu.Content>
+                  </Menu.Positioner>
+                </Portal>
+              </Menu.Root>
             </Table.Cell>
           )}
         </Table.Row>
@@ -275,6 +317,26 @@ export function createResourcesTableRow<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "actions": {
+    en: "Actions",
+    it: "Azioni",
+  },
+  "persistent.done": {
+    en: "Resource made persistent",
+    it: "Risorsa resa persistente",
+  },
+  "persistent.error.description": {
+    en: "The resource could not be made persistent.",
+    it: "La risorsa non può essere resa persistente.",
+  },
+  "persistent.error.title": {
+    en: "Persistence failed",
+    it: "Persistenza fallita",
+  },
+  "persistent.make": {
+    en: "Make persistent",
+    it: "Rendi persistente",
+  },
   "print_deck.add": {
     en: "Add to print deck",
     it: "Aggiungi al mazzo di stampa",

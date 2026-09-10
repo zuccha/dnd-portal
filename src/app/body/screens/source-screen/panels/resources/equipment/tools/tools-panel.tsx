@@ -1,4 +1,4 @@
-import { LayersIcon, WandIcon, XIcon } from "lucide-react";
+import { LayersIcon, WandIcon } from "lucide-react";
 import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import { type Tool } from "~/models/resources/equipment/tools/tool";
@@ -75,12 +75,6 @@ const actions: ResourcesTableExtra<Tool, LocalizedTool>["actions"] = [
     isVisible: ({ virtual }) => !virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: toolVariantDialog.open,
-  },
-  {
-    icon: XIcon,
-    isVisible: ({ virtual }) => !!virtual,
-    label: { en: "Remove variant", it: "Rimuovi variante" },
-    onClick: ({ id }) => toolStore.removeVirtualResource(id),
   },
 ];
 

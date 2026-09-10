@@ -157,6 +157,7 @@ export function createEquipmentVariantDialog<
         modifiersById={allModifiersById}
         orderedModifierIds={orderedModifierIds}
         request={request}
+        sourceId={sourceId}
       />
     );
   }
@@ -206,10 +207,12 @@ export function createEquipmentVariantDialog<
     modifiersById,
     orderedModifierIds,
     request,
+    sourceId,
   }: {
     modifiersById: Map<string, EquipmentModifier>;
     orderedModifierIds: string[];
     request: EquipmentVariantRequest<E>;
+    sourceId: string;
   }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const formatCost = useFormatCp();
@@ -218,6 +221,7 @@ export function createEquipmentVariantDialog<
     const [selectedModifierIds, setSelectedModifierIds] = useState<string[]>(
       request.selected_modifier_ids,
     );
+    const [makePersistent, setMakePersistent] = useState(false);
     const [saving, setSaving] = useState(false);
 
     const selectedModifiers = orderedIds
@@ -227,7 +231,9 @@ export function createEquipmentVariantDialog<
 
     const preview =
       selectedModifiers.length === selectedModifierIds.length ?
-        createEquipmentVariant(request.base, selectedModifiers, "preview")
+        createEquipmentVariant(request.base, selectedModifiers, "preview", {
+          temporary: !makePersistent,
+        })
       : undefined;
 
     const confirm = async () => {
@@ -238,10 +244,15 @@ export function createEquipmentVariantDialog<
         return;
 
       setSaving(true);
-      const added = addEquipmentVariant(
-        store.addVirtualResource,
+      const added = await addEquipmentVariant(
+        async (resource) => {
+          if (!makePersistent) return store.addTemporaryResource(resource);
+          const error = await store.createResource(sourceId, resource);
+          return !error;
+        },
         request.base,
         selectedModifiers,
+        { temporary: !makePersistent },
       );
       setSaving(false);
 
@@ -328,7 +339,7 @@ export function createEquipmentVariantDialog<
                     {translate(preview.name, lang)}
                   </Text>
                   {preview.virtual && (
-                    <Badge colorPalette="gray">{t("variant")}</Badge>
+                    <Badge colorPalette="gray">{t("temporary")}</Badge>
                   )}
                 </HStack>
 
@@ -360,6 +371,12 @@ export function createEquipmentVariantDialog<
                 )}
               </VStack>
             )}
+
+            <Checkbox
+              label={t("make_persistent")}
+              onValueChange={setMakePersistent}
+              value={makePersistent}
+            />
           </VStack>
         </Dialog.Body>
 
@@ -442,6 +459,10 @@ const i18nContext = {
     en: "Magic",
     it: "Magico",
   },
+  make_persistent: {
+    en: "Make persistent",
+    it: "Rendi persistente",
+  },
   modifiers: {
     en: "Modifiers",
     it: "Modificatori",
@@ -457,6 +478,10 @@ const i18nContext = {
   non_magic: {
     en: "Nonmagic",
     it: "Non magico",
+  },
+  temporary: {
+    en: "Temporary",
+    it: "Temporaneo",
   },
   title: {
     en: "Add equipment variant",

@@ -1,4 +1,4 @@
-import { LayersIcon, WandIcon, XIcon } from "lucide-react";
+import { LayersIcon, WandIcon } from "lucide-react";
 import { type Armor } from "~/models/resources/equipment/armors/armor";
 import {
   armorForm,
@@ -83,12 +83,6 @@ const actions: ResourcesTableExtra<Armor, LocalizedArmor>["actions"] = [
     isVisible: ({ virtual }) => !virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: armorVariantDialog.open,
-  },
-  {
-    icon: XIcon,
-    isVisible: ({ virtual }) => !!virtual,
-    label: { en: "Remove variant", it: "Rimuovi variante" },
-    onClick: ({ id }) => armorStore.removeVirtualResource(id),
   },
 ];
 

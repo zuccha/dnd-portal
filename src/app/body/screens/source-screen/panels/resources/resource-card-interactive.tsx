@@ -1,5 +1,10 @@
-import { Badge, Box, Theme, VStack } from "@chakra-ui/react";
-import { EditIcon, PrinterIcon } from "lucide-react";
+import { Badge, Box, Menu, Portal, Theme, VStack } from "@chakra-ui/react";
+import {
+  EditIcon,
+  EllipsisVerticalIcon,
+  PrinterIcon,
+  SaveIcon,
+} from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -12,6 +17,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
+import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
 import PokerCard from "~/ui/poker-card";
 import { toaster } from "~/ui/toaster";
@@ -53,7 +59,6 @@ export type ResourceCardInteractiveProps<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
-  editable?: boolean;
   localizeResource: (resource: R) => L;
   palette?: Palette;
   resourceId: string;
@@ -82,7 +87,6 @@ export function createResourceCardInteractive<
   const { useCardMode, usePaletteName, useShowImage } = context;
 
   function ResourcesAlbumCardInteractive({
-    editable,
     localizeResource,
     palette = defaultPalette,
     resourceId,
@@ -148,6 +152,19 @@ export function createResourceCardInteractive<
       });
     }, [lang, localizedResource, paletteName, t]);
 
+    const makePersistent = useCallback(async () => {
+      const error = await store.makeResourcePersistent(localizedResource.id);
+      return error ?
+          toaster.error({
+            description: t("persistent.error.description"),
+            title: t("persistent.error.title"),
+          })
+        : toaster.info({
+            description: localizedResource.name,
+            title: t("persistent.done"),
+          });
+    }, [localizedResource.id, localizedResource.name, t]);
+
     return (
       <Box
         className="group"
@@ -202,7 +219,7 @@ export function createResourceCardInteractive<
               variant="solid"
               zIndex={1}
             >
-              {t("variant")}
+              {t("temporary")}
             </Badge>
           )}
           <VStack
@@ -214,51 +231,75 @@ export function createResourceCardInteractive<
             visibility="hidden"
             zIndex={2}
           >
-            {editable && !localizedResource._raw.virtual && (
-              <IconButton
-                Icon={EditIcon}
-                _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
-                className="light"
-                label={t("edit")}
-                onPointerDown={(e) => {
-                  e.stopPropagation();
-                  edit();
-                }}
-                size="2xs"
-                tooltipPositioning={{ placement: "right" }}
-              />
-            )}
-
-            {visibleActions.map((action, i) => (
-              <IconButton
-                Icon={action.icon}
-                _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
-                className="light"
-                disabled={action.isDisabled?.(localizedResource._raw)}
-                key={i}
-                label={translate(action.label, lang)}
-                onPointerDown={(e) => {
-                  e.stopPropagation();
-                  if (action.isDisabled?.(localizedResource._raw)) return;
-                  action.onClick(localizedResource._raw);
-                }}
-                size="2xs"
-                tooltipPositioning={{ placement: "right" }}
-              />
-            ))}
-
             <IconButton
-              Icon={PrinterIcon}
+              Icon={EditIcon}
               _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
               className="light"
-              label={t("print_deck.add")}
+              label={t("edit")}
               onPointerDown={(e) => {
                 e.stopPropagation();
-                addToPrintDeck();
+                edit();
               }}
               size="2xs"
               tooltipPositioning={{ placement: "right" }}
             />
+
+            <Menu.Root ids={{ trigger: `actions-${resourceId}` }}>
+              <Menu.Trigger asChild>
+                <IconButton
+                  Icon={EllipsisVerticalIcon}
+                  _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
+                  className="light"
+                  label={t("actions")}
+                  onPointerDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                  size="2xs"
+                  tooltipIds={{ trigger: `actions-${resourceId}` }}
+                  tooltipPositioning={{ placement: "right" }}
+                />
+              </Menu.Trigger>
+
+              <Portal>
+                <Menu.Positioner>
+                  <Menu.Content>
+                    <Menu.Item onSelect={addToPrintDeck} value="print-deck-add">
+                      <Icon Icon={PrinterIcon} size="xs" />
+                      {t("print_deck.add")}
+                    </Menu.Item>
+
+                    {localizedResource._raw.virtual && (
+                      <Menu.Item
+                        onSelect={makePersistent}
+                        value="make-persistent"
+                      >
+                        <Icon Icon={SaveIcon} size="xs" />
+                        {t("persistent.make")}
+                      </Menu.Item>
+                    )}
+
+                    {visibleActions.map((action, i) => {
+                      const ActionIcon = action.icon;
+                      return (
+                        <Menu.Item
+                          disabled={action.isDisabled?.(localizedResource._raw)}
+                          key={i}
+                          onSelect={() => {
+                            if (action.isDisabled?.(localizedResource._raw))
+                              return;
+                            void action.onClick(localizedResource._raw);
+                          }}
+                          value={`action-${i}`}
+                        >
+                          <Icon Icon={ActionIcon} size="xs" />
+                          {translate(action.label, lang)}
+                        </Menu.Item>
+                      );
+                    })}
+                  </Menu.Content>
+                </Menu.Positioner>
+              </Portal>
+            </Menu.Root>
           </VStack>
 
           <IconButton
@@ -308,9 +349,29 @@ export function createResourceCardInteractive<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "actions": {
+    en: "Actions",
+    it: "Azioni",
+  },
   "edit": {
     en: "Edit",
     it: "Modifica",
+  },
+  "persistent.done": {
+    en: "Resource made persistent",
+    it: "Risorsa resa persistente",
+  },
+  "persistent.error.description": {
+    en: "The resource could not be made persistent.",
+    it: "La risorsa non può essere resa persistente.",
+  },
+  "persistent.error.title": {
+    en: "Persistence failed",
+    it: "Persistenza fallita",
+  },
+  "persistent.make": {
+    en: "Make persistent",
+    it: "Rendi persistente",
   },
   "print_deck.add": {
     en: "Add to print deck",
@@ -328,8 +389,8 @@ const i18nContext = {
     en: "Select",
     it: "Seleziona",
   },
-  "variant": {
-    en: "Variant",
-    it: "Variante",
+  "temporary": {
+    en: "Temporary",
+    it: "Temporanea",
   },
 };
