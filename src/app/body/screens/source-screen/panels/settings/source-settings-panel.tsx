@@ -4,7 +4,6 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import type { Source } from "~/models/catalogue/source";
-import { updateSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
@@ -92,7 +91,10 @@ function SourceDependenciesSettings({
     setSaving(true);
     setError(undefined);
     try {
-      await updateSourceDependencies(source.id, draft);
+      await catalogue.updateSource(source.id, (source) => ({
+        ...source,
+        ...draft,
+      }));
     } catch (e) {
       console.error(e);
       setError("error.save");
@@ -345,23 +347,6 @@ function sourceToDependencies(source: SourceDependencies): SourceDependencies {
     include_ids: source.include_ids,
     required_ids: source.required_ids,
   };
-}
-
-async function updateSourceDependencies(
-  sourceId: string,
-  dependencies: SourceDependencies,
-): Promise<void> {
-  const bundle = await updateSourceBundle(sourceId, (bundle) => ({
-    ...bundle,
-    source: {
-      ...bundle.source,
-      ...dependencies,
-    },
-  }));
-
-  catalogue.importSourceBundle(bundle, {
-    activate: catalogue.getActiveSourceId() === sourceId,
-  });
 }
 
 //------------------------------------------------------------------------------

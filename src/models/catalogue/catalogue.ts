@@ -41,6 +41,7 @@ import {
   filterSourceBundleResources,
   sourceBundleResourceKeyByKind,
 } from "./source-bundle";
+import { updateSourceBundle } from "./source-bundle-indexed-db";
 
 //------------------------------------------------------------------------------
 // Create Catalogue
@@ -314,6 +315,30 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
+  // Update Source
+  //----------------------------------------------------------------------------
+
+  async function updateSource(
+    sourceId: string,
+    update: (source: Source) => Source,
+  ): Promise<Source | undefined> {
+    const current = sourceById.get(sourceId);
+    if (!current) return undefined;
+
+    const source = update(current);
+    const bundle = await updateSourceBundle(sourceId, (bundle) => ({
+      ...bundle,
+      source,
+    }));
+
+    sourceById.set(bundle.source.id, bundle.source);
+    if (activeSourceId.get() === bundle.source.id)
+      setActiveSourceResourceIds(bundle.source.id);
+
+    return bundle.source;
+  }
+
+  //----------------------------------------------------------------------------
   // Create Resource Store
   //----------------------------------------------------------------------------
 
@@ -551,6 +576,7 @@ export function createCatalogue(id: string) {
     importSourceBundle,
     removeSourceBundle,
     setActiveSourceId,
+    updateSource,
     useActiveSource,
     useActiveSourceId: activeSourceId.useValue,
     useSource,
