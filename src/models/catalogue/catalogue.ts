@@ -15,7 +15,6 @@ import type { CreatureTag } from "../resources/creature-tags/creature-tag";
 import type { Creature } from "../resources/creatures/creature";
 import type { EldritchInvocation } from "../resources/eldritch-invocations/eldritch-invocation";
 import type { Armor } from "../resources/equipment/armors/armor";
-import type { Equipment } from "../resources/equipment/equipment";
 import type { Item } from "../resources/equipment/items/item";
 import type { Tool } from "../resources/equipment/tools/tool";
 import type { Weapon } from "../resources/equipment/weapons/weapon";
@@ -25,11 +24,9 @@ import type { Language } from "../resources/languages/language";
 import type { Maneuver } from "../resources/maneuvers/maneuver";
 import type { Metamagic } from "../resources/metamagics/metamagic";
 import type { ArmorModifier } from "../resources/modifiers/equipment/armors/armor-modifier";
-import type { EquipmentModifier } from "../resources/modifiers/equipment/equipment-modifier";
 import type { ItemModifier } from "../resources/modifiers/equipment/items/item-modifier";
 import type { ToolModifier } from "../resources/modifiers/equipment/tools/tool-modifier";
 import type { WeaponModifier } from "../resources/modifiers/equipment/weapons/weapon-modifier";
-import type { Modifier } from "../resources/modifiers/modifier";
 import type { Plane } from "../resources/planes/plane";
 import type { Resource } from "../resources/resource";
 import type { Service } from "../resources/services/service";
@@ -114,9 +111,6 @@ export function createCatalogue(id: string) {
     eldritch_invocation: createResourcesById<EldritchInvocation>(
       "eldritch_invocation",
     ),
-    equipment: createResourcesById<Equipment>("equipment"),
-    equipment_modifier:
-      createResourcesById<EquipmentModifier>("equipment_modifier"),
     feat: createResourcesById<Feat>("feat"),
     feature: createResourcesById<Feature>("feature"),
     item: createResourcesById<Item>("item"),
@@ -124,9 +118,7 @@ export function createCatalogue(id: string) {
     language: createResourcesById<Language>("language"),
     maneuver: createResourcesById<Maneuver>("maneuver"),
     metamagic: createResourcesById<Metamagic>("metamagic"),
-    modifier: createResourcesById<Modifier>("modifier"),
     plane: createResourcesById<Plane>("plane"),
-    resource: createResourcesById<Resource>("resource"),
     service: createResourcesById<Service>("service"),
     species: createResourcesById<Species>("species"),
     spell: createResourcesById<Spell>("spell"),
@@ -150,8 +142,6 @@ export function createCatalogue(id: string) {
     creature: createResourcesIdsBySourceId("creature"),
     creature_tag: createResourcesIdsBySourceId("creature_tag"),
     eldritch_invocation: createResourcesIdsBySourceId("eldritch_invocation"),
-    equipment: createResourcesIdsBySourceId("equipment"),
-    equipment_modifier: createResourcesIdsBySourceId("equipment_modifier"),
     feat: createResourcesIdsBySourceId("feat"),
     feature: createResourcesIdsBySourceId("feature"),
     item: createResourcesIdsBySourceId("item"),
@@ -159,9 +149,7 @@ export function createCatalogue(id: string) {
     language: createResourcesIdsBySourceId("language"),
     maneuver: createResourcesIdsBySourceId("maneuver"),
     metamagic: createResourcesIdsBySourceId("metamagic"),
-    modifier: createResourcesIdsBySourceId("modifier"),
     plane: createResourcesIdsBySourceId("plane"),
-    resource: createResourcesIdsBySourceId("resource"),
     service: createResourcesIdsBySourceId("service"),
     species: createResourcesIdsBySourceId("species"),
     spell: createResourcesIdsBySourceId("spell"),
@@ -442,8 +430,6 @@ export function createCatalogue(id: string) {
       ["creature", bundle.resources.creatures],
       ["creature_tag", bundle.resources.creature_tags],
       ["eldritch_invocation", bundle.resources.eldritch_invocations],
-      ["equipment", bundle.resources.equipments],
-      ["equipment_modifier", bundle.resources.equipment_modifiers],
       ["feat", bundle.resources.feats],
       ["feature", bundle.resources.features],
       ["item", bundle.resources.items],
@@ -451,7 +437,6 @@ export function createCatalogue(id: string) {
       ["language", bundle.resources.languages],
       ["maneuver", bundle.resources.maneuvers],
       ["metamagic", bundle.resources.metamagics],
-      ["modifier", bundle.resources.modifiers],
       ["plane", bundle.resources.planes],
       ["service", bundle.resources.services],
       ["species", bundle.resources.species],

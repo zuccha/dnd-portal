@@ -17,7 +17,6 @@ export const equipmentModifierSchema = modifierSchema.extend({
   cost_delta: z.number(),
   equipment_ids: z.array(z.uuid()),
   kind: z.enum([
-    "equipment_modifier",
     "armor_modifier",
     "item_modifier",
     "tool_modifier",
@@ -36,12 +35,11 @@ export type EquipmentModifier = z.infer<typeof equipmentModifierSchema>;
 // Default Equipment Modifier
 //------------------------------------------------------------------------------
 
-export const defaultEquipmentModifier: EquipmentModifier = {
+export const defaultEquipmentModifier: Omit<EquipmentModifier, "kind"> = {
   ...defaultModifier,
   attunement_notes_delta: {},
   cost_delta: 0,
   equipment_ids: [],
-  kind: "equipment_modifier",
   make_magic: false,
   notes_delta: {},
   rarity_minimum: "common",

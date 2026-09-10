@@ -33,10 +33,9 @@ export type Resource = z.infer<typeof resourceSchema>;
 // Default Resource
 //------------------------------------------------------------------------------
 
-export const defaultResource: Resource = {
+export const defaultResource: Omit<Resource, "kind"> = {
   id: "",
   image_url: undefined,
-  kind: "resource",
   name: {},
   name_short: {},
   page: {},

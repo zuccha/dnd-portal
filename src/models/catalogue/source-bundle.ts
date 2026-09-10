@@ -6,7 +6,6 @@ import { creatureTagSchema } from "../resources/creature-tags/creature-tag";
 import { creatureSchema } from "../resources/creatures/creature";
 import { eldritchInvocationSchema } from "../resources/eldritch-invocations/eldritch-invocation";
 import { armorSchema } from "../resources/equipment/armors/armor";
-import { equipmentSchema } from "../resources/equipment/equipment";
 import { itemSchema } from "../resources/equipment/items/item";
 import { toolSchema } from "../resources/equipment/tools/tool";
 import { weaponSchema } from "../resources/equipment/weapons/weapon";
@@ -16,11 +15,9 @@ import { languageSchema } from "../resources/languages/language";
 import { maneuverSchema } from "../resources/maneuvers/maneuver";
 import { metamagicSchema } from "../resources/metamagics/metamagic";
 import { armorModifierSchema } from "../resources/modifiers/equipment/armors/armor-modifier";
-import { equipmentModifierSchema } from "../resources/modifiers/equipment/equipment-modifier";
 import { itemModifierSchema } from "../resources/modifiers/equipment/items/item-modifier";
 import { toolModifierSchema } from "../resources/modifiers/equipment/tools/tool-modifier";
 import { weaponModifierSchema } from "../resources/modifiers/equipment/weapons/weapon-modifier";
-import { modifierSchema } from "../resources/modifiers/modifier";
 import { planeSchema } from "../resources/planes/plane";
 import type { Resource } from "../resources/resource";
 import { serviceSchema } from "../resources/services/service";
@@ -29,12 +26,6 @@ import { spellSchema } from "../resources/spells/spell";
 import { vehicleSchema } from "../resources/vehicles/vehicle";
 import type { ResourceKind } from "../types/resource-kind";
 import { sourceSchema } from "./source";
-
-//------------------------------------------------------------------------------
-// Source Bundle Resource Kind
-//------------------------------------------------------------------------------
-
-export type SourceBundleResourceKind = Exclude<ResourceKind, "resource">;
 
 //------------------------------------------------------------------------------
 // Source Bundle Resources
@@ -49,8 +40,6 @@ export const sourceBundleResourcesSchema = z.object({
   creature_tags: creatureTagSchema.array().default([]),
   creatures: creatureSchema.array().default([]),
   eldritch_invocations: eldritchInvocationSchema.array().default([]),
-  equipment_modifiers: equipmentModifierSchema.array().default([]),
-  equipments: equipmentSchema.array().default([]),
   feats: featSchema.array().default([]),
   features: featureSchema.array().default([]),
   item_modifiers: itemModifierSchema.array().default([]),
@@ -58,7 +47,6 @@ export const sourceBundleResourcesSchema = z.object({
   languages: languageSchema.array().default([]),
   maneuvers: maneuverSchema.array().default([]),
   metamagics: metamagicSchema.array().default([]),
-  modifiers: modifierSchema.array().default([]),
   planes: planeSchema.array().default([]),
   services: serviceSchema.array().default([]),
   species: speciesSchema.array().default([]),
@@ -94,8 +82,6 @@ export const sourceBundleResourceKeyByKind = {
   creature: "creatures",
   creature_tag: "creature_tags",
   eldritch_invocation: "eldritch_invocations",
-  equipment: "equipments",
-  equipment_modifier: "equipment_modifiers",
   feat: "feats",
   feature: "features",
   item: "items",
@@ -103,7 +89,6 @@ export const sourceBundleResourceKeyByKind = {
   language: "languages",
   maneuver: "maneuvers",
   metamagic: "metamagics",
-  modifier: "modifiers",
   plane: "planes",
   service: "services",
   species: "species",
@@ -113,10 +98,7 @@ export const sourceBundleResourceKeyByKind = {
   vehicle: "vehicles",
   weapon: "weapons",
   weapon_modifier: "weapon_modifiers",
-} as const satisfies Record<
-  SourceBundleResourceKind,
-  keyof SourceBundle["resources"]
->;
+} as const satisfies Record<ResourceKind, keyof SourceBundle["resources"]>;
 
 //------------------------------------------------------------------------------
 // Upsert Source Bundle Resource
@@ -128,7 +110,6 @@ export function upsertSourceBundleResource<R extends Resource>(
   { includeVirtual = false }: { includeVirtual?: boolean } = {},
 ): SourceBundle {
   if (resource.virtual && !includeVirtual) return bundle;
-  if (resource.kind === "resource") return bundle;
 
   const key = sourceBundleResourceKeyByKind[resource.kind];
   const resources = bundle.resources[key] as Resource[];
@@ -154,7 +135,7 @@ export function upsertSourceBundleResource<R extends Resource>(
 
 export function removeSourceBundleResources(
   bundle: SourceBundle,
-  kind: SourceBundleResourceKind,
+  kind: ResourceKind,
   resourceIds: string[],
 ): SourceBundle {
   const key = sourceBundleResourceKeyByKind[kind];

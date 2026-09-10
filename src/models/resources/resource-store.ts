@@ -4,7 +4,6 @@ import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
 import {
-  type SourceBundleResourceKind,
   removeSourceBundleResources,
   upsertSourceBundleResource,
 } from "~/models/catalogue/source-bundle";
@@ -243,11 +242,7 @@ export function createResourceStore<
             .map(({ id }) => id);
 
           return updateSourceBundle(sourceId, (bundle) =>
-            removeSourceBundleResources(
-              bundle,
-              kind as SourceBundleResourceKind,
-              ids,
-            ),
+            removeSourceBundleResources(bundle, kind, ids),
           );
         }),
       );

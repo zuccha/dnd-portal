@@ -17,7 +17,7 @@ export const equipmentSchema = resourceSchema.extend({
   attunement_notes: i18nStringSchema,
   cost: z.number().nullable(),
   feature_entries: z.array(featureEntrySchema),
-  kind: z.enum(["equipment", "armor", "item", "tool", "weapon"]),
+  kind: z.enum(["armor", "item", "tool", "weapon"]),
   magic: z.boolean(),
   modifier_ids: z.array(z.uuid()),
   notes: i18nStringSchema,
@@ -34,12 +34,11 @@ export type Equipment = z.infer<typeof equipmentSchema>;
 // Default Equipment
 //------------------------------------------------------------------------------
 
-export const defaultEquipment: Equipment = {
+export const defaultEquipment: Omit<Equipment, "kind"> = {
   ...defaultResource,
   attunement_notes: {},
   cost: 0,
   feature_entries: [],
-  kind: "equipment",
   magic: false,
   modifier_ids: [],
   notes: {},
