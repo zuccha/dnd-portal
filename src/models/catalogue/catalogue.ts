@@ -492,7 +492,13 @@ export function createCatalogue(id: string) {
     for (const [kind, resources] of resourceImports) {
       type ResourceStoreSet = OptionalStoreSet<string, Resource>;
       const resourcesById = resourcesByIdByKind[kind] as ResourceStoreSet;
+      const previousResourceIds = resourceIdsBySourceIdByKind[kind].get(
+        source.id,
+        emptyIds,
+      );
 
+      for (const resourceId of previousResourceIds)
+        resourcesById.clear(resourceId);
       for (const resource of resources)
         resourcesById.set(resource.id, resource);
 

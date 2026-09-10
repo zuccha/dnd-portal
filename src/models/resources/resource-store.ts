@@ -204,10 +204,10 @@ export function createResourceStore<
     } as R;
 
     try {
-      await updateSourceBundle(source.id, (bundle) =>
+      const bundle = await updateSourceBundle(source.id, (bundle) =>
         upsertSourceBundleResource(bundle, resource),
       );
-      catalogueResourceStore.upsertResource(resource);
+      catalogue.importSourceBundle(bundle, { activate: false });
       return undefined;
     } catch (error) {
       console.error(`${storeId}.create_resource`, error);
@@ -235,7 +235,7 @@ export function createResourceStore<
     ];
 
     try {
-      await Promise.all(
+      const bundles = await Promise.all(
         sourceIds.map((sourceId) => {
           const ids = resources
             .filter((resource) => resource.source_id === sourceId)
@@ -247,7 +247,9 @@ export function createResourceStore<
         }),
       );
 
-      for (const resource of resources)
+      for (const bundle of bundles)
+        catalogue.importSourceBundle(bundle, { activate: false });
+      for (const resource of resources.filter((resource) => resource.virtual))
         catalogueResourceStore.removeResource(resource.id);
 
       return undefined;
@@ -295,10 +297,10 @@ export function createResourceStore<
     }
 
     try {
-      await updateSourceBundle(resource.source_id, (bundle) =>
+      const bundle = await updateSourceBundle(resource.source_id, (bundle) =>
         upsertSourceBundleResource(bundle, resource),
       );
-      catalogueResourceStore.upsertResource(resource);
+      catalogue.importSourceBundle(bundle, { activate: false });
       return undefined;
     } catch (error) {
       console.error(`${storeId}.update_resource`, error);
