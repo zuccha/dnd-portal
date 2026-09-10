@@ -315,8 +315,8 @@ const i18nContext = {
     it: "Includi risorse private",
   },
   "export.include_virtual": {
-    en: "Include virtual resources",
-    it: "Includi risorse virtuali",
+    en: "Include temporary resources",
+    it: "Includi risorse temporanee",
   },
   "import": {
     en: "Import",
