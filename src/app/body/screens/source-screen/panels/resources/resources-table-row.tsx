@@ -9,6 +9,9 @@ import {
   createIcon,
 } from "@chakra-ui/react";
 import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  EditIcon,
   EllipsisVerticalIcon,
   EyeClosedIcon,
   EyeIcon,
@@ -155,16 +158,33 @@ export function createResourcesTableRow<
       [toggleResourceSelection],
     );
 
+    const toggleExpansion = useCallback(
+      (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!extra.detailsKey) return;
+        context.setResourceExpansion(resourceId, false, (prev) => !prev);
+      },
+      [resourceId],
+    );
+
     const hasActions = true;
-    const columnCount = extra.columns.length + 2 + (hasActions ? 1 : 0);
+    const columnCount = extra.columns.length + 4 + (hasActions ? 1 : 0);
 
     return (
       <>
-        <Table.Row
-          onClick={() =>
-            context.setResourceExpansion(resourceId, false, (prev) => !prev)
-          }
-        >
+        <Table.Row>
+          <Table.Cell textAlign="center" w="3em">
+            <IconButton
+              Icon={expanded ? ChevronDownIcon : ChevronRightIcon}
+              disabled={!extra.detailsKey}
+              label={expanded ? t("collapse") : t("expand")}
+              onClick={toggleExpansion}
+              size="2xs"
+              variant="ghost"
+            />
+          </Table.Cell>
+
           <Table.Cell textAlign="center" w="4em">
             <Checkbox
               mt={0.5}
@@ -212,6 +232,16 @@ export function createResourcesTableRow<
             );
           })}
 
+          <Table.Cell textAlign="center" w="3em">
+            <IconButton
+              Icon={EditIcon}
+              label={t("edit")}
+              onClick={edit}
+              size="2xs"
+              variant="ghost"
+            />
+          </Table.Cell>
+
           {hasActions && (
             <Table.Cell textAlign="center" w="1%" whiteSpace="nowrap">
               <Menu.Root ids={{ trigger: `actions-${resourceId}` }}>
@@ -219,7 +249,6 @@ export function createResourcesTableRow<
                   <IconButton
                     Icon={EllipsisVerticalIcon}
                     label={t("actions")}
-                    onClick={(e) => e.stopPropagation()}
                     size="2xs"
                     tooltipIds={{ trigger: `actions-${resourceId}` }}
                     variant="ghost"
@@ -256,9 +285,8 @@ export function createResourcesTableRow<
                             )}
                             key={i}
                             onSelect={() => {
-                              if (action.isDisabled?.(localizedResource._raw))
-                                return;
-                              void action.onClick(localizedResource._raw);
+                              if (!action.isDisabled?.(localizedResource._raw))
+                                action.onClick(localizedResource._raw);
                             }}
                             value={`action-${i}`}
                           >
@@ -320,6 +348,18 @@ const i18nContext = {
   "actions": {
     en: "Actions",
     it: "Azioni",
+  },
+  "collapse": {
+    en: "Collapse",
+    it: "Comprimi",
+  },
+  "edit": {
+    en: "Edit",
+    it: "Modifica",
+  },
+  "expand": {
+    en: "Expand",
+    it: "Espandi",
   },
   "persistent.done": {
     en: "Resource made persistent",
