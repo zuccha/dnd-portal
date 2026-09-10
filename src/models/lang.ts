@@ -1,34 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
 import z from "zod";
-import supabase from "~/supabase";
 
 //------------------------------------------------------------------------------
 // Lang
 //------------------------------------------------------------------------------
 
-export const languageSchema = z.object({
-  code: z.string(),
-  label: z.string(),
-});
+export const langSchema = z.enum(["en", "it"]);
 
-export type Lang = z.infer<typeof languageSchema>;
+export type Lang = z.infer<typeof langSchema>;
 
 //------------------------------------------------------------------------------
-// Fetch Langs
+// Langs
 //------------------------------------------------------------------------------
 
-export async function fetchLangs(): Promise<Lang[]> {
-  const { data } = await supabase.from("langs").select();
-  return z.array(languageSchema).parse(data);
-}
-
-//------------------------------------------------------------------------------
-// Use Langs
-//------------------------------------------------------------------------------
-
-export function useLangs() {
-  return useQuery<Lang[]>({
-    queryFn: fetchLangs,
-    queryKey: ["langs"],
-  });
-}
+export const langOptions: { label: string; value: Lang }[] = [
+  { label: "English", value: "en" },
+  { label: "Italiano", value: "it" },
+];

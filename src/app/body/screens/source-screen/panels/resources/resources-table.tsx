@@ -3,11 +3,8 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { useCanEditSourceResources } from "~/models/sources";
 import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
-import ResourcesLoading from "./resources-loading";
-import ResourcesRefreshing from "./resources-refreshing";
 import {
   type ResourcesTableHeadExtra,
   createResourcesTableHead,
@@ -46,37 +43,16 @@ export function createResourcesTable<
   const ResourcesTableHead = createResourcesTableHead(store, context, extra);
   const ResourcesTableRow = createResourcesTableRow(store, context, extra);
 
-  const {
-    useFilteredResourceIds,
-    useFilteredResourceIdsLoading,
-    useLocalizeResource,
-  } = store;
+  const { useFilteredResourceIds, useLocalizeResource } = store;
 
   return function ResourcesTable({ sourceId }: ResourcesTableProps) {
     const filteredResourceIds = useFilteredResourceIds(sourceId);
-    const loading = useFilteredResourceIdsLoading(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
-    const editable = useCanEditSourceResources(sourceId);
 
-    if (!filteredResourceIds.length)
-      return loading ?
-          <ResourcesLoading name={store.displayName} />
-        : <ResourcesEmpty />;
+    if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
       <Box flex={1} h="full" minW={0} position="relative">
-        {loading && (
-          <Box
-            pointerEvents="none"
-            position="absolute"
-            right={4}
-            top={2}
-            zIndex={2}
-          >
-            <ResourcesRefreshing />
-          </Box>
-        )}
-
         <Flex bgColor="bg.subtle" h="full" minW={0} overflow="scroll">
           <Box bgColor="bg.subtle" minW="max-content" w="full">
             <Table.Root
@@ -93,7 +69,6 @@ export function createResourcesTable<
               <Table.Body>
                 {filteredResourceIds.map((id) => (
                   <ResourcesTableRow
-                    editable={editable}
                     key={id}
                     localizeResource={localizeResource}
                     resourceId={id}

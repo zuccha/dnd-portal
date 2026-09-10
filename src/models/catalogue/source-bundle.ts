@@ -27,8 +27,8 @@ import { serviceSchema } from "../resources/services/service";
 import { speciesSchema } from "../resources/species/species";
 import { spellSchema } from "../resources/spells/spell";
 import { vehicleSchema } from "../resources/vehicles/vehicle";
-import { sourceMetadataSchema } from "../sources";
 import type { ResourceKind } from "../types/resource-kind";
+import { sourceSchema } from "./source";
 
 //------------------------------------------------------------------------------
 // Source Bundle Resource Kind
@@ -76,7 +76,7 @@ export const sourceBundleResourcesSchema = z.object({
 
 export const sourceBundleSchema = z.object({
   resources: sourceBundleResourcesSchema,
-  source: sourceMetadataSchema,
+  source: sourceSchema,
 });
 
 export type SourceBundle = z.infer<typeof sourceBundleSchema>;

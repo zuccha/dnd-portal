@@ -63,7 +63,6 @@ type ResourcesTableRowProps<
   R extends Resource,
   L extends LocalizedResource<R>,
 > = {
-  editable: boolean;
   localizeResource: (resource: R) => L;
   resourceId: string;
 };
@@ -83,7 +82,6 @@ export function createResourcesTableRow<
   const { usePaletteName, useResourceExpansion } = context;
 
   return function ResourcesTableRow({
-    editable,
     localizeResource,
     resourceId,
   }: ResourcesTableRowProps<R, L>) {
@@ -147,8 +145,7 @@ export function createResourcesTableRow<
     );
 
     const hasActions = true;
-    const columnCount =
-      extra.columns.length + (editable ? 2 : 1) + (hasActions ? 1 : 0);
+    const columnCount = extra.columns.length + 2 + (hasActions ? 1 : 0);
 
     return (
       <>
@@ -195,7 +192,7 @@ export function createResourcesTableRow<
                         {translate({ en: "Variant", it: "Variante" }, lang)}
                       </Badge>
                     )}
-                    {editable && !localizedResource._raw.virtual ?
+                    {!localizedResource._raw.virtual ?
                       <Link onClick={edit}>{String(value)}</Link>
                     : <span>{String(value) || "-"}</span>}
                   </HStack>

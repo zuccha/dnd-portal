@@ -1,17 +1,10 @@
-import { Box, HStack, Heading, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import {
-  type Source,
-  type SourceRelations,
-  defaultSourceRelations,
-  updateSourceRelations,
-  useCanAdminSource,
-  useSelectedSource,
-  useSourceRelations,
-  useSources,
-} from "~/models/sources";
+import catalogue from "~/models/catalogue/catalogue";
+import type { Source } from "~/models/catalogue/source";
+import { updateSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
@@ -27,13 +20,8 @@ import { normalizeString } from "~/utils/string";
 
 export default function SourceSettingsPanel() {
   const { lang, t } = useI18nLangContext(i18nContext);
-  const source = useSelectedSource();
-  const sourceId = source?.id ?? "";
-  const canAdmin = useCanAdminSource(sourceId);
-  const sources = useSources();
-  const relations = useSourceRelations(sourceId);
-
-  const loading = sources.isLoading || relations.isLoading;
+  const source = catalogue.useActiveSource();
+  const sources = catalogue.useSources();
 
   if (!source)
     return (
@@ -53,42 +41,37 @@ export default function SourceSettingsPanel() {
         </Text>
       </VStack>
 
-      {loading ?
-        <HStack color="fg.muted">
-          <Spinner size="sm" />
-          <Text>{t("loading")}</Text>
-        </HStack>
-      : <SourceRelationsSettings
-          canAdmin={canAdmin}
-          initialRelations={relations.data ?? defaultSourceRelations}
-          key={hash(relations.data ?? defaultSourceRelations)}
-          source={source}
-          sources={sources.data ?? []}
-        />
-      }
+      <SourceDependenciesSettings
+        initialDependencies={source}
+        key={hash(source)}
+        source={source}
+        sources={sources}
+      />
     </SourceSettingsRoot>
   );
 }
 
 //------------------------------------------------------------------------------
-// Source Relations Settings
+// Source Dependencies Settings
 //------------------------------------------------------------------------------
 
-type SourceRelationsSettingsProps = {
-  canAdmin: boolean;
-  initialRelations: SourceRelations;
+type SourceDependencies = Pick<Source, "include_ids" | "required_ids">;
+
+type SourceDependenciesSettingsProps = {
+  initialDependencies: SourceDependencies;
   source: Source;
   sources: Source[];
 };
 
-function SourceRelationsSettings({
-  canAdmin,
-  initialRelations,
+function SourceDependenciesSettings({
+  initialDependencies,
   source,
   sources,
-}: SourceRelationsSettingsProps) {
+}: SourceDependenciesSettingsProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [draft, setDraft] = useState<SourceRelations>(initialRelations);
+  const [draft, setDraft] = useState<SourceDependencies>(
+    sourceToDependencies(initialDependencies),
+  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string>();
 
@@ -97,18 +80,19 @@ function SourceRelationsSettings({
     return new Map(entries);
   }, [sources]);
 
-  const changed = hash(draft) !== hash(initialRelations);
+  const initialDraft = sourceToDependencies(initialDependencies);
+  const changed = hash(draft) !== hash(initialDraft);
 
   const reset = useCallback(() => {
-    setDraft(initialRelations);
+    setDraft(sourceToDependencies(initialDependencies));
     setError(undefined);
-  }, [initialRelations]);
+  }, [initialDependencies]);
 
   const save = useCallback(async () => {
     setSaving(true);
     setError(undefined);
     try {
-      await updateSourceRelations(source.id, draft);
+      await updateSourceDependencies(source.id, draft);
     } catch (e) {
       console.error(e);
       setError("error.save");
@@ -129,14 +113,8 @@ function SourceRelationsSettings({
 
   return (
     <VStack align="flex-start" gap={8} w="full">
-      {!canAdmin && (
-        <Text color="fg.muted" fontSize="sm">
-          {t("read_only")}
-        </Text>
-      )}
-
-      <SourceRelationEditor
-        disabled={!canAdmin || saving}
+      <SourceDependencyEditor
+        disabled={saving}
         ids={draft.include_ids}
         label={t("includes")}
         onIdsChange={setIncludeIds}
@@ -147,8 +125,8 @@ function SourceRelationsSettings({
         sources={sources}
       />
 
-      <SourceRelationEditor
-        disabled={!canAdmin || saving}
+      <SourceDependencyEditor
+        disabled={saving}
         ids={draft.required_ids}
         label={t("requires")}
         onIdsChange={setRequiredIds}
@@ -167,7 +145,7 @@ function SourceRelationsSettings({
 
       <HStack justify="flex-end" w="full">
         <Button
-          disabled={!canAdmin || !changed || saving}
+          disabled={!changed || saving}
           onClick={reset}
           size="sm"
           variant="outline"
@@ -175,7 +153,7 @@ function SourceRelationsSettings({
           {t("reset")}
         </Button>
         <Button
-          disabled={!canAdmin || !changed || saving}
+          disabled={!changed || saving}
           loading={saving}
           onClick={save}
           size="sm"
@@ -210,10 +188,10 @@ function SourceSettingsRoot({ children }: { children: React.ReactNode }) {
 }
 
 //------------------------------------------------------------------------------
-// Source Relation Editor
+// Source Dependency Editor
 //------------------------------------------------------------------------------
 
-type SourceRelationEditorProps = {
+type SourceDependencyEditorProps = {
   disabled: boolean;
   ids: string[];
   label: string;
@@ -225,7 +203,7 @@ type SourceRelationEditorProps = {
   sources: Source[];
 };
 
-function SourceRelationEditor({
+function SourceDependencyEditor({
   disabled,
   ids,
   label,
@@ -235,7 +213,7 @@ function SourceRelationEditor({
   sourceById,
   sourceId,
   sources,
-}: SourceRelationEditorProps) {
+}: SourceDependencyEditorProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const searchRef = useRef<SearchRefObject>(null);
 
@@ -359,6 +337,34 @@ function filterSourceOption(option: SourceOption, search: string): boolean {
 }
 
 //------------------------------------------------------------------------------
+// Source Dependencies
+//------------------------------------------------------------------------------
+
+function sourceToDependencies(source: SourceDependencies): SourceDependencies {
+  return {
+    include_ids: source.include_ids,
+    required_ids: source.required_ids,
+  };
+}
+
+async function updateSourceDependencies(
+  sourceId: string,
+  dependencies: SourceDependencies,
+): Promise<void> {
+  const bundle = await updateSourceBundle(sourceId, (bundle) => ({
+    ...bundle,
+    source: {
+      ...bundle.source,
+      ...dependencies,
+    },
+  }));
+
+  catalogue.importSourceBundle(bundle, {
+    activate: catalogue.getActiveSourceId() === sourceId,
+  });
+}
+
+//------------------------------------------------------------------------------
 // I18n Context
 //------------------------------------------------------------------------------
 
@@ -383,10 +389,6 @@ const i18nContext = {
     en: "Includes",
     it: "Include",
   },
-  "loading": {
-    en: "Loading source relationships",
-    it: "Caricamento delle relazioni della fonte",
-  },
   "no_source": {
     en: "No source selected",
     it: "Nessuna fonte selezionata",
@@ -394,10 +396,6 @@ const i18nContext = {
   "none": {
     en: "No sources selected",
     it: "Nessuna fonte selezionata",
-  },
-  "read_only": {
-    en: "You can view these relationships, but only source admins can edit them.",
-    it: "Puoi visualizzare queste relazioni, ma solo gli amministratori della fonte possono modificarle.",
   },
   "remove": {
     en: "Remove",

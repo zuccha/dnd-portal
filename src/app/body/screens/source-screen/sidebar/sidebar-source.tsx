@@ -3,7 +3,6 @@ import { SettingsIcon } from "lucide-react";
 import { useMemo } from "react";
 import SectionButton from "~/app/body/screens/source-screen/sidebar/section-button";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useCanEditSourceResources } from "~/models/sources";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import { resourcePanels } from "../panels/panels";
@@ -13,14 +12,9 @@ import SidebarSection from "./sidebar-section";
 // Sidebar Source
 //------------------------------------------------------------------------------
 
-export type SidebarSourceProps = {
-  sourceId: string;
-};
-
-export default function SidebarSource({ sourceId }: SidebarSourceProps) {
+export default function SidebarSource() {
   const { t } = useI18nLangContext(i18nContext);
   const route = useRoute();
-  const canEdit = useCanEditSourceResources(sourceId);
 
   const localizedResourcePanels = useMemo(
     () =>
@@ -53,16 +47,14 @@ export default function SidebarSource({ sourceId }: SidebarSourceProps) {
         ))}
       </VStack>
 
-      {canEdit && (
-        <VStack justifyContent="flex-end" px={2} w="full">
-          <SectionButton
-            Icon={SettingsIcon}
-            active={route === Route.SettingsCampaign}
-            label={t(Route.SettingsCampaign)}
-            onClick={() => history.pushState({}, "", Route.SettingsCampaign)}
-          />
-        </VStack>
-      )}
+      <VStack justifyContent="flex-end" px={2} w="full">
+        <SectionButton
+          Icon={SettingsIcon}
+          active={route === Route.SettingsCampaign}
+          label={t(Route.SettingsCampaign)}
+          onClick={() => history.pushState({}, "", Route.SettingsCampaign)}
+        />
+      </VStack>
     </VStack>
   );
 }

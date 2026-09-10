@@ -2,7 +2,7 @@ import { FolderIcon } from "lucide-react";
 import { useCallback, useLayoutEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
-import { type SourceMetadata, useSelectedSourceId } from "~/models/sources";
+import type { Source } from "~/models/catalogue/source";
 import {
   type SourceVersion,
   useTranslateSourceVersion,
@@ -24,17 +24,13 @@ export type SidebarSourceSelectorProps = {
 export default function SidebarSourceSelector({
   versions,
 }: SidebarSourceSelectorProps) {
-  const [selectedSourceId, setSelectedSourceId] = useSelectedSourceId();
+  const selectedSourceId = catalogue.useActiveSourceId();
 
-  const setSourceId = useCallback(
-    (sourceId: string | undefined) => {
-      setSelectedSourceId(sourceId);
-      catalogue.setActiveSourceId(sourceId);
-    },
-    [setSelectedSourceId],
-  );
+  const setSourceId = useCallback((sourceId: string | undefined) => {
+    catalogue.setActiveSourceId(sourceId);
+  }, []);
 
-  const sources = catalogue.useSourceMetadataList();
+  const sources = catalogue.useSources();
 
   const { lang, t } = useI18nLangContext(i18nContext);
   const translateSourceVersion = useTranslateSourceVersion(lang);
@@ -111,9 +107,8 @@ export default function SidebarSourceSelector({
         selectedSourceId
       : sourceOptionIds[0];
 
-    if (next !== selectedSourceId) setSelectedSourceId(next);
-    catalogue.setActiveSourceId(next);
-  }, [selectedSourceId, setSelectedSourceId, sourceOptionIdsKey]);
+    if (next !== selectedSourceId) catalogue.setActiveSourceId(next);
+  }, [selectedSourceId, sourceOptionIdsKey]);
 
   return (
     <>
@@ -147,7 +142,7 @@ export default function SidebarSourceSelector({
 //------------------------------------------------------------------------------
 
 function itemizeSources(
-  sources: SourceMetadata[],
+  sources: Source[],
   versions: SourceVersion[],
   lang: string,
   translateSourceVersion: (version: SourceVersion) => { label: string },
@@ -163,7 +158,7 @@ function itemizeSources(
 //------------------------------------------------------------------------------
 
 function sourceToOption(
-  source: SourceMetadata,
+  source: Source,
   lang: string,
   translateSourceVersion: (version: SourceVersion) => { label: string },
 ): SelectOption<string> {

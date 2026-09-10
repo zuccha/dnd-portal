@@ -1,4 +1,6 @@
 import { useLayoutEffect, useState } from "react";
+import { z } from "zod";
+import { createLocalStore } from "../../store/local-store";
 import { createMemoryStore } from "../../store/memory-store";
 import { createOptionalMemoryStoreSet } from "../../store/optional-set/optional-memory-store-set";
 import type { OptionalStoreSet } from "../../store/optional-set/optional-store-set";
@@ -34,8 +36,8 @@ import type { Service } from "../resources/services/service";
 import type { Species } from "../resources/species/species";
 import type { Spell } from "../resources/spells/spell";
 import type { Vehicle } from "../resources/vehicles/vehicle";
-import type { SourceMetadata } from "../sources";
 import type { ResourceKind } from "../types/resource-kind";
+import type { Source } from "./source";
 import type { SourceBundle } from "./source-bundle";
 
 //------------------------------------------------------------------------------
@@ -77,27 +79,24 @@ export function createCatalogue(id: string) {
   // Active Source Id
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const activeSourceId = createMemoryStore<string | undefined>(
-    `${id}/active-source-id`,
+  const activeSourceId = createLocalStore<string | undefined>(
+    "sources.selected_id",
     undefined,
+    z.string().parse,
   );
 
-  // Source Metadata By Id
+  // Source By Id
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const sourceMetadataById = createOptionalMemoryStoreSet<
-    string,
-    SourceMetadata
-  >(`${id}/source-metadata-by-id`);
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Source Metadata Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  const sourceMetadataIds = createMemoryStore<string[]>(
-    `${id}/source-metadata-ids`,
-    [],
+  const sourceById = createOptionalMemoryStoreSet<string, Source>(
+    `${id}/source-by-id`,
   );
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Source Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const sourceIdList = createMemoryStore<string[]>(`${id}/source-ids`, []);
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Resources By Id
@@ -213,7 +212,7 @@ export function createCatalogue(id: string) {
   //----------------------------------------------------------------------------
 
   function setActiveSourceResourceIds(sourceId: string | undefined): void {
-    const source = sourceId ? sourceMetadataById.get(sourceId) : undefined;
+    const source = sourceId ? sourceById.get(sourceId) : undefined;
 
     const includedIds = source?.include_ids ?? emptyIds;
     const requiredIds = source?.required_ids ?? emptyIds;
@@ -246,21 +245,46 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
-  // Get Source Metadata
+  // Get Source
   //----------------------------------------------------------------------------
 
-  function getSourceMetadata(sourceId: string): SourceMetadata | undefined {
-    return sourceMetadataById.get(sourceId);
+  function getSource(sourceId: string): Source | undefined {
+    return sourceById.get(sourceId);
   }
 
   //----------------------------------------------------------------------------
-  // Use Source Metadata List
+  // Get Active Source
   //----------------------------------------------------------------------------
 
-  function useSourceMetadataList(): SourceMetadata[] {
-    const sourceIds = sourceMetadataIds.useValue();
-    return sourceIds.flatMap((id) => {
-      const source = sourceMetadataById.get(id);
+  function getActiveSource(): Source | undefined {
+    const sourceId = activeSourceId.get();
+    return sourceId ? getSource(sourceId) : undefined;
+  }
+
+  //----------------------------------------------------------------------------
+  // Use Source
+  //----------------------------------------------------------------------------
+
+  function useSource(sourceId: string | undefined): Source | undefined {
+    return sourceById.useValue(sourceId ?? "");
+  }
+
+  //----------------------------------------------------------------------------
+  // Use Active Source
+  //----------------------------------------------------------------------------
+
+  function useActiveSource(): Source | undefined {
+    return useSource(activeSourceId.useValue());
+  }
+
+  //----------------------------------------------------------------------------
+  // Use Sources
+  //----------------------------------------------------------------------------
+
+  function useSources(): Source[] {
+    const ids = sourceIdList.useValue();
+    return ids.flatMap((id) => {
+      const source = sourceById.get(id);
       return source ? [source] : [];
     });
   }
@@ -439,8 +463,8 @@ export function createCatalogue(id: string) {
       ["weapon_modifier", bundle.resources.weapon_modifiers],
     ] as const satisfies readonly [ResourceKind, readonly Resource[]][];
 
-    sourceMetadataById.set(source.id, source);
-    sourceMetadataIds.set((prev) =>
+    sourceById.set(source.id, source);
+    sourceIdList.set((prev) =>
       prev.includes(source.id) ? prev : [...prev, source.id],
     );
 
@@ -456,6 +480,8 @@ export function createCatalogue(id: string) {
     }
 
     if (activate) setActiveSourceId(source.id);
+    else if (activeSourceId.get() === source.id)
+      setActiveSourceResourceIds(source.id);
 
     return bundle;
   }
@@ -477,8 +503,8 @@ export function createCatalogue(id: string) {
       resourceIdsBySourceIdByKind[kind].set(sourceId, emptyIds, emptyIds);
     }
 
-    sourceMetadataById.clear(sourceId);
-    sourceMetadataIds.set((prev) => prev.filter((id) => id !== sourceId));
+    sourceById.clear(sourceId);
+    sourceIdList.set((prev) => prev.filter((id) => id !== sourceId));
 
     if (activeSourceId.get() === sourceId) activeSourceId.set(undefined);
     setActiveSourceResourceIds(activeSourceId.get());
@@ -490,13 +516,16 @@ export function createCatalogue(id: string) {
 
   return {
     createResourceStore,
+    getActiveSource,
     getActiveSourceId: activeSourceId.get,
-    getSourceMetadata,
+    getSource,
     importSourceBundle,
     removeSourceBundle,
     setActiveSourceId,
+    useActiveSource,
     useActiveSourceId: activeSourceId.useValue,
-    useSourceMetadataList,
+    useSource,
+    useSources,
   };
 }
 

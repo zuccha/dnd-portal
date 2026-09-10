@@ -3,11 +3,11 @@ import { Trash2Icon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
+import type { Source } from "~/models/catalogue/source";
 import {
   deleteSourceBundle,
   saveSourceBundle,
 } from "~/models/catalogue/source-bundle-indexed-db";
-import { type SourceMetadata, useSelectedSourceId } from "~/models/sources";
 import type { SourceType } from "~/models/types/source-type";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
@@ -19,11 +19,10 @@ import IconButton from "~/ui/icon-button";
 
 export default function SourcesPanel() {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
-  const sources = catalogue.useSourceMetadataList();
+  const sources = catalogue.useSources();
   const translateSourceVersion = useTranslateSourceVersion(lang);
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>();
-  const [selectedSourceId, setSelectedSourceId] = useSelectedSourceId();
   const sourceGroups = groupSourcesByType(sources, lang);
 
   const importSource = async (file: File | undefined) => {
@@ -54,7 +53,6 @@ export default function SourcesPanel() {
     try {
       await deleteSourceBundle(sourceId);
       catalogue.removeSourceBundle(sourceId);
-      if (selectedSourceId === sourceId) setSelectedSourceId(undefined);
     } catch (e) {
       console.error(e);
       setError(t("error.remove"));
@@ -148,9 +146,9 @@ export default function SourcesPanel() {
 //------------------------------------------------------------------------------
 
 function groupSourcesByType(
-  sources: SourceMetadata[],
+  sources: Source[],
   lang: string,
-): { sources: SourceMetadata[]; type: SourceType }[] {
+): { sources: Source[]; type: SourceType }[] {
   const sourceTypes: SourceType[] = ["core", "module", "campaign"];
 
   return sourceTypes.flatMap((type) => {

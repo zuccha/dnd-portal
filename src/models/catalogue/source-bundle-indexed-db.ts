@@ -1,12 +1,12 @@
 import Dexie, { type Table } from "dexie";
-import type { SourceMetadata } from "../sources";
+import type { Source } from "./source";
 import { type SourceBundle, sourceBundleSchema } from "./source-bundle";
 
 //------------------------------------------------------------------------------
-// Persisted Source Metadata
+// Persisted Source
 //------------------------------------------------------------------------------
 
-export type PersistedSourceMetadata = SourceMetadata & {
+export type PersistedSource = Source & {
   imported_at: string;
 };
 
@@ -25,7 +25,7 @@ export type PersistedSourceBundle = {
 
 class SourceBundleIndexedDb extends Dexie {
   source_bundles!: Table<PersistedSourceBundle, string>;
-  sources!: Table<PersistedSourceMetadata, string>;
+  sources!: Table<PersistedSource, string>;
 
   constructor() {
     super("dnd-portal");

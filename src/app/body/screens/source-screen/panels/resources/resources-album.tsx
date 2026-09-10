@@ -10,7 +10,6 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { useCanEditSourceResources } from "~/models/sources";
 import { palettes } from "~/utils/palette";
 import {
   type ResourceCardInteractiveExtra,
@@ -18,8 +17,6 @@ import {
 } from "./resource-card-interactive";
 import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
-import ResourcesLoading from "./resources-loading";
-import ResourcesRefreshing from "./resources-refreshing";
 
 //------------------------------------------------------------------------------
 // Resources Album Extra
@@ -53,17 +50,11 @@ export function createResourcesAlbum<
     extra,
   );
 
-  const {
-    useFilteredResourceIds,
-    useFilteredResourceIdsLoading,
-    useLocalizeResource,
-  } = store;
+  const { useFilteredResourceIds, useLocalizeResource } = store;
   const { usePaletteName, useZoom } = context;
 
   function ResourcesAlbum({ sourceId }: ResourcesAlbumProps) {
-    const editable = useCanEditSourceResources(sourceId);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
-    const loading = useFilteredResourceIdsLoading(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
     const zoom = useZoom();
@@ -112,25 +103,10 @@ export function createResourcesAlbum<
       return () => resizeObserver.disconnect();
     }, [virtualize]);
 
-    if (!filteredResourceIds.length)
-      return loading ?
-          <ResourcesLoading name={store.displayName} />
-        : <ResourcesEmpty />;
+    if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
       <Box flex={1} h="full" position="relative">
-        {loading && (
-          <Box
-            pointerEvents="none"
-            position="absolute"
-            right={4}
-            top={2}
-            zIndex={2}
-          >
-            <ResourcesRefreshing />
-          </Box>
-        )}
-
         <Flex
           h="full"
           onScroll={virtualize}
@@ -148,7 +124,7 @@ export function createResourcesAlbum<
               {filteredResourceIds.map((id) => {
                 return visibleById[id] ?
                     <ResourceCardInteractive
-                      editable={editable}
+                      editable
                       key={id}
                       localizeResource={localizeResource}
                       palette={palettes[paletteName]}

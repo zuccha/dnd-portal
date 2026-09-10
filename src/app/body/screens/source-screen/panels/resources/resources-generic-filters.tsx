@@ -3,12 +3,12 @@ import z from "zod";
 import useDebouncedCallback from "~/hooks/use-debounced-callback";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
+import catalogue from "~/models/catalogue/catalogue";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { useDraftResourcesSourcesFilter } from "~/models/resources/resources-sources-filter";
-import { useSelectedSource } from "~/models/sources";
 import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 import Input from "~/ui/input";
@@ -29,12 +29,13 @@ export function createResourcesGenericFilters<
   F extends ResourceFilters,
 >(store: ResourceStore<R, L, F>, _context: ResourcesContext<R>) {
   const { useFilters } = store;
+  const { useSource } = catalogue;
 
   return function ResourcesGenericFilters({
     sourceId,
   }: ResourcesGenericFiltersProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
-    const source = useSelectedSource(); // TODO: Get source from sourceId
+    const source = useSource(sourceId);
     const [sources, setSources] = useDraftResourcesSourcesFilter(sourceId);
     const [filters, setFilters] = useFilters();
     const [name, setName] = useState(filters.name);
@@ -53,7 +54,10 @@ export function createResourcesGenericFilters<
     const options = useMemo(() => {
       if (!source) return [];
       return [
-        ...source.includes.map(({ code, id }) => ({ label: code, value: id })),
+        ...source.include_ids.flatMap((sourceId) => {
+          const source = catalogue.getSource(sourceId);
+          return source ? [{ label: source.code, value: source.id }] : [];
+        }),
         { label: source.code, value: source.id },
       ];
     }, [source]);

@@ -12,7 +12,6 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { useCanEditSourceResources } from "~/models/sources";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import Section from "~/ui/section";
@@ -44,7 +43,6 @@ export function createResourcesActions<
 
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
     const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
-    const canEdit = useCanEditSourceResources(sourceId);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
     const selectedFilteredResourceIds =
       useSelectedFilteredResourceIds(sourceId);
@@ -171,27 +169,23 @@ export function createResourcesActions<
             <Portal>
               <Menu.Positioner>
                 <Menu.Content>
-                  {canEdit && (
-                    <>
-                      <Menu.ItemGroup>
-                        <Menu.Item onSelect={addNew} value="add">
-                          {t("add")}
-                        </Menu.Item>
+                  <Menu.ItemGroup>
+                    <Menu.Item onSelect={addNew} value="add">
+                      {t("add")}
+                    </Menu.Item>
 
-                        <Menu.Item
-                          _hover={{ bg: "bg.error", color: "fg.error" }}
-                          color="fg.error"
-                          disabled={!hasSelection}
-                          onSelect={removeSelected}
-                          value="remove"
-                        >
-                          {t("remove")}
-                        </Menu.Item>
-                      </Menu.ItemGroup>
+                    <Menu.Item
+                      _hover={{ bg: "bg.error", color: "fg.error" }}
+                      color="fg.error"
+                      disabled={!hasSelection}
+                      onSelect={removeSelected}
+                      value="remove"
+                    >
+                      {t("remove")}
+                    </Menu.Item>
+                  </Menu.ItemGroup>
 
-                      <Menu.Separator />
-                    </>
-                  )}
+                  <Menu.Separator />
 
                   <Menu.ItemGroup>
                     <Menu.Item

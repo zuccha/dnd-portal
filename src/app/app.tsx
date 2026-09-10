@@ -40,6 +40,12 @@ export default function App() {
       for (const bundle of bundles)
         catalogue.importSourceBundle(bundle, { activate: false });
 
+      const activeSourceId = catalogue.getActiveSourceId();
+      if (activeSourceId)
+        catalogue.setActiveSourceId(
+          catalogue.getSource(activeSourceId) ? activeSourceId : undefined,
+        );
+
       setReady(true);
     }
 

@@ -1,7 +1,7 @@
 import { HStack, Separator, VStack } from "@chakra-ui/react";
 import { MenuIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useSelectedSourceId } from "~/models/sources";
+import catalogue from "~/models/catalogue/catalogue";
 import { useSelectedSourceVersion } from "~/models/types/source-version";
 import IconButton from "~/ui/icon-button";
 import LanguageSelect from "./language-select";
@@ -16,7 +16,7 @@ import SystemSelect from "./system-select";
 
 export default function Sidebar() {
   const { t } = useI18nLangContext(i18nContext);
-  const [sourceId] = useSelectedSourceId();
+  const sourceId = catalogue.useActiveSourceId();
   const [selectedSourceVersions] = useSelectedSourceVersion();
   const collapsed = useSidebarCollapsed();
   const setCollapsed = useSidebarSetCollapsed();
@@ -68,7 +68,7 @@ export default function Sidebar() {
           <SidebarSourceSelector versions={selectedSourceVersions} />
         </HStack>
 
-        {sourceId && <SidebarSource sourceId={sourceId} />}
+        {sourceId && <SidebarSource />}
       </VStack>
     </VStack>
   );

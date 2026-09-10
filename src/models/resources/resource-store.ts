@@ -190,7 +190,7 @@ export function createResourceStore<
     sourceId: string,
     resourcePatch: Partial<R>,
   ): Promise<string | undefined> {
-    const source = catalogue.getSourceMetadata(sourceId);
+    const source = catalogue.getSource(sourceId);
     if (!source) return "form.error.update_failure";
 
     const resource = {
@@ -360,17 +360,6 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resource Ids Loading By Params
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useResourceIdsLoadingByParams(
-    _sourceId: string,
-    _sources: Record<string, boolean | undefined>,
-  ): boolean {
-    return false;
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resource Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -431,12 +420,6 @@ export function createResourceStore<
     const [lang] = useI18nLang();
     const params = [sourceId, sources, filters, lang] as const;
     return useFilteredResourceIdsByParams(...params);
-  }
-
-  function useFilteredResourceIdsLoading(sourceId: string): boolean {
-    const [sources] = useResourcesSourcesFilter(sourceId);
-    const params = [sourceId, sources] as const;
-    return useResourceIdsLoadingByParams(...params);
   }
 
   //----------------------------------------------------------------------------
@@ -706,7 +689,6 @@ export function createResourceStore<
     useResources,
 
     useFilteredResourceIds,
-    useFilteredResourceIdsLoading,
 
     useResourceSelection,
     useResourceSelectionMethods,
