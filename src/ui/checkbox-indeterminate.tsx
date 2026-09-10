@@ -27,13 +27,17 @@ export default function CheckboxIndeterminate({
   return (
     <ChakraCheckbox.Root
       checked={value}
+      cursor="pointer"
       defaultChecked={defaultValue}
       onCheckedChange={(e) => onValueChange?.(e.checked)}
       size="sm"
       {...rest}
     >
       <ChakraCheckbox.HiddenInput />
-      <ChakraCheckbox.Control />
+      <ChakraCheckbox.Control
+        _disabled={{ cursor: "disabled" }}
+        cursor="pointer"
+      />
       {label && <ChakraCheckbox.Label>{label}</ChakraCheckbox.Label>}
     </ChakraCheckbox.Root>
   );
