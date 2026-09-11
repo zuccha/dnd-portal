@@ -34,6 +34,7 @@ export type SearchProps<T extends string, O extends SearchOption<T>> = Omit<
   | "onValueChange"
   | "value"
 > & {
+  categories?: { id: string; items: O[]; title: string }[];
   emptyLabel?: string;
   onFilter: (option: O, search: string) => boolean;
   options: O[];
@@ -54,6 +55,7 @@ export type SearchProps<T extends string, O extends SearchOption<T>> = Omit<
   );
 
 export default function Search<T extends string, O extends SearchOption<T>>({
+  categories,
   emptyLabel,
   multiple,
   onFilter,
@@ -73,6 +75,17 @@ export default function Search<T extends string, O extends SearchOption<T>>({
     [onFilter, options, search],
   );
 
+  const filteredCategories = useMemo(
+    () =>
+      categories?.flatMap((category) => {
+        const items = category.items.filter((option) =>
+          onFilter(option, search),
+        );
+        return items.length ? [{ ...category, items }] : [];
+      }),
+    [categories, onFilter, search],
+  );
+
   const collection = useMemo(
     () => createListCollection({ items: filteredOptions }),
     [filteredOptions],
@@ -87,12 +100,27 @@ export default function Search<T extends string, O extends SearchOption<T>>({
     <Combobox.Positioner>
       <Combobox.Content>
         <Combobox.Empty>{emptyLabel}</Combobox.Empty>
-        {collection.items.map((item) => (
-          <Combobox.Item item={item} key={item.value}>
-            {item.label}
-            <Combobox.ItemIndicator />
-          </Combobox.Item>
-        ))}
+        {filteredCategories ?
+          filteredCategories.map(({ id, items, title }) => (
+            <Combobox.ItemGroup key={id}>
+              <Combobox.ItemGroupLabel fontWeight="bold">
+                {title}
+              </Combobox.ItemGroupLabel>
+              {items.map((item) => (
+                <Combobox.Item item={item} key={item.value}>
+                  {item.label}
+                  <Combobox.ItemIndicator />
+                </Combobox.Item>
+              ))}
+            </Combobox.ItemGroup>
+          ))
+        : collection.items.map((item) => (
+            <Combobox.Item item={item} key={item.value}>
+              {item.label}
+              <Combobox.ItemIndicator />
+            </Combobox.Item>
+          ))
+        }
       </Combobox.Content>
     </Combobox.Positioner>
   );
