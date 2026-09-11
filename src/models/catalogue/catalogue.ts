@@ -360,6 +360,26 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
+  // Detach Source
+  //----------------------------------------------------------------------------
+
+  async function detachSource(sourceId: string): Promise<Source | undefined> {
+    const current = sourceById.get(sourceId);
+    if (!current?.registry) return current;
+
+    const bundle = await updateSourceBundle(sourceId, (bundle) => {
+      const { registry: _registry, ...source } = bundle.source;
+      return { ...bundle, source };
+    });
+
+    sourceById.set(bundle.source.id, bundle.source);
+    if (activeSourceId.get() === bundle.source.id)
+      setActiveSourceResourceIds(bundle.source.id);
+
+    return bundle.source;
+  }
+
+  //----------------------------------------------------------------------------
   // Create Resource Store
   //----------------------------------------------------------------------------
 
@@ -590,6 +610,7 @@ export function createCatalogue(id: string) {
 
   return {
     createResourceStore,
+    detachSource,
     getActiveSource,
     getActiveSourceId: activeSourceId.get,
     getSource,

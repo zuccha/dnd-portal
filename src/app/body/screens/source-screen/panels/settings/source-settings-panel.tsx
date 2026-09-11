@@ -97,6 +97,7 @@ function SourceSettingsForm({
     sourceToSettingsDraft(initialSource),
   );
   const [saving, setSaving] = useState(false);
+  const [detaching, setDetaching] = useState(false);
   const [error, setError] = useState<string>();
 
   const initialDraft = sourceToSettingsDraft(initialSource);
@@ -125,6 +126,21 @@ function SourceSettingsForm({
     }
   }, [draft, source.id, sourceEditable]);
 
+  const detach = useCallback(async () => {
+    if (sourceEditable || !confirm(t("detach_confirm"))) return;
+
+    setDetaching(true);
+    setError(undefined);
+    try {
+      await catalogue.detachSource(source.id);
+    } catch (e) {
+      console.error(e);
+      setError("error.detach");
+    } finally {
+      setDetaching(false);
+    }
+  }, [source.id, sourceEditable, t]);
+
   const setIncludes = useCallback((includes: SourceDependency[]) => {
     setDraft((prev) => ({ ...prev, includes }));
     setError(undefined);
@@ -147,9 +163,19 @@ function SourceSettingsForm({
           py={2}
           w="full"
         >
-          <Text color="fg.muted" fontSize="sm">
-            {t("readonly")}
-          </Text>
+          <HStack justify="space-between">
+            <Text color="fg.muted" fontSize="sm">
+              {t("readonly")}
+            </Text>
+            <Button
+              loading={detaching}
+              onClick={detach}
+              size="sm"
+              variant="outline"
+            >
+              {t("make_local")}
+            </Button>
+          </HStack>
         </Box>
       )}
 
@@ -501,9 +527,17 @@ const i18nContext = {
     en: "Code",
     it: "Codice",
   },
+  "detach_confirm": {
+    en: "Make this official source local? It will no longer receive registry updates on this device.",
+    it: "Rendere locale questa fonte ufficiale? Non riceverà più aggiornamenti dal registro su questo dispositivo.",
+  },
   "empty": {
     en: "No sources found",
     it: "Nessuna fonte trovata",
+  },
+  "error.detach": {
+    en: "Could not make the source local",
+    it: "Impossibile rendere locale la fonte",
   },
   "error.save": {
     en: "Could not save source settings",
@@ -512,6 +546,10 @@ const i18nContext = {
   "includes": {
     en: "Includes",
     it: "Include",
+  },
+  "make_local": {
+    en: "Make local",
+    it: "Rendi locale",
   },
   "metadata": {
     en: "Details",
