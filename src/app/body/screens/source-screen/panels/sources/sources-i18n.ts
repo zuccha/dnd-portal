@@ -1,0 +1,144 @@
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  "all": {
+    en: "All",
+    it: "Tutte",
+  },
+  "available": {
+    en: "Not installed",
+    it: "Non installato",
+  },
+  "campaign": {
+    en: "Campaign",
+    it: "Campagna",
+  },
+  "core": {
+    en: "Core",
+    it: "Core",
+  },
+  "create": {
+    en: "Create",
+    it: "Crea",
+  },
+  "detached": {
+    en: "Local copy",
+    it: "Copia locale",
+  },
+  "download": {
+    en: "Download",
+    it: "Scarica",
+  },
+  "empty": {
+    en: "No sources found",
+    it: "Nessuna fonte trovata",
+  },
+  "error.create": {
+    en: "The source could not be created.",
+    it: "La fonte non può essere creata.",
+  },
+  "error.create_required": {
+    en: "Name and code are required.",
+    it: "Nome e codice sono obbligatori.",
+  },
+  "error.download": {
+    en: "The source could not be downloaded.",
+    it: "La fonte non può essere scaricata.",
+  },
+  "error.export": {
+    en: "The selected source could not be exported.",
+    it: "La fonte selezionata non può essere esportata.",
+  },
+  "error.import": {
+    en: "The selected file is not a valid source JSON.",
+    it: "Il file selezionato non è una fonte JSON valida.",
+  },
+  "error.make_local": {
+    en: "The source could not be made local.",
+    it: "La fonte non può essere resa locale.",
+  },
+  "error.remove": {
+    en: "The selected source could not be removed.",
+    it: "La fonte selezionata non può essere rimossa.",
+  },
+  "export": {
+    en: "Export",
+    it: "Esporta",
+  },
+  "export.description": {
+    en: "Export <1> as a JSON source bundle.",
+    it: "Esporta <1> come fonte JSON.",
+  },
+  "export.include_private": {
+    en: "Include private resources",
+    it: "Includi risorse private",
+  },
+  "import": {
+    en: "Import",
+    it: "Importa",
+  },
+  "installed": {
+    en: "Installed",
+    it: "Installato",
+  },
+  "local": {
+    en: "Local",
+    it: "Locale",
+  },
+  "make_local": {
+    en: "Make local",
+    it: "Rendi locale",
+  },
+  "make_local.confirm": {
+    en: "Make <1> local? It will no longer receive registry updates on this device.",
+    it: "Rendere <1> locale? Non riceverà più aggiornamenti dal registro su questo dispositivo.",
+  },
+  "make_official": {
+    en: "Make official",
+    it: "Rendi ufficiale",
+  },
+  "make_official.confirm": {
+    en: "Download the official version of <1> and replace the local source? Local changes will be lost.",
+    it: "Scaricare la versione ufficiale di <1> e sostituire la fonte locale? Le modifiche locali andranno perse.",
+  },
+  "module": {
+    en: "Module",
+    it: "Modulo",
+  },
+  "my_sources": {
+    en: "My Sources",
+    it: "Le Mie Fonti",
+  },
+  "readonly": {
+    en: "Read-only",
+    it: "Sola lettura",
+  },
+  "registry_unavailable": {
+    en: "The registry is currently unavailable.",
+    it: "Il registro non è attualmente disponibile.",
+  },
+  "remove": {
+    en: "Remove",
+    it: "Rimuovi",
+  },
+  "remove.confirm": {
+    en: "Remove <1> from this device?",
+    it: "Rimuovere <1> da questo dispositivo?",
+  },
+  "repository": {
+    en: "Repository",
+    it: "Archivio",
+  },
+  "subtitle": {
+    en: "Import, export, and remove local sources.",
+    it: "Importa, esporta e rimuovi fonti locali.",
+  },
+  "title": {
+    en: "Sources",
+    it: "Fonti",
+  },
+} as const;
+
+export default i18nContext;

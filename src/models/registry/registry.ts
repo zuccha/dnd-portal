@@ -11,15 +11,25 @@ import {
 const registryUrl = import.meta.env["VITE_REGISTRY_URL"];
 
 //------------------------------------------------------------------------------
+// Registry Request
+//------------------------------------------------------------------------------
+
+async function registryRequest(path: string): Promise<unknown> {
+  if (!registryUrl) throw new Error("VITE_REGISTRY_URL is not configured");
+
+  const response = await fetch(`${registryUrl}${path}`);
+  if (!response.ok)
+    throw new Error(`Registry request failed: ${response.status}`);
+
+  return response.json();
+}
+
+//------------------------------------------------------------------------------
 // Registry Sources
 //------------------------------------------------------------------------------
 
 export async function fetchRegistrySources(): Promise<Source[]> {
-  const response = await fetch(`${registryUrl}/registry/sources`);
-  if (!response.ok)
-    throw new Error(`Registry request failed: ${response.status}`);
-
-  return sourceSchema.array().parse(await response.json());
+  return sourceSchema.array().parse(await registryRequest("/registry/sources"));
 }
 
 //------------------------------------------------------------------------------
@@ -29,9 +39,7 @@ export async function fetchRegistrySources(): Promise<Source[]> {
 export async function fetchRegistrySourceBundle(
   sourceId: string,
 ): Promise<SourceBundle> {
-  const response = await fetch(`${registryUrl}/registry/sources/${sourceId}`);
-  if (!response.ok)
-    throw new Error(`Registry request failed: ${response.status}`);
-
-  return sourceBundleSchema.parse(await response.json());
+  return sourceBundleSchema.parse(
+    await registryRequest(`/registry/sources/${sourceId}`),
+  );
 }

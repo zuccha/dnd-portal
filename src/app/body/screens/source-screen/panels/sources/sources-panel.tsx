@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   CloseButton,
   Dialog,
@@ -11,8 +10,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { DownloadIcon, Trash2Icon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import type { Source } from "~/models/catalogue/source";
@@ -21,14 +19,23 @@ import {
   deleteSourceBundle,
   saveSourceBundle,
 } from "~/models/catalogue/source-bundle-indexed-db";
-import type { SourceType } from "~/models/types/source-type";
+import {
+  fetchRegistrySourceBundle,
+  fetchRegistrySources,
+} from "~/models/registry/registry";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
-import IconButton from "~/ui/icon-button";
 import { downloadFile } from "~/utils/download";
 import SourceCreateDialog from "./source-create-dialog";
+import SourceGroups from "./source-list";
+import {
+  createSourceListEntry,
+  getLocalSourceStatus,
+  groupSourcesByType,
+} from "./source-list-utils";
+import i18nContext from "./sources-i18n";
 
 //------------------------------------------------------------------------------
 // Sources Panel
@@ -44,14 +51,80 @@ export default function SourcesPanel() {
   const [creating, setCreating] = useState(false);
   const [exportSource, setExportSource] = useState<Source>();
   const [includePrivate, setIncludePrivate] = useState(true);
+  const [registrySources, setRegistrySources] = useState<Source[]>([]);
+  const [registryLoading, setRegistryLoading] = useState(true);
+  const [registryError, setRegistryError] = useState(false);
+  const [busySourceId, setBusySourceId] = useState<string>();
+  const localSourcesById = useMemo(
+    () => new Map(sources.map((source) => [source.id, source])),
+    [sources],
+  );
+
+  useEffect(() => {
+    let active = true;
+
+    fetchRegistrySources()
+      .then((nextSources) => {
+        if (!active) return;
+        setRegistrySources(nextSources);
+        setRegistryError(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        if (active) setRegistryError(true);
+      })
+      .finally(() => {
+        if (active) setRegistryLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const localSourceGroups = groupSourcesByType(
-    sources.filter((source) => !source.registry),
+    sources
+      .filter((source) => !source.registry)
+      .map((source) =>
+        createSourceListEntry(
+          source,
+          getLocalSourceStatus(source, registrySources, registryLoading),
+        ),
+      ),
     lang,
   );
   const officialSourceGroups = groupSourcesByType(
-    sources.filter((source) => source.registry),
+    registrySources.map((registrySource) => {
+      const source = localSourcesById.get(registrySource.id);
+      return createSourceListEntry(
+        source ?? registrySource,
+        source?.registry ? "installed"
+        : source ? "detached"
+        : "available",
+      );
+    }),
     lang,
   );
+  const allSourceGroups = groupSourcesByType(
+    [
+      ...sources.map((source) =>
+        createSourceListEntry(
+          source,
+          source.registry ? "installed"
+          : registrySources.some(({ id }) => id === source.id) ? "detached"
+          : "local",
+        ),
+      ),
+      ...registrySources
+        .filter(({ id }) => !localSourcesById.has(id))
+        .map((source) => createSourceListEntry(source, "available")),
+    ],
+    lang,
+  );
+
+  //----------------------------------------------------------------------------
+  // Import Source
+  //----------------------------------------------------------------------------
 
   const importSource = async (file: File | undefined) => {
     if (!file) return;
@@ -68,6 +141,10 @@ export default function SourcesPanel() {
       if (inputRef.current) inputRef.current.value = "";
     }
   };
+
+  //----------------------------------------------------------------------------
+  // Create Source
+  //----------------------------------------------------------------------------
 
   const createSource = async (bundle: SourceBundle) => {
     if (!bundle.source.code || !bundle.source.name[lang]) {
@@ -91,6 +168,10 @@ export default function SourcesPanel() {
     }
   };
 
+  //----------------------------------------------------------------------------
+  // Remove Source
+  //----------------------------------------------------------------------------
+
   const removeSource = async (sourceId: string) => {
     const source = sources.find((source) => source.id === sourceId);
     if (!source) return;
@@ -109,15 +190,75 @@ export default function SourcesPanel() {
     }
   };
 
+  //----------------------------------------------------------------------------
+  // Download Registry Source
+  //----------------------------------------------------------------------------
+
+  const downloadRegistrySource = async (registrySource: Source) => {
+    const installedSource = localSourcesById.get(registrySource.id);
+    if (
+      installedSource &&
+      !confirm(ti("make_official.confirm", registrySource.code))
+    )
+      return;
+
+    setBusySourceId(registrySource.id);
+    setError(undefined);
+
+    try {
+      const bundle = await fetchRegistrySourceBundle(registrySource.id);
+      const savedBundle = await saveSourceBundle(bundle);
+      catalogue.importSourceBundle(savedBundle);
+    } catch (e) {
+      console.error(e);
+      setError(t("error.download"));
+    } finally {
+      setBusySourceId(undefined);
+    }
+  };
+
+  //----------------------------------------------------------------------------
+  // Make Source Local
+  //----------------------------------------------------------------------------
+
+  const makeSourceLocal = async (source: Source) => {
+    if (!source.registry || !confirm(ti("make_local.confirm", source.code)))
+      return;
+
+    setBusySourceId(source.id);
+    setError(undefined);
+
+    try {
+      await catalogue.detachSource(source.id);
+    } catch (e) {
+      console.error(e);
+      setError(t("error.make_local"));
+    } finally {
+      setBusySourceId(undefined);
+    }
+  };
+
+  //----------------------------------------------------------------------------
+  // Open Export Dialog
+  //----------------------------------------------------------------------------
+
   const openExportDialog = (source: Source) => {
     setError(undefined);
     setExportSource(source);
     setIncludePrivate(true);
   };
 
+  //----------------------------------------------------------------------------
+  // Close Export Dialog
+  //----------------------------------------------------------------------------
+
   const closeExportDialog = () => {
     setExportSource(undefined);
   };
+
+  //----------------------------------------------------------------------------
+  // Export Selected Source
+  //----------------------------------------------------------------------------
 
   const exportSelectedSource = async () => {
     if (!exportSource) return;
@@ -179,17 +320,38 @@ export default function SourcesPanel() {
           </Text>
         )}
 
-        {sources.length ?
-          <Tabs.Root defaultValue="my-sources" w="full">
+        {sources.length || registrySources.length || registryLoading ?
+          <Tabs.Root defaultValue="all" w="full">
             <Tabs.List>
+              <Tabs.Trigger value="all">{t("all")}</Tabs.Trigger>
               <Tabs.Trigger value="my-sources">{t("my_sources")}</Tabs.Trigger>
-              <Tabs.Trigger value="official">{t("official")}</Tabs.Trigger>
+              <Tabs.Trigger value="official">{t("repository")}</Tabs.Trigger>
             </Tabs.List>
+
+            <Tabs.Content value="all">
+              {registryError && (
+                <Text color="fg.muted" fontSize="sm" pt={4}>
+                  {t("registry_unavailable")}
+                </Text>
+              )}
+              <SourceGroups
+                busySourceId={busySourceId}
+                groups={allSourceGroups}
+                lang={lang}
+                onDownload={downloadRegistrySource}
+                onExport={openExportDialog}
+                onMakeLocal={makeSourceLocal}
+                onRemove={removeSource}
+                translateSourceVersion={translateSourceVersion}
+              />
+            </Tabs.Content>
 
             <Tabs.Content value="my-sources">
               <SourceGroups
+                busySourceId={busySourceId}
                 groups={localSourceGroups}
                 lang={lang}
+                onDownload={downloadRegistrySource}
                 onExport={openExportDialog}
                 onRemove={removeSource}
                 translateSourceVersion={translateSourceVersion}
@@ -198,9 +360,12 @@ export default function SourcesPanel() {
 
             <Tabs.Content value="official">
               <SourceGroups
+                busySourceId={busySourceId}
                 groups={officialSourceGroups}
                 lang={lang}
+                onDownload={downloadRegistrySource}
                 onExport={openExportDialog}
+                onMakeLocal={makeSourceLocal}
                 onRemove={removeSource}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -266,247 +431,3 @@ export default function SourcesPanel() {
     </Box>
   );
 }
-
-//------------------------------------------------------------------------------
-// Source Groups
-//------------------------------------------------------------------------------
-
-type SourceGroup = { sources: Source[]; type: SourceType };
-
-type SourceGroupsProps = {
-  groups: SourceGroup[];
-  lang: string;
-  onExport: (source: Source) => void;
-  onRemove: (sourceId: string) => void;
-  translateSourceVersion: (version: Source["version"]) => { label: string };
-};
-
-function SourceGroups({
-  groups,
-  lang,
-  onExport,
-  onRemove,
-  translateSourceVersion,
-}: SourceGroupsProps) {
-  const { t } = useI18nLangContext(i18nContext);
-
-  if (!groups.length)
-    return (
-      <Text color="fg.muted" fontSize="sm" pt={4}>
-        {t("empty")}
-      </Text>
-    );
-
-  return (
-    <VStack gap={4} pt={4} w="full">
-      {groups.map(({ sources, type }) => (
-        <VStack align="flex-start" gap={2} key={type} w="full">
-          <Text color="fg.muted" fontSize="xs" fontWeight="medium">
-            {t(type)}
-          </Text>
-
-          <VStack gap={2} w="full">
-            {sources.map((source) => (
-              <SourceRow
-                key={source.id}
-                lang={lang}
-                onExport={onExport}
-                onRemove={onRemove}
-                source={source}
-                translateSourceVersion={translateSourceVersion}
-              />
-            ))}
-          </VStack>
-        </VStack>
-      ))}
-    </VStack>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Source Row
-//------------------------------------------------------------------------------
-
-type SourceRowProps = {
-  lang: string;
-  onExport: (source: Source) => void;
-  onRemove: (sourceId: string) => void;
-  source: Source;
-  translateSourceVersion: (version: Source["version"]) => { label: string };
-};
-
-function SourceRow({
-  lang,
-  onExport,
-  onRemove,
-  source,
-  translateSourceVersion,
-}: SourceRowProps) {
-  const { t } = useI18nLangContext(i18nContext);
-  const name = source.name[lang] || source.code;
-
-  return (
-    <HStack
-      bgColor="bg"
-      borderRadius="sm"
-      borderWidth={1}
-      gap={3}
-      minH={14}
-      px={3}
-      py={2}
-      w="full"
-    >
-      <VStack align="flex-start" flex={1} gap={0}>
-        <HStack gap={2} minW={0} w="full">
-          <Text fontWeight="semibold" truncate>
-            {name}
-          </Text>
-          {source.registry?.access === "read" && (
-            <Badge colorPalette="gray" size="xs" variant="subtle">
-              {t("readonly")}
-            </Badge>
-          )}
-        </HStack>
-        <Text color="fg.muted" fontSize="sm" truncate>
-          {source.code} · {translateSourceVersion(source.version).label}
-        </Text>
-      </VStack>
-
-      <IconButton
-        Icon={DownloadIcon}
-        label={t("export")}
-        onClick={() => onExport(source)}
-        size="xs"
-        variant="ghost"
-      />
-
-      <IconButton
-        Icon={Trash2Icon}
-        colorPalette="red"
-        label={t("remove")}
-        onClick={() => onRemove(source.id)}
-        size="xs"
-        variant="ghost"
-      />
-    </HStack>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Group Sources By Type
-//------------------------------------------------------------------------------
-
-function groupSourcesByType(sources: Source[], lang: string): SourceGroup[] {
-  const sourceTypes: SourceType[] = ["core", "module", "campaign"];
-
-  return sourceTypes.flatMap((type) => {
-    const groupSources = sources
-      .filter((source) => source.type === type)
-      .sort(compareSources(lang));
-
-    return groupSources.length ? [{ sources: groupSources, type }] : [];
-  });
-}
-
-//------------------------------------------------------------------------------
-// Compare Sources
-//------------------------------------------------------------------------------
-
-function compareSources(lang: string): (a: Source, b: Source) => number {
-  return (a, b) => {
-    const nameA = a.name[lang] || a.code;
-    const nameB = b.name[lang] || b.code;
-    return nameA.localeCompare(nameB) || a.code.localeCompare(b.code);
-  };
-}
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  "campaign": {
-    en: "Campaign",
-    it: "Campagna",
-  },
-  "core": {
-    en: "Core",
-    it: "Core",
-  },
-  "create": {
-    en: "Create",
-    it: "Crea",
-  },
-  "empty": {
-    en: "No sources found",
-    it: "Nessuna fonte trovata",
-  },
-  "error.create": {
-    en: "The source could not be created.",
-    it: "La fonte non può essere creata.",
-  },
-  "error.create_required": {
-    en: "Name and code are required.",
-    it: "Nome e codice sono obbligatori.",
-  },
-  "error.export": {
-    en: "The selected source could not be exported.",
-    it: "La fonte selezionata non può essere esportata.",
-  },
-  "error.import": {
-    en: "The selected file is not a valid source JSON.",
-    it: "Il file selezionato non è una fonte JSON valida.",
-  },
-  "error.remove": {
-    en: "The selected source could not be removed.",
-    it: "La fonte selezionata non può essere rimossa.",
-  },
-  "export": {
-    en: "Export",
-    it: "Esporta",
-  },
-  "export.description": {
-    en: "Export <1> as a JSON source bundle.",
-    it: "Esporta <1> come fonte JSON.",
-  },
-  "export.include_private": {
-    en: "Include private resources",
-    it: "Includi risorse private",
-  },
-  "import": {
-    en: "Import",
-    it: "Importa",
-  },
-  "module": {
-    en: "Module",
-    it: "Modulo",
-  },
-  "my_sources": {
-    en: "My Sources",
-    it: "Le Mie Fonti",
-  },
-  "official": {
-    en: "Official",
-    it: "Ufficiali",
-  },
-  "readonly": {
-    en: "Read-only",
-    it: "Sola lettura",
-  },
-  "remove": {
-    en: "Remove",
-    it: "Rimuovi",
-  },
-  "remove.confirm": {
-    en: "Remove <1> from this device?",
-    it: "Rimuovere <1> da questo dispositivo?",
-  },
-  "subtitle": {
-    en: "Import, export, and remove local sources.",
-    it: "Importa, esporta e rimuovi fonti locali.",
-  },
-  "title": {
-    en: "Sources",
-    it: "Fonti",
-  },
-};
