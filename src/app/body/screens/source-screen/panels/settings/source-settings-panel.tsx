@@ -1,14 +1,33 @@
-import { Box, HStack, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Heading,
+  SimpleGrid,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
-import { useTranslateSourceVersion } from "~/models/types/source-version";
+import {
+  type SourceType,
+  useSourceTypeOptions,
+  useTranslateSourceType,
+} from "~/models/types/source-type";
+import {
+  type SourceVersion,
+  useSourceVersionTranslations,
+  useTranslateSourceVersion,
+} from "~/models/types/source-version";
 import Button from "~/ui/button";
+import CaptionInput from "~/ui/caption-input";
 import IconButton from "~/ui/icon-button";
+import TextInput from "~/ui/input";
 import Search, { type SearchRefObject } from "~/ui/search";
 import SectionHeading from "~/ui/section-heading";
+import Select from "~/ui/select";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
@@ -40,8 +59,8 @@ export default function SourceSettingsPanel() {
         </Text>
       </VStack>
 
-      <SourceDependenciesSettings
-        initialDependencies={source}
+      <SourceSettingsForm
+        initialSource={source}
         key={hash(source)}
         source={source}
         sources={sources}
@@ -51,37 +70,42 @@ export default function SourceSettingsPanel() {
 }
 
 //------------------------------------------------------------------------------
-// Source Dependencies Settings
+// Source Settings Form
 //------------------------------------------------------------------------------
 
-type SourceDependencies = Pick<Source, "includes" | "requires">;
+type SourceSettingsDraft = Pick<
+  Source,
+  "code" | "includes" | "name" | "requires" | "type" | "version"
+>;
 
-type SourceDependenciesSettingsProps = {
-  initialDependencies: SourceDependencies;
+type SourceSettingsFormProps = {
+  initialSource: Source;
   source: Source;
   sources: Source[];
 };
 
-function SourceDependenciesSettings({
-  initialDependencies,
+function SourceSettingsForm({
+  initialSource,
   source,
   sources,
-}: SourceDependenciesSettingsProps) {
-  const { t } = useI18nLangContext(i18nContext);
+}: SourceSettingsFormProps) {
+  const { lang, t } = useI18nLangContext(i18nContext);
   const sourceEditable = catalogue.useSourceEditable(source.id);
-  const [draft, setDraft] = useState<SourceDependencies>(
-    sourceToDependencies(initialDependencies),
+  const sourceTypeOptions = useSourceTypeOptions();
+  const sourceVersionOptions = useSourceVersionTranslations();
+  const [draft, setDraft] = useState<SourceSettingsDraft>(
+    sourceToSettingsDraft(initialSource),
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string>();
 
-  const initialDraft = sourceToDependencies(initialDependencies);
+  const initialDraft = sourceToSettingsDraft(initialSource);
   const changed = hash(draft) !== hash(initialDraft);
 
   const reset = useCallback(() => {
-    setDraft(sourceToDependencies(initialDependencies));
+    setDraft(sourceToSettingsDraft(initialSource));
     setError(undefined);
-  }, [initialDependencies]);
+  }, [initialSource]);
 
   const save = useCallback(async () => {
     if (!sourceEditable) return;
@@ -128,6 +152,70 @@ function SourceDependenciesSettings({
           </Text>
         </Box>
       )}
+
+      <VStack align="flex-start" gap={4} w="full">
+        <SectionHeading>{t("metadata")}</SectionHeading>
+
+        <SimpleGrid columns={{ base: 1, lg: 2 }} gap={4} w="full">
+          <CaptionInput caption={t("name")} w="full">
+            <TextInput
+              disabled={saving || !sourceEditable}
+              onValueChange={(name) =>
+                setDraft((prev) => ({
+                  ...prev,
+                  name: { ...prev.name, [lang]: name || null },
+                }))
+              }
+              size="sm"
+              value={draft.name[lang] ?? ""}
+            />
+          </CaptionInput>
+
+          <CaptionInput caption={t("code")} w="full">
+            <TextInput
+              disabled={saving || !sourceEditable}
+              onValueChange={(code) =>
+                setDraft((prev) => ({
+                  ...prev,
+                  code,
+                }))
+              }
+              size="sm"
+              value={draft.code}
+            />
+          </CaptionInput>
+
+          <CaptionInput caption={t("type")} w="full">
+            <Select.Enum<SourceType>
+              disabled={saving || !sourceEditable}
+              onValueChange={(type) =>
+                setDraft((prev) => ({
+                  ...prev,
+                  type,
+                }))
+              }
+              options={sourceTypeOptions}
+              size="sm"
+              value={draft.type}
+            />
+          </CaptionInput>
+
+          <CaptionInput caption={t("version")} w="full">
+            <Select.Enum<SourceVersion>
+              disabled={saving || !sourceEditable}
+              onValueChange={(version) =>
+                setDraft((prev) => ({
+                  ...prev,
+                  version,
+                }))
+              }
+              options={sourceVersionOptions}
+              size="sm"
+              value={draft.version}
+            />
+          </CaptionInput>
+        </SimpleGrid>
+      </VStack>
 
       <SourceDependencyEditor
         dependencies={draft.includes}
@@ -190,7 +278,6 @@ function SourceSettingsRoot({ children }: { children: React.ReactNode }) {
       // bgColor="bg.subtle"
       flex={1}
       gap={6}
-      maxW="36rem"
       minH="full"
       px={10}
       py={10}
@@ -229,6 +316,7 @@ function SourceDependencyEditor({
   const { lang, t } = useI18nLangContext(i18nContext);
   const searchRef = useRef<SearchRefObject>(null);
 
+  const translateSourceType = useTranslateSourceType(lang);
   const translateSourceVersion = useTranslateSourceVersion(lang);
 
   const selectedIds = useMemo(
@@ -248,6 +336,17 @@ function SourceDependencyEditor({
       .map((source) => sourceToOption(source, lang))
       .sort(compareObjects("label"));
   }, [lang, selectedIds, sourceId, sources]);
+
+  const categories = useMemo(() => {
+    const sourceTypes: SourceType[] = ["core", "module", "campaign"];
+
+    return sourceTypes.flatMap((type) => {
+      const items = options.filter((option) => option.type === type);
+      return items.length ?
+          [{ id: type, items, title: translateSourceType(type).label }]
+        : [];
+    });
+  }, [options, translateSourceType]);
 
   const selectedSources = useMemo(() => {
     return dependencies.sort(compareObjects("code"));
@@ -280,6 +379,7 @@ function SourceDependencyEditor({
       <SectionHeading>{label}</SectionHeading>
 
       <Search
+        categories={categories}
         disabled={disabled || !options.length}
         emptyLabel={t("empty")}
         onFilter={filterSourceOption}
@@ -340,6 +440,7 @@ function SourceDependencyEditor({
 type SourceOption = {
   label: string;
   search: string;
+  type: SourceType;
   value: string;
 };
 
@@ -349,6 +450,7 @@ function sourceToOption(source: Source, lang: string): SourceOption {
   return {
     label,
     search: normalizeString(`${source.code} ${name} ${source.version}`),
+    type: source.type,
     value: source.id,
   };
 }
@@ -368,13 +470,17 @@ function filterSourceOption(option: SourceOption, search: string): boolean {
 }
 
 //------------------------------------------------------------------------------
-// Source Dependencies
+// Source Settings Draft
 //------------------------------------------------------------------------------
 
-function sourceToDependencies(source: SourceDependencies): SourceDependencies {
+function sourceToSettingsDraft(source: Source): SourceSettingsDraft {
   return {
+    code: source.code,
     includes: source.includes,
+    name: source.name,
     requires: source.requires,
+    type: source.type,
+    version: source.version,
   };
 }
 
@@ -391,17 +497,29 @@ const i18nContext = {
     en: "Add required source",
     it: "Aggiungi fonte richiesta",
   },
+  "code": {
+    en: "Code",
+    it: "Codice",
+  },
   "empty": {
     en: "No sources found",
     it: "Nessuna fonte trovata",
   },
   "error.save": {
-    en: "Could not save source relationships",
-    it: "Impossibile salvare le relazioni della fonte",
+    en: "Could not save source settings",
+    it: "Impossibile salvare le impostazioni della fonte",
   },
   "includes": {
     en: "Includes",
     it: "Include",
+  },
+  "metadata": {
+    en: "Details",
+    it: "Dettagli",
+  },
+  "name": {
+    en: "Name",
+    it: "Nome",
   },
   "no_source": {
     en: "No source selected",
@@ -434,5 +552,13 @@ const i18nContext = {
   "title": {
     en: "Source Settings",
     it: "Impostazioni del Modulo",
+  },
+  "type": {
+    en: "Type",
+    it: "Tipo",
+  },
+  "version": {
+    en: "Version",
+    it: "Versione",
   },
 };
