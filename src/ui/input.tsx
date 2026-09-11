@@ -26,6 +26,7 @@ export default function Input({
   return (
     <InputGroup
       endElement={
+        !rest.disabled &&
         value &&
         value.length > 0 && (
           <IconButton
