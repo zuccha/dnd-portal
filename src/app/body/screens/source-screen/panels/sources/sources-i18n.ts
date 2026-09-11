@@ -159,9 +159,29 @@ const i18nContext = {
     en: "Remove",
     it: "Rimuovi",
   },
-  "remove.confirm": {
+  "remove.confirm_action": {
+    en: "Remove source",
+    it: "Rimuovi fonte",
+  },
+  "remove.dependents": {
+    en: "Sources that depend on it",
+    it: "Fonti che dipendono da essa",
+  },
+  "remove.dependents_description": {
+    en: "Removing this source may make content from these sources unavailable.",
+    it: "La rimozione di questa fonte potrebbe rendere non disponibili i contenuti di queste fonti.",
+  },
+  "remove.description": {
     en: "Remove <1> from this device?",
     it: "Rimuovere <1> da questo dispositivo?",
+  },
+  "remove.irreversible": {
+    en: "This action cannot be undone.",
+    it: "Questa azione non può essere annullata.",
+  },
+  "remove.title": {
+    en: "Remove source",
+    it: "Rimuovi fonte",
   },
   "repository": {
     en: "Repository",

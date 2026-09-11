@@ -56,6 +56,15 @@ type SourceDependencyPrompt = {
 };
 
 //------------------------------------------------------------------------------
+// Source Removal Prompt
+//------------------------------------------------------------------------------
+
+type SourceRemovalPrompt = {
+  dependentSources: Source[];
+  source: Source;
+};
+
+//------------------------------------------------------------------------------
 // Sources Panel
 //------------------------------------------------------------------------------
 
@@ -75,6 +84,7 @@ export default function SourcesPanel() {
   const [busySourceId, setBusySourceId] = useState<string>();
   const [dependencyPrompt, setDependencyPrompt] =
     useState<SourceDependencyPrompt>();
+  const [removalPrompt, setRemovalPrompt] = useState<SourceRemovalPrompt>();
   const localSourcesById = useMemo(
     () => new Map(sources.map((source) => [source.id, source])),
     [sources],
@@ -243,14 +253,32 @@ export default function SourcesPanel() {
     const source = sources.find((source) => source.id === sourceId);
     if (!source) return;
 
-    const ok = confirm(ti("remove.confirm", source.code));
-    if (!ok) return;
+    const dependentSources = sources.filter(
+      (candidate) =>
+        candidate.id !== source.id &&
+        [...candidate.includes, ...candidate.requires].some(
+          ({ source_id }) => source_id === source.id,
+        ),
+    );
+
+    setRemovalPrompt({ dependentSources, source });
+  };
+
+  //----------------------------------------------------------------------------
+  // Complete Source Removal
+  //----------------------------------------------------------------------------
+
+  const completeSourceRemoval = async () => {
+    const prompt = removalPrompt;
+    if (!prompt) return;
+
+    setRemovalPrompt(undefined);
 
     setError(undefined);
 
     try {
-      await deleteSourceBundle(sourceId);
-      catalogue.removeSourceBundle(sourceId);
+      await deleteSourceBundle(prompt.source.id);
+      catalogue.removeSourceBundle(prompt.source.id);
     } catch (e) {
       console.error(e);
       setError(t("error.remove"));
@@ -523,6 +551,24 @@ export default function SourcesPanel() {
           open
           registryDependencies={dependencyPrompt.registryDependencies}
           source={dependencyPrompt.source}
+        />
+      )}
+
+      {removalPrompt && (
+        <SourceDependenciesDialog
+          dependentSources={removalPrompt.dependentSources}
+          missingDependencies={[]}
+          mode="remove"
+          onCancel={() => setRemovalPrompt(undefined)}
+          onContinue={() => setRemovalPrompt(undefined)}
+          onDownload={() => undefined}
+          onOpenChange={(open) => {
+            if (!open) setRemovalPrompt(undefined);
+          }}
+          onRemove={completeSourceRemoval}
+          open
+          registryDependencies={[]}
+          source={removalPrompt.source}
         />
       )}
 

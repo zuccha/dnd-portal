@@ -17,10 +17,13 @@ import i18nContext from "./sources-i18n";
 //------------------------------------------------------------------------------
 
 type SourceDependenciesDialogProps = {
+  mode?: "dependencies" | "remove";
+  dependentSources?: Source[];
   missingDependencies: SourceDependency[];
   onCancel: () => void;
   onContinue: () => void;
   onDownload: () => void;
+  onRemove?: () => void;
   onOpenChange: (open: boolean) => void;
   open: boolean;
   registryDependencies: Source[];
@@ -32,11 +35,14 @@ type SourceDependenciesDialogProps = {
 //------------------------------------------------------------------------------
 
 export default function SourceDependenciesDialog({
+  dependentSources = [],
+  mode = "dependencies",
   missingDependencies,
   onCancel,
   onContinue,
   onDownload,
   onOpenChange,
+  onRemove,
   open,
   registryDependencies,
   source,
@@ -58,16 +64,51 @@ export default function SourceDependenciesDialog({
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>{t("dependencies.title")}</Dialog.Title>
+              <Dialog.Title>
+                {t(mode === "remove" ? "remove.title" : "dependencies.title")}
+              </Dialog.Title>
             </Dialog.Header>
 
             <Dialog.Body>
               <VStack align="flex-start" gap={4}>
                 <Text color="fg.muted" fontSize="sm">
-                  {ti("dependencies.description", sourceName)}
+                  {ti(
+                    mode === "remove" ? "remove.description" : (
+                      "dependencies.description"
+                    ),
+                    sourceName,
+                  )}
                 </Text>
 
-                {registryDependencies.length > 0 && (
+                {mode === "remove" && dependentSources.length > 0 && (
+                  <VStack align="flex-start" gap={2} w="full">
+                    <Text fontWeight="semibold">{t("remove.dependents")}</Text>
+                    <VStack align="stretch" gap={1} w="full">
+                      {dependentSources.map((dependentSource) => (
+                        <Box
+                          borderColor="border"
+                          borderRadius="sm"
+                          borderWidth={1}
+                          key={dependentSource.id}
+                          px={3}
+                          py={2}
+                        >
+                          <Text fontSize="sm">
+                            {dependentSource.name[lang] || dependentSource.code}
+                          </Text>
+                          <Text color="fg.muted" fontSize="xs">
+                            {dependentSource.code}
+                          </Text>
+                        </Box>
+                      ))}
+                    </VStack>
+                    <Text color="fg.muted" fontSize="sm">
+                      {t("remove.dependents_description")}
+                    </Text>
+                  </VStack>
+                )}
+
+                {mode === "dependencies" && registryDependencies.length > 0 && (
                   <VStack align="flex-start" gap={2} w="full">
                     <Text fontWeight="semibold">
                       {t("dependencies.repository")}
@@ -94,7 +135,7 @@ export default function SourceDependenciesDialog({
                   </VStack>
                 )}
 
-                {missingDependencies.length > 0 && (
+                {mode === "dependencies" && missingDependencies.length > 0 && (
                   <VStack align="flex-start" gap={2} w="full">
                     <Text fontWeight="semibold">
                       {t("dependencies.missing")}
@@ -128,7 +169,11 @@ export default function SourceDependenciesDialog({
                 )}
 
                 <Text color="fg.muted" fontSize="sm">
-                  {t("dependencies.continue_description")}
+                  {t(
+                    mode === "remove" ?
+                      "remove.irreversible"
+                    : "dependencies.continue_description",
+                  )}
                 </Text>
               </VStack>
             </Dialog.Body>
@@ -148,14 +193,23 @@ export default function SourceDependenciesDialog({
               >
                 {t("cancel")}
               </Button>
-              <Button
-                onClick={onContinue}
-                variant="outline"
-                w={{ base: "full", sm: "auto" }}
-              >
-                {t("dependencies.continue")}
-              </Button>
-              {registryDependencies.length > 0 && (
+              {mode === "remove" ?
+                <Button
+                  colorPalette="red"
+                  onClick={onRemove}
+                  w={{ base: "full", sm: "auto" }}
+                >
+                  {t("remove.confirm_action")}
+                </Button>
+              : <Button
+                  onClick={onContinue}
+                  variant="outline"
+                  w={{ base: "full", sm: "auto" }}
+                >
+                  {t("dependencies.continue")}
+                </Button>
+              }
+              {mode === "dependencies" && registryDependencies.length > 0 && (
                 <Button onClick={onDownload} w={{ base: "full", sm: "auto" }}>
                   {t("dependencies.download")}
                 </Button>
