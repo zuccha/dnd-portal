@@ -8,6 +8,7 @@ import {
 import { useCallback } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
+import catalogue from "~/models/catalogue/catalogue";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -57,6 +58,7 @@ export function createResourcesTableHead<
 
   return function ResourcesTableHead({ sourceId }: ResourcesTableHeadProps) {
     const [lang] = useI18nLang();
+    const sourceEditable = catalogue.useSourceEditable(sourceId);
 
     const { deselectAllResources, selectAllResources } =
       useResourcesSelectionMethods(sourceId);
@@ -115,9 +117,11 @@ export function createResourcesTableHead<
           );
         })}
 
-        <Table.ColumnHeader textAlign="center" w="3em">
-          <Icon Icon={EditIcon} color="fg.muted" size="sm" />
-        </Table.ColumnHeader>
+        {sourceEditable && (
+          <Table.ColumnHeader textAlign="center" w="3em">
+            <Icon Icon={EditIcon} color="fg.muted" size="sm" />
+          </Table.ColumnHeader>
+        )}
 
         <Table.ColumnHeader textAlign="center" w="1%" />
       </Table.Row>

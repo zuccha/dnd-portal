@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import YAML from "yaml";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
+import catalogue from "~/models/catalogue/catalogue";
 import {
   type PrintDeckEntryInput,
   printDeck,
@@ -48,6 +49,7 @@ export function createResourcesActions<
       useSelectedFilteredResourceIds(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
+    const sourceEditable = catalogue.useSourceEditable(sourceId);
 
     const { deselectAllResources, selectAllResources } =
       useResourcesSelectionMethods(sourceId);
@@ -169,23 +171,25 @@ export function createResourcesActions<
             <Portal>
               <Menu.Positioner>
                 <Menu.Content>
-                  <Menu.ItemGroup>
-                    <Menu.Item onSelect={addNew} value="add">
-                      {t("add")}
-                    </Menu.Item>
+                  {sourceEditable && (
+                    <Menu.ItemGroup>
+                      <Menu.Item onSelect={addNew} value="add">
+                        {t("add")}
+                      </Menu.Item>
 
-                    <Menu.Item
-                      _hover={{ bg: "bg.error", color: "fg.error" }}
-                      color="fg.error"
-                      disabled={!hasSelection}
-                      onSelect={removeSelected}
-                      value="remove"
-                    >
-                      {t("remove")}
-                    </Menu.Item>
-                  </Menu.ItemGroup>
+                      <Menu.Item
+                        _hover={{ bg: "bg.error", color: "fg.error" }}
+                        color="fg.error"
+                        disabled={!hasSelection}
+                        onSelect={removeSelected}
+                        value="remove"
+                      >
+                        {t("remove")}
+                      </Menu.Item>
+                    </Menu.ItemGroup>
+                  )}
 
-                  <Menu.Separator />
+                  {sourceEditable && <Menu.Separator />}
 
                   <Menu.ItemGroup>
                     <Menu.Item

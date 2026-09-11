@@ -11,6 +11,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import SquareCheckIcon from "~/icons/square-check-icon";
 import SquareIcon from "~/icons/square-icon";
+import catalogue from "~/models/catalogue/catalogue";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
@@ -94,6 +95,7 @@ export function createResourceCardInteractive<
   }: ResourceCardInteractiveProps<R, L>) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const [resource] = useResource(resourceId);
+    const sourceEditable = catalogue.useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
     const localizedResource = useMemo(
       () => localizeResource(resource),
@@ -135,8 +137,9 @@ export function createResourceCardInteractive<
     const { setResourceSelection } = useResourceSelectionMethods(resourceId);
 
     const edit = useCallback(() => {
+      if (!sourceEditable) return;
       if (localizedResource) context.setEditedResource(localizedResource._raw);
-    }, [localizedResource]);
+    }, [localizedResource, sourceEditable]);
 
     const addToPrintDeck = useCallback(() => {
       printDeck.addEntry({
@@ -231,18 +234,20 @@ export function createResourceCardInteractive<
             visibility="hidden"
             zIndex={2}
           >
-            <IconButton
-              Icon={EditIcon}
-              _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
-              className="light"
-              label={t("edit")}
-              onPointerDown={(e) => {
-                e.stopPropagation();
-                edit();
-              }}
-              size="2xs"
-              tooltipPositioning={{ placement: "right" }}
-            />
+            {sourceEditable && (
+              <IconButton
+                Icon={EditIcon}
+                _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
+                className="light"
+                label={t("edit")}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  edit();
+                }}
+                size="2xs"
+                tooltipPositioning={{ placement: "right" }}
+              />
+            )}
 
             <Menu.Root ids={{ trigger: `actions-${resourceId}` }}>
               <Menu.Trigger asChild>
@@ -268,7 +273,7 @@ export function createResourceCardInteractive<
                       {t("print_deck.add")}
                     </Menu.Item>
 
-                    {localizedResource._raw.virtual && (
+                    {sourceEditable && localizedResource._raw.virtual && (
                       <Menu.Item
                         onSelect={makePersistent}
                         value="make-persistent"
@@ -278,24 +283,27 @@ export function createResourceCardInteractive<
                       </Menu.Item>
                     )}
 
-                    {visibleActions.map((action, i) => {
-                      const ActionIcon = action.icon;
-                      return (
-                        <Menu.Item
-                          disabled={action.isDisabled?.(localizedResource._raw)}
-                          key={i}
-                          onSelect={() => {
-                            if (action.isDisabled?.(localizedResource._raw))
-                              return;
-                            void action.onClick(localizedResource._raw);
-                          }}
-                          value={`action-${i}`}
-                        >
-                          <Icon Icon={ActionIcon} size="xs" />
-                          {translate(action.label, lang)}
-                        </Menu.Item>
-                      );
-                    })}
+                    {sourceEditable &&
+                      visibleActions.map((action, i) => {
+                        const ActionIcon = action.icon;
+                        return (
+                          <Menu.Item
+                            disabled={action.isDisabled?.(
+                              localizedResource._raw,
+                            )}
+                            key={i}
+                            onSelect={() => {
+                              if (action.isDisabled?.(localizedResource._raw))
+                                return;
+                              void action.onClick(localizedResource._raw);
+                            }}
+                            value={`action-${i}`}
+                          >
+                            <Icon Icon={ActionIcon} size="xs" />
+                            {translate(action.label, lang)}
+                          </Menu.Item>
+                        );
+                      })}
                   </Menu.Content>
                 </Menu.Positioner>
               </Portal>

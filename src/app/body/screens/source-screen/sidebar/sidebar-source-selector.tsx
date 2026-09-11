@@ -25,6 +25,8 @@ export default function SidebarSourceSelector({
   versions,
 }: SidebarSourceSelectorProps) {
   const selectedSourceId = catalogue.useActiveSourceId();
+  const selectedSource = catalogue.useSource(selectedSourceId);
+  const selectedSourceReadonly = selectedSource?.registry?.access === "read";
 
   const setSourceId = useCallback((sourceId: string | undefined) => {
     catalogue.setActiveSourceId(sourceId);
@@ -112,7 +114,14 @@ export default function SidebarSourceSelector({
 
   return (
     <>
-      <CaptionInput caption={t("sources")} flex={1}>
+      <CaptionInput
+        caption={
+          selectedSourceReadonly ?
+            `${t("sources")} • ${t("readonly")}`
+          : t("sources")
+        }
+        flex={1}
+      >
         <Select.Enum
           categories={sourceCategories}
           disabled={!sourceOptions.length}
@@ -177,6 +186,10 @@ function sourceToOption(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "readonly": {
+    en: "Read-only",
+    it: "Sola lettura",
+  },
   "select.campaigns": {
     en: "Campaigns",
     it: "Campagne",

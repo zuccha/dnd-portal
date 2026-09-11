@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   CloseButton,
   Dialog,
@@ -6,6 +7,7 @@ import {
   Heading,
   Input,
   Portal,
+  Tabs,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -37,7 +39,14 @@ export default function SourcesPanel() {
   const [error, setError] = useState<string>();
   const [exportSource, setExportSource] = useState<Source>();
   const [includePrivate, setIncludePrivate] = useState(true);
-  const sourceGroups = groupSourcesByType(sources, lang);
+  const localSourceGroups = groupSourcesByType(
+    sources.filter((source) => !source.registry),
+    lang,
+  );
+  const officialSourceGroups = groupSourcesByType(
+    sources.filter((source) => source.registry),
+    lang,
+  );
 
   const importSource = async (file: File | undefined) => {
     if (!file) return;
@@ -132,61 +141,32 @@ export default function SourcesPanel() {
         )}
 
         {sources.length ?
-          <VStack gap={5} w="full">
-            {sourceGroups.map(({ sources, type }) => (
-              <VStack align="flex-start" gap={2} key={type} w="full">
-                <Text color="fg.muted" fontSize="sm" fontWeight="semibold">
-                  {t(type)}
-                </Text>
+          <Tabs.Root defaultValue="my-sources" w="full">
+            <Tabs.List>
+              <Tabs.Trigger value="my-sources">{t("my_sources")}</Tabs.Trigger>
+              <Tabs.Trigger value="official">{t("official")}</Tabs.Trigger>
+            </Tabs.List>
 
-                <VStack gap={2} w="full">
-                  {sources.map((source) => {
-                    const name = source.name[lang] || source.code;
-                    return (
-                      <HStack
-                        bgColor="bg"
-                        borderRadius="sm"
-                        borderWidth={1}
-                        gap={3}
-                        key={source.id}
-                        minH={14}
-                        px={3}
-                        py={2}
-                        w="full"
-                      >
-                        <VStack align="flex-start" flex={1} gap={0}>
-                          <Text fontWeight="semibold" truncate>
-                            {name}
-                          </Text>
-                          <Text color="fg.muted" fontSize="sm" truncate>
-                            {source.code} ·{" "}
-                            {translateSourceVersion(source.version).label}
-                          </Text>
-                        </VStack>
+            <Tabs.Content value="my-sources">
+              <SourceGroups
+                groups={localSourceGroups}
+                lang={lang}
+                onExport={openExportDialog}
+                onRemove={removeSource}
+                translateSourceVersion={translateSourceVersion}
+              />
+            </Tabs.Content>
 
-                        <IconButton
-                          Icon={DownloadIcon}
-                          label={t("export")}
-                          onClick={() => openExportDialog(source)}
-                          size="xs"
-                          variant="ghost"
-                        />
-
-                        <IconButton
-                          Icon={Trash2Icon}
-                          colorPalette="red"
-                          label={t("remove")}
-                          onClick={() => removeSource(source.id)}
-                          size="xs"
-                          variant="ghost"
-                        />
-                      </HStack>
-                    );
-                  })}
-                </VStack>
-              </VStack>
-            ))}
-          </VStack>
+            <Tabs.Content value="official">
+              <SourceGroups
+                groups={officialSourceGroups}
+                lang={lang}
+                onExport={openExportDialog}
+                onRemove={removeSource}
+                translateSourceVersion={translateSourceVersion}
+              />
+            </Tabs.Content>
+          </Tabs.Root>
         : null}
       </VStack>
 
@@ -242,26 +222,156 @@ export default function SourcesPanel() {
 }
 
 //------------------------------------------------------------------------------
+// Source Groups
+//------------------------------------------------------------------------------
+
+type SourceGroup = { sources: Source[]; type: SourceType };
+
+type SourceGroupsProps = {
+  groups: SourceGroup[];
+  lang: string;
+  onExport: (source: Source) => void;
+  onRemove: (sourceId: string) => void;
+  translateSourceVersion: (version: Source["version"]) => { label: string };
+};
+
+function SourceGroups({
+  groups,
+  lang,
+  onExport,
+  onRemove,
+  translateSourceVersion,
+}: SourceGroupsProps) {
+  const { t } = useI18nLangContext(i18nContext);
+
+  if (!groups.length)
+    return (
+      <Text color="fg.muted" fontSize="sm" pt={4}>
+        {t("empty")}
+      </Text>
+    );
+
+  return (
+    <VStack gap={4} pt={4} w="full">
+      {groups.map(({ sources, type }) => (
+        <VStack align="flex-start" gap={2} key={type} w="full">
+          <Text color="fg.muted" fontSize="xs" fontWeight="medium">
+            {t(type)}
+          </Text>
+
+          <VStack gap={2} w="full">
+            {sources.map((source) => (
+              <SourceRow
+                key={source.id}
+                lang={lang}
+                onExport={onExport}
+                onRemove={onRemove}
+                source={source}
+                translateSourceVersion={translateSourceVersion}
+              />
+            ))}
+          </VStack>
+        </VStack>
+      ))}
+    </VStack>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Source Row
+//------------------------------------------------------------------------------
+
+type SourceRowProps = {
+  lang: string;
+  onExport: (source: Source) => void;
+  onRemove: (sourceId: string) => void;
+  source: Source;
+  translateSourceVersion: (version: Source["version"]) => { label: string };
+};
+
+function SourceRow({
+  lang,
+  onExport,
+  onRemove,
+  source,
+  translateSourceVersion,
+}: SourceRowProps) {
+  const { t } = useI18nLangContext(i18nContext);
+  const name = source.name[lang] || source.code;
+
+  return (
+    <HStack
+      bgColor="bg"
+      borderRadius="sm"
+      borderWidth={1}
+      gap={3}
+      minH={14}
+      px={3}
+      py={2}
+      w="full"
+    >
+      <VStack align="flex-start" flex={1} gap={0}>
+        <HStack gap={2} minW={0} w="full">
+          <Text fontWeight="semibold" truncate>
+            {name}
+          </Text>
+          {source.registry?.access === "read" && (
+            <Badge colorPalette="gray" size="xs" variant="subtle">
+              {t("readonly")}
+            </Badge>
+          )}
+        </HStack>
+        <Text color="fg.muted" fontSize="sm" truncate>
+          {source.code} · {translateSourceVersion(source.version).label}
+        </Text>
+      </VStack>
+
+      <IconButton
+        Icon={DownloadIcon}
+        label={t("export")}
+        onClick={() => onExport(source)}
+        size="xs"
+        variant="ghost"
+      />
+
+      <IconButton
+        Icon={Trash2Icon}
+        colorPalette="red"
+        label={t("remove")}
+        onClick={() => onRemove(source.id)}
+        size="xs"
+        variant="ghost"
+      />
+    </HStack>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Group Sources By Type
 //------------------------------------------------------------------------------
 
-function groupSourcesByType(
-  sources: Source[],
-  lang: string,
-): { sources: Source[]; type: SourceType }[] {
+function groupSourcesByType(sources: Source[], lang: string): SourceGroup[] {
   const sourceTypes: SourceType[] = ["core", "module", "campaign"];
 
   return sourceTypes.flatMap((type) => {
     const groupSources = sources
       .filter((source) => source.type === type)
-      .sort((a, b) => {
-        const nameA = a.name[lang] || a.code;
-        const nameB = b.name[lang] || b.code;
-        return nameA.localeCompare(nameB) || a.code.localeCompare(b.code);
-      });
+      .sort(compareSources(lang));
 
     return groupSources.length ? [{ sources: groupSources, type }] : [];
   });
+}
+
+//------------------------------------------------------------------------------
+// Compare Sources
+//------------------------------------------------------------------------------
+
+function compareSources(lang: string): (a: Source, b: Source) => number {
+  return (a, b) => {
+    const nameA = a.name[lang] || a.code;
+    const nameB = b.name[lang] || b.code;
+    return nameA.localeCompare(nameB) || a.code.localeCompare(b.code);
+  };
 }
 
 //------------------------------------------------------------------------------
@@ -280,6 +390,10 @@ const i18nContext = {
   "core": {
     en: "Core",
     it: "Core",
+  },
+  "empty": {
+    en: "No sources found",
+    it: "Nessuna fonte trovata",
   },
   "error.export": {
     en: "The selected source could not be exported.",
@@ -312,6 +426,18 @@ const i18nContext = {
   "module": {
     en: "Module",
     it: "Modulo",
+  },
+  "my_sources": {
+    en: "My Sources",
+    it: "Le Mie Fonti",
+  },
+  "official": {
+    en: "Official",
+    it: "Ufficiali",
+  },
+  "readonly": {
+    en: "Read-only",
+    it: "Sola lettura",
   },
   "remove": {
     en: "Remove",

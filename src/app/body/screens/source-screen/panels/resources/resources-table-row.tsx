@@ -23,6 +23,7 @@ import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
+import catalogue from "~/models/catalogue/catalogue";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
@@ -96,6 +97,9 @@ export function createResourcesTableRow<
     const [system] = useI18nSystem();
 
     const [resource] = useResource(resourceId);
+    const activeSourceId = catalogue.useActiveSourceId();
+    const activeSourceEditable = catalogue.useSourceEditable(activeSourceId);
+    const sourceEditable = catalogue.useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
     const localizedResource = useMemo(
       () => localizeResource(resource),
@@ -116,10 +120,11 @@ export function createResourcesTableRow<
     const edit = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
+        if (!sourceEditable) return;
         if (localizedResource)
           context.setEditedResource(localizedResource._raw);
       },
-      [localizedResource],
+      [localizedResource, sourceEditable],
     );
 
     const addToPrintDeck = useCallback(() => {
@@ -169,7 +174,11 @@ export function createResourcesTableRow<
     );
 
     const hasActions = true;
-    const columnCount = extra.columns.length + 4 + (hasActions ? 1 : 0);
+    const columnCount =
+      extra.columns.length +
+      3 +
+      (activeSourceEditable ? 1 : 0) +
+      (hasActions ? 1 : 0);
 
     return (
       <>
@@ -223,7 +232,9 @@ export function createResourcesTableRow<
                         {translate({ en: "Temporary", it: "Temporanea" }, lang)}
                       </Badge>
                     )}
-                    <Link onClick={edit}>{String(value)}</Link>
+                    {sourceEditable ?
+                      <Link onClick={edit}>{String(value)}</Link>
+                    : String(value)}
                   </HStack>
                 : typeof value === "boolean" ?
                   <Checkbox disabled mt={0.5} size="sm" value={value} />
@@ -232,15 +243,19 @@ export function createResourcesTableRow<
             );
           })}
 
-          <Table.Cell textAlign="center" w="3em">
-            <IconButton
-              Icon={EditIcon}
-              label={t("edit")}
-              onClick={edit}
-              size="2xs"
-              variant="ghost"
-            />
-          </Table.Cell>
+          {activeSourceEditable && (
+            <Table.Cell textAlign="center" w="3em">
+              {sourceEditable && (
+                <IconButton
+                  Icon={EditIcon}
+                  label={t("edit")}
+                  onClick={edit}
+                  size="2xs"
+                  variant="ghost"
+                />
+              )}
+            </Table.Cell>
+          )}
 
           {hasActions && (
             <Table.Cell textAlign="center" w="1%" whiteSpace="nowrap">
@@ -266,7 +281,7 @@ export function createResourcesTableRow<
                         {t("print_deck.add")}
                       </Menu.Item>
 
-                      {localizedResource._raw.virtual && (
+                      {sourceEditable && localizedResource._raw.virtual && (
                         <Menu.Item
                           onSelect={makePersistent}
                           value="make-persistent"
@@ -276,25 +291,28 @@ export function createResourcesTableRow<
                         </Menu.Item>
                       )}
 
-                      {visibleActions.map((action, i) => {
-                        const ActionIcon = action.icon;
-                        return (
-                          <Menu.Item
-                            disabled={action.isDisabled?.(
-                              localizedResource._raw,
-                            )}
-                            key={i}
-                            onSelect={() => {
-                              if (!action.isDisabled?.(localizedResource._raw))
-                                action.onClick(localizedResource._raw);
-                            }}
-                            value={`action-${i}`}
-                          >
-                            <Icon Icon={ActionIcon} size="xs" />
-                            {translate(action.label, lang)}
-                          </Menu.Item>
-                        );
-                      })}
+                      {sourceEditable &&
+                        visibleActions.map((action, i) => {
+                          const ActionIcon = action.icon;
+                          return (
+                            <Menu.Item
+                              disabled={action.isDisabled?.(
+                                localizedResource._raw,
+                              )}
+                              key={i}
+                              onSelect={() => {
+                                if (
+                                  !action.isDisabled?.(localizedResource._raw)
+                                )
+                                  action.onClick(localizedResource._raw);
+                              }}
+                              value={`action-${i}`}
+                            >
+                              <Icon Icon={ActionIcon} size="xs" />
+                              {translate(action.label, lang)}
+                            </Menu.Item>
+                          );
+                        })}
                     </Menu.Content>
                   </Menu.Positioner>
                 </Portal>

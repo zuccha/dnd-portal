@@ -159,6 +159,7 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function addTemporaryResource(resource: R): boolean {
+    if (!catalogue.isSourceEditable(resource.source_id)) return false;
     if (getResource(resource.id)) return false;
 
     catalogueResourceStore.upsertResource({ ...resource, virtual: true });
@@ -174,6 +175,8 @@ export function createResourceStore<
   ): Promise<string | undefined> {
     const resource = getResource(resourceId);
     if (!resource) return "form.error.update_failure";
+    if (!catalogue.isSourceEditable(resource.source_id))
+      return "form.error.update_failure";
     if (!resource.virtual) return undefined;
 
     const persistentResource = { ...resource, virtual: false };
@@ -204,6 +207,8 @@ export function createResourceStore<
   ): Promise<string | undefined> {
     const source = catalogue.getSource(sourceId);
     if (!source) return "form.error.update_failure";
+    if (!catalogue.isSourceEditable(sourceId))
+      return "form.error.update_failure";
 
     const resource = {
       ...defaultResource,
@@ -238,6 +243,12 @@ export function createResourceStore<
     const resources = resourceIds
       .map(getResource)
       .filter((resource): resource is R => resource !== undefined);
+    if (
+      resources.some(
+        (resource) => !catalogue.isSourceEditable(resource.source_id),
+      )
+    )
+      return "form.error.update_failure";
 
     const sourceIds = [
       ...new Set(
@@ -290,6 +301,8 @@ export function createResourceStore<
   ): Promise<string | undefined> {
     const current = getResource(resourceId);
     if (!current) return "form.error.update_failure";
+    if (!catalogue.isSourceEditable(current.source_id))
+      return "form.error.update_failure";
 
     const resource = mergeResourcePatch(
       current,

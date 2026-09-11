@@ -258,6 +258,15 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
+  // Is Source Editable
+  //----------------------------------------------------------------------------
+
+  function isSourceEditable(sourceId: string): boolean {
+    const source = getSource(sourceId);
+    return !!source && source.registry?.access !== "read";
+  }
+
+  //----------------------------------------------------------------------------
   // Use Source
   //----------------------------------------------------------------------------
 
@@ -271,6 +280,15 @@ export function createCatalogue(id: string) {
 
   function useActiveSource(): Source | undefined {
     return useSource(activeSourceId.useValue());
+  }
+
+  //----------------------------------------------------------------------------
+  // Use Source Editable
+  //----------------------------------------------------------------------------
+
+  function useSourceEditable(sourceId: string | undefined): boolean {
+    const source = useSource(sourceId);
+    return !!source && source.registry?.access !== "read";
   }
 
   //----------------------------------------------------------------------------
@@ -326,6 +344,7 @@ export function createCatalogue(id: string) {
   ): Promise<Source | undefined> {
     const current = sourceById.get(sourceId);
     if (!current) return undefined;
+    if (!isSourceEditable(sourceId)) return undefined;
 
     const source = update(current);
     const bundle = await updateSourceBundle(sourceId, (bundle) => ({
@@ -576,12 +595,14 @@ export function createCatalogue(id: string) {
     getSource,
     getSourceBundle,
     importSourceBundle,
+    isSourceEditable,
     removeSourceBundle,
     setActiveSourceId,
     updateSource,
     useActiveSource,
     useActiveSourceId: activeSourceId.useValue,
     useSource,
+    useSourceEditable,
     useSources,
   };
 }

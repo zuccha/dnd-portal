@@ -68,6 +68,7 @@ function SourceDependenciesSettings({
   sources,
 }: SourceDependenciesSettingsProps) {
   const { t } = useI18nLangContext(i18nContext);
+  const sourceEditable = catalogue.useSourceEditable(source.id);
   const [draft, setDraft] = useState<SourceDependencies>(
     sourceToDependencies(initialDependencies),
   );
@@ -83,6 +84,8 @@ function SourceDependenciesSettings({
   }, [initialDependencies]);
 
   const save = useCallback(async () => {
+    if (!sourceEditable) return;
+
     setSaving(true);
     setError(undefined);
     try {
@@ -96,7 +99,7 @@ function SourceDependenciesSettings({
     } finally {
       setSaving(false);
     }
-  }, [draft, source.id]);
+  }, [draft, source.id, sourceEditable]);
 
   const setIncludes = useCallback((includes: SourceDependency[]) => {
     setDraft((prev) => ({ ...prev, includes }));
@@ -110,9 +113,25 @@ function SourceDependenciesSettings({
 
   return (
     <VStack align="flex-start" gap={8} w="full">
+      {!sourceEditable && (
+        <Box
+          bgColor="bg.muted"
+          borderColor="border"
+          borderRadius="sm"
+          borderWidth={1}
+          px={3}
+          py={2}
+          w="full"
+        >
+          <Text color="fg.muted" fontSize="sm">
+            {t("readonly")}
+          </Text>
+        </Box>
+      )}
+
       <SourceDependencyEditor
         dependencies={draft.includes}
-        disabled={saving}
+        disabled={saving || !sourceEditable}
         label={t("includes")}
         onDependenciesChange={setIncludes}
         otherDependencies={draft.requires}
@@ -123,7 +142,7 @@ function SourceDependenciesSettings({
 
       <SourceDependencyEditor
         dependencies={draft.requires}
-        disabled={saving}
+        disabled={saving || !sourceEditable}
         label={t("requires")}
         onDependenciesChange={setRequires}
         otherDependencies={draft.includes}
@@ -140,7 +159,7 @@ function SourceDependenciesSettings({
 
       <HStack justify="flex-end" w="full">
         <Button
-          disabled={!changed || saving}
+          disabled={!changed || saving || !sourceEditable}
           onClick={reset}
           size="sm"
           variant="outline"
@@ -148,7 +167,7 @@ function SourceDependenciesSettings({
           {t("reset")}
         </Button>
         <Button
-          disabled={!changed || saving}
+          disabled={!changed || saving || !sourceEditable}
           loading={saving}
           onClick={save}
           size="sm"
@@ -391,6 +410,10 @@ const i18nContext = {
   "none": {
     en: "No sources selected",
     it: "Nessuna fonte selezionata",
+  },
+  "readonly": {
+    en: "This registry source is read-only on this device.",
+    it: "Questa fonte del registro è in sola lettura su questo dispositivo.",
   },
   "remove": {
     en: "Remove",
