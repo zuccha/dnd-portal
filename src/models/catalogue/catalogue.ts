@@ -208,11 +208,13 @@ export function createCatalogue(id: string) {
   function setActiveSourceResourceIds(sourceId: string | undefined): void {
     const source = sourceId ? sourceById.get(sourceId) : undefined;
 
-    const includedIds = source?.include_ids ?? emptyIds;
-    const requiredIds = source?.required_ids ?? emptyIds;
+    const includeIds =
+      source?.includes.map(({ source_id }) => source_id) ?? emptyIds;
+    const requireIds =
+      source?.requires.map(({ source_id }) => source_id) ?? emptyIds;
 
-    const resourceSourceIds = sourceId ? [sourceId, ...includedIds] : emptyIds;
-    const referenceSourceIds = [...resourceSourceIds, ...requiredIds];
+    const resourceSourceIds = sourceId ? [sourceId, ...includeIds] : emptyIds;
+    const referenceSourceIds = [...resourceSourceIds, ...requireIds];
 
     for (const kind of objectKeys(resourceIdsBySourceIdByKind)) {
       activeSourceResourceIdsByKind.set(

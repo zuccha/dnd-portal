@@ -54,10 +54,10 @@ export function createResourcesGenericFilters<
     const options = useMemo(() => {
       if (!source) return [];
       return [
-        ...source.include_ids.flatMap((sourceId) => {
-          const source = catalogue.getSource(sourceId);
-          return source ? [{ label: source.code, value: source.id }] : [];
-        }),
+        ...source.includes.map((dependency) => ({
+          label: dependency.code,
+          value: dependency.source_id,
+        })),
         { label: source.code, value: source.id },
       ];
     }, [source]);

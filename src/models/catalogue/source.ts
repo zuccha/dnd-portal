@@ -4,15 +4,46 @@ import { sourceTypeSchema } from "../types/source-type";
 import { sourceVersionSchema } from "../types/source-version";
 
 //------------------------------------------------------------------------------
+// Source Dependency
+//------------------------------------------------------------------------------
+
+export const sourceDependencySchema = z.object({
+  code: z.string(),
+  name: i18nStringSchema,
+  registry_source_id: z.uuid().optional(),
+  source_id: z.uuid(),
+  version: sourceVersionSchema,
+});
+
+export type SourceDependency = z.infer<typeof sourceDependencySchema>;
+
+//------------------------------------------------------------------------------
+// Source Registry Metadata
+//------------------------------------------------------------------------------
+
+export const sourceRegistryMetadataSchema = z.object({
+  access: z.enum(["read", "write"]),
+  revision_created_at: z.string(),
+  revision_id: z.uuid(),
+  revision_number: z.number(),
+  source_id: z.uuid(),
+});
+
+export type SourceRegistryMetadata = z.infer<
+  typeof sourceRegistryMetadataSchema
+>;
+
+//------------------------------------------------------------------------------
 // Source
 //------------------------------------------------------------------------------
 
 export const sourceSchema = z.object({
   code: z.string(),
   id: z.uuid(),
-  include_ids: z.array(z.uuid()).default([]),
+  includes: z.array(sourceDependencySchema).default([]),
   name: i18nStringSchema,
-  required_ids: z.array(z.uuid()).default([]),
+  registry: sourceRegistryMetadataSchema.optional(),
+  requires: z.array(sourceDependencySchema).default([]),
   sync_version: z.number(),
   type: sourceTypeSchema,
   version: sourceVersionSchema,

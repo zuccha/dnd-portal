@@ -3,7 +3,7 @@ import { XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
-import type { Source } from "~/models/catalogue/source";
+import type { Source, SourceDependency } from "~/models/catalogue/source";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
@@ -54,7 +54,7 @@ export default function SourceSettingsPanel() {
 // Source Dependencies Settings
 //------------------------------------------------------------------------------
 
-type SourceDependencies = Pick<Source, "include_ids" | "required_ids">;
+type SourceDependencies = Pick<Source, "includes" | "requires">;
 
 type SourceDependenciesSettingsProps = {
   initialDependencies: SourceDependencies;
@@ -73,11 +73,6 @@ function SourceDependenciesSettings({
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string>();
-
-  const sourceById = useMemo(() => {
-    const entries = sources.map((source) => [source.id, source] as const);
-    return new Map(entries);
-  }, [sources]);
 
   const initialDraft = sourceToDependencies(initialDependencies);
   const changed = hash(draft) !== hash(initialDraft);
@@ -103,38 +98,36 @@ function SourceDependenciesSettings({
     }
   }, [draft, source.id]);
 
-  const setIncludeIds = useCallback((include_ids: string[]) => {
-    setDraft((prev) => ({ ...prev, include_ids }));
+  const setIncludes = useCallback((includes: SourceDependency[]) => {
+    setDraft((prev) => ({ ...prev, includes }));
     setError(undefined);
   }, []);
 
-  const setRequiredIds = useCallback((required_ids: string[]) => {
-    setDraft((prev) => ({ ...prev, required_ids }));
+  const setRequires = useCallback((requires: SourceDependency[]) => {
+    setDraft((prev) => ({ ...prev, requires }));
     setError(undefined);
   }, []);
 
   return (
     <VStack align="flex-start" gap={8} w="full">
       <SourceDependencyEditor
+        dependencies={draft.includes}
         disabled={saving}
-        ids={draft.include_ids}
         label={t("includes")}
-        onIdsChange={setIncludeIds}
-        otherIds={draft.required_ids}
+        onDependenciesChange={setIncludes}
+        otherDependencies={draft.requires}
         placeholder={t("add_include")}
-        sourceById={sourceById}
         sourceId={source.id}
         sources={sources}
       />
 
       <SourceDependencyEditor
+        dependencies={draft.requires}
         disabled={saving}
-        ids={draft.required_ids}
         label={t("requires")}
-        onIdsChange={setRequiredIds}
-        otherIds={draft.include_ids}
+        onDependenciesChange={setRequires}
+        otherDependencies={draft.includes}
         placeholder={t("add_require")}
-        sourceById={sourceById}
         sourceId={source.id}
         sources={sources}
       />
@@ -194,25 +187,23 @@ function SourceSettingsRoot({ children }: { children: React.ReactNode }) {
 //------------------------------------------------------------------------------
 
 type SourceDependencyEditorProps = {
+  dependencies: SourceDependency[];
   disabled: boolean;
-  ids: string[];
   label: string;
-  onIdsChange: (ids: string[]) => void;
-  otherIds: string[];
+  onDependenciesChange: (dependencies: SourceDependency[]) => void;
+  otherDependencies: SourceDependency[];
   placeholder: string;
-  sourceById: Map<string, Source>;
   sourceId: string;
   sources: Source[];
 };
 
 function SourceDependencyEditor({
+  dependencies,
   disabled,
-  ids,
   label,
-  onIdsChange,
-  otherIds,
+  onDependenciesChange,
+  otherDependencies,
   placeholder,
-  sourceById,
   sourceId,
   sources,
 }: SourceDependencyEditorProps) {
@@ -222,8 +213,13 @@ function SourceDependencyEditor({
   const translateSourceVersion = useTranslateSourceVersion(lang);
 
   const selectedIds = useMemo(
-    () => new Set([...ids, ...otherIds]),
-    [ids, otherIds],
+    () =>
+      new Set(
+        [...dependencies, ...otherDependencies].map(
+          ({ source_id }) => source_id,
+        ),
+      ),
+    [dependencies, otherDependencies],
   );
 
   const options = useMemo(() => {
@@ -235,25 +231,29 @@ function SourceDependencyEditor({
   }, [lang, selectedIds, sourceId, sources]);
 
   const selectedSources = useMemo(() => {
-    return ids
-      .map((id) => sourceById.get(id))
-      .filter((source): source is Source => !!source)
-      .sort(compareObjects("code"));
-  }, [ids, sourceById]);
+    return dependencies.sort(compareObjects("code"));
+  }, [dependencies]);
 
   const addSource = useCallback(
     (id: string) => {
-      if (!id || ids.includes(id)) return;
-      onIdsChange([...ids, id]);
+      if (!id || dependencies.some(({ source_id }) => source_id === id)) return;
+
+      const source = sources.find((source) => source.id === id);
+      if (!source) return;
+
+      onDependenciesChange([...dependencies, sourceToDependency(source)]);
       searchRef.current?.clear();
       searchRef.current?.focus();
     },
-    [ids, onIdsChange],
+    [dependencies, onDependenciesChange, sources],
   );
 
   const removeSource = useCallback(
-    (id: string) => onIdsChange(ids.filter((otherId) => otherId !== id)),
-    [ids, onIdsChange],
+    (id: string) =>
+      onDependenciesChange(
+        dependencies.filter(({ source_id }) => source_id !== id),
+      ),
+    [dependencies, onDependenciesChange],
   );
 
   return (
@@ -274,12 +274,12 @@ function SourceDependencyEditor({
 
       {selectedSources.length ?
         <VStack align="stretch" gap={1.5} w="full">
-          {selectedSources.map((source) => (
+          {selectedSources.map((dependency) => (
             <HStack
               bgColor="bg"
               borderRadius="sm"
               borderWidth={1}
-              key={source.id}
+              key={dependency.source_id}
               minH={9}
               px={3}
               py={1}
@@ -287,11 +287,11 @@ function SourceDependencyEditor({
             >
               <Box flex={1} minW={0}>
                 <Text fontSize="sm" fontWeight="medium" truncate>
-                  {source.code}
-                  {source.name[lang] ? ` - ${source.name[lang]}` : ""}
+                  {dependency.code}
+                  {dependency.name[lang] ? ` - ${dependency.name[lang]}` : ""}
                 </Text>
                 <Text color="fg.muted" fontSize="xs">
-                  {translateSourceVersion(source.version).label}
+                  {translateSourceVersion(dependency.version).label}
                 </Text>
               </Box>
 
@@ -299,7 +299,7 @@ function SourceDependencyEditor({
                 Icon={XIcon}
                 disabled={disabled}
                 label={t("remove")}
-                onClick={() => removeSource(source.id)}
+                onClick={() => removeSource(dependency.source_id)}
                 size="xs"
                 variant="ghost"
               />
@@ -334,6 +334,16 @@ function sourceToOption(source: Source, lang: string): SourceOption {
   };
 }
 
+function sourceToDependency(source: Source): SourceDependency {
+  return {
+    code: source.code,
+    name: source.name,
+    registry_source_id: source.registry?.source_id,
+    source_id: source.id,
+    version: source.version,
+  };
+}
+
 function filterSourceOption(option: SourceOption, search: string): boolean {
   return option.search.includes(normalizeString(search));
 }
@@ -344,8 +354,8 @@ function filterSourceOption(option: SourceOption, search: string): boolean {
 
 function sourceToDependencies(source: SourceDependencies): SourceDependencies {
   return {
-    include_ids: source.include_ids,
-    required_ids: source.required_ids,
+    includes: source.includes,
+    requires: source.requires,
   };
 }
 
