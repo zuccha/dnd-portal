@@ -13,14 +13,18 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
-import type { Source } from "~/models/catalogue/source";
-import type { SourceBundle } from "~/models/catalogue/source-bundle";
+import type { Source, SourceDependency } from "~/models/catalogue/source";
+import {
+  type SourceBundle,
+  sourceBundleSchema,
+} from "~/models/catalogue/source-bundle";
 import {
   deleteSourceBundle,
   saveSourceBundle,
 } from "~/models/catalogue/source-bundle-indexed-db";
 import {
-  fetchRegistrySourceBundle,
+  analyzeRegistrySourceDependencies,
+  fetchRegistrySourceBundles,
   fetchRegistrySources,
 } from "~/models/registry/registry";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
@@ -29,6 +33,7 @@ import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
 import { downloadFile } from "~/utils/download";
 import SourceCreateDialog from "./source-create-dialog";
+import SourceDependenciesDialog from "./source-dependencies-dialog";
 import SourceGroups from "./source-list";
 import {
   createSourceListEntry,
@@ -36,6 +41,19 @@ import {
   groupSourcesByType,
 } from "./source-list-utils";
 import i18nContext from "./sources-i18n";
+
+//------------------------------------------------------------------------------
+// Source Dependency Prompt
+//------------------------------------------------------------------------------
+
+type SourceDependencyPrompt = {
+  bundle?: SourceBundle;
+  navigateAfter: boolean;
+  missingDependencies: SourceDependency[];
+  registryDependencies: Source[];
+  registrySourceIds: string[];
+  source: Source;
+};
 
 //------------------------------------------------------------------------------
 // Sources Panel
@@ -55,6 +73,8 @@ export default function SourcesPanel() {
   const [registryLoading, setRegistryLoading] = useState(true);
   const [registryError, setRegistryError] = useState(false);
   const [busySourceId, setBusySourceId] = useState<string>();
+  const [dependencyPrompt, setDependencyPrompt] =
+    useState<SourceDependencyPrompt>();
   const localSourcesById = useMemo(
     () => new Map(sources.map((source) => [source.id, source])),
     [sources],
@@ -123,6 +143,55 @@ export default function SourcesPanel() {
   );
 
   //----------------------------------------------------------------------------
+  // Persist Source Bundles
+  //----------------------------------------------------------------------------
+
+  const persistSourceBundles = async (
+    bundles: SourceBundle[],
+    navigateAfter: boolean,
+  ) => {
+    const savedBundles = await Promise.all(
+      bundles.map((bundle) => saveSourceBundle(bundle)),
+    );
+    for (const bundle of savedBundles) catalogue.importSourceBundle(bundle);
+
+    if (navigateAfter) history.pushState({}, "", Route.SettingsCampaign);
+  };
+
+  //----------------------------------------------------------------------------
+  // Start Source Import
+  //----------------------------------------------------------------------------
+
+  const startSourceImport = async (
+    bundle: SourceBundle,
+    navigateAfter = false,
+  ): Promise<boolean> => {
+    const analysis = analyzeRegistrySourceDependencies(
+      bundle.source,
+      registrySources,
+      new Set(localSourcesById.keys()),
+    );
+
+    if (
+      analysis.registryDependencies.length ||
+      analysis.missingDependencies.length
+    ) {
+      setDependencyPrompt({
+        bundle,
+        missingDependencies: analysis.missingDependencies,
+        navigateAfter,
+        registryDependencies: analysis.registryDependencies,
+        registrySourceIds: analysis.registrySourceIds,
+        source: bundle.source,
+      });
+      return false;
+    }
+
+    await persistSourceBundles([bundle], navigateAfter);
+    return true;
+  };
+
+  //----------------------------------------------------------------------------
   // Import Source
   //----------------------------------------------------------------------------
 
@@ -132,8 +201,8 @@ export default function SourcesPanel() {
 
     try {
       const text = await file.text();
-      const bundle = await saveSourceBundle(JSON.parse(text));
-      catalogue.importSourceBundle(bundle);
+      const bundle = sourceBundleSchema.parse(JSON.parse(text));
+      await startSourceImport(bundle);
     } catch (e) {
       console.error(e);
       setError(t("error.import"));
@@ -156,10 +225,8 @@ export default function SourcesPanel() {
     setError(undefined);
 
     try {
-      const savedBundle = await saveSourceBundle(bundle);
-      catalogue.importSourceBundle(savedBundle);
-      setCreateOpen(false);
-      history.pushState({}, "", Route.SettingsCampaign);
+      const imported = await startSourceImport(bundle, true);
+      if (imported) setCreateOpen(false);
     } catch (e) {
       console.error(e);
       setError(t("error.create"));
@@ -191,24 +258,87 @@ export default function SourcesPanel() {
   };
 
   //----------------------------------------------------------------------------
+  // Complete Source Dependency Prompt
+  //----------------------------------------------------------------------------
+
+  const completeSourceDependencyPrompt = async (
+    downloadDependencies: boolean,
+  ) => {
+    const prompt = dependencyPrompt;
+    if (!prompt) return;
+
+    setDependencyPrompt(undefined);
+    setBusySourceId(prompt.source.id);
+    setError(undefined);
+
+    try {
+      const bundles = prompt.bundle ? [prompt.bundle] : [];
+      const sourceIds =
+        downloadDependencies ? prompt.registrySourceIds
+        : prompt.bundle ? []
+        : prompt.registrySourceIds.slice(0, 1);
+
+      if (sourceIds.length) {
+        bundles.push(...(await fetchRegistrySourceBundles(sourceIds)));
+      }
+
+      await persistSourceBundles(bundles, prompt.navigateAfter);
+      if (prompt.navigateAfter) setCreateOpen(false);
+    } catch (e) {
+      console.error(e);
+      setError(prompt.bundle ? t("error.import") : t("error.download"));
+    } finally {
+      setBusySourceId(undefined);
+    }
+  };
+
+  //----------------------------------------------------------------------------
   // Download Registry Source
   //----------------------------------------------------------------------------
 
   const downloadRegistrySource = async (registrySource: Source) => {
-    const installedSource = localSourcesById.get(registrySource.id);
+    const officialSource =
+      registrySources.find(({ id }) => id === registrySource.id) ??
+      registrySource;
+    const installedSource = localSourcesById.get(officialSource.id);
     if (
       installedSource &&
-      !confirm(ti("make_official.confirm", registrySource.code))
+      !confirm(ti("make_official.confirm", officialSource.code))
     )
       return;
 
-    setBusySourceId(registrySource.id);
+    setBusySourceId(officialSource.id);
     setError(undefined);
 
     try {
-      const bundle = await fetchRegistrySourceBundle(registrySource.id);
-      const savedBundle = await saveSourceBundle(bundle);
-      catalogue.importSourceBundle(savedBundle);
+      const analysis = analyzeRegistrySourceDependencies(
+        officialSource,
+        registrySources,
+        new Set(localSourcesById.keys()),
+      );
+      const registrySourceIds = [
+        officialSource.id,
+        ...analysis.registrySourceIds,
+      ];
+
+      if (
+        analysis.registryDependencies.length ||
+        analysis.missingDependencies.length
+      ) {
+        setDependencyPrompt({
+          missingDependencies: analysis.missingDependencies,
+          navigateAfter: false,
+          registryDependencies: analysis.registryDependencies,
+          registrySourceIds,
+          source: officialSource,
+        });
+        return;
+      }
+
+      await persistSourceBundles(
+        await fetchRegistrySourceBundles(registrySourceIds),
+        false,
+      );
     } catch (e) {
       console.error(e);
       setError(t("error.download"));
@@ -380,6 +510,21 @@ export default function SourcesPanel() {
         onOpenChange={setCreateOpen}
         open={createOpen}
       />
+
+      {dependencyPrompt && (
+        <SourceDependenciesDialog
+          missingDependencies={dependencyPrompt.missingDependencies}
+          onCancel={() => setDependencyPrompt(undefined)}
+          onContinue={() => completeSourceDependencyPrompt(false)}
+          onDownload={() => completeSourceDependencyPrompt(true)}
+          onOpenChange={(open) => {
+            if (!open) setDependencyPrompt(undefined);
+          }}
+          open
+          registryDependencies={dependencyPrompt.registryDependencies}
+          source={dependencyPrompt.source}
+        />
+      )}
 
       <Dialog.Root
         lazyMount

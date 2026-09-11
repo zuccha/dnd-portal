@@ -15,6 +15,10 @@ const i18nContext = {
     en: "Campaign",
     it: "Campagna",
   },
+  "cancel": {
+    en: "Cancel",
+    it: "Annulla",
+  },
   "core": {
     en: "Core",
     it: "Core",
@@ -22,6 +26,38 @@ const i18nContext = {
   "create": {
     en: "Create",
     it: "Crea",
+  },
+  "dependencies.continue": {
+    en: "Continue without downloading",
+    it: "Continua senza scaricare",
+  },
+  "dependencies.continue_description": {
+    en: "Continuing without these sources may leave references, options, and related content unavailable.",
+    it: "Continuando senza queste fonti, riferimenti, opzioni e contenuti correlati potrebbero non essere disponibili.",
+  },
+  "dependencies.description": {
+    en: "<1> references additional sources that are not installed on this device.",
+    it: "<1> fa riferimento a fonti aggiuntive che non sono installate su questo dispositivo.",
+  },
+  "dependencies.download": {
+    en: "Download dependencies",
+    it: "Scarica dipendenze",
+  },
+  "dependencies.missing": {
+    en: "Missing local sources",
+    it: "Fonti locali mancanti",
+  },
+  "dependencies.missing_description": {
+    en: "These sources are not in the repository, so they cannot be downloaded automatically.",
+    it: "Queste fonti non sono nell'archivio e non possono essere scaricate automaticamente.",
+  },
+  "dependencies.repository": {
+    en: "Repository sources",
+    it: "Fonti dell'archivio",
+  },
+  "dependencies.title": {
+    en: "Additional sources",
+    it: "Fonti aggiuntive",
   },
   "detached": {
     en: "Local copy",
