@@ -16,16 +16,19 @@ import { useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import type { Source } from "~/models/catalogue/source";
+import type { SourceBundle } from "~/models/catalogue/source-bundle";
 import {
   deleteSourceBundle,
   saveSourceBundle,
 } from "~/models/catalogue/source-bundle-indexed-db";
 import type { SourceType } from "~/models/types/source-type";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
+import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
 import IconButton from "~/ui/icon-button";
 import { downloadFile } from "~/utils/download";
+import SourceCreateDialog from "./source-create-dialog";
 
 //------------------------------------------------------------------------------
 // Sources Panel
@@ -37,6 +40,8 @@ export default function SourcesPanel() {
   const translateSourceVersion = useTranslateSourceVersion(lang);
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>();
+  const [createOpen, setCreateOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [exportSource, setExportSource] = useState<Source>();
   const [includePrivate, setIncludePrivate] = useState(true);
   const localSourceGroups = groupSourcesByType(
@@ -61,6 +66,28 @@ export default function SourcesPanel() {
       setError(t("error.import"));
     } finally {
       if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  const createSource = async (bundle: SourceBundle) => {
+    if (!bundle.source.code || !bundle.source.name[lang]) {
+      setError(t("error.create_required"));
+      return;
+    }
+
+    setCreating(true);
+    setError(undefined);
+
+    try {
+      const savedBundle = await saveSourceBundle(bundle);
+      catalogue.importSourceBundle(savedBundle);
+      setCreateOpen(false);
+      history.pushState({}, "", Route.SettingsCampaign);
+    } catch (e) {
+      console.error(e);
+      setError(t("error.create"));
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -121,9 +148,21 @@ export default function SourcesPanel() {
             <Text color="fg.muted">{t("subtitle")}</Text>
           </VStack>
 
-          <Button onClick={() => inputRef.current?.click()} size="sm">
-            {t("import")}
-          </Button>
+          <HStack>
+            <Button
+              onClick={() => {
+                setError(undefined);
+                setCreateOpen(true);
+              }}
+              size="sm"
+            >
+              {t("create")}
+            </Button>
+
+            <Button onClick={() => inputRef.current?.click()} size="sm">
+              {t("import")}
+            </Button>
+          </HStack>
         </HStack>
 
         <Input
@@ -169,6 +208,13 @@ export default function SourcesPanel() {
           </Tabs.Root>
         : null}
       </VStack>
+
+      <SourceCreateDialog
+        creating={creating}
+        onCreate={createSource}
+        onOpenChange={setCreateOpen}
+        open={createOpen}
+      />
 
       <Dialog.Root
         lazyMount
@@ -383,17 +429,25 @@ const i18nContext = {
     en: "Campaign",
     it: "Campagna",
   },
-  "cancel": {
-    en: "Cancel",
-    it: "Annulla",
-  },
   "core": {
     en: "Core",
     it: "Core",
   },
+  "create": {
+    en: "Create",
+    it: "Crea",
+  },
   "empty": {
     en: "No sources found",
     it: "Nessuna fonte trovata",
+  },
+  "error.create": {
+    en: "The source could not be created.",
+    it: "La fonte non può essere creata.",
+  },
+  "error.create_required": {
+    en: "Name and code are required.",
+    it: "Nome e codice sono obbligatori.",
   },
   "error.export": {
     en: "The selected source could not be exported.",
