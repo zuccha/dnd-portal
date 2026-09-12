@@ -451,15 +451,33 @@ export default function SourcesPanel() {
   };
 
   return (
-    <Box bgColor="bg.subtle" flex={1} h="full">
-      <VStack flex={1} gap={6} h="full" overflow="auto" p={10} w="full">
-        <HStack align="flex-start" justify="space-between" w="full">
+    <Box bgColor="bg.subtle" flex={1} h="full" minH={0} minW={0}>
+      <VStack
+        align="stretch"
+        flex={1}
+        gap={{ base: 4, md: 6 }}
+        h="full"
+        minW={0}
+        overflow="auto"
+        p={{ base: 4, md: 10 }}
+        w="full"
+      >
+        <HStack
+          align={{ base: "stretch", sm: "flex-start" }}
+          flexDirection={{ base: "column", sm: "row" }}
+          gap={4}
+          justify="space-between"
+          w="full"
+        >
           <VStack align="flex-start" gap={1}>
             <Heading>{t("title")}</Heading>
             <Text color="fg.muted">{t("subtitle")}</Text>
           </VStack>
 
-          <HStack>
+          <HStack
+            flexWrap="wrap"
+            justify={{ base: "flex-start", sm: "flex-end" }}
+          >
             <Button
               onClick={() => {
                 setError(undefined);
