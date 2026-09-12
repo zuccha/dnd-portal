@@ -37,6 +37,7 @@ import SourceDependenciesDialog from "./source-dependencies-dialog";
 import SourceGroups from "./source-list";
 import {
   createSourceListEntry,
+  getInstalledSourceStatus,
   getLocalSourceStatus,
   groupSourcesByType,
 } from "./source-list-utils";
@@ -128,7 +129,7 @@ export default function SourcesPanel() {
       const source = localSourcesById.get(registrySource.id);
       return createSourceListEntry(
         source ?? registrySource,
-        source?.registry ? "installed"
+        source?.registry ? getInstalledSourceStatus(source, registrySource)
         : source ? "detached"
         : "available",
       );
@@ -140,7 +141,11 @@ export default function SourcesPanel() {
       ...sources.map((source) =>
         createSourceListEntry(
           source,
-          source.registry ? "installed"
+          source.registry ?
+            getInstalledSourceStatus(
+              source,
+              registrySources.find(({ id }) => id === source.id) ?? source,
+            )
           : registrySources.some(({ id }) => id === source.id) ? "detached"
           : "local",
         ),
@@ -164,6 +169,13 @@ export default function SourcesPanel() {
       bundles.map((bundle) => saveSourceBundle(bundle)),
     );
     for (const bundle of savedBundles) catalogue.importSourceBundle(bundle);
+    setRegistrySources((previousSources) =>
+      previousSources.map(
+        (registrySource) =>
+          savedBundles.find(({ source }) => source.id === registrySource.id)
+            ?.source ?? registrySource,
+      ),
+    );
 
     if (navigateAfter) history.pushState({}, "", Route.SettingsCampaign);
   };

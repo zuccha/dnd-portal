@@ -7,10 +7,6 @@ const i18nContext = {
     en: "All",
     it: "Tutte",
   },
-  "available": {
-    en: "Not installed",
-    it: "Non installato",
-  },
   "campaign": {
     en: "Campaign",
     it: "Campagna",
@@ -58,10 +54,6 @@ const i18nContext = {
   "dependencies.title": {
     en: "Additional sources",
     it: "Fonti aggiuntive",
-  },
-  "detached": {
-    en: "Local copy",
-    it: "Copia locale",
   },
   "download": {
     en: "Download",
@@ -114,14 +106,6 @@ const i18nContext = {
   "import": {
     en: "Import",
     it: "Importa",
-  },
-  "installed": {
-    en: "Installed",
-    it: "Installato",
-  },
-  "local": {
-    en: "Local",
-    it: "Locale",
   },
   "make_local": {
     en: "Make local",
@@ -186,6 +170,26 @@ const i18nContext = {
   "repository": {
     en: "Repository",
     it: "Archivio",
+  },
+  "status.available": {
+    en: "Not installed",
+    it: "Non installato",
+  },
+  "status.detached": {
+    en: "Local copy",
+    it: "Copia locale",
+  },
+  "status.installed": {
+    en: "Installed",
+    it: "Installato",
+  },
+  "status.local": {
+    en: "Local",
+    it: "Locale",
+  },
+  "status.update": {
+    en: "Update available",
+    it: "Aggiornamento disponibile",
   },
   "subtitle": {
     en: "Import, export, and remove local sources.",

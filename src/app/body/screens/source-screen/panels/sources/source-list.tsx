@@ -1,8 +1,9 @@
-import { Badge, HStack, Text, VStack } from "@chakra-ui/react";
+import { Badge, Box, HStack, Span, Text, VStack } from "@chakra-ui/react";
 import {
   DownloadIcon,
   FileDownIcon,
   LinkIcon,
+  RefreshCwIcon,
   Trash2Icon,
   UnlinkIcon,
 } from "lucide-react";
@@ -12,7 +13,7 @@ import IconButton from "~/ui/icon-button";
 import {
   type SourceGroup,
   type SourceListEntry,
-  getSourceStatusColor,
+  colorBySourceStatus,
 } from "./source-list-utils";
 import i18nContext from "./sources-i18n";
 
@@ -128,24 +129,25 @@ function SourceRow({
       w="full"
     >
       <VStack align="flex-start" flex={1} gap={0}>
-        <HStack gap={2} minW={0} w="full">
+        <HStack align="baseline" gap={2} w="full">
           <Text fontWeight="semibold" truncate>
             {name}
           </Text>
           {status && (
             <Badge
-              colorPalette={getSourceStatusColor(status)}
+              colorPalette={colorBySourceStatus[status]}
               size="xs"
               variant="subtle"
             >
-              {t(status)}
+              {t(`status.${status}`)}
             </Badge>
           )}
-          {status === "installed" && source.registry?.access === "read" && (
-            <Badge colorPalette="gray" size="xs" variant="outline">
-              {t("readonly")}
-            </Badge>
-          )}
+          {(status === "installed" || status === "update") &&
+            source.registry?.access === "read" && (
+              <Badge colorPalette="gray" size="xs" variant="outline">
+                {t("readonly")}
+              </Badge>
+            )}
         </HStack>
         <Text color="fg.muted" fontSize="sm" truncate>
           {source.code} · {translateSourceVersion(source.version).label}
@@ -163,7 +165,29 @@ function SourceRow({
         />
       )}
 
-      {status === "installed" && onMakeLocal && (
+      {status === "update" && onDownload && (
+        <Box position="relative">
+          <IconButton
+            Icon={RefreshCwIcon}
+            label={t("update")}
+            loading={busy}
+            onClick={() => onDownload(source)}
+            size="xs"
+            variant="ghost"
+          />
+          <Span
+            aria-hidden
+            bg="yellow.500"
+            borderRadius="full"
+            boxSize={2.5}
+            position="absolute"
+            right={1}
+            top={1}
+          />
+        </Box>
+      )}
+
+      {(status === "installed" || status === "update") && onMakeLocal && (
         <IconButton
           Icon={UnlinkIcon}
           label={t("make_local")}

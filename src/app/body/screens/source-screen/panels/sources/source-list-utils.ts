@@ -5,7 +5,12 @@ import type { SourceType } from "~/models/types/source-type";
 // Source Status
 //------------------------------------------------------------------------------
 
-export type SourceStatus = "available" | "detached" | "installed" | "local";
+export type SourceStatus =
+  | "available"
+  | "detached"
+  | "installed"
+  | "local"
+  | "update";
 
 //------------------------------------------------------------------------------
 // Source List Entry
@@ -45,31 +50,55 @@ export function getLocalSourceStatus(
   registrySources: Source[],
   registryLoading: boolean,
 ): SourceStatus | undefined {
-  if (source.registry) return "installed";
+  const registrySource = registrySources.find(({ id }) => id === source.id);
+
+  if (source.registry)
+    return registrySource && isRegistryUpdateAvailable(source, registrySource) ?
+        "update"
+      : "installed";
   if (registryLoading) return undefined;
-  return registrySources.some(({ id }) => id === source.id) ? "detached" : (
-      "local"
+  return registrySource ? "detached" : "local";
+}
+
+//------------------------------------------------------------------------------
+// Get Installed Source Status
+//------------------------------------------------------------------------------
+
+export function getInstalledSourceStatus(
+  source: Source,
+  registrySource: Source,
+): SourceStatus {
+  return isRegistryUpdateAvailable(source, registrySource) ? "update" : (
+      "installed"
     );
+}
+
+//------------------------------------------------------------------------------
+// Is Registry Update Available
+//------------------------------------------------------------------------------
+
+function isRegistryUpdateAvailable(
+  source: Source,
+  registrySource: Source,
+): boolean {
+  return Boolean(
+    source.registry &&
+    registrySource.registry &&
+    registrySource.registry.revision_number > source.registry.revision_number,
+  );
 }
 
 //------------------------------------------------------------------------------
 // Get Source Status Color
 //------------------------------------------------------------------------------
 
-export function getSourceStatusColor(
-  status: SourceStatus,
-): "blue" | "gray" | "green" | "orange" {
-  switch (status) {
-    case "available":
-      return "gray";
-    case "detached":
-      return "orange";
-    case "installed":
-      return "green";
-    case "local":
-      return "blue";
-  }
-}
+export const colorBySourceStatus = {
+  available: "gray",
+  detached: "orange",
+  installed: "green",
+  local: "blue",
+  update: "yellow",
+} as const;
 
 //------------------------------------------------------------------------------
 // Group Sources By Type
