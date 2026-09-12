@@ -9,33 +9,19 @@ import {
 } from "~/models/catalogue/source-bundle";
 import supabase from "~/supabase";
 
-//------------------------------------------------------------------------------
-// Registry Configuration
-//------------------------------------------------------------------------------
-
-const registryUrl = import.meta.env["VITE_REGISTRY_URL"];
 const registryBundleBucket = "registry-bundles";
-
-//------------------------------------------------------------------------------
-// Registry Request
-//------------------------------------------------------------------------------
-
-async function registryRequest(path: string): Promise<unknown> {
-  if (!registryUrl) throw new Error("VITE_REGISTRY_URL is not configured");
-
-  const response = await fetch(`${registryUrl}${path}`);
-  if (!response.ok)
-    throw new Error(`Registry request failed: ${response.status}`);
-
-  return response.json();
-}
 
 //------------------------------------------------------------------------------
 // Registry Sources
 //------------------------------------------------------------------------------
 
 export async function fetchRegistrySources(): Promise<Source[]> {
-  return sourceSchema.array().parse(await registryRequest("/registry/sources"));
+  const { data, error } = await supabase.rpc("fetch_registry_sources");
+
+  if (error)
+    throw new Error(`Registry sources request failed: ${error.message}`);
+
+  return sourceSchema.array().parse(data);
 }
 
 //------------------------------------------------------------------------------

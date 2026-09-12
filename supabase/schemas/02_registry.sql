@@ -29,6 +29,32 @@ GRANT ALL ON TABLE public.registry_sources TO service_role;
 
 
 --------------------------------------------------------------------------------
+-- REGISTRY SOURCE DEPENDENCIES
+--------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS public.registry_source_dependencies (
+  source_id uuid NOT NULL REFERENCES public.registry_sources(source_id)
+    ON DELETE CASCADE,
+  dependency_source_id uuid NOT NULL
+    REFERENCES public.registry_sources(source_id)
+    ON DELETE RESTRICT,
+  relationship public.source_dependency_relationship NOT NULL,
+  CONSTRAINT registry_source_dependencies_pkey
+    PRIMARY KEY (source_id, dependency_source_id, relationship)
+);
+
+ALTER TABLE public.registry_source_dependencies OWNER TO postgres;
+ALTER TABLE public.registry_source_dependencies ENABLE ROW LEVEL SECURITY;
+
+CREATE INDEX IF NOT EXISTS idx_registry_source_dependencies_dependency_source_id
+  ON public.registry_source_dependencies USING btree (dependency_source_id);
+
+GRANT SELECT ON TABLE public.registry_source_dependencies TO anon;
+GRANT SELECT ON TABLE public.registry_source_dependencies TO authenticated;
+GRANT ALL ON TABLE public.registry_source_dependencies TO service_role;
+
+
+--------------------------------------------------------------------------------
 -- REGISTRY REVISIONS
 --------------------------------------------------------------------------------
 
