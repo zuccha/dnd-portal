@@ -22,7 +22,7 @@ export type SourceDependency = z.infer<typeof sourceDependencySchema>;
 //------------------------------------------------------------------------------
 
 export const sourceRegistryMetadataSchema = z.object({
-  access: z.enum(["read", "write"]),
+  access: z.enum(["read", "write"]).optional(),
   revision_created_at: z.string(),
   revision_id: z.uuid(),
   revision_number: z.number(),

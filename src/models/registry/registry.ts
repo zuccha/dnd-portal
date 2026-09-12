@@ -7,12 +7,14 @@ import {
   type SourceBundle,
   sourceBundleSchema,
 } from "~/models/catalogue/source-bundle";
+import supabase from "~/supabase";
 
 //------------------------------------------------------------------------------
 // Registry Configuration
 //------------------------------------------------------------------------------
 
 const registryUrl = import.meta.env["VITE_REGISTRY_URL"];
+const registryBundleBucket = "registry-bundles";
 
 //------------------------------------------------------------------------------
 // Registry Request
@@ -127,9 +129,15 @@ export function analyzeRegistrySourceDependencies(
 export async function fetchRegistrySourceBundle(
   sourceId: string,
 ): Promise<SourceBundle> {
-  return sourceBundleSchema.parse(
-    await registryRequest(`/registry/sources/${sourceId}`),
-  );
+  const path = `sources/${sourceId}/bundle.json`;
+  const { data, error } = await supabase.storage
+    .from(registryBundleBucket)
+    .download(path);
+
+  if (error)
+    throw new Error(`Registry bundle download failed: ${error.message}`);
+
+  return sourceBundleSchema.parse(JSON.parse(await data.text()));
 }
 
 //------------------------------------------------------------------------------
