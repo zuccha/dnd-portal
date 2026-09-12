@@ -19,7 +19,6 @@ const registrySourceSchema = z
     name: z.record(z.string(), z.string().nullable().optional()),
     registry: z.unknown().optional(),
     requires: z.array(z.unknown()).default([]),
-    sync_version: z.number(),
     type: z.string(),
     version: z.string(),
   })

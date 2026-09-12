@@ -3,7 +3,6 @@
 --------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS public.registry_sources (
-  id uuid DEFAULT gen_random_uuid() NOT NULL,
   source_id uuid NOT NULL,
   creator_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   code text NOT NULL,
@@ -13,8 +12,7 @@ CREATE TABLE IF NOT EXISTS public.registry_sources (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   current_revision_id uuid,
   current_revision_number bigint DEFAULT 0 NOT NULL,
-  CONSTRAINT registry_sources_pkey PRIMARY KEY (id),
-  CONSTRAINT registry_sources_source_id_key UNIQUE (source_id),
+  CONSTRAINT registry_sources_pkey PRIMARY KEY (source_id),
   CONSTRAINT registry_sources_current_revision_number_check
     CHECK (current_revision_number >= 0)
 );
@@ -36,7 +34,7 @@ GRANT ALL ON TABLE public.registry_sources TO service_role;
 
 CREATE TABLE IF NOT EXISTS public.registry_revisions (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
-  registry_source_id uuid NOT NULL REFERENCES public.registry_sources(id)
+  source_id uuid NOT NULL REFERENCES public.registry_sources(source_id)
     ON DELETE CASCADE,
   revision_number bigint NOT NULL,
   revision_created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -45,7 +43,7 @@ CREATE TABLE IF NOT EXISTS public.registry_revisions (
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   CONSTRAINT registry_revisions_pkey PRIMARY KEY (id),
   CONSTRAINT registry_revisions_source_number_key
-    UNIQUE (registry_source_id, revision_number),
+    UNIQUE (source_id, revision_number),
   CONSTRAINT registry_revisions_number_check CHECK (revision_number > 0)
 );
 
@@ -53,7 +51,7 @@ ALTER TABLE public.registry_revisions OWNER TO postgres;
 ALTER TABLE public.registry_revisions ENABLE ROW LEVEL SECURITY;
 
 CREATE INDEX IF NOT EXISTS idx_registry_revisions_source_id
-  ON public.registry_revisions USING btree (registry_source_id);
+  ON public.registry_revisions USING btree (source_id);
 
 GRANT SELECT ON TABLE public.registry_revisions TO anon;
 GRANT SELECT ON TABLE public.registry_revisions TO authenticated;
@@ -81,13 +79,13 @@ $$;
 --------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS public.registry_source_access (
-  registry_source_id uuid NOT NULL REFERENCES public.registry_sources(id)
+  source_id uuid NOT NULL REFERENCES public.registry_sources(source_id)
     ON DELETE CASCADE,
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   access text NOT NULL,
   granted_at timestamp with time zone DEFAULT now() NOT NULL,
   CONSTRAINT registry_source_access_pkey
-    PRIMARY KEY (registry_source_id, user_id),
+    PRIMARY KEY (source_id, user_id),
   CONSTRAINT registry_source_access_access_check
     CHECK (access IN ('read', 'write'))
 );

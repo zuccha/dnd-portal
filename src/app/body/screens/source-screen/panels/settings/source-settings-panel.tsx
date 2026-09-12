@@ -485,7 +485,6 @@ function sourceToDependency(source: Source): SourceDependency {
   return {
     code: source.code,
     name: source.name,
-    registry_source_id: source.registry?.source_id,
     source_id: source.id,
     version: source.version,
   };

@@ -76,10 +76,9 @@ export function analyzeRegistrySourceDependencies(
       ...currentSource.requires,
     ]) {
       const registrySourceId =
-        dependency.registry_source_id ??
-        (registrySourceById.has(dependency.source_id) ?
+        registrySourceById.has(dependency.source_id) ?
           dependency.source_id
-        : undefined);
+        : undefined;
 
       if (registrySourceId) {
         const registrySource = registrySourceById.get(registrySourceId);

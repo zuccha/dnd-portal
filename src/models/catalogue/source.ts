@@ -10,7 +10,6 @@ import { sourceVersionSchema } from "../types/source-version";
 export const sourceDependencySchema = z.object({
   code: z.string(),
   name: i18nStringSchema,
-  registry_source_id: z.uuid().optional(),
   source_id: z.uuid(),
   version: sourceVersionSchema,
 });
@@ -44,7 +43,6 @@ export const sourceSchema = z.object({
   name: i18nStringSchema,
   registry: sourceRegistryMetadataSchema.optional(),
   requires: z.array(sourceDependencySchema).default([]),
-  sync_version: z.number(),
   type: sourceTypeSchema,
   version: sourceVersionSchema,
 });

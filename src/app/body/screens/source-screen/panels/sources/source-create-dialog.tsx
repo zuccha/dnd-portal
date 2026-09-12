@@ -177,11 +177,8 @@ function sourceDraftToSource(draft: SourceDraft, lang: string): Source {
     code: draft.code.trim(),
     id: createUuid(),
     includes: [],
-    name: {
-      [lang]: draft.name.trim(),
-    },
+    name: { [lang]: draft.name.trim() },
     requires: [],
-    sync_version: 0,
     type: draft.type,
     version: draft.version,
   };
