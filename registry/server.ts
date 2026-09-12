@@ -61,7 +61,7 @@ function sendJson(
   response.writeHead(status, {
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Origin": "http://localhost:5173",
+    "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json; charset=utf-8",
   });
   response.end(JSON.stringify(data));
@@ -125,7 +125,10 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(port, "127.0.0.1", () => {
-  console.log(`Local registry listening on http://localhost:${port}`);
+server.listen(port, "0.0.0.0", () => {
+  console.log(`Local registry listening on port ${port}`);
+  console.log(
+    "Use the development machine's LAN address in VITE_REGISTRY_URL.",
+  );
   console.log(`Reading source bundles from ${registryDataDirectory}`);
 });
