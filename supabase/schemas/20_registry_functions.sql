@@ -15,7 +15,8 @@ AS $$
     FROM public.registry_sources rs
     WHERE rs.source_id = p_source_id
       AND (
-        rs.creator_id = (SELECT auth.uid() AS uid)
+        rs.visibility = 'public'
+        OR rs.creator_id = (SELECT auth.uid() AS uid)
         OR EXISTS (
           SELECT 1
           FROM public.registry_source_access rsa
@@ -153,7 +154,7 @@ GRANT EXECUTE ON FUNCTION public.publish_registry_source_revision(uuid, uuid, te
 
 CREATE POLICY "Users can read registry sources"
 ON public.registry_sources
-FOR SELECT TO authenticated
+FOR SELECT TO anon, authenticated
 USING (public.can_read_registry_source(source_id));
 
 CREATE POLICY "Creators can create registry sources"
@@ -163,7 +164,7 @@ WITH CHECK (creator_id = (SELECT auth.uid() AS uid));
 
 CREATE POLICY "Users can read registry revisions"
 ON public.registry_revisions
-FOR SELECT TO authenticated
+FOR SELECT TO anon, authenticated
 USING (public.can_read_registry_source(source_id));
 
 CREATE POLICY "Users can read registry source access"
@@ -201,7 +202,7 @@ WITH CHECK (
 
 CREATE POLICY "Users can read registry source dependencies"
 ON public.registry_source_dependencies
-FOR SELECT TO authenticated
+FOR SELECT TO anon, authenticated
 USING (public.can_read_registry_source(source_id));
 
 --------------------------------------------------------------------------------
@@ -235,7 +236,8 @@ AS $$
         ),
         'revision_id', coalesce(revision.id, source.source_id),
         'revision_number', source.current_revision_number,
-        'source_id', source.source_id
+        'source_id', source.source_id,
+        'visibility', source.visibility
       ),
       'requires', dependencies.requires,
       'type', source.type,
@@ -273,6 +275,7 @@ AS $$
     JOIN public.registry_sources dependency
       ON dependency.source_id = relation.dependency_source_id
     WHERE relation.source_id = source.source_id
+      AND public.can_read_registry_source(dependency.source_id)
   ) dependencies ON true
   WHERE public.can_read_registry_source(source.source_id);
 $$;

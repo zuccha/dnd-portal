@@ -165,8 +165,25 @@ export default function SourcesPanel() {
     bundles: SourceBundle[],
     navigateAfter: boolean,
   ) => {
+    const bundlesWithRegistryAccess = bundles.map((bundle) => {
+      const registrySource = registrySources.find(
+        ({ id }) => id === bundle.source.id,
+      );
+      if (!bundle.source.registry || !registrySource?.registry) return bundle;
+
+      return {
+        ...bundle,
+        source: {
+          ...bundle.source,
+          registry: {
+            ...bundle.source.registry,
+            ...registrySource.registry,
+          },
+        },
+      };
+    });
     const savedBundles = await Promise.all(
-      bundles.map((bundle) => saveSourceBundle(bundle)),
+      bundlesWithRegistryAccess.map((bundle) => saveSourceBundle(bundle)),
     );
     for (const bundle of savedBundles) catalogue.importSourceBundle(bundle);
     setRegistrySources((previousSources) =>

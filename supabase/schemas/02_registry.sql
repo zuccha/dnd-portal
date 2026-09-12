@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.registry_sources (
   creator_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   code text NOT NULL,
   name jsonb NOT NULL,
+  visibility public.registry_source_visibility NOT NULL DEFAULT 'private',
   type public.source_type NOT NULL,
   version public.source_version NOT NULL,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -108,12 +109,10 @@ CREATE TABLE IF NOT EXISTS public.registry_source_access (
   source_id uuid NOT NULL REFERENCES public.registry_sources(source_id)
     ON DELETE CASCADE,
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  access text NOT NULL,
+  access public.registry_source_access_level NOT NULL,
   granted_at timestamp with time zone DEFAULT now() NOT NULL,
   CONSTRAINT registry_source_access_pkey
-    PRIMARY KEY (source_id, user_id),
-  CONSTRAINT registry_source_access_access_check
-    CHECK (access IN ('read', 'write'))
+    PRIMARY KEY (source_id, user_id)
 );
 
 ALTER TABLE public.registry_source_access OWNER TO postgres;

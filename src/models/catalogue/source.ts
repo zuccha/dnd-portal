@@ -26,6 +26,7 @@ export const sourceRegistryMetadataSchema = z.object({
   revision_id: z.uuid(),
   revision_number: z.number(),
   source_id: z.uuid(),
+  visibility: z.enum(["public", "private"]).optional(),
 });
 
 export type SourceRegistryMetadata = z.infer<
