@@ -327,7 +327,6 @@ function SourceSettingsRoot({ children }: { children: React.ReactNode }) {
   return (
     <VStack
       align="flex-start"
-      // bgColor="bg.subtle"
       flex={1}
       gap={6}
       minH="full"

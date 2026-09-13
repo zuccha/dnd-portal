@@ -65,7 +65,7 @@ export default function SourceGroups({
     <VStack gap={4} pt={4} w="full">
       {groups.map(({ sources, type }) => (
         <VStack align="flex-start" gap={2} key={type} w="full">
-          <Text color="fg.muted" fontSize="xs" fontWeight="medium">
+          <Text fontSize="sm" fontWeight="bold">
             {t(type)}
           </Text>
 
@@ -134,7 +134,6 @@ function SourceRow({
 
   return (
     <HStack
-      align="flex-start"
       bgColor="bg"
       borderRadius="sm"
       borderWidth={1}

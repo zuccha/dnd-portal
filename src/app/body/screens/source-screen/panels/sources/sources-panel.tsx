@@ -563,15 +563,16 @@ export default function SourcesPanel() {
   };
 
   return (
-    <Box bgColor="bg.subtle" flex={1} h="full" minH={0} minW={0}>
+    <Box flex={1} h="full">
       <VStack
         align="stretch"
         flex={1}
         gap={{ base: 4, md: 6 }}
         h="full"
-        minW={0}
         overflow="auto"
-        p={{ base: 4, md: 10 }}
+        pb={0}
+        pt={{ base: 4, md: 10 }}
+        px={{ base: 4, md: 10 }}
         w="full"
       >
         <HStack
@@ -621,14 +622,27 @@ export default function SourcesPanel() {
         )}
 
         {sources.length || registrySources.length || registryLoading ?
-          <Tabs.Root defaultValue="all" w="full">
-            <Tabs.List>
+          <Tabs.Root
+            defaultValue="all"
+            display="flex"
+            flex={1}
+            flexDirection="column"
+            mx={{ base: -4, md: -10 }}
+            w={{ base: "calc(100% + 2rem)", md: "calc(100% + 5rem)" }}
+          >
+            <Tabs.List borderBottomWidth={1} px={{ base: 4, md: 10 }}>
               <Tabs.Trigger value="all">{t("all")}</Tabs.Trigger>
               <Tabs.Trigger value="my-sources">{t("my_sources")}</Tabs.Trigger>
               <Tabs.Trigger value="official">{t("repository")}</Tabs.Trigger>
             </Tabs.List>
 
-            <Tabs.Content value="all">
+            <Tabs.Content
+              bg="bg.muted"
+              flex={1}
+              pb={{ base: 4, md: 10 }}
+              px={{ base: 4, md: 10 }}
+              value="all"
+            >
               {registryError && (
                 <Text color="fg.muted" fontSize="sm" pt={4}>
                   {t("registry_unavailable")}
@@ -648,7 +662,13 @@ export default function SourcesPanel() {
               />
             </Tabs.Content>
 
-            <Tabs.Content value="my-sources">
+            <Tabs.Content
+              bg="bg.muted"
+              flex={1}
+              pb={{ base: 4, md: 10 }}
+              px={{ base: 4, md: 10 }}
+              value="my-sources"
+            >
               <SourceGroups
                 busySourceId={busySourceId}
                 groups={localSourceGroups}
@@ -662,7 +682,13 @@ export default function SourcesPanel() {
               />
             </Tabs.Content>
 
-            <Tabs.Content value="official">
+            <Tabs.Content
+              bg="bg.muted"
+              flex={1}
+              pb={{ base: 4, md: 10 }}
+              px={{ base: 4, md: 10 }}
+              value="official"
+            >
               <SourceGroups
                 busySourceId={busySourceId}
                 groups={officialSourceGroups}
