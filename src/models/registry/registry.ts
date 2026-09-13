@@ -13,6 +13,70 @@ import supabase from "~/supabase";
 const registryBundleBucket = "registry-bundles";
 
 //------------------------------------------------------------------------------
+// Registry Source Access
+//------------------------------------------------------------------------------
+
+export type RegistrySourceAccess = {
+  access: "read" | "write";
+  email: string;
+  granted_at: string;
+  user_id: string;
+};
+
+//------------------------------------------------------------------------------
+// Fetch Registry Source Access
+//------------------------------------------------------------------------------
+
+export async function fetchRegistrySourceAccess(
+  sourceId: string,
+): Promise<RegistrySourceAccess[]> {
+  const { data, error } = await supabase.rpc("fetch_registry_source_access", {
+    p_source_id: sourceId,
+  });
+
+  if (error)
+    throw new Error(`Registry source access request failed: ${error.message}`);
+
+  return data as RegistrySourceAccess[];
+}
+
+//------------------------------------------------------------------------------
+// Grant Registry Source Access
+//------------------------------------------------------------------------------
+
+export async function grantRegistrySourceAccess(
+  sourceId: string,
+  email: string,
+  access: "read" | "write",
+): Promise<void> {
+  const { error } = await supabase.rpc("grant_registry_source_access", {
+    p_access: access,
+    p_email: email,
+    p_source_id: sourceId,
+  });
+
+  if (error)
+    throw new Error(`Registry source access grant failed: ${error.message}`);
+}
+
+//------------------------------------------------------------------------------
+// Revoke Registry Source Access
+//------------------------------------------------------------------------------
+
+export async function revokeRegistrySourceAccess(
+  sourceId: string,
+  userId: string,
+): Promise<void> {
+  const { error } = await supabase.rpc("revoke_registry_source_access", {
+    p_source_id: sourceId,
+    p_user_id: userId,
+  });
+
+  if (error)
+    throw new Error(`Registry source access revoke failed: ${error.message}`);
+}
+
+//------------------------------------------------------------------------------
 // Registry Sources
 //------------------------------------------------------------------------------
 

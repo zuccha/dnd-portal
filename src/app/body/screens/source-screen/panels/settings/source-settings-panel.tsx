@@ -31,6 +31,7 @@ import Select from "~/ui/select";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
+import SourceAccessPanel from "./source-access-panel";
 
 //------------------------------------------------------------------------------
 // SourceSettings Panel
@@ -264,6 +265,10 @@ function SourceSettingsForm({
         sourceId={source.id}
         sources={sources}
       />
+
+      {source.registry?.access === "creator" && (
+        <SourceAccessPanel source={source} />
+      )}
 
       {error && (
         <Text color="fg.error" fontSize="sm">

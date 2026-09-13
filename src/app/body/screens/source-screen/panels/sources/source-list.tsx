@@ -220,7 +220,8 @@ function SourceRow({
         )}
 
         {status === "installed" &&
-          source.registry?.access === "write" &&
+          (source.registry?.access === "creator" ||
+            source.registry?.access === "write") &&
           hasUnpublishedChanges &&
           onPublish && (
             <IconButton
