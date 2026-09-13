@@ -11,6 +11,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
+import { updateRegistrySourceVisibility } from "~/models/registry/registry";
 import {
   type SourceType,
   useSourceTypeOptions,
@@ -32,6 +33,7 @@ import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
 import SourceAccessPanel from "./source-access-panel";
+import SourceRegistrySettings from "./source-registry-settings";
 
 //------------------------------------------------------------------------------
 // SourceSettings Panel
@@ -77,7 +79,7 @@ export default function SourceSettingsPanel() {
 type SourceSettingsDraft = Pick<
   Source,
   "code" | "includes" | "name" | "requires" | "type" | "version"
->;
+> & { visibility: "public" | "private" };
 
 type SourceSettingsFormProps = {
   initialSource: Source;
@@ -115,9 +117,18 @@ function SourceSettingsForm({
     setSaving(true);
     setError(undefined);
     try {
+      const { visibility, ...sourceDraft } = draft;
+      if (
+        source.registry?.access === "creator" &&
+        visibility !== (source.registry.visibility ?? "private")
+      )
+        await updateRegistrySourceVisibility(source.id, visibility);
+
       await catalogue.updateSource(source.id, (source) => ({
         ...source,
-        ...draft,
+        ...sourceDraft,
+        registry:
+          source.registry ? { ...source.registry, visibility } : undefined,
       }));
     } catch (e) {
       console.error(e);
@@ -125,7 +136,7 @@ function SourceSettingsForm({
     } finally {
       setSaving(false);
     }
-  }, [draft, source.id, sourceEditable]);
+  }, [draft, source.id, source.registry, sourceEditable]);
 
   const detach = useCallback(async () => {
     if (sourceEditable || !confirm(t("detach_confirm"))) return;
@@ -268,6 +279,16 @@ function SourceSettingsForm({
 
       {source.registry?.access === "creator" && (
         <SourceAccessPanel source={source} />
+      )}
+
+      {source.registry?.access === "creator" && (
+        <SourceRegistrySettings
+          disabled={saving || !sourceEditable}
+          onVisibilityChange={(visibility) =>
+            setDraft((prev) => ({ ...prev, visibility }))
+          }
+          visibility={draft.visibility}
+        />
       )}
 
       {error && (
@@ -511,6 +532,7 @@ function sourceToSettingsDraft(source: Source): SourceSettingsDraft {
     requires: source.requires,
     type: source.type,
     version: source.version,
+    visibility: source.registry?.visibility ?? "private",
   };
 }
 

@@ -24,6 +24,25 @@ export type RegistrySourceAccess = {
 };
 
 //------------------------------------------------------------------------------
+// Update Registry Source Visibility
+//------------------------------------------------------------------------------
+
+export async function updateRegistrySourceVisibility(
+  sourceId: string,
+  visibility: "public" | "private",
+): Promise<void> {
+  const { error } = await supabase.rpc("update_registry_source_visibility", {
+    p_source_id: sourceId,
+    p_visibility: visibility,
+  });
+
+  if (error)
+    throw new Error(
+      `Registry source visibility update failed: ${error.message}`,
+    );
+}
+
+//------------------------------------------------------------------------------
 // Fetch Registry Source Access
 //------------------------------------------------------------------------------
 
