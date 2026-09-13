@@ -7,6 +7,10 @@ const i18nContext = {
     en: "All",
     it: "Tutte",
   },
+  "auto_update": {
+    en: "Auto-updates",
+    it: "Aggiornamenti automatici",
+  },
   "campaign": {
     en: "Campaign",
     it: "Campagna",

@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { setAutoUpdateSources, useAutoUpdateSources } from "~/app/app-settings";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
@@ -75,6 +76,7 @@ type SourceRemovalPrompt = {
 export default function SourcesPanel() {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const sources = catalogue.useSources();
+  const autoUpdateSources = useAutoUpdateSources();
   const translateSourceVersion = useTranslateSourceVersion(lang);
   const inputRef = useRef<HTMLInputElement>(null);
   const sourcesRef = useRef(sources);
@@ -615,6 +617,13 @@ export default function SourcesPanel() {
             </Button>
           </HStack>
         </HStack>
+
+        <Checkbox
+          label={t("auto_update")}
+          maxW="max-content"
+          onValueChange={setAutoUpdateSources}
+          value={autoUpdateSources}
+        />
 
         <Input
           accept="application/json,.json"
