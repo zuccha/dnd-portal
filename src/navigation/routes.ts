@@ -39,7 +39,6 @@ export const Route = {
   ResourcesWorldLanguages: "/resources/world/languages",
   ResourcesWorldPlanes: "/resources/world/planes",
   Settings: "/settings",
-  SettingsCampaign: "/settings/source",
   SignIn: "/sign-in",
   SignUp: "/sign-up",
   Sources: "/sources",
@@ -48,3 +47,11 @@ export const Route = {
 export type Route = (typeof Route)[keyof typeof Route];
 
 export const routes = Object.values(Route);
+
+//------------------------------------------------------------------------------
+// Source Settings Route
+//------------------------------------------------------------------------------
+
+export function sourceSettingsRoute(sourceId: string): string {
+  return `${Route.Sources}/${sourceId}`;
+}

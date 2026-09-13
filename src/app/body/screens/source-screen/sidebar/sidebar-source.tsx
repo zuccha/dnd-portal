@@ -1,7 +1,5 @@
 import { Separator, VStack } from "@chakra-ui/react";
-import { SettingsIcon } from "lucide-react";
 import { useMemo } from "react";
-import SectionButton from "~/app/body/screens/source-screen/sidebar/section-button";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
@@ -45,15 +43,6 @@ export default function SidebarSource() {
         {localizedResourcePanels.map(({ id, items }) => (
           <SidebarSection id={id} items={items} key={id} title={t(id)} />
         ))}
-      </VStack>
-
-      <VStack justifyContent="flex-end" px={2} w="full">
-        <SectionButton
-          Icon={SettingsIcon}
-          active={route === Route.SettingsCampaign}
-          label={t(Route.SettingsCampaign)}
-          onClick={() => history.pushState({}, "", Route.SettingsCampaign)}
-        />
       </VStack>
     </VStack>
   );
@@ -189,10 +178,6 @@ const i18nContext = {
     it: "Piani",
   },
   [Route.Settings]: {
-    en: "Settings",
-    it: "Impostazioni",
-  },
-  [Route.SettingsCampaign]: {
     en: "Settings",
     it: "Impostazioni",
   },

@@ -4,6 +4,7 @@ import {
   FileDownIcon,
   LinkIcon,
   RefreshCwIcon,
+  SettingsIcon,
   Trash2Icon,
   UnlinkIcon,
   UploadIcon,
@@ -33,6 +34,7 @@ type SourceGroupsProps = {
   onRegister?: (source: Source) => void;
   onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
+  onSettings?: (source: Source) => void;
   translateSourceVersion: (version: Source["version"]) => { label: string };
 };
 
@@ -50,6 +52,7 @@ export default function SourceGroups({
   onRegister,
   onPublish,
   onRemove,
+  onSettings,
   translateSourceVersion,
 }: SourceGroupsProps) {
   const { t } = useI18nLangContext(i18nContext);
@@ -82,6 +85,7 @@ export default function SourceGroups({
                 onPublish={onPublish}
                 onRegister={onRegister}
                 onRemove={onRemove}
+                onSettings={onSettings}
                 translateSourceVersion={translateSourceVersion}
               />
             ))}
@@ -106,6 +110,7 @@ type SourceRowProps = {
   onRegister?: (source: Source) => void;
   onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
+  onSettings?: (source: Source) => void;
   translateSourceVersion: (version: Source["version"]) => { label: string };
 };
 
@@ -123,6 +128,7 @@ function SourceRow({
   onRegister,
   onPublish,
   onRemove,
+  onSettings,
   translateSourceVersion,
 }: SourceRowProps) {
   const { t } = useI18nLangContext(i18nContext);
@@ -266,6 +272,16 @@ function SourceRow({
             label={t("make_official")}
             loading={busy}
             onClick={() => onDownload(source)}
+            size="xs"
+            variant="ghost"
+          />
+        )}
+
+        {status !== "available" && (
+          <IconButton
+            Icon={SettingsIcon}
+            label={t("settings")}
+            onClick={() => onSettings?.(source)}
             size="xs"
             variant="ghost"
           />

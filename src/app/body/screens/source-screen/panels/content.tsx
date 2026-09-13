@@ -40,6 +40,10 @@ export default function Content() {
   const selectedSourceId = catalogue.useActiveSourceId();
 
   if (route === Route.Sources) return <SourcesPanel />;
+  if (route.startsWith(`${Route.Sources}/`)) {
+    const sourceId = route.slice(`${Route.Sources}/`.length);
+    if (sourceId) return <SourceSettingsPanel sourceId={sourceId} />;
+  }
 
   if (!selectedSourceId) return <SourcesPanel />;
 
@@ -81,5 +85,4 @@ const panels: Record<string, React.FC<{ sourceId: string }>> = {
   [Route.ResourcesEquipmentWeaponModifiers]: WeaponModifiersPanel,
   [Route.ResourcesWorldLanguages]: LanguagesPanel,
   [Route.ResourcesWorldPlanes]: PlanesPanel,
-  [Route.SettingsCampaign]: SourceSettingsPanel,
 };

@@ -114,11 +114,3 @@ export const resourcePanels = [
   { id: Route.ResourcesMarket, items: marketPanelIds },
   { id: Route.ResourcesWorld, items: worldPanelIds },
 ] as const;
-
-//------------------------------------------------------------------------------
-// Setting Panel Ids
-//------------------------------------------------------------------------------
-
-export const settingPanelIds = [Route.SettingsCampaign] as const;
-
-export type SettingPanelId = (typeof settingPanelIds)[number];

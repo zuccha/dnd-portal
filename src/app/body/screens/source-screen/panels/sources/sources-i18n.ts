@@ -187,6 +187,10 @@ const i18nContext = {
     en: "Repository",
     it: "Archivio",
   },
+  "settings": {
+    en: "Settings",
+    it: "Impostazioni",
+  },
   "status.available": {
     en: "Not installed",
     it: "Non installato",
@@ -208,8 +212,8 @@ const i18nContext = {
     it: "Aggiornamento disponibile",
   },
   "subtitle": {
-    en: "Import, export, and remove local sources.",
-    it: "Importa, esporta e rimuovi fonti locali.",
+    en: "Download, import, and create sources",
+    it: "Scarica, importa e crea fonti",
   },
   "title": {
     en: "Sources",

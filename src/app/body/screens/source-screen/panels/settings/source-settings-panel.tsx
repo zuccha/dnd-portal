@@ -36,12 +36,18 @@ import SourceAccessPanel from "./source-access-panel";
 import SourceRegistrySettings from "./source-registry-settings";
 
 //------------------------------------------------------------------------------
-// SourceSettings Panel
+// Source Settings Panel
 //------------------------------------------------------------------------------
 
-export default function SourceSettingsPanel() {
+export type SourceSettingsPanelProps = {
+  sourceId: string;
+};
+
+export default function SourceSettingsPanel({
+  sourceId,
+}: SourceSettingsPanelProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
-  const source = catalogue.useActiveSource();
+  const source = catalogue.useSource(sourceId);
   const sources = catalogue.useSources();
 
   if (!source)

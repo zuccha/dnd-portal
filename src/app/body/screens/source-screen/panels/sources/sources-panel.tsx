@@ -31,7 +31,7 @@ import {
   registerRegistrySourceBundle,
 } from "~/models/registry/registry";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
-import { Route } from "~/navigation/routes";
+import { sourceSettingsRoute } from "~/navigation/routes";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
 import { downloadFile } from "~/utils/download";
@@ -214,7 +214,8 @@ export default function SourcesPanel() {
       ),
     );
 
-    if (navigateAfter) history.pushState({}, "", Route.SettingsCampaign);
+    if (navigateAfter && savedBundles[0])
+      history.pushState({}, "", sourceSettingsRoute(savedBundles[0].source.id));
   };
 
   //----------------------------------------------------------------------------
@@ -530,6 +531,14 @@ export default function SourcesPanel() {
     setIncludePrivate(true);
   };
 
+  //------------------------------------------------------------------------------
+  // Open Source Settings
+  //------------------------------------------------------------------------------
+
+  const openSourceSettings = (source: Source) => {
+    history.pushState({}, "", sourceSettingsRoute(source.id));
+  };
+
   //----------------------------------------------------------------------------
   // Close Export Dialog
   //----------------------------------------------------------------------------
@@ -658,6 +667,7 @@ export default function SourcesPanel() {
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
+                onSettings={openSourceSettings}
                 translateSourceVersion={translateSourceVersion}
               />
             </Tabs.Content>
@@ -678,6 +688,7 @@ export default function SourcesPanel() {
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
+                onSettings={openSourceSettings}
                 translateSourceVersion={translateSourceVersion}
               />
             </Tabs.Content>
@@ -699,6 +710,7 @@ export default function SourcesPanel() {
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
+                onSettings={openSourceSettings}
                 translateSourceVersion={translateSourceVersion}
               />
             </Tabs.Content>
