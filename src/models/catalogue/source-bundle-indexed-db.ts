@@ -177,19 +177,20 @@ export async function updateSourceBundle(
   sourceId: string,
   update: (bundle: SourceBundle) => SourceBundle,
 ): Promise<SourceBundle> {
+  const record = await db.source_bundles.get(sourceId);
+  if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
+
+  const bundle = sourceBundleSchema.parse(update(record.bundle));
+  const bundleHash = await getBundleHash(bundle);
+  const importedAt = new Date().toISOString();
+
   return db.transaction(
     "rw",
     db.sources,
     db.source_bundles,
     db.source_states,
     async () => {
-      const record = await db.source_bundles.get(sourceId);
-      if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
-
-      const bundle = sourceBundleSchema.parse(update(record.bundle));
-      const bundleHash = await getBundleHash(bundle);
       const previousState = await db.source_states.get(sourceId);
-      const importedAt = new Date().toISOString();
 
       await db.sources.put({
         ...bundle.source,
