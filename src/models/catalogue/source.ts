@@ -53,3 +53,16 @@ export const sourceSchema = z.object({
 });
 
 export type Source = z.infer<typeof sourceSchema>;
+
+//------------------------------------------------------------------------------
+// Can Edit Source
+//------------------------------------------------------------------------------
+
+export function canEditSource(source: Source | undefined): boolean {
+  return (
+    !!source &&
+    (!source.registry ||
+      source.registry.access === "creator" ||
+      source.registry.access === "write")
+  );
+}

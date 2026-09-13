@@ -34,7 +34,7 @@ import type { Species } from "../resources/species/species";
 import type { Spell } from "../resources/spells/spell";
 import type { Vehicle } from "../resources/vehicles/vehicle";
 import type { ResourceKind } from "../types/resource-kind";
-import type { Source } from "./source";
+import { type Source, canEditSource } from "./source";
 import {
   type SourceBundle,
   type SourceBundleExportOptions,
@@ -315,7 +315,7 @@ export function createCatalogue(id: string) {
 
   function isSourceEditable(sourceId: string): boolean {
     const source = getSource(sourceId);
-    return !!source && source.registry?.access !== "read";
+    return canEditSource(source);
   }
 
   //----------------------------------------------------------------------------
@@ -340,7 +340,7 @@ export function createCatalogue(id: string) {
 
   function useSourceEditable(sourceId: string | undefined): boolean {
     const source = useSource(sourceId);
-    return !!source && source.registry?.access !== "read";
+    return canEditSource(source);
   }
 
   //----------------------------------------------------------------------------
