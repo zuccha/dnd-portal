@@ -27,6 +27,7 @@ import {
   fetchRegistrySourceBundles,
   fetchRegistrySources,
   publishRegistrySourceBundle,
+  registerRegistrySourceBundle,
 } from "~/models/registry/registry";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
@@ -349,6 +350,42 @@ export default function SourcesPanel() {
     }
   };
 
+  //------------------------------------------------------------------------------
+  // Register Source
+  //------------------------------------------------------------------------------
+
+  const registerSource = async (source: Source) => {
+    const bundle = catalogue.getSourceBundle(source.id, {
+      includePrivate: false,
+    });
+    if (!bundle) return;
+
+    setBusySourceId(source.id);
+    setError(undefined);
+
+    try {
+      await registerRegistrySourceBundle(bundle);
+      const registeredSource = (await fetchRegistrySources()).find(
+        ({ id }) => id === source.id,
+      );
+      if (registeredSource?.registry)
+        await catalogue.updateSource(source.id, (current) => ({
+          ...current,
+          registry: registeredSource.registry,
+        }));
+      await catalogue.markSourcePublished(source.id);
+      setRegistrySources((previousSources) => [
+        ...previousSources.filter(({ id }) => id !== registeredSource?.id),
+        ...(registeredSource ? [registeredSource] : []),
+      ]);
+    } catch (e) {
+      console.error(e);
+      setError(t("error.register"));
+    } finally {
+      setBusySourceId(undefined);
+    }
+  };
+
   //----------------------------------------------------------------------------
   // Complete Source Dependency Prompt
   //----------------------------------------------------------------------------
@@ -582,6 +619,7 @@ export default function SourcesPanel() {
                 onExport={openExportDialog}
                 onMakeLocal={makeSourceLocal}
                 onPublish={publishSource}
+                onRegister={registerSource}
                 onRemove={removeSource}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -595,6 +633,7 @@ export default function SourcesPanel() {
                 onDownload={downloadRegistrySource}
                 onExport={openExportDialog}
                 onPublish={publishSource}
+                onRegister={registerSource}
                 onRemove={removeSource}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -609,6 +648,7 @@ export default function SourcesPanel() {
                 onExport={openExportDialog}
                 onMakeLocal={makeSourceLocal}
                 onPublish={publishSource}
+                onRegister={registerSource}
                 onRemove={removeSource}
                 translateSourceVersion={translateSourceVersion}
               />

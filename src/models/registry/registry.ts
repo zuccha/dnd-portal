@@ -241,3 +241,25 @@ export async function publishRegistrySourceBundle(
   if (error)
     throw new Error(`Registry source publish failed: ${error.message}`);
 }
+
+//------------------------------------------------------------------------------
+// Register Registry Source Bundle
+//------------------------------------------------------------------------------
+
+export async function registerRegistrySourceBundle(
+  bundle: SourceBundle,
+): Promise<void> {
+  const { registry: _registry, ...source } = bundle.source;
+  const { error } = await supabase.functions.invoke(
+    "register-registry-source",
+    {
+      body: {
+        bundle: { ...bundle, source },
+        source_id: bundle.source.id,
+      },
+    },
+  );
+
+  if (error)
+    throw new Error(`Registry source registration failed: ${error.message}`);
+}

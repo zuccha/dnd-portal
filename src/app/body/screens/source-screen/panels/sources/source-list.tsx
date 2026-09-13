@@ -30,6 +30,7 @@ type SourceGroupsProps = {
   onDownload?: (source: Source) => void;
   onExport: (source: Source) => void;
   onMakeLocal?: (source: Source) => void;
+  onRegister?: (source: Source) => void;
   onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
   translateSourceVersion: (version: Source["version"]) => { label: string };
@@ -46,6 +47,7 @@ export default function SourceGroups({
   onDownload,
   onExport,
   onMakeLocal,
+  onRegister,
   onPublish,
   onRemove,
   translateSourceVersion,
@@ -78,6 +80,7 @@ export default function SourceGroups({
                 onExport={onExport}
                 onMakeLocal={onMakeLocal}
                 onPublish={onPublish}
+                onRegister={onRegister}
                 onRemove={onRemove}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -100,6 +103,7 @@ type SourceRowProps = {
   onDownload?: (source: Source) => void;
   onExport: (source: Source) => void;
   onMakeLocal?: (source: Source) => void;
+  onRegister?: (source: Source) => void;
   onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
   translateSourceVersion: (version: Source["version"]) => { label: string };
@@ -116,6 +120,7 @@ function SourceRow({
   onDownload,
   onExport,
   onMakeLocal,
+  onRegister,
   onPublish,
   onRemove,
   translateSourceVersion,
@@ -192,6 +197,17 @@ function SourceRow({
             label={t("download")}
             loading={busy}
             onClick={() => onDownload(source)}
+            size="xs"
+            variant="ghost"
+          />
+        )}
+
+        {status === "local" && onRegister && (
+          <IconButton
+            Icon={UploadIcon}
+            label={t("register")}
+            loading={busy}
+            onClick={() => onRegister(source)}
             size="xs"
             variant="ghost"
           />

@@ -91,6 +91,10 @@ const i18nContext = {
     en: "The source could not be published.",
     it: "La fonte non può essere pubblicata.",
   },
+  "error.register": {
+    en: "The source could not be registered.",
+    it: "La fonte non può essere registrata.",
+  },
   "error.remove": {
     en: "The selected source could not be removed.",
     it: "La fonte selezionata non può essere rimossa.",
@@ -142,6 +146,10 @@ const i18nContext = {
   "readonly": {
     en: "Read-only",
     it: "Sola lettura",
+  },
+  "register": {
+    en: "Register",
+    it: "Registra",
   },
   "registry_unavailable": {
     en: "The registry is currently unavailable.",
