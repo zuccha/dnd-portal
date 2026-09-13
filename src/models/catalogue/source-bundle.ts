@@ -70,6 +70,19 @@ export const sourceBundleSchema = z.object({
 export type SourceBundle = z.infer<typeof sourceBundleSchema>;
 
 //------------------------------------------------------------------------------
+// Source Bundle Without Registry Metadata
+//------------------------------------------------------------------------------
+
+export const sourceBundleWithoutRegistrySchema = z.object({
+  resources: sourceBundleResourcesSchema,
+  source: sourceSchema.omit({ registry: true }),
+});
+
+export type SourceBundleWithoutRegistry = z.infer<
+  typeof sourceBundleWithoutRegistrySchema
+>;
+
+//------------------------------------------------------------------------------
 // Source Bundle Export Options
 //------------------------------------------------------------------------------
 

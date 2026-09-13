@@ -4,8 +4,8 @@ import {
   sourceSchema,
 } from "~/models/catalogue/source";
 import {
-  type SourceBundle,
-  sourceBundleSchema,
+  type SourceBundleWithoutRegistry,
+  sourceBundleWithoutRegistrySchema,
 } from "~/models/catalogue/source-bundle";
 import supabase from "~/supabase";
 
@@ -113,7 +113,7 @@ export function analyzeRegistrySourceDependencies(
 
 export async function fetchRegistrySourceBundle(
   sourceId: string,
-): Promise<SourceBundle> {
+): Promise<SourceBundleWithoutRegistry> {
   const path = `sources/${sourceId}/bundle.json`;
   const { data, error } = await supabase.storage
     .from(registryBundleBucket)
@@ -122,7 +122,7 @@ export async function fetchRegistrySourceBundle(
   if (error)
     throw new Error(`Registry bundle download failed: ${error.message}`);
 
-  return sourceBundleSchema.parse(JSON.parse(await data.text()));
+  return sourceBundleWithoutRegistrySchema.parse(JSON.parse(await data.text()));
 }
 
 //------------------------------------------------------------------------------
@@ -131,6 +131,6 @@ export async function fetchRegistrySourceBundle(
 
 export async function fetchRegistrySourceBundles(
   sourceIds: string[],
-): Promise<SourceBundle[]> {
+): Promise<SourceBundleWithoutRegistry[]> {
   return Promise.all(sourceIds.map(fetchRegistrySourceBundle));
 }

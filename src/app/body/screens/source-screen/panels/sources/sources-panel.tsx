@@ -169,18 +169,10 @@ export default function SourcesPanel() {
       const registrySource = registrySources.find(
         ({ id }) => id === bundle.source.id,
       );
-      if (!bundle.source.registry || !registrySource?.registry) return bundle;
+      const registry = registrySource?.registry;
+      if (!registry) return bundle;
 
-      return {
-        ...bundle,
-        source: {
-          ...bundle.source,
-          registry: {
-            ...bundle.source.registry,
-            ...registrySource.registry,
-          },
-        },
-      };
+      return { ...bundle, source: { ...bundle.source, registry } };
     });
     const savedBundles = await Promise.all(
       bundlesWithRegistryAccess.map((bundle) => saveSourceBundle(bundle)),
