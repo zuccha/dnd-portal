@@ -1,5 +1,4 @@
 import {
-  Box,
   CloseButton,
   Dialog,
   HStack,
@@ -574,7 +573,7 @@ export default function SourcesPanel() {
   };
 
   return (
-    <Box flex={1} h="full">
+    <>
       <VStack
         align="stretch"
         flex={1}
@@ -814,6 +813,6 @@ export default function SourcesPanel() {
           </Dialog.Positioner>
         </Portal>
       </Dialog.Root>
-    </Box>
+    </>
   );
 }

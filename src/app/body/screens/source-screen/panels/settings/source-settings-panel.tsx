@@ -335,7 +335,8 @@ function SourceSettingsRoot({ children }: { children: React.ReactNode }) {
       align="flex-start"
       flex={1}
       gap={6}
-      minH="full"
+      h="full"
+      overflow="auto"
       px={10}
       py={10}
       w="full"
