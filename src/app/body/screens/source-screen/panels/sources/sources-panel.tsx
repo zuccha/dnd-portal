@@ -178,7 +178,10 @@ export default function SourcesPanel() {
     const savedBundles = await Promise.all(
       bundlesWithRegistryAccess.map((bundle) => saveSourceBundle(bundle)),
     );
-    for (const bundle of savedBundles) catalogue.importSourceBundle(bundle);
+    for (const bundle of savedBundles) {
+      catalogue.importSourceBundle(bundle);
+      await catalogue.refreshSourceState(bundle.source.id);
+    }
     setRegistrySources((previousSources) =>
       previousSources.map(
         (registrySource) =>
@@ -330,6 +333,7 @@ export default function SourcesPanel() {
           ...current,
           registry: publishedSource.registry,
         }));
+      await catalogue.markSourcePublished(source.id);
       setRegistrySources((previousSources) =>
         previousSources.map((registrySource) =>
           registrySource.id === publishedSource?.id && publishedSource ?

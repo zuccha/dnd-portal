@@ -185,6 +185,7 @@ export function createResourceStore<
       await updateSourceBundle(resource.source_id, (bundle) =>
         upsertSourceBundleResource(bundle, persistentResource),
       );
+      await catalogue.refreshSourceState(resource.source_id);
       catalogueResourceStore.upsertResource(persistentResource);
       return undefined;
     } catch (error) {
@@ -225,6 +226,7 @@ export function createResourceStore<
       await updateSourceBundle(source.id, (bundle) =>
         upsertSourceBundleResource(bundle, resource),
       );
+      await catalogue.refreshSourceState(source.id);
       catalogueResourceStore.upsertResource(resource);
       return undefined;
     } catch (error) {
@@ -269,6 +271,9 @@ export function createResourceStore<
             removeSourceBundleResources(bundle, kind, ids),
           );
         }),
+      );
+      await Promise.all(
+        sourceIds.map((sourceId) => catalogue.refreshSourceState(sourceId)),
       );
 
       for (const resource of resources)
@@ -326,6 +331,7 @@ export function createResourceStore<
       await updateSourceBundle(resource.source_id, (bundle) =>
         upsertSourceBundleResource(bundle, resource),
       );
+      await catalogue.refreshSourceState(resource.source_id);
       catalogueResourceStore.upsertResource(resource);
       return undefined;
     } catch (error) {

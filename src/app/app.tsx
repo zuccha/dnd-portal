@@ -1,7 +1,10 @@
 import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useState } from "react";
 import catalogue from "~/models/catalogue/catalogue";
-import { loadSourceBundles } from "~/models/catalogue/source-bundle-indexed-db";
+import {
+  loadSourceBundles,
+  loadSourceStates,
+} from "~/models/catalogue/source-bundle-indexed-db";
 import { useRoute } from "../navigation/navigation";
 import { Route } from "../navigation/routes";
 import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
@@ -19,9 +22,13 @@ export default function App() {
     let cancelled = false;
 
     async function initializeApp(): Promise<void> {
-      const [bundles] = await Promise.all([
+      const [bundles, states] = await Promise.all([
         loadSourceBundles().catch((error) => {
           console.error("Unable to load persisted source bundles", error);
+          return [];
+        }),
+        loadSourceStates().catch((error) => {
+          console.error("Unable to load persisted source states", error);
           return [];
         }),
         document.fonts.load('16px "Bookinsanity"'),
@@ -39,6 +46,7 @@ export default function App() {
 
       for (const bundle of bundles)
         catalogue.importSourceBundle(bundle, { activate: false });
+      for (const state of states) catalogue.setSourceState(state);
 
       const activeSourceId = catalogue.getActiveSourceId();
       if (activeSourceId)

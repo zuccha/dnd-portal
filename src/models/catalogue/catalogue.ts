@@ -41,7 +41,12 @@ import {
   filterSourceBundleResources,
   sourceBundleResourceKeyByKind,
 } from "./source-bundle";
-import { updateSourceBundle } from "./source-bundle-indexed-db";
+import {
+  type LocalSourceState,
+  loadSourceState,
+  markSourceBundlePublished,
+  updateSourceBundle,
+} from "./source-bundle-indexed-db";
 
 //------------------------------------------------------------------------------
 // Create Catalogue
@@ -100,6 +105,15 @@ export function createCatalogue(id: string) {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   const sourceIdList = createMemoryStore<string[]>(`${id}/source-ids`, []);
+
+  //----------------------------------------------------------------------------
+  // Source State By Id
+  //----------------------------------------------------------------------------
+
+  const sourceStateById = createOptionalMemoryStoreSet<
+    string,
+    LocalSourceState
+  >(`${id}/source-state-by-id`);
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Resources By Id
@@ -257,6 +271,44 @@ export function createCatalogue(id: string) {
     return sourceId ? getSource(sourceId) : undefined;
   }
 
+  //------------------------------------------------------------------------------
+  // Set Source State
+  //------------------------------------------------------------------------------
+
+  function setSourceState(state: LocalSourceState): void {
+    sourceStateById.set(state.source_id, state);
+  }
+
+  //------------------------------------------------------------------------------
+  // Refresh Source State
+  //------------------------------------------------------------------------------
+
+  async function refreshSourceState(sourceId: string): Promise<void> {
+    const state = await loadSourceState(sourceId);
+    if (state) setSourceState(state);
+  }
+
+  //------------------------------------------------------------------------------
+  // Mark Source Published
+  //------------------------------------------------------------------------------
+
+  async function markSourcePublished(sourceId: string): Promise<void> {
+    const state = await markSourceBundlePublished(sourceId);
+    setSourceState(state);
+  }
+
+  //------------------------------------------------------------------------------
+  // Use Source Has Unpublished Changes
+  //------------------------------------------------------------------------------
+
+  function useSourceHasUnpublishedChanges(sourceId: string): boolean {
+    const state = sourceStateById.useValue(sourceId);
+    return (
+      !!state?.published_bundle_hash &&
+      state.current_bundle_hash !== state.published_bundle_hash
+    );
+  }
+
   //----------------------------------------------------------------------------
   // Is Source Editable
   //----------------------------------------------------------------------------
@@ -351,6 +403,7 @@ export function createCatalogue(id: string) {
       ...bundle,
       source,
     }));
+    await refreshSourceState(sourceId);
 
     sourceById.set(bundle.source.id, bundle.source);
     if (activeSourceId.get() === bundle.source.id)
@@ -371,6 +424,7 @@ export function createCatalogue(id: string) {
       const { registry: _registry, ...source } = bundle.source;
       return { ...bundle, source };
     });
+    await refreshSourceState(sourceId);
 
     sourceById.set(bundle.source.id, bundle.source);
     if (activeSourceId.get() === bundle.source.id)
@@ -598,6 +652,7 @@ export function createCatalogue(id: string) {
     }
 
     sourceById.clear(sourceId);
+    sourceStateById.clear(sourceId);
     sourceIdList.set((prev) => prev.filter((id) => id !== sourceId));
 
     if (activeSourceId.get() === sourceId) activeSourceId.set(undefined);
@@ -617,13 +672,17 @@ export function createCatalogue(id: string) {
     getSourceBundle,
     importSourceBundle,
     isSourceEditable,
+    markSourcePublished,
+    refreshSourceState,
     removeSourceBundle,
     setActiveSourceId,
+    setSourceState,
     updateSource,
     useActiveSource,
     useActiveSourceId: activeSourceId.useValue,
     useSource,
     useSourceEditable,
+    useSourceHasUnpublishedChanges,
     useSources,
   };
 }
