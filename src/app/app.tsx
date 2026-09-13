@@ -4,7 +4,12 @@ import catalogue from "~/models/catalogue/catalogue";
 import {
   loadSourceBundles,
   loadSourceStates,
+  saveSourceBundle,
 } from "~/models/catalogue/source-bundle-indexed-db";
+import {
+  fetchRegistrySourceBundles,
+  fetchRegistrySources,
+} from "~/models/registry/registry";
 import { useRoute } from "../navigation/navigation";
 import { Route } from "../navigation/routes";
 import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
@@ -48,6 +53,15 @@ export default function App() {
         catalogue.importSourceBundle(bundle, { activate: false });
       for (const state of states) catalogue.setSourceState(state);
 
+      if (!localStorage.getItem("initialized") && !bundles.length) {
+        try {
+          await downloadDefaultSource();
+          localStorage.setItem("initialized", "true");
+        } catch (error) {
+          console.error("Unable to download the default source", error);
+        }
+      }
+
       const activeSourceId = catalogue.getActiveSourceId();
       if (activeSourceId)
         catalogue.setActiveSourceId(
@@ -71,6 +85,32 @@ export default function App() {
       <AppRouter />
     </VStack>
   );
+}
+
+//------------------------------------------------------------------------------
+// Download Default Source
+//------------------------------------------------------------------------------
+
+async function downloadDefaultSource(): Promise<void> {
+  const sourceId = import.meta.env["VITE_DEFAULT_SOURCE_ID"];
+  if (!sourceId) throw new Error("VITE_DEFAULT_SOURCE_ID is not configured");
+
+  const sources = await fetchRegistrySources();
+  const source = sources.find(({ id }) => id === sourceId);
+  if (!source) throw new Error(`Default source not found: ${sourceId}`);
+
+  const [bundle] = await fetchRegistrySourceBundles([source.id]);
+  if (!bundle) throw new Error(`Default bundle not found: ${source.id}`);
+
+  const savedBundle = await saveSourceBundle({
+    ...bundle,
+    source: {
+      ...bundle.source,
+      registry: source.registry,
+    },
+  });
+  catalogue.importSourceBundle(savedBundle);
+  catalogue.setActiveSourceId(savedBundle.source.id);
 }
 
 //------------------------------------------------------------------------------
