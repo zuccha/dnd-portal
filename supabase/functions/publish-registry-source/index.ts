@@ -7,7 +7,7 @@ const registryBundleBucket = "registry-bundles";
 //------------------------------------------------------------------------------
 
 function jsonResponse(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
+  return new Response(status === 204 ? null : JSON.stringify(body), {
     headers: {
       "Access-Control-Allow-Headers":
         "authorization, x-client-info, apikey, content-type",
