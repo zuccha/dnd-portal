@@ -1,4 +1,20 @@
 --------------------------------------------------------------------------------
+-- REGISTRY PUBLISHERS
+--------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS public.registry_publishers (
+  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  CONSTRAINT registry_publishers_pkey PRIMARY KEY (user_id)
+);
+
+ALTER TABLE public.registry_publishers OWNER TO postgres;
+ALTER TABLE public.registry_publishers ENABLE ROW LEVEL SECURITY;
+
+GRANT ALL ON TABLE public.registry_publishers TO service_role;
+GRANT SELECT ON TABLE public.registry_publishers TO authenticated;
+
+
+--------------------------------------------------------------------------------
 -- REGISTRY SOURCES
 --------------------------------------------------------------------------------
 

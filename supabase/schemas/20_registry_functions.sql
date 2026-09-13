@@ -263,6 +263,15 @@ DECLARE
 BEGIN
   IF NOT EXISTS (
     SELECT 1
+    FROM public.registry_publishers publisher
+    WHERE publisher.user_id = p_user_id
+  ) THEN
+    RAISE EXCEPTION 'User is not authorized to publish registry sources'
+      USING ERRCODE = '42501';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
     FROM public.registry_sources source
     WHERE source.source_id = p_source_id
       AND (
@@ -353,7 +362,14 @@ USING (public.can_read_registry_source(source_id));
 CREATE POLICY "Creators can create registry sources"
 ON public.registry_sources
 FOR INSERT TO authenticated
-WITH CHECK (creator_id = (SELECT auth.uid() AS uid));
+WITH CHECK (
+  creator_id = (SELECT auth.uid() AS uid)
+  AND EXISTS (
+    SELECT 1
+    FROM public.registry_publishers publisher
+    WHERE publisher.user_id = (SELECT auth.uid() AS uid)
+  )
+);
 
 CREATE POLICY "Users can read registry revisions"
 ON public.registry_revisions
