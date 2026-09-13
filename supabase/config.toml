@@ -106,7 +106,7 @@ enabled = true
 file_size_limit = "50MiB"
 
 [storage.buckets.registry-bundles]
-public = true
+public = false
 objects_path = "./storage/registry-bundles"
 
 # Image transformation API is available to Supabase Pro plan.
