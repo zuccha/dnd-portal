@@ -45,10 +45,9 @@ export default function Content() {
     if (sourceId) return <SourceSettingsPanel sourceId={sourceId} />;
   }
 
-  if (!selectedSourceId) return <SourcesPanel />;
-
   if (route === Route._) return <HomePanel />;
   if (route === Route.PrintDeck) return <PrintDeckPanel />;
+  if (!selectedSourceId) return <Redirect route={Route.Sources} />;
 
   const Panel = panels[route];
   if (Panel) return <Panel sourceId={selectedSourceId} />;
