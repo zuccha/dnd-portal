@@ -67,11 +67,7 @@ const db = new SourceBundleIndexedDb();
 
 async function getBundleHash(bundle: SourceBundle): Promise<string> {
   const { registry: _registry, ...source } = bundle.source;
-  const publishableBundle = filterSourceBundleResources(
-    { ...bundle, source },
-    { includePrivate: false },
-  );
-  return sha256(publishableBundle);
+  return sha256(filterSourceBundleResources({ ...bundle, source }));
 }
 
 //------------------------------------------------------------------------------

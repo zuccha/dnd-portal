@@ -5,7 +5,11 @@ import {
 } from "../registry/registry";
 import catalogue from "./catalogue";
 import type { Source } from "./source";
-import type { SourceBundle } from "./source-bundle";
+import {
+  type SourceBundle,
+  canAccessPrivateResources,
+  filterSourceBundleResources,
+} from "./source-bundle";
 import {
   type LocalSourceState,
   loadSourceState,
@@ -29,13 +33,18 @@ export async function downloadDefaultSource(
   const [bundle] = await fetchRegistrySourceBundles([source.id]);
   if (!bundle) throw new Error(`Default bundle not found: ${source.id}`);
 
-  const savedBundle = await saveSourceBundle({
+  const bundleWithRegistry = {
     ...bundle,
     source: {
       ...bundle.source,
       registry: source.registry,
     },
-  });
+  };
+  const savedBundle = await saveSourceBundle(
+    filterSourceBundleResources(bundleWithRegistry, {
+      includePrivate: canAccessPrivateResources(source),
+    }),
+  );
   catalogue.importSourceBundle(savedBundle);
   catalogue.setActiveSourceId(savedBundle.source.id);
 }
@@ -48,7 +57,7 @@ export async function publishSourceBundle(
   sourceId: string,
 ): Promise<Source | undefined> {
   const bundle = catalogue.getSourceBundle(sourceId, {
-    includePrivate: false,
+    includePrivate: true,
   });
   if (!bundle) return undefined;
 
@@ -102,13 +111,18 @@ export async function updateInstalledSources(
       const [nextBundle] = await fetchRegistrySourceBundles([bundle.source.id]);
       if (!nextBundle) continue;
 
-      const savedBundle = await saveSourceBundle({
+      const bundleWithRegistry = {
         ...nextBundle,
         source: {
           ...nextBundle.source,
           registry: registrySource.registry,
         },
-      });
+      };
+      const savedBundle = await saveSourceBundle(
+        filterSourceBundleResources(bundleWithRegistry, {
+          includePrivate: canAccessPrivateResources(registrySource),
+        }),
+      );
       catalogue.importSourceBundle(savedBundle, { activate: false });
 
       const state = await loadSourceState(savedBundle.source.id);

@@ -17,6 +17,8 @@ import catalogue from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
 import {
   type SourceBundle,
+  canAccessPrivateResources,
+  filterSourceBundleResources,
   sourceBundleSchema,
 } from "~/models/catalogue/source-bundle";
 import {
@@ -210,9 +212,14 @@ export default function SourcesPanel() {
         ({ id }) => id === bundle.source.id,
       );
       const registry = registrySource?.registry;
-      if (!registry) return bundle;
+      const bundleWithRegistry =
+        registry ?
+          { ...bundle, source: { ...bundle.source, registry } }
+        : bundle;
 
-      return { ...bundle, source: { ...bundle.source, registry } };
+      return filterSourceBundleResources(bundleWithRegistry, {
+        includePrivate: !registry || canAccessPrivateResources(registrySource),
+      });
     });
     const savedBundles = await Promise.all(
       bundlesWithRegistryAccess.map((bundle) => saveSourceBundle(bundle)),
@@ -381,7 +388,7 @@ export default function SourcesPanel() {
 
   const registerSource = async (source: Source) => {
     const bundle = catalogue.getSourceBundle(source.id, {
-      includePrivate: false,
+      includePrivate: true,
     });
     if (!bundle) return;
 

@@ -25,7 +25,7 @@ import { speciesSchema } from "../resources/species/species";
 import { spellSchema } from "../resources/spells/spell";
 import { vehicleSchema } from "../resources/vehicles/vehicle";
 import type { ResourceKind } from "../types/resource-kind";
-import { sourceSchema } from "./source";
+import { type Source, sourceSchema } from "./source";
 
 //------------------------------------------------------------------------------
 // Source Bundle Resources
@@ -141,6 +141,17 @@ export function filterSourceBundleResources(
   ) as SourceBundle["resources"];
 
   return { ...bundle, resources };
+}
+
+//------------------------------------------------------------------------------
+// Can Access Private Resources
+//------------------------------------------------------------------------------
+
+export function canAccessPrivateResources(source: Source | undefined): boolean {
+  return (
+    source?.registry?.access === "creator" ||
+    source?.registry?.access === "write"
+  );
 }
 
 //------------------------------------------------------------------------------
