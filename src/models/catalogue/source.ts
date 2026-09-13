@@ -66,3 +66,11 @@ export function canEditSource(source: Source | undefined): boolean {
       source.registry.access === "write")
   );
 }
+
+//------------------------------------------------------------------------------
+// Can Publish Source
+//------------------------------------------------------------------------------
+
+export function canPublishSource(source: Source | undefined): boolean {
+  return !!source?.registry && canEditSource(source);
+}

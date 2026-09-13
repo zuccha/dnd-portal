@@ -1,14 +1,21 @@
-import { FolderIcon } from "lucide-react";
-import { useCallback, useLayoutEffect, useMemo } from "react";
+import { HStack, VStack } from "@chakra-ui/react";
+import { FolderIcon, UploadIcon } from "lucide-react";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
-import type { Source } from "~/models/catalogue/source";
+import { type Source, canPublishSource } from "~/models/catalogue/source";
+import {
+  fetchRegistrySources,
+  publishRegistrySourceBundle,
+} from "~/models/registry/registry";
 import {
   type SourceVersion,
   useTranslateSourceVersion,
 } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
+import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
+import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
 import Select, { type SelectOption } from "~/ui/select";
 import { compareObjects } from "~/utils/object";
@@ -27,6 +34,10 @@ export default function SidebarSourceSelector({
   const selectedSourceId = catalogue.useActiveSourceId();
   const selectedSource = catalogue.useSource(selectedSourceId);
   const selectedSourceReadonly = selectedSource?.registry?.access === "read";
+  const hasUnpublishedChanges = catalogue.useSourceHasUnpublishedChanges(
+    selectedSourceId ?? "",
+  );
+  const [publishing, setPublishing] = useState(false);
 
   const setSourceId = useCallback((sourceId: string | undefined) => {
     catalogue.setActiveSourceId(sourceId);
@@ -36,6 +47,33 @@ export default function SidebarSourceSelector({
 
   const { lang, t } = useI18nLangContext(i18nContext);
   const translateSourceVersion = useTranslateSourceVersion(lang);
+
+  const publishSource = useCallback(async () => {
+    if (!selectedSource || !canPublishSource(selectedSource)) return;
+
+    const bundle = catalogue.getSourceBundle(selectedSource.id, {
+      includePrivate: false,
+    });
+    if (!bundle) return;
+
+    setPublishing(true);
+    try {
+      await publishRegistrySourceBundle(bundle);
+      const publishedSource = (await fetchRegistrySources()).find(
+        ({ id }) => id === selectedSource.id,
+      );
+      if (publishedSource?.registry)
+        await catalogue.updateSourceRegistryMetadata(
+          selectedSource.id,
+          publishedSource.registry,
+        );
+      await catalogue.markSourcePublished(selectedSource.id);
+    } catch (error) {
+      console.error("Unable to publish source", error);
+    } finally {
+      setPublishing(false);
+    }
+  }, [selectedSource]);
 
   const [sourceOptions, sourceCategories] = useMemo(() => {
     const cores = sources.filter(({ type }) => type === "core");
@@ -113,36 +151,52 @@ export default function SidebarSourceSelector({
   }, [selectedSourceId, sourceOptionIdsKey]);
 
   return (
-    <>
-      <CaptionInput
-        caption={
-          selectedSourceReadonly ?
-            `${t("sources")} • ${t("readonly")}`
-          : t("sources")
-        }
-        flex={1}
-      >
-        <Select.Enum
-          categories={sourceCategories}
-          disabled={!sourceOptions.length}
-          onValueChange={setSourceId}
-          options={sourceOptions}
-          positioning={{ slide: true }}
-          size="sm"
-          value={selectedSourceId ?? ""}
-        />
-      </CaptionInput>
+    <VStack align="stretch" flex={1} gap={2}>
+      <HStack gap={2} w="full">
+        <CaptionInput
+          caption={
+            selectedSourceReadonly ?
+              `${t("sources")} • ${t("readonly")}`
+            : t("sources")
+          }
+          flex={1}
+        >
+          <Select.Enum
+            categories={sourceCategories}
+            disabled={!sourceOptions.length}
+            onValueChange={setSourceId}
+            options={sourceOptions}
+            positioning={{ slide: true }}
+            size="sm"
+            value={selectedSourceId ?? ""}
+          />
+        </CaptionInput>
 
-      <IconButton
-        Icon={FolderIcon}
-        alignSelf="flex-end"
-        label={t(Route.Sources)}
-        onClick={() => history.pushState({}, "", Route.Sources)}
-        rounded="sm"
-        size="sm"
-        variant="outline"
-      />
-    </>
+        <IconButton
+          Icon={FolderIcon}
+          alignSelf="flex-end"
+          label={t(Route.Sources)}
+          onClick={() => history.pushState({}, "", Route.Sources)}
+          rounded="sm"
+          size="sm"
+          variant="outline"
+        />
+      </HStack>
+
+      {canPublishSource(selectedSource) && (
+        <Button
+          disabled={!hasUnpublishedChanges}
+          loading={publishing}
+          onClick={publishSource}
+          size="sm"
+          variant="outline"
+          w="full"
+        >
+          <Icon Icon={UploadIcon} size="sm" />
+          {t("publish")}
+        </Button>
+      )}
+    </VStack>
   );
 }
 
@@ -186,6 +240,10 @@ function sourceToOption(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "publish": {
+    en: "Publish",
+    it: "Pubblica",
+  },
   "readonly": {
     en: "Read-only",
     it: "Sola lettura",
