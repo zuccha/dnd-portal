@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS public.registry_revisions (
   revision_created_at timestamp with time zone DEFAULT now() NOT NULL,
   created_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
   storage_path text NOT NULL,
+  bundle_hash text,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   CONSTRAINT registry_revisions_pkey PRIMARY KEY (id),
   CONSTRAINT registry_revisions_source_number_key

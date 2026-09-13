@@ -20,6 +20,39 @@ function jsonResponse(body: unknown, status = 200): Response {
 }
 
 //------------------------------------------------------------------------------
+// Canonical JSON
+//------------------------------------------------------------------------------
+
+function canonicalJson(value: unknown): string {
+  return JSON.stringify(value, (_key, currentValue) => {
+    if (!currentValue || typeof currentValue !== "object") return currentValue;
+    if (Array.isArray(currentValue)) return currentValue;
+
+    return Object.keys(currentValue)
+      .sort()
+      .reduce<Record<string, unknown>>((object, key) => {
+        object[key] = currentValue[key];
+        return object;
+      }, {});
+  });
+}
+
+//------------------------------------------------------------------------------
+// SHA-256
+//------------------------------------------------------------------------------
+
+async function sha256(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(value),
+  );
+
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
+}
+
+//------------------------------------------------------------------------------
 // Publish Registry Source
 //------------------------------------------------------------------------------
 
@@ -68,11 +101,13 @@ Deno.serve(async (request) => {
 
   const sourceId = body.source_id;
   const permanentPath = `sources/${sourceId}/bundle.json`;
+  const bundleHash = await sha256(canonicalJson(body.bundle));
 
   const { data, error: revisionError } = await serviceClient.rpc(
     "publish_registry_source_revision",
     {
       p_base_revision_id: body.base_revision_id,
+      p_bundle_hash: bundleHash,
       p_source_id: sourceId,
       p_storage_path: permanentPath,
       p_user_id: userData.user.id,

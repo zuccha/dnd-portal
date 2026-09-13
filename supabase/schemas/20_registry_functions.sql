@@ -75,7 +75,8 @@ CREATE OR REPLACE FUNCTION public.publish_registry_source_revision(
   p_source_id uuid,
   p_base_revision_id uuid,
   p_storage_path text,
-  p_user_id uuid
+  p_user_id uuid,
+  p_bundle_hash text
 )
 RETURNS TABLE(
   revision_id uuid,
@@ -115,6 +116,11 @@ BEGIN
       USING ERRCODE = '22023';
   END IF;
 
+  IF p_bundle_hash IS NULL OR p_bundle_hash !~ '^[0-9a-f]{64}$' THEN
+    RAISE EXCEPTION 'Invalid registry bundle hash'
+      USING ERRCODE = '22023';
+  END IF;
+
   SELECT *
   INTO v_source
   FROM public.registry_sources
@@ -135,13 +141,15 @@ BEGIN
     source_id,
     revision_number,
     created_by,
-    storage_path
+    storage_path,
+    bundle_hash
   )
   VALUES (
     v_source.source_id,
     v_source.current_revision_number + 1,
     p_user_id,
-    p_storage_path
+    p_storage_path,
+    p_bundle_hash
   )
   RETURNING * INTO v_revision;
 
@@ -157,9 +165,9 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.publish_registry_source_revision(uuid, uuid, text, uuid)
+ALTER FUNCTION public.publish_registry_source_revision(uuid, uuid, text, uuid, text)
   OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION public.publish_registry_source_revision(uuid, uuid, text, uuid)
+GRANT EXECUTE ON FUNCTION public.publish_registry_source_revision(uuid, uuid, text, uuid, text)
   TO service_role;
 
 
@@ -252,7 +260,8 @@ AS $$
         'revision_id', coalesce(revision.id, source.source_id),
         'revision_number', source.current_revision_number,
         'source_id', source.source_id,
-        'visibility', source.visibility
+        'visibility', source.visibility,
+        'bundle_hash', revision.bundle_hash
       ),
       'requires', dependencies.requires,
       'type', source.type,
