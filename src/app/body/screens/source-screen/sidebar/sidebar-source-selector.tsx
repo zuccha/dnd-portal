@@ -4,10 +4,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import { type Source, canPublishSource } from "~/models/catalogue/source";
-import {
-  fetchRegistrySources,
-  publishRegistrySourceBundle,
-} from "~/models/registry/registry";
+import { publishSourceBundle } from "~/models/catalogue/source-bundle-sync";
 import {
   type SourceVersion,
   useTranslateSourceVersion,
@@ -51,23 +48,9 @@ export default function SidebarSourceSelector({
   const publishSource = useCallback(async () => {
     if (!selectedSource || !canPublishSource(selectedSource)) return;
 
-    const bundle = catalogue.getSourceBundle(selectedSource.id, {
-      includePrivate: false,
-    });
-    if (!bundle) return;
-
     setPublishing(true);
     try {
-      await publishRegistrySourceBundle(bundle);
-      const publishedSource = (await fetchRegistrySources()).find(
-        ({ id }) => id === selectedSource.id,
-      );
-      if (publishedSource?.registry)
-        await catalogue.updateSourceRegistryMetadata(
-          selectedSource.id,
-          publishedSource.registry,
-        );
-      await catalogue.markSourcePublished(selectedSource.id);
+      await publishSourceBundle(selectedSource.id);
     } catch (error) {
       console.error("Unable to publish source", error);
     } finally {

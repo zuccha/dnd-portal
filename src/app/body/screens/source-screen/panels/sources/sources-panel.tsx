@@ -24,12 +24,12 @@ import {
   deleteSourceBundle,
   saveSourceBundle,
 } from "~/models/catalogue/source-bundle-indexed-db";
+import { publishSourceBundle } from "~/models/catalogue/source-bundle-sync";
 import {
   analyzeRegistrySourceDependencies,
   canRegisterRegistrySource,
   fetchRegistrySourceBundles,
   fetchRegistrySources,
-  publishRegistrySourceBundle,
   registerRegistrySourceBundle,
 } from "~/models/registry/registry";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
@@ -356,25 +356,11 @@ export default function SourcesPanel() {
   //------------------------------------------------------------------------------
 
   const publishSource = async (source: Source) => {
-    const bundle = catalogue.getSourceBundle(source.id, {
-      includePrivate: false,
-    });
-    if (!bundle) return;
-
     setBusySourceId(source.id);
     setError(undefined);
 
     try {
-      await publishRegistrySourceBundle(bundle);
-      const publishedSource = (await fetchRegistrySources()).find(
-        ({ id }) => id === source.id,
-      );
-      if (publishedSource?.registry)
-        await catalogue.updateSource(source.id, (current) => ({
-          ...current,
-          registry: publishedSource.registry,
-        }));
-      await catalogue.markSourcePublished(source.id);
+      const publishedSource = await publishSourceBundle(source.id);
       setRegistrySources((previousSources) =>
         previousSources.map((registrySource) =>
           registrySource.id === publishedSource?.id && publishedSource ?

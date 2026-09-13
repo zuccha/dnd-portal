@@ -1,8 +1,10 @@
 import {
   fetchRegistrySourceBundles,
   fetchRegistrySources,
+  publishRegistrySourceBundle,
 } from "../registry/registry";
 import catalogue from "./catalogue";
+import type { Source } from "./source";
 import type { SourceBundle } from "./source-bundle";
 import {
   type LocalSourceState,
@@ -36,6 +38,32 @@ export async function downloadDefaultSource(
   });
   catalogue.importSourceBundle(savedBundle);
   catalogue.setActiveSourceId(savedBundle.source.id);
+}
+
+//------------------------------------------------------------------------------
+// Publish Source Bundle
+//------------------------------------------------------------------------------
+
+export async function publishSourceBundle(
+  sourceId: string,
+): Promise<Source | undefined> {
+  const bundle = catalogue.getSourceBundle(sourceId, {
+    includePrivate: false,
+  });
+  if (!bundle) return undefined;
+
+  await publishRegistrySourceBundle(bundle);
+  const publishedSource = (await fetchRegistrySources()).find(
+    ({ id }) => id === sourceId,
+  );
+  if (publishedSource?.registry)
+    await catalogue.updateSourceRegistryMetadata(
+      sourceId,
+      publishedSource.registry,
+    );
+  await catalogue.markSourcePublished(sourceId);
+
+  return publishedSource;
 }
 
 //------------------------------------------------------------------------------
