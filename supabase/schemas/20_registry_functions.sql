@@ -74,7 +74,8 @@ GRANT EXECUTE ON FUNCTION public.can_write_registry_source(uuid)
 CREATE OR REPLACE FUNCTION public.publish_registry_source_revision(
   p_source_id uuid,
   p_base_revision_id uuid,
-  p_storage_path text
+  p_storage_path text,
+  p_user_id uuid
 )
 RETURNS TABLE(
   revision_id uuid,
@@ -89,7 +90,21 @@ DECLARE
   v_source public.registry_sources%ROWTYPE;
   v_revision public.registry_revisions%ROWTYPE;
 BEGIN
-  IF NOT public.can_write_registry_source(p_source_id) THEN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM public.registry_sources source
+    WHERE source.source_id = p_source_id
+      AND (
+        source.creator_id = p_user_id
+        OR EXISTS (
+          SELECT 1
+          FROM public.registry_source_access access
+          WHERE access.source_id = source.source_id
+            AND access.user_id = p_user_id
+            AND access.access = 'write'
+        )
+      )
+  ) THEN
     RAISE EXCEPTION 'User cannot publish this registry source'
       USING ERRCODE = '42501';
   END IF;
@@ -104,7 +119,7 @@ BEGIN
   INTO v_source
   FROM public.registry_sources
   WHERE source_id = p_source_id
-  FOR UPDATE;
+  FOR UPDATE NOWAIT;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Registry source not found'
@@ -125,7 +140,7 @@ BEGIN
   VALUES (
     v_source.source_id,
     v_source.current_revision_number + 1,
-    (SELECT auth.uid() AS uid),
+    p_user_id,
     p_storage_path
   )
   RETURNING * INTO v_revision;
@@ -142,10 +157,10 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.publish_registry_source_revision(uuid, uuid, text)
+ALTER FUNCTION public.publish_registry_source_revision(uuid, uuid, text, uuid)
   OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION public.publish_registry_source_revision(uuid, uuid, text)
-  TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.publish_registry_source_revision(uuid, uuid, text, uuid)
+  TO service_role;
 
 
 --------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ import {
   RefreshCwIcon,
   Trash2Icon,
   UnlinkIcon,
+  UploadIcon,
 } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Source } from "~/models/catalogue/source";
@@ -28,6 +29,7 @@ type SourceGroupsProps = {
   onDownload?: (source: Source) => void;
   onExport: (source: Source) => void;
   onMakeLocal?: (source: Source) => void;
+  onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
   translateSourceVersion: (version: Source["version"]) => { label: string };
 };
@@ -43,6 +45,7 @@ export default function SourceGroups({
   onDownload,
   onExport,
   onMakeLocal,
+  onPublish,
   onRemove,
   translateSourceVersion,
 }: SourceGroupsProps) {
@@ -73,6 +76,7 @@ export default function SourceGroups({
                 onDownload={onDownload}
                 onExport={onExport}
                 onMakeLocal={onMakeLocal}
+                onPublish={onPublish}
                 onRemove={onRemove}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -95,6 +99,7 @@ type SourceRowProps = {
   onDownload?: (source: Source) => void;
   onExport: (source: Source) => void;
   onMakeLocal?: (source: Source) => void;
+  onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
   translateSourceVersion: (version: Source["version"]) => { label: string };
 };
@@ -110,6 +115,7 @@ function SourceRow({
   onDownload,
   onExport,
   onMakeLocal,
+  onPublish,
   onRemove,
   translateSourceVersion,
 }: SourceRowProps) {
@@ -208,6 +214,19 @@ function SourceRow({
             />
           </Box>
         )}
+
+        {status === "installed" &&
+          source.registry?.access === "write" &&
+          onPublish && (
+            <IconButton
+              Icon={UploadIcon}
+              label={t("publish")}
+              loading={busy}
+              onClick={() => onPublish(source)}
+              size="xs"
+              variant="ghost"
+            />
+          )}
 
         {(status === "installed" || status === "update") && onMakeLocal && (
           <IconButton

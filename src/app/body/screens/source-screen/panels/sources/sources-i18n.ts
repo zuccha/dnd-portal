@@ -87,6 +87,10 @@ const i18nContext = {
     en: "The source could not be made local.",
     it: "La fonte non può essere resa locale.",
   },
+  "error.publish": {
+    en: "The source could not be published.",
+    it: "La fonte non può essere pubblicata.",
+  },
   "error.remove": {
     en: "The selected source could not be removed.",
     it: "La fonte selezionata non può essere rimossa.",
@@ -130,6 +134,10 @@ const i18nContext = {
   "my_sources": {
     en: "My Sources",
     it: "Le Mie Fonti",
+  },
+  "publish": {
+    en: "Publish",
+    it: "Pubblica",
   },
   "readonly": {
     en: "Read-only",

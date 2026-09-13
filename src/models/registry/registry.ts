@@ -4,6 +4,7 @@ import {
   sourceSchema,
 } from "~/models/catalogue/source";
 import {
+  type SourceBundle,
   type SourceBundleWithoutRegistry,
   sourceBundleWithoutRegistrySchema,
 } from "~/models/catalogue/source-bundle";
@@ -133,4 +134,27 @@ export async function fetchRegistrySourceBundles(
   sourceIds: string[],
 ): Promise<SourceBundleWithoutRegistry[]> {
   return Promise.all(sourceIds.map(fetchRegistrySourceBundle));
+}
+
+//------------------------------------------------------------------------------
+// Publish Registry Source Bundle
+//------------------------------------------------------------------------------
+
+export async function publishRegistrySourceBundle(
+  bundle: SourceBundle,
+): Promise<void> {
+  const registry = bundle.source.registry;
+  if (!registry) throw new Error("Source is not registered");
+
+  const { registry: _registry, ...source } = bundle.source;
+  const { error } = await supabase.functions.invoke("publish-registry-source", {
+    body: {
+      base_revision_id: registry.revision_id,
+      bundle: { ...bundle, source },
+      source_id: bundle.source.id,
+    },
+  });
+
+  if (error)
+    throw new Error(`Registry source publish failed: ${error.message}`);
 }
