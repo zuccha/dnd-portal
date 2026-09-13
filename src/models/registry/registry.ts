@@ -13,6 +13,21 @@ import supabase from "~/supabase";
 const registryBundleBucket = "registry-bundles";
 
 //------------------------------------------------------------------------------
+// Can Register Registry Source
+//------------------------------------------------------------------------------
+
+export async function canRegisterRegistrySource(): Promise<boolean> {
+  const { data, error } = await supabase.rpc("can_register_registry_source");
+
+  if (error)
+    throw new Error(
+      `Registry source registration permission request failed: ${error.message}`,
+    );
+
+  return data;
+}
+
+//------------------------------------------------------------------------------
 // Registry Source Access
 //------------------------------------------------------------------------------
 

@@ -24,6 +24,7 @@ import {
 } from "~/models/catalogue/source-bundle-indexed-db";
 import {
   analyzeRegistrySourceDependencies,
+  canRegisterRegistrySource,
   fetchRegistrySourceBundles,
   fetchRegistrySources,
   publishRegistrySourceBundle,
@@ -76,6 +77,7 @@ export default function SourcesPanel() {
   const sources = catalogue.useSources();
   const translateSourceVersion = useTranslateSourceVersion(lang);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sourcesRef = useRef(sources);
   const [error, setError] = useState<string>();
   const [createOpen, setCreateOpen] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -84,6 +86,7 @@ export default function SourcesPanel() {
   const [registrySources, setRegistrySources] = useState<Source[]>([]);
   const [registryLoading, setRegistryLoading] = useState(true);
   const [registryError, setRegistryError] = useState(false);
+  const [canRegisterSources, setCanRegisterSources] = useState(false);
   const [busySourceId, setBusySourceId] = useState<string>();
   const [dependencyPrompt, setDependencyPrompt] =
     useState<SourceDependencyPrompt>();
@@ -93,14 +96,34 @@ export default function SourcesPanel() {
     [sources],
   );
 
+  //------------------------------------------------------------------------------
+  // Update Sources Reference
+  //------------------------------------------------------------------------------
+
+  useEffect(() => {
+    sourcesRef.current = sources;
+  }, [sources]);
+
   useEffect(() => {
     let active = true;
 
-    fetchRegistrySources()
-      .then((nextSources) => {
+    Promise.all([fetchRegistrySources(), canRegisterRegistrySource()])
+      .then(([nextSources, canRegister]) => {
         if (!active) return;
         setRegistrySources(nextSources);
+        setCanRegisterSources(canRegister);
         setRegistryError(false);
+
+        const registrySourceIds = new Set(
+          nextSources.map((source) => source.id),
+        );
+        void Promise.all(
+          sourcesRef.current
+            .filter(
+              (source) => source.registry && !registrySourceIds.has(source.id),
+            )
+            .map((source) => catalogue.detachSource(source.id)),
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -619,7 +642,7 @@ export default function SourcesPanel() {
                 onExport={openExportDialog}
                 onMakeLocal={makeSourceLocal}
                 onPublish={publishSource}
-                onRegister={registerSource}
+                onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -633,7 +656,7 @@ export default function SourcesPanel() {
                 onDownload={downloadRegistrySource}
                 onExport={openExportDialog}
                 onPublish={publishSource}
-                onRegister={registerSource}
+                onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -648,7 +671,7 @@ export default function SourcesPanel() {
                 onExport={openExportDialog}
                 onMakeLocal={makeSourceLocal}
                 onPublish={publishSource}
-                onRegister={registerSource}
+                onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
                 translateSourceVersion={translateSourceVersion}
               />
