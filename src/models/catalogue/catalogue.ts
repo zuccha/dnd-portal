@@ -46,6 +46,7 @@ import {
   loadSourceState,
   markSourceBundlePublished,
   updateSourceBundle,
+  updateSourceBundleRegistryMetadata,
 } from "./source-bundle-indexed-db";
 
 //------------------------------------------------------------------------------
@@ -413,6 +414,22 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
+  // Update Source Registry Metadata
+  //----------------------------------------------------------------------------
+
+  async function updateSourceRegistryMetadata(
+    sourceId: string,
+    registry: Source["registry"],
+  ): Promise<Source | undefined> {
+    const current = sourceById.get(sourceId);
+    if (!current) return undefined;
+
+    const bundle = await updateSourceBundleRegistryMetadata(sourceId, registry);
+    sourceById.set(bundle.source.id, bundle.source);
+    return bundle.source;
+  }
+
+  //----------------------------------------------------------------------------
   // Detach Source
   //----------------------------------------------------------------------------
 
@@ -678,6 +695,7 @@ export function createCatalogue(id: string) {
     setActiveSourceId,
     setSourceState,
     updateSource,
+    updateSourceRegistryMetadata,
     useActiveSource,
     useActiveSourceId: activeSourceId.useValue,
     useSource,

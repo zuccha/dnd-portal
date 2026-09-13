@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { setAutoUpdateSources, useAutoUpdateSources } from "~/app/app-settings";
+import useAuth from "~/auth/use-auth";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
@@ -75,6 +76,7 @@ type SourceRemovalPrompt = {
 
 export default function SourcesPanel() {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const auth = useAuth();
   const sources = catalogue.useSources();
   const autoUpdateSources = useAutoUpdateSources();
   const translateSourceVersion = useTranslateSourceVersion(lang);
@@ -107,24 +109,36 @@ export default function SourcesPanel() {
   }, [sources]);
 
   useEffect(() => {
+    if (auth.loading) return;
+
     let active = true;
+    setRegistryLoading(true);
 
     Promise.all([fetchRegistrySources(), canRegisterRegistrySource()])
-      .then(([nextSources, canRegister]) => {
+      .then(async ([nextSources, canRegister]) => {
         if (!active) return;
         setRegistrySources(nextSources);
         setCanRegisterSources(canRegister);
         setRegistryError(false);
 
-        const registrySourceIds = new Set(
-          nextSources.map((source) => source.id),
+        const registrySourceById = new Map(
+          nextSources.map((source) => [source.id, source]),
         );
-        void Promise.all(
-          sourcesRef.current
-            .filter(
-              (source) => source.registry && !registrySourceIds.has(source.id),
-            )
-            .map((source) => catalogue.detachSource(source.id)),
+        await Promise.all(
+          sourcesRef.current.map((source) => {
+            const registrySource = registrySourceById.get(source.id);
+            if (source.registry && registrySource?.registry)
+              return catalogue.updateSourceRegistryMetadata(
+                source.id,
+                registrySource.registry,
+              );
+            if (source.registry && !registrySource)
+              return catalogue.updateSourceRegistryMetadata(source.id, {
+                ...source.registry,
+                access: undefined,
+              });
+            return undefined;
+          }),
         );
       })
       .catch((error) => {
@@ -138,7 +152,7 @@ export default function SourcesPanel() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [auth.loading, auth.user?.id]);
 
   const localSourceGroups = groupSourcesByType(
     sources

@@ -1,6 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import { sha256 } from "~/utils/hash";
-import type { Source } from "./source";
+import type { Source, SourceRegistryMetadata } from "./source";
 import {
   type SourceBundle,
   type SourceBundleExportOptions,
@@ -212,6 +212,33 @@ export async function updateSourceBundle(
       return bundle;
     },
   );
+}
+
+//------------------------------------------------------------------------------
+// Update Source Registry Metadata
+//------------------------------------------------------------------------------
+
+export async function updateSourceBundleRegistryMetadata(
+  sourceId: string,
+  registry: SourceRegistryMetadata | undefined,
+): Promise<SourceBundle> {
+  return db.transaction("rw", db.sources, db.source_bundles, async () => {
+    const record = await db.source_bundles.get(sourceId);
+    if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
+
+    const bundle = sourceBundleSchema.parse({
+      ...record.bundle,
+      source: { ...record.bundle.source, registry },
+    });
+
+    await db.sources.put({
+      ...bundle.source,
+      imported_at: new Date().toISOString(),
+    });
+    await db.source_bundles.put({ bundle, source_id: sourceId });
+
+    return bundle;
+  });
 }
 
 //------------------------------------------------------------------------------
