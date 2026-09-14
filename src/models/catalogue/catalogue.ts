@@ -90,16 +90,22 @@ export function createCatalogue(id: string) {
     z.string().parse,
   );
 
+  const useActiveSourceId = activeSourceId.useValue;
+
   // Source By Id
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   const sourceById = createOptionalMemoryStoreSet<string, Source>(`${id}/source-by-id`);
+
+  const useSourceById = sourceById.useValue;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Source Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   const sourceIdList = createMemoryStore<string[]>(`${id}/source-ids`, []);
+
+  const useSourceIdList = sourceIdList.useValue;
 
   //----------------------------------------------------------------------------
   // Source State By Id
@@ -108,6 +114,8 @@ export function createCatalogue(id: string) {
   const sourceStateById = createOptionalMemoryStoreSet<string, LocalSourceState>(
     `${id}/source-state-by-id`,
   );
+
+  const useSourceStateById = sourceStateById.useValue;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Resources By Id
@@ -179,6 +187,8 @@ export function createCatalogue(id: string) {
     `${id}/active-source-resource-ids-by-kind`,
   );
 
+  const useActiveSourceResourceIdsByKind = activeSourceResourceIdsByKind.useValue;
+
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Active Source Reference Resource Ids By Kind
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -186,6 +196,8 @@ export function createCatalogue(id: string) {
   const activeSourceReferenceResourceIdsByKind = createMemoryStoreSet<ResourceKind, string[]>(
     `${id}/active-source-reference-resource-ids-by-kind`,
   );
+
+  const useActiveSourceReferenceResourceIdsByKind = activeSourceReferenceResourceIdsByKind.useValue;
 
   //----------------------------------------------------------------------------
   // Active Source Resource Ids
@@ -284,7 +296,7 @@ export function createCatalogue(id: string) {
   //------------------------------------------------------------------------------
 
   function useSourceHasUnpublishedChanges(sourceId: string): boolean {
-    const state = sourceStateById.useValue(sourceId);
+    const state = useSourceStateById(sourceId);
     return (
       !!state?.published_bundle_hash && state.current_bundle_hash !== state.published_bundle_hash
     );
@@ -304,7 +316,7 @@ export function createCatalogue(id: string) {
   //----------------------------------------------------------------------------
 
   function useSource(sourceId: string | undefined): Source | undefined {
-    return sourceById.useValue(sourceId ?? "");
+    return useSourceById(sourceId ?? "");
   }
 
   //----------------------------------------------------------------------------
@@ -312,7 +324,8 @@ export function createCatalogue(id: string) {
   //----------------------------------------------------------------------------
 
   function useActiveSource(): Source | undefined {
-    return useSource(activeSourceId.useValue());
+    const activeSourceId = useActiveSourceId();
+    return useSource(activeSourceId);
   }
 
   //----------------------------------------------------------------------------
@@ -329,7 +342,7 @@ export function createCatalogue(id: string) {
   //----------------------------------------------------------------------------
 
   function useSources(): Source[] {
-    const ids = sourceIdList.useValue();
+    const ids = useSourceIdList();
     return ids.flatMap((id) => {
       const source = sourceById.get(id);
       return source ? [source] : [];
@@ -433,6 +446,7 @@ export function createCatalogue(id: string) {
 
   function createResourceStore<const K extends ResourceKind>(kind: K) {
     type R = ResourceForKind<K>;
+    const store = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, R>;
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Get Resource
@@ -484,15 +498,6 @@ export function createCatalogue(id: string) {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Use Resource
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    function useResource(resourceId: string): R | undefined {
-      const store = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, R>;
-      return store.useValue(resourceId);
-    }
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Use Resources
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -519,7 +524,7 @@ export function createCatalogue(id: string) {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     function useActiveSourceResourceIds(): string[] {
-      return activeSourceResourceIdsByKind.useValue(kind, emptyIds);
+      return useActiveSourceResourceIdsByKind(kind, emptyIds);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -527,7 +532,7 @@ export function createCatalogue(id: string) {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     function useActiveSourceReferenceResourceIds(): string[] {
-      return activeSourceReferenceResourceIdsByKind.useValue(kind, emptyIds);
+      return useActiveSourceReferenceResourceIdsByKind(kind, emptyIds);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -540,7 +545,7 @@ export function createCatalogue(id: string) {
       upsertResource,
       useActiveSourceReferenceResourceIds,
       useActiveSourceResourceIds,
-      useResource,
+      useResource: store.useValue,
       useResources,
     };
   }
@@ -644,6 +649,7 @@ export function createCatalogue(id: string) {
     setSourceState,
     updateSource,
     updateSourceRegistryMetadata,
+
     useActiveSource,
     useActiveSourceId: activeSourceId.useValue,
     useSource,
@@ -657,6 +663,23 @@ export function createCatalogue(id: string) {
 // Catalogue
 //------------------------------------------------------------------------------
 
-const catalogue = createCatalogue("catalogue");
+const {
+  useActiveSource,
+  useActiveSourceId,
+  useSource,
+  useSourceEditable,
+  useSourceHasUnpublishedChanges,
+  useSources,
+  ...catalogue
+} = createCatalogue("catalogue");
 
 export default catalogue;
+
+export {
+  useActiveSource,
+  useActiveSourceId,
+  useSource,
+  useSourceEditable,
+  useSourceHasUnpublishedChanges,
+  useSources,
+};

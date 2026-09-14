@@ -22,6 +22,8 @@ export type FeatureEntriesEditorProps = StackProps & {
   withinDialog?: boolean;
 };
 
+const useFeatureResourceOptions = featureStore.useResourceOptions;
+
 export default function FeatureEntriesEditor({
   onValueChange,
   sourceId,
@@ -36,7 +38,7 @@ export default function FeatureEntriesEditor({
   const [featureId, setFeatureId] = useState("");
   const [minLevel, setMinLevel] = useState(0);
 
-  const options = featureStore.useResourceOptions(sourceId);
+  const options = useFeatureResourceOptions(sourceId);
   const optionMap = useMemo(
     () => new Map(options.map((option) => [option.value, option])),
     [options],

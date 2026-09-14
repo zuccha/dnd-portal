@@ -1,4 +1,4 @@
-import catalogue from "~/models/catalogue/catalogue";
+import { useActiveSourceId } from "~/models/catalogue/catalogue";
 import { useRoute } from "~/navigation/navigation";
 import Redirect from "~/navigation/redirect";
 import { Route } from "~/navigation/routes";
@@ -37,7 +37,7 @@ import SourcesPanel from "./sources/sources-panel";
 
 export default function Content() {
   const route = useRoute();
-  const selectedSourceId = catalogue.useActiveSourceId();
+  const selectedSourceId = useActiveSourceId();
 
   if (route === Route.Sources) return <SourcesPanel />;
   if (route.startsWith(`${Route.Sources}/`)) {

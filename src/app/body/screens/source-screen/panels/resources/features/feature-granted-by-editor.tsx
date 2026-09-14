@@ -148,21 +148,30 @@ export default function FeatureGrantedByEditor({
 
 type FeatureGrantOption = ResourceOption & { kind: ResourceFeatureKind };
 
+const useCharacterClassResourceOptions = characterClassStore.useResourceOptions;
+const useCharacterSubclassResourceOptions = characterSubclassStore.useResourceOptions;
+const useSpeciesResourceOptions = speciesStore.useResourceOptions;
+const useFeatResourceOptions = featStore.useResourceOptions;
+const useArmorResourceOptions = armorStore.useResourceOptions;
+const useItemResourceOptions = itemStore.useResourceOptions;
+const useToolResourceOptions = toolStore.useResourceOptions;
+const useWeaponResourceOptions = weaponStore.useResourceOptions;
+
 function useFeatureGrantOptions(sourceId: string): FeatureGrantOption[] {
-  const classOptions = characterClassStore.useResourceOptions(sourceId);
-  const subclassOptions = characterSubclassStore.useResourceOptions(sourceId);
-  const speciesOptions = speciesStore.useResourceOptions(sourceId);
-  const featOptions = featStore.useResourceOptions(sourceId);
-  const armorOptions = armorStore.useResourceOptions(sourceId);
-  const itemOptions = itemStore.useResourceOptions(sourceId);
-  const toolOptions = toolStore.useResourceOptions(sourceId);
-  const weaponOptions = weaponStore.useResourceOptions(sourceId);
+  const characterClassOptions = useCharacterClassResourceOptions(sourceId);
+  const characterSubclassOptions = useCharacterSubclassResourceOptions(sourceId);
+  const speciesOptions = useSpeciesResourceOptions(sourceId);
+  const featOptions = useFeatResourceOptions(sourceId);
+  const armorOptions = useArmorResourceOptions(sourceId);
+  const itemOptions = useItemResourceOptions(sourceId);
+  const toolOptions = useToolResourceOptions(sourceId);
+  const weaponOptions = useWeaponResourceOptions(sourceId);
 
   return useMemo(
     () =>
       [
-        ...withKind(classOptions, "character_class"),
-        ...withKind(subclassOptions, "character_subclass"),
+        ...withKind(characterClassOptions, "character_class"),
+        ...withKind(characterSubclassOptions, "character_subclass"),
         ...withKind(speciesOptions, "species"),
         ...withKind(featOptions, "feat"),
         ...withKind(armorOptions, "armor"),
@@ -172,11 +181,11 @@ function useFeatureGrantOptions(sourceId: string): FeatureGrantOption[] {
       ].sort(compareObjects("label")),
     [
       armorOptions,
-      classOptions,
+      characterClassOptions,
       featOptions,
       itemOptions,
       speciesOptions,
-      subclassOptions,
+      characterSubclassOptions,
       toolOptions,
       weaponOptions,
     ],

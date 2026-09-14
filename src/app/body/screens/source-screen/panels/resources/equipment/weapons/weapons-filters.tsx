@@ -15,9 +15,11 @@ import EquipmentFilters from "../equipment-filters";
 // Weapons Filters
 //------------------------------------------------------------------------------
 
+const useWeaponFilters = weaponStore.useFilters;
+
 export default function WeaponsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = weaponStore.useFilters();
+  const [filters, setFilters] = useWeaponFilters();
 
   const typeOptions = useWeaponTypeOptions();
   const propertyOptions = useWeaponPropertyOptions();

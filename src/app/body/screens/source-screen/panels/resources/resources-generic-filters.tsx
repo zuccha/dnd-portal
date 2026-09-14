@@ -3,7 +3,7 @@ import z from "zod";
 import useDebouncedCallback from "~/hooks/use-debounced-callback";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import catalogue from "~/models/catalogue/catalogue";
+import { useSource } from "~/models/catalogue/catalogue";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -29,7 +29,6 @@ export function createResourcesGenericFilters<
   F extends ResourceFilters,
 >(store: ResourceStore<R, L, F>, _context: ResourcesContext<R>) {
   const { useFilters } = store;
-  const { useSource } = catalogue;
 
   return function ResourcesGenericFilters({ sourceId }: ResourcesGenericFiltersProps) {
     const { lang, t } = useI18nLangContext(i18nContext);

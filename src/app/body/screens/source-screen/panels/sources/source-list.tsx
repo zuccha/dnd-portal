@@ -10,7 +10,7 @@ import {
   UploadIcon,
 } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import catalogue from "~/models/catalogue/catalogue";
+import { useSourceHasUnpublishedChanges } from "~/models/catalogue/catalogue";
 import type { Source } from "~/models/catalogue/source";
 import IconButton from "~/ui/icon-button";
 import { type SourceGroup, type SourceListEntry, colorBySourceStatus } from "./source-list-utils";
@@ -129,7 +129,7 @@ function SourceRow({
 }: SourceRowProps) {
   const { t } = useI18nLangContext(i18nContext);
   const { source, status } = entry;
-  const hasUnpublishedChanges = catalogue.useSourceHasUnpublishedChanges(source.id);
+  const hasUnpublishedChanges = useSourceHasUnpublishedChanges(source.id);
   const name = source.name[lang] || source.code;
 
   return (

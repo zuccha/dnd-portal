@@ -101,6 +101,11 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 // Use Localize Creature
 //------------------------------------------------------------------------------
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+const useLocalizeLanguageName = languageStore.useLocalizeResourceName;
+const useLocalizePlaneName = planeStore.useLocalizeResourceName;
+const useLocalizeCreatureTagName = creatureTagStore.useLocalizeResourceName;
+
 export function useLocalizeCreature(sourceId: string): (creature: Creature) => LocalizedCreature {
   const localizeResource = useLocalizeResource<Creature>();
   const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
@@ -114,10 +119,10 @@ export function useLocalizeCreature(sourceId: string): (creature: Creature) => L
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateCreatureCondition = useTranslateCreatureCondition(lang);
   const translateDamageType = useTranslateDamageType(lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
-  const localizeLanguageName = languageStore.useLocalizeResourceName(sourceId, lang);
-  const localizePlaneName = planeStore.useLocalizeResourceName(sourceId, lang);
-  const localizeTagName = creatureTagStore.useLocalizeResourceName(sourceId, lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(sourceId, lang);
+  const localizeLanguageName = useLocalizeLanguageName(sourceId, lang);
+  const localizePlaneName = useLocalizePlaneName(sourceId, lang);
+  const localizeTagName = useLocalizeCreatureTagName(sourceId, lang);
   const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 

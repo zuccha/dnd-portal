@@ -45,10 +45,9 @@ function PrintDeckEditorDialogLoaded({
   if (!registryEntry) throw new Error("Missing print deck editor registry entry");
 
   const { t, ti } = useI18nLangContext(i18nContext);
-  const localizeResource = registryEntry.useLocalizeResource(
-    entry.localized_resource._raw.source_id,
-  );
-  const { Editor, form, parseFormData } = registryEntry;
+  const { Editor, form, parseFormData, translationFields, useLocalizeResource } = registryEntry;
+  const { useSubmit, useSubmitError, useValid } = form;
+  const localizeResource = useLocalizeResource(entry.localized_resource._raw.source_id);
 
   useEffect(() => {
     form.reset();
@@ -63,7 +62,7 @@ function PrintDeckEditorDialogLoaded({
         applyResourceEditorPreviewPatch(
           entry.localized_resource._raw,
           errorOrPatch,
-          registryEntry.translationFields,
+          translationFields,
         ),
       );
       const nextLocalizedResource = localizeResource(nextRawResource);
@@ -75,10 +74,10 @@ function PrintDeckEditorDialogLoaded({
 
       return undefined;
     },
-    [entry, localizeResource, parseFormData, registryEntry.translationFields],
+    [entry, localizeResource, parseFormData, translationFields],
   );
 
-  const [submit, saving] = form.useSubmit(updateEntry);
+  const [submit, saving] = useSubmit(updateEntry);
 
   const save = useCallback(async () => {
     await submit();
@@ -88,8 +87,8 @@ function PrintDeckEditorDialogLoaded({
     if (!(await submit())) onClose();
   }, [onClose, submit]);
 
-  const valid = form.useValid();
-  const error = form.useSubmitError();
+  const valid = useValid();
+  const error = useSubmitError();
 
   return (
     <ResourceDialog
@@ -123,12 +122,11 @@ function PrintDeckEditorDialogPreview({ entry }: { entry: PrintDeckEntry }) {
   const registryEntry = getPrintDeckEditorRegistryEntry(entry.localized_resource.kind);
   if (!registryEntry) throw new Error("Missing print deck editor registry entry");
 
-  const localizeResource = registryEntry.useLocalizeResource(
-    entry.localized_resource._raw.source_id,
-  );
+  const { form, parseFormData, translationFields, useLocalizeResource } = registryEntry;
+  const { useData } = form;
+  const localizeResource = useLocalizeResource(entry.localized_resource._raw.source_id);
   const { Card } = getPrintDeckRegistryEntry(entry.localized_resource.kind);
-  const { form, parseFormData } = registryEntry;
-  const formData = form.useData();
+  const formData = useData();
 
   const previewLocalizedResource = useMemo(() => {
     const errorOrPatch = parseFormData(formData, entry.lang);
@@ -138,11 +136,11 @@ function PrintDeckEditorDialogPreview({ entry }: { entry: PrintDeckEntry }) {
       applyResourceEditorPreviewPatch(
         entry.localized_resource._raw,
         errorOrPatch,
-        registryEntry.translationFields,
+        translationFields,
       ),
     );
     return localizeResource(nextRawResource);
-  }, [entry, formData, localizeResource, parseFormData, registryEntry.translationFields]);
+  }, [entry, formData, localizeResource, parseFormData, translationFields]);
 
   return (
     <ResourceCardPreview

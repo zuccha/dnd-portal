@@ -8,6 +8,8 @@ import { type Theme, themeSchema } from "./theme";
 
 const themeStore = createLocalStore("theme", "light", themeSchema.parse);
 
+const useThemeStore = themeStore.use;
+
 //------------------------------------------------------------------------------
 // Use Theme
 //------------------------------------------------------------------------------
@@ -17,7 +19,7 @@ export default function useTheme(): [
   React.Dispatch<React.SetStateAction<Theme>>,
   () => void,
 ] {
-  const [theme, setTheme] = themeStore.use();
+  const [theme, setTheme] = useThemeStore();
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));

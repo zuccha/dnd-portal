@@ -2,7 +2,7 @@ import { Box, HStack, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react
 import { XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import catalogue from "~/models/catalogue/catalogue";
+import catalogue, { useSource, useSourceEditable, useSources } from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
 import { updateRegistrySourceVisibility } from "~/models/registry/registry";
 import {
@@ -38,8 +38,8 @@ export type SourceSettingsPanelProps = {
 
 export default function SourceSettingsPanel({ sourceId }: SourceSettingsPanelProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
-  const source = catalogue.useSource(sourceId);
-  const sources = catalogue.useSources();
+  const source = useSource(sourceId);
+  const sources = useSources();
 
   if (!source)
     return (
@@ -86,7 +86,7 @@ type SourceSettingsFormProps = {
 
 function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFormProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
-  const sourceEditable = catalogue.useSourceEditable(source.id);
+  const sourceEditable = useSourceEditable(source.id);
   const sourceTypeOptions = useSourceTypeOptions();
   const sourceVersionOptions = useSourceVersionTranslations();
   const [draft, setDraft] = useState<SourceSettingsDraft>(sourceToSettingsDraft(initialSource));

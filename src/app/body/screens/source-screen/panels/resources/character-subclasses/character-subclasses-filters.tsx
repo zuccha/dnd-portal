@@ -13,15 +13,18 @@ export type CharacterSubclassesFiltersProps = StackProps & {
   sourceId: string;
 };
 
+const useCharacterClassResourceOptions = characterClassStore.useResourceOptions;
+const useCharacterSubclassFilters = characterSubclassStore.useFilters;
+
 export default function CharacterSubclassesFilters({
   sourceId,
   ...rest
 }: CharacterSubclassesFiltersProps) {
   const { t } = useI18nLangContext(i18nContext);
 
-  const characterClassOptions = characterClassStore.useResourceOptions(sourceId);
+  const characterClassOptions = useCharacterClassResourceOptions(sourceId);
 
-  const [filters, setFilters] = characterSubclassStore.useFilters();
+  const [filters, setFilters] = useCharacterSubclassFilters();
 
   return (
     <VStack {...rest}>

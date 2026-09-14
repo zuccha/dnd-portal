@@ -44,6 +44,8 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 // Use Localized Weapon
 //------------------------------------------------------------------------------
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+
 export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => LocalizedWeapon {
   const localizeEquipment = useLocalizeEquipment<Weapon>(sourceId);
   const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
@@ -54,7 +56,7 @@ export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => Localiz
   const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(lang);
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(sourceId, lang);
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {

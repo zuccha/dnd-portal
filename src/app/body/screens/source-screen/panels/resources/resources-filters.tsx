@@ -43,7 +43,7 @@ export function createResourcesFilters<
   const ResourcesCounter = createResourcesCounter(store, context);
   const ResourcesGenericFilters = createResourcesGenericFilters(store, context);
 
-  const { useApplyFilters, useHasFilterChanges, useHasFilters } = store;
+  const { useApplyFilters, useHasFilterChanges, useHasFilters, useResetFilters } = store;
 
   return function ResourcesFilters({ sourceId }: ResourcesFiltersProps) {
     const { t } = useI18nLangContext(i18nContext);
@@ -57,7 +57,7 @@ export function createResourcesFilters<
     const applyFilters = useApplyFilters();
     const applySourcesFilter = useApplyResourcesSourcesFilter(sourceId);
 
-    const resetFilters = store.useResetFilters();
+    const resetFilters = useResetFilters();
     const resetSourcesFilter = useResetDraftResourcesSourcesFilter(sourceId);
 
     const applyAllFilters = useCallback(() => {

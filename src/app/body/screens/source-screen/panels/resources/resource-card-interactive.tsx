@@ -6,7 +6,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import SquareCheckIcon from "~/icons/square-check-icon";
 import SquareIcon from "~/icons/square-icon";
-import catalogue from "~/models/catalogue/catalogue";
+import { useSourceEditable } from "~/models/catalogue/catalogue";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
@@ -80,7 +80,7 @@ export function createResourceCardInteractive<
   }: ResourceCardInteractiveProps<R, L>) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const [resource] = useResource(resourceId);
-    const sourceEditable = catalogue.useSourceEditable(resource.source_id);
+    const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
     const localizedResource = useMemo(
       () => localizeResource(resource),

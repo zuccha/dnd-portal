@@ -86,6 +86,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   );
 
   const useSubmitError = submitErrorStore.useValue;
+  const useSetSubmitError = submitErrorStore.useSetValue;
 
   //----------------------------------------------------------------------------
   // Submitting Store
@@ -226,7 +227,7 @@ export function createForm<Fields extends Record<string, unknown>>(
     onSubmit: (data: Partial<Fields>) => Promise<string | undefined>,
   ): [() => Promise<string | undefined>, boolean] {
     const [submitting, setSubmitting] = useSubmitting();
-    const setSubmitError = submitErrorStore.useSetValue();
+    const setSubmitError = useSetSubmitError();
 
     const submit = useCallback(async () => {
       if (!isValid()) return;
@@ -291,6 +292,7 @@ export function createForm<Fields extends Record<string, unknown>>(
 
 function createStoreSetRegister<K extends PropertyKey, T>(store: StoreSet<K, T>) {
   const keys = new Map<K, number>();
+  const { use: useStore } = store;
 
   function useAndRegister(...args: Parameters<typeof store.useValue>) {
     const key = args[0];
@@ -314,7 +316,7 @@ function createStoreSetRegister<K extends PropertyKey, T>(store: StoreSet<K, T>)
       };
     }, [defaultValue, key]);
 
-    return store.use(...args);
+    return useStore(...args);
   }
 
   return { keys, useAndRegister };

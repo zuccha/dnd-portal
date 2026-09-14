@@ -23,12 +23,14 @@ export type LocalizedCharacterSubclass = z.infer<typeof localizedCharacterSubcla
 // Use Localized Character Subclass
 //------------------------------------------------------------------------------
 
+const useLocalizeCharacterClassName = characterClassStore.useLocalizeResourceName;
+
 export function useLocalizeCharacterSubclass(
   sourceId: string,
 ): (characterSubclass: CharacterSubclass) => LocalizedCharacterSubclass {
   const { lang, ti } = useI18nLangContext(i18nContext);
   const localizeResource = useLocalizeResource<CharacterSubclass>();
-  const localizeCharacterClass = characterClassStore.useLocalizeResourceName(sourceId, lang);
+  const localizeCharacterClass = useLocalizeCharacterClassName(sourceId, lang);
   const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
 
   return useCallback(

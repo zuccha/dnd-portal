@@ -14,9 +14,11 @@ import EquipmentFilters from "../equipment-filters";
 // Items Filters
 //------------------------------------------------------------------------------
 
+const useItemFilters = itemStore.useFilters;
+
 export default function ItemsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = itemStore.useFilters();
+  const [filters, setFilters] = useItemFilters();
 
   const typeOptions = useItemTypeOptions();
 

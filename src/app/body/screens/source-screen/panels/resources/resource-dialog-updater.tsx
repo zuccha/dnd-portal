@@ -58,6 +58,10 @@ export function createResourceDialogUpdater<
     return store.updateResource(id, errorOrData);
   }
 
+  const { useData, useSubmit, useSubmitError, useValid } = form;
+  const { useLocalizeResource } = store;
+  const { useEditedResource, usePaletteName, useShowImage } = context;
+
   //----------------------------------------------------------------------------
   // Preview
   //----------------------------------------------------------------------------
@@ -75,8 +79,8 @@ export function createResourceDialogUpdater<
     showImage: boolean;
     sourceId: string;
   }) {
-    const localizeResource = store.useLocalizeResource(sourceId);
-    const formData = form.useData();
+    const localizeResource = useLocalizeResource(sourceId);
+    const formData = useData();
 
     const previewResource = useMemo(() => {
       const errorOrData = parseFormData(formData, lang);
@@ -105,13 +109,13 @@ export function createResourceDialogUpdater<
   return function ResourcesUpdater({ sourceId }: ResourceDialogUpdaterProps) {
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
-    const editedResource = context.useEditedResource();
+    const editedResource = useEditedResource();
     const editedResourceId = editedResource?.id ?? "";
     const resource = editedResource ?? store.defaultResource;
-    const paletteName = context.usePaletteName();
-    const showImage = context.useShowImage();
+    const paletteName = usePaletteName();
+    const showImage = useShowImage();
 
-    const [submit, saving] = form.useSubmit(
+    const [submit, saving] = useSubmit(
       useCallback(
         (data) => submitForm(data, { id: editedResourceId, lang }),
         [editedResourceId, lang],
@@ -130,8 +134,8 @@ export function createResourceDialogUpdater<
       if (!(await submit())) unsetEditedResource();
     }, [submit, unsetEditedResource]);
 
-    const valid = form.useValid();
-    const error = form.useSubmitError();
+    const valid = useValid();
+    const error = useSubmitError();
 
     const name = editedResource?.name[lang] ?? "";
 

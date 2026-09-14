@@ -32,11 +32,16 @@ function getEquipment(resourceId: string): Equipment | undefined {
 // Use Equipment Reference Ids
 //------------------------------------------------------------------------------
 
+const useActiveSourceReferenceArmorIds = armorResources.useActiveSourceReferenceResourceIds;
+const useActiveSourceReferenceItemIds = itemResources.useActiveSourceReferenceResourceIds;
+const useActiveSourceReferenceToolIds = toolResources.useActiveSourceReferenceResourceIds;
+const useActiveSourceReferenceWeaponIds = weaponResources.useActiveSourceReferenceResourceIds;
+
 function useEquipmentReferenceIds(): string[] {
-  const armorIds = armorResources.useActiveSourceReferenceResourceIds();
-  const itemIds = itemResources.useActiveSourceReferenceResourceIds();
-  const toolIds = toolResources.useActiveSourceReferenceResourceIds();
-  const weaponIds = weaponResources.useActiveSourceReferenceResourceIds();
+  const armorIds = useActiveSourceReferenceArmorIds();
+  const itemIds = useActiveSourceReferenceItemIds();
+  const toolIds = useActiveSourceReferenceToolIds();
+  const weaponIds = useActiveSourceReferenceWeaponIds();
 
   return useMemo(
     () => [...armorIds, ...itemIds, ...toolIds, ...weaponIds],

@@ -60,6 +60,10 @@ export function createResourceDialogCreator<
     return error;
   }
 
+  const { useData, useSubmit, useSubmitError, useValid } = form;
+  const { useLocalizeResource } = store;
+  const { useCreatedResource, usePaletteName, useShowImage } = context;
+
   //----------------------------------------------------------------------------
   // Preview
   //----------------------------------------------------------------------------
@@ -77,8 +81,8 @@ export function createResourceDialogCreator<
     showImage: boolean;
     sourceId: string;
   }) {
-    const localizeResource = store.useLocalizeResource(sourceId);
-    const formData = form.useData();
+    const localizeResource = useLocalizeResource(sourceId);
+    const formData = useData();
 
     const previewResource = useMemo(() => {
       const errorOrData = parseFormData(formData, lang);
@@ -107,12 +111,12 @@ export function createResourceDialogCreator<
   return function ResourcesCreator({ sourceId }: ResourceDialogCreatorProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
 
-    const createdResource = context.useCreatedResource();
+    const createdResource = useCreatedResource();
     const resource = createdResource ?? store.defaultResource;
-    const paletteName = context.usePaletteName();
-    const showImage = context.useShowImage();
+    const paletteName = usePaletteName();
+    const showImage = useShowImage();
 
-    const [submit, saving] = form.useSubmit(
+    const [submit, saving] = useSubmit(
       useCallback((data) => submitForm(sourceId, data, { lang }), [sourceId, lang]),
     );
 
@@ -130,8 +134,8 @@ export function createResourceDialogCreator<
       if (!error) unsetCreatedResource();
     }, [submit, unsetCreatedResource]);
 
-    const valid = form.useValid();
-    const error = form.useSubmitError();
+    const valid = useValid();
+    const error = useSubmitError();
 
     return (
       <ResourceDialog

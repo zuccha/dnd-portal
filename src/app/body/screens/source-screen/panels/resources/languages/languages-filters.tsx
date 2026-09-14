@@ -9,9 +9,11 @@ import InclusionSelect from "~/ui/inclusion-select";
 // Languages Filters
 //------------------------------------------------------------------------------
 
+const useLanguageFilters = languageStore.useFilters;
+
 export default function LanguagesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = languageStore.useFilters();
+  const [filters, setFilters] = useLanguageFilters();
 
   const rarityOptions = useLanguageRarityOptions();
 

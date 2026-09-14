@@ -14,9 +14,11 @@ import NumberInput from "~/ui/number-input";
 // Creatures Filters
 //------------------------------------------------------------------------------
 
+const useCreatureFilters = creatureStore.useFilters;
+
 export default function CreaturesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = creatureStore.useFilters();
+  const [filters, setFilters] = useCreatureFilters();
 
   const typeOptions = useCreatureTypeOptions();
   const habitatOptions = useCreatureHabitatOptions();

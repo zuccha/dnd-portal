@@ -10,9 +10,11 @@ import EquipmentFilters from "../equipment-filters";
 // Armors Filters
 //------------------------------------------------------------------------------
 
+const useArmorFilters = armorStore.useFilters;
+
 export default function ArmorsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = armorStore.useFilters();
+  const [filters, setFilters] = useArmorFilters();
 
   const typeOptions = useArmorTypeOptions();
 

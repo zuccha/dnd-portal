@@ -32,18 +32,22 @@ const draftResourcesSourcesFilterStore = createMemoryStoreSet<string, ResourcesS
 // Use Resources Sources Filter
 //------------------------------------------------------------------------------
 
+const useResourcesSourcesFilterStore = resourcesSourcesFilterStore.use;
+
 export function useResourcesSourcesFilter(sourceId: string) {
-  return resourcesSourcesFilterStore.use(sourceId, defaultResourcesSourcesFilter);
+  return useResourcesSourcesFilterStore(sourceId, defaultResourcesSourcesFilter);
 }
 
 //------------------------------------------------------------------------------
 // Use Draft Resources Sources Filter
 //------------------------------------------------------------------------------
 
+const useDraftResourcesSourcesFilterStore = draftResourcesSourcesFilterStore.use;
+
 export function useDraftResourcesSourcesFilter(sourceId: string) {
   const defaultValue = resourcesSourcesFilterStore.get(sourceId, defaultResourcesSourcesFilter);
 
-  return draftResourcesSourcesFilterStore.use(sourceId, defaultValue);
+  return useDraftResourcesSourcesFilterStore(sourceId, defaultValue);
 }
 
 //------------------------------------------------------------------------------

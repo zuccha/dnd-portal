@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import YAML from "yaml";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import catalogue from "~/models/catalogue/catalogue";
+import { useSourceEditable } from "~/models/catalogue/catalogue";
 import { type PrintDeckEntryInput, printDeck } from "~/models/print-deck/print-deck-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
@@ -45,7 +45,7 @@ export function createResourcesActions<
     const selectedFilteredResourceIds = useSelectedFilteredResourceIds(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
-    const sourceEditable = catalogue.useSourceEditable(sourceId);
+    const sourceEditable = useSourceEditable(sourceId);
 
     const { deselectAllResources, selectAllResources } = useResourcesSelectionMethods(sourceId);
 

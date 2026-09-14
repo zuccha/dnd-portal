@@ -52,8 +52,10 @@ export function createResourcesPanel<
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
 
+  const { useView } = context;
+
   return function ResourcesPanel({ sourceId }: { sourceId: string }) {
-    const view = context.useView();
+    const view = useView();
 
     return (
       <HStack flex={1} gap={0} h="full" overflow="auto" position="relative" w="full">

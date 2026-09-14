@@ -47,6 +47,9 @@ export type LocalizedCharacterClass = z.infer<typeof localizedCharacterClassSche
 // Use Localized Character Class
 //------------------------------------------------------------------------------
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+const useLocalizeToolName = toolStore.useLocalizeResourceName;
+
 export function useLocalizeCharacterClass(
   sourceId: string,
 ): (characterClass: CharacterClass) => LocalizedCharacterClass {
@@ -57,8 +60,8 @@ export function useLocalizeCharacterClass(
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateDieType = useTranslateDieType(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeToolName = toolStore.useLocalizeResourceName(sourceId, lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
+  const localizeToolName = useLocalizeToolName(sourceId, lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(sourceId, lang);
   const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
   const formatCp = useFormatCp();
 

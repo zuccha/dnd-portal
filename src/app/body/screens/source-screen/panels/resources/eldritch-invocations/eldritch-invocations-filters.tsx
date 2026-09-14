@@ -8,9 +8,11 @@ import NumberInput from "~/ui/number-input";
 // EldritchInvocations Filters
 //------------------------------------------------------------------------------
 
+const useEldritchInvocationFilters = eldritchInvocationStore.useFilters;
+
 export default function EldritchInvocationsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = eldritchInvocationStore.useFilters();
+  const [filters, setFilters] = useEldritchInvocationFilters();
 
   return (
     <VStack {...props}>

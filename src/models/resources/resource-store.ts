@@ -75,6 +75,13 @@ export function createResourceStore<
   const storeId = `resources[${kind}]`;
   const catalogueResourceStore = catalogue.createResourceStore(kind);
 
+  const {
+    useResource: useCatalogueResource,
+    useResources: useCatalogueResources,
+    useActiveSourceReferenceResourceIds: useCatalogueActiveSourceReferenceResourceIds,
+    useActiveSourceResourceIds: useCatalogueActiveSourceResourceIds,
+  } = catalogueResourceStore;
+
   //----------------------------------------------------------------------------
   // Filters
   //----------------------------------------------------------------------------
@@ -85,15 +92,25 @@ export function createResourceStore<
     filtersSchema.parse,
   );
 
-  const filtersStore = createMemoryStore<F>(`${storeId}.filters.draft`, appliedFiltersStore.get());
+  const useAppliedFilters = appliedFiltersStore.useValue;
+  const useSetAppliedFilters = appliedFiltersStore.useSetValue;
+
+  const draftFiltersStore = createMemoryStore<F>(
+    `${storeId}.filters.draft`,
+    appliedFiltersStore.get(),
+  );
+
+  const useDraftFilters = draftFiltersStore.useValue;
+  const useSetDraftFilters = draftFiltersStore.useSetValue;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Filters
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useFilters(): [F, (partial: Partial<F>) => void] {
-    const [filters, setFilters] = filtersStore.use();
-    const setAppliedFilters = appliedFiltersStore.useSetValue();
+    const filters = useDraftFilters();
+    const setFilters = useSetDraftFilters();
+    const setAppliedFilters = useSetAppliedFilters();
 
     const setPartialFilters = useCallback(
       (partial: Partial<F>) => {
@@ -110,34 +127,34 @@ export function createResourceStore<
   }
 
   function useEffectiveFilters(): F {
-    const { name } = filtersStore.useValue();
-    const appliedFilters = appliedFiltersStore.useValue();
+    const { name } = useDraftFilters();
+    const appliedFilters = useAppliedFilters();
 
     return useMemo(() => ({ ...appliedFilters, name }), [appliedFilters, name]);
   }
 
   function useApplyFilters(): () => void {
-    const filters = filtersStore.useValue();
-    const setAppliedFilters = appliedFiltersStore.useSetValue();
+    const filters = useDraftFilters();
+    const setAppliedFilters = useSetAppliedFilters();
 
     return useCallback(() => setAppliedFilters(filters), [filters, setAppliedFilters]);
   }
 
   function useResetFilters(): () => void {
-    const setFilters = filtersStore.useSetValue();
+    const setFilters = useSetDraftFilters();
 
     return useCallback(() => setFilters(defaultFilters), [setFilters]);
   }
 
   function useHasFilters(): boolean {
-    const filters = filtersStore.useValue();
+    const filters = useDraftFilters();
 
     return hash(filters) !== hash(defaultFilters);
   }
 
   function useHasFilterChanges(): boolean {
-    const filters = filtersStore.useValue();
-    const appliedFilters = appliedFiltersStore.useValue();
+    const filters = useDraftFilters();
+    const appliedFilters = useAppliedFilters();
     const { name: _name, ...deferredFilters } = filters;
     const { name: _appliedName, ...appliedDeferredFilters } = appliedFilters;
 
@@ -317,7 +334,7 @@ export function createResourceStore<
 
   function useResource(resourceId: string): [R, string] {
     const key = hash([resourceId]);
-    const resource = catalogueResourceStore.useResource(resourceId);
+    const resource = useCatalogueResource(resourceId);
     const result = [(resource ?? defaultResource) as R, key] as [R, string];
     return result;
   }
@@ -327,7 +344,7 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResources(resourceIds: string[]): R[] {
-    const resources = catalogueResourceStore.useResources(resourceIds);
+    const resources = useCatalogueResources(resourceIds);
     const resourcesById = useMemo(
       () => new Map(resources.map((resource) => [resource.id, resource])),
       [resources],
@@ -344,7 +361,7 @@ export function createResourceStore<
     sourceId: string,
     sources: Record<string, boolean | undefined>,
   ): [string[], string] {
-    const resourceIds = catalogueResourceStore.useActiveSourceResourceIds();
+    const resourceIds = useCatalogueActiveSourceResourceIds();
     const sourceFilteredResourceIds = useMemo(
       () =>
         resourceIds.filter((resourceId) => {
@@ -423,6 +440,7 @@ export function createResourceStore<
 
   // resource id -> boolean
   const resourceSelectionCache = createCache<string, boolean>(`${storeId}.resource_selection`);
+  const useResourceSelectionCache = resourceSelectionCache.useValue;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Subscribe Resource Selection
@@ -438,7 +456,7 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourceSelection(resourceId: string): boolean {
-    return resourceSelectionCache.useValue(resourceId) ?? false;
+    return useResourceSelectionCache(resourceId) ?? false;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -550,7 +568,7 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const resourceIds = catalogueResourceStore.useActiveSourceReferenceResourceIds();
+    const resourceIds = useCatalogueActiveSourceReferenceResourceIds();
     const resourcesById = useMemo(
       () => new Map(resourceIds.map((id) => [id, getResource(id) ?? defaultResource])),
       [resourceIds],
@@ -573,7 +591,7 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const resourceIds = catalogueResourceStore.useActiveSourceReferenceResourceIds();
+    const resourceIds = useCatalogueActiveSourceReferenceResourceIds();
     const resourcesById = useMemo(
       () => new Map(resourceIds.map((id) => [id, getResource(id) ?? defaultResource])),
       [resourceIds],
@@ -606,7 +624,7 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourceOptionsByLang(_sourceId: string, lang: string): [ResourceOption[], string] {
-    const resourceIds = catalogueResourceStore.useActiveSourceReferenceResourceIds();
+    const resourceIds = useCatalogueActiveSourceReferenceResourceIds();
     const key = hash([resourceIds, lang]);
 
     return [

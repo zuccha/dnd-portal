@@ -11,9 +11,11 @@ import EquipmentFilters from "../equipment-filters";
 // Tools Filters
 //------------------------------------------------------------------------------
 
+const useToolFilters = toolStore.useFilters;
+
 export default function ToolsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = toolStore.useFilters();
+  const [filters, setFilters] = useToolFilters();
 
   const abilityOptions = useCreatureAbilityOptions();
   const typeOptions = useToolTypeOptions();

@@ -2,7 +2,12 @@ import { HStack, VStack } from "@chakra-ui/react";
 import { FolderIcon, UploadIcon } from "lucide-react";
 import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import catalogue from "~/models/catalogue/catalogue";
+import catalogue, {
+  useActiveSourceId,
+  useSource,
+  useSourceHasUnpublishedChanges,
+  useSources,
+} from "~/models/catalogue/catalogue";
 import { type Source, canPublishSource } from "~/models/catalogue/source";
 import { publishSourceBundle } from "~/models/catalogue/source-bundle-sync";
 import { type SourceVersion, useTranslateSourceVersion } from "~/models/types/source-version";
@@ -23,17 +28,17 @@ export type SidebarSourceSelectorProps = {
 };
 
 export default function SidebarSourceSelector({ versions }: SidebarSourceSelectorProps) {
-  const selectedSourceId = catalogue.useActiveSourceId();
-  const selectedSource = catalogue.useSource(selectedSourceId);
+  const selectedSourceId = useActiveSourceId();
+  const selectedSource = useSource(selectedSourceId);
   const selectedSourceReadonly = selectedSource?.registry?.access === "read";
-  const hasUnpublishedChanges = catalogue.useSourceHasUnpublishedChanges(selectedSourceId ?? "");
+  const hasUnpublishedChanges = useSourceHasUnpublishedChanges(selectedSourceId ?? "");
   const [publishing, setPublishing] = useState(false);
 
   const setSourceId = useCallback((sourceId: string | undefined) => {
     catalogue.setActiveSourceId(sourceId);
   }, []);
 
-  const sources = catalogue.useSources();
+  const sources = useSources();
 
   const { lang, t } = useI18nLangContext(i18nContext);
   const translateSourceVersion = useTranslateSourceVersion(lang);

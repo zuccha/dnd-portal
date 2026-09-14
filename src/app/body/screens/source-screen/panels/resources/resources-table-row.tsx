@@ -14,7 +14,7 @@ import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
-import catalogue from "~/models/catalogue/catalogue";
+import { useActiveSourceId, useSourceEditable } from "~/models/catalogue/catalogue";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
@@ -81,9 +81,9 @@ export function createResourcesTableRow<
     const [system] = useI18nSystem();
 
     const [resource] = useResource(resourceId);
-    const activeSourceId = catalogue.useActiveSourceId();
-    const activeSourceEditable = catalogue.useSourceEditable(activeSourceId);
-    const sourceEditable = catalogue.useSourceEditable(resource.source_id);
+    const activeSourceId = useActiveSourceId();
+    const activeSourceEditable = useSourceEditable(activeSourceId);
+    const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
     const localizedResource = useMemo(
       () => localizeResource(resource),

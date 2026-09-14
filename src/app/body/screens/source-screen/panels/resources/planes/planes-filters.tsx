@@ -10,9 +10,11 @@ import InclusionSelect from "~/ui/inclusion-select";
 // Planes Filters
 //------------------------------------------------------------------------------
 
+const usePlaneFilters = planeStore.useFilters;
+
 export default function PlanesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = planeStore.useFilters();
+  const [filters, setFilters] = usePlaneFilters();
 
   const categoryOptions = usePlaneCategoryOptions();
   const alignmentOptions = useCreatureAlignmentOptions();

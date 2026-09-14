@@ -28,6 +28,9 @@ export type EquipmentBundleEditorProps = StackProps & {
   withinDialog?: boolean;
 };
 
+const useEquipmentReferenceResourceOptions = equipmentReferenceStore.useResourceOptions;
+const useEquipmentReferenceLocalizeResourceName = equipmentReferenceStore.useLocalizeResourceName;
+
 export default function EquipmentBundleEditor({
   onValueChange,
   sourceId,
@@ -43,8 +46,8 @@ export default function EquipmentBundleEditor({
   const [equipmentId, setEquipmentId] = useState("");
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
 
-  const options = equipmentReferenceStore.useResourceOptions(sourceId);
-  const localize = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
+  const options = useEquipmentReferenceResourceOptions(sourceId);
+  const localize = useEquipmentReferenceLocalizeResourceName(sourceId, lang);
 
   const filterResourceOptions = useCallback((option: ResourceOption, search: string): boolean => {
     const normalizedFilter = normalizeString(search);

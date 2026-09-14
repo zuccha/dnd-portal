@@ -41,6 +41,10 @@ export type LocalizedBackground = z.infer<typeof localizedBackgroundSchema>;
 // Use Localized Background
 //------------------------------------------------------------------------------
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+const useLocalizeFeatName = featStore.useLocalizeResourceName;
+const useLocalizeToolName = toolStore.useLocalizeResourceName;
+
 export function useLocalizeBackground(
   sourceId: string,
 ): (background: Background) => LocalizedBackground {
@@ -48,9 +52,9 @@ export function useLocalizeBackground(
   const localizeResource = useLocalizeResource<Background>();
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
-  const localizeFeatName = featStore.useLocalizeResourceName(sourceId, lang);
-  const localizeToolName = toolStore.useLocalizeResourceName(sourceId, lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(sourceId, lang);
+  const localizeFeatName = useLocalizeFeatName(sourceId, lang);
+  const localizeToolName = useLocalizeToolName(sourceId, lang);
   const formatCp = useFormatCp();
 
   return useCallback(

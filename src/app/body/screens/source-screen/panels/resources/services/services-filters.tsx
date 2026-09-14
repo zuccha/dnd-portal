@@ -9,9 +9,11 @@ import InclusionSelect from "~/ui/inclusion-select";
 // Services Filters
 //------------------------------------------------------------------------------
 
+const useServiceFilters = serviceStore.useFilters;
+
 export default function ServicesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = serviceStore.useFilters();
+  const [filters, setFilters] = useServiceFilters();
 
   const categoryOptions = useServiceCategoryOptions();
 

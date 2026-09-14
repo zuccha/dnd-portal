@@ -13,7 +13,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { setAutoUpdateSources, useAutoUpdateSources } from "~/app/app-settings";
 import useAuth from "~/auth/use-auth";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import catalogue from "~/models/catalogue/catalogue";
+import catalogue, { useSources } from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
 import {
   type SourceBundle,
@@ -75,7 +75,7 @@ type SourceRemovalPrompt = {
 export default function SourcesPanel() {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const auth = useAuth();
-  const sources = catalogue.useSources();
+  const sources = useSources();
   const autoUpdateSources = useAutoUpdateSources();
   const translateSourceVersion = useTranslateSourceVersion(lang);
   const inputRef = useRef<HTMLInputElement>(null);

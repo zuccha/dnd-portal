@@ -19,9 +19,11 @@ export function createResourcesCounter<
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
 >(store: ResourceStore<R, L, F>, _context: ResourcesContext<R>) {
+  const { useFilteredResourceIds } = store;
+
   return function ResourcesCounter({ sourceId }: ResourcesCounterProps) {
     const { tpi } = useI18nLangContext(i18nContext);
-    const filteredResourceIds = store.useFilteredResourceIds(sourceId);
+    const filteredResourceIds = useFilteredResourceIds(sourceId);
     const count = filteredResourceIds.length;
 
     return (

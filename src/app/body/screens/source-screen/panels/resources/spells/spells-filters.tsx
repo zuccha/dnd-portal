@@ -21,9 +21,12 @@ export type SpellsFiltersProps = StackProps & {
   sourceId: string;
 };
 
+const useSpellFilters = spellStore.useFilters;
+const useCharacterClassResourceOptions = characterClassStore.useResourceOptions;
+
 export default function SpellsFilters({ sourceId, ...rest }: SpellsFiltersProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = spellStore.useFilters();
+  const [filters, setFilters] = useSpellFilters();
 
   const levelOptions = useSpellLevelOptions();
   const stringifiedLevelOptions = useMemo(
@@ -31,7 +34,7 @@ export default function SpellsFilters({ sourceId, ...rest }: SpellsFiltersProps)
     [levelOptions],
   );
 
-  const characterClassOptions = characterClassStore.useResourceOptions(sourceId);
+  const characterClassOptions = useCharacterClassResourceOptions(sourceId);
   const schoolOptions = useSpellSchoolOptions();
   const castingTimeOptions = useSpellCastingTimeOptions();
 
