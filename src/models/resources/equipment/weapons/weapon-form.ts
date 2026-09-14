@@ -5,10 +5,7 @@ import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
 import { weaponTypeSchema } from "../../../types/weapon-type";
 import { createResourceFormDataPatch } from "../../resource-form";
-import {
-  equipmentFormDataSchema,
-  equipmentFormDataToResource,
-} from "../equipment-form";
+import { equipmentFormDataSchema, equipmentFormDataToResource } from "../equipment-form";
 import type { Weapon } from "./weapon";
 
 //------------------------------------------------------------------------------

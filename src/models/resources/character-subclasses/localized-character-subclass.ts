@@ -3,14 +3,8 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useFormatFeatureEntries } from "../../other/feature-entries";
 import { characterClassStore } from "../character-classes/character-class-store";
-import {
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
-import {
-  type CharacterSubclass,
-  characterSubclassSchema,
-} from "./character-subclass";
+import { localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import { type CharacterSubclass, characterSubclassSchema } from "./character-subclass";
 
 //------------------------------------------------------------------------------
 // Localized Character Subclass
@@ -23,9 +17,7 @@ export const localizedCharacterSubclassSchema = localizedResourceSchema(
   character_class: z.string(),
 });
 
-export type LocalizedCharacterSubclass = z.infer<
-  typeof localizedCharacterSubclassSchema
->;
+export type LocalizedCharacterSubclass = z.infer<typeof localizedCharacterSubclassSchema>;
 
 //------------------------------------------------------------------------------
 // Use Localized Character Subclass
@@ -36,17 +28,12 @@ export function useLocalizeCharacterSubclass(
 ): (characterSubclass: CharacterSubclass) => LocalizedCharacterSubclass {
   const { lang, ti } = useI18nLangContext(i18nContext);
   const localizeResource = useLocalizeResource<CharacterSubclass>();
-  const localizeCharacterClass = characterClassStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
+  const localizeCharacterClass = characterClassStore.useLocalizeResourceName(sourceId, lang);
   const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
 
   return useCallback(
     (characterSubclass: CharacterSubclass): LocalizedCharacterSubclass => {
-      const character_class = localizeCharacterClass(
-        characterSubclass.character_class_id,
-      );
+      const character_class = localizeCharacterClass(characterSubclass.character_class_id);
 
       return {
         ...localizeResource(characterSubclass),

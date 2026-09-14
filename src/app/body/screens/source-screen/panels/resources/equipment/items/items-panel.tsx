@@ -1,20 +1,17 @@
 import { FlaskConicalIcon, LayersIcon } from "lucide-react";
 import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type Item } from "~/models/resources/equipment/items/item";
-import {
-  itemForm,
-  itemFormDataToResource,
-} from "~/models/resources/equipment/items/item-form";
+import { itemForm, itemFormDataToResource } from "~/models/resources/equipment/items/item-form";
 import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { type LocalizedItem } from "~/models/resources/equipment/items/localized-item";
 import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/item-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
-import type { ResourcesTableExtra } from "../../resources-table";
 import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { ItemCard } from "./item-card";
 import { createItemEditor } from "./item-editor";
 import ItemsFilters from "./items-filters";
+import type { ResourcesTableExtra } from "../../resources-table";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -51,10 +48,7 @@ const columns = createEquipmentTableColumns<Item, LocalizedItem>([
 // Item Variant Dialog
 //------------------------------------------------------------------------------
 
-const itemVariantDialog = createEquipmentVariantDialog(
-  itemStore,
-  itemModifierStore,
-);
+const itemVariantDialog = createEquipmentVariantDialog(itemStore, itemModifierStore);
 
 //------------------------------------------------------------------------------
 // Actions

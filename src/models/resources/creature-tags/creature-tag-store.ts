@@ -1,8 +1,5 @@
 import { createResourceStore } from "../resource-store";
-import {
-  creatureTagTranslationFields,
-  defaultCreatureTag,
-} from "./creature-tag";
+import { creatureTagTranslationFields, defaultCreatureTag } from "./creature-tag";
 import {
   creatureTagFiltersSchema,
   creatureTagOrderOptions,

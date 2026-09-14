@@ -26,9 +26,7 @@ export default function RichText({
 }: RichTextProps) {
   return (
     <Span {...rest}>
-      {isListWithAtLeastOneItem(patterns) ?
-        <RichTextRec patterns={patterns} text={text} />
-      : text}
+      {isListWithAtLeastOneItem(patterns) ? <RichTextRec patterns={patterns} text={text} /> : text}
     </Span>
   );
 }
@@ -47,14 +45,10 @@ function RichTextRec({ patterns, text }: RichTextRecProps) {
   const parts = text.split(regex);
 
   const renderPart = (part: string) =>
-    isListWithAtLeastOneItem(rest) ?
-      <RichTextRec patterns={rest} text={part} />
-    : part;
+    isListWithAtLeastOneItem(rest) ? <RichTextRec patterns={rest} text={part} /> : part;
 
   return parts.map((part, i) => (
-    <Fragment key={i}>
-      {i & 1 ? render(renderPart(part)) : renderPart(part)}
-    </Fragment>
+    <Fragment key={i}>{i & 1 ? render(renderPart(part)) : renderPart(part)}</Fragment>
   ));
 }
 

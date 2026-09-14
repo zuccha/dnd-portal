@@ -6,11 +6,7 @@ import { useFormatCp } from "~/measures/cost";
 import { useFormatCmh } from "~/measures/speed";
 import { useFormatGrams } from "~/measures/weight";
 import { formatNumber } from "~/utils/number";
-import {
-  formatInfo,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { type Vehicle, vehicleSchema } from "./vehicle";
 
 //------------------------------------------------------------------------------

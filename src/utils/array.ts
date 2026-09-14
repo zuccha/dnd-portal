@@ -2,11 +2,7 @@
 // Join With
 //------------------------------------------------------------------------------
 
-export function joinWith(
-  items: string[],
-  separator: string,
-  lastSeparator: string,
-): string {
+export function joinWith(items: string[], separator: string, lastSeparator: string): string {
   if (items.length <= 1) return items.join("");
   if (items.length === 2) return `${items[0]}${lastSeparator}${items[1]}`;
   return `${items.slice(0, -1).join(separator)}${lastSeparator}${items.at(-1)}`;
@@ -49,8 +45,5 @@ export function dropLast<T>(items: T[]): T[] {
 //------------------------------------------------------------------------------
 
 export function areSameArray<T>(items1: T[], items2: T[]): boolean {
-  return (
-    items1.length === items2.length &&
-    items1.every((item, index) => item === items2[index])
-  );
+  return items1.length === items2.length && items1.every((item, index) => item === items2[index]);
 }

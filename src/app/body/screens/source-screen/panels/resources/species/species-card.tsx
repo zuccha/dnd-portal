@@ -1,10 +1,7 @@
 import type { LocalizedSpecies } from "~/models/resources/species/localized-species";
 import type { Species } from "~/models/resources/species/species";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Species Card
@@ -25,9 +22,7 @@ export function SpeciesCard({
     <ResourcePokerCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       localizedResource={localizedResource}

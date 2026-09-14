@@ -1,16 +1,5 @@
-import {
-  Combobox,
-  type ComboboxRootProps,
-  Portal,
-  createListCollection,
-} from "@chakra-ui/react";
-import {
-  type Ref,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Combobox, type ComboboxRootProps, Portal, createListCollection } from "@chakra-ui/react";
+import { type Ref, useImperativeHandle, useMemo, useRef, useState } from "react";
 
 //------------------------------------------------------------------------------
 // Search
@@ -28,11 +17,7 @@ export type SearchRefObject = {
 
 export type SearchProps<T extends string, O extends SearchOption<T>> = Omit<
   ComboboxRootProps,
-  | "collection"
-  | "defaultValue"
-  | "onInputValueChange"
-  | "onValueChange"
-  | "value"
+  "collection" | "defaultValue" | "onInputValueChange" | "onValueChange" | "value"
 > & {
   categories?: { id: string; items: O[]; title: string }[];
   emptyLabel?: string;
@@ -78,9 +63,7 @@ export default function Search<T extends string, O extends SearchOption<T>>({
   const filteredCategories = useMemo(
     () =>
       categories?.flatMap((category) => {
-        const items = category.items.filter((option) =>
-          onFilter(option, search),
-        );
+        const items = category.items.filter((option) => onFilter(option, search));
         return items.length ? [{ ...category, items }] : [];
       }),
     [categories, onFilter, search],
@@ -100,27 +83,24 @@ export default function Search<T extends string, O extends SearchOption<T>>({
     <Combobox.Positioner>
       <Combobox.Content>
         <Combobox.Empty>{emptyLabel}</Combobox.Empty>
-        {filteredCategories ?
-          filteredCategories.map(({ id, items, title }) => (
-            <Combobox.ItemGroup key={id}>
-              <Combobox.ItemGroupLabel fontWeight="bold">
-                {title}
-              </Combobox.ItemGroupLabel>
-              {items.map((item) => (
-                <Combobox.Item item={item} key={item.value}>
-                  {item.label}
-                  <Combobox.ItemIndicator />
-                </Combobox.Item>
-              ))}
-            </Combobox.ItemGroup>
-          ))
-        : collection.items.map((item) => (
-            <Combobox.Item item={item} key={item.value}>
-              {item.label}
-              <Combobox.ItemIndicator />
-            </Combobox.Item>
-          ))
-        }
+        {filteredCategories
+          ? filteredCategories.map(({ id, items, title }) => (
+              <Combobox.ItemGroup key={id}>
+                <Combobox.ItemGroupLabel fontWeight="bold">{title}</Combobox.ItemGroupLabel>
+                {items.map((item) => (
+                  <Combobox.Item item={item} key={item.value}>
+                    {item.label}
+                    <Combobox.ItemIndicator />
+                  </Combobox.Item>
+                ))}
+              </Combobox.ItemGroup>
+            ))
+          : collection.items.map((item) => (
+              <Combobox.Item item={item} key={item.value}>
+                {item.label}
+                <Combobox.ItemIndicator />
+              </Combobox.Item>
+            ))}
       </Combobox.Content>
     </Combobox.Positioner>
   );
@@ -131,20 +111,11 @@ export default function Search<T extends string, O extends SearchOption<T>>({
       multiple={multiple}
       onInputValueChange={(e) => setSearch(e.inputValue)}
       onValueChange={
-        onValueChange ?
-          (e) =>
-            multiple ?
-              onValueChange(e.value as T[])
-            : onValueChange(e.value[0] as T)
-        : undefined
+        onValueChange
+          ? (e) => (multiple ? onValueChange(e.value as T[]) : onValueChange(e.value[0] as T))
+          : undefined
       }
-      value={
-        value ?
-          multiple ?
-            value
-          : [value]
-        : []
-      }
+      value={value ? (multiple ? value : [value]) : []}
       {...rest}
     >
       <Combobox.Control>

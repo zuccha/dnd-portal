@@ -6,8 +6,8 @@ import {
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
-import type { Feature } from "./feature";
 import { featureGrantSchema } from "./feature-entry";
+import type { Feature } from "./feature";
 
 //------------------------------------------------------------------------------
 // Feature Form Data

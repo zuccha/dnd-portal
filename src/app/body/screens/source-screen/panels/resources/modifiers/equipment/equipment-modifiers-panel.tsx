@@ -11,13 +11,13 @@ import type { ResourceOption } from "~/models/resources/resource";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import type { Form } from "~/utils/form";
 import type { PaletteName } from "~/utils/palette";
-import type { ResourcesAlbumExtra } from "../../resources-album";
-import type { ResourcesFiltersExtra } from "../../resources-filters";
 import { createResourcesPanel } from "../../resources-panel";
-import type { ResourcesTableExtra } from "../../resources-table";
 import { EquipmentModifierCard } from "./equipment-modifier-card";
 import { createEquipmentModifierEditor } from "./equipment-modifier-editor";
 import EquipmentModifiersFilters from "./equipment-modifiers-filters";
+import type { ResourcesAlbumExtra } from "../../resources-album";
+import type { ResourcesFiltersExtra } from "../../resources-filters";
+import type { ResourcesTableExtra } from "../../resources-table";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -96,8 +96,7 @@ export function createEquipmentModifiersPanel<
   } = {},
 ) {
   const AlbumCard =
-    uiOptions.AlbumCard ??
-    (EquipmentModifierCard as ResourcesAlbumExtra<R, L>["AlbumCard"]);
+    uiOptions.AlbumCard ?? (EquipmentModifierCard as ResourcesAlbumExtra<R, L>["AlbumCard"]);
   const Filters = uiOptions.Filters ?? EquipmentModifiersFilters;
   const createEditor = uiOptions.createEditor ?? createEquipmentModifierEditor;
 

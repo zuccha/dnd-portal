@@ -9,9 +9,7 @@ export default function useDebouncedCallback<Args extends unknown[]>(
   delay: number,
 ): (...args: Args) => void {
   const callbackRef = useRef(callback);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  );
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useLayoutEffect(() => {
     callbackRef.current = callback;

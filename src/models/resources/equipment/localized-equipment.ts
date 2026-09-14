@@ -6,11 +6,7 @@ import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
 import { useFormatFeatureEntries } from "../../other/feature-entries";
 import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
-import {
-  formatDetails,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { formatDetails, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { type Equipment } from "./equipment";
 
 //------------------------------------------------------------------------------
@@ -54,16 +50,11 @@ export function useLocalizeEquipment<E extends Equipment>(
       const attunementNotes = translate(equipment.attunement_notes, lang);
       const attunementSlots = equipment.required_attunement_slots;
       const attunement =
-        equipment.magic && attunementSlots > 0 ?
-          attunementNotes ?
-            tpi(
-              "attunement.with_notes",
-              attunementSlots,
-              `${attunementSlots}`,
-              attunementNotes,
-            )
-          : tpi("attunement", attunementSlots, `${attunementSlots}`)
-        : "";
+        equipment.magic && attunementSlots > 0
+          ? attunementNotes
+            ? tpi("attunement.with_notes", attunementSlots, `${attunementSlots}`, attunementNotes)
+            : tpi("attunement", attunementSlots, `${attunementSlots}`)
+          : "";
       const notes = translate(equipment.notes, lang);
       const features = formatFeatureEntriesDetails(equipment.feature_entries);
 
@@ -73,10 +64,9 @@ export function useLocalizeEquipment<E extends Equipment>(
 
         cost: equipment.cost === null ? "" : formatCost(equipment.cost),
         magic: equipment.magic,
-        magic_type:
-          equipment.magic ?
-            equipment.rarity === "artifact" ?
-              t("magic_type.magic.artifact")
+        magic_type: equipment.magic
+          ? equipment.rarity === "artifact"
+            ? t("magic_type.magic.artifact")
             : ti("magic_type.magic", rarity)
           : t("magic_type.non_magic"),
         rarity,

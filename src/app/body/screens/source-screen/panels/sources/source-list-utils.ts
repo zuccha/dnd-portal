@@ -5,12 +5,7 @@ import type { SourceType } from "~/models/types/source-type";
 // Source Status
 //------------------------------------------------------------------------------
 
-export type SourceStatus =
-  | "available"
-  | "detached"
-  | "installed"
-  | "local"
-  | "update";
+export type SourceStatus = "available" | "detached" | "installed" | "local" | "update";
 
 //------------------------------------------------------------------------------
 // Source List Entry
@@ -53,8 +48,8 @@ export function getLocalSourceStatus(
   const registrySource = registrySources.find(({ id }) => id === source.id);
 
   if (source.registry)
-    return registrySource && isRegistryUpdateAvailable(source, registrySource) ?
-        "update"
+    return registrySource && isRegistryUpdateAvailable(source, registrySource)
+      ? "update"
       : "installed";
   if (registryLoading) return undefined;
   return registrySource ? "detached" : "local";
@@ -64,23 +59,15 @@ export function getLocalSourceStatus(
 // Get Installed Source Status
 //------------------------------------------------------------------------------
 
-export function getInstalledSourceStatus(
-  source: Source,
-  registrySource: Source,
-): SourceStatus {
-  return isRegistryUpdateAvailable(source, registrySource) ? "update" : (
-      "installed"
-    );
+export function getInstalledSourceStatus(source: Source, registrySource: Source): SourceStatus {
+  return isRegistryUpdateAvailable(source, registrySource) ? "update" : "installed";
 }
 
 //------------------------------------------------------------------------------
 // Is Registry Update Available
 //------------------------------------------------------------------------------
 
-function isRegistryUpdateAvailable(
-  source: Source,
-  registrySource: Source,
-): boolean {
+function isRegistryUpdateAvailable(source: Source, registrySource: Source): boolean {
   return Boolean(
     source.registry &&
     registrySource.registry &&
@@ -104,10 +91,7 @@ export const colorBySourceStatus = {
 // Group Sources By Type
 //------------------------------------------------------------------------------
 
-export function groupSourcesByType(
-  sources: SourceListEntry[],
-  lang: string,
-): SourceGroup[] {
+export function groupSourcesByType(sources: SourceListEntry[], lang: string): SourceGroup[] {
   const sourceTypes: SourceType[] = ["core", "module", "campaign"];
 
   return sourceTypes.flatMap((type) => {

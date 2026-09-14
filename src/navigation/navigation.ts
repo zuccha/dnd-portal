@@ -18,9 +18,7 @@ history.pushState = function (...args: Parameters<typeof history.pushState>) {
   notify();
 };
 
-history.replaceState = function (
-  ...args: Parameters<typeof history.replaceState>
-) {
+history.replaceState = function (...args: Parameters<typeof history.replaceState>) {
   replaceState.apply(this, args);
   notify();
 };

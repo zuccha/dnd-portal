@@ -379,9 +379,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Legendary Actions Count
   //----------------------------------------------------------------------------
 
-  const useLegendaryActionsCountField = form.createUseField(
-    "legendary_actions_count",
-  );
+  const useLegendaryActionsCountField = form.createUseField("legendary_actions_count");
 
   const LegendaryActionsCountField = createNumberInputField({
     i18nContext: {
@@ -391,9 +389,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useField: useLegendaryActionsCountField,
   });
 
-  const useLairLegendaryActionsCountField = form.createUseField(
-    "lair_legendary_actions_count",
-  );
+  const useLairLegendaryActionsCountField = form.createUseField("lair_legendary_actions_count");
 
   const LairLegendaryActionsCountField = createNumberInputField({
     i18nContext: {
@@ -636,14 +632,13 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   return function CreatureEditor({ resource, sourceId }: CreatureEditorProps) {
     const [lang] = useI18nLang();
     const { value: hasLair } = useHasLairField(resource.has_lair);
-    const { value: languageScope } = useLanguageScopeField(
-      resource.language_scope,
-    );
+    const { value: languageScope } = useLanguageScopeField(resource.language_scope);
     const { value: legendaryActionsCount } = useLegendaryActionsCountField(
       resource.legendary_actions_count,
     );
-    const { value: lairLegendaryActionsCount } =
-      useLairLegendaryActionsCountField(resource.lair_legendary_actions_count);
+    const { value: lairLegendaryActionsCount } = useLairLegendaryActionsCountField(
+      resource.lair_legendary_actions_count,
+    );
 
     return (
       <ResourceEditor resource={resource}>
@@ -660,10 +655,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         {/* Treasures & Habitat */}
         <HStack align="flex-start" gap={4} w="full">
           <HabitatsField defaultValue={resource.habitats} />
-          <PlaneIdsField
-            defaultValue={resource.plane_ids}
-            sourceId={sourceId}
-          />
+          <PlaneIdsField defaultValue={resource.plane_ids} sourceId={sourceId} />
           <TreasuresField defaultValue={resource.treasures} />
         </HStack>
 
@@ -719,12 +711,8 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
         {/* Proficiencies */}
         <HStack align="flex-start" gap={4} w="full">
-          <AbilityProficienciesField
-            defaultValue={resource.ability_proficiencies}
-          />
-          <SkillProficienciesField
-            defaultValue={resource.skill_proficiencies}
-          />
+          <AbilityProficienciesField defaultValue={resource.ability_proficiencies} />
+          <SkillProficienciesField defaultValue={resource.skill_proficiencies} />
           <SkillExpertiseField defaultValue={resource.skill_expertise} />
         </HStack>
 
@@ -732,22 +720,14 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         <HStack align="flex-start" gap={4} w="full">
           <DamageImmunitiesField defaultValue={resource.damage_immunities} />
           <DamageResistancesField defaultValue={resource.damage_resistances} />
-          <DamageVulnerabilitiesField
-            defaultValue={resource.damage_vulnerabilities}
-          />
+          <DamageVulnerabilitiesField defaultValue={resource.damage_vulnerabilities} />
         </HStack>
 
         {/* Condition Interactions */}
         <HStack align="flex-start" gap={4} w="full">
-          <ConditionImmunitiesField
-            defaultValue={resource.condition_immunities}
-          />
-          <ConditionResistancesField
-            defaultValue={resource.condition_resistances}
-          />
-          <ConditionVulnerabilitiesField
-            defaultValue={resource.condition_vulnerabilities}
-          />
+          <ConditionImmunitiesField defaultValue={resource.condition_immunities} />
+          <ConditionResistancesField defaultValue={resource.condition_resistances} />
+          <ConditionVulnerabilitiesField defaultValue={resource.condition_vulnerabilities} />
         </HStack>
 
         {/* Senses */}
@@ -772,10 +752,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         {/* Language */}
         {languageScope === "specific" && (
           <HStack align="flex-start" gap={2} mt={-1} w="full">
-            <LanguageEntriesField
-              defaultValue={resource.language_entries}
-              sourceId={sourceId}
-            />
+            <LanguageEntriesField defaultValue={resource.language_entries} sourceId={sourceId} />
             <HStack h={10}>
               <Icon Icon={PlusIcon} size="sm" />
             </HStack>
@@ -796,25 +773,18 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         <ReactionsField defaultValue={resource.reactions[lang] ?? ""} />
         <VStack gap={2} w="full">
           <HStack align="flex-start" gap={4} w="full">
-            <LegendaryActionsCountField
-              defaultValue={resource.legendary_actions_count}
-            />
+            <LegendaryActionsCountField defaultValue={resource.legendary_actions_count} />
             {hasLair && (
               <LairLegendaryActionsCountField
                 defaultValue={resource.lair_legendary_actions_count}
               />
             )}
           </HStack>
-          {(!!legendaryActionsCount ||
-            (hasLair && !!lairLegendaryActionsCount)) && (
-            <LegendaryActionsField
-              defaultValue={resource.legendary_actions[lang] ?? ""}
-            />
+          {(!!legendaryActionsCount || (hasLair && !!lairLegendaryActionsCount)) && (
+            <LegendaryActionsField defaultValue={resource.legendary_actions[lang] ?? ""} />
           )}
         </VStack>
-        {hasLair && (
-          <LairEffectsField defaultValue={resource.lair_effects[lang] ?? ""} />
-        )}
+        {hasLair && <LairEffectsField defaultValue={resource.lair_effects[lang] ?? ""} />}
       </ResourceEditor>
     );
   };

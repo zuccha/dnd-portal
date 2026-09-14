@@ -51,8 +51,7 @@ export function useTranslateWeaponMasteryRuling(
   lang: string,
 ): (weaponMastery: WeaponMastery) => string {
   return useCallback(
-    (weaponMastery: WeaponMastery) =>
-      translate(weaponMasteryRulings[weaponMastery], lang),
+    (weaponMastery: WeaponMastery) => translate(weaponMasteryRulings[weaponMastery], lang),
     [lang],
   );
 }

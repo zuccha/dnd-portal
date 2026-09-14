@@ -77,11 +77,7 @@ function duplicateEntry(entryId: string): string | undefined {
     if (index < 0) return prev;
 
     const duplicate = { ...structuredClone(prev[index]!), id };
-    const entries = [
-      ...prev.slice(0, index + 1),
-      duplicate,
-      ...prev.slice(index + 1),
-    ];
+    const entries = [...prev.slice(0, index + 1), duplicate, ...prev.slice(index + 1)];
     duplicated = true;
     return entries;
   });

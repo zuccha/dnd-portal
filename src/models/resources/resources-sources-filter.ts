@@ -8,14 +8,9 @@ import { hash } from "~/utils/hash";
 // Resources Sources Filter
 //------------------------------------------------------------------------------
 
-export const resourcesSourcesFilterSchema = z.record(
-  z.string(),
-  z.boolean().optional(),
-);
+export const resourcesSourcesFilterSchema = z.record(z.string(), z.boolean().optional());
 
-export type ResourcesSourcesFilter = z.infer<
-  typeof resourcesSourcesFilterSchema
->;
+export type ResourcesSourcesFilter = z.infer<typeof resourcesSourcesFilterSchema>;
 
 export const defaultResourcesSourcesFilter = {};
 
@@ -29,20 +24,16 @@ const resourcesSourcesFilterStore = createLocalStoreSet<ResourcesSourcesFilter>(
   resourcesSourcesFilterSchema.parse,
 );
 
-const draftResourcesSourcesFilterStore = createMemoryStoreSet<
-  string,
-  ResourcesSourcesFilter
->("resources.filters.modules.draft");
+const draftResourcesSourcesFilterStore = createMemoryStoreSet<string, ResourcesSourcesFilter>(
+  "resources.filters.modules.draft",
+);
 
 //------------------------------------------------------------------------------
 // Use Resources Sources Filter
 //------------------------------------------------------------------------------
 
 export function useResourcesSourcesFilter(sourceId: string) {
-  return resourcesSourcesFilterStore.use(
-    sourceId,
-    defaultResourcesSourcesFilter,
-  );
+  return resourcesSourcesFilterStore.use(sourceId, defaultResourcesSourcesFilter);
 }
 
 //------------------------------------------------------------------------------
@@ -50,10 +41,7 @@ export function useResourcesSourcesFilter(sourceId: string) {
 //------------------------------------------------------------------------------
 
 export function useDraftResourcesSourcesFilter(sourceId: string) {
-  const defaultValue = resourcesSourcesFilterStore.get(
-    sourceId,
-    defaultResourcesSourcesFilter,
-  );
+  const defaultValue = resourcesSourcesFilterStore.get(sourceId, defaultResourcesSourcesFilter);
 
   return draftResourcesSourcesFilterStore.use(sourceId, defaultValue);
 }
@@ -66,25 +54,17 @@ export function useApplyResourcesSourcesFilter(sourceId: string): () => void {
   const [draftSources] = useDraftResourcesSourcesFilter(sourceId);
   const [, setSources] = useResourcesSourcesFilter(sourceId);
 
-  return useCallback(
-    () => setSources(draftSources),
-    [draftSources, setSources],
-  );
+  return useCallback(() => setSources(draftSources), [draftSources, setSources]);
 }
 
 //------------------------------------------------------------------------------
 // Use Reset Draft Resources Sources Filter
 //------------------------------------------------------------------------------
 
-export function useResetDraftResourcesSourcesFilter(
-  sourceId: string,
-): () => void {
+export function useResetDraftResourcesSourcesFilter(sourceId: string): () => void {
   const [, setDraftSources] = useDraftResourcesSourcesFilter(sourceId);
 
-  return useCallback(
-    () => setDraftSources(defaultResourcesSourcesFilter),
-    [setDraftSources],
-  );
+  return useCallback(() => setDraftSources(defaultResourcesSourcesFilter), [setDraftSources]);
 }
 
 //------------------------------------------------------------------------------

@@ -21,10 +21,7 @@ export function createLockedRequest<R, Args extends unknown[]>(
 ): [(...args: Args) => { key: string; promise: Promise<RequestResponse<R>> }] {
   const fetchingCache = createCache<string, boolean>(`${id}.fetching`);
 
-  async function lockedRequestByKey(
-    key: string,
-    ...args: Args
-  ): Promise<RequestResponse<R>> {
+  async function lockedRequestByKey(key: string, ...args: Args): Promise<RequestResponse<R>> {
     if (fetchingCache.get(key)) return loading(defaultValue);
 
     try {
@@ -73,13 +70,9 @@ export function createCachedRequest<R, Args extends unknown[]>(
   const fetchingCache = createCache<string, boolean>(`${id}.fetching`);
   const responseCache = createCache<string, R>(`${id}.response`);
 
-  async function cachedRequestByKey(
-    key: string,
-    ...args: Args
-  ): Promise<RequestResponse<R>> {
+  async function cachedRequestByKey(key: string, ...args: Args): Promise<RequestResponse<R>> {
     if (cached.has(key)) return success(responseCache.get(key)!);
-    if (fetchingCache.get(key))
-      return loading(responseCache.get(key) ?? defaultValue);
+    if (fetchingCache.get(key)) return loading(responseCache.get(key) ?? defaultValue);
 
     try {
       argsCache.set(key, args);
@@ -117,8 +110,7 @@ export function createCachedRequest<R, Args extends unknown[]>(
 
   function invalidateAll(): void {
     cached.clear();
-    for (const [key, args] of argsCache.entries())
-      cachedRequestByKey(key, ...args);
+    for (const [key, args] of argsCache.entries()) cachedRequestByKey(key, ...args);
   }
 
   function set(response: R, ...args: Args): void {

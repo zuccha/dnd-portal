@@ -10,13 +10,7 @@ export default function ResourcesEmpty() {
   const { t } = useI18nLangContext(i18nContext);
 
   return (
-    <EmptyState
-      Icon={RatIcon}
-      flex={1}
-      mb="10%"
-      subtitle={t("subtitle")}
-      title={t("title")}
-    />
+    <EmptyState Icon={RatIcon} flex={1} mb="10%" subtitle={t("subtitle")} title={t("title")} />
   );
 }
 

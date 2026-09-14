@@ -7,7 +7,6 @@ import { useFormatCp } from "~/measures/cost";
 import { useFormatCmWithUnit } from "~/measures/distance";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { formatNumber, formatNumberAsWord, formatSigned } from "~/utils/number";
-import type { CreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import {
   type CreatureCondition,
@@ -15,26 +14,17 @@ import {
 } from "../../types/creature-condition";
 import { useTranslateCreatureHabitat } from "../../types/creature-habitat";
 import { useTranslateCreatureSize } from "../../types/creature-size";
-import {
-  type CreatureSkill,
-  useTranslateCreatureSkill,
-} from "../../types/creature-skill";
+import { type CreatureSkill, useTranslateCreatureSkill } from "../../types/creature-skill";
 import { useTranslateCreatureTreasure } from "../../types/creature-treasure";
 import { useTranslateCreatureType } from "../../types/creature-type";
-import {
-  type DamageType,
-  useTranslateDamageType,
-} from "../../types/damage-type";
+import { type DamageType, useTranslateDamageType } from "../../types/damage-type";
 import { creatureTagStore } from "../creature-tags/creature-tag-store";
 import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
 import { languageStore } from "../languages/language-store";
-import {
-  formatInfo,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { planeStore } from "../planes/plane-store";
 import { type Creature, creatureSchema } from "./creature";
+import type { CreatureAbility } from "../../types/creature-ability";
 
 //------------------------------------------------------------------------------
 // Localized Creature
@@ -111,9 +101,7 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 // Use Localize Creature
 //------------------------------------------------------------------------------
 
-export function useLocalizeCreature(
-  sourceId: string,
-): (creature: Creature) => LocalizedCreature {
+export function useLocalizeCreature(sourceId: string): (creature: Creature) => LocalizedCreature {
   const localizeResource = useLocalizeResource<Creature>();
   const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
@@ -126,19 +114,10 @@ export function useLocalizeCreature(
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateCreatureCondition = useTranslateCreatureCondition(lang);
   const translateDamageType = useTranslateDamageType(lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
-  const localizeLanguageName = languageStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
+  const localizeLanguageName = languageStore.useLocalizeResourceName(sourceId, lang);
   const localizePlaneName = planeStore.useLocalizeResourceName(sourceId, lang);
-  const localizeTagName = creatureTagStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
+  const localizeTagName = creatureTagStore.useLocalizeResourceName(sourceId, lang);
   const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
 
@@ -153,9 +132,7 @@ export function useLocalizeCreature(
 
       const habitats = creature.habitats
         .map(translateCreatureHabitat)
-        .map(({ label, value }) =>
-          value === "planar" && planes ? `${label} (${planes})` : label,
-        )
+        .map(({ label, value }) => (value === "planar" && planes ? `${label} (${planes})` : label))
         .sort()
         .join(", ");
 
@@ -167,11 +144,15 @@ export function useLocalizeCreature(
 
       // EXP and PB from CR
       const cr =
-        creature.cr === 0 ? "0"
-        : creature.cr <= 0.125 ? "⅛"
-        : creature.cr <= 0.25 ? "¼"
-        : creature.cr <= 0.5 ? "½"
-        : `${creature.cr}`;
+        creature.cr === 0
+          ? "0"
+          : creature.cr <= 0.125
+            ? "⅛"
+            : creature.cr <= 0.25
+              ? "¼"
+              : creature.cr <= 0.5
+                ? "½"
+                : `${creature.cr}`;
       const exp = creature.exp;
       const lair_exp = creature.lair_exp;
       const pb = creature.pb;
@@ -187,9 +168,11 @@ export function useLocalizeCreature(
       const speed_fly = convertSpeed(creature.speed_fly);
       const speed_swim = convertSpeed(creature.speed_swim);
       const speed_fly_label =
-        speed_fly && creature.hover ? ti("speed.fly_hover", speed_fly)
-        : speed_fly ? ti("speed.fly", speed_fly)
-        : "";
+        speed_fly && creature.hover
+          ? ti("speed.fly_hover", speed_fly)
+          : speed_fly
+            ? ti("speed.fly", speed_fly)
+            : "";
       const speed = [
         ti("speed.walk", speed_walk ?? (system === "metric" ? "0 m" : "0 ft")),
         speed_fly_label,
@@ -209,44 +192,32 @@ export function useLocalizeCreature(
       const ability_str = `${creature.ability_str}`;
       const ability_str_mod_value = getAbilityMod(creature.ability_str);
       const ability_str_mod = formatMod(ability_str_mod_value);
-      const ability_str_save = formatMod(
-        getAbilitySave("strength", ability_str_mod_value),
-      );
+      const ability_str_save = formatMod(getAbilitySave("strength", ability_str_mod_value));
 
       const ability_dex = `${creature.ability_dex}`;
       const ability_dex_mod_value = getAbilityMod(creature.ability_dex);
       const ability_dex_mod = formatMod(ability_dex_mod_value);
-      const ability_dex_save = formatMod(
-        getAbilitySave("dexterity", ability_dex_mod_value),
-      );
+      const ability_dex_save = formatMod(getAbilitySave("dexterity", ability_dex_mod_value));
 
       const ability_con = `${creature.ability_con}`;
       const ability_con_mod_value = getAbilityMod(creature.ability_con);
       const ability_con_mod = formatMod(ability_con_mod_value);
-      const ability_con_save = formatMod(
-        getAbilitySave("constitution", ability_con_mod_value),
-      );
+      const ability_con_save = formatMod(getAbilitySave("constitution", ability_con_mod_value));
 
       const ability_int = `${creature.ability_int}`;
       const ability_int_mod_value = getAbilityMod(creature.ability_int);
       const ability_int_mod = formatMod(ability_int_mod_value);
-      const ability_int_save = formatMod(
-        getAbilitySave("intelligence", ability_int_mod_value),
-      );
+      const ability_int_save = formatMod(getAbilitySave("intelligence", ability_int_mod_value));
 
       const ability_wis = `${creature.ability_wis}`;
       const ability_wis_mod_value = getAbilityMod(creature.ability_wis);
       const ability_wis_mod = formatMod(ability_wis_mod_value);
-      const ability_wis_save = formatMod(
-        getAbilitySave("wisdom", ability_wis_mod_value),
-      );
+      const ability_wis_save = formatMod(getAbilitySave("wisdom", ability_wis_mod_value));
 
       const ability_cha = `${creature.ability_cha}`;
       const ability_cha_mod_value = getAbilityMod(creature.ability_cha);
       const ability_cha_mod = formatMod(ability_cha_mod_value);
-      const ability_cha_save = formatMod(
-        getAbilitySave("charisma", ability_cha_mod_value),
-      );
+      const ability_cha_save = formatMod(getAbilitySave("charisma", ability_cha_mod_value));
 
       // Get ability modifier by ability name
       const abilityModByAbility = {
@@ -261,19 +232,18 @@ export function useLocalizeCreature(
       // Perception
       const perception =
         ability_wis_mod_value +
-        (creature.skill_expertise.includes("perception") ? 2 * pb
-        : creature.skill_proficiencies.includes("perception") ? pb
-        : 0);
+        (creature.skill_expertise.includes("perception")
+          ? 2 * pb
+          : creature.skill_proficiencies.includes("perception")
+            ? pb
+            : 0);
 
       // Stats section
       const info_parts: [string, string][] = [];
 
       // Skill proficiencies
       let skills = "";
-      if (
-        creature.skill_proficiencies.length ||
-        creature.skill_expertise.length
-      ) {
+      if (creature.skill_proficiencies.length || creature.skill_expertise.length) {
         const pbsBySkill: Partial<Record<CreatureSkill, number>> = {};
         creature.skill_proficiencies.forEach((s) => (pbsBySkill[s] = pb));
         creature.skill_expertise.forEach((s) => (pbsBySkill[s] = 2 * pb));
@@ -319,8 +289,7 @@ export function useLocalizeCreature(
         info_parts.push([
           tp(
             "info.immunities",
-            creature.damage_immunities.length +
-              creature.condition_immunities.length,
+            creature.damage_immunities.length + creature.condition_immunities.length,
           ),
           immunities,
         ]);
@@ -334,8 +303,7 @@ export function useLocalizeCreature(
         info_parts.push([
           tp(
             "info.resistances",
-            creature.damage_resistances.length +
-              creature.condition_resistances.length,
+            creature.damage_resistances.length + creature.condition_resistances.length,
           ),
           resistances,
         ]);
@@ -349,8 +317,7 @@ export function useLocalizeCreature(
         info_parts.push([
           tp(
             "info.vulnerabilities",
-            creature.damage_vulnerabilities.length +
-              creature.condition_vulnerabilities.length,
+            creature.damage_vulnerabilities.length + creature.condition_vulnerabilities.length,
           ),
           vulnerabilities,
         ]);
@@ -368,10 +335,7 @@ export function useLocalizeCreature(
         .filter((entry) => entry)
         .join(", ");
       if (gear) {
-        info_parts.push([
-          tp("info.gear", creature.gear.equipments.length),
-          gear,
-        ]);
+        info_parts.push([tp("info.gear", creature.gear.equipments.length), gear]);
       }
 
       // Languages
@@ -382,81 +346,56 @@ export function useLocalizeCreature(
         .filter(({ mode }) => mode === "understands")
         .map(({ language_id }) => language_id);
       const baseLanguages =
-        creature.language_scope === "all" ? t("languages.all")
-        : creature.language_scope === "none" ? ""
-        : spokenLanguageIds
-            .map(localizeLanguageName)
-            .filter(Boolean)
-            .sort()
-            .join(", ");
+        creature.language_scope === "all"
+          ? t("languages.all")
+          : creature.language_scope === "none"
+            ? ""
+            : spokenLanguageIds.map(localizeLanguageName).filter(Boolean).sort().join(", ");
       const understoodLanguages =
-        creature.language_scope === "specific" ?
-          understoodLanguageIds
-            .map(localizeLanguageName)
-            .filter(Boolean)
-            .sort()
-            .join(", ")
-        : "";
+        creature.language_scope === "specific"
+          ? understoodLanguageIds.map(localizeLanguageName).filter(Boolean).sort().join(", ")
+          : "";
       const additionalLanguages =
-        (
-          creature.language_additional_count > 0 &&
-          creature.language_scope === "specific"
-        ) ?
-          tpi(
-            baseLanguages.length ? "languages.additional" : "languages.count",
-            creature.language_additional_count,
-            formatNumberAsWord(creature.language_additional_count, lang),
-          )
-        : "";
+        creature.language_additional_count > 0 && creature.language_scope === "specific"
+          ? tpi(
+              baseLanguages.length ? "languages.additional" : "languages.count",
+              creature.language_additional_count,
+              formatNumberAsWord(creature.language_additional_count, lang),
+            )
+          : "";
       const telepathy =
-        creature.telepathy_range > 0 ?
-          ti("languages.telepathy", formatCm(creature.telepathy_range))
-        : "";
+        creature.telepathy_range > 0
+          ? ti("languages.telepathy", formatCm(creature.telepathy_range))
+          : "";
       const languages =
         [
           [baseLanguages, additionalLanguages].filter(Boolean).join(" "),
-          understoodLanguages ?
-            tpi(
-              "languages.understands",
-              understoodLanguageIds.length,
-              understoodLanguages,
-            )
-          : "",
+          understoodLanguages
+            ? tpi("languages.understands", understoodLanguageIds.length, understoodLanguages)
+            : "",
           telepathy,
         ]
           .filter(Boolean)
           .join("; ") || t("languages.none");
       if (languages) {
-        info_parts.push([
-          tp("info.languages", creature.language_entries.length),
-          languages,
-        ]);
+        info_parts.push([tp("info.languages", creature.language_entries.length), languages]);
       }
 
       // Senses
-      const blindsight =
-        creature.blindsight ?
-          ti("senses.blindsight", formatCm(creature.blindsight))
+      const blindsight = creature.blindsight
+        ? ti("senses.blindsight", formatCm(creature.blindsight))
         : "";
-      const darkvision =
-        creature.darkvision ?
-          ti("senses.darkvision", formatCm(creature.darkvision))
+      const darkvision = creature.darkvision
+        ? ti("senses.darkvision", formatCm(creature.darkvision))
         : "";
-      const tremorsense =
-        creature.tremorsense ?
-          ti("senses.tremorsense", formatCm(creature.tremorsense))
+      const tremorsense = creature.tremorsense
+        ? ti("senses.tremorsense", formatCm(creature.tremorsense))
         : "";
-      const truesight =
-        creature.truesight ?
-          ti("senses.truesight", formatCm(creature.truesight))
+      const truesight = creature.truesight
+        ? ti("senses.truesight", formatCm(creature.truesight))
         : "";
 
-      const sensesParts = [
-        blindsight,
-        darkvision,
-        tremorsense,
-        truesight,
-      ].filter((sense) => sense);
+      const sensesParts = [blindsight, darkvision, tremorsense, truesight].filter((sense) => sense);
       const senses = sensesParts.join(", ");
       if (senses) {
         info_parts.push([tp("info.senses", sensesParts.length), senses]);
@@ -479,9 +418,7 @@ export function useLocalizeCreature(
 
       const bonus_actions = translate(creature.bonus_actions, lang);
       if (bonus_actions) {
-        details_parts.push(
-          t("description.bonus_actions") + "\r" + bonus_actions,
-        );
+        details_parts.push(t("description.bonus_actions") + "\r" + bonus_actions);
       }
 
       const reactions = translate(creature.reactions, lang);
@@ -491,21 +428,18 @@ export function useLocalizeCreature(
 
       const legendary_actions = translate(creature.legendary_actions, lang);
       if (legendary_actions) {
-        const lac =
-          creature.legendary_actions_count ?
-            formatNumber(creature.legendary_actions_count, lang)
+        const lac = creature.legendary_actions_count
+          ? formatNumber(creature.legendary_actions_count, lang)
           : "";
         const llac =
-          creature.legendary_actions_count && creature.has_lair ?
-            formatNumber(creature.lair_legendary_actions_count, lang)
-          : "";
+          creature.legendary_actions_count && creature.has_lair
+            ? formatNumber(creature.lair_legendary_actions_count, lang)
+            : "";
         const title =
-          lac && llac && lac !== llac ?
-            ti("description.legendary_actions_with_lair", lac, llac)
-          : ti("description.legendary_actions", lac);
-        details_parts.push(
-          title + (legendary_actions ? "\r" + legendary_actions : ""),
-        );
+          lac && llac && lac !== llac
+            ? ti("description.legendary_actions_with_lair", lac, llac)
+            : ti("description.legendary_actions", lac);
+        details_parts.push(title + (legendary_actions ? "\r" + legendary_actions : ""));
       }
 
       const lair_effects = translate(creature.lair_effects, lang);
@@ -517,9 +451,8 @@ export function useLocalizeCreature(
 
       return {
         ...localizeResource(creature),
-        descriptor:
-          tags ?
-            ti("subtitle.with_tags", size, type, alignment, tags)
+        descriptor: tags
+          ? ti("subtitle.with_tags", size, type, alignment, tags)
           : ti("subtitle.without_tags", size, type, alignment),
         details,
 

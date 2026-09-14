@@ -1,9 +1,6 @@
 import { type LocalizedService } from "~/models/resources/services/localized-service";
 import { type Service } from "~/models/resources/services/service";
-import {
-  serviceForm,
-  serviceFormDataToResource,
-} from "~/models/resources/services/service-form";
+import { serviceForm, serviceFormDataToResource } from "~/models/resources/services/service-form";
 import { serviceStore } from "~/models/resources/services/service-store";
 import { createResourcesPanel } from "../resources-panel";
 import { createResourcesTableColumns } from "../resources-table-columns";

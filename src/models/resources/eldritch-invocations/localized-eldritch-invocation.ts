@@ -2,15 +2,8 @@ import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import {
-  formatInfo,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
-import {
-  type EldritchInvocation,
-  eldritchInvocationSchema,
-} from "./eldritch-invocation";
+import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import { type EldritchInvocation, eldritchInvocationSchema } from "./eldritch-invocation";
 
 //------------------------------------------------------------------------------
 // Localized Eldritch Invocation
@@ -25,9 +18,7 @@ export const localizedEldritchInvocationSchema = localizedResourceSchema(
   other_prerequisite: z.string(),
 });
 
-export type LocalizedEldritchInvocation = z.infer<
-  typeof localizedEldritchInvocationSchema
->;
+export type LocalizedEldritchInvocation = z.infer<typeof localizedEldritchInvocationSchema>;
 
 //------------------------------------------------------------------------------
 // Use Localized Eldritch Invocation
@@ -42,16 +33,12 @@ export function useLocalizeEldritchInvocation(): (
   return useCallback(
     (eldritchInvocation: EldritchInvocation): LocalizedEldritchInvocation => {
       const minWarlockLevel = eldritchInvocation.min_warlock_level;
-      const otherPrerequisite =
-        eldritchInvocation.prerequisite ?
-          translate(eldritchInvocation.prerequisite, lang)
+      const otherPrerequisite = eldritchInvocation.prerequisite
+        ? translate(eldritchInvocation.prerequisite, lang)
         : undefined;
 
       const info = formatInfo([
-        [
-          tp("requisites", otherPrerequisite?.includes(",") ? 2 : 1),
-          otherPrerequisite ?? "",
-        ],
+        [tp("requisites", otherPrerequisite?.includes(",") ? 2 : 1), otherPrerequisite ?? ""],
       ]);
 
       return {

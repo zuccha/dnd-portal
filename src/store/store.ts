@@ -1,11 +1,7 @@
 import { useLayoutEffect, useState } from "react";
 import type { Callback1 } from "~/utils/callback";
 import { createObservable } from "~/utils/observable";
-import {
-  type StateSetter,
-  type StateUpdate,
-  isStateUpdater,
-} from "~/utils/state";
+import { type StateSetter, type StateUpdate, isStateUpdater } from "~/utils/state";
 
 //------------------------------------------------------------------------------
 // Store
@@ -29,10 +25,7 @@ export type Store<T> = {
 
 export function createStore<T>(
   id: string,
-  {
-    initCache,
-    onCacheUpdate,
-  }: { initCache: () => T; onCacheUpdate: (value: T) => void },
+  { initCache, onCacheUpdate }: { initCache: () => T; onCacheUpdate: (value: T) => void },
 ): Store<T> {
   const { notify, subscribe, unsubscribe } = createObservable<T>(id);
 

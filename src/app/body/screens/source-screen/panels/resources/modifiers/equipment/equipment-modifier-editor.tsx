@@ -3,10 +3,7 @@ import { useI18nLang } from "~/i18n/i18n-lang";
 import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
 import type { EquipmentModifierFormData } from "~/models/resources/modifiers/equipment/equipment-modifier-form";
 import type { ResourceOption } from "~/models/resources/resource";
-import {
-  type EquipmentRarity,
-  useEquipmentRarityOptions,
-} from "~/models/types/equipment-rarity";
+import { type EquipmentRarity, useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../../resource-editor";
 import {
@@ -33,9 +30,10 @@ type SupportedEquipmentOptionsStore = {
   useResourceOptions: (sourceId: string) => ResourceOption[];
 };
 
-export function createEquipmentModifierEditor<
-  F extends EquipmentModifierFormData,
->(form: Form<F>, supportedEquipmentStore: SupportedEquipmentOptionsStore) {
+export function createEquipmentModifierEditor<F extends EquipmentModifierFormData>(
+  form: Form<F>,
+  supportedEquipmentStore: SupportedEquipmentOptionsStore,
+) {
   //----------------------------------------------------------------------------
   // Resource Editor
   //----------------------------------------------------------------------------
@@ -167,22 +165,16 @@ export function createEquipmentModifierEditor<
   // Equipment Modifier Editor
   //----------------------------------------------------------------------------
 
-  return function EquipmentModifierEditor({
-    resource,
-    sourceId,
-  }: EquipmentModifierEditorProps) {
+  return function EquipmentModifierEditor({ resource, sourceId }: EquipmentModifierEditorProps) {
     const [lang] = useI18nLang();
     const { value: makeMagic } = useMakeMagic(resource.make_magic);
-    const { value: requiredAttunementSlotsMinimum } =
-      useRequiredAttunementSlotsMinimum(
-        resource.required_attunement_slots_minimum,
-      );
+    const { value: requiredAttunementSlotsMinimum } = useRequiredAttunementSlotsMinimum(
+      resource.required_attunement_slots_minimum,
+    );
 
     return (
       <ResourceEditor resource={resource}>
-        <CompositeNameField
-          defaultValue={resource.composite_name[lang] ?? "{1}"}
-        />
+        <CompositeNameField defaultValue={resource.composite_name[lang] ?? "{1}"} />
         <AppliesToField defaultValue={resource.applies_to[lang] ?? ""} />
 
         <HStack align="flex-start" gap={4} w="full">
@@ -203,18 +195,12 @@ export function createEquipmentModifierEditor<
         </HStack>
 
         {makeMagic && requiredAttunementSlotsMinimum > 0 && (
-          <AttunementNotesDeltaField
-            defaultValue={resource.attunement_notes_delta[lang] ?? ""}
-          />
+          <AttunementNotesDeltaField defaultValue={resource.attunement_notes_delta[lang] ?? ""} />
         )}
 
         <NotesDeltaField defaultValue={resource.notes_delta[lang] ?? ""} />
 
-        <EquipmentField
-          defaultValue={resource.equipment_ids}
-          sourceId={sourceId}
-          w="full"
-        />
+        <EquipmentField defaultValue={resource.equipment_ids} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

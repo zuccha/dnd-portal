@@ -34,5 +34,6 @@ export const defaultCharacterSubclass: CharacterSubclass = {
 // Character Subclass Translation Fields
 //------------------------------------------------------------------------------
 
-export const characterSubclassTranslationFields: TranslationFields<CharacterSubclass>[] =
-  [...resourceTranslationFields];
+export const characterSubclassTranslationFields: TranslationFields<CharacterSubclass>[] = [
+  ...resourceTranslationFields,
+];

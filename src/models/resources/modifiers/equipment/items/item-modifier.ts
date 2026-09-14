@@ -1,10 +1,10 @@
 import z from "zod";
-import type { TranslationFields } from "../../../resource";
 import {
   defaultEquipmentModifier,
   equipmentModifierSchema,
   equipmentModifierTranslationFields,
 } from "../equipment-modifier";
+import type { TranslationFields } from "../../../resource";
 
 //------------------------------------------------------------------------------
 // Item Modifier
@@ -29,5 +29,6 @@ export const defaultItemModifier: ItemModifier = {
 // Item Modifier Translation Fields
 //------------------------------------------------------------------------------
 
-export const itemModifierTranslationFields: TranslationFields<ItemModifier>[] =
-  [...equipmentModifierTranslationFields];
+export const itemModifierTranslationFields: TranslationFields<ItemModifier>[] = [
+  ...equipmentModifierTranslationFields,
+];

@@ -1,26 +1,16 @@
-import {
-  Button as ChakraButton,
-  type ButtonProps as ChakraButtonProps,
-} from "@chakra-ui/react";
+import { Button as ChakraButton, type ButtonProps as ChakraButtonProps } from "@chakra-ui/react";
 import { useCallback } from "react";
 
 //------------------------------------------------------------------------------
 // Inclusion Button
 //------------------------------------------------------------------------------
 
-export type InclusionButtonProps = Omit<
-  ChakraButtonProps,
-  "colorScheme" | "onClick"
-> & {
+export type InclusionButtonProps = Omit<ChakraButtonProps, "colorScheme" | "onClick"> & {
   include: boolean | undefined;
   onValueChange?: (include: boolean | undefined) => void;
 };
 
-export default function InclusionButton({
-  include,
-  onValueChange,
-  ...rest
-}: InclusionButtonProps) {
+export default function InclusionButton({ include, onValueChange, ...rest }: InclusionButtonProps) {
   const includeKey = String(include) as IncludeKey;
 
   const toggleState = useCallback(

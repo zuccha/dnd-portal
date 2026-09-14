@@ -1,29 +1,20 @@
 import { HStack } from "@chakra-ui/react";
-import type { ComponentType } from "react";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import type { PaletteName } from "~/utils/palette";
-import {
-  type ResourceCreatorExtra,
-  createResourceDialogCreator,
-} from "./resource-dialog-creator";
+import { type ResourceCreatorExtra, createResourceDialogCreator } from "./resource-dialog-creator";
 import {
   type ResourceDialogUpdaterExtra,
   createResourceDialogUpdater,
 } from "./resource-dialog-updater";
-import {
-  type ResourcesAlbumExtra,
-  createResourcesAlbum,
-} from "./resources-album";
+import { type ResourcesAlbumExtra, createResourcesAlbum } from "./resources-album";
 import { createResourcesContext } from "./resources-context";
 import { type ResourcesFiltersExtra } from "./resources-filters";
 import { createResourcesSidebar } from "./resources-sidebar";
-import {
-  type ResourcesTableExtra,
-  createResourcesTable,
-} from "./resources-table";
+import { type ResourcesTableExtra, createResourcesTable } from "./resources-table";
+import type { ComponentType } from "react";
 
 export function createResourcesPanel<
   R extends Resource,
@@ -65,14 +56,7 @@ export function createResourcesPanel<
     const view = context.useView();
 
     return (
-      <HStack
-        flex={1}
-        gap={0}
-        h="full"
-        overflow="auto"
-        position="relative"
-        w="full"
-      >
+      <HStack flex={1} gap={0} h="full" overflow="auto" position="relative" w="full">
         {view === "table" && <ResourcesTable sourceId={sourceId} />}
         {view === "cards" && <ResourcesAlbum sourceId={sourceId} />}
 

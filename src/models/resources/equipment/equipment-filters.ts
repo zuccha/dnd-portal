@@ -1,9 +1,6 @@
 import z from "zod";
 import { equipmentRaritySchema } from "../../types/equipment-rarity";
-import {
-  resourceFiltersSchema,
-  resourceOrderOptions,
-} from "../resource-filters";
+import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Equipment Order Options
@@ -17,9 +14,7 @@ export const equipmentOrderOptions = resourceOrderOptions;
 
 export const equipmentFiltersSchema = resourceFiltersSchema.extend({
   magic: z.boolean().optional(),
-  rarities: z
-    .partialRecord(equipmentRaritySchema, z.boolean().optional())
-    .optional(),
+  rarities: z.partialRecord(equipmentRaritySchema, z.boolean().optional()).optional(),
   requires_attunement: z.boolean().optional(),
 });
 

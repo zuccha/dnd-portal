@@ -1,12 +1,4 @@
-import {
-  Badge,
-  Box,
-  CloseButton,
-  Dialog,
-  Portal,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Badge, Box, CloseButton, Dialog, Portal, Text, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
 import Button from "~/ui/button";
@@ -73,9 +65,7 @@ export default function SourceDependenciesDialog({
               <VStack align="flex-start" gap={4}>
                 <Text color="fg.muted" fontSize="sm">
                   {ti(
-                    mode === "remove" ? "remove.description" : (
-                      "dependencies.description"
-                    ),
+                    mode === "remove" ? "remove.description" : "dependencies.description",
                     sourceName,
                   )}
                 </Text>
@@ -110,9 +100,7 @@ export default function SourceDependenciesDialog({
 
                 {mode === "dependencies" && registryDependencies.length > 0 && (
                   <VStack align="flex-start" gap={2} w="full">
-                    <Text fontWeight="semibold">
-                      {t("dependencies.repository")}
-                    </Text>
+                    <Text fontWeight="semibold">{t("dependencies.repository")}</Text>
                     <VStack align="stretch" gap={1} w="full">
                       {registryDependencies.map((dependency) => (
                         <Box
@@ -123,9 +111,7 @@ export default function SourceDependenciesDialog({
                           px={3}
                           py={2}
                         >
-                          <Text fontSize="sm">
-                            {dependency.name[lang] || dependency.code}
-                          </Text>
+                          <Text fontSize="sm">{dependency.name[lang] || dependency.code}</Text>
                           <Text color="fg.muted" fontSize="xs">
                             {dependency.code}
                           </Text>
@@ -137,9 +123,7 @@ export default function SourceDependenciesDialog({
 
                 {mode === "dependencies" && missingDependencies.length > 0 && (
                   <VStack align="flex-start" gap={2} w="full">
-                    <Text fontWeight="semibold">
-                      {t("dependencies.missing")}
-                    </Text>
+                    <Text fontWeight="semibold">{t("dependencies.missing")}</Text>
                     <Box
                       bgColor="bg.subtle"
                       borderColor="border"
@@ -170,9 +154,7 @@ export default function SourceDependenciesDialog({
 
                 <Text color="fg.muted" fontSize="sm">
                   {t(
-                    mode === "remove" ?
-                      "remove.irreversible"
-                    : "dependencies.continue_description",
+                    mode === "remove" ? "remove.irreversible" : "dependencies.continue_description",
                   )}
                 </Text>
               </VStack>
@@ -186,29 +168,18 @@ export default function SourceDependenciesDialog({
               justifyContent="flex-end"
               w="full"
             >
-              <Button
-                onClick={onCancel}
-                variant="outline"
-                w={{ base: "full", sm: "auto" }}
-              >
+              <Button onClick={onCancel} variant="outline" w={{ base: "full", sm: "auto" }}>
                 {t("cancel")}
               </Button>
-              {mode === "remove" ?
-                <Button
-                  colorPalette="red"
-                  onClick={onRemove}
-                  w={{ base: "full", sm: "auto" }}
-                >
+              {mode === "remove" ? (
+                <Button colorPalette="red" onClick={onRemove} w={{ base: "full", sm: "auto" }}>
                   {t("remove.confirm_action")}
                 </Button>
-              : <Button
-                  onClick={onContinue}
-                  variant="outline"
-                  w={{ base: "full", sm: "auto" }}
-                >
+              ) : (
+                <Button onClick={onContinue} variant="outline" w={{ base: "full", sm: "auto" }}>
                   {t("dependencies.continue")}
                 </Button>
-              }
+              )}
               {mode === "dependencies" && registryDependencies.length > 0 && (
                 <Button onClick={onDownload} w={{ base: "full", sm: "auto" }}>
                   {t("dependencies.download")}

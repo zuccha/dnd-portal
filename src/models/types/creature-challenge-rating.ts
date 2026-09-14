@@ -5,8 +5,8 @@ import { z } from "zod";
 //------------------------------------------------------------------------------
 
 export const creatureChallengeRatings = [
-  0, 0.125, 0.25, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-  17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+  0, 0.125, 0.25, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+  22, 23, 24, 25, 26, 27, 28, 29, 30,
 ] as const;
 
 export const creatureChallengeRatingSchema = z.union(
@@ -17,13 +17,9 @@ export const creatureChallengeRatingStringSchema = z.union(
   creatureChallengeRatings.map((level) => z.literal(`${level}`)),
 );
 
-export type CreatureChallengeRating = z.infer<
-  typeof creatureChallengeRatingSchema
->;
+export type CreatureChallengeRating = z.infer<typeof creatureChallengeRatingSchema>;
 
-export type CreatureChallengeRatingString = z.infer<
-  typeof creatureChallengeRatingStringSchema
->;
+export type CreatureChallengeRatingString = z.infer<typeof creatureChallengeRatingStringSchema>;
 
 //------------------------------------------------------------------------------
 // Parse/Stringify Creature Challenge Rating
@@ -36,8 +32,8 @@ export function parseCreatureChallengeRating(
   if (creatureChallengeRating === "¼") return 0.25;
   if (creatureChallengeRating === "½") return 0.5;
   const value = parseInt(creatureChallengeRating);
-  return creatureChallengeRatings.includes(value as CreatureChallengeRating) ?
-      (value as CreatureChallengeRating)
+  return creatureChallengeRatings.includes(value as CreatureChallengeRating)
+    ? (value as CreatureChallengeRating)
     : 0;
 }
 
@@ -54,12 +50,10 @@ export function stringifyCreatureChallengeRating(
 // Use Creature Challenge Rating Options
 //------------------------------------------------------------------------------
 
-const creatureChallengeRatingOptions = creatureChallengeRatings.map(
-  (value) => ({
-    label: stringifyCreatureChallengeRating(value),
-    value: value,
-  }),
-);
+const creatureChallengeRatingOptions = creatureChallengeRatings.map((value) => ({
+  label: stringifyCreatureChallengeRating(value),
+  value: value,
+}));
 
 export function useCreatureChallengeRatingOptions() {
   return creatureChallengeRatingOptions;

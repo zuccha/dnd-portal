@@ -21,12 +21,12 @@ export const defaultPalette = {
   800: "#27272a",
 };
 
-const palette = (
-  c50: string,
-  c100: string,
-  c700: string,
-  c800: string,
-): Palette => ({ 50: c50, 100: c100, 700: c700, 800: c800 });
+const palette = (c50: string, c100: string, c700: string, c800: string): Palette => ({
+  50: c50,
+  100: c100,
+  700: c700,
+  800: c800,
+});
 
 //------------------------------------------------------------------------------
 // Palette Name

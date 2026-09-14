@@ -6,10 +6,7 @@ import type { ResourcesTableExtra } from "./resources-table";
 // Create Resources Table Columns
 //------------------------------------------------------------------------------
 
-export function createResourcesTableColumns<
-  R extends Resource,
-  L extends LocalizedResource<R>,
->(
+export function createResourcesTableColumns<R extends Resource, L extends LocalizedResource<R>>(
   others: ResourcesTableExtra<R, L>["columns"],
 ): ResourcesTableExtra<R, L>["columns"] {
   return [

@@ -44,9 +44,7 @@ export default function ItemsFilters(props: StackProps) {
       <CaptionInput caption={t("types")} w="full">
         <InclusionSelect
           includes={filters.types ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ types: { ...filters.types, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ types: { ...filters.types, ...partial } })}
           options={typeOptions}
           placeholder={t("types")}
           size="sm"

@@ -9,11 +9,7 @@ import {
 } from "~/models/types/character-level";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
-import {
-  createInputField,
-  createSelectField,
-  createTextareaField,
-} from "../resource-editor-form";
+import { createInputField, createSelectField, createTextareaField } from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
 // Create Eldritch Invocation Editor
@@ -23,9 +19,7 @@ export type EldritchInvocationEditorProps = {
   resource: EldritchInvocation;
 };
 
-export function createEldritchInvocationEditor(
-  form: Form<EldritchInvocationFormData>,
-) {
+export function createEldritchInvocationEditor(form: Form<EldritchInvocationFormData>) {
   //----------------------------------------------------------------------------
   // Resource Editor
   //----------------------------------------------------------------------------
@@ -79,18 +73,13 @@ export function createEldritchInvocationEditor(
   // Eldritch Invocation Editor
   //----------------------------------------------------------------------------
 
-  return function EldritchInvocationEditor({
-    resource,
-  }: EldritchInvocationEditorProps) {
+  return function EldritchInvocationEditor({ resource }: EldritchInvocationEditorProps) {
     const [lang] = useI18nLang();
 
     return (
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
-          <MinWarlockLevelField
-            defaultValue={resource.min_warlock_level}
-            w="5em"
-          />
+          <MinWarlockLevelField defaultValue={resource.min_warlock_level} w="5em" />
           <PrerequisiteField defaultValue={resource.prerequisite[lang] ?? ""} />
         </HStack>
 

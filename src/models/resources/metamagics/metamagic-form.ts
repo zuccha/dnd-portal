@@ -42,7 +42,4 @@ export function metamagicFormDataToResource(
 // Metamagic Form
 //------------------------------------------------------------------------------
 
-export const metamagicForm = createForm(
-  "metamagic",
-  metamagicFormDataSchema.parse,
-);
+export const metamagicForm = createForm("metamagic", metamagicFormDataSchema.parse);

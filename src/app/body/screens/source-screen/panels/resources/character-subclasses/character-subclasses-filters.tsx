@@ -19,8 +19,7 @@ export default function CharacterSubclassesFilters({
 }: CharacterSubclassesFiltersProps) {
   const { t } = useI18nLangContext(i18nContext);
 
-  const characterClassOptions =
-    characterClassStore.useResourceOptions(sourceId);
+  const characterClassOptions = characterClassStore.useResourceOptions(sourceId);
 
   const [filters, setFilters] = characterSubclassStore.useFilters();
 

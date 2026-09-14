@@ -6,10 +6,7 @@ import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
 import { useTranslateEquipmentRarity } from "~/models/types/equipment-rarity";
 import { formatDetails } from "../../localized-resource";
-import {
-  localizedModifierSchema,
-  useLocalizeModifier,
-} from "../localized-modifier";
+import { localizedModifierSchema, useLocalizeModifier } from "../localized-modifier";
 import { type EquipmentModifier } from "./equipment-modifier";
 
 //------------------------------------------------------------------------------
@@ -52,19 +49,15 @@ export function useLocalizeEquipmentModifier<EM extends EquipmentModifier>(): (
   return useCallback(
     (equipmentModifier: EM): LocalizedEquipmentModifier<EM> => {
       const appliesTo = translate(equipmentModifier.applies_to, lang);
-      const attunementNotesDelta = translate(
-        equipmentModifier.attunement_notes_delta,
-        lang,
-      );
+      const attunementNotesDelta = translate(equipmentModifier.attunement_notes_delta, lang);
       const notesDelta = translate(equipmentModifier.notes_delta, lang);
-      const rarityMinimum =
-        equipmentModifier.rarity_minimum ?
-          translateRarity(equipmentModifier.rarity_minimum).label
+      const rarityMinimum = equipmentModifier.rarity_minimum
+        ? translateRarity(equipmentModifier.rarity_minimum).label
         : "";
       const requiredAttunementSlotsMinimum =
-        equipmentModifier.required_attunement_slots_minimum > 0 ?
-          `${equipmentModifier.required_attunement_slots_minimum}`
-        : "";
+        equipmentModifier.required_attunement_slots_minimum > 0
+          ? `${equipmentModifier.required_attunement_slots_minimum}`
+          : "";
 
       return {
         ...localizeModifier(equipmentModifier),
@@ -78,9 +71,8 @@ export function useLocalizeEquipmentModifier<EM extends EquipmentModifier>(): (
         make_magic: equipmentModifier.make_magic,
         notes_delta: notesDelta,
         rarity_minimum: rarityMinimum,
-        required_attunement_slots_minimum:
-          requiredAttunementSlotsMinimum ?
-            ti("attunement_slots_minimum", requiredAttunementSlotsMinimum)
+        required_attunement_slots_minimum: requiredAttunementSlotsMinimum
+          ? ti("attunement_slots_minimum", requiredAttunementSlotsMinimum)
           : "",
         weight_delta: formatWeight(equipmentModifier.weight_delta),
       };

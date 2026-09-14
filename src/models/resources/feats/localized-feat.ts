@@ -16,10 +16,7 @@ import { type Feat, featSchema } from "./feat";
 // Localized Feat
 //------------------------------------------------------------------------------
 
-export const localizedFeatSchema = localizedResourceSchema(
-  featSchema,
-  z.literal("feat"),
-).extend({
+export const localizedFeatSchema = localizedResourceSchema(featSchema, z.literal("feat")).extend({
   category: z.string(),
   info: z.string(),
   min_level: z.string(),
@@ -32,9 +29,7 @@ export type LocalizedFeat = z.infer<typeof localizedFeatSchema>;
 // Use Localized Feat
 //------------------------------------------------------------------------------
 
-export function useLocalizeFeat(
-  sourceId: string,
-): (feat: Feat) => LocalizedFeat {
+export function useLocalizeFeat(sourceId: string): (feat: Feat) => LocalizedFeat {
   const localizeResource = useLocalizeResource<Feat>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
@@ -62,14 +57,7 @@ export function useLocalizeFeat(
         prerequisite,
       };
     },
-    [
-      formatFeatureEntriesDetails,
-      lang,
-      localizeResource,
-      t,
-      ti,
-      translateFeatCategory,
-    ],
+    [formatFeatureEntriesDetails, lang, localizeResource, t, ti, translateFeatCategory],
   );
 }
 

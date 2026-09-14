@@ -28,35 +28,20 @@ import {
   eldritchInvocationFormDataToResource,
 } from "~/models/resources/eldritch-invocations/eldritch-invocation-form";
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
-import {
-  armorForm,
-  armorFormDataToResource,
-} from "~/models/resources/equipment/armors/armor-form";
+import { armorForm, armorFormDataToResource } from "~/models/resources/equipment/armors/armor-form";
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
-import {
-  itemForm,
-  itemFormDataToResource,
-} from "~/models/resources/equipment/items/item-form";
+import { itemForm, itemFormDataToResource } from "~/models/resources/equipment/items/item-form";
 import { itemStore } from "~/models/resources/equipment/items/item-store";
-import {
-  toolForm,
-  toolFormDataToResource,
-} from "~/models/resources/equipment/tools/tool-form";
+import { toolForm, toolFormDataToResource } from "~/models/resources/equipment/tools/tool-form";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import {
   weaponForm,
   weaponFormDataToResource,
 } from "~/models/resources/equipment/weapons/weapon-form";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
-import {
-  featForm,
-  featFormDataToResource,
-} from "~/models/resources/feats/feat-form";
+import { featForm, featFormDataToResource } from "~/models/resources/feats/feat-form";
 import { featStore } from "~/models/resources/feats/feat-store";
-import {
-  featureForm,
-  featureFormDataToResource,
-} from "~/models/resources/features/feature-form";
+import { featureForm, featureFormDataToResource } from "~/models/resources/features/feature-form";
 import { featureStore } from "~/models/resources/features/feature-store";
 import {
   languageForm,
@@ -93,35 +78,17 @@ import {
   weaponModifierFormDataToResource,
 } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-form";
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
-import {
-  planeForm,
-  planeFormDataToResource,
-} from "~/models/resources/planes/plane-form";
+import { planeForm, planeFormDataToResource } from "~/models/resources/planes/plane-form";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import type { TranslationFields } from "~/models/resources/resource";
-import type {
-  LocalizedResourceUnion,
-  ResourceUnion,
-} from "~/models/resources/resource-union";
-import {
-  serviceForm,
-  serviceFormDataToResource,
-} from "~/models/resources/services/service-form";
+import type { LocalizedResourceUnion, ResourceUnion } from "~/models/resources/resource-union";
+import { serviceForm, serviceFormDataToResource } from "~/models/resources/services/service-form";
 import { serviceStore } from "~/models/resources/services/service-store";
-import {
-  speciesForm,
-  speciesFormDataToResource,
-} from "~/models/resources/species/species-form";
+import { speciesForm, speciesFormDataToResource } from "~/models/resources/species/species-form";
 import { speciesStore } from "~/models/resources/species/species-store";
-import {
-  spellForm,
-  spellFormDataToResource,
-} from "~/models/resources/spells/spell-form";
+import { spellForm, spellFormDataToResource } from "~/models/resources/spells/spell-form";
 import { spellStore } from "~/models/resources/spells/spell-store";
-import {
-  vehicleForm,
-  vehicleFormDataToResource,
-} from "~/models/resources/vehicles/vehicle-form";
+import { vehicleForm, vehicleFormDataToResource } from "~/models/resources/vehicles/vehicle-form";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
 import type { Form } from "~/utils/form";
 import { createBackgroundEditor } from "../resources/backgrounds/background-editor";
@@ -168,9 +135,7 @@ export type PrintDeckEditorRegistryEntry = {
     lang: string,
   ) => PrintDeckEditorPatch | string;
   translationFields: TranslationFields<ResourceUnion>[];
-  useLocalizeResource: (
-    sourceId: string,
-  ) => (resource: unknown) => LocalizedResourceUnion;
+  useLocalizeResource: (sourceId: string) => (resource: unknown) => LocalizedResourceUnion;
 };
 
 export type PrintDeckEditorRegistry = Partial<

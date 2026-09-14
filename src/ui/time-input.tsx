@@ -13,12 +13,7 @@ import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 export type TimeInputProps = Omit<
   MeasureInputProps<TimeUnit>,
-  | "onUnitChange"
-  | "onValueChange"
-  | "onParse"
-  | "unit"
-  | "unitOptions"
-  | "value"
+  "onUnitChange" | "onValueChange" | "onParse" | "unit" | "unitOptions" | "value"
 > & {
   id?: string;
   name?: string;
@@ -28,11 +23,7 @@ export type TimeInputProps = Omit<
   value: number;
 };
 
-export default function TimeInput({
-  onValueChange,
-  value,
-  ...rest
-}: TimeInputProps) {
+export default function TimeInput({ onValueChange, value, ...rest }: TimeInputProps) {
   const [unit, setUnit] = useState<TimeUnit>("min");
 
   const unitOptions = useTimeUnitOptions();

@@ -1,17 +1,5 @@
-import {
-  AbsoluteCenter,
-  Box,
-  Spinner,
-  type StackProps,
-  VStack,
-} from "@chakra-ui/react";
-import {
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { AbsoluteCenter, Box, Spinner, type StackProps, VStack } from "@chakra-ui/react";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import usePaginatedContent from "~/hooks/use-paginated-content";
 import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
@@ -35,20 +23,14 @@ export type ResourcePokerCardProps<
   footer?: ReactNode;
   localizedResource: L;
   mode?: "paginated" | "scroll";
-  onPageCountChange?: (
-    count: number | undefined,
-    firstDetailsPageOverflow: boolean,
-  ) => void;
+  onPageCountChange?: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
   selectedPageIndex?: number;
   showImage: boolean;
   startDetailsOnSecondPage?: boolean;
 };
 
-export function ResourcePokerCard<
-  R extends Resource,
-  L extends LocalizedResource<R>,
->({
+export function ResourcePokerCard<R extends Resource, L extends LocalizedResource<R>>({
   alwaysEvenPages,
   afterDescriptor,
   beforeDetails,
@@ -135,19 +117,13 @@ type PaginatedResourcePokerCardProps<
   hasImage: boolean;
   imageUrl: string;
   localizedResource: L;
-  onPageCountChange: (
-    count: number | undefined,
-    firstDetailsPageOverflow: boolean,
-  ) => void;
+  onPageCountChange: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
   selectedPageIndex: number;
   startDetailsOnSecondPage: boolean;
 };
 
-function PaginatedResourcePokerCard<
-  R extends Resource,
-  L extends LocalizedResource<R>,
->({
+function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResource<R>>({
   afterDescriptor,
   alwaysEvenPages,
   beforeDetails,
@@ -265,9 +241,7 @@ function PaginatedResourcePokerCard<
             >
               {pageIndex === 0 && beforeDetails}
 
-              {text.length > 0 && (
-                <PokerCard.Details palette={palette}>{text}</PokerCard.Details>
-              )}
+              {text.length > 0 && <PokerCard.Details palette={palette}>{text}</PokerCard.Details>}
             </VStack>
 
             {!hasImage && pageIndex === 0 && firstPageInfo && (
@@ -319,17 +293,11 @@ type ScrollableResourcePokerCardProps<
   firstPageInfo?: ReactNode;
   footer?: ReactNode;
   localizedResource: L;
-  onPageCountChange: (
-    count: number | undefined,
-    firstDetailsPageOverflow: boolean,
-  ) => void;
+  onPageCountChange: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
 };
 
-function ScrollableResourcePokerCard<
-  R extends Resource,
-  L extends LocalizedResource<R>,
->({
+function ScrollableResourcePokerCard<R extends Resource, L extends LocalizedResource<R>>({
   afterDescriptor,
   beforeDetails,
   details,
@@ -373,9 +341,7 @@ function ScrollableResourcePokerCard<
       >
         {beforeDetails}
 
-        {details.length > 0 && (
-          <PokerCard.Details palette={palette}>{details}</PokerCard.Details>
-        )}
+        {details.length > 0 && <PokerCard.Details palette={palette}>{details}</PokerCard.Details>}
       </VStack>
 
       {firstPageInfo && (

@@ -82,11 +82,7 @@ export default function SourceAccessPanel({ source }: { source: Source }) {
       <SectionHeading>{t("access")}</SectionHeading>
 
       <HStack align="flex-end" flexWrap="wrap" gap={3} w="full">
-        <CaptionInput
-          caption={t("email")}
-          flex={{ base: "1 1 100%", sm: 1 }}
-          minW={0}
-        >
+        <CaptionInput caption={t("email")} flex={{ base: "1 1 100%", sm: 1 }} minW={0}>
           <TextInput
             disabled={saving}
             onValueChange={setEmail}
@@ -96,10 +92,7 @@ export default function SourceAccessPanel({ source }: { source: Source }) {
             value={email}
           />
         </CaptionInput>
-        <CaptionInput
-          caption={t("permission")}
-          minW={{ base: "8rem", sm: "8rem" }}
-        >
+        <CaptionInput caption={t("permission")} minW={{ base: "8rem", sm: "8rem" }}>
           <Select.Enum
             disabled={saving}
             onValueChange={setAccess}
@@ -112,12 +105,7 @@ export default function SourceAccessPanel({ source }: { source: Source }) {
             w="full"
           />
         </CaptionInput>
-        <Button
-          disabled={saving || !email.trim()}
-          loading={saving}
-          onClick={grantAccess}
-          size="sm"
-        >
+        <Button disabled={saving || !email.trim()} loading={saving} onClick={grantAccess} size="sm">
           {t("grant")}
         </Button>
       </HStack>

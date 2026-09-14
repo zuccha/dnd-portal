@@ -7,21 +7,13 @@ import {
 // Switch
 //------------------------------------------------------------------------------
 
-export type SwitchRootProps = Omit<
-  ChakraSwitchRootProps,
-  "checked" | "value"
-> & {
+export type SwitchRootProps = Omit<ChakraSwitchRootProps, "checked" | "value"> & {
   label?: string;
   onValueChange?: (checked: boolean) => void;
   value?: boolean;
 };
 
-export default function Switch({
-  label,
-  onValueChange,
-  value,
-  ...rest
-}: SwitchRootProps) {
+export default function Switch({ label, onValueChange, value, ...rest }: SwitchRootProps) {
   return (
     <ChakraSwitch.Root
       checked={value}

@@ -68,10 +68,7 @@ export default function ResourceSearch({
         />
 
         {!hideFilter && (
-          <InclusionButton
-            include={showSelected}
-            onValueChange={setShowSelected}
-          >
+          <InclusionButton include={showSelected} onValueChange={setShowSelected}>
             <Icon Icon={icons[`${showSelected}`]} />
           </InclusionButton>
         )}
@@ -83,9 +80,7 @@ export default function ResourceSearch({
             <Tag
               key={id}
               label={optionsMap.get(id)?.label ?? t("unknown")}
-              onClose={() =>
-                onValueChange(value.filter((other) => other !== id))
-              }
+              onClose={() => onValueChange(value.filter((other) => other !== id))}
             />
           ))}
         </HStack>

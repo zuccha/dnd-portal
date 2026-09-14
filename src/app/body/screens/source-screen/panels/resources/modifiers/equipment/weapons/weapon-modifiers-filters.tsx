@@ -1,5 +1,5 @@
-import type { StackProps } from "@chakra-ui/react";
 import EquipmentModifiersFilters from "../equipment-modifiers-filters";
+import type { StackProps } from "@chakra-ui/react";
 
 //------------------------------------------------------------------------------
 // Weapon Modifiers Filters

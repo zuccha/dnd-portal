@@ -21,10 +21,7 @@ import {
   filterSourceBundleResources,
   sourceBundleSchema,
 } from "~/models/catalogue/source-bundle";
-import {
-  deleteSourceBundle,
-  saveSourceBundle,
-} from "~/models/catalogue/source-bundle-indexed-db";
+import { deleteSourceBundle, saveSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
 import { publishSourceBundle } from "~/models/catalogue/source-bundle-sync";
 import {
   analyzeRegistrySourceDependencies,
@@ -93,8 +90,7 @@ export default function SourcesPanel() {
   const [registryError, setRegistryError] = useState(false);
   const [canRegisterSources, setCanRegisterSources] = useState(false);
   const [busySourceId, setBusySourceId] = useState<string>();
-  const [dependencyPrompt, setDependencyPrompt] =
-    useState<SourceDependencyPrompt>();
+  const [dependencyPrompt, setDependencyPrompt] = useState<SourceDependencyPrompt>();
   const [removalPrompt, setRemovalPrompt] = useState<SourceRemovalPrompt>();
   const localSourcesById = useMemo(
     () => new Map(sources.map((source) => [source.id, source])),
@@ -122,17 +118,12 @@ export default function SourcesPanel() {
         setCanRegisterSources(canRegister);
         setRegistryError(false);
 
-        const registrySourceById = new Map(
-          nextSources.map((source) => [source.id, source]),
-        );
+        const registrySourceById = new Map(nextSources.map((source) => [source.id, source]));
         await Promise.all(
           sourcesRef.current.map((source) => {
             const registrySource = registrySourceById.get(source.id);
             if (source.registry && registrySource?.registry)
-              return catalogue.updateSourceRegistryMetadata(
-                source.id,
-                registrySource.registry,
-              );
+              return catalogue.updateSourceRegistryMetadata(source.id, registrySource.registry);
             if (source.registry && !registrySource)
               return catalogue.updateSourceRegistryMetadata(source.id, {
                 ...source.registry,
@@ -171,9 +162,11 @@ export default function SourcesPanel() {
       const source = localSourcesById.get(registrySource.id);
       return createSourceListEntry(
         source ?? registrySource,
-        source?.registry ? getInstalledSourceStatus(source, registrySource)
-        : source ? "detached"
-        : "available",
+        source?.registry
+          ? getInstalledSourceStatus(source, registrySource)
+          : source
+            ? "detached"
+            : "available",
       );
     }),
     lang,
@@ -183,13 +176,14 @@ export default function SourcesPanel() {
       ...sources.map((source) =>
         createSourceListEntry(
           source,
-          source.registry ?
-            getInstalledSourceStatus(
-              source,
-              registrySources.find(({ id }) => id === source.id) ?? source,
-            )
-          : registrySources.some(({ id }) => id === source.id) ? "detached"
-          : "local",
+          source.registry
+            ? getInstalledSourceStatus(
+                source,
+                registrySources.find(({ id }) => id === source.id) ?? source,
+              )
+            : registrySources.some(({ id }) => id === source.id)
+              ? "detached"
+              : "local",
         ),
       ),
       ...registrySources
@@ -203,18 +197,12 @@ export default function SourcesPanel() {
   // Persist Source Bundles
   //----------------------------------------------------------------------------
 
-  const persistSourceBundles = async (
-    bundles: SourceBundle[],
-    navigateAfter: boolean,
-  ) => {
+  const persistSourceBundles = async (bundles: SourceBundle[], navigateAfter: boolean) => {
     const bundlesWithRegistryAccess = bundles.map((bundle) => {
-      const registrySource = registrySources.find(
-        ({ id }) => id === bundle.source.id,
-      );
+      const registrySource = registrySources.find(({ id }) => id === bundle.source.id);
       const registry = registrySource?.registry;
-      const bundleWithRegistry =
-        registry ?
-          { ...bundle, source: { ...bundle.source, registry } }
+      const bundleWithRegistry = registry
+        ? { ...bundle, source: { ...bundle.source, registry } }
         : bundle;
 
       return filterSourceBundleResources(bundleWithRegistry, {
@@ -231,8 +219,8 @@ export default function SourcesPanel() {
     setRegistrySources((previousSources) =>
       previousSources.map(
         (registrySource) =>
-          savedBundles.find(({ source }) => source.id === registrySource.id)
-            ?.source ?? registrySource,
+          savedBundles.find(({ source }) => source.id === registrySource.id)?.source ??
+          registrySource,
       ),
     );
 
@@ -254,10 +242,7 @@ export default function SourcesPanel() {
       new Set(localSourcesById.keys()),
     );
 
-    if (
-      analysis.registryDependencies.length ||
-      analysis.missingDependencies.length
-    ) {
+    if (analysis.registryDependencies.length || analysis.missingDependencies.length) {
       setDependencyPrompt({
         bundle,
         missingDependencies: analysis.missingDependencies,
@@ -369,9 +354,9 @@ export default function SourcesPanel() {
       const publishedSource = await publishSourceBundle(source.id);
       setRegistrySources((previousSources) =>
         previousSources.map((registrySource) =>
-          registrySource.id === publishedSource?.id && publishedSource ?
-            publishedSource
-          : registrySource,
+          registrySource.id === publishedSource?.id && publishedSource
+            ? publishedSource
+            : registrySource,
         ),
       );
     } catch (e) {
@@ -397,9 +382,7 @@ export default function SourcesPanel() {
 
     try {
       await registerRegistrySourceBundle(bundle);
-      const registeredSource = (await fetchRegistrySources()).find(
-        ({ id }) => id === source.id,
-      );
+      const registeredSource = (await fetchRegistrySources()).find(({ id }) => id === source.id);
       if (registeredSource?.registry)
         await catalogue.updateSource(source.id, (current) => ({
           ...current,
@@ -422,9 +405,7 @@ export default function SourcesPanel() {
   // Complete Source Dependency Prompt
   //----------------------------------------------------------------------------
 
-  const completeSourceDependencyPrompt = async (
-    downloadDependencies: boolean,
-  ) => {
+  const completeSourceDependencyPrompt = async (downloadDependencies: boolean) => {
     const prompt = dependencyPrompt;
     if (!prompt) return;
 
@@ -434,10 +415,11 @@ export default function SourcesPanel() {
 
     try {
       const bundles = prompt.bundle ? [prompt.bundle] : [];
-      const sourceIds =
-        downloadDependencies ? prompt.registrySourceIds
-        : prompt.bundle ? []
-        : prompt.registrySourceIds.slice(0, 1);
+      const sourceIds = downloadDependencies
+        ? prompt.registrySourceIds
+        : prompt.bundle
+          ? []
+          : prompt.registrySourceIds.slice(0, 1);
 
       if (sourceIds.length) {
         bundles.push(...(await fetchRegistrySourceBundles(sourceIds)));
@@ -459,14 +441,9 @@ export default function SourcesPanel() {
 
   const downloadRegistrySource = async (registrySource: Source) => {
     const officialSource =
-      registrySources.find(({ id }) => id === registrySource.id) ??
-      registrySource;
+      registrySources.find(({ id }) => id === registrySource.id) ?? registrySource;
     const installedSource = localSourcesById.get(officialSource.id);
-    if (
-      installedSource &&
-      !confirm(ti("make_official.confirm", officialSource.code))
-    )
-      return;
+    if (installedSource && !confirm(ti("make_official.confirm", officialSource.code))) return;
 
     setBusySourceId(officialSource.id);
     setError(undefined);
@@ -477,15 +454,9 @@ export default function SourcesPanel() {
         registrySources,
         new Set(localSourcesById.keys()),
       );
-      const registrySourceIds = [
-        officialSource.id,
-        ...analysis.registrySourceIds,
-      ];
+      const registrySourceIds = [officialSource.id, ...analysis.registrySourceIds];
 
-      if (
-        analysis.registryDependencies.length ||
-        analysis.missingDependencies.length
-      ) {
+      if (analysis.registryDependencies.length || analysis.missingDependencies.length) {
         setDependencyPrompt({
           missingDependencies: analysis.missingDependencies,
           navigateAfter: false,
@@ -496,10 +467,7 @@ export default function SourcesPanel() {
         return;
       }
 
-      await persistSourceBundles(
-        await fetchRegistrySourceBundles(registrySourceIds),
-        false,
-      );
+      await persistSourceBundles(await fetchRegistrySourceBundles(registrySourceIds), false);
     } catch (e) {
       console.error(e);
       setError(t("error.download"));
@@ -513,8 +481,7 @@ export default function SourcesPanel() {
   //----------------------------------------------------------------------------
 
   const makeSourceLocal = async (source: Source) => {
-    if (!source.registry || !confirm(ti("make_local.confirm", source.code)))
-      return;
+    if (!source.registry || !confirm(ti("make_local.confirm", source.code))) return;
 
     setBusySourceId(source.id);
     setError(undefined);
@@ -604,10 +571,7 @@ export default function SourcesPanel() {
             <Text color="fg.muted">{t("subtitle")}</Text>
           </VStack>
 
-          <HStack
-            flexWrap="wrap"
-            justify={{ base: "flex-start", sm: "flex-end" }}
-          >
+          <HStack flexWrap="wrap" justify={{ base: "flex-start", sm: "flex-end" }}>
             <Button
               onClick={() => {
                 setError(undefined);
@@ -645,7 +609,7 @@ export default function SourcesPanel() {
           </Text>
         )}
 
-        {sources.length || registrySources.length || registryLoading ?
+        {sources.length || registrySources.length || registryLoading ? (
           <Tabs.Root
             defaultValue="all"
             display="flex"
@@ -730,7 +694,7 @@ export default function SourcesPanel() {
               />
             </Tabs.Content>
           </Tabs.Root>
-        : null}
+        ) : null}
       </VStack>
 
       <SourceCreateDialog
@@ -792,9 +756,7 @@ export default function SourcesPanel() {
               <Dialog.Body>
                 <VStack align="flex-start" gap={4}>
                   <Text color="fg.muted" fontSize="sm">
-                    {exportSource ?
-                      ti("export.description", exportSource.code)
-                    : ""}
+                    {exportSource ? ti("export.description", exportSource.code) : ""}
                   </Text>
 
                   <Checkbox

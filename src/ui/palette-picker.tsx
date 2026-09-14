@@ -1,18 +1,6 @@
-import {
-  Box,
-  Center,
-  ColorSwatch,
-  HStack,
-  Menu,
-  Portal,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, ColorSwatch, HStack, Menu, Portal, Text } from "@chakra-ui/react";
 import { CheckIcon } from "lucide-react";
-import {
-  type PaletteName,
-  palettes,
-  usePaletteNameOptions,
-} from "~/utils/palette";
+import { type PaletteName, palettes, usePaletteNameOptions } from "~/utils/palette";
 import Icon from "./icon";
 
 //------------------------------------------------------------------------------
@@ -24,21 +12,14 @@ type PalettePickerProps = {
   value: PaletteName;
 };
 
-export default function PalettePicker({
-  onValueChange,
-  value,
-}: PalettePickerProps) {
+export default function PalettePicker({ onValueChange, value }: PalettePickerProps) {
   const paletteNameOptions = usePaletteNameOptions();
 
   return (
     <Menu.Root>
       <Menu.Trigger asChild focusRing="outside">
         <Center borderWidth={1} h={9} rounded="sm" tabIndex={0} w={9}>
-          <ColorSwatch
-            cursor="pointer"
-            size="lg"
-            value={palettes[value][700]}
-          />
+          <ColorSwatch cursor="pointer" size="lg" value={palettes[value][700]} />
         </Center>
       </Menu.Trigger>
 
@@ -62,9 +43,7 @@ export default function PalettePicker({
                       w={4}
                     />
                     <Text flex={1}>{option.label}</Text>
-                    {option.value === value && (
-                      <Icon Icon={CheckIcon} color="fg.muted" size="xs" />
-                    )}
+                    {option.value === value && <Icon Icon={CheckIcon} color="fg.muted" size="xs" />}
                   </HStack>
                 </Menu.Item>
               ))}

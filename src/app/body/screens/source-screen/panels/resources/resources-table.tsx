@@ -3,16 +3,10 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
-import {
-  type ResourcesTableHeadExtra,
-  createResourcesTableHead,
-} from "./resources-table-head";
-import {
-  type ResourcesTableRowExtra,
-  createResourcesTableRow,
-} from "./resources-table-row";
+import { type ResourcesTableHeadExtra, createResourcesTableHead } from "./resources-table-head";
+import { type ResourcesTableRowExtra, createResourcesTableRow } from "./resources-table-row";
+import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
 // Resources Table Extra
@@ -35,11 +29,7 @@ export function createResourcesTable<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
->(
-  store: ResourceStore<R, L, F>,
-  context: ResourcesContext<R>,
-  extra: ResourcesTableExtra<R, L>,
-) {
+>(store: ResourceStore<R, L, F>, context: ResourcesContext<R>, extra: ResourcesTableExtra<R, L>) {
   const ResourcesTableHead = createResourcesTableHead(store, context, extra);
   const ResourcesTableRow = createResourcesTableRow(store, context, extra);
 
@@ -68,11 +58,7 @@ export function createResourcesTable<
 
               <Table.Body>
                 {filteredResourceIds.map((id) => (
-                  <ResourcesTableRow
-                    key={id}
-                    localizeResource={localizeResource}
-                    resourceId={id}
-                  />
+                  <ResourcesTableRow key={id} localizeResource={localizeResource} resourceId={id} />
                 ))}
               </Table.Body>
             </Table.Root>

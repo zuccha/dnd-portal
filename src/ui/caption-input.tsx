@@ -8,11 +8,7 @@ export type CaptionProps = StackProps & {
   caption: string;
 };
 
-export default function CaptionInput({
-  caption,
-  children,
-  ...rest
-}: CaptionProps) {
+export default function CaptionInput({ caption, children, ...rest }: CaptionProps) {
   return (
     <VStack align="flex-start" gap={1} position="relative" {...rest}>
       <Span

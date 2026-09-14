@@ -1,8 +1,5 @@
 import z from "zod";
-import {
-  resourceFiltersSchema,
-  resourceOrderOptions,
-} from "../resource-filters";
+import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Character Subclass Order Options
@@ -15,14 +12,10 @@ export const characterSubclassOrderOptions = resourceOrderOptions;
 //------------------------------------------------------------------------------
 
 export const characterSubclassFiltersSchema = resourceFiltersSchema.extend({
-  character_class_ids: z
-    .partialRecord(z.uuid(), z.boolean().optional())
-    .optional(),
+  character_class_ids: z.partialRecord(z.uuid(), z.boolean().optional()).optional(),
 });
 
-export type CharacterSubclassFilters = z.infer<
-  typeof characterSubclassFiltersSchema
->;
+export type CharacterSubclassFilters = z.infer<typeof characterSubclassFiltersSchema>;
 
 //------------------------------------------------------------------------------
 // Default Character Subclass Filters

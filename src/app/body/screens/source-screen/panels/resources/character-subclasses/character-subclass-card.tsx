@@ -1,9 +1,6 @@
 import type { CharacterSubclass } from "~/models/resources/character-subclasses/character-subclass";
 import type { LocalizedCharacterSubclass } from "~/models/resources/character-subclasses/localized-character-subclass";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Character Subclass Card

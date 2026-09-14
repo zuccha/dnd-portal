@@ -29,9 +29,7 @@ export default function CreaturesFilters(props: StackProps) {
       <CaptionInput caption={t("types")} w="full">
         <InclusionSelect
           includes={filters.types ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ types: { ...filters.types, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ types: { ...filters.types, ...partial } })}
           options={typeOptions}
           placeholder={t("types")}
           size="sm"
@@ -42,9 +40,7 @@ export default function CreaturesFilters(props: StackProps) {
       <CaptionInput caption={t("size")} w="full">
         <InclusionSelect
           includes={filters.size ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ size: { ...filters.size, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ size: { ...filters.size, ...partial } })}
           options={sizeOptions}
           placeholder={t("size")}
           size="sm"
@@ -68,9 +64,7 @@ export default function CreaturesFilters(props: StackProps) {
       <CaptionInput caption={t("habitats")} w="full">
         <InclusionSelect
           includes={filters.habitats ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ habitats: { ...filters.habitats, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ habitats: { ...filters.habitats, ...partial } })}
           options={habitatOptions}
           placeholder={t("habitats")}
           size="sm"

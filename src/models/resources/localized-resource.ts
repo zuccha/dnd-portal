@@ -34,9 +34,7 @@ export type LocalizedResource<R extends Resource> = z.infer<
 // Use Localize Resource
 //------------------------------------------------------------------------------
 
-export function useLocalizeResource<R extends Resource>(): (
-  resource: R,
-) => LocalizedResource<R> {
+export function useLocalizeResource<R extends Resource>(): (resource: R) => LocalizedResource<R> {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const translateSourceVersion = useTranslateSourceVersion(lang);
 

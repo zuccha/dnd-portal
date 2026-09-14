@@ -1,7 +1,4 @@
-import {
-  EquipmentModifierCard,
-  type EquipmentModifierCardProps,
-} from "../equipment-modifier-card";
+import { EquipmentModifierCard, type EquipmentModifierCardProps } from "../equipment-modifier-card";
 
 //------------------------------------------------------------------------------
 // Item Modifier Card

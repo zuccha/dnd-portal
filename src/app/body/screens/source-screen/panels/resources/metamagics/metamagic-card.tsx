@@ -3,10 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedMetamagic } from "~/models/resources/metamagics/localized-metamagic";
 import type { Metamagic } from "~/models/resources/metamagics/metamagic";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Metamagic Card
@@ -30,18 +27,12 @@ export function MetamagicCard({
     <ResourcePokerCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       firstPageInfo={
         <Flex justify="center" w="full">
-          {tpi(
-            "sorcery_points",
-            sorceryPoints,
-            localizedResource.sorcery_points,
-          )}
+          {tpi("sorcery_points", sorceryPoints, localizedResource.sorcery_points)}
         </Flex>
       }
       localizedResource={localizedResource}

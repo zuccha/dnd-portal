@@ -1,20 +1,10 @@
-import {
-  Box,
-  Center,
-  GridItem,
-  SimpleGrid,
-  Span,
-  VStack,
-} from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { Box, Center, GridItem, SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import type { Spell } from "~/models/resources/spells/spell";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
+import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
 // Spell Card
@@ -39,17 +29,15 @@ export function SpellCard({
   const duration = localizedResource.duration_with_concentration;
 
   const castingTimeColor =
-    (
-      localizedResource._raw.casting_time === "bonus_action" ||
-      localizedResource._raw.casting_time === "reaction"
-    ) ?
-      palette[800]
-    : undefined;
+    localizedResource._raw.casting_time === "bonus_action" ||
+    localizedResource._raw.casting_time === "reaction"
+      ? palette[800]
+      : undefined;
 
   return (
     <ResourcePokerCard
       afterDescriptor={
-        localizedResource.character_classes ?
+        localizedResource.character_classes ? (
           <Center
             fontFamily="Mr Eaves"
             fontSize={PokerCard.rem0750}
@@ -58,16 +46,12 @@ export function SpellCard({
           >
             {localizedResource.character_classes}
           </Center>
-        : null
+        ) : null
       }
       beforeDetails={
         <>
           <SimpleGrid columns={2} gap={0} px={PokerCard.rem1000} w="full">
-            <Cell
-              color={castingTimeColor}
-              label={t("casting_time")}
-              value={casting_time}
-            >
+            <Cell color={castingTimeColor} label={t("casting_time")} value={casting_time}>
               {localizedResource._raw.ritual && (
                 <Indicator color={palette[700]} position="left">
                   <RitualSvg />
@@ -91,9 +75,7 @@ export function SpellCard({
           <PokerCard.Separator />
 
           {localizedResource.info && (
-            <PokerCard.Info palette={palette}>
-              {localizedResource.info}
-            </PokerCard.Info>
+            <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
           )}
         </>
       }
@@ -228,19 +210,8 @@ function RitualSvg() {
 
 function Star() {
   return (
-    <GridItem
-      colSpan={2}
-      h={PokerCard.rem0250}
-      justifyItems="center"
-      position="relative"
-      w="full"
-    >
-      <Box
-        left="50%"
-        position="absolute"
-        top="50%"
-        transform="translate(-50%, -50%)"
-      >
+    <GridItem colSpan={2} h={PokerCard.rem0250} justifyItems="center" position="relative" w="full">
+      <Box left="50%" position="absolute" top="50%" transform="translate(-50%, -50%)">
         <svg height={starSize} viewBox="0 0 100 100" width={starSize}>
           <polygon
             fill={PokerCard.separatorColor}

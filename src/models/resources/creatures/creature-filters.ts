@@ -4,10 +4,7 @@ import { creatureHabitatSchema } from "../../types/creature-habitat";
 import { creatureSizeSchema } from "../../types/creature-size";
 import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
-import {
-  resourceFiltersSchema,
-  resourceOrderOptions,
-} from "../resource-filters";
+import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Creature Order Options
@@ -20,16 +17,10 @@ export const creatureOrderOptions = resourceOrderOptions;
 //------------------------------------------------------------------------------
 
 export const creatureFiltersSchema = resourceFiltersSchema.extend({
-  alignment: z
-    .partialRecord(creatureAlignmentSchema, z.boolean().optional())
-    .optional(),
-  habitats: z
-    .partialRecord(creatureHabitatSchema, z.boolean().optional())
-    .optional(),
+  alignment: z.partialRecord(creatureAlignmentSchema, z.boolean().optional()).optional(),
+  habitats: z.partialRecord(creatureHabitatSchema, z.boolean().optional()).optional(),
   size: z.partialRecord(creatureSizeSchema, z.boolean().optional()).optional(),
-  treasures: z
-    .partialRecord(creatureTreasureSchema, z.boolean().optional())
-    .optional(),
+  treasures: z.partialRecord(creatureTreasureSchema, z.boolean().optional()).optional(),
   types: z.partialRecord(creatureTypeSchema, z.boolean().optional()).optional(),
 
   cr_max: z.number(),

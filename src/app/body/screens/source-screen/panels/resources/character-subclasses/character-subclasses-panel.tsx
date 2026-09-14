@@ -15,10 +15,7 @@ import CharacterSubclassesFilters from "./character-subclasses-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns = createResourcesTableColumns<
-  CharacterSubclass,
-  LocalizedCharacterSubclass
->([
+const columns = createResourcesTableColumns<CharacterSubclass, LocalizedCharacterSubclass>([
   {
     key: "character_class",
     label: { en: "Class", it: "Classe" },

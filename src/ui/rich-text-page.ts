@@ -31,10 +31,7 @@ export function closeRichTextPage(
 // Return Rich Text Page State
 //------------------------------------------------------------------------------
 
-function readRichTextPageState(
-  text: string,
-  initialState: RichTextPageState,
-): RichTextPageState {
+function readRichTextPageState(text: string, initialState: RichTextPageState): RichTextPageState {
   const state = [...initialState];
 
   for (let i = 0; i < text.length; ++i) {

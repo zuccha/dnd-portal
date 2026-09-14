@@ -1,8 +1,5 @@
 import type { Feature } from "~/models/resources/features/feature";
-import {
-  featureForm,
-  featureFormDataToResource,
-} from "~/models/resources/features/feature-form";
+import { featureForm, featureFormDataToResource } from "~/models/resources/features/feature-form";
 import { featureStore } from "~/models/resources/features/feature-store";
 import type { LocalizedFeature } from "~/models/resources/features/localized-feature";
 import { createResourcesPanel } from "../resources-panel";

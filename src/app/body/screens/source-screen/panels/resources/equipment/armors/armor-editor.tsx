@@ -39,9 +39,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         it: "Mod. Carisma Massimo",
       },
     },
-    useConditionalField: form.createUseField(
-      "armor_class_includes_cha_modifier",
-    ),
+    useConditionalField: form.createUseField("armor_class_includes_cha_modifier"),
     useField: form.createUseField("armor_class_max_cha_modifier"),
   });
 
@@ -52,9 +50,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         it: "Mod. Costituzione Massimo",
       },
     },
-    useConditionalField: form.createUseField(
-      "armor_class_includes_con_modifier",
-    ),
+    useConditionalField: form.createUseField("armor_class_includes_con_modifier"),
     useField: form.createUseField("armor_class_max_con_modifier"),
   });
 
@@ -65,9 +61,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         it: "Mod. Destrezza Massimo",
       },
     },
-    useConditionalField: form.createUseField(
-      "armor_class_includes_dex_modifier",
-    ),
+    useConditionalField: form.createUseField("armor_class_includes_dex_modifier"),
     useField: form.createUseField("armor_class_max_dex_modifier"),
   });
 
@@ -78,9 +72,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         it: "Mod. Intelligenza Massimo",
       },
     },
-    useConditionalField: form.createUseField(
-      "armor_class_includes_int_modifier",
-    ),
+    useConditionalField: form.createUseField("armor_class_includes_int_modifier"),
     useField: form.createUseField("armor_class_max_int_modifier"),
   });
 
@@ -91,9 +83,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         it: "Mod. Forza Massimo",
       },
     },
-    useConditionalField: form.createUseField(
-      "armor_class_includes_str_modifier",
-    ),
+    useConditionalField: form.createUseField("armor_class_includes_str_modifier"),
     useField: form.createUseField("armor_class_max_str_modifier"),
   });
 
@@ -104,9 +94,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         it: "Mod. Saggezza Massimo",
       },
     },
-    useConditionalField: form.createUseField(
-      "armor_class_includes_wis_modifier",
-    ),
+    useConditionalField: form.createUseField("armor_class_includes_wis_modifier"),
     useField: form.createUseField("armor_class_max_wis_modifier"),
   });
 
@@ -215,49 +203,35 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         <HStack align="flex-start" gap={4}>
           <TypeField defaultValue={resource.type} />
           <BaseArmorClassField defaultValue={resource.base_armor_class} />
-          <ArmorClassModifierField
-            defaultValue={resource.armor_class_modifier}
-          />
+          <ArmorClassModifierField defaultValue={resource.armor_class_modifier} />
         </HStack>
 
         <HStack align="flex-start" gap={4}>
           <StrModifierField
-            defaultConditionalValue={
-              typeof resource.armor_class_max_str_modifier === "number"
-            }
+            defaultConditionalValue={typeof resource.armor_class_max_str_modifier === "number"}
             defaultValue={resource.armor_class_max_str_modifier ?? 0}
           />
           <DexModifierField
-            defaultConditionalValue={
-              typeof resource.armor_class_max_dex_modifier === "number"
-            }
+            defaultConditionalValue={typeof resource.armor_class_max_dex_modifier === "number"}
             defaultValue={resource.armor_class_max_dex_modifier ?? 0}
           />
           <ConModifierField
-            defaultConditionalValue={
-              typeof resource.armor_class_max_con_modifier === "number"
-            }
+            defaultConditionalValue={typeof resource.armor_class_max_con_modifier === "number"}
             defaultValue={resource.armor_class_max_con_modifier ?? 0}
           />
         </HStack>
 
         <HStack align="flex-start" gap={4}>
           <IntModifierField
-            defaultConditionalValue={
-              typeof resource.armor_class_max_int_modifier === "number"
-            }
+            defaultConditionalValue={typeof resource.armor_class_max_int_modifier === "number"}
             defaultValue={resource.armor_class_max_int_modifier ?? 0}
           />
           <WisModifierField
-            defaultConditionalValue={
-              typeof resource.armor_class_max_wis_modifier === "number"
-            }
+            defaultConditionalValue={typeof resource.armor_class_max_wis_modifier === "number"}
             defaultValue={resource.armor_class_max_wis_modifier ?? 0}
           />
           <ChaModifierField
-            defaultConditionalValue={
-              typeof resource.armor_class_max_cha_modifier === "number"
-            }
+            defaultConditionalValue={typeof resource.armor_class_max_cha_modifier === "number"}
             defaultValue={resource.armor_class_max_cha_modifier ?? 0}
           />
         </HStack>
@@ -275,9 +249,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         </HStack>
 
         <HStack align="flex-start" gap={4}>
-          <DisadvantageOnStealth
-            defaultValue={resource.disadvantage_on_stealth}
-          />
+          <DisadvantageOnStealth defaultValue={resource.disadvantage_on_stealth} />
         </HStack>
       </EquipmentEditor>
     );

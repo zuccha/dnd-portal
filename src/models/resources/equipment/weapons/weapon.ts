@@ -3,12 +3,8 @@ import { damageTypeSchema } from "../../../types/damage-type";
 import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
 import { weaponTypeSchema } from "../../../types/weapon-type";
+import { defaultEquipment, equipmentSchema, equipmentTranslationFields } from "../equipment";
 import type { TranslationFields } from "../../resource";
-import {
-  defaultEquipment,
-  equipmentSchema,
-  equipmentTranslationFields,
-} from "../equipment";
 
 //------------------------------------------------------------------------------
 // Weapon
@@ -55,6 +51,4 @@ export const defaultWeapon: Weapon = {
 // Weapon Translation Fields
 //------------------------------------------------------------------------------
 
-export const weaponTranslationFields: TranslationFields<Weapon>[] = [
-  ...equipmentTranslationFields,
-];
+export const weaponTranslationFields: TranslationFields<Weapon>[] = [...equipmentTranslationFields];

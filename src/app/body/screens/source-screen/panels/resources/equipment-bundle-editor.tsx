@@ -41,25 +41,17 @@ export default function EquipmentBundleEditor({
 
   const [equipmentQuantity, setEquipmentQuantity] = useState(1);
   const [equipmentId, setEquipmentId] = useState("");
-  const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(
-    null,
-  );
+  const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
 
   const options = equipmentReferenceStore.useResourceOptions(sourceId);
-  const localize = equipmentReferenceStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
+  const localize = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
 
-  const filterResourceOptions = useCallback(
-    (option: ResourceOption, search: string): boolean => {
-      const normalizedFilter = normalizeString(search);
-      return Object.values(option.name)
-        .filter((name) => name)
-        .some((name) => normalizeString(name!).includes(normalizedFilter));
-    },
-    [],
-  );
+  const filterResourceOptions = useCallback((option: ResourceOption, search: string): boolean => {
+    const normalizedFilter = normalizeString(search);
+    return Object.values(option.name)
+      .filter((name) => name)
+      .some((name) => normalizeString(name!).includes(normalizedFilter));
+  }, []);
 
   const addEquipment = useCallback(() => {
     if (!equipmentId) return;
@@ -70,13 +62,11 @@ export default function EquipmentBundleEditor({
     };
     const index = value.equipments.findIndex(({ id }) => id === equipmentId);
     const equipments =
-      index === -1 ?
-        [...value.equipments, equipment]
-      : value.equipments.map((current, i) =>
-          i === index ?
-            { ...current, quantity: current.quantity + equipmentQuantity }
-          : current,
-        );
+      index === -1
+        ? [...value.equipments, equipment]
+        : value.equipments.map((current, i) =>
+            i === index ? { ...current, quantity: current.quantity + equipmentQuantity } : current,
+          );
     onValueChange({ ...value, equipments });
     setSelectedEquipmentId(equipmentId);
     setEquipmentId("");
@@ -95,9 +85,7 @@ export default function EquipmentBundleEditor({
       onValueChange({
         ...value,
         equipments: value.equipments.map((equipment) =>
-          equipment.id === id ?
-            { ...equipment, quantity: Math.max(1, quantity) }
-          : equipment,
+          equipment.id === id ? { ...equipment, quantity: Math.max(1, quantity) } : equipment,
         ),
       });
     },
@@ -120,9 +108,9 @@ export default function EquipmentBundleEditor({
       onValueChange({
         ...value,
         equipments: value.equipments.map((equipment) =>
-          equipment.id === id ?
-            { ...equipment, notes: { ...equipment.notes, [lang]: notes } }
-          : equipment,
+          equipment.id === id
+            ? { ...equipment, notes: { ...equipment.notes, [lang]: notes } }
+            : equipment,
         ),
       });
     },
@@ -151,11 +139,7 @@ export default function EquipmentBundleEditor({
             value={equipmentId}
             withinDialog={withinDialog}
           />
-          <Button
-            disabled={!equipmentId}
-            onClick={addEquipment}
-            variant="outline"
-          >
+          <Button disabled={!equipmentId} onClick={addEquipment} variant="outline">
             {t("add")}
           </Button>
         </HStack>
@@ -178,9 +162,7 @@ export default function EquipmentBundleEditor({
           <HStack gap={1} w="full" wrap="wrap">
             {value.equipments.map(({ id, notes, quantity }) => (
               <Tag
-                borderColor={
-                  selectedEquipmentId === id ? "border.info" : undefined
-                }
+                borderColor={selectedEquipmentId === id ? "border.info" : undefined}
                 borderWidth={selectedEquipmentId === id ? 1 : undefined}
                 key={id}
                 label={
@@ -209,9 +191,7 @@ export default function EquipmentBundleEditor({
 
                 <Input
                   bgColor="bg.info"
-                  onValueChange={(notes) =>
-                    updateEquipmentNotes(selectedEquipment.id, notes)
-                  }
+                  onValueChange={(notes) => updateEquipmentNotes(selectedEquipment.id, notes)}
                   placeholder={t("notes")}
                   size="sm"
                   value={selectedEquipment.notes[lang] ?? ""}
@@ -228,11 +208,7 @@ export default function EquipmentBundleEditor({
                 />
               </HStack>
 
-              <Button
-                onClick={() => setSelectedEquipmentId(null)}
-                size="xs"
-                variant="outline"
-              >
+              <Button onClick={() => setSelectedEquipmentId(null)} size="xs" variant="outline">
                 {t("done")}
               </Button>
             </VStack>

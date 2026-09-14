@@ -1,4 +1,4 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Background } from "~/models/resources/backgrounds/background";
@@ -6,18 +6,17 @@ import type { BackgroundFormData } from "~/models/resources/backgrounds/backgrou
 import type { StartingEquipmentGroup } from "~/models/resources/character-classes/starting-equipment";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { featStore } from "~/models/resources/feats/feat-store";
-import type { ResourceOption } from "~/models/resources/resource";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useCreatureSkillOptions } from "~/models/types/creature-skill";
 import Field from "~/ui/field";
-import type { FieldBag, Form } from "~/utils/form";
+import type { Form } from "~/utils/form";
 import StartingEquipmentEditor from "../character-classes/starting-equipment-editor";
 import { createResourceEditor } from "../resource-editor";
 import {
   createInputField,
   createMultipleSelectEnumField,
+  createSingleResourceField,
 } from "../resource-editor-form";
-import ResourceSearch from "../resource-search";
 
 //------------------------------------------------------------------------------
 // Background Editor
@@ -177,10 +176,7 @@ export function createBackgroundEditor(form: Form<BackgroundFormData>) {
   // Background Editor
   //----------------------------------------------------------------------------
 
-  return function BackgroundEditor({
-    resource,
-    sourceId,
-  }: BackgroundEditorProps) {
+  return function BackgroundEditor({ resource, sourceId }: BackgroundEditorProps) {
     const [lang] = useI18nLang();
 
     return (
@@ -193,68 +189,16 @@ export function createBackgroundEditor(form: Form<BackgroundFormData>) {
         </HStack>
 
         <HStack align="flex-start" gap={4} w="full">
-          <ToolProficiencyField
-            defaultValue={resource.tool_proficiency_id}
-            sourceId={sourceId}
-          />
+          <ToolProficiencyField defaultValue={resource.tool_proficiency_id} sourceId={sourceId} />
           <ToolNotesField defaultValue={resource.tool_notes[lang] ?? ""} />
         </HStack>
 
         <SkillProficienciesField defaultValue={resource.skill_proficiencies} />
 
-        <StartingEquipmentField
-          defaultValue={resource.starting_equipment}
-          sourceId={sourceId}
-        />
+        <StartingEquipmentField defaultValue={resource.starting_equipment} sourceId={sourceId} />
       </ResourceEditor>
     );
   };
-}
-
-//------------------------------------------------------------------------------
-// Create Single Resource Field
-//------------------------------------------------------------------------------
-
-type SingleResourceFieldProps = Omit<StackProps, "defaultValue"> & {
-  defaultValue: string | null;
-  sourceId: string;
-};
-
-function createSingleResourceField({
-  i18nContext,
-  useOptions,
-  useField,
-}: {
-  i18nContext: {
-    label: { en: string; it: string };
-    placeholder: { en: string; it: string };
-  };
-  useOptions: (sourceId: string) => ResourceOption[];
-  useField: (defaultValue: string | null) => FieldBag<string, string | null>;
-}) {
-  function SingleResourceField({
-    sourceId,
-    defaultValue,
-    ...rest
-  }: SingleResourceFieldProps) {
-    const options = useOptions(sourceId);
-    const { error, onValueChange, value } = useField(defaultValue);
-    const { t } = useI18nLangContext(i18nContext);
-    const message = error ? t(error) : undefined;
-
-    return (
-      <Field error={message} label={t("label")} {...rest}>
-        <ResourceSearch
-          onValueChange={(ids) => onValueChange(ids.at(-1) ?? null)}
-          options={options}
-          value={value ? [value] : []}
-          withinDialog
-        />
-      </Field>
-    );
-  }
-
-  return SingleResourceField;
 }
 
 //----------------------------------------------------------------------------

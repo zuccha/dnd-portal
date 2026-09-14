@@ -15,8 +15,7 @@ export const weaponModifierOrderOptions = equipmentModifierOrderOptions;
 // Weapon Modifier Filters
 //------------------------------------------------------------------------------
 
-export const weaponModifierFiltersSchema =
-  equipmentModifierFiltersSchema.extend({});
+export const weaponModifierFiltersSchema = equipmentModifierFiltersSchema.extend({});
 
 export type WeaponModifierFilters = z.infer<typeof weaponModifierFiltersSchema>;
 

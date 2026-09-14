@@ -1,9 +1,6 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
 import { useLocalizeToolModifier } from "./localized-tool-modifier";
-import {
-  defaultToolModifier,
-  toolModifierTranslationFields,
-} from "./tool-modifier";
+import { defaultToolModifier, toolModifierTranslationFields } from "./tool-modifier";
 import {
   defaultToolModifierFilters,
   toolModifierFiltersSchema,

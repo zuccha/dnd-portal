@@ -1,11 +1,7 @@
 import z from "zod";
 import { armorTypeSchema } from "../../../types/armor-type";
+import { defaultEquipment, equipmentSchema, equipmentTranslationFields } from "../equipment";
 import type { TranslationFields } from "../../resource";
-import {
-  defaultEquipment,
-  equipmentSchema,
-  equipmentTranslationFields,
-} from "../equipment";
 
 //------------------------------------------------------------------------------
 // Armor
@@ -62,6 +58,4 @@ export const defaultArmor: Armor = {
 // Armor Translation Fields
 //------------------------------------------------------------------------------
 
-export const armorTranslationFields: TranslationFields<Armor>[] = [
-  ...equipmentTranslationFields,
-];
+export const armorTranslationFields: TranslationFields<Armor>[] = [...equipmentTranslationFields];

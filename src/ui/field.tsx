@@ -10,13 +10,7 @@ export type FieldProps = StackProps & {
   help?: string;
 };
 
-export default function Field({
-  children,
-  error,
-  help,
-  label,
-  ...rest
-}: FieldProps) {
+export default function Field({ children, error, help, label, ...rest }: FieldProps) {
   return (
     <VStack align="flex-start" gap={1.5} w="full" {...rest}>
       {label && (

@@ -2,14 +2,8 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import { creatureAbilitySchema } from "../../../types/creature-ability";
 import { toolTypeSchema } from "../../../types/tool-type";
-import {
-  createResourceFormDataI18nValue,
-  createResourceFormDataPatch,
-} from "../../resource-form";
-import {
-  equipmentFormDataSchema,
-  equipmentFormDataToResource,
-} from "../equipment-form";
+import { createResourceFormDataI18nValue, createResourceFormDataPatch } from "../../resource-form";
+import { equipmentFormDataSchema, equipmentFormDataToResource } from "../equipment-form";
 import type { Tool } from "./tool";
 
 //------------------------------------------------------------------------------
@@ -29,10 +23,7 @@ export type ToolFormData = z.infer<typeof toolFormDataSchema>;
 // Tool Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function toolFormDataToResource(
-  data: Partial<ToolFormData>,
-  lang: string,
-): Partial<Tool> {
+export function toolFormDataToResource(data: Partial<ToolFormData>, lang: string): Partial<Tool> {
   return createResourceFormDataPatch({
     ...equipmentFormDataToResource(data, lang),
     ability: data.ability,

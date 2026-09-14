@@ -1,9 +1,6 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
-import {
-  defaultEquipmentBundle,
-  equipmentBundleSchema,
-} from "../../other/equipment-bundle";
+import { defaultEquipmentBundle, equipmentBundleSchema } from "../../other/equipment-bundle";
 import { languageEntrySchema } from "../../other/language-entries";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";

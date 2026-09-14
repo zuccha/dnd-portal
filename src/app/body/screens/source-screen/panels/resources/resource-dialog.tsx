@@ -65,22 +65,14 @@ export default function ResourceDialog({
             <Dialog.Header alignItems="center" gap={0}>
               <Menu.Root>
                 <Menu.Trigger asChild focusRing="outside" rounded="full">
-                  <IconButton
-                    Icon={EllipsisVerticalIcon}
-                    label={""}
-                    size="xs"
-                    variant="ghost"
-                  />
+                  <IconButton Icon={EllipsisVerticalIcon} label={""} size="xs" variant="ghost" />
                 </Menu.Trigger>
                 <Menu.Positioner>
                   <Menu.Content>
                     <Menu.Item onClick={onCopyToClipboard} value="data.copy">
                       {t("data.copy")}
                     </Menu.Item>
-                    <Menu.Item
-                      onClick={onPasteFromClipboard}
-                      value="data.paste"
-                    >
+                    <Menu.Item onClick={onPasteFromClipboard} value="data.paste">
                       {t("data.paste")}
                     </Menu.Item>
                   </Menu.Content>
@@ -144,11 +136,7 @@ export default function ResourceDialog({
                 {secondaryActionText}
               </Button>
 
-              <Button
-                disabled={disabled}
-                loading={saving}
-                onClick={onPrimaryAction}
-              >
+              <Button disabled={disabled} loading={saving} onClick={onPrimaryAction}>
                 {primaryActionText}
               </Button>
             </Dialog.Footer>

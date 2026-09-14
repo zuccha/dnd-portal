@@ -2,20 +2,14 @@ import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useTranslateItemType } from "../../../types/item-type";
-import {
-  localizedEquipmentSchema,
-  useLocalizeEquipment,
-} from "../localized-equipment";
+import { localizedEquipmentSchema, useLocalizeEquipment } from "../localized-equipment";
 import { type Item, itemSchema } from "./item";
 
 //------------------------------------------------------------------------------
 // Localized Item
 //------------------------------------------------------------------------------
 
-export const localizedItemSchema = localizedEquipmentSchema(
-  itemSchema,
-  z.literal("item"),
-).extend({
+export const localizedItemSchema = localizedEquipmentSchema(itemSchema, z.literal("item")).extend({
   charges: z.string(),
   consumable: z.boolean(),
   rarity: z.string(),
@@ -28,9 +22,7 @@ export type LocalizedItem = z.infer<typeof localizedItemSchema>;
 // Use Localized Item
 //------------------------------------------------------------------------------
 
-export function useLocalizeItem(
-  sourceId: string,
-): (item: Item) => LocalizedItem {
+export function useLocalizeItem(sourceId: string): (item: Item) => LocalizedItem {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
 
   const translateType = useTranslateItemType(lang);
@@ -41,11 +33,11 @@ export function useLocalizeItem(
       const equipment = localizeEquipment(item);
 
       const type =
-        item.type === "other" ?
-          item.magic ?
-            ti("wondrous_item")
-          : t("mundane_item")
-        : translateType(item.type).label;
+        item.type === "other"
+          ? item.magic
+            ? ti("wondrous_item")
+            : t("mundane_item")
+          : translateType(item.type).label;
 
       const rarity = item.magic ? equipment.rarity : "";
 

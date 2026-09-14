@@ -14,12 +14,7 @@ import {
 export const modifierSchema = resourceSchema.extend({
   applies_to: i18nStringSchema,
   composite_name: i18nStringSchema,
-  kind: z.enum([
-    "armor_modifier",
-    "item_modifier",
-    "tool_modifier",
-    "weapon_modifier",
-  ]),
+  kind: z.enum(["armor_modifier", "item_modifier", "tool_modifier", "weapon_modifier"]),
 });
 
 export type Modifier = z.infer<typeof modifierSchema>;

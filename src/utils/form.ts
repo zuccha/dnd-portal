@@ -69,9 +69,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   // Errors Store
   //----------------------------------------------------------------------------
 
-  const errorsStore = createMemoryStoreSet<keyof Fields, string | undefined>(
-    `form[${id}].errors`,
-  );
+  const errorsStore = createMemoryStoreSet<keyof Fields, string | undefined>(`form[${id}].errors`);
 
   const { get: getError, subscribeAny: subscribeAnyError } = errorsStore;
 
@@ -93,10 +91,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   // Submitting Store
   //----------------------------------------------------------------------------
 
-  const { use: useSubmitting } = createMemoryStore(
-    `form[${id}].submitting`,
-    false,
-  );
+  const { use: useSubmitting } = createMemoryStore(`form[${id}].submitting`, false);
 
   //----------------------------------------------------------------------------
   // Value Changers Store
@@ -112,9 +107,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   function buildData(): Partial<Fields> {
     const data: Partial<Fields> = {};
     const empty = undefined as Fields[keyof Fields];
-    [...valueFields.keys()].forEach(
-      (field) => (data[field] = getValue(field, empty)),
-    );
+    [...valueFields.keys()].forEach((field) => (data[field] = getValue(field, empty)));
     return data;
   }
 
@@ -207,10 +200,7 @@ export function createForm<Fields extends Record<string, unknown>>(
 
   function useData(): Partial<Fields> {
     const [data, setData] = useState(buildData);
-    useLayoutEffect(
-      () => valuesStore.subscribeAny(() => setData(buildData())),
-      [],
-    );
+    useLayoutEffect(() => valuesStore.subscribeAny(() => setData(buildData())), []);
     return data;
   }
 
@@ -219,9 +209,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   //----------------------------------------------------------------------------
 
   function isValid(): boolean {
-    return [...errorFields.keys()].every(
-      (field) => !getError(field, undefined),
-    );
+    return [...errorFields.keys()].every((field) => !getError(field, undefined));
   }
 
   function useValid(): boolean {
@@ -260,9 +248,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   // Reset
   //----------------------------------------------------------------------------
 
-  const { notify: notifyReset, subscribe: subscribeReset } = createObservable(
-    `form[${id}].reset`,
-  );
+  const { notify: notifyReset, subscribe: subscribeReset } = createObservable(`form[${id}].reset`);
 
   function reset() {
     notifyReset(undefined);
@@ -303,9 +289,7 @@ export function createForm<Fields extends Record<string, unknown>>(
 // Return
 //------------------------------------------------------------------------------
 
-function createStoreSetRegister<K extends PropertyKey, T>(
-  store: StoreSet<K, T>,
-) {
+function createStoreSetRegister<K extends PropertyKey, T>(store: StoreSet<K, T>) {
   const keys = new Map<K, number>();
 
   function useAndRegister(...args: Parameters<typeof store.useValue>) {

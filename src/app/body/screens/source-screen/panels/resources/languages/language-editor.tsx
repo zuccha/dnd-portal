@@ -5,10 +5,7 @@ import type { LanguageFormData } from "~/models/resources/languages/language-for
 import { useLanguageRarityOptions } from "~/models/types/language-rarity";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
-import {
-  createInputField,
-  createSelectEnumField,
-} from "../resource-editor-form";
+import { createInputField, createSelectEnumField } from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
 // Create Language Editor

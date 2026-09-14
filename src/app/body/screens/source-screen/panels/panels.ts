@@ -9,10 +9,10 @@ export type PanelItem = {
   route: Route;
 };
 
-const panelItem = <R extends Route>(
-  route: R,
-  extra: Omit<PanelItem, "route"> = {},
-) => ({ route, ...extra });
+const panelItem = <R extends Route>(route: R, extra: Omit<PanelItem, "route"> = {}) => ({
+  route,
+  ...extra,
+});
 
 //------------------------------------------------------------------------------
 // Bestiary Panel Ids
@@ -56,9 +56,7 @@ export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number]["route"];
 // Blocks Panel Ids
 //------------------------------------------------------------------------------
 
-export const blocksPanelIds = [
-  panelItem(Route.ResourcesBlocksFeatures),
-] as const;
+export const blocksPanelIds = [panelItem(Route.ResourcesBlocksFeatures)] as const;
 
 export type BlocksPanelId = (typeof blocksPanelIds)[number]["route"];
 

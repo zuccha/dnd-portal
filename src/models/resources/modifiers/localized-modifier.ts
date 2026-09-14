@@ -2,10 +2,7 @@ import { useCallback } from "react";
 import z, { type ZodType } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
-import {
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { type Modifier } from "./modifier";
 
 //------------------------------------------------------------------------------
@@ -30,9 +27,7 @@ export type LocalizedModifier<M extends Modifier> = z.infer<
 // Use Localize Modifier
 //------------------------------------------------------------------------------
 
-export function useLocalizeModifier<M extends Modifier>(): (
-  modifier: M,
-) => LocalizedModifier<M> {
+export function useLocalizeModifier<M extends Modifier>(): (modifier: M) => LocalizedModifier<M> {
   const localizeResource = useLocalizeResource<M>();
   const [lang] = useI18nLang();
 

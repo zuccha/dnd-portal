@@ -1,9 +1,4 @@
-import {
-  ColorPicker as ChakraColorPicker,
-  HStack,
-  Portal,
-  parseColor,
-} from "@chakra-ui/react";
+import { ColorPicker as ChakraColorPicker, HStack, Portal, parseColor } from "@chakra-ui/react";
 
 //------------------------------------------------------------------------------
 // Color Picker
@@ -14,10 +9,7 @@ export type ColorPickerProps = {
   value: string;
 };
 
-export default function ColorPicker({
-  onValueChange,
-  value,
-}: ColorPickerProps) {
+export default function ColorPicker({ onValueChange, value }: ColorPickerProps) {
   return (
     <ChakraColorPicker.Root
       defaultValue={parseColor(value)}

@@ -13,10 +13,7 @@ const formatNumberFormats: Record<string, (value: number) => string> = {
   it: new Intl.NumberFormat("it-IT", formatNumberOptions).format,
 };
 
-const defaultFormatNumberFormat = new Intl.NumberFormat(
-  "en-US",
-  formatNumberOptions,
-).format;
+const defaultFormatNumberFormat = new Intl.NumberFormat("en-US", formatNumberOptions).format;
 
 export function formatNumber(value: number, lang: string): string {
   const format = formatNumberFormats[lang] ?? defaultFormatNumberFormat;

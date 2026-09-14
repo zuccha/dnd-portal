@@ -44,10 +44,7 @@ export function equipmentFormDataToResource(
 ): EquipmentFormDataPatch {
   return createResourceFormDataPatch({
     ...resourceFormDataToResource(data, lang),
-    attunement_notes: createResourceFormDataI18nValue(
-      data.attunement_notes,
-      lang,
-    ),
+    attunement_notes: createResourceFormDataI18nValue(data.attunement_notes, lang),
     cost: data.cost,
     feature_entries: data.feature_entries,
     magic: data.magic,
@@ -63,7 +60,4 @@ export function equipmentFormDataToResource(
 // Equipment Form
 //------------------------------------------------------------------------------
 
-export const equipmentForm = createForm(
-  "equipment",
-  equipmentFormDataSchema.parse,
-);
+export const equipmentForm = createForm("equipment", equipmentFormDataSchema.parse);

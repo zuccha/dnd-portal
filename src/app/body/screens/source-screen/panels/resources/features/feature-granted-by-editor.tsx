@@ -47,9 +47,7 @@ export default function FeatureGrantedByEditor({
 
   const [resourceId, setResourceId] = useState("");
   const [minLevel, setMinLevel] = useState(0);
-  const [kindFilters, setKindFilters] = useState<
-    Record<string, boolean | undefined>
-  >({});
+  const [kindFilters, setKindFilters] = useState<Record<string, boolean | undefined>>({});
 
   const options = useFeatureGrantOptions(sourceId);
   const optionMap = useMemo(
@@ -73,12 +71,7 @@ export default function FeatureGrantedByEditor({
 
   const addGrant = useCallback(() => {
     if (!resourceId) return;
-    if (
-      value.some(
-        (grant) => grant.id === resourceId && grant.min_level === minLevel,
-      )
-    )
-      return;
+    if (value.some((grant) => grant.id === resourceId && grant.min_level === minLevel)) return;
 
     onValueChange([...value, { id: resourceId, min_level: minLevel }]);
     setResourceId("");
@@ -101,9 +94,7 @@ export default function FeatureGrantedByEditor({
 
         <InclusionSelect
           includes={kindFilters}
-          onValueChange={(partial) =>
-            setKindFilters((prev) => ({ ...prev, ...partial }))
-          }
+          onValueChange={(partial) => setKindFilters((prev) => ({ ...prev, ...partial }))}
           options={resourceFeatureKindOptions}
           placeholder={t("kind_filter")}
           positioning={{ sameWidth: false, slide: true }}
@@ -139,9 +130,7 @@ export default function FeatureGrantedByEditor({
               onClose={() =>
                 onValueChange(
                   value.filter(
-                    (other) =>
-                      other.id !== grant.id ||
-                      other.min_level !== grant.min_level,
+                    (other) => other.id !== grant.id || other.min_level !== grant.min_level,
                   ),
                 )
               }
@@ -194,10 +183,7 @@ function useFeatureGrantOptions(sourceId: string): FeatureGrantOption[] {
   );
 }
 
-function withKind(
-  options: ResourceOption[],
-  kind: ResourceFeatureKind,
-): FeatureGrantOption[] {
+function withKind(options: ResourceOption[], kind: ResourceFeatureKind): FeatureGrantOption[] {
   return options.map((option) => ({ ...option, kind }));
 }
 

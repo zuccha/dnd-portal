@@ -12,15 +12,9 @@ import type { ResourcePokerCardProps } from "./resource-poker-card";
 // Resource Card Preview Props
 //------------------------------------------------------------------------------
 
-export type ResourceCardPreviewProps<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = {
+export type ResourceCardPreviewProps<R extends Resource, L extends LocalizedResource<R>> = {
   Card: ComponentType<
-    Omit<
-      ResourcePokerCardProps<R, L>,
-      "afterDetails" | "beforeDetails" | "firstPageInfo"
-    >
+    Omit<ResourcePokerCardProps<R, L>, "afterDetails" | "beforeDetails" | "firstPageInfo">
   > & { h: number; w: number };
   localizedResource: L;
   palette: Palette;
@@ -31,10 +25,7 @@ export type ResourceCardPreviewProps<
 // Resource Card Preview
 //------------------------------------------------------------------------------
 
-export default function ResourceCardPreview<
-  R extends Resource,
-  L extends LocalizedResource<R>,
->({
+export default function ResourceCardPreview<R extends Resource, L extends LocalizedResource<R>>({
   Card,
   localizedResource,
   palette,
@@ -46,9 +37,7 @@ export default function ResourceCardPreview<
 
   const setClampedPageCount = useCallback((count: number | undefined) => {
     setPageCount(count || 1);
-    setSelectedPageIndex((prev) =>
-      Math.min(prev, Math.max(0, (count || 1) - 1)),
-    );
+    setSelectedPageIndex((prev) => Math.min(prev, Math.max(0, (count || 1) - 1)));
   }, []);
 
   const movePrevious = useCallback(() => {
@@ -61,12 +50,7 @@ export default function ResourceCardPreview<
 
   return (
     <VStack gap={3} py={2} w="full">
-      <Box
-        h={`${Card.h}in`}
-        overflow="hidden"
-        position="relative"
-        w={`${Card.w}in`}
-      >
+      <Box h={`${Card.h}in`} overflow="hidden" position="relative" w={`${Card.w}in`}>
         <Card
           left={0}
           localizedResource={localizedResource}
@@ -89,12 +73,7 @@ export default function ResourceCardPreview<
           size="xs"
           variant="ghost"
         />
-        <Text
-          fontSize="sm"
-          fontVariantNumeric="tabular-nums"
-          minW={12}
-          textAlign="center"
-        >
+        <Text fontSize="sm" fontVariantNumeric="tabular-nums" minW={12} textAlign="center">
           {selectedPageIndex + 1}/{pageCount}
         </Text>
         <IconButton

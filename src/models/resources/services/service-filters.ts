@@ -1,9 +1,6 @@
 import z from "zod";
 import { serviceCategorySchema } from "~/models/types/service-category";
-import {
-  resourceFiltersSchema,
-  resourceOrderOptions,
-} from "../resource-filters";
+import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Service Order Options
@@ -16,9 +13,7 @@ export const serviceOrderOptions = resourceOrderOptions;
 //------------------------------------------------------------------------------
 
 export const serviceFiltersSchema = resourceFiltersSchema.extend({
-  categories: z
-    .partialRecord(serviceCategorySchema, z.boolean().optional())
-    .optional(),
+  categories: z.partialRecord(serviceCategorySchema, z.boolean().optional()).optional(),
 });
 
 export type ServiceFilters = z.infer<typeof serviceFiltersSchema>;

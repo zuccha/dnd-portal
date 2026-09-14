@@ -1,8 +1,5 @@
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import {
-  type SourceVersion,
-  useSourceVersionOptions,
-} from "~/models/types/source-version";
+import { type SourceVersion, useSourceVersionOptions } from "~/models/types/source-version";
 import CaptionInput from "~/ui/caption-input";
 import Select from "~/ui/select";
 

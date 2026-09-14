@@ -115,11 +115,7 @@ export function createFeatEditor(form: Form<FeatFormData>) {
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
 
-        <FeatureEntriesField
-          defaultValue={resource.feature_entries}
-          sourceId={sourceId}
-          w="full"
-        />
+        <FeatureEntriesField defaultValue={resource.feature_entries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

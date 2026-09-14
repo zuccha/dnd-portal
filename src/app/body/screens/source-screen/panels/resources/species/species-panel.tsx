@@ -1,9 +1,6 @@
 import { type LocalizedSpecies } from "~/models/resources/species/localized-species";
 import { type Species } from "~/models/resources/species/species";
-import {
-  speciesForm,
-  speciesFormDataToResource,
-} from "~/models/resources/species/species-form";
+import { speciesForm, speciesFormDataToResource } from "~/models/resources/species/species-form";
 import { speciesStore } from "~/models/resources/species/species-store";
 import { createResourcesPanel } from "../resources-panel";
 import { createResourcesTableColumns } from "../resources-table-columns";

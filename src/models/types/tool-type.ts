@@ -5,12 +5,7 @@ import { createTypeTranslationHooks } from "./_base";
 // Tool Type
 //------------------------------------------------------------------------------
 
-export const toolTypeSchema = z.enum([
-  "artisan",
-  "gaming_set",
-  "musical_instrument",
-  "other",
-]);
+export const toolTypeSchema = z.enum(["artisan", "gaming_set", "musical_instrument", "other"]);
 
 export const toolTypes = toolTypeSchema.options;
 

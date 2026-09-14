@@ -9,12 +9,12 @@ import {
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
-import type { ResourcesTableExtra } from "../../resources-table";
 import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { WeaponCard } from "./weapon-card";
 import { createWeaponEditor } from "./weapon-editor";
 import WeaponsFilters from "./weapons-filters";
+import type { ResourcesTableExtra } from "../../resources-table";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -57,10 +57,7 @@ const columns = createEquipmentTableColumns<Weapon, LocalizedWeapon>([
 // Weapon Variant Dialog
 //------------------------------------------------------------------------------
 
-const weaponVariantDialog = createEquipmentVariantDialog(
-  weaponStore,
-  weaponModifierStore,
-);
+const weaponVariantDialog = createEquipmentVariantDialog(weaponStore, weaponModifierStore);
 
 //------------------------------------------------------------------------------
 // Actions

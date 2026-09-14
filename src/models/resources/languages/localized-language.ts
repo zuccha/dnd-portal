@@ -3,11 +3,7 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateLanguageRarity } from "../../types/language-rarity";
-import {
-  formatInfo,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { type Language, languageSchema } from "./language";
 
 //------------------------------------------------------------------------------
@@ -29,9 +25,7 @@ export type LocalizedLanguage = z.infer<typeof localizedLanguageSchema>;
 // Use Localized Language
 //------------------------------------------------------------------------------
 
-export function useLocalizeLanguage(): (
-  language: Language,
-) => LocalizedLanguage {
+export function useLocalizeLanguage(): (language: Language) => LocalizedLanguage {
   const localizeResource = useLocalizeResource<Language>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
 

@@ -96,9 +96,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   // Attunement
   //----------------------------------------------------------------------------
 
-  const useRequiredAttunementSlotsField = form.createUseField(
-    "required_attunement_slots",
-  );
+  const useRequiredAttunementSlotsField = form.createUseField("required_attunement_slots");
 
   const RequiredAttunementSlotsField = createNumberInputField({
     i18nContext: {
@@ -154,11 +152,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   // Equipment Editor
   //----------------------------------------------------------------------------
 
-  return function EquipmentEditor({
-    children,
-    resource,
-    sourceId,
-  }: EquipmentEditorProps) {
+  return function EquipmentEditor({ children, resource, sourceId }: EquipmentEditorProps) {
     const [lang] = useI18nLang();
     const { value: magic } = useMagicField(resource.magic);
     const { value: requiredAttunementSlots } = useRequiredAttunementSlotsField(
@@ -176,34 +170,21 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
         {magic && (
           <HStack align="flex-start" gap={4}>
             <RarityField defaultValue={resource.rarity} />
-            <RequiredAttunementSlotsField
-              defaultValue={resource.required_attunement_slots}
-            />
+            <RequiredAttunementSlotsField defaultValue={resource.required_attunement_slots} />
           </HStack>
         )}
 
         {magic && requiredAttunementSlots > 0 && (
-          <AttunementNotesField
-            defaultValue={resource.attunement_notes[lang] ?? ""}
-            w="full"
-          />
+          <AttunementNotesField defaultValue={resource.attunement_notes[lang] ?? ""} w="full" />
         )}
 
         {children}
 
         <NotesField defaultValue={resource.notes[lang] ?? ""} />
 
-        <ModifiersField
-          defaultValue={resource.modifier_ids}
-          sourceId={sourceId}
-          w="full"
-        />
+        <ModifiersField defaultValue={resource.modifier_ids} sourceId={sourceId} w="full" />
 
-        <FeatureEntriesField
-          defaultValue={resource.feature_entries}
-          sourceId={sourceId}
-          w="full"
-        />
+        <FeatureEntriesField defaultValue={resource.feature_entries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

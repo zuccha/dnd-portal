@@ -40,9 +40,7 @@ export default function EquipmentFilters({
 
       <InclusionButton
         include={filters.requires_attunement}
-        onValueChange={(requires_attunement) =>
-          onFiltersChange({ requires_attunement })
-        }
+        onValueChange={(requires_attunement) => onFiltersChange({ requires_attunement })}
         size="sm"
         w="full"
       >

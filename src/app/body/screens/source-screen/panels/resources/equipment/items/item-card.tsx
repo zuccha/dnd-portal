@@ -5,8 +5,8 @@ import type { Item } from "~/models/resources/equipment/items/item";
 import type { LocalizedItem } from "~/models/resources/equipment/items/localized-item";
 import Icon from "~/ui/icon";
 import { range } from "~/utils/array";
-import type { ResourcePokerCardProps } from "../../resource-poker-card";
 import { EquipmentCard } from "../equipment-card";
+import type { ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Item Card
@@ -31,27 +31,28 @@ export function ItemCard({
   return (
     <EquipmentCard
       firstPageInfoRight={
-        charges <= 0 ? null
-        : charges === 1 && consumable ?
+        charges <= 0 ? null : charges === 1 && consumable ? (
           <Span alignSelf="flex-end" fontStyle="italic" fontWeight="bold">
             {t("consumable")}
           </Span>
-        : <VStack align="flex-end" alignSelf="flex-end" gap={0}>
+        ) : (
+          <VStack align="flex-end" alignSelf="flex-end" gap={0}>
             <Span fontStyle="italic" fontWeight="bold">
               {consumable ? ti("usages") : tp("charges", charges)}
             </Span>
-            {charges <= 5 ?
+            {charges <= 5 ? (
               <HStack gap={0}>
                 {range(charges).map((c) => (
                   <Icon Icon={SquareIcon} key={c} size="xs" />
                 ))}
               </HStack>
-            : <Span fontStyle="normal" fontWeight="bold">
+            ) : (
+              <Span fontStyle="normal" fontWeight="bold">
                 {`${"___"} / ${charges}`}
               </Span>
-            }
+            )}
           </VStack>
-
+        )
       }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}

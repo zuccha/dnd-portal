@@ -1,8 +1,4 @@
-export function downloadFile(
-  data: string,
-  filename: string,
-  format: "csv" | "json",
-) {
+export function downloadFile(data: string, filename: string, format: "csv" | "json") {
   const blob = new Blob([data], { type: typeByFormats[format] });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");

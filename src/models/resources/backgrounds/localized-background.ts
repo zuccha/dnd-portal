@@ -48,10 +48,7 @@ export function useLocalizeBackground(
   const localizeResource = useLocalizeResource<Background>();
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
   const localizeFeatName = featStore.useLocalizeResourceName(sourceId, lang);
   const localizeToolName = toolStore.useLocalizeResourceName(sourceId, lang);
   const formatCp = useFormatCp();
@@ -65,8 +62,7 @@ export function useLocalizeBackground(
         .map(({ label }) => label)
         .join(", ");
 
-      const feat_name =
-        background.feat_id ? localizeFeatName(background.feat_id) : "";
+      const feat_name = background.feat_id ? localizeFeatName(background.feat_id) : "";
       const feat_notes = translate(background.feat_notes, lang);
       const feat = formatNamedNote(feat_name, feat_notes);
 
@@ -76,9 +72,8 @@ export function useLocalizeBackground(
         .sort()
         .join(", ");
 
-      const tool_name =
-        background.tool_proficiency_id ?
-          localizeToolName(background.tool_proficiency_id)
+      const tool_name = background.tool_proficiency_id
+        ? localizeToolName(background.tool_proficiency_id)
         : "";
       const tool_notes = translate(background.tool_notes, lang);
       const tool_proficiency = formatNamedNote(tool_name, tool_notes);
@@ -97,32 +92,22 @@ export function useLocalizeBackground(
               ]
                 .filter((entry) => entry)
                 .join(", ");
-              return group.options.length > 1 ?
-                  `(${numberToLetter(index)}) ${optionText}`
+              return group.options.length > 1
+                ? `(${numberToLetter(index)}) ${optionText}`
                 : optionText;
             }),
             "; ",
             equipmentOptionOr,
           );
 
-          return tpi(
-            "starting_equipment.group",
-            group.options.length,
-            groupText,
-          );
+          return tpi("starting_equipment.group", group.options.length, groupText);
         })
         .filter((text) => text)
         .join("\n");
 
       const info = formatInfo([
-        [
-          tp("ability_scores", background.ability_scores.length),
-          ability_scores,
-        ],
-        [
-          tp("skill_proficiencies", background.skill_proficiencies.length),
-          skill_proficiencies,
-        ],
+        [tp("ability_scores", background.ability_scores.length), ability_scores],
+        [tp("skill_proficiencies", background.skill_proficiencies.length), skill_proficiencies],
         [t("feat"), feat],
         [t("tool_proficiency"), tool_proficiency],
       ]);
@@ -131,9 +116,7 @@ export function useLocalizeBackground(
         ...localizeResource(background),
         descriptor: t("descriptor"),
         details: formatDetails(
-          starting_equipment ?
-            ti("starting_equipment", starting_equipment)
-          : "",
+          starting_equipment ? ti("starting_equipment", starting_equipment) : "",
         ),
 
         ability_scores,

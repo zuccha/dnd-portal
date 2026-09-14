@@ -1,9 +1,6 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import {
-  resourceFormDataSchema,
-  resourceFormDataToResource,
-} from "../resource-form";
+import { resourceFormDataSchema, resourceFormDataToResource } from "../resource-form";
 import type { CreatureTag } from "./creature-tag";
 
 //------------------------------------------------------------------------------
@@ -29,7 +26,4 @@ export function creatureTagFormDataToResource(
 // Creature Tag Form
 //------------------------------------------------------------------------------
 
-export const creatureTagForm = createForm(
-  "creature_tag",
-  creatureTagFormDataSchema.parse,
-);
+export const creatureTagForm = createForm("creature_tag", creatureTagFormDataSchema.parse);

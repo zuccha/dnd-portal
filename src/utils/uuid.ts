@@ -12,9 +12,7 @@ export function createUuid() {
     randomValues[6] = (randomValues[6]! & 0x0f) | 0x40;
     randomValues[8] = (randomValues[8]! & 0x3f) | 0x80;
 
-    const hex = Array.from(randomValues, (value) =>
-      value.toString(16).padStart(2, "0"),
-    ).join("");
+    const hex = Array.from(randomValues, (value) => value.toString(16).padStart(2, "0")).join("");
 
     return [
       hex.slice(0, 8),
@@ -40,9 +38,7 @@ export function createDeterministicUuid(value: unknown): string {
     hashStringToHex(input, 0x85ebca6b),
     hashStringToHex(input, 0xc2b2ae35),
   ].join("");
-  const variant = ((Number.parseInt(hex[16] ?? "0", 16) & 0x3) | 0x8).toString(
-    16,
-  );
+  const variant = ((Number.parseInt(hex[16] ?? "0", 16) & 0x3) | 0x8).toString(16);
 
   return [
     hex.slice(0, 8),

@@ -1,8 +1,5 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
-import {
-  defaultItemModifier,
-  itemModifierTranslationFields,
-} from "./item-modifier";
+import { defaultItemModifier, itemModifierTranslationFields } from "./item-modifier";
 import {
   defaultItemModifierFilters,
   itemModifierFiltersSchema,

@@ -1,10 +1,7 @@
 import z from "zod";
 import { creatureSizeSchema } from "../../types/creature-size";
 import { creatureTypeSchema } from "../../types/creature-type";
-import {
-  resourceFiltersSchema,
-  resourceOrderOptions,
-} from "../resource-filters";
+import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Species Order Options

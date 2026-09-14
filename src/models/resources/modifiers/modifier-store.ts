@@ -1,11 +1,11 @@
-import type { ZodType } from "zod";
 import type { I18nString } from "~/i18n/i18n-string";
+import { type ResourceStore, createResourceStore } from "../resource-store";
 import type { ResourceKind } from "../../types/resource-kind";
 import type { LocalizedResource } from "../localized-resource";
 import type { TranslationFields } from "../resource";
-import { type ResourceStore, createResourceStore } from "../resource-store";
 import type { Modifier } from "./modifier";
 import type { ModifierFilters } from "./modifier-filters";
+import type { ZodType } from "zod";
 
 //------------------------------------------------------------------------------
 // Create Modifier Store

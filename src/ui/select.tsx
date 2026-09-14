@@ -63,35 +63,29 @@ export default function Select<T>({
     initialItems: stringifiedOptions,
   });
 
-  useLayoutEffect(
-    () => set(stringifiedOptions),
-    [options, set, stringifiedOptions],
-  );
+  useLayoutEffect(() => set(stringifiedOptions), [options, set, stringifiedOptions]);
 
   const content = (
     <ChakraSelect.Positioner>
       <ChakraSelect.Content>
-        {categories ?
-          categories.map(({ id, items, title }) => (
-            <ChakraSelect.ItemGroup key={id}>
-              <ChakraSelect.ItemGroupLabel fontWeight="bold">
-                {title}
-              </ChakraSelect.ItemGroupLabel>
-              {items.map((item) => (
-                <ChakraSelect.Item item={item} key={stringify(item.value)}>
-                  {item.dropdownLabel ?? item.label}
-                  <ChakraSelect.ItemIndicator />
-                </ChakraSelect.Item>
-              ))}
-            </ChakraSelect.ItemGroup>
-          ))
-        : collection.items.map((option) => (
-            <ChakraSelect.Item item={option} key={option.value}>
-              {option.dropdownLabel ?? option.label}
-              <ChakraSelect.ItemIndicator />
-            </ChakraSelect.Item>
-          ))
-        }
+        {categories
+          ? categories.map(({ id, items, title }) => (
+              <ChakraSelect.ItemGroup key={id}>
+                <ChakraSelect.ItemGroupLabel fontWeight="bold">{title}</ChakraSelect.ItemGroupLabel>
+                {items.map((item) => (
+                  <ChakraSelect.Item item={item} key={stringify(item.value)}>
+                    {item.dropdownLabel ?? item.label}
+                    <ChakraSelect.ItemIndicator />
+                  </ChakraSelect.Item>
+                ))}
+              </ChakraSelect.ItemGroup>
+            ))
+          : collection.items.map((option) => (
+              <ChakraSelect.Item item={option} key={option.value}>
+                {option.dropdownLabel ?? option.label}
+                <ChakraSelect.ItemIndicator />
+              </ChakraSelect.Item>
+            ))}
       </ChakraSelect.Content>
     </ChakraSelect.Positioner>
   );
@@ -100,27 +94,21 @@ export default function Select<T>({
     <ChakraSelect.Root
       collection={collection}
       defaultValue={
-        defaultValue !== undefined ?
-          multiple ?
-            defaultValue.map(stringify)
-          : [stringify(defaultValue)]
-        : undefined
+        defaultValue !== undefined
+          ? multiple
+            ? defaultValue.map(stringify)
+            : [stringify(defaultValue)]
+          : undefined
       }
       multiple={multiple}
       onValueChange={
-        onValueChange ?
-          (e) =>
-            multiple ?
-              onValueChange(e.value.map(parse))
-            : onValueChange(parse(e.value[0]!))
-        : undefined
+        onValueChange
+          ? (e) =>
+              multiple ? onValueChange(e.value.map(parse)) : onValueChange(parse(e.value[0]!))
+          : undefined
       }
       value={
-        value !== undefined ?
-          multiple ?
-            value.map(stringify)
-          : [stringify(value)]
-        : undefined
+        value !== undefined ? (multiple ? value.map(stringify) : [stringify(value)]) : undefined
       }
       {...rest}
     >

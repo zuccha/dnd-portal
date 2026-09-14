@@ -1,19 +1,5 @@
-import {
-  Box,
-  Circle,
-  HStack,
-  Heading,
-  SimpleGrid,
-  Span,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import {
-  BookOpenIcon,
-  PrinterIcon,
-  ScrollTextIcon,
-  SearchIcon,
-} from "lucide-react";
+import { Box, Circle, HStack, Heading, SimpleGrid, Span, Text, VStack } from "@chakra-ui/react";
+import { BookOpenIcon, PrinterIcon, ScrollTextIcon, SearchIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import DragonIcon from "~/icons/dragon-icon";
 import { Route } from "~/navigation/routes";
@@ -51,11 +37,7 @@ export default function HomePanel() {
       >
         <VStack align="flex-start" flex={1} gap={5} minW="20em">
           <VStack align="flex-start" gap={3}>
-            <Heading
-              fontSize={{ base: "2xl", md: "4xl" }}
-              fontWeight="semibold"
-              lineHeight={1.1}
-            >
+            <Heading fontSize={{ base: "2xl", md: "4xl" }} fontWeight="semibold" lineHeight={1.1}>
               {t("home.title")}
             </Heading>
             <Text color="fg.muted" fontSize={{ base: "md", md: "lg" }}>
@@ -64,18 +46,12 @@ export default function HomePanel() {
           </VStack>
 
           <HStack flexWrap="wrap" gap={3}>
-            <Button
-              onClick={() =>
-                history.pushState({}, "", Route.ResourcesAbilitiesSpells)
-              }
-            >
+            <Button onClick={() => history.pushState({}, "", Route.ResourcesAbilitiesSpells)}>
               <Icon Icon={ScrollTextIcon} size="sm" />
               {t("home.action.spells")}
             </Button>
             <Button
-              onClick={() =>
-                history.pushState({}, "", Route.ResourcesBestiaryMonsters)
-              }
+              onClick={() => history.pushState({}, "", Route.ResourcesBestiaryMonsters)}
               variant="outline"
             >
               <Icon Icon={DragonIcon} size="sm" />
@@ -96,11 +72,7 @@ export default function HomePanel() {
           p={6}
           w="full"
         >
-          <Box
-            h={`${Math.max(CreatureCard.h, SpellCard.h)}in`}
-            position="relative"
-            w="full"
-          >
+          <Box h={`${Math.max(CreatureCard.h, SpellCard.h)}in`} position="relative" w="full">
             <SpellCard
               left={0}
               localizedResource={fireball[lang]!}
@@ -122,13 +94,7 @@ export default function HomePanel() {
         </HStack>
       </HStack>
 
-      <SimpleGrid
-        columns={{ base: 1, lg: 3, md: 2 }}
-        gap={4}
-        maxW="7xl"
-        mx="auto"
-        w="full"
-      >
+      <SimpleGrid columns={{ base: 1, lg: 3, md: 2 }} gap={4} maxW="7xl" mx="auto" w="full">
         <HomeStep
           Icon={BookOpenIcon}
           index="01"
@@ -165,14 +131,7 @@ type HomeStepProps = {
 
 function HomeStep({ Icon: StepIcon, index, text, title }: HomeStepProps) {
   return (
-    <HStack
-      align="flex-start"
-      borderColor="border"
-      borderRadius="md"
-      borderWidth={1}
-      gap={4}
-      p={4}
-    >
+    <HStack align="flex-start" borderColor="border" borderRadius="md" borderWidth={1} gap={4} p={4}>
       <Circle bg="bg.muted" color="fg.muted" flexShrink={0} size={9}>
         <Icon Icon={StepIcon} size="sm" />
       </Circle>

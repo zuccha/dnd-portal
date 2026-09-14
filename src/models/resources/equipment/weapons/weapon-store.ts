@@ -1,16 +1,8 @@
-import {
-  matchesBoolean,
-  matchesInclusion,
-  matchesInclusionList,
-} from "../../resource-filtering";
+import { matchesBoolean, matchesInclusion, matchesInclusionList } from "../../resource-filtering";
 import { createEquipmentStore, matchesEquipment } from "../equipment-store";
 import { useLocalizeWeapon } from "./localized-weapon";
 import { defaultWeapon, weaponTranslationFields } from "./weapon";
-import {
-  defaultWeaponFilters,
-  weaponFiltersSchema,
-  weaponOrderOptions,
-} from "./weapon-filters";
+import { defaultWeaponFilters, weaponFiltersSchema, weaponOrderOptions } from "./weapon-filters";
 
 //------------------------------------------------------------------------------
 // Weapon Store

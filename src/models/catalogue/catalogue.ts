@@ -3,11 +3,25 @@ import { z } from "zod";
 import { createLocalStore } from "../../store/local-store";
 import { createMemoryStore } from "../../store/memory-store";
 import { createOptionalMemoryStoreSet } from "../../store/optional-set/optional-memory-store-set";
-import type { OptionalStoreSet } from "../../store/optional-set/optional-store-set";
 import { createMemoryStoreSet } from "../../store/set/memory-store-set";
-import type { StoreSet } from "../../store/set/store-set";
 import { areSameArray } from "../../utils/array";
 import { objectKeys } from "../../utils/object";
+import { type Source, canEditSource } from "./source";
+import {
+  type SourceBundle,
+  type SourceBundleExportOptions,
+  filterSourceBundleResources,
+  sourceBundleResourceKeyByKind,
+} from "./source-bundle";
+import {
+  type LocalSourceState,
+  loadSourceState,
+  markSourceBundlePublished,
+  updateSourceBundle,
+  updateSourceBundleRegistryMetadata,
+} from "./source-bundle-indexed-db";
+import type { OptionalStoreSet } from "../../store/optional-set/optional-store-set";
+import type { StoreSet } from "../../store/set/store-set";
 import type { Background } from "../resources/backgrounds/background";
 import type { CharacterClass } from "../resources/character-classes/character-class";
 import type { CharacterSubclass } from "../resources/character-subclasses/character-subclass";
@@ -34,20 +48,6 @@ import type { Species } from "../resources/species/species";
 import type { Spell } from "../resources/spells/spell";
 import type { Vehicle } from "../resources/vehicles/vehicle";
 import type { ResourceKind } from "../types/resource-kind";
-import { type Source, canEditSource } from "./source";
-import {
-  type SourceBundle,
-  type SourceBundleExportOptions,
-  filterSourceBundleResources,
-  sourceBundleResourceKeyByKind,
-} from "./source-bundle";
-import {
-  type LocalSourceState,
-  loadSourceState,
-  markSourceBundlePublished,
-  updateSourceBundle,
-  updateSourceBundleRegistryMetadata,
-} from "./source-bundle-indexed-db";
 
 //------------------------------------------------------------------------------
 // Create Catalogue
@@ -65,9 +65,7 @@ export function createCatalogue(id: string) {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function createResourcesById<R extends Resource>(kind: Resource["kind"]) {
-    return createOptionalMemoryStoreSet<string, R>(
-      `${id}/resources-by-id/${kind}`,
-    );
+    return createOptionalMemoryStoreSet<string, R>(`${id}/resources-by-id/${kind}`);
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,9 +73,7 @@ export function createCatalogue(id: string) {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function createResourcesIdsBySourceId(kind: Resource["kind"]) {
-    return createMemoryStoreSet<string, string[]>(
-      `${id}/resources-ids-by-source-id/${kind}`,
-    );
+    return createMemoryStoreSet<string, string[]>(`${id}/resources-ids-by-source-id/${kind}`);
   }
 
   //----------------------------------------------------------------------------
@@ -97,9 +93,7 @@ export function createCatalogue(id: string) {
   // Source By Id
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const sourceById = createOptionalMemoryStoreSet<string, Source>(
-    `${id}/source-by-id`,
-  );
+  const sourceById = createOptionalMemoryStoreSet<string, Source>(`${id}/source-by-id`);
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Source Ids
@@ -111,10 +105,9 @@ export function createCatalogue(id: string) {
   // Source State By Id
   //----------------------------------------------------------------------------
 
-  const sourceStateById = createOptionalMemoryStoreSet<
-    string,
-    LocalSourceState
-  >(`${id}/source-state-by-id`);
+  const sourceStateById = createOptionalMemoryStoreSet<string, LocalSourceState>(
+    `${id}/source-state-by-id`,
+  );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Resources By Id
@@ -125,13 +118,10 @@ export function createCatalogue(id: string) {
     armor_modifier: createResourcesById<ArmorModifier>("armor_modifier"),
     background: createResourcesById<Background>("background"),
     character_class: createResourcesById<CharacterClass>("character_class"),
-    character_subclass:
-      createResourcesById<CharacterSubclass>("character_subclass"),
+    character_subclass: createResourcesById<CharacterSubclass>("character_subclass"),
     creature: createResourcesById<Creature>("creature"),
     creature_tag: createResourcesById<CreatureTag>("creature_tag"),
-    eldritch_invocation: createResourcesById<EldritchInvocation>(
-      "eldritch_invocation",
-    ),
+    eldritch_invocation: createResourcesById<EldritchInvocation>("eldritch_invocation"),
     feat: createResourcesById<Feat>("feat"),
     feature: createResourcesById<Feature>("feature"),
     item: createResourcesById<Item>("item"),
@@ -185,33 +175,26 @@ export function createCatalogue(id: string) {
   // Active Source Resource Ids By Kind
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const activeSourceResourceIdsByKind = createMemoryStoreSet<
-    ResourceKind,
-    string[]
-  >(`${id}/active-source-resource-ids-by-kind`);
+  const activeSourceResourceIdsByKind = createMemoryStoreSet<ResourceKind, string[]>(
+    `${id}/active-source-resource-ids-by-kind`,
+  );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Active Source Reference Resource Ids By Kind
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const activeSourceReferenceResourceIdsByKind = createMemoryStoreSet<
-    ResourceKind,
-    string[]
-  >(`${id}/active-source-reference-resource-ids-by-kind`);
+  const activeSourceReferenceResourceIdsByKind = createMemoryStoreSet<ResourceKind, string[]>(
+    `${id}/active-source-reference-resource-ids-by-kind`,
+  );
 
   //----------------------------------------------------------------------------
   // Active Source Resource Ids
   //----------------------------------------------------------------------------
 
-  function getResourceIdsByKind(
-    kind: ResourceKind,
-    sourceIds: string[],
-  ): string[] {
+  function getResourceIdsByKind(kind: ResourceKind, sourceIds: string[]): string[] {
     return [
       ...new Set(
-        sourceIds.flatMap((sourceId) =>
-          resourceIdsBySourceIdByKind[kind].get(sourceId, emptyIds),
-        ),
+        sourceIds.flatMap((sourceId) => resourceIdsBySourceIdByKind[kind].get(sourceId, emptyIds)),
       ),
     ];
   }
@@ -223,10 +206,8 @@ export function createCatalogue(id: string) {
   function setActiveSourceResourceIds(sourceId: string | undefined): void {
     const source = sourceId ? sourceById.get(sourceId) : undefined;
 
-    const includeIds =
-      source?.includes.map(({ source_id }) => source_id) ?? emptyIds;
-    const requireIds =
-      source?.requires.map(({ source_id }) => source_id) ?? emptyIds;
+    const includeIds = source?.includes.map(({ source_id }) => source_id) ?? emptyIds;
+    const requireIds = source?.requires.map(({ source_id }) => source_id) ?? emptyIds;
 
     const resourceSourceIds = sourceId ? [sourceId, ...includeIds] : emptyIds;
     const referenceSourceIds = [...resourceSourceIds, ...requireIds];
@@ -305,8 +286,7 @@ export function createCatalogue(id: string) {
   function useSourceHasUnpublishedChanges(sourceId: string): boolean {
     const state = sourceStateById.useValue(sourceId);
     return (
-      !!state?.published_bundle_hash &&
-      state.current_bundle_hash !== state.published_bundle_hash
+      !!state?.published_bundle_hash && state.current_bundle_hash !== state.published_bundle_hash
     );
   }
 
@@ -369,10 +349,7 @@ export function createCatalogue(id: string) {
 
     const resources = Object.fromEntries(
       objectKeys(sourceBundleResourceKeyByKind).map((kind) => {
-        const resourceIds = resourceIdsBySourceIdByKind[kind].get(
-          sourceId,
-          emptyIds,
-        );
+        const resourceIds = resourceIdsBySourceIdByKind[kind].get(sourceId, emptyIds);
 
         return [
           sourceBundleResourceKeyByKind[kind],
@@ -407,8 +384,7 @@ export function createCatalogue(id: string) {
     await refreshSourceState(sourceId);
 
     sourceById.set(bundle.source.id, bundle.source);
-    if (activeSourceId.get() === bundle.source.id)
-      setActiveSourceResourceIds(bundle.source.id);
+    if (activeSourceId.get() === bundle.source.id) setActiveSourceResourceIds(bundle.source.id);
 
     return bundle.source;
   }
@@ -444,8 +420,7 @@ export function createCatalogue(id: string) {
     await refreshSourceState(sourceId);
 
     sourceById.set(bundle.source.id, bundle.source);
-    if (activeSourceId.get() === bundle.source.id)
-      setActiveSourceResourceIds(bundle.source.id);
+    if (activeSourceId.get() === bundle.source.id) setActiveSourceResourceIds(bundle.source.id);
 
     return bundle.source;
   }
@@ -472,9 +447,7 @@ export function createCatalogue(id: string) {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     function getResources(resourceIds: string[]): R[] {
-      return resourceIds
-        .map(getResource)
-        .filter((resource) => resource !== undefined);
+      return resourceIds.map(getResource).filter((resource) => resource !== undefined);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -482,12 +455,8 @@ export function createCatalogue(id: string) {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     function upsertResource(resource: R): void {
-      const resourcesById = resourcesByIdByKind[
-        kind
-      ] as unknown as OptionalStoreSet<string, R>;
-      const resourceIdsBySourceId = resourceIdsBySourceIdByKind[
-        kind
-      ] as StoreSet<string, string[]>;
+      const resourcesById = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, R>;
+      const resourceIdsBySourceId = resourceIdsBySourceIdByKind[kind] as StoreSet<string, string[]>;
 
       resourcesById.set(resource.id, resource);
       resourceIdsBySourceId.set(resource.source_id, emptyIds, (prev) =>
@@ -504,12 +473,8 @@ export function createCatalogue(id: string) {
       const resource = getResource(resourceId);
       if (!resource) return;
 
-      const resourcesById = resourcesByIdByKind[
-        kind
-      ] as unknown as OptionalStoreSet<string, R>;
-      const resourceIdsBySourceId = resourceIdsBySourceIdByKind[
-        kind
-      ] as StoreSet<string, string[]>;
+      const resourcesById = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, R>;
+      const resourceIdsBySourceId = resourceIdsBySourceIdByKind[kind] as StoreSet<string, string[]>;
 
       resourcesById.clear(resourceId);
       resourceIdsBySourceId.set(resource.source_id, emptyIds, (prev) =>
@@ -523,10 +488,7 @@ export function createCatalogue(id: string) {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     function useResource(resourceId: string): R | undefined {
-      const store = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<
-        string,
-        R
-      >;
+      const store = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, R>;
       return store.useValue(resourceId);
     }
 
@@ -535,9 +497,7 @@ export function createCatalogue(id: string) {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     function useResources(resourceIds: string[]): R[] {
-      const [resources, setResources] = useState(() =>
-        getResources(resourceIds),
-      );
+      const [resources, setResources] = useState(() => getResources(resourceIds));
 
       useLayoutEffect(() => {
         function refreshResources(): void {
@@ -623,30 +583,22 @@ export function createCatalogue(id: string) {
     ] as const satisfies readonly [ResourceKind, readonly Resource[]][];
 
     sourceById.set(source.id, source);
-    sourceIdList.set((prev) =>
-      prev.includes(source.id) ? prev : [...prev, source.id],
-    );
+    sourceIdList.set((prev) => (prev.includes(source.id) ? prev : [...prev, source.id]));
 
     for (const [kind, resources] of resourceImports) {
       type ResourceStoreSet = OptionalStoreSet<string, Resource>;
       const resourcesById = resourcesByIdByKind[kind] as ResourceStoreSet;
-      const previousResourceIds = resourceIdsBySourceIdByKind[kind].get(
-        source.id,
-        emptyIds,
-      );
+      const previousResourceIds = resourceIdsBySourceIdByKind[kind].get(source.id, emptyIds);
 
-      for (const resourceId of previousResourceIds)
-        resourcesById.clear(resourceId);
-      for (const resource of resources)
-        resourcesById.set(resource.id, resource);
+      for (const resourceId of previousResourceIds) resourcesById.clear(resourceId);
+      for (const resource of resources) resourcesById.set(resource.id, resource);
 
       const resourceIds = resources.map(({ id }) => id);
       resourceIdsBySourceIdByKind[kind].set(source.id, [], resourceIds);
     }
 
     if (activate) setActiveSourceId(source.id);
-    else if (activeSourceId.get() === source.id)
-      setActiveSourceResourceIds(source.id);
+    else if (activeSourceId.get() === source.id) setActiveSourceResourceIds(source.id);
 
     return importedBundle;
   }
@@ -657,13 +609,9 @@ export function createCatalogue(id: string) {
 
   function removeSourceBundle(sourceId: string): void {
     for (const kind of objectKeys(resourceIdsBySourceIdByKind)) {
-      const resourceIds = resourceIdsBySourceIdByKind[kind].get(
-        sourceId,
-        emptyIds,
-      );
+      const resourceIds = resourceIdsBySourceIdByKind[kind].get(sourceId, emptyIds);
 
-      for (const resourceId of resourceIds)
-        resourcesByIdByKind[kind].clear(resourceId);
+      for (const resourceId of resourceIds) resourcesByIdByKind[kind].clear(resourceId);
 
       resourceIdsBySourceIdByKind[kind].set(sourceId, emptyIds, emptyIds);
     }

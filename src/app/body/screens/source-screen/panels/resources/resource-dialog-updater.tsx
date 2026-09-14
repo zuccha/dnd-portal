@@ -19,10 +19,7 @@ import type { ResourcesContext } from "./resources-context";
 // Resource Dialog Updater Extra
 //------------------------------------------------------------------------------
 
-export type ResourceDialogUpdaterExtra<
-  R extends Resource,
-  FF extends Record<string, unknown>,
-> = {
+export type ResourceDialogUpdaterExtra<R extends Resource, FF extends Record<string, unknown>> = {
   Editor: React.FC<{ resource: R; sourceId: string }>;
   form: Form<FF>;
   parseFormData: (data: Partial<FF>, lang: string) => Partial<R> | string;
@@ -54,10 +51,7 @@ export function createResourceDialogUpdater<
   { Editor, form, parseFormData }: ResourceDialogUpdaterExtra<R, FF>,
   { PreviewCard }: ResourceDialogUpdaterPreviewExtra<R, L>,
 ) {
-  async function submitForm(
-    data: Partial<FF>,
-    { id, lang }: { id: string; lang: string },
-  ) {
+  async function submitForm(data: Partial<FF>, { id, lang }: { id: string; lang: string }) {
     const errorOrData = parseFormData(data, lang);
     if (typeof errorOrData === "string") return errorOrData;
 
@@ -165,10 +159,7 @@ export function createResourceDialogUpdater<
         title={name ? ti("title", name) : t("title.empty")}
         valid={valid}
       >
-        <Editor
-          resource={editedResource ?? store.defaultResource}
-          sourceId={sourceId}
-        />
+        <Editor resource={editedResource ?? store.defaultResource} sourceId={sourceId} />
       </ResourceDialog>
     );
   };

@@ -1,10 +1,7 @@
 import z from "zod";
 import { creatureAbilitySchema } from "../../../types/creature-ability";
 import { toolTypeSchema } from "../../../types/tool-type";
-import {
-  equipmentFiltersSchema,
-  equipmentOrderOptions,
-} from "../equipment-filters";
+import { equipmentFiltersSchema, equipmentOrderOptions } from "../equipment-filters";
 
 //------------------------------------------------------------------------------
 // Tool Order Options
@@ -17,9 +14,7 @@ export const toolOrderOptions = equipmentOrderOptions;
 //------------------------------------------------------------------------------
 
 export const toolFiltersSchema = equipmentFiltersSchema.extend({
-  abilities: z
-    .partialRecord(creatureAbilitySchema, z.boolean().optional())
-    .optional(),
+  abilities: z.partialRecord(creatureAbilitySchema, z.boolean().optional()).optional(),
   types: z.partialRecord(toolTypeSchema, z.boolean().optional()).optional(),
 });
 

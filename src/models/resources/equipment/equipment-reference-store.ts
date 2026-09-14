@@ -48,10 +48,7 @@ function useEquipmentReferenceIds(): string[] {
 // Use Localize Resource Name
 //------------------------------------------------------------------------------
 
-function useLocalizeResourceName(
-  _sourceId: string,
-  lang: string,
-): (resourceId: string) => string {
+function useLocalizeResourceName(_sourceId: string, lang: string): (resourceId: string) => string {
   const resourceIds = useEquipmentReferenceIds();
   const equipmentById = useMemo(
     () =>

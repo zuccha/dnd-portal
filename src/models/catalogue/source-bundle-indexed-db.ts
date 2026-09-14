@@ -1,12 +1,12 @@
 import Dexie, { type Table } from "dexie";
 import { sha256 } from "~/utils/hash";
-import type { Source, SourceRegistryMetadata } from "./source";
 import {
   type SourceBundle,
   type SourceBundleExportOptions,
   filterSourceBundleResources,
   sourceBundleSchema,
 } from "./source-bundle";
+import type { Source, SourceRegistryMetadata } from "./source";
 
 //------------------------------------------------------------------------------
 // Persisted Source
@@ -74,38 +74,27 @@ async function getBundleHash(bundle: SourceBundle): Promise<string> {
 // Save Source Bundle
 //------------------------------------------------------------------------------
 
-export async function saveSourceBundle(
-  maybeBundle: unknown,
-): Promise<SourceBundle> {
-  const parsedBundle = filterSourceBundleResources(
-    sourceBundleSchema.parse(maybeBundle),
-  );
+export async function saveSourceBundle(maybeBundle: unknown): Promise<SourceBundle> {
+  const parsedBundle = filterSourceBundleResources(sourceBundleSchema.parse(maybeBundle));
   const bundleHash = await getBundleHash(parsedBundle);
   const importedAt = new Date().toISOString();
 
-  await db.transaction(
-    "rw",
-    db.sources,
-    db.source_bundles,
-    db.source_states,
-    async () => {
-      await db.sources.put({
-        ...parsedBundle.source,
-        imported_at: importedAt,
-      });
+  await db.transaction("rw", db.sources, db.source_bundles, db.source_states, async () => {
+    await db.sources.put({
+      ...parsedBundle.source,
+      imported_at: importedAt,
+    });
 
-      await db.source_bundles.put({
-        bundle: parsedBundle,
-        source_id: parsedBundle.source.id,
-      });
-      await db.source_states.put({
-        current_bundle_hash: bundleHash,
-        published_bundle_hash:
-          parsedBundle.source.registry ? bundleHash : undefined,
-        source_id: parsedBundle.source.id,
-      });
-    },
-  );
+    await db.source_bundles.put({
+      bundle: parsedBundle,
+      source_id: parsedBundle.source.id,
+    });
+    await db.source_states.put({
+      current_bundle_hash: bundleHash,
+      published_bundle_hash: parsedBundle.source.registry ? bundleHash : undefined,
+      source_id: parsedBundle.source.id,
+    });
+  });
 
   return parsedBundle;
 }
@@ -144,9 +133,7 @@ export async function loadSourceStates(): Promise<LocalSourceState[]> {
 // Load Source State
 //------------------------------------------------------------------------------
 
-export async function loadSourceState(
-  sourceId: string,
-): Promise<LocalSourceState | undefined> {
+export async function loadSourceState(sourceId: string): Promise<LocalSourceState | undefined> {
   return db.source_states.get(sourceId);
 }
 
@@ -180,34 +167,27 @@ export async function updateSourceBundle(
   const bundleHash = await getBundleHash(bundle);
   const importedAt = new Date().toISOString();
 
-  return db.transaction(
-    "rw",
-    db.sources,
-    db.source_bundles,
-    db.source_states,
-    async () => {
-      const previousState = await db.source_states.get(sourceId);
+  return db.transaction("rw", db.sources, db.source_bundles, db.source_states, async () => {
+    const previousState = await db.source_states.get(sourceId);
 
-      await db.sources.put({
-        ...bundle.source,
-        imported_at: importedAt,
-      });
+    await db.sources.put({
+      ...bundle.source,
+      imported_at: importedAt,
+    });
 
-      await db.source_bundles.put({
-        bundle,
-        source_id: bundle.source.id,
-      });
-      await db.source_states.put({
-        current_bundle_hash: bundleHash,
-        published_bundle_hash:
-          previousState?.published_bundle_hash ??
-          (bundle.source.registry ? bundleHash : undefined),
-        source_id: bundle.source.id,
-      });
+    await db.source_bundles.put({
+      bundle,
+      source_id: bundle.source.id,
+    });
+    await db.source_states.put({
+      current_bundle_hash: bundleHash,
+      published_bundle_hash:
+        previousState?.published_bundle_hash ?? (bundle.source.registry ? bundleHash : undefined),
+      source_id: bundle.source.id,
+    });
 
-      return bundle;
-    },
-  );
+    return bundle;
+  });
 }
 
 //------------------------------------------------------------------------------
@@ -241,9 +221,7 @@ export async function updateSourceBundleRegistryMetadata(
 // Mark Source Bundle Published
 //------------------------------------------------------------------------------
 
-export async function markSourceBundlePublished(
-  sourceId: string,
-): Promise<LocalSourceState> {
+export async function markSourceBundlePublished(sourceId: string): Promise<LocalSourceState> {
   const bundle = await loadSourceBundle(sourceId);
   const bundleHash = await getBundleHash(bundle);
   const state: LocalSourceState = {
@@ -261,15 +239,9 @@ export async function markSourceBundlePublished(
 //------------------------------------------------------------------------------
 
 export async function deleteSourceBundle(sourceId: string): Promise<void> {
-  await db.transaction(
-    "rw",
-    db.sources,
-    db.source_bundles,
-    db.source_states,
-    async () => {
-      await db.sources.delete(sourceId);
-      await db.source_bundles.delete(sourceId);
-      await db.source_states.delete(sourceId);
-    },
-  );
+  await db.transaction("rw", db.sources, db.source_bundles, db.source_states, async () => {
+    await db.sources.delete(sourceId);
+    await db.source_bundles.delete(sourceId);
+    await db.source_states.delete(sourceId);
+  });
 }

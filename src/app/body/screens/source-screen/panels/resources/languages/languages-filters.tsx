@@ -20,9 +20,7 @@ export default function LanguagesFilters(props: StackProps) {
       <CaptionInput caption={t("rarity")} w="full">
         <InclusionSelect
           includes={filters.rarity ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ rarity: { ...filters.rarity, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ rarity: { ...filters.rarity, ...partial } })}
           options={rarityOptions}
           placeholder={t("rarity")}
           size="sm"

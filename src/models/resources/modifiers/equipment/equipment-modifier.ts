@@ -1,12 +1,8 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { equipmentRaritySchema } from "~/models/types/equipment-rarity";
+import { defaultModifier, modifierSchema, modifierTranslationFields } from "../modifier";
 import type { TranslationFields } from "../../resource";
-import {
-  defaultModifier,
-  modifierSchema,
-  modifierTranslationFields,
-} from "../modifier";
 
 //------------------------------------------------------------------------------
 // Equipment Modifier
@@ -16,12 +12,7 @@ export const equipmentModifierSchema = modifierSchema.extend({
   attunement_notes_delta: i18nStringSchema,
   cost_delta: z.number(),
   equipment_ids: z.array(z.uuid()),
-  kind: z.enum([
-    "armor_modifier",
-    "item_modifier",
-    "tool_modifier",
-    "weapon_modifier",
-  ]),
+  kind: z.enum(["armor_modifier", "item_modifier", "tool_modifier", "weapon_modifier"]),
   make_magic: z.boolean(),
   notes_delta: i18nStringSchema,
   rarity_minimum: equipmentRaritySchema,
@@ -51,5 +42,8 @@ export const defaultEquipmentModifier: Omit<EquipmentModifier, "kind"> = {
 // Equipment Modifier Translation Fields
 //------------------------------------------------------------------------------
 
-export const equipmentModifierTranslationFields: TranslationFields<EquipmentModifier>[] =
-  [...modifierTranslationFields, "attunement_notes_delta", "notes_delta"];
+export const equipmentModifierTranslationFields: TranslationFields<EquipmentModifier>[] = [
+  ...modifierTranslationFields,
+  "attunement_notes_delta",
+  "notes_delta",
+];

@@ -1,17 +1,14 @@
 import { WandIcon } from "lucide-react";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { LocalizedEquipment } from "~/models/resources/equipment/localized-equipment";
-import type { ResourcesTableExtra } from "../resources-table";
 import { createResourcesTableColumns } from "../resources-table-columns";
+import type { ResourcesTableExtra } from "../resources-table";
 
 //------------------------------------------------------------------------------
 // Create Resources Table Columns
 //------------------------------------------------------------------------------
 
-export function createEquipmentTableColumns<
-  R extends Equipment,
-  L extends LocalizedEquipment<R>,
->(
+export function createEquipmentTableColumns<R extends Equipment, L extends LocalizedEquipment<R>>(
   others: ResourcesTableExtra<R, L>["columns"],
 ): ResourcesTableExtra<R, L>["columns"] {
   return createResourcesTableColumns<R, L>([

@@ -5,10 +5,7 @@ import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
 import { usePlaneCategoryOptions } from "~/models/types/plane-category";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
-import {
-  createMultipleSelectEnumField,
-  createSelectEnumField,
-} from "../resource-editor-form";
+import { createMultipleSelectEnumField, createSelectEnumField } from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
 // Create Plane Editor

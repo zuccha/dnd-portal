@@ -1,10 +1,5 @@
 import { useCallback, useState } from "react";
-import {
-  type CostUnit,
-  costToCp,
-  cpToCostValue,
-  useCostUnitOptions,
-} from "~/measures/cost";
+import { type CostUnit, costToCp, cpToCostValue, useCostUnitOptions } from "~/measures/cost";
 import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 //------------------------------------------------------------------------------
@@ -13,12 +8,7 @@ import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 export type CostInputProps = Omit<
   MeasureInputProps<CostUnit>,
-  | "onUnitChange"
-  | "onValueChange"
-  | "onParse"
-  | "unit"
-  | "unitOptions"
-  | "value"
+  "onUnitChange" | "onValueChange" | "onParse" | "unit" | "unitOptions" | "value"
 > & {
   id?: string;
   name?: string;
@@ -28,11 +18,7 @@ export type CostInputProps = Omit<
   value: number;
 };
 
-export default function CostInput({
-  onValueChange,
-  value,
-  ...rest
-}: CostInputProps) {
+export default function CostInput({ onValueChange, value, ...rest }: CostInputProps) {
   const [unit, setUnit] = useState<CostUnit>("gp");
 
   const unitOptions = useCostUnitOptions();

@@ -1,10 +1,7 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { compareObjects } from "~/utils/object";
-import {
-  type EquipmentBundle,
-  equipmentBundleSchema,
-} from "../../other/equipment-bundle";
+import { type EquipmentBundle, equipmentBundleSchema } from "../../other/equipment-bundle";
 
 //------------------------------------------------------------------------------
 // Starting Equipment Entry
@@ -18,9 +15,7 @@ export const startingEquipmentEntrySchema = z.object({
   quantity: z.number(),
 });
 
-export type StartingEquipmentEntry = z.infer<
-  typeof startingEquipmentEntrySchema
->;
+export type StartingEquipmentEntry = z.infer<typeof startingEquipmentEntrySchema>;
 
 //------------------------------------------------------------------------------
 // Starting Equipment Option
@@ -31,9 +26,7 @@ export const startingEquipmentOptionSchema = z.object({
   option: z.number(),
 });
 
-export type StartingEquipmentOption = z.infer<
-  typeof startingEquipmentOptionSchema
->;
+export type StartingEquipmentOption = z.infer<typeof startingEquipmentOptionSchema>;
 
 //------------------------------------------------------------------------------
 // Starting Equipment Group
@@ -44,9 +37,7 @@ export const startingEquipmentGroupSchema = z.object({
   options: z.array(startingEquipmentOptionSchema),
 });
 
-export type StartingEquipmentGroup = z.infer<
-  typeof startingEquipmentGroupSchema
->;
+export type StartingEquipmentGroup = z.infer<typeof startingEquipmentGroupSchema>;
 
 //------------------------------------------------------------------------------
 // Starting Equipment From Entries

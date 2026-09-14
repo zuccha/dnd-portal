@@ -3,10 +3,7 @@ import { SlidersHorizontalIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import IconButton from "~/ui/icon-button";
-import {
-  useRightPanelCollapsed,
-  useRightPanelSetCollapsed,
-} from "../../right-panel-state";
+import { useRightPanelCollapsed, useRightPanelSetCollapsed } from "../../right-panel-state";
 import {
   useHighFidelityPrintHelpDialogDismissed,
   usePrintQuality,
@@ -32,21 +29,16 @@ export default function PrintDeckSidebar() {
 
   const [printQuality] = usePrintQuality();
 
-  const [
-    highFidelityPrintHelpDialogDismissed,
-    setHighFidelityPrintHelpDialogDismissed,
-  ] = useHighFidelityPrintHelpDialogDismissed();
-  const [
-    standardPrintHelpDialogDismissed,
-    setStandardPrintHelpDialogDismissed,
-  ] = useStandardPrintHelpDialogDismissed();
+  const [highFidelityPrintHelpDialogDismissed, setHighFidelityPrintHelpDialogDismissed] =
+    useHighFidelityPrintHelpDialogDismissed();
+  const [standardPrintHelpDialogDismissed, setStandardPrintHelpDialogDismissed] =
+    useStandardPrintHelpDialogDismissed();
 
   const [visibleDialog, setVisibleDialog] = useState<
     null | "help.print_quality.high_fidelity" | "help.print_quality.standard"
   >(null);
 
-  const [shouldPrintAfterCloseDialog, setShouldPrintAfterCloseDialog] =
-    useState(false);
+  const [shouldPrintAfterCloseDialog, setShouldPrintAfterCloseDialog] = useState(false);
 
   const closeDialog = useCallback(() => setVisibleDialog(null), []);
 
@@ -110,9 +102,7 @@ export default function PrintDeckSidebar() {
       <VStack separator={<StackSeparator />} w="full">
         <PrintDeckSidebarView />
 
-        <PrintDeckSidebarSettings
-          onClickPrintQualityHelp={openPrintQualityHelpDialog}
-        />
+        <PrintDeckSidebarSettings onClickPrintQualityHelp={openPrintQualityHelpDialog} />
 
         <PrintDeckSidebarActions onPrint={printOrOpenHelpDialog} />
       </VStack>

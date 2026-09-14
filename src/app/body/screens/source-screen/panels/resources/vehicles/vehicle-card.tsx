@@ -6,10 +6,7 @@ import type { LocalizedVehicle } from "~/models/resources/vehicles/localized-veh
 import type { Vehicle } from "~/models/resources/vehicles/vehicle";
 import Icon from "~/ui/icon";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Vehicle Card
@@ -32,26 +29,19 @@ export function VehicleCard({
     <ResourcePokerCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       firstPageInfo={
         <HStack gap={0} justify="space-between" px={PokerCard.rem1000} w="full">
           <HStack gap={PokerCard.rem0750}>
-            <StatIcon
-              icon={shieldIcon}
-              label={t("armor_class")}
-              value={localizedResource.ac}
-            />
+            <StatIcon icon={shieldIcon} label={t("armor_class")} value={localizedResource.ac} />
             <VStack align="flex-start" gap={0}>
               <Span>
                 <b>{t("hit_points")}</b> <Span>{localizedResource.hp}</Span>
               </Span>
               <Span>
-                <b>{t("damage_threshold")}</b>{" "}
-                <Span>{localizedResource.damage_threshold}</Span>
+                <b>{t("damage_threshold")}</b> <Span>{localizedResource.damage_threshold}</Span>
               </Span>
             </VStack>
           </HStack>

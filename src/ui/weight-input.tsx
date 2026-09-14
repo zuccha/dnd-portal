@@ -14,12 +14,7 @@ import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 export type WeightInputProps = Omit<
   MeasureInputProps<WeightUnit>,
-  | "onUnitChange"
-  | "onValueChange"
-  | "onParse"
-  | "unit"
-  | "unitOptions"
-  | "value"
+  "onUnitChange" | "onValueChange" | "onParse" | "unit" | "unitOptions" | "value"
 > & {
   id?: string;
   name?: string;
@@ -29,11 +24,7 @@ export type WeightInputProps = Omit<
   value: number;
 };
 
-export default function WeightInput({
-  onValueChange,
-  value,
-  ...rest
-}: WeightInputProps) {
+export default function WeightInput({ onValueChange, value, ...rest }: WeightInputProps) {
   const [system] = useI18nSystem();
   const defaultUnit = system === "metric" ? "kg" : "lb";
   const [unit, setUnit] = useState<WeightUnit>(defaultUnit);

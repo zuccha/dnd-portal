@@ -27,14 +27,11 @@ export function createTypeTranslationHooks<Type extends string>(
   // Use Translate
   //----------------------------------------------------------------------------
 
-  function useTranslate(
-    lang: I18nLang,
-  ): (value: Type) => TypeTranslation<Type> {
+  function useTranslate(lang: I18nLang): (value: Type) => TypeTranslation<Type> {
     const translate = useCallback(
       (type: Type): TypeTranslation<Type> => {
         const label = labels[type][lang] ?? type;
-        const label_short =
-          shortLabels ? (shortLabels[type][lang] ?? type) : label;
+        const label_short = shortLabels ? (shortLabels[type][lang] ?? type) : label;
         return { label, label_short, lang, value: type };
       },
       [lang],

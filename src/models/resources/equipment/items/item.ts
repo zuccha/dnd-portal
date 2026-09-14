@@ -1,11 +1,7 @@
 import z from "zod";
 import { itemTypeSchema } from "../../../types/item-type";
+import { defaultEquipment, equipmentSchema, equipmentTranslationFields } from "../equipment";
 import type { TranslationFields } from "../../resource";
-import {
-  defaultEquipment,
-  equipmentSchema,
-  equipmentTranslationFields,
-} from "../equipment";
 
 //------------------------------------------------------------------------------
 // Item
@@ -37,6 +33,4 @@ export const defaultItem: Item = {
 // Item Translation Fields
 //------------------------------------------------------------------------------
 
-export const itemTranslationFields: TranslationFields<Item>[] = [
-  ...equipmentTranslationFields,
-];
+export const itemTranslationFields: TranslationFields<Item>[] = [...equipmentTranslationFields];

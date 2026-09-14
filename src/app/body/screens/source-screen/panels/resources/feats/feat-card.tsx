@@ -1,10 +1,7 @@
 import type { Feat } from "~/models/resources/feats/feat";
 import type { LocalizedFeat } from "~/models/resources/feats/localized-feat";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Feat Card
@@ -25,9 +22,7 @@ export function FeatCard({
     <ResourcePokerCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       localizedResource={localizedResource}

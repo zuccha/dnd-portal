@@ -26,10 +26,12 @@ export type ResourceMatcher<R extends Resource, F extends ResourceFilters> = (
 // Resource Comparator
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export type ResourceComparator<
-  R extends Resource,
-  F extends ResourceFilters,
-> = (a: R, b: R, filters: F, lang: string) => number;
+export type ResourceComparator<R extends Resource, F extends ResourceFilters> = (
+  a: R,
+  b: R,
+  filters: F,
+  lang: string,
+) => number;
 
 //------------------------------------------------------------------------------
 // Filter Matching
@@ -39,10 +41,7 @@ export type ResourceComparator<
 // Matches Boolean
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export function matchesBoolean(
-  value: boolean,
-  filter: boolean | undefined,
-): boolean {
+export function matchesBoolean(value: boolean, filter: boolean | undefined): boolean {
   return filter === undefined || value === filter;
 }
 
@@ -86,10 +85,7 @@ export function matchesInclusionList(
 // Matches Name
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export function matchesName(
-  resource: Resource,
-  normalizedName: string,
-): boolean {
+export function matchesName(resource: Resource, normalizedName: string): boolean {
   if (!normalizedName) return true;
 
   return Object.values(resource.name)
@@ -105,10 +101,7 @@ export function matchesName(
 // Compare Direction
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function compareDirection(
-  result: number,
-  orderDir: ResourceFilters["order_dir"],
-): number {
+function compareDirection(result: number, orderDir: ResourceFilters["order_dir"]): number {
   return orderDir === "desc" ? -result : result;
 }
 

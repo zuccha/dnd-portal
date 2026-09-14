@@ -277,10 +277,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   // Character Class Editor
   //----------------------------------------------------------------------------
 
-  return function CharacterClassEditor({
-    resource,
-    sourceId,
-  }: CharacterClassEditorProps) {
+  return function CharacterClassEditor({ resource, sourceId }: CharacterClassEditorProps) {
     const { lang } = useI18nLangContext(i18nContext);
 
     return (
@@ -290,14 +287,10 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
           <HpDieField defaultValue={resource.hp_die} maxW="10em" />
         </HStack>
 
-        <SavingThrowProficienciesField
-          defaultValue={resource.saving_throw_proficiencies}
-        />
+        <SavingThrowProficienciesField defaultValue={resource.saving_throw_proficiencies} />
 
         <HStack gap={4} w="full">
-          <SkillProficienciesPoolField
-            defaultValue={resource.skill_proficiencies_pool}
-          />
+          <SkillProficienciesPoolField defaultValue={resource.skill_proficiencies_pool} />
 
           <SkillProficienciesPoolQuantityField
             defaultValue={resource.skill_proficiencies_pool_quantity}
@@ -306,44 +299,26 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
         </HStack>
 
         <HStack gap={2} w="full">
-          <WeaponProficienciesField
-            defaultValue={resource.weapon_proficiencies}
-          />
+          <WeaponProficienciesField defaultValue={resource.weapon_proficiencies} />
           <WeaponProficienciesExtraField
             defaultValue={resource.weapon_proficiencies_extra[lang] ?? ""}
           />
         </HStack>
 
         <HStack gap={2} w="full">
-          <ArmorProficienciesField
-            defaultValue={resource.armor_proficiencies}
-          />
+          <ArmorProficienciesField defaultValue={resource.armor_proficiencies} />
           <ArmorProficienciesExtraField
             defaultValue={resource.armor_proficiencies_extra[lang] ?? ""}
           />
         </HStack>
 
-        <ToolProficiencyIdsField
-          defaultValue={resource.tool_proficiency_ids}
-          sourceId={sourceId}
-        />
+        <ToolProficiencyIdsField defaultValue={resource.tool_proficiency_ids} sourceId={sourceId} />
 
-        <StartingEquipmentField
-          defaultValue={resource.starting_equipment}
-          sourceId={sourceId}
-        />
+        <StartingEquipmentField defaultValue={resource.starting_equipment} sourceId={sourceId} />
 
-        <SpellIdsField
-          defaultValue={resource.spell_ids}
-          sourceId={sourceId}
-          w="full"
-        />
+        <SpellIdsField defaultValue={resource.spell_ids} sourceId={sourceId} w="full" />
 
-        <FeatureEntriesField
-          defaultValue={resource.feature_entries}
-          sourceId={sourceId}
-          w="full"
-        />
+        <FeatureEntriesField defaultValue={resource.feature_entries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

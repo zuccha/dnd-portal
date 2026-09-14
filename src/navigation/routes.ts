@@ -7,8 +7,7 @@ export const Route = {
   PrintDeck: "/print-deck",
   Resources: "/resources",
   ResourcesAbilities: "/resources/abilities",
-  ResourcesAbilitiesEldritchInvocations:
-    "/resources/abilities/eldritch-invocations",
+  ResourcesAbilitiesEldritchInvocations: "/resources/abilities/eldritch-invocations",
   ResourcesAbilitiesManeuvers: "/resources/abilities/maneuvers",
   ResourcesAbilitiesMetamagic: "/resources/abilities/metamagic",
   ResourcesAbilitiesSpells: "/resources/abilities/spells",

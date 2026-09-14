@@ -39,7 +39,4 @@ export function languageFormDataToResource(
 // Language Form
 //------------------------------------------------------------------------------
 
-export const languageForm = createForm(
-  "language",
-  languageFormDataSchema.parse,
-);
+export const languageForm = createForm("language", languageFormDataSchema.parse);

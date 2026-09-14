@@ -1,31 +1,25 @@
 import { HStack, Span, VStack } from "@chakra-ui/react";
-import type { ReactNode } from "react";
 import CoinsIcon from "~/icons/coins-icon";
 import ScaleIcon from "~/icons/scale-icon";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { LocalizedEquipment } from "~/models/resources/equipment/localized-equipment";
 import Icon from "~/ui/icon";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
+import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
 // Equipment Card
 //------------------------------------------------------------------------------
 
-export type EquipmentCardProps<
-  E extends Equipment,
-  L extends LocalizedEquipment<E>,
-> = Omit<ResourcePokerCardProps<E, L>, "firstPageInfo"> & {
+export type EquipmentCardProps<E extends Equipment, L extends LocalizedEquipment<E>> = Omit<
+  ResourcePokerCardProps<E, L>,
+  "firstPageInfo"
+> & {
   firstPageInfoRight?: ReactNode;
 };
 
-export function EquipmentCard<
-  E extends Equipment,
-  L extends LocalizedEquipment<E>,
->({
+export function EquipmentCard<E extends Equipment, L extends LocalizedEquipment<E>>({
   firstPageInfoRight,
   localizedResource,
   onPageCountChange = () => {},
@@ -35,17 +29,8 @@ export function EquipmentCard<
   return (
     <ResourcePokerCard
       firstPageInfo={
-        (
-          localizedResource.cost ||
-          localizedResource.weight ||
-          firstPageInfoRight
-        ) ?
-          <HStack
-            align="flex-end"
-            justify="space-between"
-            px={PokerCard.rem1000}
-            w="full"
-          >
+        localizedResource.cost || localizedResource.weight || firstPageInfoRight ? (
+          <HStack align="flex-end" justify="space-between" px={PokerCard.rem1000} w="full">
             <VStack align="flex-start" gap={0}>
               {localizedResource.weight && (
                 <HStack gap={PokerCard.rem0250}>
@@ -64,7 +49,7 @@ export function EquipmentCard<
 
             {firstPageInfoRight}
           </HStack>
-        : undefined
+        ) : undefined
       }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}

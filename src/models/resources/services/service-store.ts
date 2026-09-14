@@ -17,8 +17,7 @@ export const serviceStore = createResourceStore("service", {
   defaultResource: defaultService,
   displayName: { en: "Services", it: "Servizi" },
   filtersSchema: serviceFiltersSchema,
-  matchesResource: (service, filters) =>
-    matchesInclusion(service.category, filters.categories),
+  matchesResource: (service, filters) => matchesInclusion(service.category, filters.categories),
   orderOptions: serviceOrderOptions,
   translationFields: serviceTranslationFields,
   useLocalizeResource: useLocalizeService,

@@ -33,9 +33,7 @@ export const sourceRegistryMetadataSchema = z.object({
   visibility: z.enum(["public", "private"]).optional(),
 });
 
-export type SourceRegistryMetadata = z.infer<
-  typeof sourceRegistryMetadataSchema
->;
+export type SourceRegistryMetadata = z.infer<typeof sourceRegistryMetadataSchema>;
 
 //------------------------------------------------------------------------------
 // Source
@@ -61,9 +59,7 @@ export type Source = z.infer<typeof sourceSchema>;
 export function canEditSource(source: Source | undefined): boolean {
   return (
     !!source &&
-    (!source.registry ||
-      source.registry.access === "creator" ||
-      source.registry.access === "write")
+    (!source.registry || source.registry.access === "creator" || source.registry.access === "write")
   );
 }
 

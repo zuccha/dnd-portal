@@ -1,9 +1,6 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import {
-  defaultEquipmentBundle,
-  equipmentBundleSchema,
-} from "../../other/equipment-bundle";
+import { defaultEquipmentBundle, equipmentBundleSchema } from "../../other/equipment-bundle";
 import { languageEntrySchema } from "../../other/language-entries";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
@@ -132,10 +129,7 @@ export function creatureFormDataToResource(
     language_additional_count: data.language_additional_count,
     language_entries: data.language_entries,
     language_scope: data.language_scope,
-    legendary_actions: createResourceFormDataI18nValue(
-      data.legendary_actions,
-      lang,
-    ),
+    legendary_actions: createResourceFormDataI18nValue(data.legendary_actions, lang),
     legendary_actions_count: data.legendary_actions_count,
     passive_perception: data.passive_perception,
     pb: data.pb,
@@ -163,7 +157,4 @@ export function creatureFormDataToResource(
 // Creature Form
 //------------------------------------------------------------------------------
 
-export const creatureForm = createForm(
-  "creature",
-  creatureFormDataSchema.parse,
-);
+export const creatureForm = createForm("creature", creatureFormDataSchema.parse);

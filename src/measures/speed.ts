@@ -95,8 +95,7 @@ export function useFormatCmh() {
 
   return useCallback(
     (cmh: number, format: "long" | "short" = "short") => {
-      const { unit, value } =
-        system === "metric" ? cmhToSpeedMet(cmh) : cmhToSpeedImp(cmh);
+      const { unit, value } = system === "metric" ? cmhToSpeedMet(cmh) : cmhToSpeedImp(cmh);
       return tpi(`${unit}.${format}`, value, formatNumber(value, lang));
     },
     [lang, system, tpi],

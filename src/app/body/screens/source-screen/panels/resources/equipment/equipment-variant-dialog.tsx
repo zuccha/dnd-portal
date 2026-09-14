@@ -1,13 +1,4 @@
-import {
-  Badge,
-  CloseButton,
-  Dialog,
-  HStack,
-  Portal,
-  Span,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Badge, CloseButton, Dialog, HStack, Portal, Span, Text, VStack } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -52,11 +43,10 @@ export function createEquipmentVariantDialog<
   EML extends LocalizedEquipmentModifier<EM>,
   EMF extends EquipmentModifierFilters,
 >(store: ResourceStore<E, L, F>, modifierStore: ResourceStore<EM, EML, EMF>) {
-  const pendingEquipmentVariantStore =
-    createMemoryStore<EquipmentVariantRequest<E> | null>(
-      `equipment_variant_dialog[${store.kind}].pending`,
-      null,
-    );
+  const pendingEquipmentVariantStore = createMemoryStore<EquipmentVariantRequest<E> | null>(
+    `equipment_variant_dialog[${store.kind}].pending`,
+    null,
+  );
 
   const close = () => pendingEquipmentVariantStore.set(null);
 
@@ -101,12 +91,7 @@ export function createEquipmentVariantDialog<
                 <Dialog.Title>{t("title")}</Dialog.Title>
               </Dialog.Header>
 
-              {request && (
-                <EquipmentVariantDialogContent
-                  request={request}
-                  sourceId={sourceId}
-                />
-              )}
+              {request && <EquipmentVariantDialogContent request={request} sourceId={sourceId} />}
 
               <Dialog.CloseTrigger asChild>
                 <CloseButton size="sm" />
@@ -146,9 +131,7 @@ export function createEquipmentVariantDialog<
       return <EquipmentVariantDialogLoading modifierIds={modifierIds} />;
 
     const orderedModifierIds = modifiers
-      .sort((a, b) =>
-        translate(a.name, lang).localeCompare(translate(b.name, lang), lang),
-      )
+      .sort((a, b) => translate(a.name, lang).localeCompare(translate(b.name, lang), lang))
       .map(({ id }) => id);
 
     return (
@@ -166,11 +149,7 @@ export function createEquipmentVariantDialog<
   // Equipment Variant Dialog Loading
   //----------------------------------------------------------------------------
 
-  function EquipmentVariantDialogLoading({
-    modifierIds,
-  }: {
-    modifierIds: string[];
-  }) {
+  function EquipmentVariantDialogLoading({ modifierIds }: { modifierIds: string[] }) {
     const { t } = useI18nLangContext(i18nContext);
 
     return (
@@ -230,11 +209,11 @@ export function createEquipmentVariantDialog<
       .filter((modifier): modifier is EquipmentModifier => !!modifier);
 
     const preview =
-      selectedModifiers.length === selectedModifierIds.length ?
-        createEquipmentVariant(request.base, selectedModifiers, "preview", {
-          temporary: !makePersistent,
-        })
-      : undefined;
+      selectedModifiers.length === selectedModifierIds.length
+        ? createEquipmentVariant(request.base, selectedModifiers, "preview", {
+            temporary: !makePersistent,
+          })
+        : undefined;
 
     const confirm = async () => {
       if (
@@ -287,9 +266,7 @@ export function createEquipmentVariantDialog<
                       label={translate(modifier.name, lang)}
                       onValueChange={(value) =>
                         setSelectedModifierIds((prev) =>
-                          value ?
-                            [...prev, modifier.id]
-                          : prev.filter((id) => id !== modifier.id),
+                          value ? [...prev, modifier.id] : prev.filter((id) => id !== modifier.id),
                         )
                       }
                       value={checked}
@@ -299,11 +276,7 @@ export function createEquipmentVariantDialog<
                       Icon={ArrowUpIcon}
                       disabled={index <= 0}
                       label={t("move_up")}
-                      onClick={() =>
-                        setOrderedIds((prev) =>
-                          moveModifier(prev, modifier.id, -1),
-                        )
-                      }
+                      onClick={() => setOrderedIds((prev) => moveModifier(prev, modifier.id, -1))}
                       size="xs"
                       variant="ghost"
                     />
@@ -312,11 +285,7 @@ export function createEquipmentVariantDialog<
                       Icon={ArrowDownIcon}
                       disabled={index < 0 || index >= orderedIds.length - 1}
                       label={t("move_down")}
-                      onClick={() =>
-                        setOrderedIds((prev) =>
-                          moveModifier(prev, modifier.id, 1),
-                        )
-                      }
+                      onClick={() => setOrderedIds((prev) => moveModifier(prev, modifier.id, 1))}
                       size="xs"
                       variant="ghost"
                     />
@@ -335,24 +304,14 @@ export function createEquipmentVariantDialog<
                 rounded="md"
               >
                 <HStack justify="space-between">
-                  <Text fontWeight="medium">
-                    {translate(preview.name, lang)}
-                  </Text>
-                  {preview.virtual && (
-                    <Badge colorPalette="gray">{t("temporary")}</Badge>
-                  )}
+                  <Text fontWeight="medium">{translate(preview.name, lang)}</Text>
+                  {preview.virtual && <Badge colorPalette="gray">{t("temporary")}</Badge>}
                 </HStack>
 
                 <HStack color="fg.muted" fontSize="sm" gap={4}>
+                  <Span>{preview.cost === null ? t("unspecified") : formatCost(preview.cost)}</Span>
                   <Span>
-                    {preview.cost === null ?
-                      t("unspecified")
-                    : formatCost(preview.cost)}
-                  </Span>
-                  <Span>
-                    {preview.weight === null ?
-                      t("unspecified")
-                    : formatWeight(preview.weight)}
+                    {preview.weight === null ? t("unspecified") : formatWeight(preview.weight)}
                   </Span>
                   <Span>{preview.magic ? t("magic") : t("non_magic")}</Span>
                   <Span>{preview.rarity}</Span>
@@ -407,15 +366,10 @@ export function createEquipmentVariantDialog<
 // Move Modifier
 //------------------------------------------------------------------------------
 
-function moveModifier(
-  modifierIds: string[],
-  modifierId: string,
-  delta: -1 | 1,
-): string[] {
+function moveModifier(modifierIds: string[], modifierId: string, delta: -1 | 1): string[] {
   const index = modifierIds.indexOf(modifierId);
   const nextIndex = index + delta;
-  if (index < 0 || nextIndex < 0 || nextIndex >= modifierIds.length)
-    return modifierIds;
+  if (index < 0 || nextIndex < 0 || nextIndex >= modifierIds.length) return modifierIds;
 
   const result = [...modifierIds];
   [result[index], result[nextIndex]] = [result[nextIndex]!, result[index]!];

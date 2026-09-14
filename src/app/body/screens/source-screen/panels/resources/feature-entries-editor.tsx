@@ -1,10 +1,5 @@
 import { HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/react";
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  GripVerticalIcon,
-  XIcon,
-} from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, GripVerticalIcon, XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { FeatureEntry } from "~/models/resources/features/feature-entry";
@@ -47,24 +42,16 @@ export default function FeatureEntriesEditor({
     [options],
   );
 
-  const filterResourceOptions = useCallback(
-    (option: ResourceOption, search: string): boolean => {
-      const normalizedFilter = normalizeString(search);
-      return Object.values(option.name)
-        .filter((name) => name)
-        .some((name) => normalizeString(name!).includes(normalizedFilter));
-    },
-    [],
-  );
+  const filterResourceOptions = useCallback((option: ResourceOption, search: string): boolean => {
+    const normalizedFilter = normalizeString(search);
+    return Object.values(option.name)
+      .filter((name) => name)
+      .some((name) => normalizeString(name!).includes(normalizedFilter));
+  }, []);
 
   const addFeature = useCallback(() => {
     if (!featureId) return;
-    if (
-      value.some(
-        (entry) => entry.id === featureId && entry.min_level === minLevel,
-      )
-    )
-      return;
+    if (value.some((entry) => entry.id === featureId && entry.min_level === minLevel)) return;
 
     onValueChange([...value, { id: featureId, min_level: minLevel }]);
     setFeatureId("");
@@ -188,10 +175,7 @@ export default function FeatureEntriesEditor({
 // Utils
 //------------------------------------------------------------------------------
 
-function formatLevelLabel(
-  minLevel: number,
-  t: (key: keyof typeof i18nContext) => string,
-): string {
+function formatLevelLabel(minLevel: number, t: (key: keyof typeof i18nContext) => string): string {
   return t("level").replace("<1>", `${minLevel}`);
 }
 

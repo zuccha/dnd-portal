@@ -64,9 +64,7 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
   return function FeatureEditor({ resource, sourceId }: FeatureEditorProps) {
     const [lang] = useI18nLang();
     const { t } = useI18nLangContext(i18nContext);
-    const { error, onValueChange, value } = useGrantedByField(
-      resource.granted_by,
-    );
+    const { error, onValueChange, value } = useGrantedByField(resource.granted_by);
 
     return (
       <ResourceEditor resource={resource}>

@@ -4,10 +4,7 @@ import type { CharacterSubclass } from "~/models/resources/character-subclasses/
 import type { CharacterSubclassFormData } from "~/models/resources/character-subclasses/character-subclass-form";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
-import {
-  createFeatureEntriesField,
-  createSelectIdField,
-} from "../resource-editor-form";
+import { createFeatureEntriesField, createSelectIdField } from "../resource-editor-form";
 
 //------------------------------------------------------------------------------
 // Create CharacterSubclass Editor
@@ -18,9 +15,7 @@ export type CharacterSubclassEditorProps = {
   sourceId: string;
 };
 
-export function createCharacterSubclassEditor(
-  form: Form<CharacterSubclassFormData>,
-) {
+export function createCharacterSubclassEditor(form: Form<CharacterSubclassFormData>) {
   //----------------------------------------------------------------------------
   // Resource Editor
   //----------------------------------------------------------------------------
@@ -50,24 +45,14 @@ export function createCharacterSubclassEditor(
   // CharacterSubclass Editor
   //----------------------------------------------------------------------------
 
-  return function CharacterSubclassEditor({
-    resource,
-    sourceId,
-  }: CharacterSubclassEditorProps) {
+  return function CharacterSubclassEditor({ resource, sourceId }: CharacterSubclassEditorProps) {
     return (
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
-          <CharacterClassField
-            defaultValue={resource.character_class_id}
-            sourceId={sourceId}
-          />
+          <CharacterClassField defaultValue={resource.character_class_id} sourceId={sourceId} />
         </HStack>
 
-        <FeatureEntriesField
-          defaultValue={resource.feature_entries}
-          sourceId={sourceId}
-          w="full"
-        />
+        <FeatureEntriesField defaultValue={resource.feature_entries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

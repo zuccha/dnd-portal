@@ -13,9 +13,7 @@ export function createLocalStore<T>(
     initCache: () => {
       try {
         const stringOrNull = localStorage.getItem(id);
-        return stringOrNull === null ? defaultValue : (
-            parse(JSON.parse(stringOrNull))
-          );
+        return stringOrNull === null ? defaultValue : parse(JSON.parse(stringOrNull));
       } catch {
         localStorage.removeItem(id);
         return defaultValue;

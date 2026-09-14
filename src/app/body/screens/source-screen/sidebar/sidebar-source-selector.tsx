@@ -5,10 +5,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import { type Source, canPublishSource } from "~/models/catalogue/source";
 import { publishSourceBundle } from "~/models/catalogue/source-bundle-sync";
-import {
-  type SourceVersion,
-  useTranslateSourceVersion,
-} from "~/models/types/source-version";
+import { type SourceVersion, useTranslateSourceVersion } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
@@ -25,15 +22,11 @@ export type SidebarSourceSelectorProps = {
   versions: SourceVersion[];
 };
 
-export default function SidebarSourceSelector({
-  versions,
-}: SidebarSourceSelectorProps) {
+export default function SidebarSourceSelector({ versions }: SidebarSourceSelectorProps) {
   const selectedSourceId = catalogue.useActiveSourceId();
   const selectedSource = catalogue.useSource(selectedSourceId);
   const selectedSourceReadonly = selectedSource?.registry?.access === "read";
-  const hasUnpublishedChanges = catalogue.useSourceHasUnpublishedChanges(
-    selectedSourceId ?? "",
-  );
+  const hasUnpublishedChanges = catalogue.useSourceHasUnpublishedChanges(selectedSourceId ?? "");
   const [publishing, setPublishing] = useState(false);
 
   const setSourceId = useCallback((sourceId: string | undefined) => {
@@ -62,24 +55,9 @@ export default function SidebarSourceSelector({
     const cores = sources.filter(({ type }) => type === "core");
     const modules = sources.filter(({ type }) => type === "module");
     const campaigns = sources.filter(({ type }) => type === "campaign");
-    const coreItems = itemizeSources(
-      cores,
-      versions,
-      lang,
-      translateSourceVersion,
-    );
-    const moduleItems = itemizeSources(
-      modules,
-      versions,
-      lang,
-      translateSourceVersion,
-    );
-    const campaignItems = itemizeSources(
-      campaigns,
-      versions,
-      lang,
-      translateSourceVersion,
-    );
+    const coreItems = itemizeSources(cores, versions, lang, translateSourceVersion);
+    const moduleItems = itemizeSources(modules, versions, lang, translateSourceVersion);
+    const campaignItems = itemizeSources(campaigns, versions, lang, translateSourceVersion);
     const items = [...coreItems, ...moduleItems, ...campaignItems];
 
     const categories: {
@@ -118,17 +96,16 @@ export default function SidebarSourceSelector({
   );
 
   useLayoutEffect(() => {
-    const sourceOptionIds =
-      sourceOptionIdsKey ? sourceOptionIdsKey.split(",") : [];
+    const sourceOptionIds = sourceOptionIdsKey ? sourceOptionIdsKey.split(",") : [];
     if (!sourceOptionIds.length) {
       catalogue.setActiveSourceId(undefined);
       return;
     }
 
     const next =
-      selectedSourceId && sourceOptionIds.includes(selectedSourceId) ?
-        selectedSourceId
-      : sourceOptionIds[0];
+      selectedSourceId && sourceOptionIds.includes(selectedSourceId)
+        ? selectedSourceId
+        : sourceOptionIds[0];
 
     if (next !== selectedSourceId) catalogue.setActiveSourceId(next);
   }, [selectedSourceId, sourceOptionIdsKey]);
@@ -137,11 +114,7 @@ export default function SidebarSourceSelector({
     <VStack align="stretch" flex={1} gap={2}>
       <HStack gap={2} w="full">
         <CaptionInput
-          caption={
-            selectedSourceReadonly ?
-              `${t("sources")} • ${t("readonly")}`
-            : t("sources")
-          }
+          caption={selectedSourceReadonly ? `${t("sources")} • ${t("readonly")}` : t("sources")}
           flex={1}
         >
           <Select.Enum

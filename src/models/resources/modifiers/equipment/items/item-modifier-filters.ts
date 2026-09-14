@@ -15,9 +15,7 @@ export const itemModifierOrderOptions = equipmentModifierOrderOptions;
 // Item Modifier Filters
 //------------------------------------------------------------------------------
 
-export const itemModifierFiltersSchema = equipmentModifierFiltersSchema.extend(
-  {},
-);
+export const itemModifierFiltersSchema = equipmentModifierFiltersSchema.extend({});
 
 export type ItemModifierFilters = z.infer<typeof itemModifierFiltersSchema>;
 

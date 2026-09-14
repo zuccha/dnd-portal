@@ -1,11 +1,4 @@
-import {
-  Center,
-  HStack,
-  Heading,
-  Span,
-  VStack,
-  chakra,
-} from "@chakra-ui/react";
+import { Center, HStack, Heading, Span, VStack, chakra } from "@chakra-ui/react";
 import { ArrowLeftIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import RawDiscordIcon from "~/assets/images/icons/discord.svg?react";
@@ -40,8 +33,7 @@ export default function SignInScreen() {
     // if (!username) return setErrorMessage("error.username.empty");
     if (!email) return setErrorMessage("error.email.empty");
     if (!password) return setErrorMessage("error.password.empty");
-    if (password !== passwordConfirmation)
-      return setErrorMessage("error.password.mismatch");
+    if (password !== passwordConfirmation) return setErrorMessage("error.password.mismatch");
     setLoading(true);
     const error = await signUpWithPassword({ email, password });
     if (error) setErrorMessage("error.generic");
@@ -60,21 +52,11 @@ export default function SignInScreen() {
         </Field> */}
 
         <Field label={t("email")}>
-          <Input
-            onValueChange={setEmail}
-            size="sm"
-            type="email"
-            value={email}
-          />
+          <Input onValueChange={setEmail} size="sm" type="email" value={email} />
         </Field>
 
         <Field label={t("password")}>
-          <Input
-            onValueChange={setPassword}
-            size="sm"
-            type="password"
-            value={password}
-          />
+          <Input onValueChange={setPassword} size="sm" type="password" value={password} />
         </Field>
 
         <Field label={t("password_confirmation")}>
@@ -94,9 +76,7 @@ export default function SignInScreen() {
 
         <Span fontSize="sm" w="full">
           {`${t("already_registered")} `}
-          <Link onClick={() => history.pushState({}, "", Route.SignIn)}>
-            {t("signin")}
-          </Link>
+          <Link onClick={() => history.pushState({}, "", Route.SignIn)}>{t("signin")}</Link>
         </Span>
 
         <Button alignSelf="flex-end" onClick={signUp} size="sm">
@@ -109,12 +89,7 @@ export default function SignInScreen() {
           <Span bgColor="border.emphasized" flex={1} h="1px" />
         </HStack>
 
-        <Button
-          borderColor="bg.inverted"
-          onClick={signInWithDiscord}
-          variant="outline"
-          w="full"
-        >
+        <Button borderColor="bg.inverted" onClick={signInWithDiscord} variant="outline" w="full">
           <DiscordIcon />
           {t("discord")}
         </Button>

@@ -29,10 +29,7 @@ export type FeatFormData = z.infer<typeof featFormDataSchema>;
 // Feat Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function featFormDataToResource(
-  data: Partial<FeatFormData>,
-  lang: string,
-): Partial<Feat> {
+export function featFormDataToResource(data: Partial<FeatFormData>, lang: string): Partial<Feat> {
   return createResourceFormDataPatch({
     ...resourceFormDataToResource(data, lang),
     category: data.category,

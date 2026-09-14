@@ -2,11 +2,7 @@ import { matchesInclusion, matchesInclusionList } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
 import { useLocalizePlane } from "./localized-plane";
 import { defaultPlane, planeTranslationFields } from "./plane";
-import {
-  defaultPlaneFilters,
-  planeFiltersSchema,
-  planeOrderOptions,
-} from "./plane-filters";
+import { defaultPlaneFilters, planeFiltersSchema, planeOrderOptions } from "./plane-filters";
 
 //------------------------------------------------------------------------------
 // Plane Store

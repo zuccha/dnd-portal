@@ -88,7 +88,7 @@ function Frame({
     >
       {bleed.corner && <BleedGuide {...bleed} corner={bleed.corner} />}
 
-      {compact ?
+      {compact ? (
         <HStack
           align="baseline"
           color={palette[800]}
@@ -103,12 +103,8 @@ function Frame({
           <Span fontWeight="bold">{name}</Span>
           <Span whiteSpace="nowrap">{pageIndicator}</Span>
         </HStack>
-      : <VStack
-          gap={0}
-          lineHeight={0.9}
-          px={`${remToIn(1) + bleed.x}in`}
-          textAlign="center"
-        >
+      ) : (
+        <VStack gap={0} lineHeight={0.9} px={`${remToIn(1) + bleed.x}in`} textAlign="center">
           <HStack
             color={palette[800]}
             fontFamily="Title Wave"
@@ -122,15 +118,16 @@ function Frame({
             {descriptor}
           </HStack>
         </VStack>
-      }
+      )}
 
       <VStack flex={1} gap={0} overflow="hidden" w="full">
         {children}
       </VStack>
 
-      {compact ?
+      {compact ? (
         <Span h={bleed.y} />
-      : <HStack
+      ) : (
+        <HStack
           bgColor={palette[700]}
           color="white"
           fontFamily="Mr Eaves Alt"
@@ -145,27 +142,17 @@ function Frame({
           w="full"
           whiteSpace="nowrap"
         >
-          <Span
-            overflow="hidden"
-            textAlign="left"
-            textOverflow="ellipsis"
-            w="40%"
-          >
+          <Span overflow="hidden" textAlign="left" textOverflow="ellipsis" w="40%">
             {sourcePage ? `${sourceName} > ${sourcePage}` : sourceName}
           </Span>
           <Span position="relative" w="20%">
             {footer}
           </Span>
-          <Span
-            overflow="hidden"
-            textAlign="right"
-            textOverflow="ellipsis"
-            w="40%"
-          >
+          <Span overflow="hidden" textAlign="right" textOverflow="ellipsis" w="40%">
             {sourceVersion}
           </Span>
         </HStack>
-      }
+      )}
     </VStack>
   );
 }
@@ -243,7 +230,7 @@ function Details({ children, palette }: DetailsProps) {
       w="full"
     >
       {children.split(/[\n\r]/).map((paragraph, paragraphIndex) =>
-        paragraph.startsWith("##") ?
+        paragraph.startsWith("##") ? (
           <Span
             borderBottomColor={palette[800]}
             borderBottomWidth={px2}
@@ -258,7 +245,9 @@ function Details({ children, palette }: DetailsProps) {
           >
             {paragraph.substring(2, paragraph.length - 2)}
           </Span>
-        : <RichText hyphens="auto" key={paragraphIndex} text={paragraph} />,
+        ) : (
+          <RichText hyphens="auto" key={paragraphIndex} text={paragraph} />
+        ),
       )}
     </VStack>
   );
@@ -342,11 +331,7 @@ function Separator(props: StackProps) {
 
   return (
     <Box px={`${remToIn(0.5) + bleed.x}in`} w="full" {...props}>
-      <svg
-        preserveAspectRatio="none"
-        style={{ height: px2, width: "100%" }}
-        viewBox="0 0 100 2"
-      >
+      <svg preserveAspectRatio="none" style={{ height: px2, width: "100%" }} viewBox="0 0 100 2">
         <polygon fill={separatorColor} points="0,1 50,0 100,1 50,2" />
       </svg>
     </Box>

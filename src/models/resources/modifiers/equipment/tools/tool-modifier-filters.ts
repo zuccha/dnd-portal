@@ -15,9 +15,7 @@ export const toolModifierOrderOptions = equipmentModifierOrderOptions;
 // Tool Modifier Filters
 //------------------------------------------------------------------------------
 
-export const toolModifierFiltersSchema = equipmentModifierFiltersSchema.extend(
-  {},
-);
+export const toolModifierFiltersSchema = equipmentModifierFiltersSchema.extend({});
 
 export type ToolModifierFilters = z.infer<typeof toolModifierFiltersSchema>;
 

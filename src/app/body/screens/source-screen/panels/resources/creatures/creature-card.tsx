@@ -4,10 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Creature } from "~/models/resources/creatures/creature";
 import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Creature Card
@@ -144,11 +141,7 @@ export function CreatureCard({
       firstPageInfo={
         <HStack gap={0} justify="space-between" px={PokerCard.rem1000} w="full">
           <HStack gap={PokerCard.rem0750}>
-            <StatIcon
-              icon={shieldIcon}
-              label={t("armor_class")}
-              value={localizedResource.ac}
-            />
+            <StatIcon icon={shieldIcon} label={t("armor_class")} value={localizedResource.ac} />
             <VStack align="flex-start" gap={0}>
               <Span>
                 <b>{t("hit_points")}</b> <Span>{localizedResource.hp}</Span>
@@ -160,8 +153,7 @@ export function CreatureCard({
           <HStack gap={PokerCard.rem0750}>
             <VStack align="flex-end" flex={1} gap={0}>
               <Span>
-                <b>{t("proficiency_bonus")}</b>{" "}
-                <Span>{localizedResource.pb}</Span>
+                <b>{t("proficiency_bonus")}</b> <Span>{localizedResource.pb}</Span>
               </Span>
               <Span>
                 <b>{t("exp")}</b> <Span>{localizedResource.exp}</Span>
@@ -169,8 +161,7 @@ export function CreatureCard({
               {localizedResource.has_lair &&
                 localizedResource.exp !== localizedResource.lair_exp && (
                   <Span>
-                    <b>{t("lair_exp")}</b>{" "}
-                    <Span>{localizedResource.lair_exp}</Span>
+                    <b>{t("lair_exp")}</b> <Span>{localizedResource.lair_exp}</Span>
                   </Span>
                 )}
             </VStack>
@@ -230,13 +221,7 @@ type AbilityRowProps = {
   score: string;
 };
 
-function AbilityRow({
-  category,
-  label,
-  modifier,
-  save,
-  score,
-}: AbilityRowProps) {
+function AbilityRow({ category, label, modifier, save, score }: AbilityRowProps) {
   const colors = abilityRowColors[category];
   return (
     <>

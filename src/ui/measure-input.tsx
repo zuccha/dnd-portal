@@ -6,10 +6,7 @@ import SelectNative, { type SelectNativeProps } from "./select-native";
 // Measure Input
 //------------------------------------------------------------------------------
 
-export type MeasureInputProps<U extends string> = Omit<
-  InputGroupProps,
-  "children" | "onChange"
-> & {
+export type MeasureInputProps<U extends string> = Omit<InputGroupProps, "children" | "onChange"> & {
   disabled?: boolean;
   id?: string;
   name?: string;

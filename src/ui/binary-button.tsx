@@ -6,10 +6,7 @@ import IconButton from "./icon-button";
 // Binary Button
 //------------------------------------------------------------------------------
 
-export type BinaryButtonProps<
-  O1 extends string,
-  O2 extends string,
-> = StackProps & {
+export type BinaryButtonProps<O1 extends string, O2 extends string> = StackProps & {
   labels: [string, string];
   onValueChange: (value: O1 | O2) => void;
   options: [{ Icon: LucideIcon; value: O1 }, { Icon: LucideIcon; value: O2 }];
@@ -24,12 +21,7 @@ export default function BinaryButton<O1 extends string, O2 extends string>({
   ...rest
 }: BinaryButtonProps<O1, O2>) {
   return (
-    <HStack
-      bgColor="bg.emphasized"
-      position="relative"
-      rounded="full"
-      {...rest}
-    >
+    <HStack bgColor="bg.emphasized" position="relative" rounded="full" {...rest}>
       <Box
         bgColor="bg"
         h={8}

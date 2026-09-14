@@ -10,12 +10,7 @@ export type SectionProps = StackProps & {
   title: string;
 };
 
-export default function Section({
-  action,
-  children,
-  title,
-  ...rest
-}: SectionProps) {
+export default function Section({ action, children, title, ...rest }: SectionProps) {
   return (
     <VStack pb={children ? 2 : 0} px={6} w="full" {...rest}>
       <HStack justify="space-between" minH={8} w="full">

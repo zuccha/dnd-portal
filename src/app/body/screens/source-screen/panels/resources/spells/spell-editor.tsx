@@ -213,10 +213,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
     return (
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
-          <CharacterClassIdsField
-            defaultValue={resource.character_class_ids}
-            sourceId={sourceId}
-          />
+          <CharacterClassIdsField defaultValue={resource.character_class_ids} sourceId={sourceId} />
           <SchoolField defaultValue={resource.school} w="20em" />
           <LevelField defaultValue={resource.level} w="10em" />
         </HStack>
@@ -226,9 +223,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
             <HStack align="flex-end" w="full">
               <CastingTimeField defaultValue={resource.casting_time} />
               {castingTime === "value" && (
-                <CastingTimeValueField
-                  defaultValue={resource.casting_time_value ?? 0}
-                />
+                <CastingTimeValueField defaultValue={resource.casting_time_value ?? 0} />
               )}
             </HStack>
             <RitualField defaultValue={resource.ritual} />
@@ -238,9 +233,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
             <HStack align="flex-end" w="full">
               <DurationField defaultValue={resource.duration} />
               {duration === "value" && (
-                <DurationValueField
-                  defaultValue={resource.duration_value ?? 0}
-                />
+                <DurationValueField defaultValue={resource.duration_value ?? 0} />
               )}
             </HStack>
             <ConcentrationField defaultValue={resource.concentration} />
@@ -249,9 +242,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
 
         <HStack align="flex-end" flex={1} w="full">
           <RangeField defaultValue={resource.range} />
-          {range === "value" && (
-            <RangeValueField defaultValue={resource.range_value ?? 0} />
-          )}
+          {range === "value" && <RangeValueField defaultValue={resource.range_value ?? 0} />}
         </HStack>
 
         <HStack gap={8}>
@@ -260,9 +251,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
           <MaterialField defaultValue={resource.material} />
         </HStack>
 
-        {material && (
-          <MaterialsField defaultValue={resource.materials?.[lang] ?? ""} />
-        )}
+        {material && <MaterialsField defaultValue={resource.materials?.[lang] ?? ""} />}
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
         <UpgradeField defaultValue={resource.upgrade?.[lang] ?? ""} />

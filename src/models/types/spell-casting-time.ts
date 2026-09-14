@@ -5,12 +5,7 @@ import { createTypeTranslationHooks } from "./_base";
 // Spell Casting Time
 //------------------------------------------------------------------------------
 
-export const spellCastingTimeSchema = z.enum([
-  "action",
-  "bonus_action",
-  "reaction",
-  "value",
-]);
+export const spellCastingTimeSchema = z.enum(["action", "bonus_action", "reaction", "value"]);
 
 export const spellCastingTimes = spellCastingTimeSchema.options;
 

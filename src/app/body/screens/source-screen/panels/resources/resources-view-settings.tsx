@@ -27,8 +27,7 @@ export function createResourcesViewSettings<
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
 >(_store: ResourceStore<R, L, F>, context: ResourcesContext<R>) {
-  const { useCardMode, usePaletteName, useShowImage, useView, useZoom } =
-    context;
+  const { useCardMode, usePaletteName, useShowImage, useView, useZoom } = context;
 
   return function ResourcesViewSwitch(_props: ResourcesViewSettingsProps) {
     const { t } = useI18nLangContext(i18nContext);
@@ -68,10 +67,7 @@ export function createResourcesViewSettings<
                 />
               </CaptionInput>
 
-              <PalettePicker
-                onValueChange={context.setPaletteName}
-                value={paletteName}
-              />
+              <PalettePicker onValueChange={context.setPaletteName} value={paletteName} />
             </HStack>
 
             <CaptionInput caption={t("card_mode")} w="full">

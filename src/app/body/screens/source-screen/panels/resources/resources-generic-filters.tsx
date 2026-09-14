@@ -31,9 +31,7 @@ export function createResourcesGenericFilters<
   const { useFilters } = store;
   const { useSource } = catalogue;
 
-  return function ResourcesGenericFilters({
-    sourceId,
-  }: ResourcesGenericFiltersProps) {
+  return function ResourcesGenericFilters({ sourceId }: ResourcesGenericFiltersProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const source = useSource(sourceId);
     const [sources, setSources] = useDraftResourcesSourcesFilter(sourceId);
@@ -87,9 +85,7 @@ export function createResourcesGenericFilters<
           <InclusionSelect
             buttonProps={{ disabled: !options.length }}
             includes={sources}
-            onValueChange={(partial) =>
-              setSources((prev) => ({ ...prev, ...partial }))
-            }
+            onValueChange={(partial) => setSources((prev) => ({ ...prev, ...partial }))}
             options={options}
             placeholder={t("modules")}
             size="sm"
@@ -102,9 +98,7 @@ export function createResourcesGenericFilters<
             onValueChange={(value) => {
               const order = value.split(".");
               const order_by = order[0] ?? "name";
-              const maybe_order_dir = z
-                .enum(["asc", "desc"])
-                .safeParse(order[1]);
+              const maybe_order_dir = z.enum(["asc", "desc"]).safeParse(order[1]);
               const order_dir = maybe_order_dir.data ?? "asc";
               setFilters({ order_by, order_dir } as Partial<F>);
             }}

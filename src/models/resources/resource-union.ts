@@ -11,10 +11,7 @@ import { creatureSchema } from "./creatures/creature";
 import { localizedCreatureSchema } from "./creatures/localized-creature";
 import { eldritchInvocationSchema } from "./eldritch-invocations/eldritch-invocation";
 import { localizedEldritchInvocationSchema } from "./eldritch-invocations/localized-eldritch-invocation";
-import {
-  equipmentUnionSchema,
-  localizedEquipmentUnionSchema,
-} from "./equipment/equipment-union";
+import { equipmentUnionSchema, localizedEquipmentUnionSchema } from "./equipment/equipment-union";
 import { featSchema } from "./feats/feat";
 import { localizedFeatSchema } from "./feats/localized-feat";
 import { featureSchema } from "./features/feature";
@@ -25,10 +22,7 @@ import { localizedManeuverSchema } from "./maneuvers/localized-maneuver";
 import { maneuverSchema } from "./maneuvers/maneuver";
 import { localizedMetamagicSchema } from "./metamagics/localized-metamagic";
 import { metamagicSchema } from "./metamagics/metamagic";
-import {
-  localizedModifierUnionSchema,
-  modifierUnionSchema,
-} from "./modifiers/modifier-union";
+import { localizedModifierUnionSchema, modifierUnionSchema } from "./modifiers/modifier-union";
 import { localizedPlaneSchema } from "./planes/localized-plane";
 import { planeSchema } from "./planes/plane";
 import { localizedServiceSchema } from "./services/localized-service";
@@ -92,6 +86,4 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedVehicleSchema,
 ]);
 
-export type LocalizedResourceUnion = z.infer<
-  typeof localizedResourceUnionSchema
->;
+export type LocalizedResourceUnion = z.infer<typeof localizedResourceUnionSchema>;

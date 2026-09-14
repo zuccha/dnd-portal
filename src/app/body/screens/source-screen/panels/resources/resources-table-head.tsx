@@ -1,10 +1,5 @@
 import { Table, createIcon } from "@chakra-ui/react";
-import {
-  ChevronRightIcon,
-  EditIcon,
-  EyeIcon,
-  type LucideIcon,
-} from "lucide-react";
+import { ChevronRightIcon, EditIcon, EyeIcon, type LucideIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
@@ -21,10 +16,7 @@ import type { ResourcesContext } from "./resources-context";
 // Resources Table Head Extra
 //------------------------------------------------------------------------------
 
-export type ResourcesTableHeadExtra<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = {
+export type ResourcesTableHeadExtra<R extends Resource, L extends LocalizedResource<R>> = {
   actions?: unknown[];
   columns: (Table.ColumnHeaderProps & {
     icon?: LucideIcon | ReturnType<typeof createIcon>;
@@ -50,27 +42,24 @@ export function createResourcesTableHead<
   _context: ResourcesContext<R>,
   extra: ResourcesTableHeadExtra<R, L>,
 ) {
-  const {
-    useFilteredResourceIds,
-    useResourcesSelectionMethods,
-    useSelectedFilteredResourceIds,
-  } = store;
+  const { useFilteredResourceIds, useResourcesSelectionMethods, useSelectedFilteredResourceIds } =
+    store;
 
   return function ResourcesTableHead({ sourceId }: ResourcesTableHeadProps) {
     const [lang] = useI18nLang();
     const sourceEditable = catalogue.useSourceEditable(sourceId);
 
-    const { deselectAllResources, selectAllResources } =
-      useResourcesSelectionMethods(sourceId);
+    const { deselectAllResources, selectAllResources } = useResourcesSelectionMethods(sourceId);
 
     const filteredResourceIds = useFilteredResourceIds(sourceId);
-    const selectedFilteredResourceIds =
-      useSelectedFilteredResourceIds(sourceId);
+    const selectedFilteredResourceIds = useSelectedFilteredResourceIds(sourceId);
 
     const selected =
-      selectedFilteredResourceIds.length === filteredResourceIds.length ? true
-      : selectedFilteredResourceIds.length > 0 ? "indeterminate"
-      : false;
+      selectedFilteredResourceIds.length === filteredResourceIds.length
+        ? true
+        : selectedFilteredResourceIds.length > 0
+          ? "indeterminate"
+          : false;
 
     const toggleSelected = useCallback(
       (e: React.MouseEvent) => {
@@ -89,12 +78,7 @@ export function createResourcesTableHead<
         </Table.ColumnHeader>
 
         <Table.ColumnHeader textAlign="center" w="4em">
-          <CheckboxIndeterminate
-            mt={0.5}
-            onClick={toggleSelected}
-            size="sm"
-            value={selected}
-          />
+          <CheckboxIndeterminate mt={0.5} onClick={toggleSelected} size="sm" value={selected} />
         </Table.ColumnHeader>
 
         <Table.ColumnHeader textAlign="center" w="3em">
@@ -110,9 +94,7 @@ export function createResourcesTableHead<
               whiteSpace="nowrap"
               {...rest}
             >
-              {icon ?
-                <Icon Icon={icon} size="sm" />
-              : translate(label, lang)}
+              {icon ? <Icon Icon={icon} size="sm" /> : translate(label, lang)}
             </Table.ColumnHeader>
           );
         })}

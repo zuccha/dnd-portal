@@ -2,8 +2,8 @@ import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { defaultFeature } from "../resources/features/feature";
-import type { FeatureEntry } from "../resources/features/feature-entry";
 import { featureStore } from "../resources/features/feature-store";
+import type { FeatureEntry } from "../resources/features/feature-entry";
 
 //------------------------------------------------------------------------------
 // Use Format Feature Entries
@@ -35,9 +35,7 @@ export function useFormatFeatureEntries(
           ).replace(" ", " ");
           const description = translate(feature.description, lang);
           return [
-            entry.min_level ?
-              ti("name.min_level", name, `${entry.min_level}`)
-            : `##${name}##`,
+            entry.min_level ? ti("name.min_level", name, `${entry.min_level}`) : `##${name}##`,
             description,
           ]
             .filter(Boolean)

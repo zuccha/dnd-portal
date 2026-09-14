@@ -1,10 +1,5 @@
 import { Badge, Box, Menu, Portal, Theme, VStack } from "@chakra-ui/react";
-import {
-  EditIcon,
-  EllipsisVerticalIcon,
-  PrinterIcon,
-  SaveIcon,
-} from "lucide-react";
+import { EditIcon, EllipsisVerticalIcon, PrinterIcon, SaveIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -35,15 +30,9 @@ import type { ResourceAction } from "./resources-table-row";
 // Resource Card Interactive Extra
 //------------------------------------------------------------------------------
 
-export type ResourceCardInteractiveExtra<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = {
+export type ResourceCardInteractiveExtra<R extends Resource, L extends LocalizedResource<R>> = {
   AlbumCard: React.FC<
-    Omit<
-      ResourcePokerCardProps<R, L>,
-      "afterDetails" | "beforeDetails" | "firstPageInfo"
-    >
+    Omit<ResourcePokerCardProps<R, L>, "afterDetails" | "beforeDetails" | "firstPageInfo">
   > & {
     Placeholder: React.FC<ResourcePokerCardPlaceholderProps>;
     h: number;
@@ -56,10 +45,7 @@ export type ResourceCardInteractiveExtra<
 // Create Resource Card Interactive
 //------------------------------------------------------------------------------
 
-export type ResourceCardInteractiveProps<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = {
+export type ResourceCardInteractiveProps<R extends Resource, L extends LocalizedResource<R>> = {
   localizeResource: (resource: R) => L;
   palette?: Palette;
   resourceId: string;
@@ -81,8 +67,7 @@ export function createResourceCardInteractive<
   context: ResourcesContext<R>,
   extra: ResourceCardInteractiveExtra<R, L>,
 ) {
-  const { useResource, useResourceSelection, useResourceSelectionMethods } =
-    store;
+  const { useResource, useResourceSelection, useResourceSelectionMethods } = store;
 
   const AlbumCard = extra.AlbumCard;
   const { useCardMode, usePaletteName, useShowImage } = context;
@@ -102,9 +87,8 @@ export function createResourceCardInteractive<
       [localizeResource, resource],
     );
     const visibleActions =
-      extra.actions?.filter(
-        ({ isVisible }) => !isVisible || isVisible(localizedResource._raw),
-      ) ?? [];
+      extra.actions?.filter(({ isVisible }) => !isVisible || isVisible(localizedResource._raw)) ??
+      [];
 
     const cardMode = useCardMode();
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
@@ -144,8 +128,7 @@ export function createResourceCardInteractive<
     const addToPrintDeck = useCallback(() => {
       printDeck.addEntry({
         lang,
-        localized_resource:
-          localizedResourceUnionSchema.parse(localizedResource),
+        localized_resource: localizedResourceUnionSchema.parse(localizedResource),
         palette_name: paletteName,
       });
 
@@ -157,8 +140,8 @@ export function createResourceCardInteractive<
 
     const makePersistent = useCallback(async () => {
       const error = await store.makeResourcePersistent(localizedResource.id);
-      return error ?
-          toaster.error({
+      return error
+        ? toaster.error({
             description: t("persistent.error.description"),
             title: t("persistent.error.title"),
           })
@@ -173,27 +156,27 @@ export function createResourceCardInteractive<
         className="group"
         h={`${AlbumCard.h}in`}
         onPointerDown={
-          cardMode === "paginated" ?
-            (e) => {
-              pointerDownRef.current = { x: e.clientX, y: e.clientY };
-            }
-          : undefined
+          cardMode === "paginated"
+            ? (e) => {
+                pointerDownRef.current = { x: e.clientX, y: e.clientY };
+              }
+            : undefined
         }
         onPointerUp={
-          cardMode === "paginated" ?
-            (e) => {
-              const dx = Math.abs(e.clientX - pointerDownRef.current.x);
-              const dy = Math.abs(e.clientY - pointerDownRef.current.y);
-              const selection = window.getSelection()?.toString() ?? "";
-              if (selection) return;
-              if (dx > 4 || dy > 4) return;
-              const el = e.currentTarget;
-              const rect = el.getBoundingClientRect();
-              const isLeft = e.clientX < rect.left + rect.width / 2;
-              if (isLeft) cycleLeft();
-              else cycleRight();
-            }
-          : undefined
+          cardMode === "paginated"
+            ? (e) => {
+                const dx = Math.abs(e.clientX - pointerDownRef.current.x);
+                const dy = Math.abs(e.clientY - pointerDownRef.current.y);
+                const selection = window.getSelection()?.toString() ?? "";
+                if (selection) return;
+                if (dx > 4 || dy > 4) return;
+                const el = e.currentTarget;
+                const rect = el.getBoundingClientRect();
+                const isLeft = e.clientX < rect.left + rect.width / 2;
+                if (isLeft) cycleLeft();
+                else cycleRight();
+              }
+            : undefined
         }
         position="relative"
         w={`${AlbumCard.w}in`}
@@ -274,10 +257,7 @@ export function createResourceCardInteractive<
                     </Menu.Item>
 
                     {sourceEditable && localizedResource._raw.virtual && (
-                      <Menu.Item
-                        onSelect={makePersistent}
-                        value="make-persistent"
-                      >
+                      <Menu.Item onSelect={makePersistent} value="make-persistent">
                         <Icon Icon={SaveIcon} size="xs" />
                         {t("persistent.make")}
                       </Menu.Item>
@@ -288,13 +268,10 @@ export function createResourceCardInteractive<
                         const ActionIcon = action.icon;
                         return (
                           <Menu.Item
-                            disabled={action.isDisabled?.(
-                              localizedResource._raw,
-                            )}
+                            disabled={action.isDisabled?.(localizedResource._raw)}
                             key={i}
                             onSelect={() => {
-                              if (action.isDisabled?.(localizedResource._raw))
-                                return;
+                              if (action.isDisabled?.(localizedResource._raw)) return;
                               void action.onClick(localizedResource._raw);
                             }}
                             value={`action-${i}`}
@@ -344,8 +321,7 @@ export function createResourceCardInteractive<
     return <AlbumCard.Placeholder name={name} palette={palette} zoom={zoom} />;
   }
 
-  ResourcesAlbumCardInteractive.Placeholder =
-    ResourcesAlbumCardInteractivePlaceholder;
+  ResourcesAlbumCardInteractive.Placeholder = ResourcesAlbumCardInteractivePlaceholder;
   ResourcesAlbumCardInteractive.h = AlbumCard.h;
   ResourcesAlbumCardInteractive.w = AlbumCard.w;
 

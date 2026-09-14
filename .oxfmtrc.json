@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "quoteProps": "consistent",
+  "sortImports": {
+    "customGroups": [
+      {
+        "groupName": "app",
+        "elementNamePattern": ["~/**"]
+      }
+    ],
+    "groups": [
+      ["value-builtin", "value-external"],
+      "app",
+      ["value-parent", "value-sibling", "value-index"],
+      "type-import",
+      "unknown"
+    ],
+    "newlinesBetween": false
+  }
+}

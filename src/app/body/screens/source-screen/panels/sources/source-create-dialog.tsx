@@ -7,14 +7,8 @@ import {
   sourceBundleResourcesSchema,
   sourceBundleSchema,
 } from "~/models/catalogue/source-bundle";
-import {
-  type SourceType,
-  useSourceTypeOptions,
-} from "~/models/types/source-type";
-import {
-  type SourceVersion,
-  useSourceVersionTranslations,
-} from "~/models/types/source-version";
+import { type SourceType, useSourceTypeOptions } from "~/models/types/source-type";
+import { type SourceVersion, useSourceVersionTranslations } from "~/models/types/source-version";
 import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
 import TextInput from "~/ui/input";

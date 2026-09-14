@@ -28,9 +28,7 @@ export type ResourceFormDataPatch = Partial<
 // Create Resource Form Data Patch
 //------------------------------------------------------------------------------
 
-export function createResourceFormDataPatch<P extends object>(
-  patch: P,
-): Partial<P> {
+export function createResourceFormDataPatch<P extends object>(patch: P): Partial<P> {
   return Object.fromEntries(
     Object.entries(patch).filter(([, value]) => value !== undefined),
   ) as Partial<P>;
@@ -56,14 +54,13 @@ export function resourceFormDataToResource(
   lang: string,
 ): ResourceFormDataPatch {
   return createResourceFormDataPatch({
-    image_url:
-      data.image_url === undefined ? undefined : data.image_url || null,
+    image_url: data.image_url === undefined ? undefined : data.image_url || null,
     name: createResourceFormDataI18nValue(data.name, lang),
     name_short: createResourceFormDataI18nValue(data.name_short, lang),
     page:
-      data.page === undefined ?
-        undefined
-      : createResourceFormDataI18nValue(data.page || null, lang),
+      data.page === undefined
+        ? undefined
+        : createResourceFormDataI18nValue(data.page || null, lang),
     visibility: data.visibility,
   });
 }

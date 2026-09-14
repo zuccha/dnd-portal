@@ -10,8 +10,7 @@ import type { ArmorModifier } from "./armor-modifier";
 // Armor Modifier Form Data
 //------------------------------------------------------------------------------
 
-export const armorModifierFormDataSchema =
-  equipmentModifierFormDataSchema.extend({});
+export const armorModifierFormDataSchema = equipmentModifierFormDataSchema.extend({});
 
 export type ArmorModifierFormData = z.infer<typeof armorModifierFormDataSchema>;
 
@@ -23,17 +22,11 @@ export function armorModifierFormDataToResource(
   data: Partial<ArmorModifierFormData>,
   lang: string,
 ): Partial<ArmorModifier> {
-  return equipmentModifierFormDataToResource(
-    data,
-    lang,
-  ) as Partial<ArmorModifier>;
+  return equipmentModifierFormDataToResource(data, lang) as Partial<ArmorModifier>;
 }
 
 //------------------------------------------------------------------------------
 // Armor Modifier Form
 //------------------------------------------------------------------------------
 
-export const armorModifierForm = createForm(
-  "armor_modifier",
-  armorModifierFormDataSchema.parse,
-);
+export const armorModifierForm = createForm("armor_modifier", armorModifierFormDataSchema.parse);

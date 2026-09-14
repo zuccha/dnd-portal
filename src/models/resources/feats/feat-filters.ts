@@ -1,9 +1,6 @@
 import z from "zod";
 import { featCategorySchema } from "../../types/feat-category";
-import {
-  resourceFiltersSchema,
-  resourceOrderOptions,
-} from "../resource-filters";
+import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Feat Order Options
@@ -16,9 +13,7 @@ export const featOrderOptions = resourceOrderOptions;
 //------------------------------------------------------------------------------
 
 export const featFiltersSchema = resourceFiltersSchema.extend({
-  categories: z
-    .partialRecord(featCategorySchema, z.boolean().optional())
-    .optional(),
+  categories: z.partialRecord(featCategorySchema, z.boolean().optional()).optional(),
   level: z.number().default(20),
 });
 

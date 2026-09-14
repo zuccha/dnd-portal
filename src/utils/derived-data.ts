@@ -1,9 +1,4 @@
-import {
-  type Dispatch,
-  type SetStateAction,
-  useLayoutEffect,
-  useState,
-} from "react";
+import { type Dispatch, type SetStateAction, useLayoutEffect, useState } from "react";
 
 //------------------------------------------------------------------------------
 // Create Use Derived Data
@@ -26,16 +21,12 @@ export function createUseDerivedData<Data, DerivedData, Args extends unknown[]>(
 
   function argsEqual(args1: [Data, ...Args], args2: [Data, ...Args]): boolean {
     if (args1.length !== args2.length) return false;
-    for (let i = 0; i < args1.length; ++i)
-      if (args1[i] !== args2[i]) return false;
+    for (let i = 0; i < args1.length; ++i) if (args1[i] !== args2[i]) return false;
     return true;
   }
 
   function getOrDeriveItems(key: string, data: Data, ...args: Args) {
-    if (
-      derivedDataCache[key] &&
-      argsEqual(derivedDataArgs[key]!, [data, ...args])
-    )
+    if (derivedDataCache[key] && argsEqual(derivedDataArgs[key]!, [data, ...args]))
       return derivedDataCache[key];
 
     const derivedItems = deriveData(data, ...args);
@@ -52,14 +43,8 @@ export function createUseDerivedData<Data, DerivedData, Args extends unknown[]>(
     delete unlisteners[key];
   }
 
-  function useDerivedItems(
-    key: string,
-    data: Data,
-    ...args: Args
-  ): [DerivedData, string] {
-    const [derivedData, setDerivedData] = useState(() =>
-      getOrDeriveItems(key, data, ...args),
-    );
+  function useDerivedItems(key: string, data: Data, ...args: Args): [DerivedData, string] {
+    const [derivedData, setDerivedData] = useState(() => getOrDeriveItems(key, data, ...args));
 
     useLayoutEffect(() => {
       if (!listeners[key]) listeners[key] = new Set();

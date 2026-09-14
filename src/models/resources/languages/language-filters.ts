@@ -1,9 +1,6 @@
 import z from "zod";
 import { languageRaritySchema } from "../../types/language-rarity";
-import {
-  resourceFiltersSchema,
-  resourceOrderOptions,
-} from "../resource-filters";
+import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Language Order Options
@@ -16,9 +13,7 @@ export const languageOrderOptions = resourceOrderOptions;
 //------------------------------------------------------------------------------
 
 export const languageFiltersSchema = resourceFiltersSchema.extend({
-  rarity: z
-    .partialRecord(languageRaritySchema, z.boolean().optional())
-    .optional(),
+  rarity: z.partialRecord(languageRaritySchema, z.boolean().optional()).optional(),
 });
 
 export type LanguageFilters = z.infer<typeof languageFiltersSchema>;

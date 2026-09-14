@@ -6,11 +6,5 @@ import { getResponsiveSidebarDefault } from "../responsive-sidebar-default";
 // Sidebar Collapsed State
 //------------------------------------------------------------------------------
 
-export const {
-  useSetValue: useSidebarSetCollapsed,
-  useValue: useSidebarCollapsed,
-} = createLocalStore(
-  "sidebar.collapsed",
-  getResponsiveSidebarDefault(),
-  z.boolean().parse,
-);
+export const { useSetValue: useSidebarSetCollapsed, useValue: useSidebarCollapsed } =
+  createLocalStore("sidebar.collapsed", getResponsiveSidebarDefault(), z.boolean().parse);

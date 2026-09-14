@@ -2,20 +2,14 @@ import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import {
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { type Feature, featureSchema } from "./feature";
 
 //------------------------------------------------------------------------------
 // Localized Feature
 //------------------------------------------------------------------------------
 
-export const localizedFeatureSchema = localizedResourceSchema(
-  featureSchema,
-  z.literal("feature"),
-);
+export const localizedFeatureSchema = localizedResourceSchema(featureSchema, z.literal("feature"));
 
 export type LocalizedFeature = z.infer<typeof localizedFeatureSchema>;
 

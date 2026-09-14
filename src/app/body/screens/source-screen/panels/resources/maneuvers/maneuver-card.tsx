@@ -1,10 +1,7 @@
 import type { LocalizedManeuver } from "~/models/resources/maneuvers/localized-maneuver";
 import type { Maneuver } from "~/models/resources/maneuvers/maneuver";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Maneuver Card
@@ -25,9 +22,7 @@ export function ManeuverCard({
     <ResourcePokerCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       localizedResource={localizedResource}

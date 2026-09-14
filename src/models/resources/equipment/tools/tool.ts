@@ -2,12 +2,8 @@ import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { creatureAbilitySchema } from "../../../types/creature-ability";
 import { toolTypeSchema } from "../../../types/tool-type";
+import { defaultEquipment, equipmentSchema, equipmentTranslationFields } from "../equipment";
 import type { TranslationFields } from "../../resource";
-import {
-  defaultEquipment,
-  equipmentSchema,
-  equipmentTranslationFields,
-} from "../equipment";
 
 //------------------------------------------------------------------------------
 // Tool

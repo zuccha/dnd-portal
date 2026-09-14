@@ -2,10 +2,7 @@ import ConcentrationIcon from "~/icons/concentration-icon";
 import RitualIcon from "~/icons/ritual-icon";
 import { type LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import { type Spell } from "~/models/resources/spells/spell";
-import {
-  spellForm,
-  spellFormDataToResource,
-} from "~/models/resources/spells/spell-form";
+import { spellForm, spellFormDataToResource } from "~/models/resources/spells/spell-form";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { createResourcesPanel } from "../resources-panel";
 import { createResourcesTableColumns } from "../resources-table-columns";

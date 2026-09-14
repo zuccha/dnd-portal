@@ -5,14 +5,7 @@ import { createTypeTranslationHooks } from "./_base";
 // Spell Range
 //------------------------------------------------------------------------------
 
-export const spellRangeSchema = z.enum([
-  "self",
-  "sight",
-  "special",
-  "touch",
-  "unlimited",
-  "value",
-]);
+export const spellRangeSchema = z.enum(["self", "sight", "special", "touch", "unlimited", "value"]);
 
 export const spellRanges = spellRangeSchema.options;
 

@@ -4,10 +4,7 @@ import type { LocalizedService } from "~/models/resources/services/localized-ser
 import type { Service } from "~/models/resources/services/service";
 import Icon from "~/ui/icon";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Service Card
@@ -28,9 +25,7 @@ export function ServiceCard({
     <ResourcePokerCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       firstPageInfo={

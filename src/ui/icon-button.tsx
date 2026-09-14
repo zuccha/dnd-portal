@@ -3,8 +3,8 @@ import {
   type IconButtonProps as ChakraIconButtonProps,
   createIcon,
 } from "@chakra-ui/react";
-import type { LucideIcon } from "lucide-react";
 import Tooltip, { type TooltipProps } from "./tooltip";
+import type { LucideIcon } from "lucide-react";
 
 //------------------------------------------------------------------------------
 // Icon Button

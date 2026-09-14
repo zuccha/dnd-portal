@@ -35,13 +35,8 @@ export default function Checkbox({
       {...rest}
     >
       <ChakraCheckbox.HiddenInput />
-      <ChakraCheckbox.Control
-        _disabled={{ cursor: "disabled" }}
-        cursor="pointer"
-      />
-      {label && (
-        <ChakraCheckbox.Label fontWeight="normal">{label}</ChakraCheckbox.Label>
-      )}
+      <ChakraCheckbox.Control _disabled={{ cursor: "disabled" }} cursor="pointer" />
+      {label && <ChakraCheckbox.Label fontWeight="normal">{label}</ChakraCheckbox.Label>}
     </ChakraCheckbox.Root>
   );
 }

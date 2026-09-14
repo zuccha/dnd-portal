@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import type { ReactNode } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFormData } from "~/models/resources/resource-form";
@@ -10,6 +9,7 @@ import {
   createNumberInputField,
   createSelectEnumField,
 } from "./resource-editor-form";
+import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
 // Create Resource Editor
@@ -20,9 +20,7 @@ export type ResourceEditorProps = {
   resource: Resource;
 };
 
-export function createResourceEditor<D extends ResourceFormData>(
-  form: Form<D>,
-) {
+export function createResourceEditor<D extends ResourceFormData>(form: Form<D>) {
   //----------------------------------------------------------------------------
   // Image Url Field
   //----------------------------------------------------------------------------
@@ -63,9 +61,7 @@ export function createResourceEditor<D extends ResourceFormData>(
       },
     },
     translatable: true,
-    useField: form.createUseField("name", (name) =>
-      name ? undefined : "error.empty",
-    ),
+    useField: form.createUseField("name", (name) => (name ? undefined : "error.empty")),
   });
 
   //----------------------------------------------------------------------------
@@ -122,10 +118,7 @@ export function createResourceEditor<D extends ResourceFormData>(
       <VStack align="stretch" gap={4}>
         <HStack align="flex-start" gap={4}>
           <NameField defaultValue={resource.name[lang] ?? ""} />
-          <NameShortField
-            defaultValue={resource.name_short[lang] ?? ""}
-            w="14em"
-          />
+          <NameShortField defaultValue={resource.name_short[lang] ?? ""} w="14em" />
           <PageField defaultValue={resource.page?.[lang] ?? 0} maxW="6em" />
           <VisibilityField defaultValue={resource.visibility} maxW="10em" />
         </HStack>

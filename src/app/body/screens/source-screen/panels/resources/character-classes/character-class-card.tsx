@@ -1,19 +1,16 @@
 import { HStack, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import D10Icon from "~/icons/d10-icon";
-import D12Icon from "~/icons/d12-icon";
-import D20Icon from "~/icons/d20-icon";
 import D4Icon from "~/icons/d4-icon";
 import D6Icon from "~/icons/d6-icon";
 import D8Icon from "~/icons/d8-icon";
+import D10Icon from "~/icons/d10-icon";
+import D12Icon from "~/icons/d12-icon";
+import D20Icon from "~/icons/d20-icon";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
 import type { LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
 import Icon from "~/ui/icon";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Character Class Card
@@ -35,11 +32,7 @@ export function CharacterClassCard({
 
   return (
     <ResourcePokerCard
-      beforeDetails={
-        <PokerCard.Info palette={palette}>
-          {localizedResource.info}
-        </PokerCard.Info>
-      }
+      beforeDetails={<PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>}
       firstPageInfo={
         <HStack justify="space-between" px={PokerCard.rem0750} w="full">
           <HStack gap={PokerCard.rem0250}>
@@ -60,9 +53,7 @@ export function CharacterClassCard({
             <Span fontStyle="italic" fontWeight="bold">
               {tp("abilities", primaryAbilitiesCount)}
             </Span>
-            <Span>
-              {localizedResource.primary_abilities ?? t("abilities.none")}
-            </Span>
+            <Span>{localizedResource.primary_abilities ?? t("abilities.none")}</Span>
           </VStack>
         </HStack>
       }

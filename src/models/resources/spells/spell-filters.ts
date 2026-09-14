@@ -3,10 +3,7 @@ import type { I18nString } from "~/i18n/i18n-string";
 import { spellCastingTimeSchema } from "../../types/spell-casting-time";
 import { spellLevelStringSchema } from "../../types/spell-level";
 import { spellSchoolSchema } from "../../types/spell-school";
-import {
-  resourceFiltersSchema,
-  resourceOrderOptions,
-} from "../resource-filters";
+import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
 //------------------------------------------------------------------------------
 // Spell Order Options
@@ -35,18 +32,10 @@ export const spellOrderOptions: { label: I18nString; value: string }[] = [
 //------------------------------------------------------------------------------
 
 export const spellFiltersSchema = resourceFiltersSchema.extend({
-  casting_time: z
-    .partialRecord(spellCastingTimeSchema, z.boolean().optional())
-    .optional(),
-  character_class_ids: z
-    .partialRecord(z.uuid(), z.boolean().optional())
-    .optional(),
-  levels: z
-    .partialRecord(spellLevelStringSchema, z.boolean().optional())
-    .optional(),
-  schools: z
-    .partialRecord(spellSchoolSchema, z.boolean().optional())
-    .optional(),
+  casting_time: z.partialRecord(spellCastingTimeSchema, z.boolean().optional()).optional(),
+  character_class_ids: z.partialRecord(z.uuid(), z.boolean().optional()).optional(),
+  levels: z.partialRecord(spellLevelStringSchema, z.boolean().optional()).optional(),
+  schools: z.partialRecord(spellSchoolSchema, z.boolean().optional()).optional(),
 
   concentration: z.boolean().optional(),
   ritual: z.boolean().optional(),

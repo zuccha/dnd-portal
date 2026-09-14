@@ -35,6 +35,4 @@ export const defaultPlane: Plane = {
 // Plane Translation Fields
 //------------------------------------------------------------------------------
 
-export const planeTranslationFields: TranslationFields<Plane>[] = [
-  ...resourceTranslationFields,
-];
+export const planeTranslationFields: TranslationFields<Plane>[] = [...resourceTranslationFields];

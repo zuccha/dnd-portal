@@ -13,11 +13,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import type { Source } from "~/models/catalogue/source";
 import IconButton from "~/ui/icon-button";
-import {
-  type SourceGroup,
-  type SourceListEntry,
-  colorBySourceStatus,
-} from "./source-list-utils";
+import { type SourceGroup, type SourceListEntry, colorBySourceStatus } from "./source-list-utils";
 import i18nContext from "./sources-i18n";
 
 //------------------------------------------------------------------------------
@@ -133,9 +129,7 @@ function SourceRow({
 }: SourceRowProps) {
   const { t } = useI18nLangContext(i18nContext);
   const { source, status } = entry;
-  const hasUnpublishedChanges = catalogue.useSourceHasUnpublishedChanges(
-    source.id,
-  );
+  const hasUnpublishedChanges = catalogue.useSourceHasUnpublishedChanges(source.id);
   const name = source.name[lang] || source.code;
 
   return (
@@ -150,12 +144,7 @@ function SourceRow({
       py={2}
       w="full"
     >
-      <VStack
-        align="flex-start"
-        flex={{ base: "1 1 100%", sm: 1 }}
-        gap={0}
-        minW={0}
-      >
+      <VStack align="flex-start" flex={{ base: "1 1 100%", sm: 1 }} gap={0} minW={0}>
         <HStack align="baseline" flexWrap="wrap" gap={2} w="full">
           <Text
             flex={{ base: 1, sm: "0 1 auto" }}
@@ -167,11 +156,7 @@ function SourceRow({
             {name}
           </Text>
           {status && (
-            <Badge
-              colorPalette={colorBySourceStatus[status]}
-              size="xs"
-              variant="subtle"
-            >
+            <Badge colorPalette={colorBySourceStatus[status]} size="xs" variant="subtle">
               {t(`status.${status}`)}
             </Badge>
           )}
@@ -241,8 +226,7 @@ function SourceRow({
         )}
 
         {status === "installed" &&
-          (source.registry?.access === "creator" ||
-            source.registry?.access === "write") &&
+          (source.registry?.access === "creator" || source.registry?.access === "write") &&
           hasUnpublishedChanges &&
           onPublish && (
             <IconButton

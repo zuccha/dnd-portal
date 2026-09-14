@@ -1,11 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from "react";
 import type { Callback2 } from "~/utils/callback";
 import { createObservableSet } from "~/utils/observable-set";
-import {
-  type StateSetter,
-  type StateUpdate,
-  isStateUpdater,
-} from "~/utils/state";
+import { type StateSetter, type StateUpdate, isStateUpdater } from "~/utils/state";
 
 //------------------------------------------------------------------------------
 // Store Set
@@ -38,8 +34,10 @@ export function createStoreSet<K, T>(
     onCacheUpdate,
   }: { initCache: () => Map<K, T>; onCacheUpdate: (key: K, value: T) => void },
 ): StoreSet<K, T> {
-  const { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny } =
-    createObservableSet<K, T>(id);
+  const { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny } = createObservableSet<
+    K,
+    T
+  >(id);
 
   const cache = initCache();
 
@@ -56,9 +54,8 @@ export function createStoreSet<K, T>(
   }
 
   function set(key: K, defaultValue: T, update: StateUpdate<T>): T {
-    const value =
-      isStateUpdater(update) ?
-        update(cache.has(key) ? cache.get(key)! : defaultValue)
+    const value = isStateUpdater(update)
+      ? update(cache.has(key) ? cache.get(key)! : defaultValue)
       : update;
     cache.set(key, value);
     onCacheUpdate(key, value);
@@ -69,10 +66,7 @@ export function createStoreSet<K, T>(
   function useValue(key: K, defaultValue: T): T {
     const [value, setValue] = useState(() => get(key, defaultValue));
     useLayoutEffect(() => subscribe(key, setValue), [key]);
-    useLayoutEffect(
-      () => setValue(get(key, defaultValue)),
-      [key, defaultValue],
-    );
+    useLayoutEffect(() => setValue(get(key, defaultValue)), [key, defaultValue]);
     return value;
   }
 

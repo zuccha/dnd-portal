@@ -5,20 +5,14 @@ import { translate } from "~/i18n/i18n-string";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
 import { useTranslateToolType } from "../../../types/tool-type";
 import { equipmentReferenceStore } from "../equipment-reference-store";
-import {
-  localizedEquipmentSchema,
-  useLocalizeEquipment,
-} from "../localized-equipment";
+import { localizedEquipmentSchema, useLocalizeEquipment } from "../localized-equipment";
 import { type Tool, toolSchema } from "./tool";
 
 //------------------------------------------------------------------------------
 // Localized Tool
 //------------------------------------------------------------------------------
 
-export const localizedToolSchema = localizedEquipmentSchema(
-  toolSchema,
-  z.literal("tool"),
-).extend({
+export const localizedToolSchema = localizedEquipmentSchema(toolSchema, z.literal("tool")).extend({
   ability: z.string(),
   type: z.string(),
 });
@@ -29,39 +23,27 @@ export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 // Use Localized Tool
 //------------------------------------------------------------------------------
 
-export function useLocalizeTool(
-  sourceId: string,
-): (tool: Tool) => LocalizedTool {
+export function useLocalizeTool(sourceId: string): (tool: Tool) => LocalizedTool {
   const localizeEquipment = useLocalizeEquipment<Tool>(sourceId);
   const { lang, ti, tpi } = useI18nLangContext(i18nContext);
 
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateToolType = useTranslateToolType(lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
 
   return useCallback(
     (tool: Tool): LocalizedTool => {
       const equipment = localizeEquipment(tool);
       const type = translateToolType(tool.type).label;
 
-      const craft =
-        tool.craft_ids.map(localizeEquipmentName).sort().join(", ") + ".";
+      const craft = tool.craft_ids.map(localizeEquipmentName).sort().join(", ") + ".";
 
       const utilize = translate(tool.utilize, lang);
-      const utilizeCount =
-        utilize ?
-          utilize.includes(",") ?
-            2
-          : 1
-        : 0;
+      const utilizeCount = utilize ? (utilize.includes(",") ? 2 : 1) : 0;
 
       return {
         ...equipment,
-        descriptor:
-          tool.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+        descriptor: tool.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
         details: [
           tpi("utilize", utilizeCount, utilize),
           tpi("craft", tool.craft_ids.length, craft),

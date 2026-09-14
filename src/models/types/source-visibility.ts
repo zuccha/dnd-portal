@@ -5,11 +5,7 @@ import { createTypeTranslationHooks } from "./_base";
 // Source Visibility
 //------------------------------------------------------------------------------
 
-export const sourceVisibilitySchema = z.enum([
-  "public",
-  "private",
-  "purchasable",
-]);
+export const sourceVisibilitySchema = z.enum(["public", "private", "purchasable"]);
 
 export const sourceVisibilities = sourceVisibilitySchema.options;
 

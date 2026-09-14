@@ -21,12 +21,7 @@ export function hash(value: unknown): string {
 //------------------------------------------------------------------------------
 
 export async function sha256(value: unknown): Promise<string> {
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(hash(value)),
-  );
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(hash(value)));
 
-  return Array.from(new Uint8Array(digest), (byte) =>
-    byte.toString(16).padStart(2, "0"),
-  ).join("");
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }

@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from "react";
-import type { ZodType } from "zod";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
@@ -16,13 +15,7 @@ import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
 import { createUuid } from "~/utils/uuid";
-import type { ResourceKind } from "../types/resource-kind";
-import type { LocalizedResource } from "./localized-resource";
-import {
-  type Resource,
-  type ResourceOption,
-  type TranslationFields,
-} from "./resource";
+import { type Resource, type ResourceOption, type TranslationFields } from "./resource";
 import {
   type ResourceComparator,
   type ResourceMatcher,
@@ -30,9 +23,12 @@ import {
   matchesInclusion,
   matchesName,
 } from "./resource-filtering";
-import type { ResourceFilters } from "./resource-filters";
 import { mergeResourcePatch } from "./resource-patch";
 import { useResourcesSourcesFilter } from "./resources-sources-filter";
+import type { ResourceKind } from "../types/resource-kind";
+import type { LocalizedResource } from "./localized-resource";
+import type { ResourceFilters } from "./resource-filters";
+import type { ZodType } from "zod";
 
 //------------------------------------------------------------------------------
 // Resource Store
@@ -89,10 +85,7 @@ export function createResourceStore<
     filtersSchema.parse,
   );
 
-  const filtersStore = createMemoryStore<F>(
-    `${storeId}.filters.draft`,
-    appliedFiltersStore.get(),
-  );
+  const filtersStore = createMemoryStore<F>(`${storeId}.filters.draft`, appliedFiltersStore.get());
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Filters
@@ -127,10 +120,7 @@ export function createResourceStore<
     const filters = filtersStore.useValue();
     const setAppliedFilters = appliedFiltersStore.useSetValue();
 
-    return useCallback(
-      () => setAppliedFilters(filters),
-      [filters, setAppliedFilters],
-    );
+    return useCallback(() => setAppliedFilters(filters), [filters, setAppliedFilters]);
   }
 
   function useResetFilters(): () => void {
@@ -170,13 +160,10 @@ export function createResourceStore<
   // Make Resource Persistent
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  async function makeResourcePersistent(
-    resourceId: string,
-  ): Promise<string | undefined> {
+  async function makeResourcePersistent(resourceId: string): Promise<string | undefined> {
     const resource = getResource(resourceId);
     if (!resource) return "form.error.update_failure";
-    if (!catalogue.isSourceEditable(resource.source_id))
-      return "form.error.update_failure";
+    if (!catalogue.isSourceEditable(resource.source_id)) return "form.error.update_failure";
     if (!resource.virtual) return undefined;
 
     const persistentResource = { ...resource, virtual: false };
@@ -208,8 +195,7 @@ export function createResourceStore<
   ): Promise<string | undefined> {
     const source = catalogue.getSource(sourceId);
     if (!source) return "form.error.update_failure";
-    if (!catalogue.isSourceEditable(sourceId))
-      return "form.error.update_failure";
+    if (!catalogue.isSourceEditable(sourceId)) return "form.error.update_failure";
 
     const resource = {
       ...defaultResource,
@@ -223,9 +209,7 @@ export function createResourceStore<
     } as R;
 
     try {
-      await updateSourceBundle(source.id, (bundle) =>
-        upsertSourceBundleResource(bundle, resource),
-      );
+      await updateSourceBundle(source.id, (bundle) => upsertSourceBundleResource(bundle, resource));
       await catalogue.refreshSourceState(source.id);
       catalogueResourceStore.upsertResource(resource);
       return undefined;
@@ -239,24 +223,16 @@ export function createResourceStore<
   // Delete Resources
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  async function deleteResources(
-    resourceIds: string[],
-  ): Promise<string | undefined> {
+  async function deleteResources(resourceIds: string[]): Promise<string | undefined> {
     const resources = resourceIds
       .map(getResource)
       .filter((resource): resource is R => resource !== undefined);
-    if (
-      resources.some(
-        (resource) => !catalogue.isSourceEditable(resource.source_id),
-      )
-    )
+    if (resources.some((resource) => !catalogue.isSourceEditable(resource.source_id)))
       return "form.error.update_failure";
 
     const sourceIds = [
       ...new Set(
-        resources
-          .filter((resource) => !resource.virtual)
-          .map(({ source_id }) => source_id),
+        resources.filter((resource) => !resource.virtual).map(({ source_id }) => source_id),
       ),
     ];
 
@@ -272,14 +248,10 @@ export function createResourceStore<
           );
         }),
       );
-      await Promise.all(
-        sourceIds.map((sourceId) => catalogue.refreshSourceState(sourceId)),
-      );
+      await Promise.all(sourceIds.map((sourceId) => catalogue.refreshSourceState(sourceId)));
 
-      for (const resource of resources)
-        catalogueResourceStore.removeResource(resource.id);
-      for (const resource of resources)
-        resourceSelectionCache.remove(resource.id);
+      for (const resource of resources) catalogueResourceStore.removeResource(resource.id);
+      for (const resource of resources) resourceSelectionCache.remove(resource.id);
 
       return undefined;
     } catch (error) {
@@ -306,8 +278,7 @@ export function createResourceStore<
   ): Promise<string | undefined> {
     const current = getResource(resourceId);
     if (!current) return "form.error.update_failure";
-    if (!catalogue.isSourceEditable(current.source_id))
-      return "form.error.update_failure";
+    if (!catalogue.isSourceEditable(current.source_id)) return "form.error.update_failure";
 
     const resource = mergeResourcePatch(
       current,
@@ -361,9 +332,7 @@ export function createResourceStore<
       () => new Map(resources.map((resource) => [resource.id, resource])),
       [resources],
     );
-    const result = resourceIds.map(
-      (id) => resourcesById.get(id) ?? defaultResource,
-    ) as R[];
+    const result = resourceIds.map((id) => resourcesById.get(id) ?? defaultResource) as R[];
     return result;
   }
 
@@ -427,10 +396,7 @@ export function createResourceStore<
         .filter((resourceId) => {
           const resource = getResource(resourceId);
           if (!resource) return false;
-          return (
-            matchesName(resource, normalizedName) &&
-            matchesResource(resource, filters)
-          );
+          return matchesName(resource, normalizedName) && matchesResource(resource, filters);
         })
         .sort((aId, bId) => {
           const a = getResource(aId);
@@ -456,21 +422,14 @@ export function createResourceStore<
   //----------------------------------------------------------------------------
 
   // resource id -> boolean
-  const resourceSelectionCache = createCache<string, boolean>(
-    `${storeId}.resource_selection`,
-  );
+  const resourceSelectionCache = createCache<string, boolean>(`${storeId}.resource_selection`);
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Subscribe Resource Selection
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const subscribeResourceSelections = (
-    resourceIds: string[],
-    callback: () => void,
-  ) => {
-    const unsubscribes = resourceIds.map((id) =>
-      resourceSelectionCache.subscribe(id, callback),
-    );
+  const subscribeResourceSelections = (resourceIds: string[], callback: () => void) => {
+    const unsubscribes = resourceIds.map((id) => resourceSelectionCache.subscribe(id, callback));
     return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
   };
 
@@ -591,13 +550,9 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const resourceIds =
-      catalogueResourceStore.useActiveSourceReferenceResourceIds();
+    const resourceIds = catalogueResourceStore.useActiveSourceReferenceResourceIds();
     const resourcesById = useMemo(
-      () =>
-        new Map(
-          resourceIds.map((id) => [id, getResource(id) ?? defaultResource]),
-        ),
+      () => new Map(resourceIds.map((id) => [id, getResource(id) ?? defaultResource])),
       [resourceIds],
     );
 
@@ -618,13 +573,9 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const resourceIds =
-      catalogueResourceStore.useActiveSourceReferenceResourceIds();
+    const resourceIds = catalogueResourceStore.useActiveSourceReferenceResourceIds();
     const resourcesById = useMemo(
-      () =>
-        new Map(
-          resourceIds.map((id) => [id, getResource(id) ?? defaultResource]),
-        ),
+      () => new Map(resourceIds.map((id) => [id, getResource(id) ?? defaultResource])),
       [resourceIds],
     );
 
@@ -641,10 +592,7 @@ export function createResourceStore<
   // Use Localized Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useLocalizedResource(
-    sourceId: string,
-    resourceId: string,
-  ): L | undefined {
+  function useLocalizedResource(sourceId: string, resourceId: string): L | undefined {
     const [resource] = useResource(resourceId);
     const localizeResource = useLocalizeResource(sourceId);
 
@@ -657,12 +605,8 @@ export function createResourceStore<
   // Use Resource Options
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useResourceOptionsByLang(
-    _sourceId: string,
-    lang: string,
-  ): [ResourceOption[], string] {
-    const resourceIds =
-      catalogueResourceStore.useActiveSourceReferenceResourceIds();
+  function useResourceOptionsByLang(_sourceId: string, lang: string): [ResourceOption[], string] {
+    const resourceIds = catalogueResourceStore.useActiveSourceReferenceResourceIds();
     const key = hash([resourceIds, lang]);
 
     return [

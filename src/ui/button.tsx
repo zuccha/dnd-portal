@@ -1,7 +1,4 @@
-import {
-  Button as ChakraButton,
-  type ButtonProps as ChakraButtonProps,
-} from "@chakra-ui/react";
+import { Button as ChakraButton, type ButtonProps as ChakraButtonProps } from "@chakra-ui/react";
 
 //------------------------------------------------------------------------------
 // Button

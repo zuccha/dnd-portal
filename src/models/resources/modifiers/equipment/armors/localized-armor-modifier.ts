@@ -14,9 +14,7 @@ export const localizedArmorModifierSchema = localizedEquipmentModifierSchema(
   z.literal("armor_modifier"),
 ).extend({});
 
-export type LocalizedArmorModifier = z.infer<
-  typeof localizedArmorModifierSchema
->;
+export type LocalizedArmorModifier = z.infer<typeof localizedArmorModifierSchema>;
 
 //------------------------------------------------------------------------------
 // Use Localize Armor Modifier

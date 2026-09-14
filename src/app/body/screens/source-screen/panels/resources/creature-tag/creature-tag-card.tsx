@@ -1,9 +1,6 @@
 import type { CreatureTag } from "~/models/resources/creature-tags/creature-tag";
 import type { LocalizedCreatureTag } from "~/models/resources/creature-tags/localized-creature-tag";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Creature Tag Card

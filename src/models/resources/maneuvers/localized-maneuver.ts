@@ -2,11 +2,7 @@ import { useCallback } from "react";
 import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import {
-  formatInfo,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { type Maneuver, maneuverSchema } from "./maneuver";
 
 //------------------------------------------------------------------------------
@@ -27,24 +23,18 @@ export type LocalizedManeuver = z.infer<typeof localizedManeuverSchema>;
 // Use Localized Maneuver
 //------------------------------------------------------------------------------
 
-export function useLocalizeManeuver(): (
-  maneuver: Maneuver,
-) => LocalizedManeuver {
+export function useLocalizeManeuver(): (maneuver: Maneuver) => LocalizedManeuver {
   const localizeResource = useLocalizeResource<Maneuver>();
   const { lang, t, tp } = useI18nLangContext(i18nContext);
 
   return useCallback(
     (maneuver: Maneuver): LocalizedManeuver => {
-      const prerequisite =
-        maneuver.prerequisite ?
-          translate(maneuver.prerequisite, lang)
+      const prerequisite = maneuver.prerequisite
+        ? translate(maneuver.prerequisite, lang)
         : undefined;
 
       const info = formatInfo([
-        [
-          tp("prerequisites", prerequisite?.includes(",") ? 2 : 1),
-          prerequisite ?? "",
-        ],
+        [tp("prerequisites", prerequisite?.includes(",") ? 2 : 1), prerequisite ?? ""],
       ]);
 
       return {

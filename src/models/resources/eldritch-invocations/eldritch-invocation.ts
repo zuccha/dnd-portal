@@ -37,5 +37,8 @@ export const defaultEldritchInvocation: EldritchInvocation = {
 // Eldritch Invocation Translation Fields
 //------------------------------------------------------------------------------
 
-export const eldritchInvocationTranslationFields: TranslationFields<EldritchInvocation>[] =
-  [...resourceTranslationFields, "description", "prerequisite"];
+export const eldritchInvocationTranslationFields: TranslationFields<EldritchInvocation>[] = [
+  ...resourceTranslationFields,
+  "description",
+  "prerequisite",
+];

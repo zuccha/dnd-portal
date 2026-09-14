@@ -19,13 +19,8 @@ export default function UserButton() {
     return (
       <>
         <HStack display={{ base: "none", md: "flex" }} fontSize="sm" mx={2.5}>
-          <Link onClick={() => history.pushState({}, "", Route.SignIn)}>
-            {t("button.signin")}
-          </Link>
-          /
-          <Link onClick={() => history.pushState({}, "", Route.SignUp)}>
-            {t("button.signup")}
-          </Link>
+          <Link onClick={() => history.pushState({}, "", Route.SignIn)}>{t("button.signin")}</Link>/
+          <Link onClick={() => history.pushState({}, "", Route.SignUp)}>{t("button.signup")}</Link>
         </HStack>
 
         <Menu.Root>
@@ -43,16 +38,10 @@ export default function UserButton() {
             <Menu.Positioner>
               <Menu.Content>
                 <Menu.ItemGroup>
-                  <Menu.Item
-                    onClick={() => history.pushState({}, "", Route.SignIn)}
-                    value="signin"
-                  >
+                  <Menu.Item onClick={() => history.pushState({}, "", Route.SignIn)} value="signin">
                     {t("button.signin")}
                   </Menu.Item>
-                  <Menu.Item
-                    onClick={() => history.pushState({}, "", Route.SignUp)}
-                    value="signup"
-                  >
+                  <Menu.Item onClick={() => history.pushState({}, "", Route.SignUp)} value="signup">
                     {t("button.signup")}
                   </Menu.Item>
                 </Menu.ItemGroup>

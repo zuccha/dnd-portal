@@ -12,20 +12,13 @@ export type PrintDeckSidebarActionsProps = {
   onPrint: () => void;
 };
 
-export default function PrintDeckSidebarActions({
-  onPrint,
-}: PrintDeckSidebarActionsProps) {
+export default function PrintDeckSidebarActions({ onPrint }: PrintDeckSidebarActionsProps) {
   const { t } = useI18nLangContext(i18nContext);
 
   return (
     <Section title={t("heading")} w="full">
       <VStack w="full">
-        <Button
-          onClick={printDeck.clearEntries}
-          size="sm"
-          variant="outline"
-          w="full"
-        >
+        <Button onClick={printDeck.clearEntries} size="sm" variant="outline" w="full">
           {t("clear")}
         </Button>
 

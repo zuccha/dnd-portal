@@ -17,9 +17,7 @@ export const characterSubclassFormDataSchema = resourceFormDataSchema.extend({
   feature_entries: z.array(featureEntrySchema).default([]),
 });
 
-export type CharacterSubclassFormData = z.infer<
-  typeof characterSubclassFormDataSchema
->;
+export type CharacterSubclassFormData = z.infer<typeof characterSubclassFormDataSchema>;
 
 //------------------------------------------------------------------------------
 // Character Subclass Form Data To Resource

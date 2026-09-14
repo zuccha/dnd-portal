@@ -1,10 +1,7 @@
 import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useState } from "react";
 import catalogue from "~/models/catalogue/catalogue";
-import {
-  loadSourceBundles,
-  loadSourceStates,
-} from "~/models/catalogue/source-bundle-indexed-db";
+import { loadSourceBundles, loadSourceStates } from "~/models/catalogue/source-bundle-indexed-db";
 import {
   downloadDefaultSource,
   updateInstalledSources,
@@ -49,16 +46,13 @@ export default function App() {
 
       if (cancelled) return;
 
-      for (const bundle of bundles)
-        catalogue.importSourceBundle(bundle, { activate: false });
+      for (const bundle of bundles) catalogue.importSourceBundle(bundle, { activate: false });
       for (const state of states) catalogue.setSourceState(state);
 
       if (!localStorage.getItem("initialized")) {
         if (!bundles.length) {
           try {
-            await downloadDefaultSource(
-              import.meta.env["VITE_DEFAULT_SOURCE_ID"],
-            );
+            await downloadDefaultSource(import.meta.env["VITE_DEFAULT_SOURCE_ID"]);
             localStorage.setItem("initialized", "true");
           } catch (error) {
             console.error("Unable to download the default source", error);

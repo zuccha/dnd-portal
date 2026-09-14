@@ -17,8 +17,7 @@ export const languageStore = createResourceStore("language", {
   defaultResource: defaultLanguage,
   displayName: { en: "Languages", it: "Lingue" },
   filtersSchema: languageFiltersSchema,
-  matchesResource: (language, filters) =>
-    matchesInclusion(language.rarity, filters.rarity),
+  matchesResource: (language, filters) => matchesInclusion(language.rarity, filters.rarity),
   orderOptions: languageOrderOptions,
   translationFields: languageTranslationFields,
   useLocalizeResource: useLocalizeLanguage,

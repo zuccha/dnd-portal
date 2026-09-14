@@ -90,15 +90,7 @@ type CropMarksHProps = {
   w: number;
 };
 
-function CropMarksH({
-  bleedY,
-  cardH,
-  color,
-  offsetX,
-  offsetY,
-  rows,
-  w,
-}: CropMarksHProps) {
+function CropMarksH({ bleedY, cardH, color, offsetX, offsetY, rows, w }: CropMarksHProps) {
   return (
     <>
       {range(rows).map((c) => (
@@ -139,15 +131,7 @@ type CropMarksVProps = {
   offsetY: number;
 };
 
-function CropMarksV({
-  bleedX,
-  cardW,
-  color,
-  columns,
-  h,
-  offsetX,
-  offsetY,
-}: CropMarksVProps) {
+function CropMarksV({ bleedX, cardW, color, columns, h, offsetX, offsetY }: CropMarksVProps) {
   return (
     <Fragment>
       {range(columns).map((c) => (

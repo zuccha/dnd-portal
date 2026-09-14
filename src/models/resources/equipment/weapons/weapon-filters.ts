@@ -2,10 +2,7 @@ import z from "zod";
 import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
 import { weaponTypeSchema } from "../../../types/weapon-type";
-import {
-  equipmentFiltersSchema,
-  equipmentOrderOptions,
-} from "../equipment-filters";
+import { equipmentFiltersSchema, equipmentOrderOptions } from "../equipment-filters";
 
 //------------------------------------------------------------------------------
 // Weapon Order Options
@@ -18,12 +15,8 @@ export const weaponOrderOptions = equipmentOrderOptions;
 //------------------------------------------------------------------------------
 
 export const weaponFiltersSchema = equipmentFiltersSchema.extend({
-  masteries: z
-    .partialRecord(weaponMasterySchema, z.boolean().optional())
-    .optional(),
-  properties: z
-    .partialRecord(weaponPropertySchema, z.boolean().optional())
-    .optional(),
+  masteries: z.partialRecord(weaponMasterySchema, z.boolean().optional()).optional(),
+  properties: z.partialRecord(weaponPropertySchema, z.boolean().optional()).optional(),
   types: z.partialRecord(weaponTypeSchema, z.boolean().optional()).optional(),
 
   melee: z.boolean().optional(),

@@ -15,10 +15,7 @@ import CharacterClassesFilters from "./character-classes-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns = createResourcesTableColumns<
-  CharacterClass,
-  LocalizedCharacterClass
->([
+const columns = createResourcesTableColumns<CharacterClass, LocalizedCharacterClass>([
   {
     key: "primary_abilities",
     label: { en: "Abilities", it: "Abilità" },

@@ -21,9 +21,7 @@ export const eldritchInvocationFormDataSchema = resourceFormDataSchema.extend({
   prerequisite: z.string().default(""),
 });
 
-export type EldritchInvocationFormData = z.infer<
-  typeof eldritchInvocationFormDataSchema
->;
+export type EldritchInvocationFormData = z.infer<typeof eldritchInvocationFormDataSchema>;
 
 //------------------------------------------------------------------------------
 // Character Class Form Data To Resource

@@ -17,12 +17,7 @@ export type InputProps = Omit<ChakraInputProps, "onChange" | "value"> & {
   value?: string;
 };
 
-export default function Input({
-  groupProps,
-  onValueChange,
-  value,
-  ...rest
-}: InputProps) {
+export default function Input({ groupProps, onValueChange, value, ...rest }: InputProps) {
   return (
     <InputGroup
       endElement={
@@ -42,11 +37,7 @@ export default function Input({
       }
       {...groupProps}
     >
-      <ChakraInput
-        {...rest}
-        onChange={(e) => onValueChange?.(e.target.value)}
-        value={value}
-      />
+      <ChakraInput {...rest} onChange={(e) => onValueChange?.(e.target.value)} value={value} />
     </InputGroup>
   );
 }

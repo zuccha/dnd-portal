@@ -1,11 +1,6 @@
 import { useCallback, useState } from "react";
 import { useI18nSystem } from "~/i18n/i18n-system";
-import {
-  type SpeedUnit,
-  cmhToSpeedValue,
-  speedToCmh,
-  useSpeedUnitOptions,
-} from "~/measures/speed";
+import { type SpeedUnit, cmhToSpeedValue, speedToCmh, useSpeedUnitOptions } from "~/measures/speed";
 import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 //------------------------------------------------------------------------------
@@ -14,12 +9,7 @@ import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 export type SpeedInputProps = Omit<
   MeasureInputProps<SpeedUnit>,
-  | "onUnitChange"
-  | "onValueChange"
-  | "onParse"
-  | "unit"
-  | "unitOptions"
-  | "value"
+  "onUnitChange" | "onValueChange" | "onParse" | "unit" | "unitOptions" | "value"
 > & {
   id?: string;
   name?: string;
@@ -29,11 +19,7 @@ export type SpeedInputProps = Omit<
   value: number;
 };
 
-export default function SpeedInput({
-  onValueChange,
-  value,
-  ...rest
-}: SpeedInputProps) {
+export default function SpeedInput({ onValueChange, value, ...rest }: SpeedInputProps) {
   const [system] = useI18nSystem();
   const defaultUnit = system === "metric" ? "kmh" : "mph";
   const [unit, setUnit] = useState<SpeedUnit>(defaultUnit);

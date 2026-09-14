@@ -7,10 +7,7 @@ import { dropLast } from "../utils/array";
 
 export default function usePaginatedContent(
   content: string,
-  onPageCountChange: (
-    count: number | undefined,
-    firstPageOverflow: boolean,
-  ) => void,
+  onPageCountChange: (count: number | undefined, firstPageOverflow: boolean) => void,
   options: { firstPageReserved: boolean },
 ) {
   const changePageCountRef = useRef(onPageCountChange);
@@ -24,12 +21,12 @@ export default function usePaginatedContent(
       textTemp: string;
     }[]
   >(
-    options.firstPageReserved ?
-      [
-        { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
-        { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
-      ]
-    : [{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }],
+    options.firstPageReserved
+      ? [
+          { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
+          { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
+        ]
+      : [{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }],
   );
 
   useLayoutEffect(() => {
@@ -40,12 +37,12 @@ export default function usePaginatedContent(
     changePageCountRef.current(undefined, false);
     contentRef.current = content;
     setPages(
-      options.firstPageReserved ?
-        [
-          { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
-          { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
-        ]
-      : [{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }],
+      options.firstPageReserved
+        ? [
+            { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
+            { ref: createRef<HTMLDivElement>(), text: "", textTemp: "" },
+          ]
+        : [{ ref: createRef<HTMLDivElement>(), text: "", textTemp: "" }],
     );
   }, [content, options.firstPageReserved]);
 
@@ -74,10 +71,7 @@ export default function usePaginatedContent(
       if (!left) [left, right] = [right, ""];
 
       if (!left && !contentRef.current)
-        return changePageCountRef.current(
-          pages.length,
-          getFirstPageOverflow(pages),
-        );
+        return changePageCountRef.current(pages.length, getFirstPageOverflow(pages));
 
       if (right) {
         setPages([...dropLast(pages), { ...lastPage, textTemp: left }]);
@@ -113,9 +107,7 @@ export default function usePaginatedContent(
 // Get First Page Overflow
 //------------------------------------------------------------------------------
 
-function getFirstPageOverflow(
-  pages: { ref: React.RefObject<HTMLDivElement | null> }[],
-): boolean {
+function getFirstPageOverflow(pages: { ref: React.RefObject<HTMLDivElement | null> }[]): boolean {
   const element = pages[0]?.ref.current;
   return element ? element.scrollHeight > element.clientHeight : false;
 }
@@ -140,11 +132,7 @@ function split(text: string, hardSplit: boolean): [string, string] {
 // Find Center Most Split Index
 //------------------------------------------------------------------------------
 
-function findCenterMostSplitIndex(
-  text: string,
-  center: number,
-  regex: RegExp,
-): number {
+function findCenterMostSplitIndex(text: string, center: number, regex: RegExp): number {
   let left = center - 1;
   let right = center;
 

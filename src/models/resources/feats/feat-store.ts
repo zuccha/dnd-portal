@@ -1,11 +1,7 @@
 import { matchesInclusion } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
 import { defaultFeat, featTranslationFields } from "./feat";
-import {
-  defaultFeatFilters,
-  featFiltersSchema,
-  featOrderOptions,
-} from "./feat-filters";
+import { defaultFeatFilters, featFiltersSchema, featOrderOptions } from "./feat-filters";
 import { useLocalizeFeat } from "./localized-feat";
 
 //------------------------------------------------------------------------------
@@ -18,8 +14,7 @@ export const featStore = createResourceStore("feat", {
   displayName: { en: "Feats", it: "Talenti" },
   filtersSchema: featFiltersSchema,
   matchesResource: (feat, filters) =>
-    feat.min_level <= filters.level &&
-    matchesInclusion(feat.category, filters.categories),
+    feat.min_level <= filters.level && matchesInclusion(feat.category, filters.categories),
   orderOptions: featOrderOptions,
   translationFields: featTranslationFields,
   useLocalizeResource: useLocalizeFeat,

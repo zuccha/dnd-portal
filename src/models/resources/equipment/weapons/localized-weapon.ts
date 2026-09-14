@@ -13,10 +13,7 @@ import { useTranslateWeaponProperty } from "../../../types/weapon-property";
 import { useTranslateWeaponType } from "../../../types/weapon-type";
 import { formatInfo } from "../../localized-resource";
 import { equipmentReferenceStore } from "../equipment-reference-store";
-import {
-  localizedEquipmentSchema,
-  useLocalizeEquipment,
-} from "../localized-equipment";
+import { localizedEquipmentSchema, useLocalizeEquipment } from "../localized-equipment";
 import { type Weapon, weaponSchema } from "./weapon";
 
 //------------------------------------------------------------------------------
@@ -47,9 +44,7 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 // Use Localized Weapon
 //------------------------------------------------------------------------------
 
-export function useLocalizeWeapon(
-  sourceId: string,
-): (weapon: Weapon) => LocalizedWeapon {
+export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => LocalizedWeapon {
   const localizeEquipment = useLocalizeEquipment<Weapon>(sourceId);
   const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();
@@ -59,25 +54,21 @@ export function useLocalizeWeapon(
   const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(lang);
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(
-    sourceId,
-    lang,
-  );
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(sourceId, lang);
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
       const damage_type = translateDamageType(weapon.damage_type).label;
       const damage_extended = ti("damage_extended", weapon.damage, damage_type);
 
-      const damage_modifier =
-        weapon.properties.includes("finesse") ? t("damage_modifier.dex_or_str")
-        : !weapon.ranged || weapon.properties.includes("throw") ?
-          t("damage_modifier.str")
-        : t("damage_modifier.dex");
+      const damage_modifier = weapon.properties.includes("finesse")
+        ? t("damage_modifier.dex_or_str")
+        : !weapon.ranged || weapon.properties.includes("throw")
+          ? t("damage_modifier.str")
+          : t("damage_modifier.dex");
 
-      const damage_line =
-        weapon.damage_versatile ?
-          `${weapon.damage} (${weapon.damage_versatile}) + ${damage_modifier}`
+      const damage_line = weapon.damage_versatile
+        ? `${weapon.damage} (${weapon.damage_versatile}) + ${damage_modifier}`
         : `${weapon.damage} + ${damage_modifier}`;
 
       const has_range = !!(weapon.range_long || weapon.range_short);
@@ -87,14 +78,11 @@ export function useLocalizeWeapon(
       const il = cmToDistanceValue(weapon.range_long ?? 0, "ft");
 
       const range =
-        system === "metric" ?
-          ti("range.m", `${formatNumber(ms, lang)}/${formatNumber(ml, lang)}`)
-        : ti("range.ft", `${formatNumber(is, lang)}/${formatNumber(il, lang)}`);
+        system === "metric"
+          ? ti("range.m", `${formatNumber(ms, lang)}/${formatNumber(ml, lang)}`)
+          : ti("range.ft", `${formatNumber(is, lang)}/${formatNumber(il, lang)}`);
 
-      const ammunition = weapon.ammunition_ids
-        .map(localizeEquipmentName)
-        .sort()
-        .join(", ");
+      const ammunition = weapon.ammunition_ids.map(localizeEquipmentName).sort().join(", ");
 
       const properties = weapon.properties
         .map(translateWeaponProperty)
@@ -116,13 +104,12 @@ export function useLocalizeWeapon(
 
       return {
         ...equipment,
-        descriptor:
-          weapon.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+        descriptor: weapon.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
         details: [
           equipment.details,
-          weapon.mastery !== "none" ?
-            ti("mastery", mastery, translateWeaponMasteryRuling(weapon.mastery))
-          : undefined,
+          weapon.mastery !== "none"
+            ? ti("mastery", mastery, translateWeaponMasteryRuling(weapon.mastery))
+            : undefined,
         ]
           .filter((text) => text)
           .join("\n\n"),

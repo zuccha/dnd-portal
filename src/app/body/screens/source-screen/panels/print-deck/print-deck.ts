@@ -30,14 +30,7 @@ export const printQualities = printQualitySchema.options;
 // Paper Type
 //------------------------------------------------------------------------------
 
-const paperTypeSchema = z.enum([
-  "a3",
-  "a4",
-  "a5",
-  "letter",
-  "legal",
-  "tabloid",
-]);
+const paperTypeSchema = z.enum(["a3", "a4", "a5", "letter", "legal", "tabloid"]);
 
 export type PaperType = z.infer<typeof paperTypeSchema>;
 
@@ -57,15 +50,14 @@ export const paperLayouts = paperLayoutSchema.options;
 // Paper Sizes
 //------------------------------------------------------------------------------
 
-export const paperSizes: Record<PaperType, { height: number; width: number }> =
-  {
-    a3: { height: 16.54, width: 11.69 },
-    a4: { height: 11.69, width: 8.27 },
-    a5: { height: 8.27, width: 5.83 },
-    legal: { height: 14, width: 8.5 },
-    letter: { height: 11, width: 8.5 },
-    tabloid: { height: 17, width: 11 },
-  };
+export const paperSizes: Record<PaperType, { height: number; width: number }> = {
+  a3: { height: 16.54, width: 11.69 },
+  a4: { height: 11.69, width: 8.27 },
+  a5: { height: 8.27, width: 5.83 },
+  legal: { height: 14, width: 8.5 },
+  letter: { height: 11, width: 8.5 },
+  tabloid: { height: 17, width: 11 },
+};
 
 //------------------------------------------------------------------------------
 // Print Dialogues

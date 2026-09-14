@@ -36,9 +36,7 @@ export type LocalizedSpecies = z.infer<typeof localizedSpeciesSchema>;
 // Use Localized Species
 //------------------------------------------------------------------------------
 
-export function useLocalizeSpecies(
-  sourceId: string,
-): (species: Species) => LocalizedSpecies {
+export function useLocalizeSpecies(sourceId: string): (species: Species) => LocalizedSpecies {
   const localizeResource = useLocalizeResource<Species>();
   const { lang, t, ti } = useI18nLangContext(i18nContext);
 
@@ -53,9 +51,7 @@ export function useLocalizeSpecies(
     (species: Species): LocalizedSpecies => {
       const description = translate(species.description, lang);
       const features = formatFeatureEntriesDetails(species.feature_entries);
-      const sizes = species.sizes
-        .map((size) => translateCreatureSize(size).label)
-        .join("/");
+      const sizes = species.sizes.map((size) => translateCreatureSize(size).label).join("/");
       const type = translateCreatureType(species.type).label;
       const speed = formatCm(species.speed);
 

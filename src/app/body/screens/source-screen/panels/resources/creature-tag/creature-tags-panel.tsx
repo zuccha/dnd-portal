@@ -15,9 +15,7 @@ import CreatureTagsFilters from "./creature-tags-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns = createResourcesTableColumns<CreatureTag, LocalizedCreatureTag>(
-  [],
-);
+const columns = createResourcesTableColumns<CreatureTag, LocalizedCreatureTag>([]);
 
 //------------------------------------------------------------------------------
 // Creature Tags Panel

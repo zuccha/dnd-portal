@@ -5,20 +5,14 @@ import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/e
 import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import Icon from "~/ui/icon";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Equipment Modifier Card
 //------------------------------------------------------------------------------
 
 export type EquipmentModifierCardProps = Omit<
-  ResourcePokerCardProps<
-    EquipmentModifier,
-    LocalizedEquipmentModifier<EquipmentModifier>
-  >,
+  ResourcePokerCardProps<EquipmentModifier, LocalizedEquipmentModifier<EquipmentModifier>>,
   "firstPageInfo"
 >;
 
@@ -31,12 +25,10 @@ export function EquipmentModifierCard({
   return (
     <ResourcePokerCard
       firstPageInfo={
-        (
-          localizedResource.cost_delta ||
-          localizedResource.weight_delta ||
-          localizedResource.magic ||
-          localizedResource.required_attunement_slots_minimum
-        ) ?
+        localizedResource.cost_delta ||
+        localizedResource.weight_delta ||
+        localizedResource.magic ||
+        localizedResource.required_attunement_slots_minimum ? (
           <HStack justify="space-between" px={PokerCard.rem1000} w="full">
             <VStack align="flex-start" gap={0}>
               {localizedResource.weight_delta && (
@@ -59,13 +51,11 @@ export function EquipmentModifierCard({
                 <Span>{`${localizedResource.magic} (${localizedResource.rarity_minimum})`}</Span>
               )}
               {localizedResource.required_attunement_slots_minimum && (
-                <Span>
-                  {localizedResource.required_attunement_slots_minimum}
-                </Span>
+                <Span>{localizedResource.required_attunement_slots_minimum}</Span>
               )}
             </VStack>
           </HStack>
-        : undefined
+        ) : undefined
       }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}

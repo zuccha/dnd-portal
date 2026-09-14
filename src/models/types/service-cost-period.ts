@@ -6,12 +6,7 @@ import { createTypeTranslationHooks } from "./_base";
 // Service Cost Period
 //------------------------------------------------------------------------------
 
-export const serviceCostPeriodSchema = z.enum([
-  "once",
-  "day",
-  "hour",
-  "distance",
-]);
+export const serviceCostPeriodSchema = z.enum(["once", "day", "hour", "distance"]);
 
 export const serviceCostPeriods = serviceCostPeriodSchema.options;
 

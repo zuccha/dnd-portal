@@ -1,8 +1,5 @@
 import { createResourceStore } from "../resource-store";
-import {
-  characterClassTranslationFields,
-  defaultCharacterClass,
-} from "./character-class";
+import { characterClassTranslationFields, defaultCharacterClass } from "./character-class";
 import {
   characterClassFiltersSchema,
   characterClassOrderOptions,

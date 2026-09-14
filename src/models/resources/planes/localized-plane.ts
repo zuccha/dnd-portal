@@ -3,25 +3,20 @@ import z from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import { useTranslatePlaneCategory } from "../../types/plane-category";
-import {
-  formatInfo,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { type Plane, planeSchema } from "./plane";
 
 //------------------------------------------------------------------------------
 // Localized Plane
 //------------------------------------------------------------------------------
 
-export const localizedPlaneSchema = localizedResourceSchema(
-  planeSchema,
-  z.literal("plane"),
-).extend({
-  alignments: z.string(),
-  category: z.string(),
-  info: z.string(),
-});
+export const localizedPlaneSchema = localizedResourceSchema(planeSchema, z.literal("plane")).extend(
+  {
+    alignments: z.string(),
+    category: z.string(),
+    info: z.string(),
+  },
+);
 
 export type LocalizedPlane = z.infer<typeof localizedPlaneSchema>;
 
@@ -50,9 +45,7 @@ export function useLocalizePlane(): (plane: Plane) => LocalizedPlane {
 
         alignments,
         category,
-        info: formatInfo([
-          [tp("alignments", plane.alignments.length), alignments],
-        ]),
+        info: formatInfo([[tp("alignments", plane.alignments.length), alignments]]),
       };
     },
     [localizeResource, tp, translateCreatureAlignment, translatePlaneCategory],

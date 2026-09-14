@@ -2,8 +2,8 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import PokerCard from "~/ui/poker-card";
-import type { ResourcePokerCardProps } from "../../resource-poker-card";
 import { EquipmentCard } from "../equipment-card";
+import type { ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Weapon Card
@@ -26,9 +26,7 @@ export function WeaponCard({
     <EquipmentCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       firstPageInfoRight={

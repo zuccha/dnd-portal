@@ -17,9 +17,7 @@ export const equipmentModifierOrderOptions = modifierOrderOptions;
 
 export const equipmentModifierFiltersSchema = modifierFiltersSchema.extend({});
 
-export type EquipmentModifierFilters = z.infer<
-  typeof equipmentModifierFiltersSchema
->;
+export type EquipmentModifierFilters = z.infer<typeof equipmentModifierFiltersSchema>;
 
 //------------------------------------------------------------------------------
 // Default Equipment Modifier Filters

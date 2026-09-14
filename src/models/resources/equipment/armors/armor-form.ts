@@ -2,10 +2,7 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import { armorTypeSchema } from "../../../types/armor-type";
 import { createResourceFormDataPatch } from "../../resource-form";
-import {
-  equipmentFormDataSchema,
-  equipmentFormDataToResource,
-} from "../equipment-form";
+import { equipmentFormDataSchema, equipmentFormDataToResource } from "../equipment-form";
 import type { Armor } from "./armor";
 
 //------------------------------------------------------------------------------
@@ -50,35 +47,41 @@ export function armorFormDataToResource(
   return createResourceFormDataPatch({
     ...equipmentFormDataToResource(data, lang),
     armor_class_max_cha_modifier:
-      data.armor_class_includes_cha_modifier === undefined ? undefined
-      : data.armor_class_includes_cha_modifier ?
-        data.armor_class_max_cha_modifier
-      : null,
+      data.armor_class_includes_cha_modifier === undefined
+        ? undefined
+        : data.armor_class_includes_cha_modifier
+          ? data.armor_class_max_cha_modifier
+          : null,
     armor_class_max_con_modifier:
-      data.armor_class_includes_con_modifier === undefined ? undefined
-      : data.armor_class_includes_con_modifier ?
-        data.armor_class_max_con_modifier
-      : null,
+      data.armor_class_includes_con_modifier === undefined
+        ? undefined
+        : data.armor_class_includes_con_modifier
+          ? data.armor_class_max_con_modifier
+          : null,
     armor_class_max_dex_modifier:
-      data.armor_class_includes_dex_modifier === undefined ? undefined
-      : data.armor_class_includes_dex_modifier ?
-        data.armor_class_max_dex_modifier
-      : null,
+      data.armor_class_includes_dex_modifier === undefined
+        ? undefined
+        : data.armor_class_includes_dex_modifier
+          ? data.armor_class_max_dex_modifier
+          : null,
     armor_class_max_int_modifier:
-      data.armor_class_includes_int_modifier === undefined ? undefined
-      : data.armor_class_includes_int_modifier ?
-        data.armor_class_max_int_modifier
-      : null,
+      data.armor_class_includes_int_modifier === undefined
+        ? undefined
+        : data.armor_class_includes_int_modifier
+          ? data.armor_class_max_int_modifier
+          : null,
     armor_class_max_str_modifier:
-      data.armor_class_includes_str_modifier === undefined ? undefined
-      : data.armor_class_includes_str_modifier ?
-        data.armor_class_max_str_modifier
-      : null,
+      data.armor_class_includes_str_modifier === undefined
+        ? undefined
+        : data.armor_class_includes_str_modifier
+          ? data.armor_class_max_str_modifier
+          : null,
     armor_class_max_wis_modifier:
-      data.armor_class_includes_wis_modifier === undefined ? undefined
-      : data.armor_class_includes_wis_modifier ?
-        data.armor_class_max_wis_modifier
-      : null,
+      data.armor_class_includes_wis_modifier === undefined
+        ? undefined
+        : data.armor_class_includes_wis_modifier
+          ? data.armor_class_max_wis_modifier
+          : null,
     armor_class_modifier: data.armor_class_modifier,
     base_armor_class: data.base_armor_class,
     disadvantage_on_stealth: data.disadvantage_on_stealth,

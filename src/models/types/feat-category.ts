@@ -5,12 +5,7 @@ import { createTypeTranslationHooks } from "./_base";
 // Feat Category
 //------------------------------------------------------------------------------
 
-export const featCategorySchema = z.enum([
-  "origin",
-  "general",
-  "fighting_style",
-  "epic_boon",
-]);
+export const featCategorySchema = z.enum(["origin", "general", "fighting_style", "epic_boon"]);
 
 export const featCategories = featCategorySchema.options;
 

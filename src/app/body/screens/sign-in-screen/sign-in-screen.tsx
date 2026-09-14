@@ -1,11 +1,4 @@
-import {
-  Center,
-  HStack,
-  Heading,
-  Span,
-  VStack,
-  chakra,
-} from "@chakra-ui/react";
+import { Center, HStack, Heading, Span, VStack, chakra } from "@chakra-ui/react";
 import { ArrowLeftIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import RawDiscordIcon from "~/assets/images/icons/discord.svg?react";
@@ -51,21 +44,11 @@ export default function SignInScreen() {
         <Heading size="2xl">{t("title")}</Heading>
 
         <Field label={t("email")}>
-          <Input
-            onValueChange={setEmail}
-            size="sm"
-            type="email"
-            value={email}
-          />
+          <Input onValueChange={setEmail} size="sm" type="email" value={email} />
         </Field>
 
         <Field label={t("password")}>
-          <Input
-            onValueChange={setPassword}
-            size="sm"
-            type="password"
-            value={password}
-          />
+          <Input onValueChange={setPassword} size="sm" type="password" value={password} />
         </Field>
 
         {errorMessage && (
@@ -76,9 +59,7 @@ export default function SignInScreen() {
 
         <Span fontSize="sm" w="full">
           {`${t("not_registered")} `}
-          <Link onClick={() => history.pushState({}, "", Route.SignUp)}>
-            {t("signup")}
-          </Link>
+          <Link onClick={() => history.pushState({}, "", Route.SignUp)}>{t("signup")}</Link>
         </Span>
 
         <Button alignSelf="flex-end" onClick={signIn} size="sm">

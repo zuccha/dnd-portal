@@ -12,7 +12,5 @@ export type TextareaProps = ChakraTextareaProps & {
 };
 
 export default function Textarea({ onValueChange, ...rest }: TextareaProps) {
-  return (
-    <ChakraTextarea onChange={(e) => onValueChange(e.target.value)} {...rest} />
-  );
+  return <ChakraTextarea onChange={(e) => onValueChange(e.target.value)} {...rest} />;
 }

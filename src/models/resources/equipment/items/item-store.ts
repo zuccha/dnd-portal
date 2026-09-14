@@ -1,11 +1,7 @@
 import { matchesBoolean, matchesInclusion } from "../../resource-filtering";
 import { createEquipmentStore, matchesEquipment } from "../equipment-store";
 import { defaultItem, itemTranslationFields } from "./item";
-import {
-  defaultItemFilters,
-  itemFiltersSchema,
-  itemOrderOptions,
-} from "./item-filters";
+import { defaultItemFilters, itemFiltersSchema, itemOrderOptions } from "./item-filters";
 import { useLocalizeItem } from "./localized-item";
 
 //------------------------------------------------------------------------------

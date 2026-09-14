@@ -1,12 +1,12 @@
-import type { ZodType } from "zod";
 import type { I18nString } from "~/i18n/i18n-string";
-import type { ResourceKind } from "../../../types/resource-kind";
-import type { TranslationFields } from "../../resource";
 import { type ResourceStore } from "../../resource-store";
 import { createModifierStore } from "../modifier-store";
-import type { EquipmentModifier } from "./equipment-modifier";
 import { type EquipmentModifierFilters } from "./equipment-modifier-filters";
 import { type LocalizedEquipmentModifier } from "./localized-equipment-modifier";
+import type { ResourceKind } from "../../../types/resource-kind";
+import type { TranslationFields } from "../../resource";
+import type { EquipmentModifier } from "./equipment-modifier";
+import type { ZodType } from "zod";
 
 //------------------------------------------------------------------------------
 // Create Equipment Modifier Store

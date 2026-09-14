@@ -53,7 +53,4 @@ export function backgroundFormDataToResource(
 // Background Form
 //------------------------------------------------------------------------------
 
-export const backgroundForm = createForm(
-  "background",
-  backgroundFormDataSchema.parse,
-);
+export const backgroundForm = createForm("background", backgroundFormDataSchema.parse);

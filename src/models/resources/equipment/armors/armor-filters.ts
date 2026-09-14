@@ -1,9 +1,6 @@
 import z from "zod";
 import { armorTypeSchema } from "../../../types/armor-type";
-import {
-  equipmentFiltersSchema,
-  equipmentOrderOptions,
-} from "../equipment-filters";
+import { equipmentFiltersSchema, equipmentOrderOptions } from "../equipment-filters";
 
 //------------------------------------------------------------------------------
 // Armor Order Options

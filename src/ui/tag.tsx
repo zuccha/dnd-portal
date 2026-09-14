@@ -1,7 +1,4 @@
-import {
-  Tag as ChakraTag,
-  type TagRootProps as ChakraTagRootProps,
-} from "@chakra-ui/react";
+import { Tag as ChakraTag, type TagRootProps as ChakraTagRootProps } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------

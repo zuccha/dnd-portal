@@ -4,10 +4,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { formatSigned } from "~/utils/number";
 import { useTranslateArmorType } from "../../../types/armor-type";
 import { formatInfo } from "../../localized-resource";
-import {
-  localizedEquipmentSchema,
-  useLocalizeEquipment,
-} from "../localized-equipment";
+import { localizedEquipmentSchema, useLocalizeEquipment } from "../localized-equipment";
 import { type Armor, armorSchema } from "./armor";
 
 //------------------------------------------------------------------------------
@@ -34,9 +31,7 @@ export type LocalizedArmor = z.infer<typeof localizedArmorSchema>;
 // Use Localized Armor
 //------------------------------------------------------------------------------
 
-export function useLocalizeArmor(
-  sourceId: string,
-): (armor: Armor) => LocalizedArmor {
+export function useLocalizeArmor(sourceId: string): (armor: Armor) => LocalizedArmor {
   const localizeEquipment = useLocalizeEquipment<Armor>(sourceId);
   const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
   const translateArmorType = useTranslateArmorType(lang);
@@ -45,25 +40,22 @@ export function useLocalizeArmor(
     (armor: Armor): LocalizedArmor => {
       const equipment = localizeEquipment(armor);
 
-      const formatModifier = (
-        ability: string,
-        modifier: number | null | undefined,
-      ) => {
-        return (
-          modifier === null || modifier === undefined ?
-            t(`armor_class_ability_modifier[${ability}].unlimited`)
-          : modifier > 0 ?
-            ti(`armor_class_ability_modifier[${ability}].max`, `${modifier}`)
-          : ""
-        );
+      const formatModifier = (ability: string, modifier: number | null | undefined) => {
+        return modifier === null || modifier === undefined
+          ? t(`armor_class_ability_modifier[${ability}].unlimited`)
+          : modifier > 0
+            ? ti(`armor_class_ability_modifier[${ability}].max`, `${modifier}`)
+            : "";
       };
 
       const baseArmorClass =
-        armor.base_armor_class && armor.armor_class_modifier ?
-          `${armor.base_armor_class + armor.armor_class_modifier}`
-        : armor.base_armor_class ? `${armor.base_armor_class}`
-        : armor.armor_class_modifier ? formatSigned(armor.armor_class_modifier)
-        : "0";
+        armor.base_armor_class && armor.armor_class_modifier
+          ? `${armor.base_armor_class + armor.armor_class_modifier}`
+          : armor.base_armor_class
+            ? `${armor.base_armor_class}`
+            : armor.armor_class_modifier
+              ? formatSigned(armor.armor_class_modifier)
+              : "0";
       const armorClass = [
         baseArmorClass,
         formatModifier("cha", armor.armor_class_max_cha_modifier),
@@ -88,27 +80,20 @@ export function useLocalizeArmor(
 
       const info = formatInfo([
         [tp("requirements", requirementsList.length), requirements],
-        [
-          t("stealth"),
-          armor.disadvantage_on_stealth ? t("stealth.disadvantage") : "",
-        ],
+        [t("stealth"), armor.disadvantage_on_stealth ? t("stealth.disadvantage") : ""],
       ]);
 
       const type = translateArmorType(armor.type).label;
 
       return {
         ...equipment,
-        descriptor:
-          armor.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+        descriptor: armor.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
 
         armor_class: armorClass,
         disadvantage_on_stealth: armor.disadvantage_on_stealth,
         info,
         requirements,
-        stealth:
-          armor.disadvantage_on_stealth ?
-            t("stealth.disadvantage")
-          : t("stealth.normal"),
+        stealth: armor.disadvantage_on_stealth ? t("stealth.disadvantage") : t("stealth.normal"),
         type,
       };
     },

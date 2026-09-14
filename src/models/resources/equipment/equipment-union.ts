@@ -32,6 +32,4 @@ export const localizedEquipmentUnionSchema = z.discriminatedUnion("kind", [
   localizedWeaponSchema,
 ]);
 
-export type LocalizedEquipmentUnion = z.infer<
-  typeof localizedEquipmentUnionSchema
->;
+export type LocalizedEquipmentUnion = z.infer<typeof localizedEquipmentUnionSchema>;

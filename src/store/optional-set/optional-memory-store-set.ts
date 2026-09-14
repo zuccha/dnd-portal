@@ -1,7 +1,4 @@
-import {
-  type OptionalStoreSet,
-  createOptionalStoreSet,
-} from "./optional-store-set";
+import { type OptionalStoreSet, createOptionalStoreSet } from "./optional-store-set";
 
 //------------------------------------------------------------------------------
 // Create Optional Memory Store Set

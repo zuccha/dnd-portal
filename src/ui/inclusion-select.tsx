@@ -39,9 +39,7 @@ export default function InclusionSelect({
   size,
   ...rest
 }: InclusionSelectProps) {
-  const count = Object.values(includes).filter(
-    (include) => include !== undefined,
-  ).length;
+  const count = Object.values(includes).filter((include) => include !== undefined).length;
 
   const reset = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -64,16 +62,20 @@ export default function InclusionSelect({
           >
             <HStack justify="space-between" w="full">
               <Span overflow="hidden" textAlign="left" textOverflow="ellipsis">
-                {count ?
+                {count ? (
                   options
                     .map((option) =>
-                      includes[option.value] === true ? `+${option.label}`
-                      : includes[option.value] === false ? `-${option.label}`
-                      : "",
+                      includes[option.value] === true
+                        ? `+${option.label}`
+                        : includes[option.value] === false
+                          ? `-${option.label}`
+                          : "",
                     )
                     .filter(Boolean)
                     .join(", ")
-                : <Span color="fg.muted">{placeholder}</Span>}
+                ) : (
+                  <Span color="fg.muted">{placeholder}</Span>
+                )}
               </Span>
               <Icon Icon={ChevronDownIcon} color="fg.muted" />
             </HStack>

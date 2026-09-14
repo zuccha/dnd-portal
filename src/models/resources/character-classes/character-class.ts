@@ -66,9 +66,8 @@ export const defaultCharacterClass: CharacterClass = {
 // Character Class Translation Fields
 //------------------------------------------------------------------------------
 
-export const characterClassTranslationFields: TranslationFields<CharacterClass>[] =
-  [
-    ...resourceTranslationFields,
-    "armor_proficiencies_extra",
-    "weapon_proficiencies_extra",
-  ];
+export const characterClassTranslationFields: TranslationFields<CharacterClass>[] = [
+  ...resourceTranslationFields,
+  "armor_proficiencies_extra",
+  "weapon_proficiencies_extra",
+];

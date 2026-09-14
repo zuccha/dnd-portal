@@ -11,10 +11,7 @@ import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { PrintDeckEntry } from "~/models/print-deck/print-deck-store";
 import { printDeck } from "~/models/print-deck/print-deck-store";
-import {
-  type ResourceKind,
-  useTranslateResourceKind,
-} from "~/models/types/resource-kind";
+import { type ResourceKind, useTranslateResourceKind } from "~/models/types/resource-kind";
 import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
 import PalettePicker from "~/ui/palette-picker";
@@ -35,25 +32,13 @@ export default function PrintDeckContentList() {
 
   if (entries.length === 0) {
     return (
-      <EmptyState
-        Icon={RatIcon}
-        h="full"
-        subtitle={t("empty.subtitle")}
-        title={t("empty.title")}
-      />
+      <EmptyState Icon={RatIcon} h="full" subtitle={t("empty.subtitle")} title={t("empty.title")} />
     );
   }
 
   return (
     <>
-      <VStack
-        bgColor="bg.subtle"
-        flex={1}
-        gap={2}
-        h="full"
-        overflow="auto"
-        p={4}
-      >
+      <VStack bgColor="bg.subtle" flex={1} gap={2} h="full" overflow="auto" p={4}>
         {entries.map((entry, index) => (
           <PrintDeckEntryRow
             canMoveDown={index < entries.length - 1}
@@ -65,9 +50,7 @@ export default function PrintDeckContentList() {
             onEdit={() => setEditedEntryId(entry.id)}
             onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
             onMoveUp={() => printDeck.moveEntry(entry.id, index - 1)}
-            onPaletteChange={(paletteName) =>
-              printDeck.setEntryPalette(entry.id, paletteName)
-            }
+            onPaletteChange={(paletteName) => printDeck.setEntryPalette(entry.id, paletteName)}
             onRemove={() => printDeck.removeEntry(entry.id)}
             paletteName={entry.palette_name}
             source={entry.localized_resource.source}
@@ -120,16 +103,7 @@ function PrintDeckEntryRow({
   const translateKind = useTranslateResourceKind(lang);
 
   return (
-    <HStack
-      bgColor="bg"
-      borderRadius="sm"
-      borderWidth={1}
-      gap={3}
-      minH={14}
-      px={3}
-      py={2}
-      w="full"
-    >
+    <HStack bgColor="bg" borderRadius="sm" borderWidth={1} gap={3} minH={14} px={3} py={2} w="full">
       <PalettePicker onValueChange={onPaletteChange} value={paletteName} />
 
       <VStack align="flex-start" flex={1} gap={0} minW={0}>
@@ -158,13 +132,7 @@ function PrintDeckEntryRow({
           size="xs"
           variant="ghost"
         />
-        <IconButton
-          Icon={EditIcon}
-          label={t("edit")}
-          onClick={onEdit}
-          size="xs"
-          variant="ghost"
-        />
+        <IconButton Icon={EditIcon} label={t("edit")} onClick={onEdit} size="xs" variant="ghost" />
         <IconButton
           Icon={CopyPlusIcon}
           label={t("clone")}

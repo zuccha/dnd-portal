@@ -11,9 +11,7 @@ import { type PaletteName, paletteNameSchema } from "~/utils/palette";
 
 export const resourcesContextCardModeSchema = z.enum(["paginated", "scroll"]);
 
-export type ResourcesContextCardMode = z.infer<
-  typeof resourcesContextCardModeSchema
->;
+export type ResourcesContextCardMode = z.infer<typeof resourcesContextCardModeSchema>;
 
 export const resourcesContextViewSchema = z.enum(["cards", "table"]);
 
@@ -23,9 +21,7 @@ export type ResourcesContextView = z.infer<typeof resourcesContextViewSchema>;
 // Resources Context
 //------------------------------------------------------------------------------
 
-export type ResourcesContext<R extends Resource> = ReturnType<
-  typeof createResourcesContext<R>
->;
+export type ResourcesContext<R extends Resource> = ReturnType<typeof createResourcesContext<R>>;
 
 //------------------------------------------------------------------------------
 // Create Resources Context
@@ -40,10 +36,7 @@ export function createResourcesContext<R extends Resource>(
     undefined,
   );
 
-  const editedResourceStore = createMemoryStore<R | undefined>(
-    `${id}.edited_resource`,
-    undefined,
-  );
+  const editedResourceStore = createMemoryStore<R | undefined>(`${id}.edited_resource`, undefined);
 
   const paletteNameStore = createLocalStore(
     `${id}.palette_name`,
@@ -57,21 +50,11 @@ export function createResourcesContext<R extends Resource>(
     resourcesContextCardModeSchema.parse,
   );
 
-  const resourceExpansionStore = createMemoryStoreSet<string, boolean>(
-    `${id}.resource_expansion`,
-  );
+  const resourceExpansionStore = createMemoryStoreSet<string, boolean>(`${id}.resource_expansion`);
 
-  const showImageStore = createLocalStore<boolean>(
-    `${id}.show_image`,
-    true,
-    z.boolean().parse,
-  );
+  const showImageStore = createLocalStore<boolean>(`${id}.show_image`, true, z.boolean().parse);
 
-  const viewStore = createLocalStore(
-    `${id}.view`,
-    "table",
-    resourcesContextViewSchema.parse,
-  );
+  const viewStore = createLocalStore(`${id}.view`, "table", resourcesContextViewSchema.parse);
 
   const zoomStore = createLocalStore(`${id}.zoom`, 1.3, z.number().parse);
 

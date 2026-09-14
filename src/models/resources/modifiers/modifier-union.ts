@@ -8,9 +8,7 @@ import {
 //  Modifier Union
 //------------------------------------------------------------------------------
 
-export const modifierUnionSchema = z.discriminatedUnion("kind", [
-  equipmentModifierUnionSchema,
-]);
+export const modifierUnionSchema = z.discriminatedUnion("kind", [equipmentModifierUnionSchema]);
 
 export type ModifierUnion = z.infer<typeof modifierUnionSchema>;
 
@@ -22,6 +20,4 @@ export const localizedModifierUnionSchema = z.discriminatedUnion("kind", [
   localizedEquipmentModifierUnionSchema,
 ]);
 
-export type LocalizedModifierUnion = z.infer<
-  typeof localizedModifierUnionSchema
->;
+export type LocalizedModifierUnion = z.infer<typeof localizedModifierUnionSchema>;

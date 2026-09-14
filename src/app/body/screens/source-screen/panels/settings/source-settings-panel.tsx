@@ -1,11 +1,4 @@
-import {
-  Box,
-  HStack,
-  Heading,
-  SimpleGrid,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, HStack, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -43,9 +36,7 @@ export type SourceSettingsPanelProps = {
   sourceId: string;
 };
 
-export default function SourceSettingsPanel({
-  sourceId,
-}: SourceSettingsPanelProps) {
+export default function SourceSettingsPanel({ sourceId }: SourceSettingsPanelProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const source = catalogue.useSource(sourceId);
   const sources = catalogue.useSources();
@@ -93,18 +84,12 @@ type SourceSettingsFormProps = {
   sources: Source[];
 };
 
-function SourceSettingsForm({
-  initialSource,
-  source,
-  sources,
-}: SourceSettingsFormProps) {
+function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFormProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const sourceEditable = catalogue.useSourceEditable(source.id);
   const sourceTypeOptions = useSourceTypeOptions();
   const sourceVersionOptions = useSourceVersionTranslations();
-  const [draft, setDraft] = useState<SourceSettingsDraft>(
-    sourceToSettingsDraft(initialSource),
-  );
+  const [draft, setDraft] = useState<SourceSettingsDraft>(sourceToSettingsDraft(initialSource));
   const [saving, setSaving] = useState(false);
   const [detaching, setDetaching] = useState(false);
   const [error, setError] = useState<string>();
@@ -133,8 +118,7 @@ function SourceSettingsForm({
       await catalogue.updateSource(source.id, (source) => ({
         ...source,
         ...sourceDraft,
-        registry:
-          source.registry ? { ...source.registry, visibility } : undefined,
+        registry: source.registry ? { ...source.registry, visibility } : undefined,
       }));
     } catch (e) {
       console.error(e);
@@ -185,12 +169,7 @@ function SourceSettingsForm({
             <Text color="fg.muted" fontSize="sm">
               {t("readonly")}
             </Text>
-            <Button
-              loading={detaching}
-              onClick={detach}
-              size="sm"
-              variant="outline"
-            >
+            <Button loading={detaching} onClick={detach} size="sm" variant="outline">
               {t("make_local")}
             </Button>
           </HStack>
@@ -283,16 +262,12 @@ function SourceSettingsForm({
         sources={sources}
       />
 
-      {source.registry?.access === "creator" && (
-        <SourceAccessPanel source={source} />
-      )}
+      {source.registry?.access === "creator" && <SourceAccessPanel source={source} />}
 
       {source.registry?.access === "creator" && (
         <SourceRegistrySettings
           disabled={saving || !sourceEditable}
-          onVisibilityChange={(visibility) =>
-            setDraft((prev) => ({ ...prev, visibility }))
-          }
+          onVisibilityChange={(visibility) => setDraft((prev) => ({ ...prev, visibility }))}
           visibility={draft.visibility}
         />
       )}
@@ -331,16 +306,7 @@ function SourceSettingsForm({
 
 function SourceSettingsRoot({ children }: { children: React.ReactNode }) {
   return (
-    <VStack
-      align="flex-start"
-      flex={1}
-      gap={6}
-      h="full"
-      overflow="auto"
-      px={10}
-      py={10}
-      w="full"
-    >
+    <VStack align="flex-start" flex={1} gap={6} h="full" overflow="auto" px={10} py={10} w="full">
       {children}
     </VStack>
   );
@@ -378,12 +344,7 @@ function SourceDependencyEditor({
   const translateSourceVersion = useTranslateSourceVersion(lang);
 
   const selectedIds = useMemo(
-    () =>
-      new Set(
-        [...dependencies, ...otherDependencies].map(
-          ({ source_id }) => source_id,
-        ),
-      ),
+    () => new Set([...dependencies, ...otherDependencies].map(({ source_id }) => source_id)),
     [dependencies, otherDependencies],
   );
 
@@ -400,9 +361,7 @@ function SourceDependencyEditor({
 
     return sourceTypes.flatMap((type) => {
       const items = options.filter((option) => option.type === type);
-      return items.length ?
-          [{ id: type, items, title: translateSourceType(type).label }]
-        : [];
+      return items.length ? [{ id: type, items, title: translateSourceType(type).label }] : [];
     });
   }, [options, translateSourceType]);
 
@@ -425,10 +384,7 @@ function SourceDependencyEditor({
   );
 
   const removeSource = useCallback(
-    (id: string) =>
-      onDependenciesChange(
-        dependencies.filter(({ source_id }) => source_id !== id),
-      ),
+    (id: string) => onDependenciesChange(dependencies.filter(({ source_id }) => source_id !== id)),
     [dependencies, onDependenciesChange],
   );
 
@@ -449,7 +405,7 @@ function SourceDependencyEditor({
         w="full"
       />
 
-      {selectedSources.length ?
+      {selectedSources.length ? (
         <VStack align="stretch" gap={1.5} w="full">
           {selectedSources.map((dependency) => (
             <HStack
@@ -483,10 +439,11 @@ function SourceDependencyEditor({
             </HStack>
           ))}
         </VStack>
-      : <Text color="fg.muted" fontSize="sm">
+      ) : (
+        <Text color="fg.muted" fontSize="sm">
           {t("none")}
         </Text>
-      }
+      )}
     </VStack>
   );
 }

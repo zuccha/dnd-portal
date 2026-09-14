@@ -2,19 +2,16 @@ import { LayersIcon } from "lucide-react";
 import { hasAvailableEquipmentModifier } from "~/models/resources/equipment/equipment-variant";
 import { type LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import { type Tool } from "~/models/resources/equipment/tools/tool";
-import {
-  toolForm,
-  toolFormDataToResource,
-} from "~/models/resources/equipment/tools/tool-form";
+import { toolForm, toolFormDataToResource } from "~/models/resources/equipment/tools/tool-form";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import { createResourcesPanel } from "../../resources-panel";
-import type { ResourcesTableExtra } from "../../resources-table";
 import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import { ToolCard } from "./tool-card";
 import { createToolEditor } from "./tool-editor";
 import ToolsFilters from "./tools-filters";
+import type { ResourcesTableExtra } from "../../resources-table";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -35,10 +32,7 @@ const columns = createEquipmentTableColumns<Tool, LocalizedTool>([
 // Tool Variant Dialog
 //------------------------------------------------------------------------------
 
-const toolVariantDialog = createEquipmentVariantDialog(
-  toolStore,
-  toolModifierStore,
-);
+const toolVariantDialog = createEquipmentVariantDialog(toolStore, toolModifierStore);
 
 //------------------------------------------------------------------------------
 // Actions

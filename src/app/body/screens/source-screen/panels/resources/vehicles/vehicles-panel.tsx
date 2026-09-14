@@ -1,9 +1,6 @@
 import { type LocalizedVehicle } from "~/models/resources/vehicles/localized-vehicle";
 import { type Vehicle } from "~/models/resources/vehicles/vehicle";
-import {
-  vehicleForm,
-  vehicleFormDataToResource,
-} from "~/models/resources/vehicles/vehicle-form";
+import { vehicleForm, vehicleFormDataToResource } from "~/models/resources/vehicles/vehicle-form";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
 import { createResourcesPanel } from "../resources-panel";
 import { createResourcesTableColumns } from "../resources-table-columns";

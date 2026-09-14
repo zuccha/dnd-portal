@@ -22,9 +22,7 @@ export default function SpeciesFilters(props: StackProps) {
       <CaptionInput caption={t("types")} w="full">
         <InclusionSelect
           includes={filters.types ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ types: { ...filters.types, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ types: { ...filters.types, ...partial } })}
           options={typeOptions}
           placeholder={t("types")}
           size="sm"
@@ -35,9 +33,7 @@ export default function SpeciesFilters(props: StackProps) {
       <CaptionInput caption={t("sizes")} w="full">
         <InclusionSelect
           includes={filters.sizes ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ sizes: { ...filters.sizes, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ sizes: { ...filters.sizes, ...partial } })}
           options={sizeOptions}
           placeholder={t("sizes")}
           size="sm"

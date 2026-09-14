@@ -10,8 +10,7 @@ import type { ToolModifier } from "./tool-modifier";
 // Tool Modifier Form Data
 //------------------------------------------------------------------------------
 
-export const toolModifierFormDataSchema =
-  equipmentModifierFormDataSchema.extend({});
+export const toolModifierFormDataSchema = equipmentModifierFormDataSchema.extend({});
 
 export type ToolModifierFormData = z.infer<typeof toolModifierFormDataSchema>;
 
@@ -23,17 +22,11 @@ export function toolModifierFormDataToResource(
   data: Partial<ToolModifierFormData>,
   lang: string,
 ): Partial<ToolModifier> {
-  return equipmentModifierFormDataToResource(
-    data,
-    lang,
-  ) as Partial<ToolModifier>;
+  return equipmentModifierFormDataToResource(data, lang) as Partial<ToolModifier>;
 }
 
 //------------------------------------------------------------------------------
 // Tool Modifier Form
 //------------------------------------------------------------------------------
 
-export const toolModifierForm = createForm(
-  "tool_modifier",
-  toolModifierFormDataSchema.parse,
-);
+export const toolModifierForm = createForm("tool_modifier", toolModifierFormDataSchema.parse);

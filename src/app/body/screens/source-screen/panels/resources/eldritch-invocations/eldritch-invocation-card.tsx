@@ -3,10 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EldritchInvocation } from "~/models/resources/eldritch-invocations/eldritch-invocation";
 import type { LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Eldritch Invocation Card
@@ -29,9 +26,7 @@ export function EldritchInvocationCard({
     <ResourcePokerCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       firstPageInfo={

@@ -38,9 +38,9 @@ export default function PrintDeckContentPreview() {
   const paperSize = paperSizes[paperType];
 
   const [paperHeight, paperWidth] =
-    paperLayout === "portrait" ?
-      [paperSize.height, paperSize.width]
-    : [paperSize.width, paperSize.height];
+    paperLayout === "portrait"
+      ? [paperSize.height, paperSize.width]
+      : [paperSize.width, paperSize.height];
 
   const [bleedSize] = useBleedSize();
   const [bleedVisible] = useBleedVisible();
@@ -55,9 +55,8 @@ export default function PrintDeckContentPreview() {
 
   const bleed = useMemo(
     () => ({
-      corner:
-        cardCropMarksVisible ?
-          { color: cardCropMarksColor, length: cardCropMarksLength }
+      corner: cardCropMarksVisible
+        ? { color: cardCropMarksColor, length: cardCropMarksLength }
         : undefined,
       x: bleedVisible ? bleedSize.x : 0,
       y: bleedVisible ? bleedSize.y : 0,

@@ -1,4 +1,3 @@
-import type { ComponentType } from "react";
 import type { LocalizedBackground } from "~/models/resources/backgrounds/localized-background";
 import type { LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
 import type { LocalizedCharacterSubclass } from "~/models/resources/character-subclasses/localized-character-subclass";
@@ -44,11 +43,12 @@ import { ItemModifierCard } from "../resources/modifiers/equipment/items/item-mo
 import { ToolModifierCard } from "../resources/modifiers/equipment/tools/tool-modifier-card";
 import { WeaponModifierCard } from "../resources/modifiers/equipment/weapons/weapon-modifier-card";
 import { PlaneCard } from "../resources/planes/plane-card";
-import type { ResourcePokerCardProps } from "../resources/resource-poker-card";
 import { ServiceCard } from "../resources/services/service-card";
 import { SpeciesCard } from "../resources/species/species-card";
 import { SpellCard } from "../resources/spells/spell-card";
 import { VehicleCard } from "../resources/vehicles/vehicle-card";
+import type { ResourcePokerCardProps } from "../resources/resource-poker-card";
+import type { ComponentType } from "react";
 
 //------------------------------------------------------------------------------
 // Print Deck Resource Kind
@@ -95,18 +95,16 @@ export type PrintDeckLocalizedResource<K extends PrintDeckResourceKind> =
 //------------------------------------------------------------------------------
 
 export type PrintDeckCardProps<K extends PrintDeckResourceKind> = Omit<
-  ResourcePokerCardProps<
-    PrintDeckLocalizedResource<K>["_raw"],
-    PrintDeckLocalizedResource<K>
-  >,
+  ResourcePokerCardProps<PrintDeckLocalizedResource<K>["_raw"], PrintDeckLocalizedResource<K>>,
   "afterDetails" | "beforeDetails" | "firstPageInfo"
 >;
 
-export type PrintDeckCardComponent<K extends PrintDeckResourceKind> =
-  ComponentType<PrintDeckCardProps<K>> & {
-    h: number;
-    w: number;
-  };
+export type PrintDeckCardComponent<K extends PrintDeckResourceKind> = ComponentType<
+  PrintDeckCardProps<K>
+> & {
+  h: number;
+  w: number;
+};
 
 //------------------------------------------------------------------------------
 // Print Deck Registry Entry

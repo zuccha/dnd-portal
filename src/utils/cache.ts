@@ -8,8 +8,10 @@ import { createObservableSet } from "~/utils/observable-set";
 export type Cache<K, V> = ReturnType<typeof createCache<K, V>>;
 
 export function createCache<K, V>(id: string) {
-  const { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny } =
-    createObservableSet<K, V | undefined>(id);
+  const { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny } = createObservableSet<
+    K,
+    V | undefined
+  >(id);
 
   const cache = new Map<K, V>();
 

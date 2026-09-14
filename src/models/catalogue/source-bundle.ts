@@ -19,13 +19,13 @@ import { itemModifierSchema } from "../resources/modifiers/equipment/items/item-
 import { toolModifierSchema } from "../resources/modifiers/equipment/tools/tool-modifier";
 import { weaponModifierSchema } from "../resources/modifiers/equipment/weapons/weapon-modifier";
 import { planeSchema } from "../resources/planes/plane";
-import type { Resource } from "../resources/resource";
 import { serviceSchema } from "../resources/services/service";
 import { speciesSchema } from "../resources/species/species";
 import { spellSchema } from "../resources/spells/spell";
 import { vehicleSchema } from "../resources/vehicles/vehicle";
-import type { ResourceKind } from "../types/resource-kind";
 import { type Source, sourceSchema } from "./source";
+import type { Resource } from "../resources/resource";
+import type { ResourceKind } from "../types/resource-kind";
 
 //------------------------------------------------------------------------------
 // Source Bundle Resources
@@ -78,9 +78,7 @@ export const sourceBundleWithoutRegistrySchema = z.object({
   source: sourceSchema.omit({ registry: true }),
 });
 
-export type SourceBundleWithoutRegistry = z.infer<
-  typeof sourceBundleWithoutRegistrySchema
->;
+export type SourceBundleWithoutRegistry = z.infer<typeof sourceBundleWithoutRegistrySchema>;
 
 //------------------------------------------------------------------------------
 // Source Bundle Export Options
@@ -133,9 +131,7 @@ export function filterSourceBundleResources(
     Object.entries(bundle.resources).map(([key, resources]) => [
       key,
       resources.filter(
-        (resource) =>
-          (includePrivate || resource.visibility !== "private") &&
-          !resource.virtual,
+        (resource) => (includePrivate || resource.visibility !== "private") && !resource.virtual,
       ),
     ]),
   ) as SourceBundle["resources"];
@@ -148,10 +144,7 @@ export function filterSourceBundleResources(
 //------------------------------------------------------------------------------
 
 export function canAccessPrivateResources(source: Source | undefined): boolean {
-  return (
-    source?.registry?.access === "creator" ||
-    source?.registry?.access === "write"
-  );
+  return source?.registry?.access === "creator" || source?.registry?.access === "write";
 }
 
 //------------------------------------------------------------------------------
@@ -166,11 +159,8 @@ export function upsertSourceBundleResource<R extends Resource>(
 
   const key = sourceBundleResourceKeyByKind[resource.kind];
   const resources = bundle.resources[key] as Resource[];
-  const nextResources =
-    resources.some(({ id }) => id === resource.id) ?
-      resources.map((current) =>
-        current.id === resource.id ? resource : current,
-      )
+  const nextResources = resources.some(({ id }) => id === resource.id)
+    ? resources.map((current) => (current.id === resource.id ? resource : current))
     : [...resources, resource];
 
   return {

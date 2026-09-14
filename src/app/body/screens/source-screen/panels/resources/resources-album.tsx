@@ -1,11 +1,5 @@
 import { Box, Flex, Wrap } from "@chakra-ui/react";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -15,8 +9,8 @@ import {
   type ResourceCardInteractiveExtra,
   createResourceCardInteractive,
 } from "./resource-card-interactive";
-import type { ResourcesContext } from "./resources-context";
 import ResourcesEmpty from "./resources-empty";
+import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
 // Resources Album Extra
@@ -39,16 +33,8 @@ export function createResourcesAlbum<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
->(
-  store: ResourceStore<R, L, F>,
-  context: ResourcesContext<R>,
-  extra: ResourcesAlbumExtra<R, L>,
-) {
-  const ResourceCardInteractive = createResourceCardInteractive(
-    store,
-    context,
-    extra,
-  );
+>(store: ResourceStore<R, L, F>, context: ResourcesContext<R>, extra: ResourcesAlbumExtra<R, L>) {
+  const ResourceCardInteractive = createResourceCardInteractive(store, context, extra);
 
   const { useFilteredResourceIds, useLocalizeResource } = store;
   const { usePaletteName, useZoom } = context;
@@ -107,35 +93,26 @@ export function createResourcesAlbum<
 
     return (
       <Box flex={1} h="full" position="relative">
-        <Flex
-          h="full"
-          onScroll={virtualize}
-          overflow="scroll"
-          ref={containerRef}
-        >
+        <Flex h="full" onScroll={virtualize} overflow="scroll" ref={containerRef}>
           <Box bgColor="bg.subtle" w="full">
-            <Wrap
-              bgColor="bg.subtle"
-              gap={`${gap}px`}
-              justify="center"
-              p={`${gap}px`}
-              w="full"
-            >
+            <Wrap bgColor="bg.subtle" gap={`${gap}px`} justify="center" p={`${gap}px`} w="full">
               {filteredResourceIds.map((id) => {
-                return visibleById[id] ?
-                    <ResourceCardInteractive
-                      key={id}
-                      localizeResource={localizeResource}
-                      palette={palettes[paletteName]}
-                      resourceId={id}
-                      zoom={zoom}
-                    />
-                  : <ResourceCardInteractive.Placeholder
-                      key={id}
-                      palette={palettes[paletteName]}
-                      resourceId={id}
-                      zoom={zoom}
-                    />;
+                return visibleById[id] ? (
+                  <ResourceCardInteractive
+                    key={id}
+                    localizeResource={localizeResource}
+                    palette={palettes[paletteName]}
+                    resourceId={id}
+                    zoom={zoom}
+                  />
+                ) : (
+                  <ResourceCardInteractive.Placeholder
+                    key={id}
+                    palette={palettes[paletteName]}
+                    resourceId={id}
+                    zoom={zoom}
+                  />
+                );
               })}
             </Wrap>
           </Box>

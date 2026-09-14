@@ -6,10 +6,7 @@ import RitualIcon from "~/icons/ritual-icon";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { useSpellCastingTimeOptions } from "~/models/types/spell-casting-time";
-import {
-  stringifySpellLevel,
-  useSpellLevelOptions,
-} from "~/models/types/spell-level";
+import { stringifySpellLevel, useSpellLevelOptions } from "~/models/types/spell-level";
 import { useSpellSchoolOptions } from "~/models/types/spell-school";
 import CaptionInput from "~/ui/caption-input";
 import Icon from "~/ui/icon";
@@ -24,22 +21,17 @@ export type SpellsFiltersProps = StackProps & {
   sourceId: string;
 };
 
-export default function SpellsFilters({
-  sourceId,
-  ...rest
-}: SpellsFiltersProps) {
+export default function SpellsFilters({ sourceId, ...rest }: SpellsFiltersProps) {
   const { t } = useI18nLangContext(i18nContext);
   const [filters, setFilters] = spellStore.useFilters();
 
   const levelOptions = useSpellLevelOptions();
   const stringifiedLevelOptions = useMemo(
-    () =>
-      levelOptions.map((o) => ({ ...o, value: stringifySpellLevel(o.value) })),
+    () => levelOptions.map((o) => ({ ...o, value: stringifySpellLevel(o.value) })),
     [levelOptions],
   );
 
-  const characterClassOptions =
-    characterClassStore.useResourceOptions(sourceId);
+  const characterClassOptions = characterClassStore.useResourceOptions(sourceId);
   const schoolOptions = useSpellSchoolOptions();
   const castingTimeOptions = useSpellCastingTimeOptions();
 
@@ -48,9 +40,7 @@ export default function SpellsFilters({
       <CaptionInput caption={t("levels")} w="full">
         <InclusionSelect
           includes={filters.levels ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ levels: { ...filters.levels, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ levels: { ...filters.levels, ...partial } })}
           options={stringifiedLevelOptions}
           placeholder={t("levels")}
           size="sm"
@@ -79,9 +69,7 @@ export default function SpellsFilters({
       <CaptionInput caption={t("schools")} w="full">
         <InclusionSelect
           includes={filters.schools ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ schools: { ...filters.schools, ...partial } })
-          }
+          onValueChange={(partial) => setFilters({ schools: { ...filters.schools, ...partial } })}
           options={schoolOptions}
           placeholder={t("schools")}
           size="sm"

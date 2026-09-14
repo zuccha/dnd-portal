@@ -23,8 +23,7 @@ export default function Topbar() {
   const route = useRoute();
   const setSidebarCollapsed = useSidebarSetCollapsed();
   const setRightPanelCollapsed = useRightPanelSetCollapsed();
-  const hasResourcesSidebar =
-    route.startsWith(Route.Resources) || route === Route.PrintDeck;
+  const hasResourcesSidebar = route.startsWith(Route.Resources) || route === Route.PrintDeck;
 
   return (
     <HStack
@@ -50,11 +49,7 @@ export default function Topbar() {
           size="sm"
           variant="ghost"
         />
-        <Button
-          cursor="pointer"
-          onClick={() => history.pushState({}, "", Route._)}
-          unstyled
-        >
+        <Button cursor="pointer" onClick={() => history.pushState({}, "", Route._)} unstyled>
           <Span color="fg.error">D&D</Span> Portal
         </Button>
       </HStack>

@@ -14,12 +14,7 @@ import MeasureInput, { type MeasureInputProps } from "./measure-input";
 
 export type DistanceInputProps = Omit<
   MeasureInputProps<DistanceUnit>,
-  | "onUnitChange"
-  | "onValueChange"
-  | "onParse"
-  | "unit"
-  | "unitOptions"
-  | "value"
+  "onUnitChange" | "onValueChange" | "onParse" | "unit" | "unitOptions" | "value"
 > & {
   id?: string;
   name?: string;
@@ -29,11 +24,7 @@ export type DistanceInputProps = Omit<
   value: number;
 };
 
-export default function DistanceInput({
-  onValueChange,
-  value,
-  ...rest
-}: DistanceInputProps) {
+export default function DistanceInput({ onValueChange, value, ...rest }: DistanceInputProps) {
   const [system] = useI18nSystem();
   const defaultUnit = system === "metric" ? "m" : "ft";
   const [unit, setUnit] = useState<DistanceUnit>(defaultUnit);

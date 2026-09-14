@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import {
-  type PrintDeckEntry,
-  printDeck,
-} from "~/models/print-deck/print-deck-store";
+import { type PrintDeckEntry, printDeck } from "~/models/print-deck/print-deck-store";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import { palettes } from "~/utils/palette";
 import ResourceCardPreview from "../resources/resource-card-preview";
@@ -25,10 +22,7 @@ export type PrintDeckEditorDialogProps = {
 // Print Deck Editor Dialog
 //------------------------------------------------------------------------------
 
-export default function PrintDeckEditorDialog({
-  entry,
-  onClose,
-}: PrintDeckEditorDialogProps) {
+export default function PrintDeckEditorDialog({ entry, onClose }: PrintDeckEditorDialogProps) {
   if (!entry) {
     return null;
   }
@@ -47,11 +41,8 @@ function PrintDeckEditorDialogLoaded({
   entry: PrintDeckEntry;
   onClose: () => void;
 }) {
-  const registryEntry = getPrintDeckEditorRegistryEntry(
-    entry.localized_resource.kind,
-  );
-  if (!registryEntry)
-    throw new Error("Missing print deck editor registry entry");
+  const registryEntry = getPrintDeckEditorRegistryEntry(entry.localized_resource.kind);
+  if (!registryEntry) throw new Error("Missing print deck editor registry entry");
 
   const { t, ti } = useI18nLangContext(i18nContext);
   const localizeResource = registryEntry.useLocalizeResource(
@@ -129,11 +120,8 @@ function PrintDeckEditorDialogLoaded({
 //------------------------------------------------------------------------------
 
 function PrintDeckEditorDialogPreview({ entry }: { entry: PrintDeckEntry }) {
-  const registryEntry = getPrintDeckEditorRegistryEntry(
-    entry.localized_resource.kind,
-  );
-  if (!registryEntry)
-    throw new Error("Missing print deck editor registry entry");
+  const registryEntry = getPrintDeckEditorRegistryEntry(entry.localized_resource.kind);
+  if (!registryEntry) throw new Error("Missing print deck editor registry entry");
 
   const localizeResource = registryEntry.useLocalizeResource(
     entry.localized_resource._raw.source_id,
@@ -154,13 +142,7 @@ function PrintDeckEditorDialogPreview({ entry }: { entry: PrintDeckEntry }) {
       ),
     );
     return localizeResource(nextRawResource);
-  }, [
-    entry,
-    formData,
-    localizeResource,
-    parseFormData,
-    registryEntry.translationFields,
-  ]);
+  }, [entry, formData, localizeResource, parseFormData, registryEntry.translationFields]);
 
   return (
     <ResourceCardPreview

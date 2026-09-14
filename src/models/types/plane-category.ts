@@ -5,13 +5,7 @@ import { createTypeTranslationHooks } from "./_base";
 // Plane Category
 //------------------------------------------------------------------------------
 
-export const planeCategorySchema = z.enum([
-  "material",
-  "transitive",
-  "inner",
-  "outer",
-  "other",
-]);
+export const planeCategorySchema = z.enum(["material", "transitive", "inner", "outer", "other"]);
 
 export const planeCategories = planeCategorySchema.options;
 

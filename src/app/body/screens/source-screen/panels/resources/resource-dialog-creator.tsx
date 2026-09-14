@@ -19,10 +19,7 @@ import type { ResourcesContext } from "./resources-context";
 // Resource Dialog Creator Extra
 //------------------------------------------------------------------------------
 
-export type ResourceCreatorExtra<
-  R extends Resource,
-  FF extends Record<string, unknown>,
-> = {
+export type ResourceCreatorExtra<R extends Resource, FF extends Record<string, unknown>> = {
   Editor: React.FC<{ resource: R; sourceId: string }>;
   form: Form<FF>;
   parseFormData: (data: Partial<FF>, lang: string) => Partial<R> | string;
@@ -54,11 +51,7 @@ export function createResourceDialogCreator<
   { Editor, form, parseFormData }: ResourceCreatorExtra<R, FF>,
   { PreviewCard }: ResourceDialogCreatorPreviewExtra<R, L>,
 ) {
-  async function submitForm(
-    sourceId: string,
-    data: Partial<FF>,
-    { lang }: { lang: string },
-  ) {
+  async function submitForm(sourceId: string, data: Partial<FF>, { lang }: { lang: string }) {
     const errorOrData = parseFormData(data, lang);
     if (typeof errorOrData === "string") return errorOrData;
 
@@ -120,10 +113,7 @@ export function createResourceDialogCreator<
     const showImage = context.useShowImage();
 
     const [submit, saving] = form.useSubmit(
-      useCallback(
-        (data) => submitForm(sourceId, data, { lang }),
-        [sourceId, lang],
-      ),
+      useCallback((data) => submitForm(sourceId, data, { lang }), [sourceId, lang]),
     );
 
     const unsetCreatedResource = useCallback(() => {

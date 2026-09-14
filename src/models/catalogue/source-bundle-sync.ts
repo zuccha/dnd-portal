@@ -4,7 +4,6 @@ import {
   publishRegistrySourceBundle,
 } from "../registry/registry";
 import catalogue from "./catalogue";
-import type { Source } from "./source";
 import {
   type SourceBundle,
   canAccessPrivateResources,
@@ -15,19 +14,16 @@ import {
   loadSourceState,
   saveSourceBundle,
 } from "./source-bundle-indexed-db";
+import type { Source } from "./source";
 
 //------------------------------------------------------------------------------
 // Download Default Source
 //------------------------------------------------------------------------------
 
-export async function downloadDefaultSource(
-  sourceId: string | undefined,
-): Promise<void> {
+export async function downloadDefaultSource(sourceId: string | undefined): Promise<void> {
   if (!sourceId) throw new Error("VITE_DEFAULT_SOURCE_ID is not configured");
 
-  const source = (await fetchRegistrySources()).find(
-    ({ id }) => id === sourceId,
-  );
+  const source = (await fetchRegistrySources()).find(({ id }) => id === sourceId);
   if (!source) throw new Error(`Default source not found: ${sourceId}`);
 
   const [bundle] = await fetchRegistrySourceBundles([source.id]);
@@ -53,23 +49,16 @@ export async function downloadDefaultSource(
 // Publish Source Bundle
 //------------------------------------------------------------------------------
 
-export async function publishSourceBundle(
-  sourceId: string,
-): Promise<Source | undefined> {
+export async function publishSourceBundle(sourceId: string): Promise<Source | undefined> {
   const bundle = catalogue.getSourceBundle(sourceId, {
     includePrivate: true,
   });
   if (!bundle) return undefined;
 
   await publishRegistrySourceBundle(bundle);
-  const publishedSource = (await fetchRegistrySources()).find(
-    ({ id }) => id === sourceId,
-  );
+  const publishedSource = (await fetchRegistrySources()).find(({ id }) => id === sourceId);
   if (publishedSource?.registry)
-    await catalogue.updateSourceRegistryMetadata(
-      sourceId,
-      publishedSource.registry,
-    );
+    await catalogue.updateSourceRegistryMetadata(sourceId, publishedSource.registry);
   await catalogue.markSourcePublished(sourceId);
 
   return publishedSource;
@@ -85,20 +74,15 @@ export async function updateInstalledSources(
 ): Promise<void> {
   try {
     const registrySources = await fetchRegistrySources();
-    const registrySourceById = new Map(
-      registrySources.map((source) => [source.id, source]),
-    );
-    const stateBySourceId = new Map(
-      states.map((state) => [state.source_id, state]),
-    );
+    const registrySourceById = new Map(registrySources.map((source) => [source.id, source]));
+    const stateBySourceId = new Map(states.map((state) => [state.source_id, state]));
     const outdatedBundles = bundles.filter((bundle) => {
       const registrySource = registrySourceById.get(bundle.source.id);
       const state = stateBySourceId.get(bundle.source.id);
       return Boolean(
         bundle.source.registry &&
         registrySource?.registry &&
-        registrySource.registry.revision_number >
-          bundle.source.registry.revision_number &&
+        registrySource.registry.revision_number > bundle.source.registry.revision_number &&
         state?.published_bundle_hash &&
         state.current_bundle_hash === state.published_bundle_hash,
       );

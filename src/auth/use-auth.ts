@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import type { Auth } from "./auth";
 import AuthContext from "./auth-context";
+import type { Auth } from "./auth";
 
 //------------------------------------------------------------------------------
 // Use Auth

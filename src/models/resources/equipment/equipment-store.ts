@@ -1,16 +1,12 @@
 import { type ZodType } from "zod";
 import { type I18nString } from "~/i18n/i18n-string";
-import type { ResourceKind } from "../../types/resource-kind";
-import type { TranslationFields } from "../resource";
-import {
-  type ResourceMatcher,
-  matchesBoolean,
-  matchesInclusion,
-} from "../resource-filtering";
+import { type ResourceMatcher, matchesBoolean, matchesInclusion } from "../resource-filtering";
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import { type Equipment } from "./equipment";
 import { type EquipmentFilters } from "./equipment-filters";
 import { type LocalizedEquipment } from "./localized-equipment";
+import type { ResourceKind } from "../../types/resource-kind";
+import type { TranslationFields } from "../resource";
 
 //------------------------------------------------------------------------------
 // Create Equipment Store
@@ -49,16 +45,13 @@ export function createEquipmentStore<
 // Match Equipment
 //------------------------------------------------------------------------------
 
-export function matchesEquipment<
-  E extends Equipment,
-  F extends EquipmentFilters,
->(equipment: E, filters: F): boolean {
+export function matchesEquipment<E extends Equipment, F extends EquipmentFilters>(
+  equipment: E,
+  filters: F,
+): boolean {
   return (
     matchesBoolean(equipment.magic, filters.magic) &&
-    matchesBoolean(
-      equipment.required_attunement_slots > 0,
-      filters.requires_attunement,
-    ) &&
+    matchesBoolean(equipment.required_attunement_slots > 0, filters.requires_attunement) &&
     matchesInclusion(equipment.rarity, filters.rarities)
   );
 }

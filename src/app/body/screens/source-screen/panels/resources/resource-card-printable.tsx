@@ -11,15 +11,9 @@ import type { ResourcesContext } from "./resources-context";
 // Resource Card Printable Extra
 //------------------------------------------------------------------------------
 
-export type ResourceCardPrintableExtra<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = {
+export type ResourceCardPrintableExtra<R extends Resource, L extends LocalizedResource<R>> = {
   AlbumCard: React.FC<
-    Omit<
-      ResourcePokerCardProps<R, L>,
-      "afterDetails" | "beforeDetails" | "firstPageInfo"
-    >
+    Omit<ResourcePokerCardProps<R, L>, "afterDetails" | "beforeDetails" | "firstPageInfo">
   > & { h: number; w: number };
 };
 
@@ -27,10 +21,7 @@ export type ResourceCardPrintableExtra<
 // Create Resource Card Printable
 //------------------------------------------------------------------------------
 
-export type ResourceCardPrintableProps<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = {
+export type ResourceCardPrintableProps<R extends Resource, L extends LocalizedResource<R>> = {
   alwaysEvenPages?: boolean;
   bgColor?: string;
   css?: ResourcePokerCardProps<R, L>["css"];
@@ -66,13 +57,7 @@ export function createResourceCardPrintable<
       [localizeResource, resource],
     );
 
-    return (
-      <AlbumCard
-        borderRadius={0}
-        localizedResource={localizedResource}
-        {...rest}
-      />
-    );
+    return <AlbumCard borderRadius={0} localizedResource={localizedResource} {...rest} />;
   }
 
   ResourcesAlbumCardPrintable.h = AlbumCard.h;

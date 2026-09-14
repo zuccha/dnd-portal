@@ -70,9 +70,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
         it: "I danni non possono essere vuoti",
       },
     },
-    useField: form.createUseField("damage", (damage) =>
-      damage ? undefined : "error.empty",
-    ),
+    useField: form.createUseField("damage", (damage) => (damage ? undefined : "error.empty")),
   });
 
   const DamageVersatileField = createInputField({
@@ -181,16 +179,11 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
         <HStack align="flex-start" gap={4}>
           <DamageField defaultValue={resource.damage} />
           {properties.includes("versatile") && (
-            <DamageVersatileField
-              defaultValue={resource.damage_versatile ?? ""}
-            />
+            <DamageVersatileField defaultValue={resource.damage_versatile ?? ""} />
           )}
           <DamageTypeField defaultValue={resource.damage_type} />
           {properties.includes("ammunition") && (
-            <AmmunitionIdsField
-              defaultValue={resource.ammunition_ids}
-              sourceId={sourceId}
-            />
+            <AmmunitionIdsField defaultValue={resource.ammunition_ids} sourceId={sourceId} />
           )}
         </HStack>
 

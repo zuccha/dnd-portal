@@ -49,9 +49,7 @@ export default function StartingEquipmentEditor({
       <Button
         _hover={{ textDecoration: "underline" }}
         cursor="pointer"
-        onClick={() =>
-          onValueChange([...value, { group: nextGroup, options: [] }])
-        }
+        onClick={() => onValueChange([...value, { group: nextGroup, options: [] }])}
         unstyled
       >
         {t("group.add")}
@@ -83,8 +81,7 @@ function StartingEquipmentGroupEditor({
   const { t } = useI18nLangContext(i18nContext);
 
   const options = group.options;
-  const nextOption =
-    Math.max(...group.options.map(({ option }) => option), 0) + 1;
+  const nextOption = Math.max(...group.options.map(({ option }) => option), 0) + 1;
 
   return (
     <VStack align="flex-start" gap={1} key={group.group} {...rest}>
@@ -101,10 +98,7 @@ function StartingEquipmentGroupEditor({
           onClick={() =>
             onGroupChange({
               ...group,
-              options: [
-                ...options,
-                { bundle: defaultEquipmentBundle, option: nextOption },
-              ],
+              options: [...options, { bundle: defaultEquipmentBundle, option: nextOption }],
             })
           }
           unstyled
@@ -125,22 +119,14 @@ function StartingEquipmentGroupEditor({
         </Button>
       </Span>
 
-      <SimpleGrid
-        gapY={2}
-        templateColumns="max-content 1fr max-content"
-        w="full"
-      >
+      <SimpleGrid gapY={2} templateColumns="max-content 1fr max-content" w="full">
         {options.map((option, i) => (
           <StartingEquipmentOptionEditor
             iconLabel={t("remove")}
             key={option.option}
             label={numberToLetter(i)}
-            onOptionChange={(o) =>
-              onGroupChange({ ...group, options: replaceItem(options, i, o) })
-            }
-            onOptionRemove={() =>
-              onGroupChange({ ...group, options: removeItem(options, i) })
-            }
+            onOptionChange={(o) => onGroupChange({ ...group, options: replaceItem(options, i, o) })}
+            onOptionRemove={() => onGroupChange({ ...group, options: removeItem(options, i) })}
             option={option}
             sourceId={sourceId}
           />
@@ -183,12 +169,7 @@ function StartingEquipmentOptionEditor({
         withinDialog
       />
 
-      <IconButton
-        Icon={XIcon}
-        label={iconLabel}
-        onClick={onOptionRemove}
-        variant="ghost"
-      />
+      <IconButton Icon={XIcon} label={iconLabel} onClick={onOptionRemove} variant="ghost" />
     </>
   );
 }

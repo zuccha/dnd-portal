@@ -8,11 +8,7 @@ import {
 import { createResourceStore } from "../resource-store";
 import { useLocalizeSpell } from "./localized-spell";
 import { defaultSpell, spellTranslationFields } from "./spell";
-import {
-  defaultSpellFilters,
-  spellFiltersSchema,
-  spellOrderOptions,
-} from "./spell-filters";
+import { defaultSpellFilters, spellFiltersSchema, spellOrderOptions } from "./spell-filters";
 
 //------------------------------------------------------------------------------
 // Spell Store
@@ -20,10 +16,9 @@ import {
 
 export const spellStore = createResourceStore("spell", {
   compareResources: (a, b, filters, lang) =>
-    filters.order_by === "level" ?
-      compareNumbers(a.level, b.level, filters.order_dir) ||
-      compareNames(a, b, lang, "asc")
-    : compareNames(a, b, lang, filters.order_dir),
+    filters.order_by === "level"
+      ? compareNumbers(a.level, b.level, filters.order_dir) || compareNames(a, b, lang, "asc")
+      : compareNames(a, b, lang, filters.order_dir),
   defaultFilters: defaultSpellFilters,
   defaultResource: defaultSpell,
   displayName: { en: "Spells", it: "Incantesimi" },
@@ -37,10 +32,7 @@ export const spellStore = createResourceStore("spell", {
     matchesInclusion(spell.casting_time, filters.casting_time) &&
     matchesInclusion(spell.level, filters.levels) &&
     matchesInclusion(spell.school, filters.schools) &&
-    matchesInclusionList(
-      spell.character_class_ids,
-      filters.character_class_ids,
-    ),
+    matchesInclusionList(spell.character_class_ids, filters.character_class_ids),
   orderOptions: spellOrderOptions,
   translationFields: spellTranslationFields,
   useLocalizeResource: useLocalizeSpell,

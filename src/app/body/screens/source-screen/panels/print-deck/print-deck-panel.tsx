@@ -12,14 +12,7 @@ export default function PrintDeckPanel() {
   const [mode] = usePrintDeckMode();
 
   return (
-    <HStack
-      align="stretch"
-      className="print-mode"
-      flex={1}
-      gap={0}
-      h="full"
-      overflow="hidden"
-    >
+    <HStack align="stretch" className="print-mode" flex={1} gap={0} h="full" overflow="hidden">
       <Box flex={1} h="full" overflow="hidden" position="relative">
         <PrintDeckContentPreview />
         <Box

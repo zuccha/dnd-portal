@@ -1,13 +1,4 @@
-import {
-  Badge,
-  Box,
-  HStack,
-  Menu,
-  Portal,
-  Table,
-  VStack,
-  createIcon,
-} from "@chakra-ui/react";
+import { Badge, Box, HStack, Menu, Portal, Table, VStack, createIcon } from "@chakra-ui/react";
 import {
   ChevronDownIcon,
   ChevronRightIcon,
@@ -50,10 +41,7 @@ export type ResourceAction<R extends Resource> = {
   onClick: (resource: R) => void | Promise<void>;
 };
 
-export type ResourcesTableRowExtra<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = {
+export type ResourcesTableRowExtra<R extends Resource, L extends LocalizedResource<R>> = {
   actions?: ResourceAction<R>[];
   columns: (Table.ColumnHeaderProps & {
     icon?: LucideIcon | ReturnType<typeof createIcon>;
@@ -67,10 +55,7 @@ export type ResourcesTableRowExtra<
 // Create Resources Table Row
 //------------------------------------------------------------------------------
 
-type ResourcesTableRowProps<
-  R extends Resource,
-  L extends LocalizedResource<R>,
-> = {
+type ResourcesTableRowProps<R extends Resource, L extends LocalizedResource<R>> = {
   localizeResource: (resource: R) => L;
   resourceId: string;
 };
@@ -84,8 +69,7 @@ export function createResourcesTableRow<
   context: ResourcesContext<R>,
   extra: ResourcesTableRowExtra<R, L>,
 ) {
-  const { useResource, useResourceSelection, useResourceSelectionMethods } =
-    store;
+  const { useResource, useResourceSelection, useResourceSelectionMethods } = store;
 
   const { usePaletteName, useResourceExpansion } = context;
 
@@ -109,20 +93,17 @@ export function createResourcesTableRow<
     const { toggleResourceSelection } = useResourceSelectionMethods(resourceId);
     const expanded = useResourceExpansion(resourceId, false);
     const details =
-      extra.detailsKey && localizedResource[extra.detailsKey] ?
-        resolveSystemText(String(localizedResource[extra.detailsKey]), system)
-      : "";
+      extra.detailsKey && localizedResource[extra.detailsKey]
+        ? resolveSystemText(String(localizedResource[extra.detailsKey]), system)
+        : "";
     const visibleActions =
-      extra.actions?.filter((action) =>
-        action.isVisible(localizedResource._raw),
-      ) ?? [];
+      extra.actions?.filter((action) => action.isVisible(localizedResource._raw)) ?? [];
 
     const edit = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
         if (!sourceEditable) return;
-        if (localizedResource)
-          context.setEditedResource(localizedResource._raw);
+        if (localizedResource) context.setEditedResource(localizedResource._raw);
       },
       [localizedResource, sourceEditable],
     );
@@ -130,8 +111,7 @@ export function createResourcesTableRow<
     const addToPrintDeck = useCallback(() => {
       printDeck.addEntry({
         lang,
-        localized_resource:
-          localizedResourceUnionSchema.parse(localizedResource),
+        localized_resource: localizedResourceUnionSchema.parse(localizedResource),
         palette_name: paletteName,
       });
 
@@ -143,8 +123,8 @@ export function createResourcesTableRow<
 
     const makePersistent = useCallback(async () => {
       const error = await store.makeResourcePersistent(localizedResource.id);
-      return error ?
-          toaster.error({
+      return error
+        ? toaster.error({
             description: t("persistent.error.description"),
             title: t("persistent.error.title"),
           })
@@ -175,10 +155,7 @@ export function createResourcesTableRow<
 
     const hasActions = true;
     const columnCount =
-      extra.columns.length +
-      3 +
-      (activeSourceEditable ? 1 : 0) +
-      (hasActions ? 1 : 0);
+      extra.columns.length + 3 + (activeSourceEditable ? 1 : 0) + (hasActions ? 1 : 0);
 
     return (
       <>
@@ -195,21 +172,12 @@ export function createResourcesTableRow<
           </Table.Cell>
 
           <Table.Cell textAlign="center" w="4em">
-            <Checkbox
-              mt={0.5}
-              onClick={toggleSelection}
-              size="sm"
-              value={selected}
-            />
+            <Checkbox mt={0.5} onClick={toggleSelection} size="sm" value={selected} />
           </Table.Cell>
 
           <Table.Cell textAlign="center" w="3em">
             <Icon
-              Icon={
-                localizedResource._raw.visibility === "public" ?
-                  EyeIcon
-                : EyeClosedIcon
-              }
+              Icon={localizedResource._raw.visibility === "public" ? EyeIcon : EyeClosedIcon}
               color="fg.muted"
               size="sm"
             />
@@ -225,20 +193,20 @@ export function createResourcesTableRow<
                 whiteSpace="nowrap"
                 {...rest}
               >
-                {key === "name" ?
+                {key === "name" ? (
                   <HStack gap={2} minW={0}>
                     {localizedResource._raw.virtual && (
                       <Badge colorPalette="orange" size="xs" variant="solid">
                         {translate({ en: "Temporary", it: "Temporanea" }, lang)}
                       </Badge>
                     )}
-                    {sourceEditable ?
-                      <Link onClick={edit}>{String(value)}</Link>
-                    : String(value)}
+                    {sourceEditable ? <Link onClick={edit}>{String(value)}</Link> : String(value)}
                   </HStack>
-                : typeof value === "boolean" ?
+                ) : typeof value === "boolean" ? (
                   <Checkbox disabled mt={0.5} size="sm" value={value} />
-                : String(value) || "-"}
+                ) : (
+                  String(value) || "-"
+                )}
               </Table.Cell>
             );
           })}
@@ -273,19 +241,13 @@ export function createResourcesTableRow<
                 <Portal>
                   <Menu.Positioner>
                     <Menu.Content>
-                      <Menu.Item
-                        onSelect={addToPrintDeck}
-                        value="print-deck-add"
-                      >
+                      <Menu.Item onSelect={addToPrintDeck} value="print-deck-add">
                         <Icon Icon={PrinterIcon} size="xs" />
                         {t("print_deck.add")}
                       </Menu.Item>
 
                       {sourceEditable && localizedResource._raw.virtual && (
-                        <Menu.Item
-                          onSelect={makePersistent}
-                          value="make-persistent"
-                        >
+                        <Menu.Item onSelect={makePersistent} value="make-persistent">
                           <Icon Icon={SaveIcon} size="xs" />
                           {t("persistent.make")}
                         </Menu.Item>
@@ -296,14 +258,10 @@ export function createResourcesTableRow<
                           const ActionIcon = action.icon;
                           return (
                             <Menu.Item
-                              disabled={action.isDisabled?.(
-                                localizedResource._raw,
-                              )}
+                              disabled={action.isDisabled?.(localizedResource._raw)}
                               key={i}
                               onSelect={() => {
-                                if (
-                                  !action.isDisabled?.(localizedResource._raw)
-                                )
+                                if (!action.isDisabled?.(localizedResource._raw))
                                   action.onClick(localizedResource._raw);
                               }}
                               value={`action-${i}`}
@@ -326,7 +284,7 @@ export function createResourcesTableRow<
             <Table.Cell colSpan={columnCount}>
               <Box contain="inline-size" w="full">
                 <VStack align="flex-start" gap={1} minW={0} w="full">
-                  {details ?
+                  {details ? (
                     details
                       .split(/[\n\r]/)
                       .map((paragraph, i) => (
@@ -338,16 +296,14 @@ export function createResourcesTableRow<
                           whiteSpace="normal"
                         />
                       ))
-                  : <RichText
+                  ) : (
+                    <RichText
                       display="block"
                       overflowWrap="anywhere"
-                      text={translate(
-                        { en: "_No details._", it: "_Nessuna descrizione._" },
-                        lang,
-                      )}
+                      text={translate({ en: "_No details._", it: "_Nessuna descrizione._" }, lang)}
                       whiteSpace="normal"
                     />
-                  }
+                  )}
                 </VStack>
               </Box>
             </Table.Cell>

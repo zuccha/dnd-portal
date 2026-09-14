@@ -2,11 +2,7 @@ import { matchesInclusion } from "../../resource-filtering";
 import { createEquipmentStore, matchesEquipment } from "../equipment-store";
 import { useLocalizeTool } from "./localized-tool";
 import { defaultTool, toolTranslationFields } from "./tool";
-import {
-  defaultToolFilters,
-  toolFiltersSchema,
-  toolOrderOptions,
-} from "./tool-filters";
+import { defaultToolFilters, toolFiltersSchema, toolOrderOptions } from "./tool-filters";
 
 //------------------------------------------------------------------------------
 // Tool Store

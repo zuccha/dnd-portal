@@ -1,8 +1,4 @@
-import {
-  type Source,
-  type SourceDependency,
-  sourceSchema,
-} from "~/models/catalogue/source";
+import { type Source, type SourceDependency, sourceSchema } from "~/models/catalogue/source";
 import {
   type SourceBundle,
   type SourceBundleWithoutRegistry,
@@ -20,9 +16,7 @@ export async function canRegisterRegistrySource(): Promise<boolean> {
   const { data, error } = await supabase.rpc("can_register_registry_source");
 
   if (error)
-    throw new Error(
-      `Registry source registration permission request failed: ${error.message}`,
-    );
+    throw new Error(`Registry source registration permission request failed: ${error.message}`);
 
   return data;
 }
@@ -51,25 +45,19 @@ export async function updateRegistrySourceVisibility(
     p_visibility: visibility,
   });
 
-  if (error)
-    throw new Error(
-      `Registry source visibility update failed: ${error.message}`,
-    );
+  if (error) throw new Error(`Registry source visibility update failed: ${error.message}`);
 }
 
 //------------------------------------------------------------------------------
 // Fetch Registry Source Access
 //------------------------------------------------------------------------------
 
-export async function fetchRegistrySourceAccess(
-  sourceId: string,
-): Promise<RegistrySourceAccess[]> {
+export async function fetchRegistrySourceAccess(sourceId: string): Promise<RegistrySourceAccess[]> {
   const { data, error } = await supabase.rpc("fetch_registry_source_access", {
     p_source_id: sourceId,
   });
 
-  if (error)
-    throw new Error(`Registry source access request failed: ${error.message}`);
+  if (error) throw new Error(`Registry source access request failed: ${error.message}`);
 
   return data as RegistrySourceAccess[];
 }
@@ -89,25 +77,20 @@ export async function grantRegistrySourceAccess(
     p_source_id: sourceId,
   });
 
-  if (error)
-    throw new Error(`Registry source access grant failed: ${error.message}`);
+  if (error) throw new Error(`Registry source access grant failed: ${error.message}`);
 }
 
 //------------------------------------------------------------------------------
 // Revoke Registry Source Access
 //------------------------------------------------------------------------------
 
-export async function revokeRegistrySourceAccess(
-  sourceId: string,
-  userId: string,
-): Promise<void> {
+export async function revokeRegistrySourceAccess(sourceId: string, userId: string): Promise<void> {
   const { error } = await supabase.rpc("revoke_registry_source_access", {
     p_source_id: sourceId,
     p_user_id: userId,
   });
 
-  if (error)
-    throw new Error(`Registry source access revoke failed: ${error.message}`);
+  if (error) throw new Error(`Registry source access revoke failed: ${error.message}`);
 }
 
 //------------------------------------------------------------------------------
@@ -117,8 +100,7 @@ export async function revokeRegistrySourceAccess(
 export async function fetchRegistrySources(): Promise<Source[]> {
   const { data, error } = await supabase.rpc("fetch_registry_sources");
 
-  if (error)
-    throw new Error(`Registry sources request failed: ${error.message}`);
+  if (error) throw new Error(`Registry sources request failed: ${error.message}`);
 
   return sourceSchema.array().parse(data);
 }
@@ -139,10 +121,7 @@ export function analyzeRegistrySourceDependencies(
   installedSourceIds: ReadonlySet<string>,
 ): RegistrySourceDependencyAnalysis {
   const registrySourceById = new Map(
-    registrySources.map((registrySource) => [
-      registrySource.id,
-      registrySource,
-    ]),
+    registrySources.map((registrySource) => [registrySource.id, registrySource]),
   );
   const pendingSources = [source];
   const analyzedSourceIds = new Set<string>();
@@ -156,13 +135,9 @@ export function analyzeRegistrySourceDependencies(
     if (!currentSource || analyzedSourceIds.has(currentSource.id)) continue;
     analyzedSourceIds.add(currentSource.id);
 
-    for (const dependency of [
-      ...currentSource.includes,
-      ...currentSource.requires,
-    ]) {
-      const registrySourceId =
-        registrySourceById.has(dependency.source_id) ?
-          dependency.source_id
+    for (const dependency of [...currentSource.includes, ...currentSource.requires]) {
+      const registrySourceId = registrySourceById.has(dependency.source_id)
+        ? dependency.source_id
         : undefined;
 
       if (registrySourceId) {
@@ -214,12 +189,9 @@ export async function fetchRegistrySourceBundle(
   sourceId: string,
 ): Promise<SourceBundleWithoutRegistry> {
   const path = `sources/${sourceId}/bundle.json`;
-  const { data, error } = await supabase.storage
-    .from(registryBundleBucket)
-    .download(path);
+  const { data, error } = await supabase.storage.from(registryBundleBucket).download(path);
 
-  if (error)
-    throw new Error(`Registry bundle download failed: ${error.message}`);
+  if (error) throw new Error(`Registry bundle download failed: ${error.message}`);
 
   return sourceBundleWithoutRegistrySchema.parse(JSON.parse(await data.text()));
 }
@@ -238,9 +210,7 @@ export async function fetchRegistrySourceBundles(
 // Publish Registry Source Bundle
 //------------------------------------------------------------------------------
 
-export async function publishRegistrySourceBundle(
-  bundle: SourceBundle,
-): Promise<void> {
+export async function publishRegistrySourceBundle(bundle: SourceBundle): Promise<void> {
   const registry = bundle.source.registry;
   if (!registry) throw new Error("Source is not registered");
 
@@ -253,28 +223,21 @@ export async function publishRegistrySourceBundle(
     },
   });
 
-  if (error)
-    throw new Error(`Registry source publish failed: ${error.message}`);
+  if (error) throw new Error(`Registry source publish failed: ${error.message}`);
 }
 
 //------------------------------------------------------------------------------
 // Register Registry Source Bundle
 //------------------------------------------------------------------------------
 
-export async function registerRegistrySourceBundle(
-  bundle: SourceBundle,
-): Promise<void> {
+export async function registerRegistrySourceBundle(bundle: SourceBundle): Promise<void> {
   const { registry: _registry, ...source } = bundle.source;
-  const { error } = await supabase.functions.invoke(
-    "register-registry-source",
-    {
-      body: {
-        bundle: { ...bundle, source },
-        source_id: bundle.source.id,
-      },
+  const { error } = await supabase.functions.invoke("register-registry-source", {
+    body: {
+      bundle: { ...bundle, source },
+      source_id: bundle.source.id,
     },
-  );
+  });
 
-  if (error)
-    throw new Error(`Registry source registration failed: ${error.message}`);
+  if (error) throw new Error(`Registry source registration failed: ${error.message}`);
 }

@@ -1,11 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from "react";
 import type { Callback2 } from "~/utils/callback";
 import { createObservableSet } from "~/utils/observable-set";
-import {
-  type StateSetter,
-  type StateUpdate,
-  isStateUpdater,
-} from "~/utils/state";
+import { type StateSetter, type StateUpdate, isStateUpdater } from "~/utils/state";
 
 //------------------------------------------------------------------------------
 // Optional Store Set
@@ -40,8 +36,10 @@ export function createOptionalStoreSet<K, T>(
     onCacheUpdate: (key: K, value: T | undefined) => void;
   },
 ): OptionalStoreSet<K, T> {
-  const { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny } =
-    createObservableSet<K, T | undefined>(id);
+  const { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny } = createObservableSet<
+    K,
+    T | undefined
+  >(id);
 
   const cache = initCache();
 

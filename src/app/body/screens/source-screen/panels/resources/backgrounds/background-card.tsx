@@ -1,10 +1,7 @@
 import type { Background } from "~/models/resources/backgrounds/background";
 import type { LocalizedBackground } from "~/models/resources/backgrounds/localized-background";
 import PokerCard from "~/ui/poker-card";
-import {
-  ResourcePokerCard,
-  type ResourcePokerCardProps,
-} from "../resource-poker-card";
+import { ResourcePokerCard, type ResourcePokerCardProps } from "../resource-poker-card";
 
 //------------------------------------------------------------------------------
 // Background Card
@@ -25,9 +22,7 @@ export function BackgroundCard({
     <ResourcePokerCard
       beforeDetails={
         localizedResource.info && (
-          <PokerCard.Info palette={palette}>
-            {localizedResource.info}
-          </PokerCard.Info>
+          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
         )
       }
       localizedResource={localizedResource}

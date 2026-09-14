@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react";
+import { HStack, type StackProps } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
@@ -34,6 +34,45 @@ import ResourceSearch from "./resource-search";
 type Props<T> = Omit<FieldProps, "defaultValue"> & { defaultValue: T };
 
 type I18nFieldContext<T extends string> = Record<T, I18nString>;
+
+//------------------------------------------------------------------------------
+// Create Single Resource Field
+//------------------------------------------------------------------------------
+
+type SingleResourceFieldProps = Omit<StackProps, "defaultValue"> & {
+  defaultValue: string | null;
+  sourceId: string;
+};
+
+export function createSingleResourceField({
+  i18nContext,
+  useOptions,
+  useField,
+}: {
+  i18nContext: I18nFieldContext<"label" | "placeholder">;
+  useOptions: (sourceId: string) => ResourceOption[];
+  useField: (defaultValue: string | null) => FieldBag<string, string | null>;
+}) {
+  function SingleResourceField({ sourceId, defaultValue, ...rest }: SingleResourceFieldProps) {
+    const options = useOptions(sourceId);
+    const { error, onValueChange, value } = useField(defaultValue);
+    const { t } = useI18nLangContext(i18nContext);
+    const message = error ? t(error) : undefined;
+
+    return (
+      <Field error={message} label={t("label")} {...rest}>
+        <ResourceSearch
+          onValueChange={(ids) => onValueChange(ids.at(-1) ?? null)}
+          options={options}
+          value={value ? [value] : []}
+          withinDialog
+        />
+      </Field>
+    );
+  }
+
+  return SingleResourceField;
+}
 
 //------------------------------------------------------------------------------
 // Create Conditional Number Input Field
@@ -117,11 +156,7 @@ export function createCostInputField({
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <CostInput
-          bgColor={translatable ? "bg.info" : undefined}
-          {...inputProps}
-          {...field}
-        />
+        <CostInput bgColor={translatable ? "bg.info" : undefined} {...inputProps} {...field} />
       </Field>
     );
   }
@@ -144,12 +179,8 @@ export function createNullableCostInputField({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function NullableCostInputField({
-    defaultValue,
-    ...rest
-  }: NullableCostInputFieldProps) {
-    const { disabled, error, onValueChange, value, ...field } =
-      useField(defaultValue);
+  function NullableCostInputField({ defaultValue, ...rest }: NullableCostInputFieldProps) {
+    const { disabled, error, onValueChange, value, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
     const specified = value !== null;
@@ -200,21 +231,14 @@ export function createDistanceInputField({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function DistanceInputField({
-    defaultValue,
-    ...rest
-  }: DistanceInputFieldProps) {
+  function DistanceInputField({ defaultValue, ...rest }: DistanceInputFieldProps) {
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <DistanceInput
-          bgColor={translatable ? "bg.info" : undefined}
-          {...inputProps}
-          {...field}
-        />
+        <DistanceInput bgColor={translatable ? "bg.info" : undefined} {...inputProps} {...field} />
       </Field>
     );
   }
@@ -239,17 +263,11 @@ export function createEquipmentBundleField({
   i18nContext: I18nFieldContext<"label">;
   i18nContextExtra?: Record<string, I18nString>;
   translatable?: boolean;
-  useField: (
-    defaultValue: EquipmentBundle,
-  ) => FieldBag<string, EquipmentBundle>;
+  useField: (defaultValue: EquipmentBundle) => FieldBag<string, EquipmentBundle>;
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function EquipmentBundleField({
-    defaultValue,
-    sourceId,
-    ...rest
-  }: EquipmentBundleFieldProps) {
+  function EquipmentBundleField({ defaultValue, sourceId, ...rest }: EquipmentBundleFieldProps) {
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
@@ -291,11 +309,7 @@ export function createFeatureEntriesField({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function FeatureEntriesField({
-    defaultValue,
-    sourceId,
-    ...rest
-  }: FeatureEntriesFieldProps) {
+  function FeatureEntriesField({ defaultValue, sourceId, ...rest }: FeatureEntriesFieldProps) {
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
@@ -370,18 +384,12 @@ export function createLanguageEntriesField({
 }: {
   i18nContext: I18nFieldContext<"label">;
   i18nContextExtra?: Record<string, I18nString>;
-  useField: (
-    defaultValue: LanguageEntry[],
-  ) => FieldBag<string, LanguageEntry[]>;
+  useField: (defaultValue: LanguageEntry[]) => FieldBag<string, LanguageEntry[]>;
   useOptions: (sourceId: string) => ResourceOption[];
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function LanguageEntriesField({
-    defaultValue,
-    sourceId,
-    ...rest
-  }: LanguageEntriesFieldProps) {
+  function LanguageEntriesField({ defaultValue, sourceId, ...rest }: LanguageEntriesFieldProps) {
     const [mode, setMode] = useState<CreatureLanguageMode>("speaks");
     const options = useOptions(sourceId);
     const modeOptions = useCreatureLanguageModeOptions();
@@ -389,10 +397,7 @@ export function createLanguageEntriesField({
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
 
-    const languageIds = useMemo(
-      () => value.map(({ language_id }) => language_id),
-      [value],
-    );
+    const languageIds = useMemo(() => value.map(({ language_id }) => language_id), [value]);
 
     const handleLanguageIdsChange = useCallback(
       (ids: string[]) => {
@@ -489,10 +494,7 @@ export function createMultipleSelectEnumField<T extends string>({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function MultipleSelectEnumField({
-    defaultValue,
-    ...rest
-  }: MultipleSelectEnumFieldProps<T>) {
+  function MultipleSelectEnumField({ defaultValue, ...rest }: MultipleSelectEnumFieldProps<T>) {
     const options = useOptions();
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
@@ -593,11 +595,7 @@ export function createNumberInputField({
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <NumberInput
-          bgColor={translatable ? "bg.info" : undefined}
-          {...inputProps}
-          {...field}
-        />
+        <NumberInput bgColor={translatable ? "bg.info" : undefined} {...inputProps} {...field} />
       </Field>
     );
   }
@@ -626,11 +624,7 @@ export function createResourceSearchField({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function ResourceSearchField({
-    sourceId,
-    defaultValue,
-    ...rest
-  }: ResourceSearchFieldProps) {
+  function ResourceSearchField({ sourceId, defaultValue, ...rest }: ResourceSearchFieldProps) {
     const options = useOptions(sourceId);
 
     const { error, ...field } = useField(defaultValue);
@@ -762,11 +756,7 @@ export function createSelectIdField<T extends string>({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function SelectIdField({
-    sourceId,
-    defaultValue,
-    ...rest
-  }: SelectIdFieldProps<T>) {
+  function SelectIdField({ sourceId, defaultValue, ...rest }: SelectIdFieldProps<T>) {
     const options = useOptions(sourceId);
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
@@ -815,11 +805,7 @@ export function createSpeedInputField({
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <SpeedInput
-          bgColor={translatable ? "bg.info" : undefined}
-          {...inputProps}
-          {...field}
-        />
+        <SpeedInput bgColor={translatable ? "bg.info" : undefined} {...inputProps} {...field} />
       </Field>
     );
   }
@@ -923,11 +909,7 @@ export function createTimeInputField({
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <TimeInput
-          bgColor={translatable ? "bg.info" : undefined}
-          {...inputProps}
-          {...field}
-        />
+        <TimeInput bgColor={translatable ? "bg.info" : undefined} {...inputProps} {...field} />
       </Field>
     );
   }
@@ -964,11 +946,7 @@ export function createWeightInputField({
 
     return (
       <Field error={message} label={t("label")} {...rest}>
-        <WeightInput
-          bgColor={translatable ? "bg.info" : undefined}
-          {...inputProps}
-          {...field}
-        />
+        <WeightInput bgColor={translatable ? "bg.info" : undefined} {...inputProps} {...field} />
       </Field>
     );
   }
@@ -991,12 +969,8 @@ export function createNullableWeightInputField({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function NullableWeightInputField({
-    defaultValue,
-    ...rest
-  }: NullableWeightInputFieldProps) {
-    const { disabled, error, onValueChange, value, ...field } =
-      useField(defaultValue);
+  function NullableWeightInputField({ defaultValue, ...rest }: NullableWeightInputFieldProps) {
+    const { disabled, error, onValueChange, value, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
     const specified = value !== null;

@@ -20,8 +20,6 @@ export type StateSetter<T> = (update: StateUpdate<T>) => T;
 // Is Updater
 //------------------------------------------------------------------------------
 
-export function isStateUpdater<T>(
-  maybeUpdater: StateUpdate<T>,
-): maybeUpdater is StateUpdater<T> {
+export function isStateUpdater<T>(maybeUpdater: StateUpdate<T>): maybeUpdater is StateUpdater<T> {
   return typeof maybeUpdater === "function";
 }

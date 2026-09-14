@@ -12,8 +12,8 @@ import {
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
-import type { CharacterClass } from "./character-class";
 import { startingEquipmentGroupSchema } from "./starting-equipment";
+import type { CharacterClass } from "./character-class";
 
 //------------------------------------------------------------------------------
 // Character Class Form Data
@@ -35,9 +35,7 @@ export const characterClassFormDataSchema = resourceFormDataSchema.extend({
   weapon_proficiencies_extra: z.string().default(""),
 });
 
-export type CharacterClassFormData = z.infer<
-  typeof characterClassFormDataSchema
->;
+export type CharacterClassFormData = z.infer<typeof characterClassFormDataSchema>;
 
 //------------------------------------------------------------------------------
 // Character Class Form Data To Resource
@@ -75,7 +73,4 @@ export function characterClassFormDataToResource(
 // Character Class Form
 //------------------------------------------------------------------------------
 
-export const characterClassForm = createForm(
-  "character_class",
-  characterClassFormDataSchema.parse,
-);
+export const characterClassForm = createForm("character_class", characterClassFormDataSchema.parse);

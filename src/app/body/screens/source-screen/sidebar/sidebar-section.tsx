@@ -1,9 +1,5 @@
 import { VStack } from "@chakra-ui/react";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  CornerDownRightIcon,
-} from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, CornerDownRightIcon } from "lucide-react";
 import z from "zod";
 import SectionButton from "~/app/body/screens/source-screen/sidebar/section-button";
 import DotIcon from "~/icons/dot-icon";
@@ -30,11 +26,7 @@ export type SidebarSectionProps = {
   title: string;
 };
 
-export default function SidebarSection({
-  id,
-  items,
-  title,
-}: SidebarSectionProps) {
+export default function SidebarSection({ id, items, title }: SidebarSectionProps) {
   const [visible, setVisible] = useVisible(id, true);
 
   return (
@@ -52,9 +44,11 @@ export default function SidebarSection({
         w="full"
       >
         <SectionHeading flex={1}>{title}</SectionHeading>
-        {visible ?
+        {visible ? (
           <Icon Icon={ChevronUpIcon} size="sm" />
-        : <Icon Icon={ChevronDownIcon} size="sm" />}
+        ) : (
+          <Icon Icon={ChevronDownIcon} size="sm" />
+        )}
       </Button>
 
       {visible && (
@@ -75,8 +69,4 @@ export default function SidebarSection({
   );
 }
 
-const useVisible = createLocalStoreSet(
-  "sidebar.resources.visible",
-  true,
-  z.boolean().parse,
-).use;
+const useVisible = createLocalStoreSet("sidebar.resources.visible", true, z.boolean().parse).use;

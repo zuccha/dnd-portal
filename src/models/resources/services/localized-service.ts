@@ -6,11 +6,7 @@ import { useFormatCp } from "~/measures/cost";
 import { useTranslateServiceCategory } from "~/models/types/service-category";
 import { useTranslateServiceCostPeriod } from "~/models/types/service-cost-period";
 import { useI18nSystem } from "../../../i18n/i18n-system";
-import {
-  formatInfo,
-  localizedResourceSchema,
-  useLocalizeResource,
-} from "../localized-resource";
+import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
 import { type Service, serviceSchema } from "./service";
 
 //------------------------------------------------------------------------------
@@ -50,12 +46,13 @@ export function useLocalizeService(): (service: Service) => LocalizedService {
       const cost = formatCost(service.cost);
       const costPeriod = translateCostPeriod(service.cost_period).label;
       const price =
-        service.cost_period === "once" ? cost
-        : service.cost_period === "distance" ?
-          system === "metric" ?
-            ti(`price.distance.met`, cost)
-          : ti(`price.distance.imp`, cost)
-        : ti(`price.${service.cost_period}`, cost);
+        service.cost_period === "once"
+          ? cost
+          : service.cost_period === "distance"
+            ? system === "metric"
+              ? ti(`price.distance.met`, cost)
+              : ti(`price.distance.imp`, cost)
+            : ti(`price.${service.cost_period}`, cost);
 
       return {
         ...localizeResource(service),
@@ -70,16 +67,7 @@ export function useLocalizeService(): (service: Service) => LocalizedService {
         price,
       };
     },
-    [
-      formatCost,
-      lang,
-      localizeResource,
-      system,
-      t,
-      ti,
-      translateCategory,
-      translateCostPeriod,
-    ],
+    [formatCost, lang, localizeResource, system, t, ti, translateCategory, translateCostPeriod],
   );
 }
 

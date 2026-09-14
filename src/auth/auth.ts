@@ -1,5 +1,5 @@
-import type { Session, User } from "@supabase/supabase-js";
 import supabase from "~/supabase";
+import type { Session, User } from "@supabase/supabase-js";
 
 //------------------------------------------------------------------------------
 // Auth User
@@ -43,10 +43,7 @@ export async function signInWithDiscord() {
 // Sign In With Password
 //------------------------------------------------------------------------------
 
-export async function signInWithPassword(credentials: {
-  email: string;
-  password: string;
-}) {
+export async function signInWithPassword(credentials: { email: string; password: string }) {
   const { error } = await supabase.auth.signInWithPassword(credentials);
 
   if (!error) return requestAnimationFrame(() => window.location.reload());
@@ -58,10 +55,7 @@ export async function signInWithPassword(credentials: {
 // Sign Up With Password
 //------------------------------------------------------------------------------
 
-export async function signUpWithPassword(credentials: {
-  email: string;
-  password: string;
-}) {
+export async function signUpWithPassword(credentials: { email: string; password: string }) {
   const { error } = await supabase.auth.signUp(credentials);
 
   if (!error) return requestAnimationFrame(() => window.location.reload());
@@ -90,13 +84,9 @@ const firstDefined = <T>(...vals: Array<T | undefined>) =>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fromIdentities = <T>(user: User, pick: (data: any) => T | undefined) =>
-  user.identities
-    ?.map((i) => pick(i.identity_data))
-    .find((v) => v !== undefined);
+  user.identities?.map((i) => pick(i.identity_data)).find((v) => v !== undefined);
 
-export function mapSessionToAuthUser(
-  session: Session | undefined,
-): AuthUser | undefined {
+export function mapSessionToAuthUser(session: Session | undefined): AuthUser | undefined {
   const user = session?.user;
   if (!user) return undefined;
 
@@ -110,10 +100,7 @@ export function mapSessionToAuthUser(
     user.user_metadata?.["name"] as string | undefined,
     user.user_metadata?.["user_name"] as string | undefined,
     user.user_metadata?.["preferred_username"] as string | undefined,
-    fromIdentities(
-      user,
-      (d) => d?.name ?? d?.full_name ?? d?.username ?? d?.user_name,
-    ),
+    fromIdentities(user, (d) => d?.name ?? d?.full_name ?? d?.username ?? d?.user_name),
     email ? email.split("@")[0] : undefined,
   );
 

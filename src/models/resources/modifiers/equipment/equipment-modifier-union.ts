@@ -19,24 +19,17 @@ export const equipmentModifierUnionSchema = z.discriminatedUnion("kind", [
   weaponModifierSchema,
 ]);
 
-export type EquipmentModifierUnion = z.infer<
-  typeof equipmentModifierUnionSchema
->;
+export type EquipmentModifierUnion = z.infer<typeof equipmentModifierUnionSchema>;
 
 //------------------------------------------------------------------------------
 // Localized Equipment Modifier Union
 //------------------------------------------------------------------------------
 
-export const localizedEquipmentModifierUnionSchema = z.discriminatedUnion(
-  "kind",
-  [
-    localizedArmorModifierSchema,
-    localizedItemModifierSchema,
-    localizedToolModifierSchema,
-    localizedWeaponModifierSchema,
-  ],
-);
+export const localizedEquipmentModifierUnionSchema = z.discriminatedUnion("kind", [
+  localizedArmorModifierSchema,
+  localizedItemModifierSchema,
+  localizedToolModifierSchema,
+  localizedWeaponModifierSchema,
+]);
 
-export type LocalizedEquipmentModifierUnion = z.infer<
-  typeof localizedEquipmentModifierUnionSchema
->;
+export type LocalizedEquipmentModifierUnion = z.infer<typeof localizedEquipmentModifierUnionSchema>;

@@ -40,7 +40,4 @@ export function maneuverFormDataToResource(
 // Maneuver Form
 //------------------------------------------------------------------------------
 
-export const maneuverForm = createForm(
-  "maneuver",
-  maneuverFormDataSchema.parse,
-);
+export const maneuverForm = createForm("maneuver", maneuverFormDataSchema.parse);

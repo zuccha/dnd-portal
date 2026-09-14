@@ -1,9 +1,6 @@
 import z from "zod";
 import { itemTypeSchema } from "../../../types/item-type";
-import {
-  equipmentFiltersSchema,
-  equipmentOrderOptions,
-} from "../equipment-filters";
+import { equipmentFiltersSchema, equipmentOrderOptions } from "../equipment-filters";
 
 //------------------------------------------------------------------------------
 // Item Order Options

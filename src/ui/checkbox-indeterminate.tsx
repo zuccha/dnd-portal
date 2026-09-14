@@ -34,10 +34,7 @@ export default function CheckboxIndeterminate({
       {...rest}
     >
       <ChakraCheckbox.HiddenInput />
-      <ChakraCheckbox.Control
-        _disabled={{ cursor: "disabled" }}
-        cursor="pointer"
-      />
+      <ChakraCheckbox.Control _disabled={{ cursor: "disabled" }} cursor="pointer" />
       {label && <ChakraCheckbox.Label>{label}</ChakraCheckbox.Label>}
     </ChakraCheckbox.Root>
   );

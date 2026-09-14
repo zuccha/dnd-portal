@@ -6,17 +6,11 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import IconButton from "~/ui/icon-button";
-import {
-  useRightPanelCollapsed,
-  useRightPanelSetCollapsed,
-} from "../../right-panel-state";
+import { useRightPanelCollapsed, useRightPanelSetCollapsed } from "../../right-panel-state";
 import { createResourcesActions } from "./resources-actions";
-import type { ResourcesContext } from "./resources-context";
-import {
-  type ResourcesFiltersExtra,
-  createResourcesFilters,
-} from "./resources-filters";
+import { type ResourcesFiltersExtra, createResourcesFilters } from "./resources-filters";
 import { createResourcesViewSettings } from "./resources-view-settings";
+import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
 // Resources Sidebar Extra
@@ -36,11 +30,7 @@ export function createResourcesSidebar<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
->(
-  store: ResourceStore<R, L, F>,
-  context: ResourcesContext<R>,
-  extra: ResourcesSidebarExtra,
-) {
+>(store: ResourceStore<R, L, F>, context: ResourcesContext<R>, extra: ResourcesSidebarExtra) {
   const ResourcesActions = createResourcesActions(store, context);
   const ResourcesFilters = createResourcesFilters(store, context, extra);
   const ResourcesViewSettings = createResourcesViewSettings(store, context);

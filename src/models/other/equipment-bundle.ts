@@ -1,9 +1,5 @@
 import z from "zod";
-import {
-  type I18nString,
-  i18nStringSchema,
-  translate,
-} from "~/i18n/i18n-string";
+import { type I18nString, i18nStringSchema, translate } from "~/i18n/i18n-string";
 
 //------------------------------------------------------------------------------
 // Equipment Bundle
@@ -62,9 +58,7 @@ export function formatEquipmentNameWithNotes(
 // Equipment Bundle From Entries
 //------------------------------------------------------------------------------
 
-export function equipmentBundleFromEntries(
-  entries: EquipmentEntry[],
-): EquipmentBundle {
+export function equipmentBundleFromEntries(entries: EquipmentEntry[]): EquipmentBundle {
   const bundle: EquipmentBundle = { currency: 0, equipments: [] };
 
   for (const entry of entries) {
@@ -96,14 +90,11 @@ export function equipmentBundleFromEntries(
 // Equipment Bundle To Entries
 //------------------------------------------------------------------------------
 
-export function equipmentBundleToEntries(
-  bundle: EquipmentBundle,
-): EquipmentEntry[] {
+export function equipmentBundleToEntries(bundle: EquipmentBundle): EquipmentEntry[] {
   const entries: EquipmentEntry[] = [];
 
   const { currency, equipments } = bundle;
-  if (currency)
-    entries.push({ equipment_id: null, notes: {}, quantity: currency });
+  if (currency) entries.push({ equipment_id: null, notes: {}, quantity: currency });
   for (const equipment of equipments)
     entries.push({
       equipment_id: equipment.id,

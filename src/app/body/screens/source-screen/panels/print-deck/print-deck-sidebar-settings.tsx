@@ -49,8 +49,7 @@ export default function PrintDeckSidebarSettings({
   const [paperLayout, setPaperLayout] = usePaperLayout();
   const [printQuality, setPrintQuality] = usePrintQuality();
 
-  const [backgroundColorVisible, setBackgroundColorVisible] =
-    useBackgroundColorVisible();
+  const [backgroundColorVisible, setBackgroundColorVisible] = useBackgroundColorVisible();
   const [includeEmptyBack, setIncludeEmptyBack] = useIncludeEmptyBack();
   const [showImage, setShowImage] = useShowImage();
 
@@ -58,16 +57,12 @@ export default function PrintDeckSidebarSettings({
   const [bleedVisible, setBleedVisible] = useBleedVisible();
 
   const [cardCropMarksColor, setCardCropMarksColor] = useCardCropMarksColor();
-  const [cardCropMarksLength, setCardCropMarksLength] =
-    useCardCropMarksLength();
-  const [cardCropMarksVisible, setCardCropMarksVisible] =
-    useCardCropMarksVisible();
+  const [cardCropMarksLength, setCardCropMarksLength] = useCardCropMarksLength();
+  const [cardCropMarksVisible, setCardCropMarksVisible] = useCardCropMarksVisible();
 
   const [pageCropMarksColor, setPageCropMarksColor] = usePageCropMarksColor();
-  const [pageCropMarksLength, setPageCropMarksLength] =
-    usePageCropMarksLength();
-  const [pageCropMarksVisible, setPageCropMarksVisible] =
-    usePageCropMarksVisible();
+  const [pageCropMarksLength, setPageCropMarksLength] = usePageCropMarksLength();
+  const [pageCropMarksVisible, setPageCropMarksVisible] = usePageCropMarksVisible();
 
   const paperLayoutOptions = useMemo<SelectOption<PaperLayout>[]>(() => {
     return paperLayouts.map((paperLayout) => ({
@@ -134,11 +129,7 @@ export default function PrintDeckSidebarSettings({
         </HStack>
 
         <HStack>
-          <Checkbox
-            onValueChange={setBleedVisible}
-            size="sm"
-            value={bleedVisible}
-          />
+          <Checkbox onValueChange={setBleedVisible} size="sm" value={bleedVisible} />
           <CaptionInput caption={t("setting.bleed_x.label")}>
             <NumberInput
               disabled={!bleedVisible}
@@ -174,10 +165,7 @@ export default function PrintDeckSidebarSettings({
               value={pageCropMarksLength}
             />
           </CaptionInput>
-          <ColorPicker
-            onValueChange={setPageCropMarksColor}
-            value={pageCropMarksColor}
-          />
+          <ColorPicker onValueChange={setPageCropMarksColor} value={pageCropMarksColor} />
         </HStack>
 
         <HStack>
@@ -195,10 +183,7 @@ export default function PrintDeckSidebarSettings({
               value={cardCropMarksLength}
             />
           </CaptionInput>
-          <ColorPicker
-            onValueChange={setCardCropMarksColor}
-            value={cardCropMarksColor}
-          />
+          <ColorPicker onValueChange={setCardCropMarksColor} value={cardCropMarksColor} />
         </HStack>
 
         <VStack gap={1} w="full">

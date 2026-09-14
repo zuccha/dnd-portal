@@ -34,11 +34,7 @@ export default function SelectNative<T extends string>({
       <ChakraNativeSelect.Field
         id={id}
         name={name}
-        onChange={
-          onValueChange ?
-            (e) => onValueChange(e.currentTarget.value as T)
-          : undefined
-        }
+        onChange={onValueChange ? (e) => onValueChange(e.currentTarget.value as T) : undefined}
         value={value}
       >
         {options.map((option) => (

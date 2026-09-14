@@ -5,10 +5,7 @@ import YAML from "yaml";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
-import {
-  type PrintDeckEntryInput,
-  printDeck,
-} from "~/models/print-deck/print-deck-store";
+import { type PrintDeckEntryInput, printDeck } from "~/models/print-deck/print-deck-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -45,14 +42,12 @@ export function createResourcesActions<
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
     const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
-    const selectedFilteredResourceIds =
-      useSelectedFilteredResourceIds(sourceId);
+    const selectedFilteredResourceIds = useSelectedFilteredResourceIds(sourceId);
     const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
     const sourceEditable = catalogue.useSourceEditable(sourceId);
 
-    const { deselectAllResources, selectAllResources } =
-      useResourcesSelectionMethods(sourceId);
+    const { deselectAllResources, selectAllResources } = useResourcesSelectionMethods(sourceId);
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);
@@ -122,14 +117,7 @@ export function createResourcesActions<
         description: tpi("print.message.description", count, `${count}`),
         title: t("print.message.title"),
       });
-    }, [
-      lang,
-      localizeResource,
-      paletteName,
-      selectedFilteredResourceIds,
-      t,
-      tpi,
-    ]);
+    }, [lang, localizeResource, paletteName, selectedFilteredResourceIds, t, tpi]);
 
     const removeSelected = useCallback(async () => {
       const selectedResources = selectedFilteredResourceIds
@@ -153,8 +141,7 @@ export function createResourcesActions<
     }, [selectedFilteredResourceIds, t, tp, tpi]);
 
     const hasSelection = selectedFilteredResourceIds.length > 0;
-    const allFilteredSelected =
-      selectedFilteredResourceIds.length === filteredResourceIds.length;
+    const allFilteredSelected = selectedFilteredResourceIds.length === filteredResourceIds.length;
 
     return (
       <Section
@@ -248,11 +235,7 @@ export function createResourcesActions<
                   <Menu.Separator />
 
                   <Menu.ItemGroup>
-                    <Menu.Item
-                      disabled={!hasSelection}
-                      onSelect={printSelected}
-                      value="print"
-                    >
+                    <Menu.Item disabled={!hasSelection} onSelect={printSelected} value="print">
                       {t("print")}
                     </Menu.Item>
                   </Menu.ItemGroup>
