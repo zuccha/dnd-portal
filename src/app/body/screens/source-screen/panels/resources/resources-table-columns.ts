@@ -21,6 +21,7 @@ export function createResourcesTableColumns<
     {
       key: "page",
       label: { en: "Page", it: "Pag." },
+      w: "1%",
     },
   ];
 }
