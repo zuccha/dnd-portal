@@ -12,6 +12,7 @@ import type { ResourceStore } from "~/models/resources/resource-store";
 import type { Form } from "~/utils/form";
 import type { PaletteName } from "~/utils/palette";
 import { createResourcesPanel } from "../../resources-panel";
+import { createResourcesTableColumns } from "../../resources-table-columns";
 import { EquipmentModifierCard } from "./equipment-modifier-card";
 import { createEquipmentModifierEditor } from "./equipment-modifier-editor";
 import EquipmentModifiersFilters from "./equipment-modifiers-filters";
@@ -23,14 +24,10 @@ import type { ResourcesTableExtra } from "../../resources-table";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns: ResourcesTableExtra<
+const columns = createResourcesTableColumns<
   EquipmentModifier,
   LocalizedEquipmentModifier<EquipmentModifier>
->["columns"] = [
-  {
-    key: "name",
-    label: { en: "Name", it: "Nome" },
-  },
+>([
   {
     key: "applies_to",
     label: { en: "Applies To", it: "Applicabile A" },
@@ -57,7 +54,7 @@ const columns: ResourcesTableExtra<
     key: "rarity_minimum",
     label: { en: "Rarity", it: "Rarità" },
   },
-] as const;
+]);
 
 //------------------------------------------------------------------------------
 // Create Equipment Modifiers Panel
