@@ -31,7 +31,7 @@ export function useLocalizeTool(sourceId: string): (tool: Tool) => LocalizedTool
 
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
   const translateToolType = useTranslateToolType(lang);
-  const localizeEquipmentName = useLocalizeEquipmentName(sourceId, lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(lang);
 
   return useCallback(
     (tool: Tool): LocalizedTool => {

@@ -53,7 +53,7 @@ function useEquipmentReferenceIds(): string[] {
 // Use Localize Resource Name
 //------------------------------------------------------------------------------
 
-function useLocalizeResourceName(_sourceId: string, lang: string): (resourceId: string) => string {
+function useLocalizeResourceName(lang: string): (resourceId: string) => string {
   const resourceIds = useEquipmentReferenceIds();
   const equipmentById = useMemo(
     () =>
@@ -79,7 +79,7 @@ function useLocalizeResourceName(_sourceId: string, lang: string): (resourceId: 
 // Use Resource Options
 //------------------------------------------------------------------------------
 
-function useResourceOptions(_sourceId: string): ResourceOption[] {
+function useResourceOptions(): ResourceOption[] {
   const [lang] = useI18nLang();
   const resourceIds = useEquipmentReferenceIds();
 

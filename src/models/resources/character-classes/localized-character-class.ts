@@ -60,8 +60,8 @@ export function useLocalizeCharacterClass(
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateDieType = useTranslateDieType(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeToolName = useLocalizeToolName(sourceId, lang);
-  const localizeEquipmentName = useLocalizeEquipmentName(sourceId, lang);
+  const localizeToolName = useLocalizeToolName(lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(lang);
   const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
   const formatCp = useFormatCp();
 

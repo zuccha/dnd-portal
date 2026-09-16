@@ -36,7 +36,6 @@ export type FeatureGrantedByEditorProps = StackProps & {
 
 export default function FeatureGrantedByEditor({
   onValueChange,
-  sourceId,
   value,
   withinDialog,
   ...rest
@@ -49,7 +48,7 @@ export default function FeatureGrantedByEditor({
   const [minLevel, setMinLevel] = useState(0);
   const [kindFilters, setKindFilters] = useState<Record<string, boolean | undefined>>({});
 
-  const options = useFeatureGrantOptions(sourceId);
+  const options = useFeatureGrantOptions();
   const optionMap = useMemo(
     () => new Map(options.map((option) => [option.value, option])),
     [options],
@@ -157,15 +156,15 @@ const useItemResourceOptions = itemStore.useResourceOptions;
 const useToolResourceOptions = toolStore.useResourceOptions;
 const useWeaponResourceOptions = weaponStore.useResourceOptions;
 
-function useFeatureGrantOptions(sourceId: string): FeatureGrantOption[] {
-  const characterClassOptions = useCharacterClassResourceOptions(sourceId);
-  const characterSubclassOptions = useCharacterSubclassResourceOptions(sourceId);
-  const speciesOptions = useSpeciesResourceOptions(sourceId);
-  const featOptions = useFeatResourceOptions(sourceId);
-  const armorOptions = useArmorResourceOptions(sourceId);
-  const itemOptions = useItemResourceOptions(sourceId);
-  const toolOptions = useToolResourceOptions(sourceId);
-  const weaponOptions = useWeaponResourceOptions(sourceId);
+function useFeatureGrantOptions(): FeatureGrantOption[] {
+  const characterClassOptions = useCharacterClassResourceOptions();
+  const characterSubclassOptions = useCharacterSubclassResourceOptions();
+  const speciesOptions = useSpeciesResourceOptions();
+  const featOptions = useFeatResourceOptions();
+  const armorOptions = useArmorResourceOptions();
+  const itemOptions = useItemResourceOptions();
+  const toolOptions = useToolResourceOptions();
+  const weaponOptions = useWeaponResourceOptions();
 
   return useMemo(
     () =>

@@ -30,7 +30,7 @@ export function useLocalizeCharacterSubclass(
 ): (characterSubclass: CharacterSubclass) => LocalizedCharacterSubclass {
   const { lang, ti } = useI18nLangContext(i18nContext);
   const localizeResource = useLocalizeResource<CharacterSubclass>();
-  const localizeCharacterClass = useLocalizeCharacterClassName(sourceId, lang);
+  const localizeCharacterClass = useLocalizeCharacterClassName(lang);
   const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
 
   return useCallback(

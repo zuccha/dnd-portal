@@ -56,7 +56,7 @@ export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => Localiz
   const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(lang);
   const translateWeaponProperty = useTranslateWeaponProperty(lang);
   const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeEquipmentName = useLocalizeEquipmentName(sourceId, lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(lang);
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
