@@ -1,9 +1,10 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z, { ZodType } from "zod";
+import type { I18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translateNumber } from "~/i18n/i18n-number";
 import { translate } from "~/i18n/i18n-string";
-import { useTranslateSourceVersion } from "../types/source-version";
+import { type SourceVersion, useTranslateSourceVersion } from "../types/source-version";
 import type { Resource } from "./resource";
 
 //------------------------------------------------------------------------------
@@ -31,30 +32,64 @@ export type LocalizedResource<R extends Resource> = z.infer<
 >;
 
 //------------------------------------------------------------------------------
+// Resource Localization Context
+//------------------------------------------------------------------------------
+
+export type ResourceLocalizationContext = {
+  lang: I18nLang;
+  t: (key: string) => string;
+  ti: (key: string, ...args: string[]) => string;
+  translateSourceVersion: (version: SourceVersion) => string;
+};
+
+//------------------------------------------------------------------------------
+// Use Resource Localization Context
+//------------------------------------------------------------------------------
+
+function useResourceLocalizationContext(): ResourceLocalizationContext {
+  const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const translateSourceVersionLabels = useTranslateSourceVersion(lang);
+  const translateSourceVersion = useCallback(
+    (version: SourceVersion) => translateSourceVersionLabels(version).label,
+    [translateSourceVersionLabels],
+  );
+
+  return useMemo(
+    () => ({ lang, t, ti, translateSourceVersion }),
+    [lang, t, ti, translateSourceVersion],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Resource
+//------------------------------------------------------------------------------
+
+export function localizeResource<R extends Resource>(
+  resource: R,
+  context: ResourceLocalizationContext,
+): LocalizedResource<R> {
+  const page = translateNumber(resource.page ?? {}, context.lang);
+  return {
+    _raw: resource,
+    descriptor: "",
+    details: "",
+    id: resource.id,
+    kind: resource.kind,
+    name: translate(resource.name, context.lang) || context.t("name.missing"),
+    page: page ? context.ti("page", `${page}`) : "",
+    source: resource.source_code,
+    sourceVersion: context.translateSourceVersion(resource.source_version),
+  };
+}
+
+//------------------------------------------------------------------------------
 // Use Localize Resource
 //------------------------------------------------------------------------------
 
 export function useLocalizeResource<R extends Resource>(): (resource: R) => LocalizedResource<R> {
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
-  const translateSourceVersion = useTranslateSourceVersion(lang);
+  const context = useResourceLocalizationContext();
 
-  return useCallback(
-    (resource: R): LocalizedResource<R> => {
-      const page = translateNumber(resource.page ?? {}, lang);
-      return {
-        _raw: resource,
-        descriptor: "",
-        details: "",
-        id: resource.id,
-        kind: resource.kind,
-        name: translate(resource.name, lang) || t("name.missing"),
-        page: page ? ti("page", `${page}`) : "",
-        source: resource.source_code,
-        sourceVersion: translateSourceVersion(resource.source_version).label,
-      };
-    },
-    [lang, t, ti, translateSourceVersion],
-  );
+  return useCallback((resource) => localizeResource(resource, context), [context]);
 }
 
 //------------------------------------------------------------------------------
