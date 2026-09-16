@@ -42,17 +42,16 @@ export function createResourcesTableHead<
   _context: ResourcesContext<R>,
   extra: ResourcesTableHeadExtra<R, L>,
 ) {
-  const { useFilteredResourceIds, useResourcesSelectionMethods, useSelectedFilteredResourceIds } =
-    store;
+  const { useFilteredResourceIds, useResourcesSelectionMethods, useSelectedResourceIds } = store;
 
   return function ResourcesTableHead({ sourceId }: ResourcesTableHeadProps) {
     const [lang] = useI18nLang();
     const sourceEditable = useSourceEditable(sourceId);
 
-    const { deselectAllResources, selectAllResources } = useResourcesSelectionMethods(sourceId);
-
     const filteredResourceIds = useFilteredResourceIds(sourceId);
-    const selectedFilteredResourceIds = useSelectedFilteredResourceIds(sourceId);
+    const selectedFilteredResourceIds = useSelectedResourceIds(filteredResourceIds);
+    const { deselectAllResources, selectAllResources } =
+      useResourcesSelectionMethods(filteredResourceIds);
 
     const selected =
       selectedFilteredResourceIds.length === filteredResourceIds.length

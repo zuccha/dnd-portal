@@ -30,24 +30,21 @@ export function createResourcesActions<
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
 >(store: ResourceStore<R, L, F>, context: ResourcesContext<R>) {
-  const {
-    useFilteredResourceIds,
-    useResourcesSelectionMethods,
-    useSelectedFilteredResourceIds,
-    useLocalizeResource,
-  } = store;
+  const { useFilteredResourceIds, useLocalizeResource } = store;
 
+  const { useResourcesSelectionMethods, useSelectedResourceIds } = store;
   const { usePaletteName } = context;
 
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
     const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
-    const selectedFilteredResourceIds = useSelectedFilteredResourceIds(sourceId);
+    const selectedFilteredResourceIds = useSelectedResourceIds(filteredResourceIds);
     const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
     const sourceEditable = useSourceEditable(sourceId);
 
-    const { deselectAllResources, selectAllResources } = useResourcesSelectionMethods(sourceId);
+    const { deselectAllResources, selectAllResources } =
+      useResourcesSelectionMethods(filteredResourceIds);
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);
@@ -130,6 +127,7 @@ export function createResourcesActions<
           const selectedResourceIds = selectedResources.map(({ id }) => id);
           const error = await store.deleteResources(selectedResourceIds);
           if (error) throw new Error(error);
+          deselectAllResources();
         }
       } catch (e) {
         console.error(e);
@@ -138,7 +136,7 @@ export function createResourcesActions<
           title: t("remove.error.title"),
         });
       }
-    }, [selectedFilteredResourceIds, t, tp, tpi]);
+    }, [deselectAllResources, selectedFilteredResourceIds, t, tp, tpi]);
 
     const hasSelection = selectedFilteredResourceIds.length > 0;
     const allFilteredSelected = selectedFilteredResourceIds.length === filteredResourceIds.length;

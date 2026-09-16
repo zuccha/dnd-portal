@@ -9,8 +9,6 @@ import {
 import { updateSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
 import { createLocalStore } from "~/store/local-store";
 import { createMemoryStore } from "~/store/memory-store";
-import { createCache } from "~/utils/cache";
-import { createUseDerivedData } from "~/utils/derived-data";
 import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
@@ -24,6 +22,7 @@ import {
   matchesName,
 } from "./resource-filtering";
 import { mergeResourcePatch } from "./resource-patch";
+import { createResourceSelectionStore } from "./resource-selection-store";
 import { useResourcesSourcesFilter } from "./resources-sources-filter";
 import type { ResourceKind } from "../types/resource-kind";
 import type { LocalizedResource } from "./localized-resource";
@@ -74,6 +73,7 @@ export function createResourceStore<
 ) {
   const storeId = `resources[${kind}]`;
   const catalogueResourceStore = catalogue.createResourceStore(kind);
+  const resourceSelectionStore = createResourceSelectionStore(storeId);
 
   const {
     useResource: useCatalogueResource,
@@ -268,7 +268,7 @@ export function createResourceStore<
       await Promise.all(sourceIds.map((sourceId) => catalogue.refreshSourceState(sourceId)));
 
       for (const resource of resources) catalogueResourceStore.removeResource(resource.id);
-      for (const resource of resources) resourceSelectionCache.remove(resource.id);
+      resourceSelectionStore.deselectResources(resources.map(({ id }) => id));
 
       return undefined;
     } catch (error) {
@@ -422,127 +422,6 @@ export function createResourceStore<
   }
 
   //----------------------------------------------------------------------------
-  // Selection
-  //----------------------------------------------------------------------------
-
-  // resource id -> boolean
-  const resourceSelectionCache = createCache<string, boolean>(`${storeId}.resource_selection`);
-  const useResourceSelectionCache = resourceSelectionCache.useValue;
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Subscribe Resource Selection
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  const subscribeResourceSelections = (resourceIds: string[], callback: () => void) => {
-    const unsubscribes = resourceIds.map((id) => resourceSelectionCache.subscribe(id, callback));
-    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
-  };
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resource Selection
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useResourceSelection(resourceId: string): boolean {
-    return useResourceSelectionCache(resourceId) ?? false;
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resource Selection Methods
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useResourceSelectionMethods(resourceId: string) {
-    const deselectResource = useCallback(() => {
-      resourceSelectionCache.remove(resourceId);
-    }, [resourceId]);
-
-    const selectResource = useCallback(() => {
-      resourceSelectionCache.set(resourceId, true);
-    }, [resourceId]);
-
-    const setResourceSelection = useCallback(
-      (selection: boolean) => {
-        resourceSelectionCache.set(resourceId, selection);
-      },
-      [resourceId],
-    );
-
-    const toggleResourceSelection = useCallback(() => {
-      const prev = resourceSelectionCache.get(resourceId);
-      resourceSelectionCache.set(resourceId, !prev);
-    }, [resourceId]);
-
-    return {
-      deselectResource,
-      selectResource,
-      setResourceSelection,
-      toggleResourceSelection,
-    };
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resources Selection Methods
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useResourcesSelectionMethodsByParams(
-    sources: Record<string, boolean | undefined>,
-    filters: F,
-    lang: string,
-  ) {
-    const params = [sources, filters, lang] as const;
-    const filteredResourceIds = useFilteredResourceIdsByParams(...params);
-
-    const deselectAllResources = useCallback(() => {
-      filteredResourceIds.forEach(resourceSelectionCache.remove);
-    }, [filteredResourceIds]);
-
-    const selectAllResources = useCallback(() => {
-      filteredResourceIds.forEach((id) => resourceSelectionCache.set(id, true));
-    }, [filteredResourceIds]);
-
-    return {
-      deselectAllResources,
-      selectAllResources,
-    };
-  }
-
-  function useResourcesSelectionMethods(sourceId: string) {
-    const [sources] = useResourcesSourcesFilter(sourceId);
-    const filters = useEffectiveFilters();
-    const [lang] = useI18nLang();
-    const params = [sources, filters, lang] as const;
-    return useResourcesSelectionMethodsByParams(...params);
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Selected Filtered Resources Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  const [useSelectedFilteredResourceIdsWithKey] = createUseDerivedData(
-    (resourceIds: string[]) => resourceIds.filter(resourceSelectionCache.get),
-    subscribeResourceSelections,
-  );
-
-  function useSelectedFilteredResourceIdsByParams(
-    sourceId: string,
-    sources: Record<string, boolean | undefined>,
-    filters: F,
-    lang: string,
-  ): string[] {
-    const params = [sources, filters, lang] as const;
-    const filteredResourceIds = useFilteredResourceIdsByParams(...params);
-    const key = sourceId;
-    return useSelectedFilteredResourceIdsWithKey(key, filteredResourceIds)[0];
-  }
-
-  function useSelectedFilteredResourceIds(sourceId: string): string[] {
-    const [sources] = useResourcesSourcesFilter(sourceId);
-    const filters = useEffectiveFilters();
-    const [lang] = useI18nLang();
-    const params = [sourceId, sources, filters, lang] as const;
-    return useSelectedFilteredResourceIdsByParams(...params);
-  }
-
-  //----------------------------------------------------------------------------
   // Localization
   //----------------------------------------------------------------------------
 
@@ -653,10 +532,10 @@ export function createResourceStore<
 
     useFilteredResourceIds,
 
-    useResourceSelection,
-    useResourceSelectionMethods,
-    useResourcesSelectionMethods,
-    useSelectedFilteredResourceIds,
+    useResourceSelection: resourceSelectionStore.useResourceSelection,
+    useResourceSelectionMethods: resourceSelectionStore.useResourceSelectionMethods,
+    useResourcesSelectionMethods: resourceSelectionStore.useResourcesSelectionMethods,
+    useSelectedResourceIds: resourceSelectionStore.useSelectedResourceIds,
 
     useLocalizeResource,
     useLocalizeResourceName,
