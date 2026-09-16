@@ -426,18 +426,14 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const resourceIds = useCatalogueActiveSourceReferenceResourceIds();
-    const resourcesById = useMemo(
-      () => new Map(resourceIds.map((id) => [id, getResource(id) ?? defaultResource])),
-      [resourceIds],
-    );
+    useCatalogueActiveSourceReferenceResourceIds();
 
     return useCallback(
       (resourceId: string) => {
-        const resource = resourcesById.get(resourceId) ?? defaultResource;
-        return translate(resource.name, lang);
+        const resource = getResource(resourceId);
+        return resource ? translate(resource.name, lang) : "";
       },
-      [lang, resourcesById],
+      [lang],
     );
   }
 
@@ -449,18 +445,14 @@ export function createResourceStore<
     _sourceId: string,
     lang: string,
   ): (resourceId: string) => string {
-    const resourceIds = useCatalogueActiveSourceReferenceResourceIds();
-    const resourcesById = useMemo(
-      () => new Map(resourceIds.map((id) => [id, getResource(id) ?? defaultResource])),
-      [resourceIds],
-    );
+    useCatalogueActiveSourceReferenceResourceIds();
 
     return useCallback(
       (resourceId: string) => {
-        const resource = resourcesById.get(resourceId) ?? defaultResource;
-        return translate(resource.name_short, lang);
+        const resource = getResource(resourceId);
+        return resource ? translate(resource.name_short, lang) : "";
       },
-      [lang, resourcesById],
+      [lang],
     );
   }
 
@@ -474,8 +466,9 @@ export function createResourceStore<
 
     return [
       resourceIds
-        .map((id) => {
-          const resource = getResource(id) ?? defaultResource;
+        .map(getResource)
+        .filter((resource): resource is R => resource !== undefined)
+        .map((resource) => {
           const label = translate(resource.name, lang);
           return {
             label,
