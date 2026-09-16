@@ -6,6 +6,44 @@ import { featureStore } from "../resources/features/feature-store";
 import type { FeatureEntry } from "../resources/features/feature-entry";
 
 //------------------------------------------------------------------------------
+// Feature Entries Localization Context
+//------------------------------------------------------------------------------
+
+export type FeatureEntriesLocalizationContext = {
+  getFeature: (featureId: string) => ReturnType<typeof featureStore.getResource>;
+  lang: string;
+  ti: (key: string, ...args: string[]) => string;
+};
+
+//------------------------------------------------------------------------------
+// Format Feature Entries
+//------------------------------------------------------------------------------
+
+export function formatFeatureEntries(
+  featureEntries: FeatureEntry[],
+  context: FeatureEntriesLocalizationContext,
+): string {
+  return featureEntries
+    .map((entry) => {
+      const feature = context.getFeature(entry.id) ?? defaultFeature;
+      const name = (
+        translate(feature.display_name, context.lang) ||
+        translate(feature.name, context.lang) ||
+        " "
+      ).replace(" ", " ");
+      const description = translate(feature.description, context.lang);
+      return [
+        entry.min_level ? context.ti("name.min_level", name, `${entry.min_level}`) : `##${name}##`,
+        description,
+      ]
+        .filter(Boolean)
+        .join("\r");
+    })
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+//------------------------------------------------------------------------------
 // Use Format Feature Entries
 //------------------------------------------------------------------------------
 
@@ -24,25 +62,8 @@ export function useFormatFeatureEntries(
   );
 
   return useCallback(
-    (featureEntries: FeatureEntry[]): string =>
-      featureEntries
-        .map((entry) => {
-          const feature = featureMap.get(entry.id) ?? defaultFeature;
-          const name = (
-            translate(feature.display_name, lang) ||
-            translate(feature.name, lang) ||
-            " "
-          ).replace(" ", " ");
-          const description = translate(feature.description, lang);
-          return [
-            entry.min_level ? ti("name.min_level", name, `${entry.min_level}`) : `##${name}##`,
-            description,
-          ]
-            .filter(Boolean)
-            .join("\r");
-        })
-        .filter(Boolean)
-        .join("\n\n"),
+    (featureEntries) =>
+      formatFeatureEntries(featureEntries, { getFeature: featureMap.get, lang, ti }),
     [featureMap, lang, ti],
   );
 }
