@@ -13,7 +13,7 @@ const useLanguageFilters = languageStore.useFilters;
 
 export default function LanguagesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useLanguageFilters();
+  const [filters, { set: setFilters }] = useLanguageFilters();
 
   const rarityOptions = useLanguageRarityOptions();
 

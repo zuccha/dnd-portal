@@ -21,7 +21,7 @@ export default function CharacterSubclassesFilters({ ...rest }: CharacterSubclas
 
   const characterClassOptions = useCharacterClassResourceOptions();
 
-  const [filters, setFilters] = useCharacterSubclassFilters();
+  const [filters, { set: setFilters }] = useCharacterSubclassFilters();
 
   return (
     <VStack {...rest}>

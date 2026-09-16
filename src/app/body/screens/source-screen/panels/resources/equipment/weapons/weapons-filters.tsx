@@ -19,7 +19,7 @@ const useWeaponFilters = weaponStore.useFilters;
 
 export default function WeaponsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useWeaponFilters();
+  const [filters, { set: setFilters }] = useWeaponFilters();
 
   const typeOptions = useWeaponTypeOptions();
   const propertyOptions = useWeaponPropertyOptions();

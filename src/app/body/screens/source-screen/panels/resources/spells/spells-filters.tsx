@@ -26,7 +26,7 @@ const useCharacterClassResourceOptions = characterClassStore.useResourceOptions;
 
 export default function SpellsFilters({ ...rest }: SpellsFiltersProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useSpellFilters();
+  const [filters, { set: setFilters }] = useSpellFilters();
 
   const levelOptions = useSpellLevelOptions();
   const stringifiedLevelOptions = useMemo(

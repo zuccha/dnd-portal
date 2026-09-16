@@ -7,13 +7,11 @@ import {
   upsertSourceBundleResource,
 } from "~/models/catalogue/source-bundle";
 import { updateSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
-import { createLocalStore } from "~/store/local-store";
-import { createMemoryStore } from "~/store/memory-store";
-import { hash } from "~/utils/hash";
 import { compareObjects } from "~/utils/object";
 import { normalizeString } from "~/utils/string";
 import { createUuid } from "~/utils/uuid";
 import { type Resource, type ResourceOption, type TranslationFields } from "./resource";
+import { createResourceFilterStore } from "./resource-filter-store";
 import {
   type ResourceComparator,
   type ResourceMatcher,
@@ -82,84 +80,12 @@ export function createResourceStore<
     useActiveSourceResourceIds: useCatalogueActiveSourceResourceIds,
   } = catalogueResourceStore;
 
-  //----------------------------------------------------------------------------
-  // Filters
-  //----------------------------------------------------------------------------
-
-  const appliedFiltersStore = createLocalStore<F>(
-    `${storeId}.filters.applied`,
+  const filterStore = createResourceFilterStore(
+    `${storeId}.filters`,
     defaultFilters,
-    filtersSchema.parse,
+    filtersSchema,
   );
-
-  const useAppliedFilters = appliedFiltersStore.useValue;
-  const useSetAppliedFilters = appliedFiltersStore.useSetValue;
-
-  const draftFiltersStore = createMemoryStore<F>(
-    `${storeId}.filters.draft`,
-    appliedFiltersStore.get(),
-  );
-
-  const useDraftFilters = draftFiltersStore.useValue;
-  const useSetDraftFilters = draftFiltersStore.useSetValue;
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Filters
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useFilters(): [F, (partial: Partial<F>) => void] {
-    const filters = useDraftFilters();
-    const setFilters = useSetDraftFilters();
-    const setAppliedFilters = useSetAppliedFilters();
-
-    const setPartialFilters = useCallback(
-      (partial: Partial<F>) => {
-        if (partial.name !== undefined) {
-          setAppliedFilters((prev) => ({ ...prev, name: partial.name! }));
-        }
-
-        setFilters((prev) => ({ ...prev, ...partial }));
-      },
-      [setAppliedFilters, setFilters],
-    );
-
-    return [filters, setPartialFilters];
-  }
-
-  function useEffectiveFilters(): F {
-    const { name } = useDraftFilters();
-    const appliedFilters = useAppliedFilters();
-
-    return useMemo(() => ({ ...appliedFilters, name }), [appliedFilters, name]);
-  }
-
-  function useApplyFilters(): () => void {
-    const filters = useDraftFilters();
-    const setAppliedFilters = useSetAppliedFilters();
-
-    return useCallback(() => setAppliedFilters(filters), [filters, setAppliedFilters]);
-  }
-
-  function useResetFilters(): () => void {
-    const setFilters = useSetDraftFilters();
-
-    return useCallback(() => setFilters(defaultFilters), [setFilters]);
-  }
-
-  function useHasFilters(): boolean {
-    const filters = useDraftFilters();
-
-    return hash(filters) !== hash(defaultFilters);
-  }
-
-  function useHasFilterChanges(): boolean {
-    const filters = useDraftFilters();
-    const appliedFilters = useAppliedFilters();
-    const { name: _name, ...deferredFilters } = filters;
-    const { name: _appliedName, ...appliedDeferredFilters } = appliedFilters;
-
-    return hash(deferredFilters) !== hash(appliedDeferredFilters);
-  }
+  const { useEffectiveFilters, useFilters } = filterStore;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Add Temporary Resource
@@ -458,11 +384,7 @@ export function createResourceStore<
     orderOptions,
     translationFields,
 
-    useApplyFilters,
     useFilters,
-    useHasFilterChanges,
-    useHasFilters,
-    useResetFilters,
 
     addTemporaryResource,
     createResource,

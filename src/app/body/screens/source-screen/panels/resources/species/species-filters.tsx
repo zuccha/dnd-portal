@@ -14,7 +14,7 @@ const useSpeciesFilters = speciesStore.useFilters;
 
 export default function SpeciesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useSpeciesFilters();
+  const [filters, { set: setFilters }] = useSpeciesFilters();
 
   const typeOptions = useCreatureTypeOptions();
   const sizeOptions = useCreatureSizeOptions();

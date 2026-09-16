@@ -18,7 +18,7 @@ const useItemFilters = itemStore.useFilters;
 
 export default function ItemsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useItemFilters();
+  const [filters, { set: setFilters }] = useItemFilters();
 
   const typeOptions = useItemTypeOptions();
 

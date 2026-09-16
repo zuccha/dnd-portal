@@ -14,7 +14,7 @@ const useFeatFilters = featStore.useFilters;
 
 export default function FeatsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useFeatFilters();
+  const [filters, { set: setFilters }] = useFeatFilters();
 
   const categoryOptions = useFeatCategoryOptions();
 

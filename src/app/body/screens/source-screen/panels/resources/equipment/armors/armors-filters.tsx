@@ -14,7 +14,7 @@ const useArmorFilters = armorStore.useFilters;
 
 export default function ArmorsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useArmorFilters();
+  const [filters, { set: setFilters }] = useArmorFilters();
 
   const typeOptions = useArmorTypeOptions();
 

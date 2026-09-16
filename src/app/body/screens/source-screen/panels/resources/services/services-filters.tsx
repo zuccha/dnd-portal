@@ -13,7 +13,7 @@ const useServiceFilters = serviceStore.useFilters;
 
 export default function ServicesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useServiceFilters();
+  const [filters, { set: setFilters }] = useServiceFilters();
 
   const categoryOptions = useServiceCategoryOptions();
 

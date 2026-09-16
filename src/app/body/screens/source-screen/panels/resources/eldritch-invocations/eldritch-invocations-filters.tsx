@@ -12,7 +12,7 @@ const useEldritchInvocationFilters = eldritchInvocationStore.useFilters;
 
 export default function EldritchInvocationsFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = useEldritchInvocationFilters();
+  const [filters, { set: setFilters }] = useEldritchInvocationFilters();
 
   return (
     <VStack {...props}>

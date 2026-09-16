@@ -34,7 +34,7 @@ export function createResourcesGenericFilters<
     const { lang, t } = useI18nLangContext(i18nContext);
     const source = useSource(sourceId);
     const [sources, setSources] = useDraftResourcesSourcesFilter(sourceId);
-    const [filters, setFilters] = useFilters();
+    const [filters, { set: setFilters }] = useFilters();
     const [name, setName] = useState(filters.name);
 
     const setFiltersDebounced = useDebouncedCallback(setFilters, 200);

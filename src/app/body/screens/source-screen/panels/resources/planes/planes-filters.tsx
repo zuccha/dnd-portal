@@ -14,7 +14,7 @@ const usePlaneFilters = planeStore.useFilters;
 
 export default function PlanesFilters(props: StackProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [filters, setFilters] = usePlaneFilters();
+  const [filters, { set: setFilters }] = usePlaneFilters();
 
   const categoryOptions = usePlaneCategoryOptions();
   const alignmentOptions = useCreatureAlignmentOptions();
