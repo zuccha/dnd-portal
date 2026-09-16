@@ -1,12 +1,17 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useTranslateServiceCategory } from "~/models/types/service-category";
 import { useTranslateServiceCostPeriod } from "~/models/types/service-cost-period";
 import { useI18nSystem } from "../../../i18n/i18n-system";
-import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import {
+  type ResourceLocalizationContext,
+  formatInfo,
+  localizeResource,
+  localizedResourceSchema,
+  useResourceLocalizationContext,
+} from "../localized-resource";
 import { type Service, serviceSchema } from "./service";
 
 //------------------------------------------------------------------------------
@@ -28,47 +33,74 @@ export const localizedServiceSchema = localizedResourceSchema(
 export type LocalizedService = z.infer<typeof localizedServiceSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Service
+// Service Localization Context
+//------------------------------------------------------------------------------
+
+type ServiceLocalizationContext = ResourceLocalizationContext & {
+  formatCost: ReturnType<typeof useFormatCp>;
+  system: ReturnType<typeof useI18nSystem>[0];
+  translateCategory: (value: Service["category"]) => string;
+  translateCostPeriod: (value: Service["cost_period"]) => string;
+};
+
+//------------------------------------------------------------------------------
+// Use Service Localization Context
+//------------------------------------------------------------------------------
+
+function useServiceLocalizationContext(): ServiceLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
+  const [system] = useI18nSystem();
+  const formatCost = useFormatCp();
+  const translateCategory = useTranslateServiceCategory(context.lang);
+  const translateCostPeriod = useTranslateServiceCostPeriod(context.lang);
+
+  return useMemo(
+    () => ({ ...context, formatCost, system, translateCategory, translateCostPeriod }),
+    [context, formatCost, system, translateCategory, translateCostPeriod],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Service
+//------------------------------------------------------------------------------
+
+export function localizeService(
+  service: Service,
+  context: ServiceLocalizationContext,
+): LocalizedService {
+  const availability = translate(service.availability, context.lang);
+  const category = context.translateCategory(service.category);
+  const cost = context.formatCost(service.cost);
+  const costPeriod = context.translateCostPeriod(service.cost_period);
+  const price =
+    service.cost_period === "once"
+      ? cost
+      : service.cost_period === "distance"
+        ? context.system === "metric"
+          ? context.ti("price.distance.met", cost)
+          : context.ti("price.distance.imp", cost)
+        : context.ti(`price.${service.cost_period}`, cost);
+
+  return {
+    ...localizeResource(service, context),
+    descriptor: category,
+    details: translate(service.description, context.lang),
+    availability,
+    category,
+    cost,
+    cost_period: costPeriod,
+    info: formatInfo([[context.t("availability"), availability]]),
+    price,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Service
 //------------------------------------------------------------------------------
 
 export function useLocalizeService(): (service: Service) => LocalizedService {
-  const localizeResource = useLocalizeResource<Service>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
-  const [system] = useI18nSystem();
-  const formatCost = useFormatCp();
-  const translateCategory = useTranslateServiceCategory(lang);
-  const translateCostPeriod = useTranslateServiceCostPeriod(lang);
-
-  return useCallback(
-    (service: Service): LocalizedService => {
-      const availability = translate(service.availability, lang);
-      const category = translateCategory(service.category);
-      const cost = formatCost(service.cost);
-      const costPeriod = translateCostPeriod(service.cost_period);
-      const price =
-        service.cost_period === "once"
-          ? cost
-          : service.cost_period === "distance"
-            ? system === "metric"
-              ? ti(`price.distance.met`, cost)
-              : ti(`price.distance.imp`, cost)
-            : ti(`price.${service.cost_period}`, cost);
-
-      return {
-        ...localizeResource(service),
-        descriptor: category,
-        details: translate(service.description, lang),
-
-        availability,
-        category,
-        cost,
-        cost_period: costPeriod,
-        info: formatInfo([[t("availability"), availability]]),
-        price,
-      };
-    },
-    [formatCost, lang, localizeResource, system, t, ti, translateCategory, translateCostPeriod],
-  );
+  const context = useServiceLocalizationContext();
+  return useCallback((service) => localizeService(service, context), [context]);
 }
 
 //------------------------------------------------------------------------------

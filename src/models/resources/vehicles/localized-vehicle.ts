@@ -1,12 +1,17 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatCmh } from "~/measures/speed";
 import { useFormatGrams } from "~/measures/weight";
 import { formatNumber } from "~/utils/number";
-import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import {
+  type ResourceLocalizationContext,
+  formatInfo,
+  localizeResource,
+  localizedResourceSchema,
+  useResourceLocalizationContext,
+} from "../localized-resource";
 import { type Vehicle, vehicleSchema } from "./vehicle";
 
 //------------------------------------------------------------------------------
@@ -31,49 +36,75 @@ export const localizedVehicleSchema = localizedResourceSchema(
 export type LocalizedVehicle = z.infer<typeof localizedVehicleSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Vehicle
+// Vehicle Localization Context
 //------------------------------------------------------------------------------
 
-export function useLocalizeVehicle(): (vehicle: Vehicle) => LocalizedVehicle {
-  const localizeResource = useLocalizeResource<Vehicle>();
-  const { lang, t } = useI18nLangContext(i18nContext);
+type VehicleLocalizationContext = ResourceLocalizationContext & {
+  formatCost: ReturnType<typeof useFormatCp>;
+  formatCmh: ReturnType<typeof useFormatCmh>;
+  formatGrams: ReturnType<typeof useFormatGrams>;
+};
+
+//------------------------------------------------------------------------------
+// Use Vehicle Localization Context
+//------------------------------------------------------------------------------
+
+function useVehicleLocalizationContext(): VehicleLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
   const formatCost = useFormatCp();
   const formatCmh = useFormatCmh();
   const formatGrams = useFormatGrams();
 
-  return useCallback(
-    (vehicle: Vehicle): LocalizedVehicle => {
-      const cost = formatCost(vehicle.cost);
-      const speed = formatCmh(vehicle.speed);
-      const crew = formatNumber(vehicle.crew_capacity, lang);
-      const passengers = formatNumber(vehicle.passenger_capacity, lang);
-      const cargo = formatGrams(vehicle.cargo);
-      const ac = formatNumber(vehicle.ac, lang);
-      const hp = formatNumber(vehicle.hp, lang);
-      const damageThreshold = formatNumber(vehicle.damage_threshold, lang);
-
-      return {
-        ...localizeResource(vehicle),
-        descriptor: t("subtitle"),
-        details: translate(vehicle.description, lang),
-
-        ac,
-        cargo,
-        cost,
-        crew,
-        damage_threshold: damageThreshold,
-        hp,
-        info: formatInfo([
-          [t("speed"), speed],
-          [t("crew"), crew],
-          [t("passengers"), passengers],
-        ]),
-        passengers,
-        speed,
-      };
-    },
-    [formatCmh, formatCost, formatGrams, lang, localizeResource, t],
+  return useMemo(
+    () => ({ ...context, formatCost, formatCmh, formatGrams }),
+    [context, formatCmh, formatCost, formatGrams],
   );
+}
+
+//------------------------------------------------------------------------------
+// Localize Vehicle
+//------------------------------------------------------------------------------
+
+export function localizeVehicle(
+  vehicle: Vehicle,
+  context: VehicleLocalizationContext,
+): LocalizedVehicle {
+  const cost = context.formatCost(vehicle.cost);
+  const speed = context.formatCmh(vehicle.speed);
+  const crew = formatNumber(vehicle.crew_capacity, context.lang);
+  const passengers = formatNumber(vehicle.passenger_capacity, context.lang);
+  const cargo = context.formatGrams(vehicle.cargo);
+  const ac = formatNumber(vehicle.ac, context.lang);
+  const hp = formatNumber(vehicle.hp, context.lang);
+  const damageThreshold = formatNumber(vehicle.damage_threshold, context.lang);
+
+  return {
+    ...localizeResource(vehicle, context),
+    descriptor: context.t("subtitle"),
+    details: translate(vehicle.description, context.lang),
+    ac,
+    cargo,
+    cost,
+    crew,
+    damage_threshold: damageThreshold,
+    hp,
+    info: formatInfo([
+      [context.t("speed"), speed],
+      [context.t("crew"), crew],
+      [context.t("passengers"), passengers],
+    ]),
+    passengers,
+    speed,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Vehicle
+//------------------------------------------------------------------------------
+
+export function useLocalizeVehicle(): (vehicle: Vehicle) => LocalizedVehicle {
+  const context = useVehicleLocalizationContext();
+  return useCallback((vehicle) => localizeVehicle(vehicle, context), [context]);
 }
 
 //------------------------------------------------------------------------------
