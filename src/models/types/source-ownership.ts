@@ -15,11 +15,8 @@ export type SourceOwnership = z.infer<typeof sourceOwnershipSchema>;
 // Source Ownership Translation Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useSourceOwnershipOptions,
-  useTranslate: useTranslateSourceOwnership,
-  useTranslations: useSourceOwnershipTranslations,
-} = createTypeTranslationHooks(sourceOwnerships, {
-  guest: { en: "Guest", it: "Ospite" },
-  owner: { en: "Owner", it: "Possessore" },
-});
+export const { useOptions: useSourceOwnershipOptions, useTranslate: useTranslateSourceOwnership } =
+  createTypeTranslationHooks(sourceOwnerships, {
+    guest: { en: "Guest", it: "Ospite" },
+    owner: { en: "Owner", it: "Possessore" },
+  });

@@ -18,7 +18,6 @@ export type CreatureLanguageMode = z.infer<typeof creatureLanguageModeSchema>;
 export const {
   useOptions: useCreatureLanguageModeOptions,
   useTranslate: useTranslateCreatureLanguageMode,
-  useTranslations: useCreatureLanguageModeTranslations,
 } = createTypeTranslationHooks(creatureLanguageModes, {
   speaks: { en: "Speaks", it: "Parla" },
   understands: { en: "Understands", it: "Comprende" },

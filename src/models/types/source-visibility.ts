@@ -18,7 +18,6 @@ export type SourceVisibility = z.infer<typeof sourceVisibilitySchema>;
 export const {
   useOptions: useSourceVisibilityOptions,
   useTranslate: useTranslateSourceVisibility,
-  useTranslations: useSourceVisibilityTranslations,
 } = createTypeTranslationHooks(sourceVisibilities, {
   private: { en: "Private", it: "Privata" },
   public: { en: "Public", it: "Pubblica" },

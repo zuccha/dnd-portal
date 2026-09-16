@@ -15,13 +15,10 @@ export type ToolType = z.infer<typeof toolTypeSchema>;
 // Tool Type Translation Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useToolTypeOptions,
-  useTranslate: useTranslateToolType,
-  useTranslations: useToolTypeTranslations,
-} = createTypeTranslationHooks(toolTypes, {
-  artisan: { en: "Artisan's Tool", it: "Strumento da Artigiano" },
-  gaming_set: { en: "Gaming Set", it: "Gioco" },
-  musical_instrument: { en: "Musical Instrument", it: "Strumento Musicale" },
-  other: { en: "Other Tools", it: "Altri Strumenti" },
-});
+export const { useOptions: useToolTypeOptions, useTranslate: useTranslateToolType } =
+  createTypeTranslationHooks(toolTypes, {
+    artisan: { en: "Artisan's Tool", it: "Strumento da Artigiano" },
+    gaming_set: { en: "Gaming Set", it: "Gioco" },
+    musical_instrument: { en: "Musical Instrument", it: "Strumento Musicale" },
+    other: { en: "Other Tools", it: "Altri Strumenti" },
+  });

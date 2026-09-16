@@ -46,7 +46,7 @@ export function useLocalizeEquipment<E extends Equipment>(
 
   return useCallback(
     (equipment: E): LocalizedEquipment<E> => {
-      const rarity = translateRarity(equipment.rarity).label;
+      const rarity = translateRarity(equipment.rarity);
       const attunementNotes = translate(equipment.attunement_notes, lang);
       const attunementSlots = equipment.required_attunement_slots;
       const attunement =

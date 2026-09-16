@@ -1,5 +1,5 @@
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { type SourceVersion, useSourceVersionOptions } from "~/models/types/source-version";
+import { type SourceVersion, useSourceVersionShortOptions } from "~/models/types/source-version";
 import CaptionInput from "~/ui/caption-input";
 import Select from "~/ui/select";
 
@@ -17,7 +17,7 @@ export default function SidebarSourceVersionsSelector({
   sourceVersions,
 }: SidebarSourceVersionsSelectorProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const options = useSourceVersionOptions();
+  const options = useSourceVersionShortOptions();
 
   return (
     <CaptionInput caption={t("versions")} w="4em">

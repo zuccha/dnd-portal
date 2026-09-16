@@ -29,7 +29,6 @@ export type WeaponProperty = z.infer<typeof weaponPropertySchema>;
 export const {
   useSortedOptions: useWeaponPropertyOptions,
   useTranslate: useTranslateWeaponProperty,
-  useTranslations: useWeaponPropertyTranslations,
 } = createTypeTranslationHooks(weaponProperties, {
   "ammunition": { en: "Ammunition", it: "Munizioni" },
   "finesse": { en: "Finesse", it: "Accurata" },

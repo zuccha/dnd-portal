@@ -36,7 +36,7 @@ export function useLocalizeTool(sourceId: string): (tool: Tool) => LocalizedTool
   return useCallback(
     (tool: Tool): LocalizedTool => {
       const equipment = localizeEquipment(tool);
-      const type = translateToolType(tool.type).label;
+      const type = translateToolType(tool.type);
 
       const craft = tool.craft_ids.map(localizeEquipmentName).sort().join(", ") + ".";
 
@@ -54,7 +54,7 @@ export function useLocalizeTool(sourceId: string): (tool: Tool) => LocalizedTool
           .filter((text) => text)
           .join("\n\n"),
 
-        ability: translateCreatureAbility(tool.ability).label,
+        ability: translateCreatureAbility(tool.ability),
         type,
       };
     },

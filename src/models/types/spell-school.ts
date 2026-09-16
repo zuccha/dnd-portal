@@ -24,17 +24,14 @@ export type SpellSchool = z.infer<typeof spellSchoolSchema>;
 // Spell School Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useSortedOptions: useSpellSchoolOptions,
-  useTranslate: useTranslateSpellSchool,
-  useTranslations: useSpellSchoolTranslations,
-} = createTypeTranslationHooks(spellSchools, {
-  abjuration: { en: "Abjuration", it: "Abiurazione" },
-  conjuration: { en: "Conjuration", it: "Evocazione" },
-  divination: { en: "Divination", it: "Divinazione" },
-  enchantment: { en: "Enchantment", it: "Ammaliamento" },
-  evocation: { en: "Evocation", it: "Invocazione" },
-  illusion: { en: "Illusion", it: "Illusione" },
-  necromancy: { en: "Necromancy", it: "Necromanzia" },
-  transmutation: { en: "Transmutation", it: "Trasmutazione" },
-});
+export const { useSortedOptions: useSpellSchoolOptions, useTranslate: useTranslateSpellSchool } =
+  createTypeTranslationHooks(spellSchools, {
+    abjuration: { en: "Abjuration", it: "Abiurazione" },
+    conjuration: { en: "Conjuration", it: "Evocazione" },
+    divination: { en: "Divination", it: "Divinazione" },
+    enchantment: { en: "Enchantment", it: "Ammaliamento" },
+    evocation: { en: "Evocation", it: "Invocazione" },
+    illusion: { en: "Illusion", it: "Illusione" },
+    necromancy: { en: "Necromancy", it: "Necromanzia" },
+    transmutation: { en: "Transmutation", it: "Trasmutazione" },
+  });

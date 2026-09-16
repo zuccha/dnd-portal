@@ -15,11 +15,8 @@ export type SourceRole = z.infer<typeof sourceRoleSchema>;
 // Source Role Translation Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useSourceRoleOptions,
-  useTranslate: useTranslateSourceRole,
-  useTranslations: useSourceRoleTranslations,
-} = createTypeTranslationHooks(sourceRoles, {
-  admin: { en: "Admin", it: "Amministratore" },
-  editor: { en: "Editor", it: "Redattore" },
-});
+export const { useOptions: useSourceRoleOptions, useTranslate: useTranslateSourceRole } =
+  createTypeTranslationHooks(sourceRoles, {
+    admin: { en: "Admin", it: "Amministratore" },
+    editor: { en: "Editor", it: "Redattore" },
+  });

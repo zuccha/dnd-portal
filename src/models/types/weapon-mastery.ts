@@ -30,7 +30,6 @@ export type WeaponMastery = z.infer<typeof weaponMasterySchema>;
 export const {
   useSortedOptions: useWeaponMasteryOptions,
   useTranslate: useTranslateWeaponMastery,
-  useTranslations: useWeaponMasteryTranslations,
 } = createTypeTranslationHooks(weaponMasteries, {
   cleave: { en: "Cleave", it: "Doppio fendente" },
   graze: { en: "Graze", it: "Colpo di striscio" },

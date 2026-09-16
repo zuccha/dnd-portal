@@ -62,7 +62,7 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
     (spell: Spell): LocalizedSpell => {
       const casting_time = spell.casting_time_value
         ? formatTime(spell.casting_time_value)
-        : translateSpellCastingTime(spell.casting_time).label;
+        : translateSpellCastingTime(spell.casting_time);
 
       const character_classes = spell.character_class_ids
         .map(localizeCharacterClassNameShort)
@@ -72,17 +72,17 @@ export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
 
       const duration = spell.duration_value
         ? formatTime(spell.duration_value)
-        : translateSpellDuration(spell.duration).label;
+        : translateSpellDuration(spell.duration);
 
       const range = spell.range_value
         ? formatRange(spell.range_value)
-        : translateSpellRange(spell.range).label;
+        : translateSpellRange(spell.range);
 
       const details = translate(spell.description, lang);
       const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
       const materials = spell.materials ? translate(spell.materials, lang) : "";
 
-      const school = translateSpellSchool(spell.school).label;
+      const school = translateSpellSchool(spell.school);
 
       return {
         ...localizeResource(spell),

@@ -23,16 +23,13 @@ export type EquipmentRarity = z.infer<typeof equipmentRaritySchema>;
 // Equipment Rarity Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useEquipmentRarityOptions,
-  useTranslate: useTranslateEquipmentRarity,
-  useTranslations: useEquipmentRarityTranslations,
-} = createTypeTranslationHooks(equipmentRarities, {
-  artifact: { en: "Artifact", it: "Manufatto" },
-  common: { en: "Common", it: "Comune" },
-  legendary: { en: "Legendary", it: "Leggendario" },
-  rare: { en: "Rare", it: "Raro" },
-  uncommon: { en: "Uncommon", it: "Non Comune" },
-  various: { en: "Various", it: "Variabile" },
-  very_rare: { en: "Very Rare", it: "Molto Raro" },
-});
+export const { useOptions: useEquipmentRarityOptions, useTranslate: useTranslateEquipmentRarity } =
+  createTypeTranslationHooks(equipmentRarities, {
+    artifact: { en: "Artifact", it: "Manufatto" },
+    common: { en: "Common", it: "Comune" },
+    legendary: { en: "Legendary", it: "Leggendario" },
+    rare: { en: "Rare", it: "Raro" },
+    uncommon: { en: "Uncommon", it: "Non Comune" },
+    various: { en: "Various", it: "Variabile" },
+    very_rare: { en: "Very Rare", it: "Molto Raro" },
+  });

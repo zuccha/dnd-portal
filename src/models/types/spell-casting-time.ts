@@ -18,7 +18,6 @@ export type SpellCastingTime = z.infer<typeof spellCastingTimeSchema>;
 export const {
   useOptions: useSpellCastingTimeOptions,
   useTranslate: useTranslateSpellCastingTime,
-  useTranslations: useSpellCastingTimeTranslations,
 } = createTypeTranslationHooks(spellCastingTimes, {
   action: { en: "Action", it: "Azione" },
   bonus_action: { en: "Bonus Action", it: "Azione Bonus" },

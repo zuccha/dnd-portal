@@ -59,10 +59,7 @@ export function useLocalizeBackground(): (background: Background) => LocalizedBa
     (background: Background): LocalizedBackground => {
       const equipmentOptionOr = t("equipment.option.or");
 
-      const ability_scores = background.ability_scores
-        .map(translateCreatureAbility)
-        .map(({ label }) => label)
-        .join(", ");
+      const ability_scores = background.ability_scores.map(translateCreatureAbility).join(", ");
 
       const feat_name = background.feat_id ? localizeFeatName(background.feat_id) : "";
       const feat_notes = translate(background.feat_notes, lang);
@@ -70,7 +67,6 @@ export function useLocalizeBackground(): (background: Background) => LocalizedBa
 
       const skill_proficiencies = background.skill_proficiencies
         .map(translateCreatureSkill)
-        .map(({ label }) => label)
         .sort()
         .join(", ");
 

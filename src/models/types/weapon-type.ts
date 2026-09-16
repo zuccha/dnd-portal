@@ -15,11 +15,8 @@ export type WeaponType = z.infer<typeof weaponTypeSchema>;
 // Weapon Type Translation Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useSortedOptions: useWeaponTypeOptions,
-  useTranslate: useTranslateWeaponType,
-  useTranslations: useWeaponTypeTranslations,
-} = createTypeTranslationHooks(weaponTypes, {
-  martial: { en: "Martial Weapon", it: "Arma da Guerra" },
-  simple: { en: "Simple Weapon", it: "Arma Semplice" },
-});
+export const { useSortedOptions: useWeaponTypeOptions, useTranslate: useTranslateWeaponType } =
+  createTypeTranslationHooks(weaponTypes, {
+    martial: { en: "Martial Weapon", it: "Arma da Guerra" },
+    simple: { en: "Simple Weapon", it: "Arma Semplice" },
+  });

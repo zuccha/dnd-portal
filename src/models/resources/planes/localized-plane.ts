@@ -33,11 +33,8 @@ export function useLocalizePlane(): (plane: Plane) => LocalizedPlane {
 
   return useCallback(
     (plane: Plane): LocalizedPlane => {
-      const alignments = plane.alignments
-        .map(translateCreatureAlignment)
-        .map(({ label }) => label)
-        .join(", ");
-      const category = translatePlaneCategory(plane.category).label;
+      const alignments = plane.alignments.map(translateCreatureAlignment).join(", ");
+      const category = translatePlaneCategory(plane.category);
 
       return {
         ...localizeResource(plane),

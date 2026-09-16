@@ -25,7 +25,6 @@ export type ServiceCategory = z.infer<typeof serviceCategorySchema>;
 export const {
   useSortedOptions: useServiceCategoryOptions,
   useTranslate: useTranslateServiceCategory,
-  useTranslations: useServiceCategoryTranslations,
 } = createTypeTranslationHooks(serviceCategories, {
   food_drink: { en: "Food & Drink", it: "Cibo e Bevande" },
   hireling: { en: "Hireling", it: "Gregario" },

@@ -17,9 +17,9 @@ export type SourceVersion = z.infer<typeof sourceVersionSchema>;
 //------------------------------------------------------------------------------
 
 export const {
-  useShortOptions: useSourceVersionOptions,
+  useOptions: useSourceVersionOptions,
+  useShortOptions: useSourceVersionShortOptions,
   useTranslate: useTranslateSourceVersion,
-  useTranslations: useSourceVersionTranslations,
 } = createTypeTranslationHooks(
   sourceVersions,
   {

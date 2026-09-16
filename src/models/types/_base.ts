@@ -4,17 +4,6 @@ import type { I18nString } from "~/i18n/i18n-string";
 import { compareObjects } from "~/utils/object";
 
 //------------------------------------------------------------------------------
-// Type Translation
-//------------------------------------------------------------------------------
-
-export type TypeTranslation<Type extends string> = {
-  label: string;
-  label_short: string;
-  lang: I18nLang;
-  value: Type;
-};
-
-//------------------------------------------------------------------------------
 // Create Type Translation Hooks
 //------------------------------------------------------------------------------
 
@@ -27,27 +16,20 @@ export function createTypeTranslationHooks<Type extends string>(
   // Use Translate
   //----------------------------------------------------------------------------
 
-  function useTranslate(lang: I18nLang): (value: Type) => TypeTranslation<Type> {
-    const translate = useCallback(
-      (type: Type): TypeTranslation<Type> => {
-        const label = labels[type][lang] ?? type;
-        const label_short = shortLabels ? (shortLabels[type][lang] ?? type) : label;
-        return { label, label_short, lang, value: type };
-      },
-      [lang],
-    );
-
-    return translate;
+  function useTranslate(lang: I18nLang): (value: Type) => string {
+    return useCallback((type: Type) => labels[type][lang] ?? type, [lang]);
   }
 
   //----------------------------------------------------------------------------
-  // Use Translations
+  // Use Translate Short
   //----------------------------------------------------------------------------
 
-  function useTranslations(): TypeTranslation<Type>[] {
-    const [lang] = useI18nLang();
+  function useTranslateShort(lang: I18nLang): (value: Type) => string {
     const translate = useTranslate(lang);
-    return useMemo(() => types.map(translate), [translate]);
+    return useCallback(
+      (type: Type) => (shortLabels ? (shortLabels[type][lang] ?? type) : translate(type)),
+      [lang, translate],
+    );
   }
 
   //----------------------------------------------------------------------------
@@ -55,7 +37,9 @@ export function createTypeTranslationHooks<Type extends string>(
   //----------------------------------------------------------------------------
 
   function useOptions(): { label: string; value: Type }[] {
-    return useTranslations();
+    const [lang] = useI18nLang();
+    const translate = useTranslate(lang);
+    return useMemo(() => types.map((value) => ({ label: translate(value), value })), [translate]);
   }
 
   //----------------------------------------------------------------------------
@@ -63,14 +47,11 @@ export function createTypeTranslationHooks<Type extends string>(
   //----------------------------------------------------------------------------
 
   function useShortOptions(): { label: string; value: Type }[] {
-    const translations = useTranslations();
+    const [lang] = useI18nLang();
+    const translateShort = useTranslateShort(lang);
     return useMemo(
-      () =>
-        translations.map(({ label_short, value }) => ({
-          label: label_short,
-          value,
-        })),
-      [translations],
+      () => types.map((value) => ({ label: translateShort(value), value })),
+      [translateShort],
     );
   }
 
@@ -79,7 +60,7 @@ export function createTypeTranslationHooks<Type extends string>(
   //----------------------------------------------------------------------------
 
   function useSortedOptions(): { label: string; value: Type }[] {
-    const options = useTranslations();
+    const options = useOptions();
     return useMemo(() => options.sort(compareObjects("label")), [options]);
   }
 
@@ -102,6 +83,6 @@ export function createTypeTranslationHooks<Type extends string>(
     useSortedOptions,
     useSortedShortOptions,
     useTranslate,
-    useTranslations,
+    useTranslateShort,
   };
 }

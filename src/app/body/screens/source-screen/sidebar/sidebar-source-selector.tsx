@@ -169,7 +169,7 @@ function itemizeSources(
   sources: Source[],
   versions: SourceVersion[],
   lang: string,
-  translateSourceVersion: (version: SourceVersion) => { label: string },
+  translateSourceVersion: (version: SourceVersion) => string,
 ): SelectOption<string>[] {
   return sources
     .filter((source) => versions.includes(source.version))
@@ -184,10 +184,10 @@ function itemizeSources(
 function sourceToOption(
   source: Source,
   lang: string,
-  translateSourceVersion: (version: SourceVersion) => { label: string },
+  translateSourceVersion: (version: SourceVersion) => string,
 ): SelectOption<string> {
   const name = source.name[lang];
-  const version = translateSourceVersion(source.version).label;
+  const version = translateSourceVersion(source.version);
 
   return {
     dropdownLabel: name ? `${version} • ${name}` : source.code,

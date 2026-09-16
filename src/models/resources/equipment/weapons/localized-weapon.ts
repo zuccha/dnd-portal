@@ -60,7 +60,7 @@ export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => Localiz
 
   return useCallback(
     (weapon: Weapon): LocalizedWeapon => {
-      const damage_type = translateDamageType(weapon.damage_type).label;
+      const damage_type = translateDamageType(weapon.damage_type);
       const damage_extended = ti("damage_extended", weapon.damage, damage_type);
 
       const damage_modifier = weapon.properties.includes("finesse")
@@ -86,11 +86,7 @@ export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => Localiz
 
       const ammunition = weapon.ammunition_ids.map(localizeEquipmentName).sort().join(", ");
 
-      const properties = weapon.properties
-        .map(translateWeaponProperty)
-        .map(({ label }) => label)
-        .sort()
-        .join(", ");
+      const properties = weapon.properties.map(translateWeaponProperty).sort().join(", ");
 
       const info = formatInfo([
         [tp("properties", weapon.properties.length), properties],
@@ -98,11 +94,11 @@ export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => Localiz
         [t("ammunition"), ammunition ? ammunition : ""],
       ]);
 
-      const mastery = translateWeaponMastery(weapon.mastery).label;
+      const mastery = translateWeaponMastery(weapon.mastery);
 
       const equipment = localizeEquipment(weapon);
 
-      const type = translateWeaponType(weapon.type).label;
+      const type = translateWeaponType(weapon.type);
 
       return {
         ...equipment,

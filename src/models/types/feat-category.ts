@@ -15,13 +15,10 @@ export type FeatCategory = z.infer<typeof featCategorySchema>;
 // Feat Category Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useFeatCategoryOptions,
-  useTranslate: useTranslateFeatCategory,
-  useTranslations: useFeatCategoryTranslations,
-} = createTypeTranslationHooks(featCategories, {
-  epic_boon: { en: "Epic Boon", it: "Dono Epico" },
-  fighting_style: { en: "Fighting Style", it: "Stile di Combattimento" },
-  general: { en: "General", it: "Generale" },
-  origin: { en: "Origin", it: "Origini" },
-});
+export const { useOptions: useFeatCategoryOptions, useTranslate: useTranslateFeatCategory } =
+  createTypeTranslationHooks(featCategories, {
+    epic_boon: { en: "Epic Boon", it: "Dono Epico" },
+    fighting_style: { en: "Fighting Style", it: "Stile di Combattimento" },
+    general: { en: "General", it: "Generale" },
+    origin: { en: "Origin", it: "Origini" },
+  });

@@ -52,7 +52,7 @@ export function useLocalizeEquipmentModifier<EM extends EquipmentModifier>(): (
       const attunementNotesDelta = translate(equipmentModifier.attunement_notes_delta, lang);
       const notesDelta = translate(equipmentModifier.notes_delta, lang);
       const rarityMinimum = equipmentModifier.rarity_minimum
-        ? translateRarity(equipmentModifier.rarity_minimum).label
+        ? translateRarity(equipmentModifier.rarity_minimum)
         : "";
       const requiredAttunementSlotsMinimum =
         equipmentModifier.required_attunement_slots_minimum > 0

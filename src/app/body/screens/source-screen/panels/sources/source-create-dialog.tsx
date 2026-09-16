@@ -5,7 +5,7 @@ import type { Source } from "~/models/catalogue/source";
 import { type SourceBundle, sourceBundleResourcesSchema } from "~/models/catalogue/source-bundle";
 import { parseSourceBundle } from "~/models/catalogue/source-bundle-migrations/migrate-source-bundle";
 import { type SourceType, useSourceTypeOptions } from "~/models/types/source-type";
-import { type SourceVersion, useSourceVersionTranslations } from "~/models/types/source-version";
+import { type SourceVersion, useSourceVersionOptions } from "~/models/types/source-version";
 import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
 import TextInput from "~/ui/input";
@@ -31,7 +31,7 @@ export default function SourceCreateDialog({
 }: SourceCreateDialogProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const sourceTypeOptions = useSourceTypeOptions();
-  const sourceVersionOptions = useSourceVersionTranslations();
+  const sourceVersionOptions = useSourceVersionOptions();
   const [draft, setDraft] = useState(createSourceDraft);
 
   function submit(): void {

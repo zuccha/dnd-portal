@@ -30,7 +30,6 @@ export type CreatureAlignment = z.infer<typeof creatureAlignmentSchema>;
 export const {
   useOptions: useCreatureAlignmentOptions,
   useTranslate: useTranslateCreatureAlignment,
-  useTranslations: useCreatureAlignmentTranslations,
 } = createTypeTranslationHooks(creatureAlignments, {
   any: { en: "Any Alignment", it: "Qualsiasi Allineamento" },
   chaotic_evil: { en: "Chaotic Evil", it: "Caotico Malvagio" },

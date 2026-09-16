@@ -33,7 +33,7 @@ export function useLocalizeLanguage(): (language: Language) => LocalizedLanguage
 
   return useCallback(
     (language: Language): LocalizedLanguage => {
-      const rarity = translateLanguageRarity(language.rarity).label;
+      const rarity = translateLanguageRarity(language.rarity);
       const origin = translate(language.origin, lang);
 
       return {

@@ -50,7 +50,7 @@ function useResourceLocalizationContext(): ResourceLocalizationContext {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const translateSourceVersionLabels = useTranslateSourceVersion(lang);
   const translateSourceVersion = useCallback(
-    (version: SourceVersion) => translateSourceVersionLabels(version).label,
+    (version: SourceVersion) => translateSourceVersionLabels(version),
     [translateSourceVersionLabels],
   );
 

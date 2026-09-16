@@ -21,17 +21,14 @@ export type SpellDuration = z.infer<typeof spellDurationSchema>;
 // Spell Duration Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useSpellDurationOptions,
-  useTranslate: useTranslateSpellDuration,
-  useTranslations: useSpellDurationTranslations,
-} = createTypeTranslationHooks(spellDurations, {
-  instantaneous: { en: "Instantaneous", it: "Istantaneo" },
-  special: { en: "Special", it: "Speciale" },
-  until_dispelled: { en: "Until dispelled", it: "Finché non disperso" },
-  until_dispelled_or_triggered: {
-    en: "Until Dispelled or Triggered",
-    it: "Finché non disperso o innescato",
-  },
-  value: { en: "Value", it: "Valore" },
-});
+export const { useOptions: useSpellDurationOptions, useTranslate: useTranslateSpellDuration } =
+  createTypeTranslationHooks(spellDurations, {
+    instantaneous: { en: "Instantaneous", it: "Istantaneo" },
+    special: { en: "Special", it: "Speciale" },
+    until_dispelled: { en: "Until dispelled", it: "Finché non disperso" },
+    until_dispelled_or_triggered: {
+      en: "Until Dispelled or Triggered",
+      it: "Finché non disperso o innescato",
+    },
+    value: { en: "Value", it: "Valore" },
+  });

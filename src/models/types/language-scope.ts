@@ -15,12 +15,9 @@ export type LanguageScope = z.infer<typeof languageScopeSchema>;
 // Language Scope Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useLanguageScopeOptions,
-  useTranslate: useTranslateLanguageScope,
-  useTranslations: useLanguageScopeTranslations,
-} = createTypeTranslationHooks(languageScopes, {
-  all: { en: "All", it: "Tutte" },
-  none: { en: "None", it: "Nessuna" },
-  specific: { en: "Specific", it: "Specifiche" },
-});
+export const { useOptions: useLanguageScopeOptions, useTranslate: useTranslateLanguageScope } =
+  createTypeTranslationHooks(languageScopes, {
+    all: { en: "All", it: "Tutte" },
+    none: { en: "None", it: "Nessuna" },
+    specific: { en: "Specific", it: "Specifiche" },
+  });

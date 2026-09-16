@@ -83,7 +83,7 @@ export function useLocalizeArmor(sourceId: string): (armor: Armor) => LocalizedA
         [t("stealth"), armor.disadvantage_on_stealth ? t("stealth.disadvantage") : ""],
       ]);
 
-      const type = translateArmorType(armor.type).label;
+      const type = translateArmorType(armor.type);
 
       return {
         ...equipment,

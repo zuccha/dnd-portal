@@ -71,23 +71,21 @@ export function useLocalizeCharacterClass(
 
       const primary_abilities = characterClass.primary_abilities
         .map(translateCreatureAbility)
-        .map(({ label }) => label)
         .join(", ");
 
       const saving_throw_proficiencies = characterClass.saving_throw_proficiencies
         .map(translateCreatureAbility)
-        .map(({ label }) => label)
         .join(", ");
 
       const armor_proficiencies = [
-        ...characterClass.armor_proficiencies.map(translateArmorType).map(({ label }) => label),
+        ...characterClass.armor_proficiencies.map(translateArmorType),
         translate(characterClass.armor_proficiencies_extra, lang),
       ]
         .filter((text) => text)
         .join(", ");
 
       const weapon_proficiencies = [
-        ...characterClass.weapon_proficiencies.map(translateWeaponType).map(({ label }) => label),
+        ...characterClass.weapon_proficiencies.map(translateWeaponType),
         translate(characterClass.weapon_proficiencies_extra, lang),
       ]
         .filter((text) => text)
@@ -126,11 +124,7 @@ export function useLocalizeCharacterClass(
         ? ti(
             "skill_proficiencies_pool",
             `${characterClass.skill_proficiencies_pool_quantity}`,
-            characterClass.skill_proficiencies_pool
-              .map(translateCreatureSkill)
-              .map(({ label }) => label)
-              .sort()
-              .join(", "),
+            characterClass.skill_proficiencies_pool.map(translateCreatureSkill).sort().join(", "),
           )
         : "";
 
@@ -172,7 +166,7 @@ export function useLocalizeCharacterClass(
         ),
 
         armor_proficiencies,
-        hp_die: translateDieType(characterClass.hp_die).label,
+        hp_die: translateDieType(characterClass.hp_die),
         info,
         primary_abilities,
         saving_throw_proficiencies,

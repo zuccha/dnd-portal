@@ -15,15 +15,12 @@ export type SpellRange = z.infer<typeof spellRangeSchema>;
 // Spell Range Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useSpellRangeOptions,
-  useTranslate: useTranslateSpellRange,
-  useTranslations: useSpellRangeTranslations,
-} = createTypeTranslationHooks(spellRanges, {
-  self: { en: "Self", it: "Incantatore" },
-  sight: { en: "Sight", it: "Vista" },
-  special: { en: "Special", it: "Speciale" },
-  touch: { en: "Touch", it: "Contatto" },
-  unlimited: { en: "Unlimited", it: "Illimitato" },
-  value: { en: "Value", it: "Valore" },
-});
+export const { useOptions: useSpellRangeOptions, useTranslate: useTranslateSpellRange } =
+  createTypeTranslationHooks(spellRanges, {
+    self: { en: "Self", it: "Incantatore" },
+    sight: { en: "Sight", it: "Vista" },
+    special: { en: "Special", it: "Speciale" },
+    touch: { en: "Touch", it: "Contatto" },
+    unlimited: { en: "Unlimited", it: "Illimitato" },
+    value: { en: "Value", it: "Valore" },
+  });

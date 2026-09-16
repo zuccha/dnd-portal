@@ -37,7 +37,7 @@ export function useLocalizeItem(sourceId: string): (item: Item) => LocalizedItem
           ? item.magic
             ? ti("wondrous_item")
             : t("mundane_item")
-          : translateType(item.type).label;
+          : translateType(item.type);
 
       const rarity = item.magic ? equipment.rarity : "";
 

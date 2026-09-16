@@ -12,7 +12,7 @@ import {
 } from "~/models/types/source-type";
 import {
   type SourceVersion,
-  useSourceVersionTranslations,
+  useSourceVersionOptions,
   useTranslateSourceVersion,
 } from "~/models/types/source-version";
 import Button from "~/ui/button";
@@ -88,7 +88,7 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
   const { lang, t } = useI18nLangContext(i18nContext);
   const sourceEditable = useSourceEditable(source.id);
   const sourceTypeOptions = useSourceTypeOptions();
-  const sourceVersionOptions = useSourceVersionTranslations();
+  const sourceVersionOptions = useSourceVersionOptions();
   const [draft, setDraft] = useState<SourceSettingsDraft>(sourceToSettingsDraft(initialSource));
   const [saving, setSaving] = useState(false);
   const [detaching, setDetaching] = useState(false);
@@ -361,7 +361,7 @@ function SourceDependencyEditor({
 
     return sourceTypes.flatMap((type) => {
       const items = options.filter((option) => option.type === type);
-      return items.length ? [{ id: type, items, title: translateSourceType(type).label }] : [];
+      return items.length ? [{ id: type, items, title: translateSourceType(type) }] : [];
     });
   }, [options, translateSourceType]);
 
@@ -424,7 +424,7 @@ function SourceDependencyEditor({
                   {dependency.name[lang] ? ` - ${dependency.name[lang]}` : ""}
                 </Text>
                 <Text color="fg.muted" fontSize="xs">
-                  {translateSourceVersion(dependency.version).label}
+                  {translateSourceVersion(dependency.version)}
                 </Text>
               </Box>
 

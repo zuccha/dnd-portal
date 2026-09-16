@@ -19,7 +19,6 @@ export type ServiceCostPeriod = z.infer<typeof serviceCostPeriodSchema>;
 const {
   useSortedOptions: useServiceCostPeriodOptionsImp,
   useTranslate: useTranslateServiceCostPeriodImp,
-  useTranslations: useServiceCostPeriodTranslationsImp,
 } = createTypeTranslationHooks(serviceCostPeriods, {
   day: { en: "Per Day", it: "Al Giorno" },
   distance: { en: "Per Mile", it: "Per Miglio" },
@@ -30,7 +29,6 @@ const {
 const {
   useSortedOptions: useServiceCostPeriodOptionsMet,
   useTranslate: useTranslateServiceCostPeriodMet,
-  useTranslations: useServiceCostPeriodTranslationsMet,
 } = createTypeTranslationHooks(serviceCostPeriods, {
   day: { en: "Per Day", it: "Al Giorno" },
   distance: { en: "Per 1.5 km", it: "Per 1,5 km" },
@@ -49,12 +47,5 @@ export function useTranslateServiceCostPeriod(lang: string) {
   const [system] = useI18nSystem();
   const imp = useTranslateServiceCostPeriodImp(lang);
   const met = useTranslateServiceCostPeriodMet(lang);
-  return system === "metric" ? met : imp;
-}
-
-export function useServiceCostPeriodTranslations() {
-  const [system] = useI18nSystem();
-  const imp = useServiceCostPeriodTranslationsImp();
-  const met = useServiceCostPeriodTranslationsMet();
   return system === "metric" ? met : imp;
 }

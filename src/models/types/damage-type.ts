@@ -32,7 +32,7 @@ export type DamageType = z.infer<typeof damageTypeSchema>;
 export const {
   useSortedShortOptions: useDamageTypeOptions,
   useTranslate: useTranslateDamageType,
-  useTranslations: useDamageTypeTranslations,
+  useTranslateShort: useTranslateDamageTypeShort,
 } = createTypeTranslationHooks(
   damageTypes,
   {

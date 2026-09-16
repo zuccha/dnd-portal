@@ -42,9 +42,9 @@ export function useLocalizeService(): (service: Service) => LocalizedService {
   return useCallback(
     (service: Service): LocalizedService => {
       const availability = translate(service.availability, lang);
-      const category = translateCategory(service.category).label;
+      const category = translateCategory(service.category);
       const cost = formatCost(service.cost);
-      const costPeriod = translateCostPeriod(service.cost_period).label;
+      const costPeriod = translateCostPeriod(service.cost_period);
       const price =
         service.cost_period === "once"
           ? cost

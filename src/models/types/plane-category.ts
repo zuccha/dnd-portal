@@ -15,14 +15,11 @@ export type PlaneCategory = z.infer<typeof planeCategorySchema>;
 // Plane Category Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: usePlaneCategoryOptions,
-  useTranslate: useTranslatePlaneCategory,
-  useTranslations: usePlaneCategoryTranslations,
-} = createTypeTranslationHooks(planeCategories, {
-  inner: { en: "Inner Plane", it: "Piano Interno" },
-  material: { en: "Material Realm", it: "Regno Materiale" },
-  other: { en: "Other Plane", it: "Altro Piano" },
-  outer: { en: "Outer Plane", it: "Piano Esterno" },
-  transitive: { en: "Transitive Plane", it: "Piano di Transizione" },
-});
+export const { useOptions: usePlaneCategoryOptions, useTranslate: useTranslatePlaneCategory } =
+  createTypeTranslationHooks(planeCategories, {
+    inner: { en: "Inner Plane", it: "Piano Interno" },
+    material: { en: "Material Realm", it: "Regno Materiale" },
+    other: { en: "Other Plane", it: "Altro Piano" },
+    outer: { en: "Outer Plane", it: "Piano Esterno" },
+    transitive: { en: "Transitive Plane", it: "Piano di Transizione" },
+  });

@@ -37,7 +37,7 @@ export function useLocalizeFeat(sourceId: string): (feat: Feat) => LocalizedFeat
 
   return useCallback(
     (feat: Feat): LocalizedFeat => {
-      const category = translateFeatCategory(feat.category).label;
+      const category = translateFeatCategory(feat.category);
       const description = translate(feat.description, lang);
       const features = formatFeatureEntriesDetails(feat.feature_entries);
       const prerequisite = translate(feat.prerequisite, lang);

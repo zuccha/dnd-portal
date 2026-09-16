@@ -18,7 +18,6 @@ export type ResourceVisibility = z.infer<typeof resourceVisibilitySchema>;
 export const {
   useOptions: useResourceVisibilityOptions,
   useTranslate: useTranslateResourceVisibility,
-  useTranslations: useResourceVisibilityTranslations,
 } = createTypeTranslationHooks(resourceVisibilities, {
   private: { en: "Private", it: "Privata" },
   public: { en: "Public", it: "Pubblica" },

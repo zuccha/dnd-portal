@@ -15,12 +15,9 @@ export type SourceType = z.infer<typeof sourceTypeSchema>;
 // Source Type Translation Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useSourceTypeOptions,
-  useTranslate: useTranslateSourceType,
-  useTranslations: useSourceTypeTranslations,
-} = createTypeTranslationHooks(sourceTypes, {
-  campaign: { en: "Campaign", it: "Campagna" },
-  core: { en: "Core", it: "Core" },
-  module: { en: "Module", it: "Modulo" },
-});
+export const { useOptions: useSourceTypeOptions, useTranslate: useTranslateSourceType } =
+  createTypeTranslationHooks(sourceTypes, {
+    campaign: { en: "Campaign", it: "Campagna" },
+    core: { en: "Core", it: "Core" },
+    module: { en: "Module", it: "Modulo" },
+  });

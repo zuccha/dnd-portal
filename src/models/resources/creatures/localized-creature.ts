@@ -17,7 +17,7 @@ import { useTranslateCreatureSize } from "../../types/creature-size";
 import { type CreatureSkill, useTranslateCreatureSkill } from "../../types/creature-skill";
 import { useTranslateCreatureTreasure } from "../../types/creature-treasure";
 import { useTranslateCreatureType } from "../../types/creature-type";
-import { type DamageType, useTranslateDamageType } from "../../types/damage-type";
+import { type DamageType, useTranslateDamageTypeShort } from "../../types/damage-type";
 import { creatureTagStore } from "../creature-tags/creature-tag-store";
 import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
 import { languageStore } from "../languages/language-store";
@@ -118,7 +118,7 @@ export function useLocalizeCreature(): (creature: Creature) => LocalizedCreature
   const translateCreatureTreasure = useTranslateCreatureTreasure(lang);
   const translateCreatureSkill = useTranslateCreatureSkill(lang);
   const translateCreatureCondition = useTranslateCreatureCondition(lang);
-  const translateDamageType = useTranslateDamageType(lang);
+  const translateDamageTypeShort = useTranslateDamageTypeShort(lang);
   const localizeEquipmentName = useLocalizeEquipmentName(lang);
   const localizeLanguageName = useLocalizeLanguageName(lang);
   const localizePlaneName = useLocalizePlaneName(lang);
@@ -128,24 +128,22 @@ export function useLocalizeCreature(): (creature: Creature) => LocalizedCreature
 
   return useCallback(
     (creature: Creature): LocalizedCreature => {
-      const size = translateCreatureSize(creature.size).label;
-      const type = translateCreatureType(creature.type).label;
-      const alignment = translateCreatureAlignment(creature.alignment).label;
+      const size = translateCreatureSize(creature.size);
+      const type = translateCreatureType(creature.type);
+      const alignment = translateCreatureAlignment(creature.alignment);
 
       const tags = creature.tag_ids.map(localizeTagName).join(", ");
       const planes = creature.plane_ids.map(localizePlaneName).join(", ");
 
       const habitats = creature.habitats
-        .map(translateCreatureHabitat)
-        .map(({ label, value }) => (value === "planar" && planes ? `${label} (${planes})` : label))
+        .map((habitat) => {
+          const label = translateCreatureHabitat(habitat);
+          return habitat === "planar" && planes ? `${label} (${planes})` : label;
+        })
         .sort()
         .join(", ");
 
-      const treasures = creature.treasures
-        .map(translateCreatureTreasure)
-        .map(({ label }) => label)
-        .sort()
-        .join(", ");
+      const treasures = creature.treasures.map(translateCreatureTreasure).sort().join(", ");
 
       // EXP and PB from CR
       const cr =
@@ -255,7 +253,7 @@ export function useLocalizeCreature(): (creature: Creature) => LocalizedCreature
         const skillEntries = Object.entries(pbsBySkill);
         skills = skillEntries
           .map(([skill, pb]) => {
-            const label = translateCreatureSkill(skill as CreatureSkill).label;
+            const label = translateCreatureSkill(skill as CreatureSkill);
             const ability = skillToAbility[skill as CreatureSkill];
             const abilityMod = abilityModByAbility[ability];
             const skillBonus = formatMod(abilityMod + pb);
@@ -272,16 +270,8 @@ export function useLocalizeCreature(): (creature: Creature) => LocalizedCreature
         conditions: CreatureCondition[],
       ): string =>
         [
-          damages
-            .map(translateDamageType)
-            .map(({ label_short }) => label_short)
-            .sort()
-            .join(", "),
-          conditions
-            .map(translateCreatureCondition)
-            .map(({ label }) => label)
-            .sort()
-            .join(", "),
+          damages.map(translateDamageTypeShort).sort().join(", "),
+          conditions.map(translateCreatureCondition).sort().join(", "),
         ]
           .filter((value) => value)
           .join("; ");
@@ -544,7 +534,7 @@ export function useLocalizeCreature(): (creature: Creature) => LocalizedCreature
       translateCreatureSkill,
       translateCreatureTreasure,
       translateCreatureType,
-      translateDamageType,
+      translateDamageTypeShort,
     ],
   );
 }

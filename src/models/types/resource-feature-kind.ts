@@ -28,7 +28,6 @@ export type ResourceFeatureKind = z.infer<typeof resourceFeatureKindSchema>;
 export const {
   useOptions: useResourceFeatureKindOptions,
   useTranslate: useTranslateResourceFeatureKind,
-  useTranslations: useResourceFeatureKindTranslations,
 } = createTypeTranslationHooks(resourceFeatureKinds, {
   armor: { en: "Armor", it: "Armatura" },
   character_class: { en: "Class", it: "Classe" },

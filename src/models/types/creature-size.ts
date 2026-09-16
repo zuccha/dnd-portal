@@ -22,15 +22,12 @@ export type CreatureSize = z.infer<typeof creatureSizeSchema>;
 // Creature Size Hooks
 //------------------------------------------------------------------------------
 
-export const {
-  useOptions: useCreatureSizeOptions,
-  useTranslate: useTranslateCreatureSize,
-  useTranslations: useCreatureSizeTranslations,
-} = createTypeTranslationHooks(creatureSizes, {
-  gargantuan: { en: "Gargantuan", it: "Mastodontico" },
-  huge: { en: "Huge", it: "Enorme" },
-  large: { en: "Large", it: "Grande" },
-  medium: { en: "Medium", it: "Medio" },
-  small: { en: "Small", it: "Piccolo" },
-  tiny: { en: "Tiny", it: "Minuscolo" },
-});
+export const { useOptions: useCreatureSizeOptions, useTranslate: useTranslateCreatureSize } =
+  createTypeTranslationHooks(creatureSizes, {
+    gargantuan: { en: "Gargantuan", it: "Mastodontico" },
+    huge: { en: "Huge", it: "Enorme" },
+    large: { en: "Large", it: "Grande" },
+    medium: { en: "Medium", it: "Medio" },
+    small: { en: "Small", it: "Piccolo" },
+    tiny: { en: "Tiny", it: "Minuscolo" },
+  });

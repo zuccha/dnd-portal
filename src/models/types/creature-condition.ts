@@ -34,7 +34,6 @@ export type CreatureCondition = z.infer<typeof creatureConditionSchema>;
 export const {
   useSortedOptions: useCreatureConditionOptions,
   useTranslate: useTranslateCreatureCondition,
-  useTranslations: useCreatureConditionTranslations,
 } = createTypeTranslationHooks(creatureConditions, {
   blinded: { en: "Blinded", it: "Accecato" },
   charmed: { en: "Charmed", it: "Affascinato" },

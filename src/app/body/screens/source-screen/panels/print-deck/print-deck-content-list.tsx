@@ -111,7 +111,7 @@ function PrintDeckEntryRow({
           {name}
         </Text>
         <Text color="fg.muted" fontSize="xs" truncate>
-          {source} · {translateKind(kind).label}
+          {source} · {translateKind(kind)}
         </Text>
       </VStack>
 

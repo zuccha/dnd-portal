@@ -51,8 +51,8 @@ export function useLocalizeSpecies(sourceId: string): (species: Species) => Loca
     (species: Species): LocalizedSpecies => {
       const description = translate(species.description, lang);
       const features = formatFeatureEntriesDetails(species.feature_entries);
-      const sizes = species.sizes.map((size) => translateCreatureSize(size).label).join("/");
-      const type = translateCreatureType(species.type).label;
+      const sizes = species.sizes.map((size) => translateCreatureSize(size)).join("/");
+      const type = translateCreatureType(species.type);
       const speed = formatCm(species.speed);
 
       return {

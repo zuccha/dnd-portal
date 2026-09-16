@@ -31,7 +31,7 @@ type SourceGroupsProps = {
   onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
   onSettings?: (source: Source) => void;
-  translateSourceVersion: (version: Source["version"]) => { label: string };
+  translateSourceVersion: (version: Source["version"]) => string;
 };
 
 //------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ type SourceRowProps = {
   onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
   onSettings?: (source: Source) => void;
-  translateSourceVersion: (version: Source["version"]) => { label: string };
+  translateSourceVersion: (version: Source["version"]) => string;
 };
 
 //------------------------------------------------------------------------------
@@ -168,7 +168,7 @@ function SourceRow({
             )}
         </HStack>
         <Text color="fg.muted" fontSize="sm" overflowWrap="anywhere">
-          {source.code} · {translateSourceVersion(source.version).label}
+          {source.code} · {translateSourceVersion(source.version)}
         </Text>
       </VStack>
 
