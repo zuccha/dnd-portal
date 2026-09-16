@@ -51,7 +51,7 @@ export function createResourceCardPrintable<
     resourceId,
     ...rest
   }: ResourceCardPrintableProps<R, L>) {
-    const [resource] = useResource(resourceId);
+    const resource = useResource(resourceId);
     const localizedResource = useMemo(
       () => localizeResource(resource),
       [localizeResource, resource],

@@ -80,7 +80,7 @@ export function createResourcesTableRow<
     const { lang, t } = useI18nLangContext(i18nContext);
     const [system] = useI18nSystem();
 
-    const [resource] = useResource(resourceId);
+    const resource = useResource(resourceId);
     const activeSourceId = useActiveSourceId();
     const activeSourceEditable = useSourceEditable(activeSourceId);
     const sourceEditable = useSourceEditable(resource.source_id);

@@ -79,7 +79,7 @@ export function createResourceCardInteractive<
     zoom,
   }: ResourceCardInteractiveProps<R, L>) {
     const { lang, t } = useI18nLangContext(i18nContext);
-    const [resource] = useResource(resourceId);
+    const resource = useResource(resourceId);
     const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
     const localizedResource = useMemo(
@@ -315,7 +315,7 @@ export function createResourceCardInteractive<
     zoom,
   }: ResourceCardInteractivePlaceholderProps) {
     const [lang] = useI18nLang();
-    const [resource] = useResource(resourceId);
+    const resource = useResource(resourceId);
     const name = translate(resource.name, lang);
 
     return <AlbumCard.Placeholder name={name} palette={palette} zoom={zoom} />;

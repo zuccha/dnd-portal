@@ -332,11 +332,9 @@ export function createResourceStore<
   // Use Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useResource(resourceId: string): [R, string] {
-    const key = hash([resourceId]);
+  function useResource(resourceId: string): R {
     const resource = useCatalogueResource(resourceId);
-    const result = [(resource ?? defaultResource) as R, key] as [R, string];
-    return result;
+    return (resource ?? defaultResource) as R;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -357,10 +355,7 @@ export function createResourceStore<
   // Use Resource Ids By Params
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useResourceIdsByParams(
-    sourceId: string,
-    sources: Record<string, boolean | undefined>,
-  ): [string[], string] {
+  function useResourceIdsByParams(sources: Record<string, boolean | undefined>): string[] {
     const resourceIds = useCatalogueActiveSourceResourceIds();
     const sourceFilteredResourceIds = useMemo(
       () =>
@@ -370,8 +365,7 @@ export function createResourceStore<
         }),
       [resourceIds, sources],
     );
-    const key = hash([sourceId, sourceFilteredResourceIds]);
-    return [sourceFilteredResourceIds, key];
+    return sourceFilteredResourceIds;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -380,23 +374,22 @@ export function createResourceStore<
 
   function useResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
-    const params = [sourceId, sources] as const;
-    return useResourceIdsByParams(...params)[0];
+    const params = [sources] as const;
+    return useResourceIdsByParams(...params);
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Filtered Resource Ids
+  // Use Filtered Resource Ids Py Params
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useFilteredResourceIdsByParams(
-    sourceId: string,
     sources: Record<string, boolean | undefined>,
     filters: F,
     lang: string,
   ): string[] {
     const normalizedName = normalizeString(filters.name);
-    const params = [sourceId, sources] as const;
-    const [resourceIds] = useResourceIdsByParams(...params);
+    const params = [sources] as const;
+    const resourceIds = useResourceIdsByParams(...params);
 
     const filteredResourceIds = useMemo(() => {
       const result = resourceIds
@@ -416,11 +409,15 @@ export function createResourceStore<
     return filteredResourceIds;
   }
 
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Filtered Resource Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   function useFilteredResourceIds(sourceId: string): string[] {
     const [sources] = useResourcesSourcesFilter(sourceId);
     const filters = useEffectiveFilters();
     const [lang] = useI18nLang();
-    const params = [sourceId, sources, filters, lang] as const;
+    const params = [sources, filters, lang] as const;
     return useFilteredResourceIdsByParams(...params);
   }
 
@@ -487,12 +484,11 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResourcesSelectionMethodsByParams(
-    sourceId: string,
     sources: Record<string, boolean | undefined>,
     filters: F,
     lang: string,
   ) {
-    const params = [sourceId, sources, filters, lang] as const;
+    const params = [sources, filters, lang] as const;
     const filteredResourceIds = useFilteredResourceIdsByParams(...params);
 
     const deselectAllResources = useCallback(() => {
@@ -513,7 +509,7 @@ export function createResourceStore<
     const [sources] = useResourcesSourcesFilter(sourceId);
     const filters = useEffectiveFilters();
     const [lang] = useI18nLang();
-    const params = [sourceId, sources, filters, lang] as const;
+    const params = [sources, filters, lang] as const;
     return useResourcesSelectionMethodsByParams(...params);
   }
 
@@ -532,7 +528,7 @@ export function createResourceStore<
     filters: F,
     lang: string,
   ): string[] {
-    const params = [sourceId, sources, filters, lang] as const;
+    const params = [sources, filters, lang] as const;
     const filteredResourceIds = useFilteredResourceIdsByParams(...params);
     const key = sourceId;
     return useSelectedFilteredResourceIdsWithKey(key, filteredResourceIds)[0];
