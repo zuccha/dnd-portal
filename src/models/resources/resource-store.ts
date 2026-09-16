@@ -435,31 +435,20 @@ export function createResourceStore<
   // Use Resource Options
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useResourceOptionsByLang(_sourceId: string, lang: string): [ResourceOption[], string] {
-    const resourceIds = useCatalogueActiveSourceReferenceResourceIds();
-    const key = hash([resourceIds, lang]);
-
-    return [
-      resourceIds
-        .map(getResource)
-        .filter((resource): resource is R => resource !== undefined)
-        .map((resource) => {
-          const label = translate(resource.name, lang);
-          return {
-            label,
-            name: resource.name,
-            name_short: resource.name_short,
-            value: resource.id,
-          };
-        })
-        .sort(compareObjects("label")),
-      key,
-    ];
-  }
-
-  function useResourceOptions(sourceId: string): ResourceOption[] {
+  function useResourceOptions(_sourceId: string): ResourceOption[] {
     const [lang] = useI18nLang();
-    return useResourceOptionsByLang(sourceId, lang)[0];
+    const resourceIds = useCatalogueActiveSourceReferenceResourceIds();
+
+    return resourceIds
+      .map(getResource)
+      .filter((resource): resource is R => resource !== undefined)
+      .map((resource) => ({
+        label: translate(resource.name, lang),
+        name: resource.name,
+        name_short: resource.name_short,
+        value: resource.id,
+      }))
+      .sort(compareObjects("label"));
   }
 
   //----------------------------------------------------------------------------
