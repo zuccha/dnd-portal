@@ -73,14 +73,24 @@ export function createResourcesTableRow<
 
   const { usePaletteName, useResourceExpansion } = context;
 
-  return function ResourcesTableRow({
+  function ResourcesTableRow({ localizeResource, resourceId }: ResourcesTableRowProps<R, L>) {
+    const resource = useResource(resourceId);
+    if (!resource) return null;
+
+    return <ResourcesTableRowContent localizeResource={localizeResource} resource={resource} />;
+  }
+
+  //------------------------------------------------------------------------------
+  // Resources Table Row Content
+  //------------------------------------------------------------------------------
+
+  function ResourcesTableRowContent({
     localizeResource,
-    resourceId,
-  }: ResourcesTableRowProps<R, L>) {
+    resource,
+  }: Omit<ResourcesTableRowProps<R, L>, "resourceId"> & { resource: R }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const [system] = useI18nSystem();
 
-    const resource = useResource(resourceId);
     const activeSourceId = useActiveSourceId();
     const activeSourceEditable = useSourceEditable(activeSourceId);
     const sourceEditable = useSourceEditable(resource.source_id);
@@ -89,8 +99,8 @@ export function createResourcesTableRow<
       () => localizeResource(resource),
       [localizeResource, resource],
     );
-    const selected = useResourceSelection(resourceId);
-    const expanded = useResourceExpansion(resourceId, false);
+    const selected = useResourceSelection(resource.id);
+    const expanded = useResourceExpansion(resource.id, false);
     const details =
       extra.detailsKey && localizedResource[extra.detailsKey]
         ? resolveSystemText(String(localizedResource[extra.detailsKey]), system)
@@ -133,12 +143,12 @@ export function createResourcesTableRow<
           });
     }, [localizedResource.id, localizedResource.name, t]);
 
-    const toggleSelection = useCallback(() => toggleResourceSelection(resourceId), [resourceId]);
+    const toggleSelection = useCallback(() => toggleResourceSelection(resource.id), [resource.id]);
 
     const toggleExpansion = useCallback(() => {
       if (!extra.detailsKey) return;
-      context.setResourceExpansion(resourceId, false, (prev) => !prev);
-    }, [resourceId]);
+      context.setResourceExpansion(resource.id, false, (prev) => !prev);
+    }, [resource.id]);
 
     const hasActions = true;
     const columnCount =
@@ -214,13 +224,13 @@ export function createResourcesTableRow<
 
           {hasActions && (
             <Table.Cell textAlign="center" w="1%" whiteSpace="nowrap">
-              <Menu.Root ids={{ trigger: `actions-${resourceId}` }}>
+              <Menu.Root ids={{ trigger: `actions-${resource.id}` }}>
                 <Menu.Trigger asChild>
                   <IconButton
                     Icon={EllipsisVerticalIcon}
                     label={t("actions")}
                     size="2xs"
-                    tooltipIds={{ trigger: `actions-${resourceId}` }}
+                    tooltipIds={{ trigger: `actions-${resource.id}` }}
                     variant="ghost"
                   />
                 </Menu.Trigger>
@@ -298,7 +308,9 @@ export function createResourcesTableRow<
         )}
       </>
     );
-  };
+  }
+
+  return ResourcesTableRow;
 }
 
 //------------------------------------------------------------------------------

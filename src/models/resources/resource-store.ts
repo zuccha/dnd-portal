@@ -332,9 +332,8 @@ export function createResourceStore<
   // Use Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useResource(resourceId: string): R {
-    const resource = useCatalogueResource(resourceId);
-    return (resource ?? defaultResource) as R;
+  function useResource(resourceId: string): R | undefined {
+    return useCatalogueResource(resourceId) as R | undefined;
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -342,13 +341,7 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useResources(resourceIds: string[]): R[] {
-    const resources = useCatalogueResources(resourceIds);
-    const resourcesById = useMemo(
-      () => new Map(resources.map((resource) => [resource.id, resource])),
-      [resources],
-    );
-    const result = resourceIds.map((id) => resourcesById.get(id) ?? defaultResource) as R[];
-    return result;
+    return useCatalogueResources(resourceIds) as R[];
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

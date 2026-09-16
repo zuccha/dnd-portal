@@ -78,8 +78,30 @@ export function createResourceCardInteractive<
     resourceId,
     zoom,
   }: ResourceCardInteractiveProps<R, L>) {
-    const { lang, t } = useI18nLangContext(i18nContext);
     const resource = useResource(resourceId);
+    if (!resource) return null;
+
+    return (
+      <ResourcesAlbumCardInteractiveContent
+        localizeResource={localizeResource}
+        palette={palette}
+        resource={resource}
+        zoom={zoom}
+      />
+    );
+  }
+
+  //------------------------------------------------------------------------------
+  // Resources Album Card Interactive Content
+  //------------------------------------------------------------------------------
+
+  function ResourcesAlbumCardInteractiveContent({
+    localizeResource,
+    palette = defaultPalette,
+    resource,
+    zoom,
+  }: Omit<ResourceCardInteractiveProps<R, L>, "resourceId"> & { resource: R }) {
+    const { lang, t } = useI18nLangContext(i18nContext);
     const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
     const localizedResource = useMemo(
@@ -117,7 +139,7 @@ export function createResourceCardInteractive<
       });
     }, []);
 
-    const selected = useResourceSelection(resourceId);
+    const selected = useResourceSelection(resource.id);
 
     const edit = useCallback(() => {
       if (!sourceEditable) return;
@@ -231,7 +253,7 @@ export function createResourceCardInteractive<
               />
             )}
 
-            <Menu.Root ids={{ trigger: `actions-${resourceId}` }}>
+            <Menu.Root ids={{ trigger: `actions-${resource.id}` }}>
               <Menu.Trigger asChild>
                 <IconButton
                   Icon={EllipsisVerticalIcon}
@@ -242,7 +264,7 @@ export function createResourceCardInteractive<
                     e.stopPropagation();
                   }}
                   size="2xs"
-                  tooltipIds={{ trigger: `actions-${resourceId}` }}
+                  tooltipIds={{ trigger: `actions-${resource.id}` }}
                   tooltipPositioning={{ placement: "right" }}
                 />
               </Menu.Trigger>
@@ -293,7 +315,7 @@ export function createResourceCardInteractive<
             label={selected ? t("selection.deselect") : t("selection.select")}
             onPointerDown={(e) => {
               e.stopPropagation();
-              setResourceSelection(resourceId, !selected);
+              setResourceSelection(resource.id, !selected);
             }}
             position="absolute"
             right={PokerCard.rem0500}
@@ -315,6 +337,7 @@ export function createResourceCardInteractive<
   }: ResourceCardInteractivePlaceholderProps) {
     const [lang] = useI18nLang();
     const resource = useResource(resourceId);
+    if (!resource) return null;
     const name = translate(resource.name, lang);
 
     return <AlbumCard.Placeholder name={name} palette={palette} zoom={zoom} />;

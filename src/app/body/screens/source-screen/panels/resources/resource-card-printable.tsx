@@ -52,6 +52,26 @@ export function createResourceCardPrintable<
     ...rest
   }: ResourceCardPrintableProps<R, L>) {
     const resource = useResource(resourceId);
+    if (!resource) return null;
+
+    return (
+      <ResourcesAlbumCardPrintableContent
+        localizeResource={localizeResource}
+        resource={resource}
+        {...rest}
+      />
+    );
+  }
+
+  //------------------------------------------------------------------------------
+  // Resources Album Card Printable Content
+  //------------------------------------------------------------------------------
+
+  function ResourcesAlbumCardPrintableContent({
+    localizeResource,
+    resource,
+    ...rest
+  }: Omit<ResourceCardPrintableProps<R, L>, "resourceId"> & { resource: R }) {
     const localizedResource = useMemo(
       () => localizeResource(resource),
       [localizeResource, resource],
