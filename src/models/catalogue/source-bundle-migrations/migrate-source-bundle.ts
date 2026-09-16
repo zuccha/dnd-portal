@@ -1,37 +1,52 @@
 import {
   type SourceBundle,
   type SourceBundleWithoutRegistry,
+  sourceBundleVersion,
   sourceBundleSchema,
   sourceBundleWithoutRegistrySchema,
-} from "./source-bundle";
+} from "../source-bundle";
 
 //------------------------------------------------------------------------------
-// Source Bundle Version
+// Raw Bundle
 //------------------------------------------------------------------------------
 
-export const currentSourceBundleVersion = 1;
+type RawBundle = Record<string, unknown>;
+
+//------------------------------------------------------------------------------
+// Is Record
+//------------------------------------------------------------------------------
+
+function isRecord(value: unknown): value is RawBundle {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+const sourceBundleMigrations: Record<number, (bundle: RawBundle) => RawBundle> = {};
 
 //------------------------------------------------------------------------------
 // Migrate Source Bundle
 //------------------------------------------------------------------------------
 
-export function migrateSourceBundle(input: unknown): unknown {
-  if (typeof input !== "object" || input === null || Array.isArray(input)) {
-    throw new Error("Invalid source bundle");
-  }
+function migrateSourceBundle(input: unknown): unknown {
+  if (!isRecord(input)) throw new Error("Invalid source bundle");
 
-  const bundle = input as Record<string, unknown>;
-  const version = bundle["bundle_version"] ?? currentSourceBundleVersion;
-
+  let version = input["bundle_version"] ?? 1;
   if (typeof version !== "number" || !Number.isInteger(version) || version < 1) {
     throw new Error("Invalid source bundle version");
   }
 
-  if (version > currentSourceBundleVersion) {
+  if (version > sourceBundleVersion) {
     throw new Error(`Unsupported source bundle version: ${version}`);
   }
 
-  return { ...bundle, bundle_version: currentSourceBundleVersion };
+  let migratedBundle = input;
+  while (version < sourceBundleVersion) {
+    const migration = sourceBundleMigrations[version];
+    if (!migration) throw new Error(`Missing source bundle migration: ${version}`);
+    migratedBundle = migration(migratedBundle);
+    version += 1;
+  }
+
+  return { ...migratedBundle, bundle_version: sourceBundleVersion };
 }
 
 //------------------------------------------------------------------------------

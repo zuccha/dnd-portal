@@ -21,7 +21,7 @@ import {
   filterSourceBundleResources,
 } from "~/models/catalogue/source-bundle";
 import { deleteSourceBundle, saveSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
-import { parseSourceBundle } from "~/models/catalogue/source-bundle-migrations";
+import { parseSourceBundle } from "~/models/catalogue/source-bundle-migrations/migrate-source-bundle";
 import { publishSourceBundle } from "~/models/catalogue/source-bundle-sync";
 import {
   analyzeRegistrySourceDependencies,

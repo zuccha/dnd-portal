@@ -3,7 +3,7 @@ import {
   type SourceBundle,
   type SourceBundleWithoutRegistry,
 } from "~/models/catalogue/source-bundle";
-import { parseSourceBundleWithoutRegistry } from "~/models/catalogue/source-bundle-migrations";
+import { parseSourceBundleWithoutRegistry } from "~/models/catalogue/source-bundle-migrations/migrate-source-bundle";
 import supabase from "~/supabase";
 
 const registryBundleBucket = "registry-bundles";

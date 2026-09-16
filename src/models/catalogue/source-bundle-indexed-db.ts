@@ -5,7 +5,7 @@ import {
   type SourceBundleExportOptions,
   filterSourceBundleResources,
 } from "./source-bundle";
-import { parseSourceBundle } from "./source-bundle-migrations";
+import { parseSourceBundle } from "./source-bundle-migrations/migrate-source-bundle";
 import type { Source, SourceRegistryMetadata } from "./source";
 
 //------------------------------------------------------------------------------
