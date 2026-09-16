@@ -1,9 +1,14 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import { useTranslatePlaneCategory } from "../../types/plane-category";
-import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import {
+  type ResourceLocalizationContext,
+  formatInfo,
+  localizeResource,
+  localizedResourceSchema,
+  useResourceLocalizationContext,
+} from "../localized-resource";
 import { type Plane, planeSchema } from "./plane";
 
 //------------------------------------------------------------------------------
@@ -21,32 +26,53 @@ export const localizedPlaneSchema = localizedResourceSchema(planeSchema, z.liter
 export type LocalizedPlane = z.infer<typeof localizedPlaneSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Plane
+// Plane Localization Context
+//------------------------------------------------------------------------------
+
+type PlaneLocalizationContext = ResourceLocalizationContext & {
+  translateCreatureAlignment: (value: Plane["alignments"][number]) => string;
+  translatePlaneCategory: (value: Plane["category"]) => string;
+};
+
+//------------------------------------------------------------------------------
+// Use Plane Localization Context
+//------------------------------------------------------------------------------
+
+function usePlaneLocalizationContext(): PlaneLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
+  const translateCreatureAlignment = useTranslateCreatureAlignment(context.lang);
+  const translatePlaneCategory = useTranslatePlaneCategory(context.lang);
+
+  return useMemo(
+    () => ({ ...context, translateCreatureAlignment, translatePlaneCategory }),
+    [context, translateCreatureAlignment, translatePlaneCategory],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Plane
+//------------------------------------------------------------------------------
+
+export function localizePlane(plane: Plane, context: PlaneLocalizationContext): LocalizedPlane {
+  const alignments = plane.alignments.map(context.translateCreatureAlignment).join(", ");
+  const category = context.translatePlaneCategory(plane.category);
+
+  return {
+    ...localizeResource(plane, context),
+    descriptor: category,
+    alignments,
+    category,
+    info: formatInfo([[context.tp("alignments", plane.alignments.length), alignments]]),
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Plane
 //------------------------------------------------------------------------------
 
 export function useLocalizePlane(): (plane: Plane) => LocalizedPlane {
-  const localizeResource = useLocalizeResource<Plane>();
-  const { lang, tp } = useI18nLangContext(i18nContext);
-
-  const translateCreatureAlignment = useTranslateCreatureAlignment(lang);
-  const translatePlaneCategory = useTranslatePlaneCategory(lang);
-
-  return useCallback(
-    (plane: Plane): LocalizedPlane => {
-      const alignments = plane.alignments.map(translateCreatureAlignment).join(", ");
-      const category = translatePlaneCategory(plane.category);
-
-      return {
-        ...localizeResource(plane),
-        descriptor: category,
-
-        alignments,
-        category,
-        info: formatInfo([[tp("alignments", plane.alignments.length), alignments]]),
-      };
-    },
-    [localizeResource, tp, translateCreatureAlignment, translatePlaneCategory],
-  );
+  const context = usePlaneLocalizationContext();
+  return useCallback((plane) => localizePlane(plane, context), [context]);
 }
 
 //------------------------------------------------------------------------------

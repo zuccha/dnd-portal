@@ -1,9 +1,14 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateLanguageRarity } from "../../types/language-rarity";
-import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import {
+  type ResourceLocalizationContext,
+  formatInfo,
+  localizeResource,
+  localizedResourceSchema,
+  useResourceLocalizationContext,
+} from "../localized-resource";
 import { type Language, languageSchema } from "./language";
 
 //------------------------------------------------------------------------------
@@ -22,31 +27,54 @@ export const localizedLanguageSchema = localizedResourceSchema(
 export type LocalizedLanguage = z.infer<typeof localizedLanguageSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Language
+// Language Localization Context
+//------------------------------------------------------------------------------
+
+type LanguageLocalizationContext = ResourceLocalizationContext & {
+  translateLanguageRarity: (value: Language["rarity"]) => string;
+};
+
+//------------------------------------------------------------------------------
+// Use Language Localization Context
+//------------------------------------------------------------------------------
+
+function useLanguageLocalizationContext(): LanguageLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
+  const translateLanguageRarity = useTranslateLanguageRarity(context.lang);
+
+  return useMemo(
+    () => ({ ...context, translateLanguageRarity }),
+    [context, translateLanguageRarity],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Language
+//------------------------------------------------------------------------------
+
+export function localizeLanguage(
+  language: Language,
+  context: LanguageLocalizationContext,
+): LocalizedLanguage {
+  const rarity = context.translateLanguageRarity(language.rarity);
+  const origin = translate(language.origin, context.lang);
+
+  return {
+    ...localizeResource(language, context),
+    descriptor: context.ti("subtitle", rarity),
+    info: formatInfo([[context.t("origin"), origin]]),
+    origin,
+    rarity,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Language
 //------------------------------------------------------------------------------
 
 export function useLocalizeLanguage(): (language: Language) => LocalizedLanguage {
-  const localizeResource = useLocalizeResource<Language>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
-
-  const translateLanguageRarity = useTranslateLanguageRarity(lang);
-
-  return useCallback(
-    (language: Language): LocalizedLanguage => {
-      const rarity = translateLanguageRarity(language.rarity);
-      const origin = translate(language.origin, lang);
-
-      return {
-        ...localizeResource(language),
-        descriptor: ti("subtitle", rarity),
-
-        info: formatInfo([[t("origin"), origin]]),
-        origin,
-        rarity,
-      };
-    },
-    [lang, localizeResource, t, ti, translateLanguageRarity],
-  );
+  const context = useLanguageLocalizationContext();
+  return useCallback((language) => localizeLanguage(language, context), [context]);
 }
 
 //------------------------------------------------------------------------------
