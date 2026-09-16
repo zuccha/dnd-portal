@@ -106,7 +106,7 @@ const useLocalizeLanguageName = languageStore.useLocalizeResourceName;
 const useLocalizePlaneName = planeStore.useLocalizeResourceName;
 const useLocalizeCreatureTagName = creatureTagStore.useLocalizeResourceName;
 
-export function useLocalizeCreature(_sourceId: string): (creature: Creature) => LocalizedCreature {
+export function useLocalizeCreature(): (creature: Creature) => LocalizedCreature {
   const localizeResource = useLocalizeResource<Creature>();
   const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
   const [system] = useI18nSystem();

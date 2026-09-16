@@ -44,7 +44,7 @@ export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 
 const useLocalizeCharacterClassNameShort = characterClassStore.useLocalizeResourceNameShort;
 
-export function useLocalizeSpell(_sourceId: string): (spell: Spell) => LocalizedSpell {
+export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
   const localizeResource = useLocalizeResource<Spell>();
   const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
 

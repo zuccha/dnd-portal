@@ -45,9 +45,7 @@ const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName
 const useLocalizeFeatName = featStore.useLocalizeResourceName;
 const useLocalizeToolName = toolStore.useLocalizeResourceName;
 
-export function useLocalizeBackground(
-  _sourceId: string,
-): (background: Background) => LocalizedBackground {
+export function useLocalizeBackground(): (background: Background) => LocalizedBackground {
   const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
   const localizeResource = useLocalizeResource<Background>();
   const translateCreatureAbility = useTranslateCreatureAbility(lang);
