@@ -1,6 +1,5 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { z } from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCm } from "~/measures/distance";
 import { useFormatSeconds } from "~/measures/time";
@@ -9,7 +8,13 @@ import { useTranslateSpellDuration } from "../../types/spell-duration";
 import { useTranslateSpellRange } from "../../types/spell-range";
 import { useTranslateSpellSchool } from "../../types/spell-school";
 import { characterClassStore } from "../character-classes/character-class-store";
-import { formatInfo, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import {
+  type ResourceLocalizationContext,
+  formatInfo,
+  localizeResource,
+  localizedResourceSchema,
+  useResourceLocalizationContext,
+} from "../localized-resource";
 import { type Spell, spellSchema } from "./spell";
 
 //------------------------------------------------------------------------------
@@ -39,95 +44,124 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema, z.liter
 export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localize Spell
+// Spell Localization Context
 //------------------------------------------------------------------------------
 
-const useLocalizeCharacterClassNameShort = characterClassStore.useLocalizeResourceNameShort;
+type SpellLocalizationContext = ResourceLocalizationContext & {
+  formatRange: ReturnType<typeof useFormatCm>;
+  formatTime: ReturnType<typeof useFormatSeconds>;
+  localizeCharacterClassNameShort: (resourceId: string) => string;
+  translateSpellCastingTime: (value: Spell["casting_time"]) => string;
+  translateSpellDuration: (value: Spell["duration"]) => string;
+  translateSpellRange: (value: Spell["range"]) => string;
+  translateSpellSchool: (value: Spell["school"]) => string;
+};
 
-export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
-  const localizeResource = useLocalizeResource<Spell>();
-  const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
+//------------------------------------------------------------------------------
+// Use Spell Localization Context
+//------------------------------------------------------------------------------
 
-  const translateSpellSchool = useTranslateSpellSchool(lang);
-  const translateSpellCastingTime = useTranslateSpellCastingTime(lang);
-  const translateSpellDuration = useTranslateSpellDuration(lang);
-  const translateSpellRange = useTranslateSpellRange(lang);
-
+function useSpellLocalizationContext(): SpellLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
+  const translateSpellSchool = useTranslateSpellSchool(context.lang);
+  const translateSpellCastingTime = useTranslateSpellCastingTime(context.lang);
+  const translateSpellDuration = useTranslateSpellDuration(context.lang);
+  const translateSpellRange = useTranslateSpellRange(context.lang);
   const formatRange = useFormatCm();
   const formatTime = useFormatSeconds();
+  const localizeCharacterClassNameShort = characterClassStore.useLocalizeResourceNameShort(
+    context.lang,
+  );
 
-  const localizeCharacterClassNameShort = useLocalizeCharacterClassNameShort(lang);
-
-  return useCallback(
-    (spell: Spell): LocalizedSpell => {
-      const casting_time = spell.casting_time_value
-        ? formatTime(spell.casting_time_value)
-        : translateSpellCastingTime(spell.casting_time);
-
-      const character_classes = spell.character_class_ids
-        .map(localizeCharacterClassNameShort)
-        .map((characterClass) => `${characterClass}.`)
-        .sort()
-        .join(" ");
-
-      const duration = spell.duration_value
-        ? formatTime(spell.duration_value)
-        : translateSpellDuration(spell.duration);
-
-      const range = spell.range_value
-        ? formatRange(spell.range_value)
-        : translateSpellRange(spell.range);
-
-      const details = translate(spell.description, lang);
-      const upgrade = spell.upgrade ? translate(spell.upgrade, lang) : "";
-      const materials = spell.materials ? translate(spell.materials, lang) : "";
-
-      const school = translateSpellSchool(spell.school);
-
-      return {
-        ...localizeResource(spell),
-        descriptor: tpi("subtitle", spell.level, school, `${spell.level}`),
-
-        casting_time,
-        casting_time_with_ritual: spell.ritual
-          ? ti("casting_time_with_ritual", casting_time)
-          : casting_time,
-        character_classes,
-        components: [spell.verbal ? "V" : "", spell.somatic ? "S" : "", spell.material ? "M" : ""]
-          .filter((component) => component)
-          .join(", "),
-        concentration: spell.concentration,
-        details:
-          details && upgrade ? `${details}\n\n${tp("upgrade", spell.level)}\r${upgrade}` : details,
-        duration,
-        duration_with_concentration: spell.concentration
-          ? ti("duration_with_up_to", duration)
-          : duration,
-        info: formatInfo([[t("materials"), materials]]),
-        level: `${spell.level}`,
-        level_long: tpi("level_long", spell.level, `${spell.level}`),
-        materials,
-        range,
-        ritual: spell.ritual,
-        school,
-      };
-    },
-    [
+  return useMemo(
+    () => ({
+      ...context,
       formatRange,
       formatTime,
-      lang,
       localizeCharacterClassNameShort,
-      localizeResource,
-      t,
-      ti,
-      tp,
-      tpi,
+      translateSpellCastingTime,
+      translateSpellDuration,
+      translateSpellRange,
+      translateSpellSchool,
+    }),
+    [
+      context,
+      formatRange,
+      formatTime,
+      localizeCharacterClassNameShort,
       translateSpellCastingTime,
       translateSpellDuration,
       translateSpellRange,
       translateSpellSchool,
     ],
   );
+}
+
+//------------------------------------------------------------------------------
+// Localize Spell
+//------------------------------------------------------------------------------
+
+export function localizeSpell(spell: Spell, context: SpellLocalizationContext): LocalizedSpell {
+  const casting_time = spell.casting_time_value
+    ? context.formatTime(spell.casting_time_value)
+    : context.translateSpellCastingTime(spell.casting_time);
+
+  const character_classes = spell.character_class_ids
+    .map(context.localizeCharacterClassNameShort)
+    .map((characterClass) => `${characterClass}.`)
+    .sort()
+    .join(" ");
+
+  const duration = spell.duration_value
+    ? context.formatTime(spell.duration_value)
+    : context.translateSpellDuration(spell.duration);
+
+  const range = spell.range_value
+    ? context.formatRange(spell.range_value)
+    : context.translateSpellRange(spell.range);
+
+  const details = translate(spell.description, context.lang);
+  const upgrade = spell.upgrade ? translate(spell.upgrade, context.lang) : "";
+  const materials = spell.materials ? translate(spell.materials, context.lang) : "";
+  const school = context.translateSpellSchool(spell.school);
+
+  return {
+    ...localizeResource(spell, context),
+    descriptor: context.tpi("subtitle", spell.level, school, `${spell.level}`),
+    casting_time,
+    casting_time_with_ritual: spell.ritual
+      ? context.ti("casting_time_with_ritual", casting_time)
+      : casting_time,
+    character_classes,
+    components: [spell.verbal ? "V" : "", spell.somatic ? "S" : "", spell.material ? "M" : ""]
+      .filter((component) => component)
+      .join(", "),
+    concentration: spell.concentration,
+    details:
+      details && upgrade
+        ? `${details}\n\n${context.tp("upgrade", spell.level)}\r${upgrade}`
+        : details,
+    duration,
+    duration_with_concentration: spell.concentration
+      ? context.ti("duration_with_up_to", duration)
+      : duration,
+    info: formatInfo([[context.t("materials"), materials]]),
+    level: `${spell.level}`,
+    level_long: context.tpi("level_long", spell.level, `${spell.level}`),
+    materials,
+    range,
+    ritual: spell.ritual,
+    school,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Spell
+//------------------------------------------------------------------------------
+
+export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
+  const context = useSpellLocalizationContext();
+  return useCallback((spell) => localizeSpell(spell, context), [context]);
 }
 
 //------------------------------------------------------------------------------

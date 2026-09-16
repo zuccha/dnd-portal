@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import z, { ZodType } from "zod";
-import type { I18nLang } from "~/i18n/i18n-lang";
+import type { I18nLang, I18nLangContext } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translateNumber } from "~/i18n/i18n-number";
 import { translate } from "~/i18n/i18n-string";
@@ -39,6 +39,8 @@ export type ResourceLocalizationContext = {
   lang: I18nLang;
   t: (key: string) => string;
   ti: (key: string, ...args: string[]) => string;
+  tp: (key: string, count: number) => string;
+  tpi: (key: string, count: number, ...args: string[]) => string;
   translateSourceVersion: (version: SourceVersion) => string;
 };
 
@@ -46,13 +48,15 @@ export type ResourceLocalizationContext = {
 // Use Resource Localization Context
 //------------------------------------------------------------------------------
 
-function useResourceLocalizationContext(): ResourceLocalizationContext {
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
+export function useResourceLocalizationContext(
+  context: I18nLangContext = i18nContext,
+): ResourceLocalizationContext {
+  const { lang, t, ti, tp, tpi } = useI18nLangContext(context);
   const translateSourceVersion = useTranslateSourceVersion(lang);
 
   return useMemo(
-    () => ({ lang, t, ti, translateSourceVersion }),
-    [lang, t, ti, translateSourceVersion],
+    () => ({ lang, t, ti, tp, tpi, translateSourceVersion }),
+    [lang, t, ti, tp, tpi, translateSourceVersion],
   );
 }
 
