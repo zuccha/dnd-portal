@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
+import type { SourceBundle } from "~/models/catalogue/source-bundle";
 import {
   removeSourceBundleResources,
   upsertSourceBundleResource,
@@ -88,6 +89,26 @@ export function createResourceStore<
   const { useEffectiveFilters, useFilters } = filterStore;
 
   //------------------------------------------------------------------------------
+  // Persist Resource
+  //------------------------------------------------------------------------------
+
+  async function persistResource(
+    resource: R,
+    updateBundle: (bundle: SourceBundle) => SourceBundle,
+    operation: string,
+  ): Promise<string | undefined> {
+    try {
+      await updateSourceBundle(resource.source_id, updateBundle);
+      await catalogue.refreshSourceState(resource.source_id);
+      catalogueResourceStore.upsertResource(resource);
+      return undefined;
+    } catch (error) {
+      console.error(`${storeId}.${operation}`, error);
+      return "form.error.update_failure";
+    }
+  }
+
+  //------------------------------------------------------------------------------
   // Create Temporary Resource
   //------------------------------------------------------------------------------
 
@@ -114,19 +135,14 @@ export function createResourceStore<
 
     const updatedResource = { ...resource, virtual: temporary };
 
-    try {
-      await updateSourceBundle(resource.source_id, (bundle) =>
+    return persistResource(
+      updatedResource,
+      (bundle) =>
         temporary
           ? removeSourceBundleResources(bundle, kind, [resource.id])
           : upsertSourceBundleResource(bundle, updatedResource),
-      );
-      await catalogue.refreshSourceState(resource.source_id);
-      catalogueResourceStore.upsertResource(updatedResource);
-      return undefined;
-    } catch (error) {
-      console.error(`${storeId}.set_resource_temporary`, error);
-      return "form.error.update_failure";
-    }
+      "set_resource_temporary",
+    );
   }
 
   //----------------------------------------------------------------------------
@@ -156,15 +172,11 @@ export function createResourceStore<
       virtual: false,
     } as R;
 
-    try {
-      await updateSourceBundle(source.id, (bundle) => upsertSourceBundleResource(bundle, resource));
-      await catalogue.refreshSourceState(source.id);
-      catalogueResourceStore.upsertResource(resource);
-      return undefined;
-    } catch (error) {
-      console.error(`${storeId}.create_resource`, error);
-      return "form.error.update_failure";
-    }
+    return persistResource(
+      resource,
+      (bundle) => upsertSourceBundleResource(bundle, resource),
+      "create_resource",
+    );
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -246,17 +258,11 @@ export function createResourceStore<
       return undefined;
     }
 
-    try {
-      await updateSourceBundle(resource.source_id, (bundle) =>
-        upsertSourceBundleResource(bundle, resource),
-      );
-      await catalogue.refreshSourceState(resource.source_id);
-      catalogueResourceStore.upsertResource(resource);
-      return undefined;
-    } catch (error) {
-      console.error(`${storeId}.update_resource`, error);
-      return "form.error.update_failure";
-    }
+    return persistResource(
+      resource,
+      (bundle) => upsertSourceBundleResource(bundle, resource),
+      "update_resource",
+    );
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
