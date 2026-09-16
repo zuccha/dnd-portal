@@ -49,9 +49,10 @@ export type ResourceLocalizationContext = {
 //------------------------------------------------------------------------------
 
 export function useResourceLocalizationContext(
-  context: I18nLangContext = i18nContext,
+  context: I18nLangContext = emptyI18nContext,
 ): ResourceLocalizationContext {
-  const { lang, t, ti, tp, tpi } = useI18nLangContext(context);
+  const mergedI18nContext = useMemo(() => ({ ...i18nContext, ...context }), [context]);
+  const { lang, t, ti, tp, tpi } = useI18nLangContext(mergedI18nContext);
   const translateSourceVersion = useTranslateSourceVersion(lang);
 
   return useMemo(
@@ -125,3 +126,9 @@ const i18nContext = {
     it: "<1>", // 1 = page
   },
 };
+
+//------------------------------------------------------------------------------
+// Empty I18n Context
+//------------------------------------------------------------------------------
+
+const emptyI18nContext: I18nLangContext = {};
