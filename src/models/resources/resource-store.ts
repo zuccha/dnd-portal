@@ -385,16 +385,6 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use All Resource Ids
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useAllResourceIds(sourceId: string): string[] {
-    const [sources] = useResourcesSourcesFilter(sourceId);
-    const params = [sourceId, sources] as const;
-    return useResourceIdsByParams(...params)[0];
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Filtered Resource Ids
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -607,19 +597,6 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Localized Resource
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useLocalizedResource(sourceId: string, resourceId: string): L | undefined {
-    const [resource] = useResource(resourceId);
-    const localizeResource = useLocalizeResource(sourceId);
-
-    return useMemo(() => {
-      return resource ? localizeResource(resource) : undefined;
-    }, [localizeResource, resource]);
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resource Options
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -674,7 +651,6 @@ export function createResourceStore<
     getResource,
     makeResourcePersistent,
     updateResource,
-    useAllResourceIds,
     useResource,
     useResourceIds,
     useResources,
@@ -689,7 +665,6 @@ export function createResourceStore<
     useLocalizeResource,
     useLocalizeResourceName,
     useLocalizeResourceNameShort,
-    useLocalizedResource,
     useResourceOptions,
   };
 }

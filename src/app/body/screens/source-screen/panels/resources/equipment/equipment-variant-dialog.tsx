@@ -51,7 +51,7 @@ export function createEquipmentVariantDialog<
   const close = () => pendingEquipmentVariantStore.set(null);
 
   const usePendingEquipmentVariant = pendingEquipmentVariantStore.useValue;
-  const { useAllResourceIds: useModifierAllResourceIds, useResources: useModifierResources } =
+  const { useResourceIds: useModifierResourceIds, useResources: useModifierResources } =
     modifierStore;
 
   //----------------------------------------------------------------------------
@@ -121,7 +121,7 @@ export function createEquipmentVariantDialog<
     const { lang } = useI18nLangContext(i18nContext);
 
     const modifierIds = request.base.modifier_ids;
-    const allModifierIds = useModifierAllResourceIds(sourceId);
+    const allModifierIds = useModifierResourceIds(sourceId);
     const allModifiers = useModifierResources(allModifierIds);
     const allModifiersById = useMemo(
       () => new Map(allModifiers.map((modifier) => [modifier.id, modifier])),

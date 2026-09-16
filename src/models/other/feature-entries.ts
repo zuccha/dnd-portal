@@ -9,14 +9,14 @@ import type { FeatureEntry } from "../resources/features/feature-entry";
 // Use Format Feature Entries
 //------------------------------------------------------------------------------
 
-const { useAllResourceIds, useResources } = featureStore;
+const { useResourceIds, useResources } = featureStore;
 
 export function useFormatFeatureEntries(
   sourceId: string,
 ): (featureEntries: FeatureEntry[]) => string {
   const { lang, ti } = useI18nLangContext(i18nContext);
 
-  const featureIds = useAllResourceIds(sourceId);
+  const featureIds = useResourceIds(sourceId);
   const features = useResources(featureIds);
   const featureMap = useMemo(
     () => new Map(features.map((feature) => [feature.id, feature])),
