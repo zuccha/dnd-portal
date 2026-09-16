@@ -1,8 +1,12 @@
 import { useCallback } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import { localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import {
+  type ResourceLocalizationContext,
+  localizeResource,
+  localizedResourceSchema,
+  useResourceLocalizationContext,
+} from "../localized-resource";
 import { type Feature, featureSchema } from "./feature";
 
 //------------------------------------------------------------------------------
@@ -14,24 +18,41 @@ export const localizedFeatureSchema = localizedResourceSchema(featureSchema, z.l
 export type LocalizedFeature = z.infer<typeof localizedFeatureSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Feature
+// Feature Localization Context
+//------------------------------------------------------------------------------
+
+type FeatureLocalizationContext = ResourceLocalizationContext;
+
+//------------------------------------------------------------------------------
+// Use Feature Localization Context
+//------------------------------------------------------------------------------
+
+function useFeatureLocalizationContext(): FeatureLocalizationContext {
+  return useResourceLocalizationContext(i18nContext);
+}
+
+//------------------------------------------------------------------------------
+// Localize Feature
+//------------------------------------------------------------------------------
+
+export function localizeFeature(
+  feature: Feature,
+  context: FeatureLocalizationContext,
+): LocalizedFeature {
+  return {
+    ...localizeResource(feature, context),
+    descriptor: context.t("descriptor"),
+    details: translate(feature.description, context.lang),
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Feature
 //------------------------------------------------------------------------------
 
 export function useLocalizeFeature(): (feature: Feature) => LocalizedFeature {
-  const localizeResource = useLocalizeResource<Feature>();
-  const { lang, t } = useI18nLangContext(i18nContext);
-
-  return useCallback(
-    (feature: Feature): LocalizedFeature => {
-      const details = translate(feature.description, lang);
-      return {
-        ...localizeResource(feature),
-        descriptor: t("descriptor"),
-        details,
-      };
-    },
-    [lang, localizeResource, t],
-  );
+  const context = useFeatureLocalizationContext();
+  return useCallback((feature) => localizeFeature(feature, context), [context]);
 }
 
 //------------------------------------------------------------------------------
