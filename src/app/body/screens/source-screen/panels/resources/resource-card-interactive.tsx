@@ -160,7 +160,7 @@ export function createResourceCardInteractive<
     }, [lang, localizedResource, paletteName, t]);
 
     const makePersistent = useCallback(async () => {
-      const error = await store.makeResourcePersistent(localizedResource.id);
+      const error = await store.setResourceTemporary(localizedResource.id, false);
       return error
         ? toaster.error({
             description: t("persistent.error.description"),

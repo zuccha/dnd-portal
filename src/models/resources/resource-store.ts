@@ -87,11 +87,11 @@ export function createResourceStore<
   );
   const { useEffectiveFilters, useFilters } = filterStore;
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Add Temporary Resource
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //------------------------------------------------------------------------------
+  // Create Temporary Resource
+  //------------------------------------------------------------------------------
 
-  function addTemporaryResource(resource: R): boolean {
+  function createTemporaryResource(resource: R): boolean {
     if (!catalogue.isSourceEditable(resource.source_id)) return false;
     if (getResource(resource.id)) return false;
 
@@ -99,27 +99,32 @@ export function createResourceStore<
     return true;
   }
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Make Resource Persistent
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //------------------------------------------------------------------------------
+  // Set Resource Temporary
+  //------------------------------------------------------------------------------
 
-  async function makeResourcePersistent(resourceId: string): Promise<string | undefined> {
+  async function setResourceTemporary(
+    resourceId: string,
+    temporary: boolean,
+  ): Promise<string | undefined> {
     const resource = getResource(resourceId);
     if (!resource) return "form.error.update_failure";
     if (!catalogue.isSourceEditable(resource.source_id)) return "form.error.update_failure";
-    if (!resource.virtual) return undefined;
+    if (resource.virtual === temporary) return undefined;
 
-    const persistentResource = { ...resource, virtual: false };
+    const updatedResource = { ...resource, virtual: temporary };
 
     try {
       await updateSourceBundle(resource.source_id, (bundle) =>
-        upsertSourceBundleResource(bundle, persistentResource),
+        temporary
+          ? removeSourceBundleResources(bundle, kind, [resource.id])
+          : upsertSourceBundleResource(bundle, updatedResource),
       );
       await catalogue.refreshSourceState(resource.source_id);
-      catalogueResourceStore.upsertResource(persistentResource);
+      catalogueResourceStore.upsertResource(updatedResource);
       return undefined;
     } catch (error) {
-      console.error(`${storeId}.make_resource_persistent`, error);
+      console.error(`${storeId}.set_resource_temporary`, error);
       return "form.error.update_failure";
     }
   }
@@ -386,11 +391,11 @@ export function createResourceStore<
 
     useFilters,
 
-    addTemporaryResource,
+    createTemporaryResource,
     createResource,
     deleteResources,
     getResource,
-    makeResourcePersistent,
+    setResourceTemporary,
     updateResource,
     useResource,
     useResourceIds,

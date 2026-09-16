@@ -229,7 +229,7 @@ export function createEquipmentVariantDialog<
       setSaving(true);
       const added = await addEquipmentVariant(
         async (resource) => {
-          if (!makePersistent) return store.addTemporaryResource(resource);
+          if (!makePersistent) return store.createTemporaryResource(resource);
           const error = await store.createResource(sourceId, resource);
           return !error;
         },
