@@ -63,6 +63,7 @@ export const sourceBundleResourcesSchema = z.object({
 //------------------------------------------------------------------------------
 
 export const sourceBundleSchema = z.object({
+  bundle_version: z.literal(1),
   resources: sourceBundleResourcesSchema,
   source: sourceSchema,
 });
@@ -74,6 +75,7 @@ export type SourceBundle = z.infer<typeof sourceBundleSchema>;
 //------------------------------------------------------------------------------
 
 export const sourceBundleWithoutRegistrySchema = z.object({
+  bundle_version: z.literal(1),
   resources: sourceBundleResourcesSchema,
   source: sourceSchema.omit({ registry: true }),
 });

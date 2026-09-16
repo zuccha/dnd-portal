@@ -20,6 +20,7 @@ import {
   updateSourceBundle,
   updateSourceBundleRegistryMetadata,
 } from "./source-bundle-indexed-db";
+import { currentSourceBundleVersion } from "./source-bundle-migrations";
 import type { OptionalStoreSet } from "../../store/optional-set/optional-store-set";
 import type { StoreSet } from "../../store/set/store-set";
 import type { Background } from "../resources/backgrounds/background";
@@ -374,7 +375,10 @@ export function createCatalogue(id: string) {
       }),
     ) as SourceBundle["resources"];
 
-    return filterSourceBundleResources({ resources, source }, options);
+    return filterSourceBundleResources(
+      { bundle_version: currentSourceBundleVersion, resources, source },
+      options,
+    );
   }
 
   //----------------------------------------------------------------------------

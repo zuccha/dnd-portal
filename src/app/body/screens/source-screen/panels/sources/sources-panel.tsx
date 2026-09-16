@@ -19,9 +19,9 @@ import {
   type SourceBundle,
   canAccessPrivateResources,
   filterSourceBundleResources,
-  sourceBundleSchema,
 } from "~/models/catalogue/source-bundle";
 import { deleteSourceBundle, saveSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
+import { parseSourceBundle } from "~/models/catalogue/source-bundle-migrations";
 import { publishSourceBundle } from "~/models/catalogue/source-bundle-sync";
 import {
   analyzeRegistrySourceDependencies,
@@ -268,7 +268,7 @@ export default function SourcesPanel() {
 
     try {
       const text = await file.text();
-      const bundle = sourceBundleSchema.parse(JSON.parse(text));
+      const bundle = parseSourceBundle(JSON.parse(text));
       await startSourceImport(bundle);
     } catch (e) {
       console.error(e);

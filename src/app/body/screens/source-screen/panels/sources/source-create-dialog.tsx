@@ -2,11 +2,8 @@ import { CloseButton, Dialog, Portal, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Source } from "~/models/catalogue/source";
-import {
-  type SourceBundle,
-  sourceBundleResourcesSchema,
-  sourceBundleSchema,
-} from "~/models/catalogue/source-bundle";
+import { type SourceBundle, sourceBundleResourcesSchema } from "~/models/catalogue/source-bundle";
+import { parseSourceBundle } from "~/models/catalogue/source-bundle-migrations";
 import { type SourceType, useSourceTypeOptions } from "~/models/types/source-type";
 import { type SourceVersion, useSourceVersionTranslations } from "~/models/types/source-version";
 import Button from "~/ui/button";
@@ -179,7 +176,7 @@ function sourceDraftToSource(draft: SourceDraft, lang: string): Source {
 }
 
 function createEmptySourceBundle(source: Source): SourceBundle {
-  return sourceBundleSchema.parse({
+  return parseSourceBundle({
     resources: sourceBundleResourcesSchema.parse({}),
     source,
   });

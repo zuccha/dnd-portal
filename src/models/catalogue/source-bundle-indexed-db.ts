@@ -4,8 +4,8 @@ import {
   type SourceBundle,
   type SourceBundleExportOptions,
   filterSourceBundleResources,
-  sourceBundleSchema,
 } from "./source-bundle";
+import { parseSourceBundle } from "./source-bundle-migrations";
 import type { Source, SourceRegistryMetadata } from "./source";
 
 //------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ async function getBundleHash(bundle: SourceBundle): Promise<string> {
 //------------------------------------------------------------------------------
 
 export async function saveSourceBundle(maybeBundle: unknown): Promise<SourceBundle> {
-  const parsedBundle = filterSourceBundleResources(sourceBundleSchema.parse(maybeBundle));
+  const parsedBundle = filterSourceBundleResources(parseSourceBundle(maybeBundle));
   const bundleHash = await getBundleHash(parsedBundle);
   const importedAt = new Date().toISOString();
 
@@ -109,7 +109,7 @@ export async function loadSourceBundles(): Promise<SourceBundle[]> {
 
   for (const record of records) {
     try {
-      bundles.push(sourceBundleSchema.parse(record.bundle));
+      bundles.push(parseSourceBundle(record.bundle));
     } catch (error) {
       console.error("Invalid persisted source bundle", {
         error,
@@ -148,7 +148,7 @@ export async function loadSourceBundle(
   const record = await db.source_bundles.get(sourceId);
   if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
 
-  const bundle = sourceBundleSchema.parse(record.bundle);
+  const bundle = parseSourceBundle(record.bundle);
   return filterSourceBundleResources(bundle, options);
 }
 
@@ -163,7 +163,7 @@ export async function updateSourceBundle(
   const record = await db.source_bundles.get(sourceId);
   if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
 
-  const bundle = sourceBundleSchema.parse(update(record.bundle));
+  const bundle = parseSourceBundle(update(record.bundle));
   const bundleHash = await getBundleHash(bundle);
   const importedAt = new Date().toISOString();
 
@@ -202,7 +202,7 @@ export async function updateSourceBundleRegistryMetadata(
     const record = await db.source_bundles.get(sourceId);
     if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
 
-    const bundle = sourceBundleSchema.parse({
+    const bundle = parseSourceBundle({
       ...record.bundle,
       source: { ...record.bundle.source, registry },
     });

@@ -2,8 +2,8 @@ import { type Source, type SourceDependency, sourceSchema } from "~/models/catal
 import {
   type SourceBundle,
   type SourceBundleWithoutRegistry,
-  sourceBundleWithoutRegistrySchema,
 } from "~/models/catalogue/source-bundle";
+import { parseSourceBundleWithoutRegistry } from "~/models/catalogue/source-bundle-migrations";
 import supabase from "~/supabase";
 
 const registryBundleBucket = "registry-bundles";
@@ -193,7 +193,7 @@ export async function fetchRegistrySourceBundle(
 
   if (error) throw new Error(`Registry bundle download failed: ${error.message}`);
 
-  return sourceBundleWithoutRegistrySchema.parse(JSON.parse(await data.text()));
+  return parseSourceBundleWithoutRegistry(JSON.parse(await data.text()));
 }
 
 //------------------------------------------------------------------------------
