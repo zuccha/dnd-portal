@@ -74,9 +74,11 @@ export function createResourceStore<
   const catalogueResourceStore = catalogue.createResourceStore(kind);
   const resourceSelectionStore = createResourceSelectionStore(storeId);
 
+  const getResource = catalogueResourceStore.getResource as (resourceId: string) => R | undefined;
+  const useResource = catalogueResourceStore.useResource as (resourceId: string) => R | undefined;
+  const useResources = catalogueResourceStore.useResources as (resourceIds: string[]) => R[];
+
   const {
-    useResource: useCatalogueResource,
-    useResources: useCatalogueResources,
     useActiveSourceReferenceResourceIds: useCatalogueActiveSourceReferenceResourceIds,
     useActiveSourceResourceIds: useCatalogueActiveSourceResourceIds,
   } = catalogueResourceStore;
@@ -221,14 +223,6 @@ export function createResourceStore<
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Get Resource
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function getResource(resourceId: string): R | undefined {
-    return catalogueResourceStore.getResource(resourceId) as R | undefined;
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Update Resource
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -263,22 +257,6 @@ export function createResourceStore<
       (bundle) => upsertSourceBundleResource(bundle, resource),
       "update_resource",
     );
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resource
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useResource(resourceId: string): R | undefined {
-    return useCatalogueResource(resourceId) as R | undefined;
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Resources
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useResources(resourceIds: string[]): R[] {
-    return useCatalogueResources(resourceIds) as R[];
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
