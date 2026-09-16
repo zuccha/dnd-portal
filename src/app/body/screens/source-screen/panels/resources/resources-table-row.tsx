@@ -69,7 +69,7 @@ export function createResourcesTableRow<
   context: ResourcesContext<R>,
   extra: ResourcesTableRowExtra<R, L>,
 ) {
-  const { useResource, useResourceSelection, useResourceSelectionMethods } = store;
+  const { toggleResourceSelection, useResource, useResourceSelection } = store;
 
   const { usePaletteName, useResourceExpansion } = context;
 
@@ -90,7 +90,6 @@ export function createResourcesTableRow<
       [localizeResource, resource],
     );
     const selected = useResourceSelection(resourceId);
-    const { toggleResourceSelection } = useResourceSelectionMethods(resourceId);
     const expanded = useResourceExpansion(resourceId, false);
     const details =
       extra.detailsKey && localizedResource[extra.detailsKey]
@@ -134,24 +133,12 @@ export function createResourcesTableRow<
           });
     }, [localizedResource.id, localizedResource.name, t]);
 
-    const toggleSelection = useCallback(
-      (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        toggleResourceSelection();
-      },
-      [toggleResourceSelection],
-    );
+    const toggleSelection = useCallback(() => toggleResourceSelection(resourceId), [resourceId]);
 
-    const toggleExpansion = useCallback(
-      (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!extra.detailsKey) return;
-        context.setResourceExpansion(resourceId, false, (prev) => !prev);
-      },
-      [resourceId],
-    );
+    const toggleExpansion = useCallback(() => {
+      if (!extra.detailsKey) return;
+      context.setResourceExpansion(resourceId, false, (prev) => !prev);
+    }, [resourceId]);
 
     const hasActions = true;
     const columnCount =

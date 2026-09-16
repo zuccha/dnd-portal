@@ -42,7 +42,8 @@ export function createResourcesTableHead<
   _context: ResourcesContext<R>,
   extra: ResourcesTableHeadExtra<R, L>,
 ) {
-  const { useFilteredResourceIds, useResourcesSelectionMethods, useSelectedResourceIds } = store;
+  const { deselectResources, selectResources, useFilteredResourceIds, useSelectedResourceIds } =
+    store;
 
   return function ResourcesTableHead({ sourceId }: ResourcesTableHeadProps) {
     const [lang] = useI18nLang();
@@ -50,9 +51,6 @@ export function createResourcesTableHead<
 
     const filteredResourceIds = useFilteredResourceIds(sourceId);
     const selectedFilteredResourceIds = useSelectedResourceIds(filteredResourceIds);
-    const { deselectAllResources, selectAllResources } =
-      useResourcesSelectionMethods(filteredResourceIds);
-
     const selected =
       selectedFilteredResourceIds.length === filteredResourceIds.length
         ? true
@@ -64,10 +62,10 @@ export function createResourcesTableHead<
       (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (selected === true) deselectAllResources();
-        else selectAllResources();
+        if (selected === true) deselectResources(filteredResourceIds);
+        else selectResources(filteredResourceIds);
       },
-      [deselectAllResources, selectAllResources, selected],
+      [filteredResourceIds, selected],
     );
 
     return (

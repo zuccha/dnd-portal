@@ -532,9 +532,13 @@ export function createResourceStore<
 
     useFilteredResourceIds,
 
+    deselectResource: resourceSelectionStore.deselectResource,
+    deselectResources: resourceSelectionStore.deselectResources,
+    selectResource: resourceSelectionStore.selectResource,
+    selectResources: resourceSelectionStore.selectResources,
+    setResourceSelection: resourceSelectionStore.setResourceSelection,
+    toggleResourceSelection: resourceSelectionStore.toggleResourceSelection,
     useResourceSelection: resourceSelectionStore.useResourceSelection,
-    useResourceSelectionMethods: resourceSelectionStore.useResourceSelectionMethods,
-    useResourcesSelectionMethods: resourceSelectionStore.useResourcesSelectionMethods,
     useSelectedResourceIds: resourceSelectionStore.useSelectedResourceIds,
 
     useLocalizeResource,

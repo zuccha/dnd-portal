@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { createCache } from "~/utils/cache";
 
 //------------------------------------------------------------------------------
@@ -23,49 +23,51 @@ export function createResourceSelectionStore(id: string) {
   }
 
   //----------------------------------------------------------------------------
-  // Use Resource Selection Methods
+  // Deselect Resource
   //----------------------------------------------------------------------------
 
-  function useResourceSelectionMethods(resourceId: string) {
-    const deselectResource = useCallback(() => {
-      selectionCache.remove(resourceId);
-    }, [resourceId]);
-
-    const selectResource = useCallback(() => {
-      selectionCache.set(resourceId, true);
-    }, [resourceId]);
-
-    const setResourceSelection = useCallback(
-      (selection: boolean) => selectionCache.set(resourceId, selection),
-      [resourceId],
-    );
-
-    const toggleResourceSelection = useCallback(() => {
-      selectionCache.set(resourceId, !selectionCache.get(resourceId));
-    }, [resourceId]);
-
-    return {
-      deselectResource,
-      selectResource,
-      setResourceSelection,
-      toggleResourceSelection,
-    };
+  function deselectResource(resourceId: string): void {
+    selectionCache.remove(resourceId);
   }
 
   //----------------------------------------------------------------------------
-  // Use Resources Selection Methods
+  // Select Resource
   //----------------------------------------------------------------------------
 
-  function useResourcesSelectionMethods(resourceIds: string[]) {
-    const deselectAllResources = useCallback(() => {
-      resourceIds.forEach(selectionCache.remove);
-    }, [resourceIds]);
+  function selectResource(resourceId: string): void {
+    selectionCache.set(resourceId, true);
+  }
 
-    const selectAllResources = useCallback(() => {
-      resourceIds.forEach((resourceId) => selectionCache.set(resourceId, true));
-    }, [resourceIds]);
+  //----------------------------------------------------------------------------
+  // Set Resource Selection
+  //----------------------------------------------------------------------------
 
-    return { deselectAllResources, selectAllResources };
+  function setResourceSelection(resourceId: string, selection: boolean): void {
+    selectionCache.set(resourceId, selection);
+  }
+
+  //----------------------------------------------------------------------------
+  // Toggle Resource Selection
+  //----------------------------------------------------------------------------
+
+  function toggleResourceSelection(resourceId: string): void {
+    selectionCache.set(resourceId, !selectionCache.get(resourceId));
+  }
+
+  //----------------------------------------------------------------------------
+  // Select Resources
+  //----------------------------------------------------------------------------
+
+  function selectResources(resourceIds: string[]): void {
+    resourceIds.forEach(selectResource);
+  }
+
+  //----------------------------------------------------------------------------
+  // Deselect Resources
+  //----------------------------------------------------------------------------
+
+  function deselectResources(resourceIds: string[]): void {
+    resourceIds.forEach(deselectResource);
   }
 
   //----------------------------------------------------------------------------
@@ -92,19 +94,14 @@ export function createResourceSelectionStore(id: string) {
     return selectedResourceIds;
   }
 
-  //----------------------------------------------------------------------------
-  // Deselect Resources
-  //----------------------------------------------------------------------------
-
-  function deselectResources(resourceIds: string[]): void {
-    resourceIds.forEach(selectionCache.remove);
-  }
-
   return {
+    deselectResource,
     deselectResources,
+    selectResource,
+    selectResources,
+    setResourceSelection,
+    toggleResourceSelection,
     useResourceSelection,
-    useResourceSelectionMethods,
-    useResourcesSelectionMethods,
     useSelectedResourceIds,
   };
 }

@@ -32,7 +32,7 @@ export function createResourcesActions<
 >(store: ResourceStore<R, L, F>, context: ResourcesContext<R>) {
   const { useFilteredResourceIds, useLocalizeResource } = store;
 
-  const { useResourcesSelectionMethods, useSelectedResourceIds } = store;
+  const { deselectResources, selectResources, useSelectedResourceIds } = store;
   const { usePaletteName } = context;
 
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
@@ -42,9 +42,6 @@ export function createResourcesActions<
     const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
     const sourceEditable = useSourceEditable(sourceId);
-
-    const { deselectAllResources, selectAllResources } =
-      useResourcesSelectionMethods(filteredResourceIds);
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);
@@ -127,7 +124,7 @@ export function createResourcesActions<
           const selectedResourceIds = selectedResources.map(({ id }) => id);
           const error = await store.deleteResources(selectedResourceIds);
           if (error) throw new Error(error);
-          deselectAllResources();
+          deselectResources(selectedResourceIds);
         }
       } catch (e) {
         console.error(e);
@@ -136,7 +133,7 @@ export function createResourcesActions<
           title: t("remove.error.title"),
         });
       }
-    }, [deselectAllResources, selectedFilteredResourceIds, t, tp, tpi]);
+    }, [selectedFilteredResourceIds, t, tp, tpi]);
 
     const hasSelection = selectedFilteredResourceIds.length > 0;
     const allFilteredSelected = selectedFilteredResourceIds.length === filteredResourceIds.length;
@@ -179,7 +176,7 @@ export function createResourcesActions<
                   <Menu.ItemGroup>
                     <Menu.Item
                       disabled={allFilteredSelected}
-                      onSelect={selectAllResources}
+                      onSelect={() => selectResources(filteredResourceIds)}
                       value="select-all"
                     >
                       {t("select_all")}
@@ -187,7 +184,7 @@ export function createResourcesActions<
 
                     <Menu.Item
                       disabled={!hasSelection}
-                      onSelect={deselectAllResources}
+                      onSelect={() => deselectResources(filteredResourceIds)}
                       value="deselect-all"
                     >
                       {t("deselect_all")}

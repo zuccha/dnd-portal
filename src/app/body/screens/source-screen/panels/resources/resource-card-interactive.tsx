@@ -67,7 +67,7 @@ export function createResourceCardInteractive<
   context: ResourcesContext<R>,
   extra: ResourceCardInteractiveExtra<R, L>,
 ) {
-  const { useResource, useResourceSelection, useResourceSelectionMethods } = store;
+  const { setResourceSelection, useResource, useResourceSelection } = store;
 
   const AlbumCard = extra.AlbumCard;
   const { useCardMode, usePaletteName, useShowImage } = context;
@@ -118,7 +118,6 @@ export function createResourceCardInteractive<
     }, []);
 
     const selected = useResourceSelection(resourceId);
-    const { setResourceSelection } = useResourceSelectionMethods(resourceId);
 
     const edit = useCallback(() => {
       if (!sourceEditable) return;
@@ -294,7 +293,7 @@ export function createResourceCardInteractive<
             label={selected ? t("selection.deselect") : t("selection.select")}
             onPointerDown={(e) => {
               e.stopPropagation();
-              setResourceSelection(!selected);
+              setResourceSelection(resourceId, !selected);
             }}
             position="absolute"
             right={PokerCard.rem0500}
