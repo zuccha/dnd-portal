@@ -10,6 +10,8 @@ import {
 } from "../localized-resource";
 import { type CharacterSubclass, characterSubclassSchema } from "./character-subclass";
 
+const useLocalizeCharacterClassName = characterClassStore.useLocalizeResourceName;
+
 //------------------------------------------------------------------------------
 // Localized Character Subclass
 //------------------------------------------------------------------------------
@@ -29,7 +31,7 @@ export type LocalizedCharacterSubclass = z.infer<typeof localizedCharacterSubcla
 
 type CharacterSubclassLocalizationContext = ResourceLocalizationContext & {
   formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
-  localizeCharacterClassName: ReturnType<typeof characterClassStore.useLocalizeResourceName>;
+  localizeCharacterClassName: ReturnType<typeof useLocalizeCharacterClassName>;
 };
 
 //------------------------------------------------------------------------------
@@ -41,7 +43,7 @@ function useCharacterSubclassLocalizationContext(
 ): CharacterSubclassLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatFeatureEntries = useFormatFeatureEntries(sourceId);
-  const localizeCharacterClassName = characterClassStore.useLocalizeResourceName(context.lang);
+  const localizeCharacterClassName = useLocalizeCharacterClassName(context.lang);
 
   return useMemo(
     () => ({ ...context, formatFeatureEntries, localizeCharacterClassName }),

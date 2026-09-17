@@ -12,6 +12,8 @@ import {
 } from "../localized-equipment";
 import { type Tool, toolSchema } from "./tool";
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+
 //------------------------------------------------------------------------------
 // Localized Tool
 //------------------------------------------------------------------------------
@@ -28,7 +30,7 @@ export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 //------------------------------------------------------------------------------
 
 type ToolLocalizationContext = EquipmentLocalizationContext & {
-  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
+  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
   translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
   translateToolType: ReturnType<typeof useTranslateToolType>;
 };
@@ -41,7 +43,7 @@ function useToolLocalizationContext(sourceId: string): ToolLocalizationContext {
   const context = useEquipmentLocalizationContext(sourceId, i18nContext);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateToolType = useTranslateToolType(context.lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
 
   return useMemo(
     () => ({

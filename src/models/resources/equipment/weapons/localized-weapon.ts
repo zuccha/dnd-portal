@@ -20,6 +20,8 @@ import {
 } from "../localized-equipment";
 import { type Weapon, weaponSchema } from "./weapon";
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+
 //------------------------------------------------------------------------------
 // Localized Weapon
 //------------------------------------------------------------------------------
@@ -49,7 +51,7 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 //------------------------------------------------------------------------------
 
 type WeaponLocalizationContext = EquipmentLocalizationContext & {
-  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
+  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
   system: ReturnType<typeof useI18nSystem>[0];
   translateDamageType: ReturnType<typeof useTranslateDamageType>;
   translateWeaponMastery: ReturnType<typeof useTranslateWeaponMastery>;
@@ -70,7 +72,7 @@ function useWeaponLocalizationContext(sourceId: string): WeaponLocalizationConte
   const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(context.lang);
   const translateWeaponProperty = useTranslateWeaponProperty(context.lang);
   const translateWeaponType = useTranslateWeaponType(context.lang);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
 
   return useMemo(
     () => ({

@@ -31,6 +31,11 @@ import { planeStore } from "../planes/plane-store";
 import { type Creature, creatureSchema } from "./creature";
 import type { CreatureAbility } from "../../types/creature-ability";
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+const useLocalizeLanguageName = languageStore.useLocalizeResourceName;
+const useLocalizePlaneName = planeStore.useLocalizeResourceName;
+const useLocalizeCreatureTagName = creatureTagStore.useLocalizeResourceName;
+
 //------------------------------------------------------------------------------
 // Localized Creature
 //------------------------------------------------------------------------------
@@ -109,10 +114,10 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 type CreatureLocalizationContext = ResourceLocalizationContext & {
   formatCm: ReturnType<typeof useFormatCmWithUnit>;
   formatCp: ReturnType<typeof useFormatCp>;
-  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
-  localizeLanguageName: ReturnType<typeof languageStore.useLocalizeResourceName>;
-  localizePlaneName: ReturnType<typeof planeStore.useLocalizeResourceName>;
-  localizeTagName: ReturnType<typeof creatureTagStore.useLocalizeResourceName>;
+  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
+  localizeLanguageName: ReturnType<typeof useLocalizeLanguageName>;
+  localizePlaneName: ReturnType<typeof useLocalizePlaneName>;
+  localizeTagName: ReturnType<typeof useLocalizeCreatureTagName>;
   system: ReturnType<typeof useI18nSystem>[0];
   translateCreatureAlignment: ReturnType<typeof useTranslateCreatureAlignment>;
   translateCreatureCondition: ReturnType<typeof useTranslateCreatureCondition>;
@@ -133,10 +138,10 @@ function useCreatureLocalizationContext(): CreatureLocalizationContext {
   const [system] = useI18nSystem();
   const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
-  const localizeLanguageName = languageStore.useLocalizeResourceName(context.lang);
-  const localizePlaneName = planeStore.useLocalizeResourceName(context.lang);
-  const localizeTagName = creatureTagStore.useLocalizeResourceName(context.lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
+  const localizeLanguageName = useLocalizeLanguageName(context.lang);
+  const localizePlaneName = useLocalizePlaneName(context.lang);
+  const localizeTagName = useLocalizeCreatureTagName(context.lang);
   const translateCreatureType = useTranslateCreatureType(context.lang);
   const translateCreatureSize = useTranslateCreatureSize(context.lang);
   const translateCreatureAlignment = useTranslateCreatureAlignment(context.lang);

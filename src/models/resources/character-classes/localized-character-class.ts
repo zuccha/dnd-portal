@@ -23,6 +23,9 @@ import {
 } from "../localized-resource";
 import { type CharacterClass, characterClassSchema } from "./character-class";
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+const useLocalizeToolName = toolStore.useLocalizeResourceName;
+
 //------------------------------------------------------------------------------
 // Localized Character Class
 //------------------------------------------------------------------------------
@@ -51,8 +54,8 @@ export type LocalizedCharacterClass = z.infer<typeof localizedCharacterClassSche
 type CharacterClassLocalizationContext = ResourceLocalizationContext & {
   formatCp: ReturnType<typeof useFormatCp>;
   formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
-  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
-  localizeToolName: ReturnType<typeof toolStore.useLocalizeResourceName>;
+  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
+  localizeToolName: ReturnType<typeof useLocalizeToolName>;
   translateArmorType: ReturnType<typeof useTranslateArmorType>;
   translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
   translateCreatureSkill: ReturnType<typeof useTranslateCreatureSkill>;
@@ -68,8 +71,8 @@ function useCharacterClassLocalizationContext(sourceId: string): CharacterClassL
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
   const formatFeatureEntries = useFormatFeatureEntries(sourceId);
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
-  const localizeToolName = toolStore.useLocalizeResourceName(context.lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
+  const localizeToolName = useLocalizeToolName(context.lang);
   const translateArmorType = useTranslateArmorType(context.lang);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateCreatureSkill = useTranslateCreatureSkill(context.lang);

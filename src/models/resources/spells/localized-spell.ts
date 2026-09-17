@@ -17,6 +17,8 @@ import {
 } from "../localized-resource";
 import { type Spell, spellSchema } from "./spell";
 
+const useLocalizeCharacterClassNameShort = characterClassStore.useLocalizeResourceNameShort;
+
 //------------------------------------------------------------------------------
 // Localized Spell
 //------------------------------------------------------------------------------
@@ -69,9 +71,7 @@ function useSpellLocalizationContext(): SpellLocalizationContext {
   const translateSpellRange = useTranslateSpellRange(context.lang);
   const formatRange = useFormatCm();
   const formatTime = useFormatSeconds();
-  const localizeCharacterClassNameShort = characterClassStore.useLocalizeResourceNameShort(
-    context.lang,
-  );
+  const localizeCharacterClassNameShort = useLocalizeCharacterClassNameShort(context.lang);
 
   return useMemo(
     () => ({

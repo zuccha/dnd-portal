@@ -20,6 +20,10 @@ import {
 } from "../localized-resource";
 import { type Background, backgroundSchema } from "./background";
 
+const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+const useLocalizeFeatName = featStore.useLocalizeResourceName;
+const useLocalizeToolName = toolStore.useLocalizeResourceName;
+
 //------------------------------------------------------------------------------
 // Localized Background
 //------------------------------------------------------------------------------
@@ -44,9 +48,9 @@ export type LocalizedBackground = z.infer<typeof localizedBackgroundSchema>;
 
 type BackgroundLocalizationContext = ResourceLocalizationContext & {
   formatCp: ReturnType<typeof useFormatCp>;
-  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
-  localizeFeatName: ReturnType<typeof featStore.useLocalizeResourceName>;
-  localizeToolName: ReturnType<typeof toolStore.useLocalizeResourceName>;
+  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
+  localizeFeatName: ReturnType<typeof useLocalizeFeatName>;
+  localizeToolName: ReturnType<typeof useLocalizeToolName>;
   translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
   translateCreatureSkill: ReturnType<typeof useTranslateCreatureSkill>;
 };
@@ -58,9 +62,9 @@ type BackgroundLocalizationContext = ResourceLocalizationContext & {
 function useBackgroundLocalizationContext(): BackgroundLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
-  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
-  const localizeFeatName = featStore.useLocalizeResourceName(context.lang);
-  const localizeToolName = toolStore.useLocalizeResourceName(context.lang);
+  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
+  const localizeFeatName = useLocalizeFeatName(context.lang);
+  const localizeToolName = useLocalizeToolName(context.lang);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateCreatureSkill = useTranslateCreatureSkill(context.lang);
 
