@@ -1,14 +1,15 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatFeatureEntries } from "../../other/feature-entries";
 import { useTranslateFeatCategory } from "../../types/feat-category";
 import {
+  type ResourceLocalizationContext,
   formatDetails,
   formatInfo,
+  localizeResource,
   localizedResourceSchema,
-  useLocalizeResource,
+  useResourceLocalizationContext,
 } from "../localized-resource";
 import { type Feat, featSchema } from "./feat";
 
@@ -26,39 +27,61 @@ export const localizedFeatSchema = localizedResourceSchema(featSchema, z.literal
 export type LocalizedFeat = z.infer<typeof localizedFeatSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Feat
+// Feat Localization Context
+//------------------------------------------------------------------------------
+
+type FeatLocalizationContext = ResourceLocalizationContext & {
+  formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
+  translateFeatCategory: ReturnType<typeof useTranslateFeatCategory>;
+};
+
+//------------------------------------------------------------------------------
+// Use Feat Localization Context
+//------------------------------------------------------------------------------
+
+function useFeatLocalizationContext(sourceId: string): FeatLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
+  const formatFeatureEntries = useFormatFeatureEntries(sourceId);
+  const translateFeatCategory = useTranslateFeatCategory(context.lang);
+
+  return useMemo(
+    () => ({ ...context, formatFeatureEntries, translateFeatCategory }),
+    [context, formatFeatureEntries, translateFeatCategory],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Feat
+//------------------------------------------------------------------------------
+
+function localizeFeat(feat: Feat, context: FeatLocalizationContext): LocalizedFeat {
+  const category = context.translateFeatCategory(feat.category);
+  const description = translate(feat.description, context.lang);
+  const features = context.formatFeatureEntries(feat.feature_entries);
+  const prerequisite = translate(feat.prerequisite, context.lang);
+  const min_level = feat.min_level ? `${feat.min_level}` : "";
+
+  return {
+    ...localizeResource(feat, context),
+    descriptor: context.ti("subtitle", category),
+    category,
+    details: formatDetails(description, features),
+    info: formatInfo([
+      [context.t("min_level"), min_level],
+      [context.t("prerequisite"), prerequisite],
+    ]),
+    min_level,
+    prerequisite,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Feat
 //------------------------------------------------------------------------------
 
 export function useLocalizeFeat(sourceId: string): (feat: Feat) => LocalizedFeat {
-  const localizeResource = useLocalizeResource<Feat>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
-  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
-  const translateFeatCategory = useTranslateFeatCategory(lang);
-
-  return useCallback(
-    (feat: Feat): LocalizedFeat => {
-      const category = translateFeatCategory(feat.category);
-      const description = translate(feat.description, lang);
-      const features = formatFeatureEntriesDetails(feat.feature_entries);
-      const prerequisite = translate(feat.prerequisite, lang);
-      const min_level = feat.min_level ? `${feat.min_level}` : "";
-
-      return {
-        ...localizeResource(feat),
-        descriptor: ti("subtitle", category),
-
-        category,
-        details: formatDetails(description, features),
-        info: formatInfo([
-          [t("min_level"), min_level],
-          [t("prerequisite"), prerequisite],
-        ]),
-        min_level,
-        prerequisite,
-      };
-    },
-    [formatFeatureEntriesDetails, lang, localizeResource, t, ti, translateFeatCategory],
-  );
+  const context = useFeatLocalizationContext(sourceId);
+  return useCallback((feat) => localizeFeat(feat, context), [context]);
 }
 
 //------------------------------------------------------------------------------
