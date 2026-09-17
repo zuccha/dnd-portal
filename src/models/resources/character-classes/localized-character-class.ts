@@ -1,6 +1,5 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
@@ -15,10 +14,12 @@ import { useTranslateWeaponType } from "../../types/weapon-type";
 import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
 import { toolStore } from "../equipment/tools/tool-store";
 import {
+  type ResourceLocalizationContext,
   formatDetails,
   formatInfo,
+  localizeResource,
   localizedResourceSchema,
-  useLocalizeResource,
+  useResourceLocalizationContext,
 } from "../localized-resource";
 import { type CharacterClass, characterClassSchema } from "./character-class";
 
@@ -44,155 +45,197 @@ export const localizedCharacterClassSchema = localizedResourceSchema(
 export type LocalizedCharacterClass = z.infer<typeof localizedCharacterClassSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Character Class
+// Character Class Localization Context
 //------------------------------------------------------------------------------
 
-const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
-const useLocalizeToolName = toolStore.useLocalizeResourceName;
+type CharacterClassLocalizationContext = ResourceLocalizationContext & {
+  formatCp: ReturnType<typeof useFormatCp>;
+  formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
+  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
+  localizeToolName: ReturnType<typeof toolStore.useLocalizeResourceName>;
+  translateArmorType: ReturnType<typeof useTranslateArmorType>;
+  translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
+  translateCreatureSkill: ReturnType<typeof useTranslateCreatureSkill>;
+  translateDieType: ReturnType<typeof useTranslateDieType>;
+  translateWeaponType: ReturnType<typeof useTranslateWeaponType>;
+};
 
-export function useLocalizeCharacterClass(
-  sourceId: string,
-): (characterClass: CharacterClass) => LocalizedCharacterClass {
-  const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
-  const localizeResource = useLocalizeResource<CharacterClass>();
-  const translateArmorType = useTranslateArmorType(lang);
-  const translateCreatureAbility = useTranslateCreatureAbility(lang);
-  const translateCreatureSkill = useTranslateCreatureSkill(lang);
-  const translateDieType = useTranslateDieType(lang);
-  const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeToolName = useLocalizeToolName(lang);
-  const localizeEquipmentName = useLocalizeEquipmentName(lang);
-  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
+//------------------------------------------------------------------------------
+// Use Character Class Localization Context
+//------------------------------------------------------------------------------
+
+function useCharacterClassLocalizationContext(sourceId: string): CharacterClassLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
+  const formatFeatureEntries = useFormatFeatureEntries(sourceId);
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
+  const localizeToolName = toolStore.useLocalizeResourceName(context.lang);
+  const translateArmorType = useTranslateArmorType(context.lang);
+  const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
+  const translateCreatureSkill = useTranslateCreatureSkill(context.lang);
+  const translateDieType = useTranslateDieType(context.lang);
+  const translateWeaponType = useTranslateWeaponType(context.lang);
 
-  return useCallback(
-    (characterClass: CharacterClass): LocalizedCharacterClass => {
-      const equipmentOptionOr = t("equipment.option.or");
-
-      const primary_abilities = characterClass.primary_abilities
-        .map(translateCreatureAbility)
-        .join(", ");
-
-      const saving_throw_proficiencies = characterClass.saving_throw_proficiencies
-        .map(translateCreatureAbility)
-        .join(", ");
-
-      const armor_proficiencies = [
-        ...characterClass.armor_proficiencies.map(translateArmorType),
-        translate(characterClass.armor_proficiencies_extra, lang),
-      ]
-        .filter((text) => text)
-        .join(", ");
-
-      const weapon_proficiencies = [
-        ...characterClass.weapon_proficiencies.map(translateWeaponType),
-        translate(characterClass.weapon_proficiencies_extra, lang),
-      ]
-        .filter((text) => text)
-        .join(", ");
-
-      const tool_proficiencies = characterClass.tool_proficiency_ids
-        .map(localizeToolName)
-        .sort()
-        .join(", ");
-
-      const info = formatInfo([
-        [
-          tp("saving_throw_proficiencies", characterClass.saving_throw_proficiencies.length),
-          saving_throw_proficiencies,
-        ],
-        [
-          tp(
-            "weapon_proficiencies",
-            characterClass.weapon_proficiencies.length +
-              (characterClass.weapon_proficiencies_extra ? 1 : 0),
-          ),
-          weapon_proficiencies,
-        ],
-        [
-          tp(
-            "armor_proficiencies",
-            characterClass.armor_proficiencies.length +
-              (characterClass.armor_proficiencies_extra ? 1 : 0),
-          ),
-          armor_proficiencies,
-        ],
-        [tp("tool_proficiencies", characterClass.tool_proficiency_ids.length), tool_proficiencies],
-      ]);
-
-      const skill_proficiencies_pool = characterClass.skill_proficiencies_pool.length
-        ? ti(
-            "skill_proficiencies_pool",
-            `${characterClass.skill_proficiencies_pool_quantity}`,
-            characterClass.skill_proficiencies_pool.map(translateCreatureSkill).sort().join(", "),
-          )
-        : "";
-
-      const starting_equipment = characterClass.starting_equipment
-        .map((group) => {
-          const groupText = joinWith(
-            group.options.map((option, index) => {
-              const optionText = [
-                ...option.bundle.equipments.map(({ id, notes, quantity }) => {
-                  const name = localizeEquipmentName(id);
-                  const name2 = formatEquipmentNameWithNotes(name, notes, lang);
-                  return tpi("equipment", quantity, name2, `${quantity}`);
-                }),
-                option.bundle.currency ? formatCp(option.bundle.currency) : "",
-              ]
-                .filter((entry) => entry)
-                .join(", ");
-              return group.options.length > 1
-                ? `(${numberToLetter(index)}) ${optionText}`
-                : optionText;
-            }),
-            "; ",
-            equipmentOptionOr,
-          );
-
-          return tpi("starting_equipment.group", group.options.length, groupText);
-        })
-        .filter((text) => text)
-        .join("\n");
-      const features = formatFeatureEntriesDetails(characterClass.feature_entries);
-
-      return {
-        ...localizeResource(characterClass),
-        descriptor: t("descriptor"),
-        details: formatDetails(
-          skill_proficiencies_pool,
-          starting_equipment ? ti("starting_equipment", starting_equipment) : "",
-          features,
-        ),
-
-        armor_proficiencies,
-        hp_die: translateDieType(characterClass.hp_die),
-        info,
-        primary_abilities,
-        saving_throw_proficiencies,
-        skill_proficiencies_pool,
-        starting_equipment,
-        tool_proficiencies,
-        weapon_proficiencies,
-      };
-    },
-    [
+  return useMemo(
+    () => ({
+      ...context,
       formatCp,
-      formatFeatureEntriesDetails,
-      lang,
+      formatFeatureEntries,
       localizeEquipmentName,
-      localizeResource,
       localizeToolName,
-      t,
-      ti,
-      tp,
-      tpi,
+      translateArmorType,
+      translateCreatureAbility,
+      translateCreatureSkill,
+      translateDieType,
+      translateWeaponType,
+    }),
+    [
+      context,
+      formatCp,
+      formatFeatureEntries,
+      localizeEquipmentName,
+      localizeToolName,
       translateArmorType,
       translateCreatureAbility,
       translateCreatureSkill,
       translateDieType,
       translateWeaponType,
     ],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Character Class
+//------------------------------------------------------------------------------
+
+function localizeCharacterClass(
+  characterClass: CharacterClass,
+  context: CharacterClassLocalizationContext,
+): LocalizedCharacterClass {
+  const equipmentOptionOr = context.t("equipment.option.or");
+
+  const primary_abilities = characterClass.primary_abilities
+    .map(context.translateCreatureAbility)
+    .join(", ");
+
+  const saving_throw_proficiencies = characterClass.saving_throw_proficiencies
+    .map(context.translateCreatureAbility)
+    .join(", ");
+
+  const armor_proficiencies = [
+    ...characterClass.armor_proficiencies.map(context.translateArmorType),
+    translate(characterClass.armor_proficiencies_extra, context.lang),
+  ]
+    .filter((text) => text)
+    .join(", ");
+
+  const weapon_proficiencies = [
+    ...characterClass.weapon_proficiencies.map(context.translateWeaponType),
+    translate(characterClass.weapon_proficiencies_extra, context.lang),
+  ]
+    .filter((text) => text)
+    .join(", ");
+
+  const tool_proficiencies = characterClass.tool_proficiency_ids
+    .map(context.localizeToolName)
+    .sort()
+    .join(", ");
+
+  const info = formatInfo([
+    [
+      context.tp("saving_throw_proficiencies", characterClass.saving_throw_proficiencies.length),
+      saving_throw_proficiencies,
+    ],
+    [
+      context.tp(
+        "weapon_proficiencies",
+        characterClass.weapon_proficiencies.length +
+          (characterClass.weapon_proficiencies_extra ? 1 : 0),
+      ),
+      weapon_proficiencies,
+    ],
+    [
+      context.tp(
+        "armor_proficiencies",
+        characterClass.armor_proficiencies.length +
+          (characterClass.armor_proficiencies_extra ? 1 : 0),
+      ),
+      armor_proficiencies,
+    ],
+    [
+      context.tp("tool_proficiencies", characterClass.tool_proficiency_ids.length),
+      tool_proficiencies,
+    ],
+  ]);
+
+  const skill_proficiencies_pool = characterClass.skill_proficiencies_pool.length
+    ? context.ti(
+        "skill_proficiencies_pool",
+        `${characterClass.skill_proficiencies_pool_quantity}`,
+        characterClass.skill_proficiencies_pool
+          .map(context.translateCreatureSkill)
+          .sort()
+          .join(", "),
+      )
+    : "";
+
+  const starting_equipment = characterClass.starting_equipment
+    .map((group) => {
+      const groupText = joinWith(
+        group.options.map((option, index) => {
+          const optionText = [
+            ...option.bundle.equipments.map(({ id, notes, quantity }) => {
+              const name = context.localizeEquipmentName(id);
+              const name2 = formatEquipmentNameWithNotes(name, notes, context.lang);
+              return context.tpi("equipment", quantity, name2, `${quantity}`);
+            }),
+            option.bundle.currency ? context.formatCp(option.bundle.currency) : "",
+          ]
+            .filter((entry) => entry)
+            .join(", ");
+          return group.options.length > 1 ? `(${numberToLetter(index)}) ${optionText}` : optionText;
+        }),
+        "; ",
+        equipmentOptionOr,
+      );
+
+      return context.tpi("starting_equipment.group", group.options.length, groupText);
+    })
+    .filter((text) => text)
+    .join("\n");
+  const features = context.formatFeatureEntries(characterClass.feature_entries);
+
+  return {
+    ...localizeResource(characterClass, context),
+    descriptor: context.t("descriptor"),
+    details: formatDetails(
+      skill_proficiencies_pool,
+      starting_equipment ? context.ti("starting_equipment", starting_equipment) : "",
+      features,
+    ),
+    armor_proficiencies,
+    hp_die: context.translateDieType(characterClass.hp_die),
+    info,
+    primary_abilities,
+    saving_throw_proficiencies,
+    skill_proficiencies_pool,
+    starting_equipment,
+    tool_proficiencies,
+    weapon_proficiencies,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Character Class
+//------------------------------------------------------------------------------
+
+export function useLocalizeCharacterClass(
+  sourceId: string,
+): (characterClass: CharacterClass) => LocalizedCharacterClass {
+  const context = useCharacterClassLocalizationContext(sourceId);
+  return useCallback(
+    (characterClass) => localizeCharacterClass(characterClass, context),
+    [context],
   );
 }
 

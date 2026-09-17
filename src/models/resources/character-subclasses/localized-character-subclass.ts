@@ -1,9 +1,13 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useFormatFeatureEntries } from "../../other/feature-entries";
 import { characterClassStore } from "../character-classes/character-class-store";
-import { localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import {
+  type ResourceLocalizationContext,
+  localizeResource,
+  localizedResourceSchema,
+  useResourceLocalizationContext,
+} from "../localized-resource";
 import { type CharacterSubclass, characterSubclassSchema } from "./character-subclass";
 
 //------------------------------------------------------------------------------
@@ -20,32 +24,60 @@ export const localizedCharacterSubclassSchema = localizedResourceSchema(
 export type LocalizedCharacterSubclass = z.infer<typeof localizedCharacterSubclassSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Character Subclass
+// Character Subclass Localization Context
 //------------------------------------------------------------------------------
 
-const useLocalizeCharacterClassName = characterClassStore.useLocalizeResourceName;
+type CharacterSubclassLocalizationContext = ResourceLocalizationContext & {
+  formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
+  localizeCharacterClassName: ReturnType<typeof characterClassStore.useLocalizeResourceName>;
+};
+
+//------------------------------------------------------------------------------
+// Use Character Subclass Localization Context
+//------------------------------------------------------------------------------
+
+function useCharacterSubclassLocalizationContext(
+  sourceId: string,
+): CharacterSubclassLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
+  const formatFeatureEntries = useFormatFeatureEntries(sourceId);
+  const localizeCharacterClassName = characterClassStore.useLocalizeResourceName(context.lang);
+
+  return useMemo(
+    () => ({ ...context, formatFeatureEntries, localizeCharacterClassName }),
+    [context, formatFeatureEntries, localizeCharacterClassName],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Character Subclass
+//------------------------------------------------------------------------------
+
+function localizeCharacterSubclass(
+  characterSubclass: CharacterSubclass,
+  context: CharacterSubclassLocalizationContext,
+): LocalizedCharacterSubclass {
+  const character_class = context.localizeCharacterClassName(characterSubclass.character_class_id);
+
+  return {
+    ...localizeResource(characterSubclass, context),
+    descriptor: context.ti("descriptor", character_class),
+    details: context.formatFeatureEntries(characterSubclass.feature_entries),
+    character_class,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Character Subclass
+//------------------------------------------------------------------------------
 
 export function useLocalizeCharacterSubclass(
   sourceId: string,
 ): (characterSubclass: CharacterSubclass) => LocalizedCharacterSubclass {
-  const { lang, ti } = useI18nLangContext(i18nContext);
-  const localizeResource = useLocalizeResource<CharacterSubclass>();
-  const localizeCharacterClass = useLocalizeCharacterClassName(lang);
-  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
-
+  const context = useCharacterSubclassLocalizationContext(sourceId);
   return useCallback(
-    (characterSubclass: CharacterSubclass): LocalizedCharacterSubclass => {
-      const character_class = localizeCharacterClass(characterSubclass.character_class_id);
-
-      return {
-        ...localizeResource(characterSubclass),
-        descriptor: ti("descriptor", character_class),
-        details: formatFeatureEntriesDetails(characterSubclass.feature_entries),
-
-        character_class,
-      };
-    },
-    [formatFeatureEntriesDetails, localizeCharacterClass, localizeResource, ti],
+    (characterSubclass) => localizeCharacterSubclass(characterSubclass, context),
+    [context],
   );
 }
 
