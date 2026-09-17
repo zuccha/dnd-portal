@@ -36,12 +36,11 @@ export function createResourcesAlbum<
 >(store: ResourceStore<R, L, F>, context: ResourcesContext<R>, extra: ResourcesAlbumExtra<R, L>) {
   const ResourceCardInteractive = createResourceCardInteractive(store, context, extra);
 
-  const { useFilteredResourceIds, useLocalizeResource } = store;
+  const { useFilteredResourceIds } = store;
   const { usePaletteName, useZoom } = context;
 
   function ResourcesAlbum({ sourceId }: ResourcesAlbumProps) {
     const filteredResourceIds = useFilteredResourceIds(sourceId);
-    const localizeResource = useLocalizeResource(sourceId);
     const paletteName = usePaletteName();
     const zoom = useZoom();
 
@@ -100,7 +99,6 @@ export function createResourcesAlbum<
                 return visibleById[id] ? (
                   <ResourceCardInteractive
                     key={id}
-                    localizeResource={localizeResource}
                     palette={palettes[paletteName]}
                     resourceId={id}
                     zoom={zoom}

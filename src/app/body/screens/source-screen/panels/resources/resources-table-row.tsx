@@ -10,7 +10,7 @@ import {
   PrinterIcon,
   SaveIcon,
 } from "lucide-react";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
@@ -55,8 +55,7 @@ export type ResourcesTableRowExtra<R extends Resource, L extends LocalizedResour
 // Create Resources Table Row
 //------------------------------------------------------------------------------
 
-type ResourcesTableRowProps<R extends Resource, L extends LocalizedResource<R>> = {
-  localizeResource: (resource: R) => L;
+type ResourcesTableRowProps = {
   resourceId: string;
 };
 
@@ -69,15 +68,17 @@ export function createResourcesTableRow<
   context: ResourcesContext<R>,
   extra: ResourcesTableRowExtra<R, L>,
 ) {
-  const { toggleResourceSelection, useResource, useResourceSelection } = store;
+  const { toggleResourceSelection, useLocalizedResource, useResource, useResourceSelection } =
+    store;
 
   const { usePaletteName, useResourceExpansion } = context;
 
-  function ResourcesTableRow({ localizeResource, resourceId }: ResourcesTableRowProps<R, L>) {
+  function ResourcesTableRow({ resourceId }: ResourcesTableRowProps) {
     const resource = useResource(resourceId);
-    if (!resource) return null;
+    const localizedResource = useLocalizedResource(resourceId);
+    if (!resource || !localizedResource) return null;
 
-    return <ResourcesTableRowContent localizeResource={localizeResource} resource={resource} />;
+    return <ResourcesTableRowContent localizedResource={localizedResource} resource={resource} />;
   }
 
   //------------------------------------------------------------------------------
@@ -85,9 +86,12 @@ export function createResourcesTableRow<
   //------------------------------------------------------------------------------
 
   function ResourcesTableRowContent({
-    localizeResource,
+    localizedResource,
     resource,
-  }: Omit<ResourcesTableRowProps<R, L>, "resourceId"> & { resource: R }) {
+  }: Omit<ResourcesTableRowProps, "resourceId"> & {
+    localizedResource: L;
+    resource: R;
+  }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const [system] = useI18nSystem();
 
@@ -95,10 +99,6 @@ export function createResourcesTableRow<
     const activeSourceEditable = useSourceEditable(activeSourceId);
     const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
-    const localizedResource = useMemo(
-      () => localizeResource(resource),
-      [localizeResource, resource],
-    );
     const selected = useResourceSelection(resource.id);
     const expanded = useResourceExpansion(resource.id, false);
     const details =

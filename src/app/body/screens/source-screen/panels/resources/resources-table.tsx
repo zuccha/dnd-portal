@@ -33,12 +33,10 @@ export function createResourcesTable<
   const ResourcesTableHead = createResourcesTableHead(store, context, extra);
   const ResourcesTableRow = createResourcesTableRow(store, context, extra);
 
-  const { useFilteredResourceIds, useLocalizeResource } = store;
+  const { useFilteredResourceIds } = store;
 
   return function ResourcesTable({ sourceId }: ResourcesTableProps) {
     const filteredResourceIds = useFilteredResourceIds(sourceId);
-    const localizeResource = useLocalizeResource(sourceId);
-
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
@@ -58,7 +56,7 @@ export function createResourcesTable<
 
               <Table.Body>
                 {filteredResourceIds.map((id) => (
-                  <ResourcesTableRow key={id} localizeResource={localizeResource} resourceId={id} />
+                  <ResourcesTableRow key={id} resourceId={id} />
                 ))}
               </Table.Body>
             </Table.Root>

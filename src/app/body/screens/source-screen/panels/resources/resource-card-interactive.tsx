@@ -1,6 +1,6 @@
 import { Badge, Box, Menu, Portal, Theme, VStack } from "@chakra-ui/react";
 import { EditIcon, EllipsisVerticalIcon, PrinterIcon, SaveIcon } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
@@ -45,8 +45,7 @@ export type ResourceCardInteractiveExtra<R extends Resource, L extends Localized
 // Create Resource Card Interactive
 //------------------------------------------------------------------------------
 
-export type ResourceCardInteractiveProps<R extends Resource, L extends LocalizedResource<R>> = {
-  localizeResource: (resource: R) => L;
+export type ResourceCardInteractiveProps = {
   palette?: Palette;
   resourceId: string;
   zoom?: number;
@@ -67,25 +66,23 @@ export function createResourceCardInteractive<
   context: ResourcesContext<R>,
   extra: ResourceCardInteractiveExtra<R, L>,
 ) {
-  const { setResourceSelection, useResource, useResourceSelection } = store;
+  const { setResourceSelection, useLocalizedResource, useResource, useResourceSelection } = store;
 
   const AlbumCard = extra.AlbumCard;
   const { useCardMode, usePaletteName, useShowImage } = context;
 
   function ResourcesAlbumCardInteractive({
-    localizeResource,
     palette = defaultPalette,
     resourceId,
     zoom,
-  }: ResourceCardInteractiveProps<R, L>) {
-    const resource = useResource(resourceId);
-    if (!resource) return null;
+  }: ResourceCardInteractiveProps) {
+    const localizedResource = useLocalizedResource(resourceId);
+    if (!localizedResource) return null;
 
     return (
       <ResourcesAlbumCardInteractiveContent
-        localizeResource={localizeResource}
         palette={palette}
-        resource={resource}
+        localizedResource={localizedResource}
         zoom={zoom}
       />
     );
@@ -96,18 +93,16 @@ export function createResourceCardInteractive<
   //------------------------------------------------------------------------------
 
   function ResourcesAlbumCardInteractiveContent({
-    localizeResource,
     palette = defaultPalette,
-    resource,
+    localizedResource,
     zoom,
-  }: Omit<ResourceCardInteractiveProps<R, L>, "resourceId"> & { resource: R }) {
+  }: Omit<ResourceCardInteractiveProps, "resourceId"> & {
+    localizedResource: L;
+  }) {
+    const resource = localizedResource._raw;
     const { lang, t } = useI18nLangContext(i18nContext);
     const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
-    const localizedResource = useMemo(
-      () => localizeResource(resource),
-      [localizeResource, resource],
-    );
     const visibleActions =
       extra.actions?.filter(({ isVisible }) => !isVisible || isVisible(localizedResource._raw)) ??
       [];

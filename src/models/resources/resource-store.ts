@@ -340,6 +340,36 @@ export function createResourceStore<
     );
   }
 
+  //------------------------------------------------------------------------------
+  // Use Localized Resource Name
+  //------------------------------------------------------------------------------
+
+  function useLocalizedResourceName(resourceId: string): string {
+    const [lang] = useI18nLang();
+    const resource = useResource(resourceId);
+    return resource ? translate(resource.name, lang) : "";
+  }
+
+  //------------------------------------------------------------------------------
+  // Use Localized Resource Name Short
+  //------------------------------------------------------------------------------
+
+  function useLocalizedResourceNameShort(resourceId: string): string {
+    const [lang] = useI18nLang();
+    const resource = useResource(resourceId);
+    return resource ? translate(resource.name_short, lang) : "";
+  }
+
+  //------------------------------------------------------------------------------
+  // Use Localized Resource
+  //------------------------------------------------------------------------------
+
+  function useLocalizedResource(resourceId: string): L | undefined {
+    const resource = useResource(resourceId);
+    const localizeResource = useLocalizeResource(resource?.source_id ?? "");
+    return resource ? localizeResource(resource) : undefined;
+  }
+
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resource Options
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -399,6 +429,9 @@ export function createResourceStore<
     useLocalizeResource,
     useLocalizeResourceName,
     useLocalizeResourceNameShort,
+    useLocalizedResource,
+    useLocalizedResourceName,
+    useLocalizedResourceNameShort,
     useResourceOptions,
   };
 }
