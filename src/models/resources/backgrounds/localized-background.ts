@@ -1,6 +1,5 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
@@ -12,10 +11,12 @@ import { equipmentReferenceStore } from "../equipment/equipment-reference-store"
 import { toolStore } from "../equipment/tools/tool-store";
 import { featStore } from "../feats/feat-store";
 import {
+  type ResourceLocalizationContext,
   formatDetails,
   formatInfo,
+  localizeResource,
   localizedResourceSchema,
-  useLocalizeResource,
+  useResourceLocalizationContext,
 } from "../localized-resource";
 import { type Background, backgroundSchema } from "./background";
 
@@ -38,104 +39,47 @@ export const localizedBackgroundSchema = localizedResourceSchema(
 export type LocalizedBackground = z.infer<typeof localizedBackgroundSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Background
+// Background Localization Context
 //------------------------------------------------------------------------------
 
-const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
-const useLocalizeFeatName = featStore.useLocalizeResourceName;
-const useLocalizeToolName = toolStore.useLocalizeResourceName;
+type BackgroundLocalizationContext = ResourceLocalizationContext & {
+  formatCp: ReturnType<typeof useFormatCp>;
+  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
+  localizeFeatName: ReturnType<typeof featStore.useLocalizeResourceName>;
+  localizeToolName: ReturnType<typeof toolStore.useLocalizeResourceName>;
+  translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
+  translateCreatureSkill: ReturnType<typeof useTranslateCreatureSkill>;
+};
 
-export function useLocalizeBackground(): (background: Background) => LocalizedBackground {
-  const { lang, t, ti, tp, tpi } = useI18nLangContext(i18nContext);
-  const localizeResource = useLocalizeResource<Background>();
-  const translateCreatureAbility = useTranslateCreatureAbility(lang);
-  const translateCreatureSkill = useTranslateCreatureSkill(lang);
-  const localizeEquipmentName = useLocalizeEquipmentName(lang);
-  const localizeFeatName = useLocalizeFeatName(lang);
-  const localizeToolName = useLocalizeToolName(lang);
+//------------------------------------------------------------------------------
+// Use Background Localization Context
+//------------------------------------------------------------------------------
+
+function useBackgroundLocalizationContext(): BackgroundLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
+  const localizeFeatName = featStore.useLocalizeResourceName(context.lang);
+  const localizeToolName = toolStore.useLocalizeResourceName(context.lang);
+  const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
+  const translateCreatureSkill = useTranslateCreatureSkill(context.lang);
 
-  return useCallback(
-    (background: Background): LocalizedBackground => {
-      const equipmentOptionOr = t("equipment.option.or");
-
-      const ability_scores = background.ability_scores.map(translateCreatureAbility).join(", ");
-
-      const feat_name = background.feat_id ? localizeFeatName(background.feat_id) : "";
-      const feat_notes = translate(background.feat_notes, lang);
-      const feat = formatNamedNote(feat_name, feat_notes);
-
-      const skill_proficiencies = background.skill_proficiencies
-        .map(translateCreatureSkill)
-        .sort()
-        .join(", ");
-
-      const tool_name = background.tool_proficiency_id
-        ? localizeToolName(background.tool_proficiency_id)
-        : "";
-      const tool_notes = translate(background.tool_notes, lang);
-      const tool_proficiency = formatNamedNote(tool_name, tool_notes);
-
-      const starting_equipment = background.starting_equipment
-        .map((group) => {
-          const groupText = joinWith(
-            group.options.map((option, index) => {
-              const optionText = [
-                ...option.bundle.equipments.map(({ id, notes, quantity }) => {
-                  const name = localizeEquipmentName(id);
-                  const name2 = formatEquipmentNameWithNotes(name, notes, lang);
-                  return tpi("equipment", quantity, name2, `${quantity}`);
-                }),
-                option.bundle.currency ? formatCp(option.bundle.currency) : "",
-              ]
-                .filter((entry) => entry)
-                .join(", ");
-              return group.options.length > 1
-                ? `(${numberToLetter(index)}) ${optionText}`
-                : optionText;
-            }),
-            "; ",
-            equipmentOptionOr,
-          );
-
-          return tpi("starting_equipment.group", group.options.length, groupText);
-        })
-        .filter((text) => text)
-        .join("\n");
-
-      const info = formatInfo([
-        [tp("ability_scores", background.ability_scores.length), ability_scores],
-        [tp("skill_proficiencies", background.skill_proficiencies.length), skill_proficiencies],
-        [t("feat"), feat],
-        [t("tool_proficiency"), tool_proficiency],
-      ]);
-
-      return {
-        ...localizeResource(background),
-        descriptor: t("descriptor"),
-        details: formatDetails(
-          starting_equipment ? ti("starting_equipment", starting_equipment) : "",
-        ),
-
-        ability_scores,
-        feat,
-        info,
-        skill_proficiencies,
-        starting_equipment,
-        tool_proficiency,
-      };
-    },
-    [
+  return useMemo(
+    () => ({
+      ...context,
       formatCp,
-      lang,
       localizeEquipmentName,
       localizeFeatName,
-      localizeResource,
       localizeToolName,
-      t,
-      ti,
-      tp,
-      tpi,
+      translateCreatureAbility,
+      translateCreatureSkill,
+    }),
+    [
+      context,
+      formatCp,
+      localizeEquipmentName,
+      localizeFeatName,
+      localizeToolName,
       translateCreatureAbility,
       translateCreatureSkill,
     ],
@@ -143,7 +87,91 @@ export function useLocalizeBackground(): (background: Background) => LocalizedBa
 }
 
 //------------------------------------------------------------------------------
-// Format Named NOte
+// Localize Background
+//------------------------------------------------------------------------------
+
+function localizeBackground(
+  background: Background,
+  context: BackgroundLocalizationContext,
+): LocalizedBackground {
+  const equipmentOptionOr = context.t("equipment.option.or");
+
+  const ability_scores = background.ability_scores.map(context.translateCreatureAbility).join(", ");
+
+  const feat_name = background.feat_id ? context.localizeFeatName(background.feat_id) : "";
+  const feat_notes = translate(background.feat_notes, context.lang);
+  const feat = formatNamedNote(feat_name, feat_notes);
+
+  const skill_proficiencies = background.skill_proficiencies
+    .map(context.translateCreatureSkill)
+    .sort()
+    .join(", ");
+
+  const tool_name = background.tool_proficiency_id
+    ? context.localizeToolName(background.tool_proficiency_id)
+    : "";
+  const tool_notes = translate(background.tool_notes, context.lang);
+  const tool_proficiency = formatNamedNote(tool_name, tool_notes);
+
+  const starting_equipment = background.starting_equipment
+    .map((group) => {
+      const groupText = joinWith(
+        group.options.map((option, index) => {
+          const optionText = [
+            ...option.bundle.equipments.map(({ id, notes, quantity }) => {
+              const name = context.localizeEquipmentName(id);
+              const name2 = formatEquipmentNameWithNotes(name, notes, context.lang);
+              return context.tpi("equipment", quantity, name2, `${quantity}`);
+            }),
+            option.bundle.currency ? context.formatCp(option.bundle.currency) : "",
+          ]
+            .filter((entry) => entry)
+            .join(", ");
+          return group.options.length > 1 ? `(${numberToLetter(index)}) ${optionText}` : optionText;
+        }),
+        "; ",
+        equipmentOptionOr,
+      );
+
+      return context.tpi("starting_equipment.group", group.options.length, groupText);
+    })
+    .filter((text) => text)
+    .join("\n");
+
+  const info = formatInfo([
+    [context.tp("ability_scores", background.ability_scores.length), ability_scores],
+    [context.tp("skill_proficiencies", background.skill_proficiencies.length), skill_proficiencies],
+    [context.t("feat"), feat],
+    [context.t("tool_proficiency"), tool_proficiency],
+  ]);
+
+  return {
+    ...localizeResource(background, context),
+    descriptor: context.t("descriptor"),
+    details: formatDetails(
+      starting_equipment ? context.ti("starting_equipment", starting_equipment) : "",
+    ),
+
+    ability_scores,
+    feat,
+    info,
+    skill_proficiencies,
+    starting_equipment,
+    tool_proficiency,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Background
+//------------------------------------------------------------------------------
+
+export function useLocalizeBackground(): (background: Background) => LocalizedBackground {
+  const context = useBackgroundLocalizationContext();
+  return useCallback((background) => localizeBackground(background, context), [context]);
+}
+
+//------------------------------------------------------------------------------
+// Format Named Note
 //------------------------------------------------------------------------------
 
 function formatNamedNote(name: string, note: string): string {
