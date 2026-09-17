@@ -1,6 +1,5 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { cmToDistanceValue } from "~/measures/distance";
 import { formatNumber } from "~/utils/number";
@@ -13,7 +12,12 @@ import { useTranslateWeaponProperty } from "../../../types/weapon-property";
 import { useTranslateWeaponType } from "../../../types/weapon-type";
 import { formatInfo } from "../../localized-resource";
 import { equipmentReferenceStore } from "../equipment-reference-store";
-import { localizedEquipmentSchema, useLocalizeEquipment } from "../localized-equipment";
+import {
+  type EquipmentLocalizationContext,
+  localizeEquipment,
+  localizedEquipmentSchema,
+  useEquipmentLocalizationContext,
+} from "../localized-equipment";
 import { type Weapon, weaponSchema } from "./weapon";
 
 //------------------------------------------------------------------------------
@@ -41,106 +45,128 @@ export const localizedWeaponSchema = localizedEquipmentSchema(
 export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Weapon
+// Weapon Localization Context
 //------------------------------------------------------------------------------
 
-const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+type WeaponLocalizationContext = EquipmentLocalizationContext & {
+  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
+  system: ReturnType<typeof useI18nSystem>[0];
+  translateDamageType: ReturnType<typeof useTranslateDamageType>;
+  translateWeaponMastery: ReturnType<typeof useTranslateWeaponMastery>;
+  translateWeaponMasteryRuling: ReturnType<typeof useTranslateWeaponMasteryRuling>;
+  translateWeaponProperty: ReturnType<typeof useTranslateWeaponProperty>;
+  translateWeaponType: ReturnType<typeof useTranslateWeaponType>;
+};
 
-export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => LocalizedWeapon {
-  const localizeEquipment = useLocalizeEquipment<Weapon>(sourceId);
-  const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
+//------------------------------------------------------------------------------
+// Use Weapon Localization Context
+//------------------------------------------------------------------------------
+
+function useWeaponLocalizationContext(sourceId: string): WeaponLocalizationContext {
+  const context = useEquipmentLocalizationContext(sourceId, i18nContext);
   const [system] = useI18nSystem();
+  const translateDamageType = useTranslateDamageType(context.lang);
+  const translateWeaponMastery = useTranslateWeaponMastery(context.lang);
+  const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(context.lang);
+  const translateWeaponProperty = useTranslateWeaponProperty(context.lang);
+  const translateWeaponType = useTranslateWeaponType(context.lang);
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
 
-  const translateDamageType = useTranslateDamageType(lang);
-  const translateWeaponMastery = useTranslateWeaponMastery(lang);
-  const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(lang);
-  const translateWeaponProperty = useTranslateWeaponProperty(lang);
-  const translateWeaponType = useTranslateWeaponType(lang);
-  const localizeEquipmentName = useLocalizeEquipmentName(lang);
-
-  return useCallback(
-    (weapon: Weapon): LocalizedWeapon => {
-      const damage_type = translateDamageType(weapon.damage_type);
-      const damage_extended = ti("damage_extended", weapon.damage, damage_type);
-
-      const damage_modifier = weapon.properties.includes("finesse")
-        ? t("damage_modifier.dex_or_str")
-        : !weapon.ranged || weapon.properties.includes("throw")
-          ? t("damage_modifier.str")
-          : t("damage_modifier.dex");
-
-      const damage_line = weapon.damage_versatile
-        ? `${weapon.damage} (${weapon.damage_versatile}) + ${damage_modifier}`
-        : `${weapon.damage} + ${damage_modifier}`;
-
-      const has_range = !!(weapon.range_long || weapon.range_short);
-      const ms = cmToDistanceValue(weapon.range_short ?? 0, "m");
-      const ml = cmToDistanceValue(weapon.range_long ?? 0, "m");
-      const is = cmToDistanceValue(weapon.range_short ?? 0, "ft");
-      const il = cmToDistanceValue(weapon.range_long ?? 0, "ft");
-
-      const range =
-        system === "metric"
-          ? ti("range.m", `${formatNumber(ms, lang)}/${formatNumber(ml, lang)}`)
-          : ti("range.ft", `${formatNumber(is, lang)}/${formatNumber(il, lang)}`);
-
-      const ammunition = weapon.ammunition_ids.map(localizeEquipmentName).sort().join(", ");
-
-      const properties = weapon.properties.map(translateWeaponProperty).sort().join(", ");
-
-      const info = formatInfo([
-        [tp("properties", weapon.properties.length), properties],
-        [t("range"), has_range ? range : ""],
-        [t("ammunition"), ammunition ? ammunition : ""],
-      ]);
-
-      const mastery = translateWeaponMastery(weapon.mastery);
-
-      const equipment = localizeEquipment(weapon);
-
-      const type = translateWeaponType(weapon.type);
-
-      return {
-        ...equipment,
-        descriptor: weapon.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
-        details: [
-          equipment.details,
-          weapon.mastery !== "none"
-            ? ti("mastery", mastery, translateWeaponMasteryRuling(weapon.mastery))
-            : undefined,
-        ]
-          .filter((text) => text)
-          .join("\n\n"),
-
-        damage: weapon.damage,
-        damage_extended,
-        damage_line,
-        damage_type,
-        damage_versatile: weapon.damage_versatile,
-        info,
-        mastery,
-        melee: weapon.melee,
-        properties,
-        range,
-        ranged: weapon.ranged,
-        type,
-      };
-    },
-    [
-      translateDamageType,
-      ti,
-      system,
-      lang,
+  return useMemo(
+    () => ({
+      ...context,
       localizeEquipmentName,
-      translateWeaponProperty,
-      tp,
-      t,
+      system,
+      translateDamageType,
       translateWeaponMastery,
-      localizeEquipment,
-      translateWeaponType,
       translateWeaponMasteryRuling,
+      translateWeaponProperty,
+      translateWeaponType,
+    }),
+    [
+      context,
+      localizeEquipmentName,
+      system,
+      translateDamageType,
+      translateWeaponMastery,
+      translateWeaponMasteryRuling,
+      translateWeaponProperty,
+      translateWeaponType,
     ],
   );
+}
+
+//------------------------------------------------------------------------------
+// Localize Weapon
+//------------------------------------------------------------------------------
+
+function localizeWeapon(weapon: Weapon, context: WeaponLocalizationContext): LocalizedWeapon {
+  const damage_type = context.translateDamageType(weapon.damage_type);
+  const damage_extended = context.ti("damage_extended", weapon.damage, damage_type);
+  const damage_modifier = weapon.properties.includes("finesse")
+    ? context.t("damage_modifier.dex_or_str")
+    : !weapon.ranged || weapon.properties.includes("throw")
+      ? context.t("damage_modifier.str")
+      : context.t("damage_modifier.dex");
+  const damage_line = weapon.damage_versatile
+    ? `${weapon.damage} (${weapon.damage_versatile}) + ${damage_modifier}`
+    : `${weapon.damage} + ${damage_modifier}`;
+  const has_range = !!(weapon.range_long || weapon.range_short);
+  const ms = cmToDistanceValue(weapon.range_short ?? 0, "m");
+  const ml = cmToDistanceValue(weapon.range_long ?? 0, "m");
+  const is = cmToDistanceValue(weapon.range_short ?? 0, "ft");
+  const il = cmToDistanceValue(weapon.range_long ?? 0, "ft");
+  const range =
+    context.system === "metric"
+      ? context.ti("range.m", `${formatNumber(ms, context.lang)}/${formatNumber(ml, context.lang)}`)
+      : context.ti(
+          "range.ft",
+          `${formatNumber(is, context.lang)}/${formatNumber(il, context.lang)}`,
+        );
+  const ammunition = weapon.ammunition_ids.map(context.localizeEquipmentName).sort().join(", ");
+  const properties = weapon.properties.map(context.translateWeaponProperty).sort().join(", ");
+  const info = formatInfo([
+    [context.tp("properties", weapon.properties.length), properties],
+    [context.t("range"), has_range ? range : ""],
+    [context.t("ammunition"), ammunition ? ammunition : ""],
+  ]);
+  const mastery = context.translateWeaponMastery(weapon.mastery);
+  const equipment = localizeEquipment(weapon, context);
+  const type = context.translateWeaponType(weapon.type);
+
+  return {
+    ...equipment,
+    descriptor: weapon.magic ? context.ti("subtitle.magic", type, equipment.rarity) : type,
+    details: [
+      equipment.details,
+      weapon.mastery !== "none"
+        ? context.ti("mastery", mastery, context.translateWeaponMasteryRuling(weapon.mastery))
+        : undefined,
+    ]
+      .filter((text) => text)
+      .join("\n\n"),
+    damage: weapon.damage,
+    damage_extended,
+    damage_line,
+    damage_type,
+    damage_versatile: weapon.damage_versatile,
+    info,
+    mastery,
+    melee: weapon.melee,
+    properties,
+    range,
+    ranged: weapon.ranged,
+    type,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Weapon
+//------------------------------------------------------------------------------
+
+export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => LocalizedWeapon {
+  const context = useWeaponLocalizationContext(sourceId);
+  return useCallback((weapon) => localizeWeapon(weapon, context), [context]);
 }
 
 //------------------------------------------------------------------------------

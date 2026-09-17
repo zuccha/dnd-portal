@@ -1,11 +1,15 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
 import { useTranslateToolType } from "../../../types/tool-type";
 import { equipmentReferenceStore } from "../equipment-reference-store";
-import { localizedEquipmentSchema, useLocalizeEquipment } from "../localized-equipment";
+import {
+  type EquipmentLocalizationContext,
+  localizeEquipment,
+  localizedEquipmentSchema,
+  useEquipmentLocalizationContext,
+} from "../localized-equipment";
 import { type Tool, toolSchema } from "./tool";
 
 //------------------------------------------------------------------------------
@@ -20,54 +24,69 @@ export const localizedToolSchema = localizedEquipmentSchema(toolSchema, z.litera
 export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Tool
+// Tool Localization Context
 //------------------------------------------------------------------------------
 
-const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+type ToolLocalizationContext = EquipmentLocalizationContext & {
+  localizeEquipmentName: ReturnType<typeof equipmentReferenceStore.useLocalizeResourceName>;
+  translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
+  translateToolType: ReturnType<typeof useTranslateToolType>;
+};
 
-export function useLocalizeTool(sourceId: string): (tool: Tool) => LocalizedTool {
-  const localizeEquipment = useLocalizeEquipment<Tool>(sourceId);
-  const { lang, ti, tpi } = useI18nLangContext(i18nContext);
+//------------------------------------------------------------------------------
+// Use Tool Localization Context
+//------------------------------------------------------------------------------
 
-  const translateCreatureAbility = useTranslateCreatureAbility(lang);
-  const translateToolType = useTranslateToolType(lang);
-  const localizeEquipmentName = useLocalizeEquipmentName(lang);
+function useToolLocalizationContext(sourceId: string): ToolLocalizationContext {
+  const context = useEquipmentLocalizationContext(sourceId, i18nContext);
+  const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
+  const translateToolType = useTranslateToolType(context.lang);
+  const localizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName(context.lang);
 
-  return useCallback(
-    (tool: Tool): LocalizedTool => {
-      const equipment = localizeEquipment(tool);
-      const type = translateToolType(tool.type);
-
-      const craft = tool.craft_ids.map(localizeEquipmentName).sort().join(", ") + ".";
-
-      const utilize = translate(tool.utilize, lang);
-      const utilizeCount = utilize ? (utilize.includes(",") ? 2 : 1) : 0;
-
-      return {
-        ...equipment,
-        descriptor: tool.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
-        details: [
-          tpi("utilize", utilizeCount, utilize),
-          tpi("craft", tool.craft_ids.length, craft),
-          equipment.details,
-        ]
-          .filter((text) => text)
-          .join("\n\n"),
-
-        ability: translateCreatureAbility(tool.ability),
-        type,
-      };
-    },
-    [
-      lang,
-      localizeEquipment,
+  return useMemo(
+    () => ({
+      ...context,
       localizeEquipmentName,
-      ti,
-      tpi,
       translateCreatureAbility,
       translateToolType,
-    ],
+    }),
+    [context, localizeEquipmentName, translateCreatureAbility, translateToolType],
   );
+}
+
+//------------------------------------------------------------------------------
+// Localize Tool
+//------------------------------------------------------------------------------
+
+function localizeTool(tool: Tool, context: ToolLocalizationContext): LocalizedTool {
+  const equipment = localizeEquipment(tool, context);
+  const type = context.translateToolType(tool.type);
+  const craft = tool.craft_ids.map(context.localizeEquipmentName).sort().join(", ") + ".";
+  const utilize = translate(tool.utilize, context.lang);
+  const utilizeCount = utilize ? (utilize.includes(",") ? 2 : 1) : 0;
+
+  return {
+    ...equipment,
+    descriptor: tool.magic ? context.ti("subtitle.magic", type, equipment.rarity) : type,
+    details: [
+      context.tpi("utilize", utilizeCount, utilize),
+      context.tpi("craft", tool.craft_ids.length, craft),
+      equipment.details,
+    ]
+      .filter((text) => text)
+      .join("\n\n"),
+    ability: context.translateCreatureAbility(tool.ability),
+    type,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Tool
+//------------------------------------------------------------------------------
+
+export function useLocalizeTool(sourceId: string): (tool: Tool) => LocalizedTool {
+  const context = useToolLocalizationContext(sourceId);
+  return useCallback((tool) => localizeTool(tool, context), [context]);
 }
 
 //------------------------------------------------------------------------------

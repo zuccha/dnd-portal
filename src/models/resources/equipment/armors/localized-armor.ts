@@ -1,10 +1,14 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { formatSigned } from "~/utils/number";
 import { useTranslateArmorType } from "../../../types/armor-type";
 import { formatInfo } from "../../localized-resource";
-import { localizedEquipmentSchema, useLocalizeEquipment } from "../localized-equipment";
+import {
+  type EquipmentLocalizationContext,
+  localizeEquipment,
+  localizedEquipmentSchema,
+  useEquipmentLocalizationContext,
+} from "../localized-equipment";
 import { type Armor, armorSchema } from "./armor";
 
 //------------------------------------------------------------------------------
@@ -28,77 +32,96 @@ export const localizedArmorSchema = localizedEquipmentSchema(
 export type LocalizedArmor = z.infer<typeof localizedArmorSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Armor
+// Armor Localization Context
+//------------------------------------------------------------------------------
+
+type ArmorLocalizationContext = EquipmentLocalizationContext & {
+  translateArmorType: ReturnType<typeof useTranslateArmorType>;
+};
+
+//------------------------------------------------------------------------------
+// Use Armor Localization Context
+//------------------------------------------------------------------------------
+
+function useArmorLocalizationContext(sourceId: string): ArmorLocalizationContext {
+  const context = useEquipmentLocalizationContext(sourceId, i18nContext);
+  const translateArmorType = useTranslateArmorType(context.lang);
+
+  return useMemo(() => ({ ...context, translateArmorType }), [context, translateArmorType]);
+}
+
+//------------------------------------------------------------------------------
+// Localize Armor
+//------------------------------------------------------------------------------
+
+function localizeArmor(armor: Armor, context: ArmorLocalizationContext): LocalizedArmor {
+  const { t, ti, tp } = context;
+
+  const formatModifier = (ability: string, modifier: number | null | undefined) => {
+    return modifier === null || modifier === undefined
+      ? t(`armor_class_ability_modifier[${ability}].unlimited`)
+      : modifier > 0
+        ? ti(`armor_class_ability_modifier[${ability}].max`, `${modifier}`)
+        : "";
+  };
+
+  const baseArmorClass =
+    armor.base_armor_class && armor.armor_class_modifier
+      ? `${armor.base_armor_class + armor.armor_class_modifier}`
+      : armor.base_armor_class
+        ? `${armor.base_armor_class}`
+        : armor.armor_class_modifier
+          ? formatSigned(armor.armor_class_modifier)
+          : "0";
+  const armorClass = [
+    baseArmorClass,
+    formatModifier("cha", armor.armor_class_max_cha_modifier),
+    formatModifier("con", armor.armor_class_max_con_modifier),
+    formatModifier("dex", armor.armor_class_max_dex_modifier),
+    formatModifier("int", armor.armor_class_max_int_modifier),
+    formatModifier("str", armor.armor_class_max_str_modifier),
+    formatModifier("wis", armor.armor_class_max_wis_modifier),
+  ]
+    .filter((modifier) => modifier)
+    .join(" + ");
+
+  const requirementsList = [
+    armor.required_cha ? ti("required[cha]", `${armor.required_cha}`) : "",
+    armor.required_con ? ti("required[con]", `${armor.required_con}`) : "",
+    armor.required_dex ? ti("required[dex]", `${armor.required_dex}`) : "",
+    armor.required_int ? ti("required[int]", `${armor.required_int}`) : "",
+    armor.required_str ? ti("required[str]", `${armor.required_str}`) : "",
+    armor.required_wis ? ti("required[wis]", `${armor.required_wis}`) : "",
+  ].filter((requirement) => requirement);
+  const requirements = requirementsList.join(", ");
+
+  const info = formatInfo([
+    [tp("requirements", requirementsList.length), requirements],
+    [t("stealth"), armor.disadvantage_on_stealth ? t("stealth.disadvantage") : ""],
+  ]);
+
+  const type = context.translateArmorType(armor.type);
+  const equipment = localizeEquipment(armor, context);
+
+  return {
+    ...equipment,
+    descriptor: armor.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+    armor_class: armorClass,
+    disadvantage_on_stealth: armor.disadvantage_on_stealth,
+    info,
+    requirements,
+    stealth: armor.disadvantage_on_stealth ? t("stealth.disadvantage") : t("stealth.normal"),
+    type,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Armor
 //------------------------------------------------------------------------------
 
 export function useLocalizeArmor(sourceId: string): (armor: Armor) => LocalizedArmor {
-  const localizeEquipment = useLocalizeEquipment<Armor>(sourceId);
-  const { lang, t, ti, tp } = useI18nLangContext(i18nContext);
-  const translateArmorType = useTranslateArmorType(lang);
-
-  return useCallback(
-    (armor: Armor): LocalizedArmor => {
-      const equipment = localizeEquipment(armor);
-
-      const formatModifier = (ability: string, modifier: number | null | undefined) => {
-        return modifier === null || modifier === undefined
-          ? t(`armor_class_ability_modifier[${ability}].unlimited`)
-          : modifier > 0
-            ? ti(`armor_class_ability_modifier[${ability}].max`, `${modifier}`)
-            : "";
-      };
-
-      const baseArmorClass =
-        armor.base_armor_class && armor.armor_class_modifier
-          ? `${armor.base_armor_class + armor.armor_class_modifier}`
-          : armor.base_armor_class
-            ? `${armor.base_armor_class}`
-            : armor.armor_class_modifier
-              ? formatSigned(armor.armor_class_modifier)
-              : "0";
-      const armorClass = [
-        baseArmorClass,
-        formatModifier("cha", armor.armor_class_max_cha_modifier),
-        formatModifier("con", armor.armor_class_max_con_modifier),
-        formatModifier("dex", armor.armor_class_max_dex_modifier),
-        formatModifier("int", armor.armor_class_max_int_modifier),
-        formatModifier("str", armor.armor_class_max_str_modifier),
-        formatModifier("wis", armor.armor_class_max_wis_modifier),
-      ]
-        .filter((modifier) => modifier)
-        .join(" + ");
-
-      const requirementsList = [
-        armor.required_cha ? ti("required[cha]", `${armor.required_cha}`) : "",
-        armor.required_con ? ti("required[con]", `${armor.required_con}`) : "",
-        armor.required_dex ? ti("required[dex]", `${armor.required_dex}`) : "",
-        armor.required_int ? ti("required[int]", `${armor.required_int}`) : "",
-        armor.required_str ? ti("required[str]", `${armor.required_str}`) : "",
-        armor.required_wis ? ti("required[wis]", `${armor.required_wis}`) : "",
-      ].filter((requirement) => requirement);
-      const requirements = requirementsList.join(", ");
-
-      const info = formatInfo([
-        [tp("requirements", requirementsList.length), requirements],
-        [t("stealth"), armor.disadvantage_on_stealth ? t("stealth.disadvantage") : ""],
-      ]);
-
-      const type = translateArmorType(armor.type);
-
-      return {
-        ...equipment,
-        descriptor: armor.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
-
-        armor_class: armorClass,
-        disadvantage_on_stealth: armor.disadvantage_on_stealth,
-        info,
-        requirements,
-        stealth: armor.disadvantage_on_stealth ? t("stealth.disadvantage") : t("stealth.normal"),
-        type,
-      };
-    },
-    [localizeEquipment, t, ti, tp, translateArmorType],
-  );
+  const context = useArmorLocalizationContext(sourceId);
+  return useCallback((armor) => localizeArmor(armor, context), [context]);
 }
 
 //------------------------------------------------------------------------------

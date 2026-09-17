@@ -1,12 +1,18 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z, { ZodType } from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import type { I18nLangContext } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
-import { useFormatFeatureEntries } from "../../other/feature-entries";
+import { formatFeatureEntries, useFormatFeatureEntries } from "../../other/feature-entries";
 import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
-import { formatDetails, localizedResourceSchema, useLocalizeResource } from "../localized-resource";
+import {
+  type ResourceLocalizationContext,
+  formatDetails,
+  localizeResource,
+  localizedResourceSchema,
+  useResourceLocalizationContext,
+} from "../localized-resource";
 import { type Equipment } from "./equipment";
 
 //------------------------------------------------------------------------------
@@ -30,61 +36,92 @@ export type LocalizedEquipment<E extends Equipment> = z.infer<
 >;
 
 //------------------------------------------------------------------------------
-// Use Localized Equipment
+// Equipment Localization Context
+//------------------------------------------------------------------------------
+
+export type EquipmentLocalizationContext = ResourceLocalizationContext & {
+  formatCost: ReturnType<typeof useFormatCp>;
+  formatFeatureEntries: (entries: Parameters<typeof formatFeatureEntries>[0]) => string;
+  formatWeight: ReturnType<typeof useFormatGrams>;
+  translateRarity: (value: Equipment["rarity"]) => string;
+};
+
+//------------------------------------------------------------------------------
+// Use Equipment Localization Context
+//------------------------------------------------------------------------------
+
+export function useEquipmentLocalizationContext(
+  sourceId: string,
+  context: I18nLangContext = i18nContext,
+): EquipmentLocalizationContext {
+  const mergedContext = useMemo(() => ({ ...i18nContext, ...context }), [context]);
+  const resourceContext = useResourceLocalizationContext(mergedContext);
+  const formatWeight = useFormatGrams();
+  const formatCost = useFormatCp();
+  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
+  const translateRarity = useTranslateEquipmentRarity(resourceContext.lang);
+
+  return useMemo(
+    () => ({
+      ...resourceContext,
+      formatCost,
+      formatFeatureEntries: formatFeatureEntriesDetails,
+      formatWeight,
+      translateRarity,
+    }),
+    [formatCost, formatFeatureEntriesDetails, formatWeight, resourceContext, translateRarity],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Equipment
+//------------------------------------------------------------------------------
+
+export function localizeEquipment<E extends Equipment>(
+  equipment: E,
+  context: EquipmentLocalizationContext,
+): LocalizedEquipment<E> {
+  const rarity = context.translateRarity(equipment.rarity);
+  const attunementNotes = translate(equipment.attunement_notes, context.lang);
+  const attunementSlots = equipment.required_attunement_slots;
+  const attunement =
+    equipment.magic && attunementSlots > 0
+      ? attunementNotes
+        ? context.tpi(
+            "attunement.with_notes",
+            attunementSlots,
+            `${attunementSlots}`,
+            attunementNotes,
+          )
+        : context.tpi("attunement", attunementSlots, `${attunementSlots}`)
+      : "";
+  const notes = translate(equipment.notes, context.lang);
+  const features = context.formatFeatureEntries(equipment.feature_entries);
+
+  return {
+    ...localizeResource(equipment, context),
+    details: formatDetails(attunement, notes, features),
+    cost: equipment.cost === null ? "" : context.formatCost(equipment.cost),
+    magic: equipment.magic,
+    magic_type: equipment.magic
+      ? equipment.rarity === "artifact"
+        ? context.t("magic_type.magic.artifact")
+        : context.ti("magic_type.magic", rarity)
+      : context.t("magic_type.non_magic"),
+    rarity,
+    weight: equipment.weight === null ? "" : context.formatWeight(equipment.weight),
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Equipment
 //------------------------------------------------------------------------------
 
 export function useLocalizeEquipment<E extends Equipment>(
   sourceId: string,
 ): (equipment: E) => LocalizedEquipment<E> {
-  const localizeResource = useLocalizeResource<E>();
-  const { lang, t, ti, tpi } = useI18nLangContext(i18nContext);
-
-  const formatWeight = useFormatGrams();
-  const formatCost = useFormatCp();
-  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
-  const translateRarity = useTranslateEquipmentRarity(lang);
-
-  return useCallback(
-    (equipment: E): LocalizedEquipment<E> => {
-      const rarity = translateRarity(equipment.rarity);
-      const attunementNotes = translate(equipment.attunement_notes, lang);
-      const attunementSlots = equipment.required_attunement_slots;
-      const attunement =
-        equipment.magic && attunementSlots > 0
-          ? attunementNotes
-            ? tpi("attunement.with_notes", attunementSlots, `${attunementSlots}`, attunementNotes)
-            : tpi("attunement", attunementSlots, `${attunementSlots}`)
-          : "";
-      const notes = translate(equipment.notes, lang);
-      const features = formatFeatureEntriesDetails(equipment.feature_entries);
-
-      return {
-        ...localizeResource(equipment),
-        details: formatDetails(attunement, notes, features),
-
-        cost: equipment.cost === null ? "" : formatCost(equipment.cost),
-        magic: equipment.magic,
-        magic_type: equipment.magic
-          ? equipment.rarity === "artifact"
-            ? t("magic_type.magic.artifact")
-            : ti("magic_type.magic", rarity)
-          : t("magic_type.non_magic"),
-        rarity,
-        weight: equipment.weight === null ? "" : formatWeight(equipment.weight),
-      };
-    },
-    [
-      formatCost,
-      formatFeatureEntriesDetails,
-      formatWeight,
-      lang,
-      localizeResource,
-      t,
-      ti,
-      tpi,
-      translateRarity,
-    ],
-  );
+  const context = useEquipmentLocalizationContext(sourceId);
+  return useCallback((equipment) => localizeEquipment(equipment, context), [context]);
 }
 
 //------------------------------------------------------------------------------

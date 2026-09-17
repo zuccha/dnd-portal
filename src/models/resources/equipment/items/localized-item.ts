@@ -1,8 +1,12 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useTranslateItemType } from "../../../types/item-type";
-import { localizedEquipmentSchema, useLocalizeEquipment } from "../localized-equipment";
+import {
+  type EquipmentLocalizationContext,
+  localizeEquipment,
+  localizedEquipmentSchema,
+  useEquipmentLocalizationContext,
+} from "../localized-equipment";
 import { type Item, itemSchema } from "./item";
 
 //------------------------------------------------------------------------------
@@ -19,41 +23,57 @@ export const localizedItemSchema = localizedEquipmentSchema(itemSchema, z.litera
 export type LocalizedItem = z.infer<typeof localizedItemSchema>;
 
 //------------------------------------------------------------------------------
-// Use Localized Item
+// Item Localization Context
+//------------------------------------------------------------------------------
+
+type ItemLocalizationContext = EquipmentLocalizationContext & {
+  translateItemType: ReturnType<typeof useTranslateItemType>;
+};
+
+//------------------------------------------------------------------------------
+// Use Item Localization Context
+//------------------------------------------------------------------------------
+
+function useItemLocalizationContext(sourceId: string): ItemLocalizationContext {
+  const context = useEquipmentLocalizationContext(sourceId, i18nContext);
+  const translateItemType = useTranslateItemType(context.lang);
+
+  return useMemo(() => ({ ...context, translateItemType }), [context, translateItemType]);
+}
+
+//------------------------------------------------------------------------------
+// Localize Item
+//------------------------------------------------------------------------------
+
+function localizeItem(item: Item, context: ItemLocalizationContext): LocalizedItem {
+  const type =
+    item.type === "other"
+      ? item.magic
+        ? context.ti("wondrous_item")
+        : context.t("mundane_item")
+      : context.translateItemType(item.type);
+
+  const equipment = localizeEquipment(item, context);
+  const rarity = item.magic ? equipment.rarity : "";
+  const descriptor = item.magic ? `${type}, ${rarity}` : type;
+
+  return {
+    ...equipment,
+    charges: item.charges ? `${item.charges}` : "-",
+    consumable: item.consumable,
+    descriptor,
+    rarity,
+    type,
+  };
+}
+
+//------------------------------------------------------------------------------
+// Use Localize Item
 //------------------------------------------------------------------------------
 
 export function useLocalizeItem(sourceId: string): (item: Item) => LocalizedItem {
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
-
-  const translateType = useTranslateItemType(lang);
-  const localizeEquipment = useLocalizeEquipment<Item>(sourceId);
-
-  return useCallback(
-    (item: Item): LocalizedItem => {
-      const equipment = localizeEquipment(item);
-
-      const type =
-        item.type === "other"
-          ? item.magic
-            ? ti("wondrous_item")
-            : t("mundane_item")
-          : translateType(item.type);
-
-      const rarity = item.magic ? equipment.rarity : "";
-
-      const descriptor = item.magic ? `${type}, ${rarity}` : type;
-
-      return {
-        ...equipment,
-        charges: item.charges ? `${item.charges}` : "-",
-        consumable: item.consumable,
-        descriptor,
-        rarity,
-        type,
-      };
-    },
-    [localizeEquipment, t, ti, translateType],
-  );
+  const context = useItemLocalizationContext(sourceId);
+  return useCallback((item) => localizeItem(item, context), [context]);
 }
 
 //------------------------------------------------------------------------------
