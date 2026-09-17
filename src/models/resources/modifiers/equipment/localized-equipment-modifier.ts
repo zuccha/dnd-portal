@@ -1,12 +1,15 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import z, { type ZodType } from "zod";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
 import { useTranslateEquipmentRarity } from "~/models/types/equipment-rarity";
-import { formatDetails } from "../../localized-resource";
-import { localizedModifierSchema, useLocalizeModifier } from "../localized-modifier";
+import { formatDetails, useResourceLocalizationContext } from "../../localized-resource";
+import {
+  type ModifierLocalizationContext,
+  localizeModifier,
+  localizedModifierSchema,
+} from "../localized-modifier";
 import { type EquipmentModifier } from "./equipment-modifier";
 
 //------------------------------------------------------------------------------
@@ -34,50 +37,80 @@ export type LocalizedEquipmentModifier<EM extends EquipmentModifier> = z.infer<
 >;
 
 //------------------------------------------------------------------------------
+// Equipment Modifier Localization Context
+//------------------------------------------------------------------------------
+
+type EquipmentModifierLocalizationContext = ModifierLocalizationContext & {
+  formatCost: ReturnType<typeof useFormatCp>;
+  formatWeight: ReturnType<typeof useFormatGrams>;
+  translateRarity: ReturnType<typeof useTranslateEquipmentRarity>;
+};
+
+//------------------------------------------------------------------------------
+// Use Equipment Modifier Localization Context
+//------------------------------------------------------------------------------
+
+function useEquipmentModifierLocalizationContext(): EquipmentModifierLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
+  const formatCost = useFormatCp();
+  const formatWeight = useFormatGrams();
+  const translateRarity = useTranslateEquipmentRarity(context.lang);
+
+  return useMemo(
+    () => ({ ...context, formatCost, formatWeight, translateRarity }),
+    [context, formatCost, formatWeight, translateRarity],
+  );
+}
+
+//------------------------------------------------------------------------------
+// Localize Equipment Modifier
+//------------------------------------------------------------------------------
+
+function localizeEquipmentModifier<EM extends EquipmentModifier>(
+  equipmentModifier: EM,
+  context: EquipmentModifierLocalizationContext,
+): LocalizedEquipmentModifier<EM> {
+  const appliesTo = translate(equipmentModifier.applies_to, context.lang);
+  const attunementNotesDelta = translate(equipmentModifier.attunement_notes_delta, context.lang);
+  const notesDelta = translate(equipmentModifier.notes_delta, context.lang);
+  const rarityMinimum = equipmentModifier.rarity_minimum
+    ? context.translateRarity(equipmentModifier.rarity_minimum)
+    : "";
+  const requiredAttunementSlotsMinimum =
+    equipmentModifier.required_attunement_slots_minimum > 0
+      ? `${equipmentModifier.required_attunement_slots_minimum}`
+      : "";
+
+  return {
+    ...localizeModifier(equipmentModifier, context),
+    _raw: equipmentModifier,
+    descriptor: appliesTo,
+    details: formatDetails(notesDelta, attunementNotesDelta),
+
+    attunement_notes_delta: attunementNotesDelta,
+    cost_delta: context.formatCost(equipmentModifier.cost_delta),
+    magic: equipmentModifier.make_magic ? context.t("magic") : "",
+    make_magic: equipmentModifier.make_magic,
+    notes_delta: notesDelta,
+    rarity_minimum: rarityMinimum,
+    required_attunement_slots_minimum: requiredAttunementSlotsMinimum
+      ? context.ti("attunement_slots_minimum", requiredAttunementSlotsMinimum)
+      : "",
+    weight_delta: context.formatWeight(equipmentModifier.weight_delta),
+  };
+}
+
+//------------------------------------------------------------------------------
 // Use Localize Equipment Modifier
 //------------------------------------------------------------------------------
 
 export function useLocalizeEquipmentModifier<EM extends EquipmentModifier>(): (
   equipmentModifier: EM,
 ) => LocalizedEquipmentModifier<EM> {
-  const localizeModifier = useLocalizeModifier<EM>();
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
-  const formatCost = useFormatCp();
-  const formatWeight = useFormatGrams();
-  const translateRarity = useTranslateEquipmentRarity(lang);
-
+  const context = useEquipmentModifierLocalizationContext();
   return useCallback(
-    (equipmentModifier: EM): LocalizedEquipmentModifier<EM> => {
-      const appliesTo = translate(equipmentModifier.applies_to, lang);
-      const attunementNotesDelta = translate(equipmentModifier.attunement_notes_delta, lang);
-      const notesDelta = translate(equipmentModifier.notes_delta, lang);
-      const rarityMinimum = equipmentModifier.rarity_minimum
-        ? translateRarity(equipmentModifier.rarity_minimum)
-        : "";
-      const requiredAttunementSlotsMinimum =
-        equipmentModifier.required_attunement_slots_minimum > 0
-          ? `${equipmentModifier.required_attunement_slots_minimum}`
-          : "";
-
-      return {
-        ...localizeModifier(equipmentModifier),
-        _raw: equipmentModifier,
-        descriptor: appliesTo,
-        details: formatDetails(notesDelta, attunementNotesDelta),
-
-        attunement_notes_delta: attunementNotesDelta,
-        cost_delta: formatCost(equipmentModifier.cost_delta),
-        magic: equipmentModifier.make_magic ? t("magic") : "",
-        make_magic: equipmentModifier.make_magic,
-        notes_delta: notesDelta,
-        rarity_minimum: rarityMinimum,
-        required_attunement_slots_minimum: requiredAttunementSlotsMinimum
-          ? ti("attunement_slots_minimum", requiredAttunementSlotsMinimum)
-          : "",
-        weight_delta: formatWeight(equipmentModifier.weight_delta),
-      };
-    },
-    [formatCost, formatWeight, lang, localizeModifier, t, ti, translateRarity],
+    (equipmentModifier) => localizeEquipmentModifier(equipmentModifier, context),
+    [context],
   );
 }
 
