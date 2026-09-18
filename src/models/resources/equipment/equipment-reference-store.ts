@@ -17,36 +17,32 @@ const toolResources = catalogue.createResourceStore("tool");
 const weaponResources = catalogue.createResourceStore("weapon");
 
 //------------------------------------------------------------------------------
-// Get Equipment
-//------------------------------------------------------------------------------
-
-function getEquipment(resourceId: string): Equipment | undefined {
-  return (
-    armorResources.getResource(resourceId) ??
-    itemResources.getResource(resourceId) ??
-    toolResources.getResource(resourceId) ??
-    weaponResources.getResource(resourceId)
-  );
-}
-
-//------------------------------------------------------------------------------
-// Use Equipment Reference Ids
+// Use Equipment Reference Resources
 //------------------------------------------------------------------------------
 
 const useActiveSourceReferenceArmorIds = armorResources.useActiveSourceReferenceResourceIds;
 const useActiveSourceReferenceItemIds = itemResources.useActiveSourceReferenceResourceIds;
 const useActiveSourceReferenceToolIds = toolResources.useActiveSourceReferenceResourceIds;
 const useActiveSourceReferenceWeaponIds = weaponResources.useActiveSourceReferenceResourceIds;
+const useArmorResources = armorResources.useResources;
+const useItemResources = itemResources.useResources;
+const useToolResources = toolResources.useResources;
+const useWeaponResources = weaponResources.useResources;
 
-function useEquipmentReferenceIds(): string[] {
+function useEquipmentReferenceResources(): Equipment[] {
   const armorIds = useActiveSourceReferenceArmorIds();
   const itemIds = useActiveSourceReferenceItemIds();
   const toolIds = useActiveSourceReferenceToolIds();
   const weaponIds = useActiveSourceReferenceWeaponIds();
 
+  const armors = useArmorResources(armorIds);
+  const items = useItemResources(itemIds);
+  const tools = useToolResources(toolIds);
+  const weapons = useWeaponResources(weaponIds);
+
   return useMemo(
-    () => [...armorIds, ...itemIds, ...toolIds, ...weaponIds],
-    [armorIds, itemIds, toolIds, weaponIds],
+    () => [...armors, ...items, ...tools, ...weapons],
+    [armors, items, tools, weapons],
   );
 }
 
@@ -55,15 +51,7 @@ function useEquipmentReferenceIds(): string[] {
 //------------------------------------------------------------------------------
 
 function useLocalizedEquipmentNames(lang: I18nLang): Record<string, string> {
-  const resourceIds = useEquipmentReferenceIds();
-  const equipments = useMemo(
-    () =>
-      resourceIds.flatMap((id) => {
-        const equipment = getEquipment(id);
-        return equipment ? [equipment] : [];
-      }),
-    [resourceIds],
-  );
+  const equipments = useEquipmentReferenceResources();
 
   return useMemo(
     () =>
@@ -80,13 +68,11 @@ function useLocalizedEquipmentNames(lang: I18nLang): Record<string, string> {
 
 function useResourceOptions(): ResourceOption[] {
   const [lang] = useI18nLang();
-  const resourceIds = useEquipmentReferenceIds();
+  const equipments = useEquipmentReferenceResources();
 
   return useMemo(
     () =>
-      resourceIds
-        .map((id) => getEquipment(id))
-        .filter((equipment): equipment is Equipment => !!equipment)
+      equipments
         .map((equipment) => {
           const label = translate(equipment.name, lang);
           return {
@@ -97,7 +83,7 @@ function useResourceOptions(): ResourceOption[] {
           };
         })
         .sort(compareObjects("label")),
-    [lang, resourceIds],
+    [equipments, lang],
   );
 }
 
