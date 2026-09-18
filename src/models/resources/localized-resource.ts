@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z, { ZodType } from "zod";
 import type { I18nLang, I18nLangContext } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -81,16 +81,6 @@ export function localizeResource<R extends Resource>(
     source: resource.source_code,
     sourceVersion: context.translateSourceVersion(resource.source_version),
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Resource
-//------------------------------------------------------------------------------
-
-export function useLocalizeResource<R extends Resource>(): (resource: R) => LocalizedResource<R> {
-  const context = useResourceLocalizationContext();
-
-  return useCallback((resource) => localizeResource(resource, context), [context]);
 }
 
 //------------------------------------------------------------------------------
