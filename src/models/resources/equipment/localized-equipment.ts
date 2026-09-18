@@ -4,7 +4,7 @@ import type { I18nLangContext } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
-import { formatFeatureEntries, useFormatFeatureEntries } from "../../other/feature-entries";
+import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import {
   type ResourceLocalizationContext,
@@ -41,7 +41,7 @@ export type LocalizedEquipment<E extends Equipment> = z.infer<
 
 export type EquipmentLocalizationContext = ResourceLocalizationContext & {
   formatCost: ReturnType<typeof useFormatCp>;
-  formatFeatureEntries: (entries: Parameters<typeof formatFeatureEntries>[0]) => string;
+  featureEntries: string;
   formatWeight: ReturnType<typeof useFormatGrams>;
   translateRarity: (value: Equipment["rarity"]) => string;
 };
@@ -58,18 +58,18 @@ export function useEquipmentLocalizationContext(
   const resourceContext = useResourceLocalizationContext(mergedContext);
   const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
-  const formatFeatureEntriesDetails = useFormatFeatureEntries(equipment.source_id);
+  const featureEntries = useLocalizedFeatureEntries(equipment.feature_entries);
   const translateRarity = useTranslateEquipmentRarity(resourceContext.lang);
 
   return useMemo(
     () => ({
       ...resourceContext,
       formatCost,
-      formatFeatureEntries: formatFeatureEntriesDetails,
+      featureEntries,
       formatWeight,
       translateRarity,
     }),
-    [formatCost, formatFeatureEntriesDetails, formatWeight, resourceContext, translateRarity],
+    [featureEntries, formatCost, formatWeight, resourceContext, translateRarity],
   );
 }
 
@@ -96,7 +96,7 @@ export function localizeEquipment<E extends Equipment>(
         : context.tpi("attunement", attunementSlots, `${attunementSlots}`)
       : "";
   const notes = translate(equipment.notes, context.lang);
-  const features = context.formatFeatureEntries(equipment.feature_entries);
+  const features = context.featureEntries;
 
   return {
     ...localizeResource(equipment, context),

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
-import { useFormatFeatureEntries } from "../../other/feature-entries";
+import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateFeatCategory } from "../../types/feat-category";
 import {
   type ResourceLocalizationContext,
@@ -31,7 +31,7 @@ export type LocalizedFeat = z.infer<typeof localizedFeatSchema>;
 //------------------------------------------------------------------------------
 
 type FeatLocalizationContext = ResourceLocalizationContext & {
-  formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
+  featureEntries: string;
   translateFeatCategory: ReturnType<typeof useTranslateFeatCategory>;
 };
 
@@ -41,12 +41,12 @@ type FeatLocalizationContext = ResourceLocalizationContext & {
 
 export function useFeatLocalizationContext(feat: Feat): FeatLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
-  const formatFeatureEntries = useFormatFeatureEntries(feat.source_id);
+  const featureEntries = useLocalizedFeatureEntries(feat.feature_entries);
   const translateFeatCategory = useTranslateFeatCategory(context.lang);
 
   return useMemo(
-    () => ({ ...context, formatFeatureEntries, translateFeatCategory }),
-    [context, formatFeatureEntries, translateFeatCategory],
+    () => ({ ...context, featureEntries, translateFeatCategory }),
+    [context, featureEntries, translateFeatCategory],
   );
 }
 
@@ -57,7 +57,7 @@ export function useFeatLocalizationContext(feat: Feat): FeatLocalizationContext 
 export function localizeFeat(feat: Feat, context: FeatLocalizationContext): LocalizedFeat {
   const category = context.translateFeatCategory(feat.category);
   const description = translate(feat.description, context.lang);
-  const features = context.formatFeatureEntries(feat.feature_entries);
+  const features = context.featureEntries;
   const prerequisite = translate(feat.prerequisite, context.lang);
   const min_level = feat.min_level ? `${feat.min_level}` : "";
 

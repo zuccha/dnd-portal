@@ -5,7 +5,7 @@ import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { joinWith } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
-import { useFormatFeatureEntries } from "../../other/feature-entries";
+import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateArmorType } from "../../types/armor-type";
 import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
@@ -53,7 +53,7 @@ export type LocalizedCharacterClass = z.infer<typeof localizedCharacterClassSche
 
 type CharacterClassLocalizationContext = ResourceLocalizationContext & {
   formatCp: ReturnType<typeof useFormatCp>;
-  formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
+  featureEntries: string;
   localizedEquipmentNames: Record<string, string>;
   localizedToolNames: Record<string, string>;
   translateArmorType: ReturnType<typeof useTranslateArmorType>;
@@ -72,7 +72,7 @@ export function useCharacterClassLocalizationContext(
 ): CharacterClassLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
-  const formatFeatureEntries = useFormatFeatureEntries(characterClass.source_id);
+  const featureEntries = useLocalizedFeatureEntries(characterClass.feature_entries);
   const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
   const toolNames = useLocalizedToolNames(characterClass.tool_proficiency_ids);
   const localizedToolNames = useMemo(
@@ -92,7 +92,7 @@ export function useCharacterClassLocalizationContext(
     () => ({
       ...context,
       formatCp,
-      formatFeatureEntries,
+      featureEntries,
       localizedEquipmentNames,
       localizedToolNames,
       translateArmorType,
@@ -104,7 +104,7 @@ export function useCharacterClassLocalizationContext(
     [
       context,
       formatCp,
-      formatFeatureEntries,
+      featureEntries,
       localizedEquipmentNames,
       localizedToolNames,
       translateArmorType,
@@ -215,7 +215,7 @@ export function localizeCharacterClass(
     })
     .filter((text) => text)
     .join("\n");
-  const features = context.formatFeatureEntries(characterClass.feature_entries);
+  const features = context.featureEntries;
 
   return {
     ...localizeResource(characterClass, context),

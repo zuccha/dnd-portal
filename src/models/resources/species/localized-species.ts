@@ -3,7 +3,7 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCmWithUnit } from "~/measures/distance";
-import { useFormatFeatureEntries } from "../../other/feature-entries";
+import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateCreatureSize } from "../../types/creature-size";
 import { useTranslateCreatureType } from "../../types/creature-type";
 import {
@@ -39,7 +39,7 @@ export type LocalizedSpecies = z.infer<typeof localizedSpeciesSchema>;
 
 type SpeciesLocalizationContext = ResourceLocalizationContext & {
   formatCm: ReturnType<typeof useFormatCmWithUnit>;
-  formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
+  featureEntries: string;
   translateCreatureSize: ReturnType<typeof useTranslateCreatureSize>;
   translateCreatureType: ReturnType<typeof useTranslateCreatureType>;
 };
@@ -53,7 +53,7 @@ export function useSpeciesLocalizationContext(species: Species): SpeciesLocaliza
 
   const translateCreatureSize = useTranslateCreatureSize(context.lang);
   const translateCreatureType = useTranslateCreatureType(context.lang);
-  const formatFeatureEntries = useFormatFeatureEntries(species.source_id);
+  const featureEntries = useLocalizedFeatureEntries(species.feature_entries);
 
   const [system] = useI18nSystem();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
@@ -62,11 +62,11 @@ export function useSpeciesLocalizationContext(species: Species): SpeciesLocaliza
     () => ({
       ...context,
       formatCm,
-      formatFeatureEntries,
+      featureEntries,
       translateCreatureSize,
       translateCreatureType,
     }),
-    [context, formatCm, formatFeatureEntries, translateCreatureSize, translateCreatureType],
+    [context, featureEntries, formatCm, translateCreatureSize, translateCreatureType],
   );
 }
 
@@ -79,7 +79,7 @@ export function localizeSpecies(
   context: SpeciesLocalizationContext,
 ): LocalizedSpecies {
   const description = translate(species.description, context.lang);
-  const features = context.formatFeatureEntries(species.feature_entries);
+  const features = context.featureEntries;
   const sizes = species.sizes.map(context.translateCreatureSize).join("/");
   const type = context.translateCreatureType(species.type);
   const speed = context.formatCm(species.speed);

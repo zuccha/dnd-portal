@@ -1,39 +1,33 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
-import { defaultFeature } from "../resources/features/feature";
+import { defaultFeature, type Feature } from "../resources/features/feature";
 import { featureStore } from "../resources/features/feature-store";
 import type { FeatureEntry } from "../resources/features/feature-entry";
-
-//------------------------------------------------------------------------------
-// Feature Entries Localization Context
-//------------------------------------------------------------------------------
-
-export type FeatureEntriesLocalizationContext = {
-  getFeature: (featureId: string) => ReturnType<typeof featureStore.getResource>;
-  lang: string;
-  ti: (key: string, ...args: string[]) => string;
-};
 
 //------------------------------------------------------------------------------
 // Format Feature Entries
 //------------------------------------------------------------------------------
 
-export function formatFeatureEntries(
+function formatFeatureEntries(
   featureEntries: FeatureEntry[],
-  context: FeatureEntriesLocalizationContext,
+  features: Feature[],
+  lang: string,
+  ti: (key: string, ...args: string[]) => string,
 ): string {
+  const featuresById = new Map(features.map((feature) => [feature.id, feature]));
+
   return featureEntries
     .map((entry) => {
-      const feature = context.getFeature(entry.id) ?? defaultFeature;
+      const feature = featuresById.get(entry.id) ?? defaultFeature;
       const name = (
-        translate(feature.display_name, context.lang) ||
-        translate(feature.name, context.lang) ||
+        translate(feature.display_name, lang) ||
+        translate(feature.name, lang) ||
         " "
       ).replace(" ", " ");
-      const description = translate(feature.description, context.lang);
+      const description = translate(feature.description, lang);
       return [
-        entry.min_level ? context.ti("name.min_level", name, `${entry.min_level}`) : `##${name}##`,
+        entry.min_level ? ti("name.min_level", name, `${entry.min_level}`) : `##${name}##`,
         description,
       ]
         .filter(Boolean)
@@ -44,37 +38,10 @@ export function formatFeatureEntries(
 }
 
 //------------------------------------------------------------------------------
-// Use Format Feature Entries
-//------------------------------------------------------------------------------
-
-const { useResourceIds, useResources } = featureStore;
-
-export function useFormatFeatureEntries(
-  sourceId: string,
-): (featureEntries: FeatureEntry[]) => string {
-  const { lang, ti } = useI18nLangContext(i18nContext);
-
-  const featureIds = useResourceIds(sourceId);
-  const features = useResources(featureIds);
-  const featureMap = useMemo(
-    () => new Map(features.map((feature) => [feature.id, feature])),
-    [features],
-  );
-
-  return useCallback(
-    (featureEntries) =>
-      formatFeatureEntries(featureEntries, {
-        getFeature: (featureId) => featureMap.get(featureId),
-        lang,
-        ti,
-      }),
-    [featureMap, lang, ti],
-  );
-}
-
-//------------------------------------------------------------------------------
 // Use Localized Feature Entries
 //------------------------------------------------------------------------------
+
+const useFeatureResources = featureStore.useResources;
 
 export function useLocalizedFeatureEntries(featureEntries: FeatureEntry[]): string {
   const { lang, ti } = useI18nLangContext(i18nContext);
@@ -82,20 +49,10 @@ export function useLocalizedFeatureEntries(featureEntries: FeatureEntry[]): stri
     () => featureEntries.map((featureEntry) => featureEntry.id),
     [featureEntries],
   );
-  const features = useResources(featureIds);
-  const featureMap = useMemo(
-    () => new Map(features.map((feature) => [feature.id, feature])),
-    [features],
-  );
-
+  const features = useFeatureResources(featureIds);
   return useMemo(
-    () =>
-      formatFeatureEntries(featureEntries, {
-        getFeature: (featureId) => featureMap.get(featureId),
-        lang,
-        ti,
-      }),
-    [featureEntries, featureMap, lang, ti],
+    () => formatFeatureEntries(featureEntries, features, lang, ti),
+    [featureEntries, features, lang, ti],
   );
 }
 
