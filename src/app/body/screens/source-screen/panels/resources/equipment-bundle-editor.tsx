@@ -47,6 +47,10 @@ export default function EquipmentBundleEditor({
 
   const options = useEquipmentReferenceResourceOptions();
   const localizedNames = useEquipmentReferenceLocalizedNames(lang);
+  const optionsWithFallbackName = useMemo(
+    () => options.map((option) => ({ ...option, label: option.label || t("name.missing") })),
+    [options, t],
+  );
 
   const filterResourceOptions = useCallback((option: ResourceOption, search: string): boolean => {
     const normalizedFilter = normalizeString(search);
@@ -135,7 +139,7 @@ export default function EquipmentBundleEditor({
             minW="10em"
             onFilter={filterResourceOptions}
             onValueChange={setEquipmentId}
-            options={options}
+            options={optionsWithFallbackName}
             placeholder={t("search")}
             ref={searchRef}
             value={equipmentId}
@@ -176,7 +180,11 @@ export default function EquipmentBundleEditor({
                     {tpi(
                       "equipment",
                       quantity,
-                      formatEquipmentNameWithNotes(localizedNames[id] ?? "", notes, lang),
+                      formatEquipmentNameWithNotes(
+                        localizedNames[id] || t("name.missing"),
+                        notes,
+                        lang,
+                      ),
                       `${quantity}`,
                     )}
                   </Button>
@@ -189,7 +197,7 @@ export default function EquipmentBundleEditor({
           {selectedEquipment && (
             <VStack align="flex-end" gap={1} w="full">
               <HStack borderRadius="sm" borderWidth={1} px={2} py={1} w="full">
-                <Span flex={1}>{localizedNames[selectedEquipment.id] ?? ""}</Span>
+                <Span flex={1}>{localizedNames[selectedEquipment.id] || t("name.missing")}</Span>
 
                 <Input
                   bgColor="bg.info"
@@ -253,6 +261,10 @@ const i18nContext = {
   "notes": {
     en: "Notes",
     it: "Note",
+  },
+  "name.missing": {
+    en: "<Untitled>",
+    it: "<Senza nome>",
   },
   "search": {
     en: "Search",
