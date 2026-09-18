@@ -1,9 +1,9 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { Background } from "~/models/resources/backgrounds/background";
 import type { BackgroundFormData } from "~/models/resources/backgrounds/background-form";
-import type { StartingEquipmentGroup } from "~/models/resources/character-classes/starting-equipment";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { featStore } from "~/models/resources/feats/feat-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
@@ -121,7 +121,7 @@ export function createBackgroundEditor(form: Form<BackgroundFormData>) {
     defaultValue,
   }: {
     sourceId: string;
-    defaultValue: StartingEquipmentGroup[];
+    defaultValue: EquipmentBundle[][];
   }) {
     const { error, ...rest } = useStartingEquipment(defaultValue);
     const { t } = useI18nLangContext(i18nContext);

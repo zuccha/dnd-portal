@@ -1,11 +1,7 @@
 import { SimpleGrid, Span, type StackProps, VStack } from "@chakra-ui/react";
 import { XIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { defaultEquipmentBundle } from "~/models/other/equipment-bundle";
-import type {
-  StartingEquipmentGroup,
-  StartingEquipmentOption,
-} from "~/models/resources/character-classes/starting-equipment";
+import { defaultEquipmentBundle, type EquipmentBundle } from "~/models/other/equipment-bundle";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import { removeItem, replaceItem } from "~/utils/array";
@@ -18,8 +14,8 @@ import EquipmentBundleEditor from "../equipment-bundle-editor";
 
 export type StartingEquipmentEditorProps = StackProps & {
   sourceId: string;
-  value: StartingEquipmentGroup[];
-  onValueChange: (value: StartingEquipmentGroup[]) => void;
+  value: EquipmentBundle[][];
+  onValueChange: (value: EquipmentBundle[][]) => void;
 };
 
 export default function StartingEquipmentEditor({
@@ -30,14 +26,12 @@ export default function StartingEquipmentEditor({
 }: StartingEquipmentEditorProps) {
   const { t, ti } = useI18nLangContext(i18nContext);
 
-  const nextGroup = Math.max(...value.map(({ group }) => group), 0) + 1;
-
   return (
     <VStack align="flex-start" {...rest}>
       {value.map((group, i) => (
         <StartingEquipmentGroupEditor
-          group={group}
-          key={group.group}
+          equipmentBundles={group}
+          key={i}
           label={ti("group", `${i + 1}`)}
           onGroupChange={(g) => onValueChange(replaceItem(value, i, g))}
           onGroupRemove={() => onValueChange(removeItem(value, i))}
@@ -49,7 +43,7 @@ export default function StartingEquipmentEditor({
       <Button
         _hover={{ textDecoration: "underline" }}
         cursor="pointer"
-        onClick={() => onValueChange([...value, { group: nextGroup, options: [] }])}
+        onClick={() => onValueChange([...value, []])}
         unstyled
       >
         {t("group.add")}
@@ -64,27 +58,24 @@ export default function StartingEquipmentEditor({
 
 type StartingEquipmentGroupEditorProps = StackProps & {
   sourceId: string;
-  group: StartingEquipmentGroup;
+  equipmentBundles: EquipmentBundle[];
   label: string;
-  onGroupChange: (group: StartingEquipmentGroup) => void;
+  onGroupChange: (group: EquipmentBundle[]) => void;
   onGroupRemove: () => void;
 };
 
 function StartingEquipmentGroupEditor({
   sourceId,
   label,
-  group,
+  equipmentBundles,
   onGroupChange,
   onGroupRemove,
   ...rest
 }: StartingEquipmentGroupEditorProps) {
   const { t } = useI18nLangContext(i18nContext);
 
-  const options = group.options;
-  const nextOption = Math.max(...group.options.map(({ option }) => option), 0) + 1;
-
   return (
-    <VStack align="flex-start" gap={1} key={group.group} {...rest}>
+    <VStack align="flex-start" gap={1} {...rest}>
       <Span>
         <Span fontSize="sm" fontWeight="medium">
           {label}
@@ -95,12 +86,7 @@ function StartingEquipmentGroupEditor({
         <Button
           _hover={{ textDecoration: "underline" }}
           cursor="pointer"
-          onClick={() =>
-            onGroupChange({
-              ...group,
-              options: [...options, { bundle: defaultEquipmentBundle, option: nextOption }],
-            })
-          }
+          onClick={() => onGroupChange([...equipmentBundles, defaultEquipmentBundle])}
           unstyled
         >
           {t("option.add")}
@@ -120,14 +106,14 @@ function StartingEquipmentGroupEditor({
       </Span>
 
       <SimpleGrid gapY={2} templateColumns="max-content 1fr max-content" w="full">
-        {options.map((option, i) => (
+        {equipmentBundles.map((equipmentBundle, i) => (
           <StartingEquipmentOptionEditor
             iconLabel={t("remove")}
-            key={option.option}
+            key={i}
             label={numberToLetter(i)}
-            onOptionChange={(o) => onGroupChange({ ...group, options: replaceItem(options, i, o) })}
-            onOptionRemove={() => onGroupChange({ ...group, options: removeItem(options, i) })}
-            option={option}
+            onEquipmentBundleChange={(o) => onGroupChange(replaceItem(equipmentBundles, i, o))}
+            onEquipmentBundleRemove={() => onGroupChange(removeItem(equipmentBundles, i))}
+            option={equipmentBundle}
             sourceId={sourceId}
           />
         ))}
@@ -143,17 +129,17 @@ function StartingEquipmentGroupEditor({
 type StartingEquipmentOptionEditorProps = {
   iconLabel: string;
   label: string;
-  onOptionChange: (option: StartingEquipmentOption) => void;
-  onOptionRemove: () => void;
-  option: StartingEquipmentOption;
+  onEquipmentBundleChange: (option: EquipmentBundle) => void;
+  onEquipmentBundleRemove: () => void;
+  option: EquipmentBundle;
   sourceId: string;
 };
 
 function StartingEquipmentOptionEditor({
   iconLabel,
   label,
-  onOptionChange,
-  onOptionRemove,
+  onEquipmentBundleChange,
+  onEquipmentBundleRemove,
   option,
   sourceId,
 }: StartingEquipmentOptionEditorProps) {
@@ -162,14 +148,19 @@ function StartingEquipmentOptionEditor({
       <Span p={2}>({label})</Span>
 
       <EquipmentBundleEditor
-        onValueChange={(bundle) => onOptionChange({ ...option, bundle })}
+        onValueChange={onEquipmentBundleChange}
         sourceId={sourceId}
-        value={option.bundle}
+        value={option}
         w="full"
         withinDialog
       />
 
-      <IconButton Icon={XIcon} label={iconLabel} onClick={onOptionRemove} variant="ghost" />
+      <IconButton
+        Icon={XIcon}
+        label={iconLabel}
+        onClick={onEquipmentBundleRemove}
+        variant="ghost"
+      />
     </>
   );
 }

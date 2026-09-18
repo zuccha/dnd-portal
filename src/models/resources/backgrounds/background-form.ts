@@ -1,8 +1,8 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
+import { equipmentBundleSchema } from "../../other/equipment-bundle";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
-import { startingEquipmentGroupSchema } from "../character-classes/starting-equipment";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
@@ -22,7 +22,7 @@ export const backgroundFormDataSchema = resourceFormDataSchema.extend({
   name: z.string().default(""),
   page: z.number().default(0),
   skill_proficiencies: z.array(creatureSkillSchema).default([]),
-  starting_equipment: z.array(startingEquipmentGroupSchema).default([]),
+  starting_equipment: z.array(z.array(equipmentBundleSchema)).default([]),
   tool_notes: z.string().default(""),
   tool_proficiency_id: z.uuid().nullable().default(null),
 });

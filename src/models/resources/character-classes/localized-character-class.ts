@@ -194,24 +194,24 @@ export function localizeCharacterClass(
   const starting_equipment = characterClass.starting_equipment
     .map((group) => {
       const groupText = joinWith(
-        group.options.map((option, index) => {
+        group.map((option, index) => {
           const optionText = [
-            ...option.bundle.equipments.map(({ id, notes, quantity }) => {
+            ...option.equipments.map(({ id, notes, quantity }) => {
               const name = context.localizedEquipmentNames[id] ?? "";
               const name2 = formatEquipmentNameWithNotes(name, notes, context.lang);
               return context.tpi("equipment", quantity, name2, `${quantity}`);
             }),
-            option.bundle.currency ? context.formatCp(option.bundle.currency) : "",
+            option.currency ? context.formatCp(option.currency) : "",
           ]
             .filter((entry) => entry)
             .join(", ");
-          return group.options.length > 1 ? `(${numberToLetter(index)}) ${optionText}` : optionText;
+          return group.length > 1 ? `(${numberToLetter(index)}) ${optionText}` : optionText;
         }),
         "; ",
         equipmentOptionOr,
       );
 
-      return context.tpi("starting_equipment.group", group.options.length, groupText);
+      return context.tpi("starting_equipment.group", group.length, groupText);
     })
     .filter((text) => text)
     .join("\n");

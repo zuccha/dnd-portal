@@ -1,5 +1,6 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
+import { equipmentBundleSchema } from "../../other/equipment-bundle";
 import { armorTypeSchema } from "../../types/armor-type";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
@@ -12,7 +13,6 @@ import {
   resourceSchema,
   resourceTranslationFields,
 } from "../resource";
-import { startingEquipmentGroupSchema } from "./starting-equipment";
 
 //------------------------------------------------------------------------------
 // Character Class
@@ -35,7 +35,7 @@ export const characterClassBaseSchema = resourceSchema.extend({
 });
 
 export const characterClassSchema = characterClassBaseSchema.extend({
-  starting_equipment: z.array(startingEquipmentGroupSchema),
+  starting_equipment: z.array(z.array(equipmentBundleSchema)),
 });
 
 export type CharacterClass = z.infer<typeof characterClassSchema>;

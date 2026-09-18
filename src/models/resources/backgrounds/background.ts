@@ -1,8 +1,8 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
+import { equipmentBundleSchema } from "../../other/equipment-bundle";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
-import { startingEquipmentGroupSchema } from "../character-classes/starting-equipment";
 import {
   type TranslationFields,
   defaultResource,
@@ -25,7 +25,7 @@ export const backgroundBaseSchema = resourceSchema.extend({
 });
 
 export const backgroundSchema = backgroundBaseSchema.extend({
-  starting_equipment: z.array(startingEquipmentGroupSchema),
+  starting_equipment: z.array(z.array(equipmentBundleSchema)),
 });
 
 export type Background = z.infer<typeof backgroundSchema>;

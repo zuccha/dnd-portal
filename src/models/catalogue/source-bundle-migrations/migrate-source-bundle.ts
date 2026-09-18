@@ -5,6 +5,7 @@ import {
   sourceBundleSchema,
   sourceBundleWithoutRegistrySchema,
 } from "../source-bundle";
+import { migrateSourceBundleVersion1 } from "./migrate-source-bundle-version-1";
 
 //------------------------------------------------------------------------------
 // Raw Bundle
@@ -20,7 +21,9 @@ function isRecord(value: unknown): value is RawBundle {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-const sourceBundleMigrations: Record<number, (bundle: RawBundle) => RawBundle> = {};
+const sourceBundleMigrations: Record<number, (bundle: RawBundle) => RawBundle> = {
+  1: migrateSourceBundleVersion1,
+};
 
 //------------------------------------------------------------------------------
 // Migrate Source Bundle

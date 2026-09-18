@@ -1,8 +1,8 @@
 import { HStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
 import { type CharacterClassFormData } from "~/models/resources/character-classes/character-class-form";
-import type { StartingEquipmentGroup } from "~/models/resources/character-classes/starting-equipment";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
@@ -203,7 +203,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
     defaultValue,
   }: {
     sourceId: string;
-    defaultValue: StartingEquipmentGroup[];
+    defaultValue: EquipmentBundle[][];
   }) {
     const { error, ...rest } = useStartingEquipment(defaultValue);
     const { t } = useI18nLangContext(i18nContext);

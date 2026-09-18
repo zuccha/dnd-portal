@@ -1,5 +1,6 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
+import { equipmentBundleSchema } from "../../other/equipment-bundle";
 import { armorTypeSchema } from "../../types/armor-type";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
@@ -12,7 +13,6 @@ import {
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
-import { startingEquipmentGroupSchema } from "./starting-equipment";
 import type { CharacterClass } from "./character-class";
 
 //------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ export const characterClassFormDataSchema = resourceFormDataSchema.extend({
   skill_proficiencies_pool: z.array(creatureSkillSchema).default([]),
   skill_proficiencies_pool_quantity: z.number().default(2),
   spell_ids: z.array(z.uuid()).default([]),
-  starting_equipment: z.array(startingEquipmentGroupSchema).default([]),
+  starting_equipment: z.array(z.array(equipmentBundleSchema)).default([]),
   tool_proficiency_ids: z.array(z.uuid()).default([]),
   weapon_proficiencies: z.array(weaponTypeSchema).default([]),
   weapon_proficiencies_extra: z.string().default(""),
