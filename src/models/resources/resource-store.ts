@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
@@ -322,38 +322,6 @@ export function createResourceStore<
   // Localization
   //----------------------------------------------------------------------------
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Localize Resource Name
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useLocalizeResourceName(lang: string): (resourceId: string) => string {
-    useCatalogueActiveSourceReferenceResourceIds();
-
-    return useCallback(
-      (resourceId: string) => {
-        const resource = getResource(resourceId);
-        return resource ? translate(resource.name, lang) : "";
-      },
-      [lang],
-    );
-  }
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Use Localize Resource Name Short
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  function useLocalizeResourceNameShort(lang: string): (resourceId: string) => string {
-    useCatalogueActiveSourceReferenceResourceIds();
-
-    return useCallback(
-      (resourceId: string) => {
-        const resource = getResource(resourceId);
-        return resource ? translate(resource.name_short, lang) : "";
-      },
-      [lang],
-    );
-  }
-
   //------------------------------------------------------------------------------
   // Use Localized Resource Name
   //------------------------------------------------------------------------------
@@ -372,6 +340,42 @@ export function createResourceStore<
     const [lang] = useI18nLang();
     const resource = useResource(resourceId);
     return resource ? translate(resource.name_short, lang) : "";
+  }
+
+  //------------------------------------------------------------------------------
+  // Use Localized Resource Names
+  //------------------------------------------------------------------------------
+
+  function useLocalizedResourceNames(resourceIds: string[]): string[] {
+    const [lang] = useI18nLang();
+    const resources = useResources(resourceIds);
+
+    return useMemo(
+      () =>
+        resourceIds.map((resourceId) => {
+          const resource = resources.find(({ id }) => id === resourceId);
+          return resource ? translate(resource.name, lang) : "";
+        }),
+      [lang, resourceIds, resources],
+    );
+  }
+
+  //------------------------------------------------------------------------------
+  // Use Localized Resource Names Short
+  //------------------------------------------------------------------------------
+
+  function useLocalizedResourceNamesShort(resourceIds: string[]): string[] {
+    const [lang] = useI18nLang();
+    const resources = useResources(resourceIds);
+
+    return useMemo(
+      () =>
+        resourceIds.map((resourceId) => {
+          const resource = resources.find(({ id }) => id === resourceId);
+          return resource ? translate(resource.name_short, lang) : "";
+        }),
+      [lang, resourceIds, resources],
+    );
   }
 
   //------------------------------------------------------------------------------
@@ -443,13 +447,13 @@ export function createResourceStore<
     useResourceSelection: resourceSelectionStore.useResourceSelection,
     useSelectedResourceIds: resourceSelectionStore.useSelectedResourceIds,
 
-    useLocalizeResourceName,
-    useLocalizeResourceNameShort,
     localizeResource,
     useLocalizationContext,
     useLocalizedResource,
     useLocalizedResourceName,
     useLocalizedResourceNameShort,
+    useLocalizedResourceNames,
+    useLocalizedResourceNamesShort,
     useResourceOptions,
   };
 }

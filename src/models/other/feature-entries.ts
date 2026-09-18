@@ -63,7 +63,11 @@ export function useFormatFeatureEntries(
 
   return useCallback(
     (featureEntries) =>
-      formatFeatureEntries(featureEntries, { getFeature: featureMap.get, lang, ti }),
+      formatFeatureEntries(featureEntries, {
+        getFeature: (featureId) => featureMap.get(featureId),
+        lang,
+        ti,
+      }),
     [featureMap, lang, ti],
   );
 }
@@ -85,7 +89,12 @@ export function useLocalizedFeatureEntries(featureEntries: FeatureEntry[]): stri
   );
 
   return useMemo(
-    () => formatFeatureEntries(featureEntries, { getFeature: featureMap.get, lang, ti }),
+    () =>
+      formatFeatureEntries(featureEntries, {
+        getFeature: (featureId) => featureMap.get(featureId),
+        lang,
+        ti,
+      }),
     [featureEntries, featureMap, lang, ti],
   );
 }

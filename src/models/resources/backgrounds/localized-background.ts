@@ -20,9 +20,9 @@ import {
 } from "../localized-resource";
 import { type Background, backgroundSchema } from "./background";
 
-const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
-const useLocalizeFeatName = featStore.useLocalizeResourceName;
-const useLocalizeToolName = toolStore.useLocalizeResourceName;
+const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const useLocalizedFeatName = featStore.useLocalizedResourceName;
+const useLocalizedToolName = toolStore.useLocalizedResourceName;
 
 //------------------------------------------------------------------------------
 // Localized Background
@@ -48,9 +48,9 @@ export type LocalizedBackground = z.infer<typeof localizedBackgroundSchema>;
 
 type BackgroundLocalizationContext = ResourceLocalizationContext & {
   formatCp: ReturnType<typeof useFormatCp>;
-  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
-  localizeFeatName: ReturnType<typeof useLocalizeFeatName>;
-  localizeToolName: ReturnType<typeof useLocalizeToolName>;
+  localizedEquipmentNames: Record<string, string>;
+  localizedFeatName: string;
+  localizedToolName: string;
   translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
   translateCreatureSkill: ReturnType<typeof useTranslateCreatureSkill>;
 };
@@ -60,13 +60,13 @@ type BackgroundLocalizationContext = ResourceLocalizationContext & {
 //------------------------------------------------------------------------------
 
 export function useBackgroundLocalizationContext(
-  _background: Background,
+  background: Background,
 ): BackgroundLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
-  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
-  const localizeFeatName = useLocalizeFeatName(context.lang);
-  const localizeToolName = useLocalizeToolName(context.lang);
+  const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
+  const localizedFeatName = useLocalizedFeatName(background.feat_id ?? "");
+  const localizedToolName = useLocalizedToolName(background.tool_proficiency_id ?? "");
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateCreatureSkill = useTranslateCreatureSkill(context.lang);
 
@@ -74,18 +74,18 @@ export function useBackgroundLocalizationContext(
     () => ({
       ...context,
       formatCp,
-      localizeEquipmentName,
-      localizeFeatName,
-      localizeToolName,
+      localizedEquipmentNames,
+      localizedFeatName,
+      localizedToolName,
       translateCreatureAbility,
       translateCreatureSkill,
     }),
     [
       context,
       formatCp,
-      localizeEquipmentName,
-      localizeFeatName,
-      localizeToolName,
+      localizedEquipmentNames,
+      localizedFeatName,
+      localizedToolName,
       translateCreatureAbility,
       translateCreatureSkill,
     ],
@@ -104,7 +104,7 @@ export function localizeBackground(
 
   const ability_scores = background.ability_scores.map(context.translateCreatureAbility).join(", ");
 
-  const feat_name = background.feat_id ? context.localizeFeatName(background.feat_id) : "";
+  const feat_name = background.feat_id ? context.localizedFeatName : "";
   const feat_notes = translate(background.feat_notes, context.lang);
   const feat = formatNamedNote(feat_name, feat_notes);
 
@@ -113,9 +113,7 @@ export function localizeBackground(
     .sort()
     .join(", ");
 
-  const tool_name = background.tool_proficiency_id
-    ? context.localizeToolName(background.tool_proficiency_id)
-    : "";
+  const tool_name = background.tool_proficiency_id ? context.localizedToolName : "";
   const tool_notes = translate(background.tool_notes, context.lang);
   const tool_proficiency = formatNamedNote(tool_name, tool_notes);
 
@@ -125,7 +123,7 @@ export function localizeBackground(
         group.options.map((option, index) => {
           const optionText = [
             ...option.bundle.equipments.map(({ id, notes, quantity }) => {
-              const name = context.localizeEquipmentName(id);
+              const name = context.localizedEquipmentNames[id] ?? "";
               const name2 = formatEquipmentNameWithNotes(name, notes, context.lang);
               return context.tpi("equipment", quantity, name2, `${quantity}`);
             }),

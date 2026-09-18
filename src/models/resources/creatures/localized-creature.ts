@@ -31,10 +31,10 @@ import { planeStore } from "../planes/plane-store";
 import { type Creature, creatureSchema } from "./creature";
 import type { CreatureAbility } from "../../types/creature-ability";
 
-const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
-const useLocalizeLanguageName = languageStore.useLocalizeResourceName;
-const useLocalizePlaneName = planeStore.useLocalizeResourceName;
-const useLocalizeCreatureTagName = creatureTagStore.useLocalizeResourceName;
+const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const useLocalizedLanguageNames = languageStore.useLocalizedResourceNames;
+const useLocalizedPlaneNames = planeStore.useLocalizedResourceNames;
+const useLocalizedCreatureTagNames = creatureTagStore.useLocalizedResourceNames;
 
 //------------------------------------------------------------------------------
 // Localized Creature
@@ -114,10 +114,10 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 type CreatureLocalizationContext = ResourceLocalizationContext & {
   formatCm: ReturnType<typeof useFormatCmWithUnit>;
   formatCp: ReturnType<typeof useFormatCp>;
-  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
-  localizeLanguageName: ReturnType<typeof useLocalizeLanguageName>;
-  localizePlaneName: ReturnType<typeof useLocalizePlaneName>;
-  localizeTagName: ReturnType<typeof useLocalizeCreatureTagName>;
+  localizedEquipmentNames: Record<string, string>;
+  localizedLanguageNames: Record<string, string>;
+  localizedPlaneNames: Record<string, string>;
+  localizedTagNames: Record<string, string>;
   system: ReturnType<typeof useI18nSystem>[0];
   translateCreatureAlignment: ReturnType<typeof useTranslateCreatureAlignment>;
   translateCreatureCondition: ReturnType<typeof useTranslateCreatureCondition>;
@@ -133,15 +133,28 @@ type CreatureLocalizationContext = ResourceLocalizationContext & {
 // Use Creature Localization Context
 //------------------------------------------------------------------------------
 
-export function useCreatureLocalizationContext(_creature: Creature): CreatureLocalizationContext {
+export function useCreatureLocalizationContext(creature: Creature): CreatureLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const [system] = useI18nSystem();
   const formatCp = useFormatCp();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
-  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
-  const localizeLanguageName = useLocalizeLanguageName(context.lang);
-  const localizePlaneName = useLocalizePlaneName(context.lang);
-  const localizeTagName = useLocalizeCreatureTagName(context.lang);
+  const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
+  const languageIds = creature.language_entries.map(({ language_id }) => language_id);
+  const languageNames = useLocalizedLanguageNames(languageIds);
+  const planeNames = useLocalizedPlaneNames(creature.plane_ids);
+  const tagNames = useLocalizedCreatureTagNames(creature.tag_ids);
+  const localizedLanguageNames = useMemo(
+    () => Object.fromEntries(languageIds.map((id, index) => [id, languageNames[index] ?? ""])),
+    [languageIds, languageNames],
+  );
+  const localizedPlaneNames = useMemo(
+    () => Object.fromEntries(creature.plane_ids.map((id, index) => [id, planeNames[index] ?? ""])),
+    [creature.plane_ids, planeNames],
+  );
+  const localizedTagNames = useMemo(
+    () => Object.fromEntries(creature.tag_ids.map((id, index) => [id, tagNames[index] ?? ""])),
+    [creature.tag_ids, tagNames],
+  );
   const translateCreatureType = useTranslateCreatureType(context.lang);
   const translateCreatureSize = useTranslateCreatureSize(context.lang);
   const translateCreatureAlignment = useTranslateCreatureAlignment(context.lang);
@@ -156,10 +169,10 @@ export function useCreatureLocalizationContext(_creature: Creature): CreatureLoc
       ...context,
       formatCm,
       formatCp,
-      localizeEquipmentName,
-      localizeLanguageName,
-      localizePlaneName,
-      localizeTagName,
+      localizedEquipmentNames,
+      localizedLanguageNames,
+      localizedPlaneNames,
+      localizedTagNames,
       system,
       translateCreatureAlignment,
       translateCreatureCondition,
@@ -174,10 +187,10 @@ export function useCreatureLocalizationContext(_creature: Creature): CreatureLoc
       context,
       formatCm,
       formatCp,
-      localizeEquipmentName,
-      localizeLanguageName,
-      localizePlaneName,
-      localizeTagName,
+      localizedEquipmentNames,
+      localizedLanguageNames,
+      localizedPlaneNames,
+      localizedTagNames,
       system,
       translateCreatureAlignment,
       translateCreatureCondition,
@@ -203,10 +216,10 @@ export function localizeCreature(
     formatCm,
     formatCp,
     lang,
-    localizeEquipmentName,
-    localizeLanguageName,
-    localizePlaneName,
-    localizeTagName,
+    localizedEquipmentNames,
+    localizedLanguageNames,
+    localizedPlaneNames,
+    localizedTagNames,
     system,
     t,
     ti,
@@ -225,8 +238,8 @@ export function localizeCreature(
   const type = translateCreatureType(creature.type);
   const alignment = translateCreatureAlignment(creature.alignment);
 
-  const tags = creature.tag_ids.map(localizeTagName).join(", ");
-  const planes = creature.plane_ids.map(localizePlaneName).join(", ");
+  const tags = creature.tag_ids.map((id) => localizedTagNames[id] ?? "").join(", ");
+  const planes = creature.plane_ids.map((id) => localizedPlaneNames[id] ?? "").join(", ");
 
   const habitats = creature.habitats
     .map((habitat) => {
@@ -414,7 +427,7 @@ export function localizeCreature(
   // Gear
   const gear = [
     ...creature.gear.equipments.map(({ id, notes, quantity }) => {
-      const name = localizeEquipmentName(id);
+      const name = localizedEquipmentNames[id] ?? "";
       const nameWithNotes = formatEquipmentNameWithNotes(name, notes, lang);
       return tpi("equipment", quantity, nameWithNotes, `${quantity}`);
     }),
@@ -438,10 +451,18 @@ export function localizeCreature(
       ? t("languages.all")
       : creature.language_scope === "none"
         ? ""
-        : spokenLanguageIds.map(localizeLanguageName).filter(Boolean).sort().join(", ");
+        : spokenLanguageIds
+            .map((id) => localizedLanguageNames[id] ?? "")
+            .filter(Boolean)
+            .sort()
+            .join(", ");
   const understoodLanguages =
     creature.language_scope === "specific"
-      ? understoodLanguageIds.map(localizeLanguageName).filter(Boolean).sort().join(", ")
+      ? understoodLanguageIds
+          .map((id) => localizedLanguageNames[id] ?? "")
+          .filter(Boolean)
+          .sort()
+          .join(", ")
       : "";
   const additionalLanguages =
     creature.language_additional_count > 0 && creature.language_scope === "specific"

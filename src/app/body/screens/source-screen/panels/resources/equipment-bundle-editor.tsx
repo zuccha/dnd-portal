@@ -29,7 +29,7 @@ export type EquipmentBundleEditorProps = StackProps & {
 };
 
 const useEquipmentReferenceResourceOptions = equipmentReferenceStore.useResourceOptions;
-const useEquipmentReferenceLocalizeResourceName = equipmentReferenceStore.useLocalizeResourceName;
+const useEquipmentReferenceLocalizedNames = equipmentReferenceStore.useLocalizedEquipmentNames;
 
 export default function EquipmentBundleEditor({
   onValueChange,
@@ -46,7 +46,7 @@ export default function EquipmentBundleEditor({
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
 
   const options = useEquipmentReferenceResourceOptions();
-  const localize = useEquipmentReferenceLocalizeResourceName(lang);
+  const localizedNames = useEquipmentReferenceLocalizedNames(lang);
 
   const filterResourceOptions = useCallback((option: ResourceOption, search: string): boolean => {
     const normalizedFilter = normalizeString(search);
@@ -176,7 +176,7 @@ export default function EquipmentBundleEditor({
                     {tpi(
                       "equipment",
                       quantity,
-                      formatEquipmentNameWithNotes(localize(id), notes, lang),
+                      formatEquipmentNameWithNotes(localizedNames[id] ?? "", notes, lang),
                       `${quantity}`,
                     )}
                   </Button>
@@ -189,7 +189,7 @@ export default function EquipmentBundleEditor({
           {selectedEquipment && (
             <VStack align="flex-end" gap={1} w="full">
               <HStack borderRadius="sm" borderWidth={1} px={2} py={1} w="full">
-                <Span flex={1}>{localize(selectedEquipment.id)}</Span>
+                <Span flex={1}>{localizedNames[selectedEquipment.id] ?? ""}</Span>
 
                 <Input
                   bgColor="bg.info"

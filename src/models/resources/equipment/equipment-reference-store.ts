@@ -1,4 +1,5 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
+import type { I18nLang } from "~/i18n/i18n-lang";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
@@ -50,28 +51,26 @@ function useEquipmentReferenceIds(): string[] {
 }
 
 //------------------------------------------------------------------------------
-// Use Localize Resource Name
+// Use Localized Equipment Names
 //------------------------------------------------------------------------------
 
-function useLocalizeResourceName(lang: string): (resourceId: string) => string {
+function useLocalizedEquipmentNames(lang: I18nLang): Record<string, string> {
   const resourceIds = useEquipmentReferenceIds();
-  const equipmentById = useMemo(
+  const equipments = useMemo(
     () =>
-      new Map(
-        resourceIds
-          .map((id) => getEquipment(id))
-          .filter((equipment) => !!equipment)
-          .map((equipment) => [equipment.id, equipment]),
-      ),
+      resourceIds.flatMap((id) => {
+        const equipment = getEquipment(id);
+        return equipment ? [equipment] : [];
+      }),
     [resourceIds],
   );
 
-  return useCallback(
-    (resourceId: string) => {
-      const equipment = equipmentById.get(resourceId);
-      return equipment ? translate(equipment.name, lang) : "";
-    },
-    [equipmentById, lang],
+  return useMemo(
+    () =>
+      Object.fromEntries(
+        equipments.map((equipment) => [equipment.id, translate(equipment.name, lang)]),
+      ),
+    [equipments, lang],
   );
 }
 
@@ -107,6 +106,6 @@ function useResourceOptions(): ResourceOption[] {
 //------------------------------------------------------------------------------
 
 export const equipmentReferenceStore = {
-  useLocalizeResourceName,
+  useLocalizedEquipmentNames,
   useResourceOptions,
 };

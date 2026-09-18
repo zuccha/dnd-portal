@@ -20,7 +20,7 @@ import {
 } from "../localized-equipment";
 import { type Weapon, weaponSchema } from "./weapon";
 
-const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
+const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
 
 //------------------------------------------------------------------------------
 // Localized Weapon
@@ -51,7 +51,7 @@ export type LocalizedWeapon = z.infer<typeof localizedWeaponSchema>;
 //------------------------------------------------------------------------------
 
 type WeaponLocalizationContext = EquipmentLocalizationContext & {
-  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
+  localizedEquipmentNames: Record<string, string>;
   system: ReturnType<typeof useI18nSystem>[0];
   translateDamageType: ReturnType<typeof useTranslateDamageType>;
   translateWeaponMastery: ReturnType<typeof useTranslateWeaponMastery>;
@@ -72,12 +72,12 @@ export function useWeaponLocalizationContext(weapon: Weapon): WeaponLocalization
   const translateWeaponMasteryRuling = useTranslateWeaponMasteryRuling(context.lang);
   const translateWeaponProperty = useTranslateWeaponProperty(context.lang);
   const translateWeaponType = useTranslateWeaponType(context.lang);
-  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
+  const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
 
   return useMemo(
     () => ({
       ...context,
-      localizeEquipmentName,
+      localizedEquipmentNames,
       system,
       translateDamageType,
       translateWeaponMastery,
@@ -87,7 +87,7 @@ export function useWeaponLocalizationContext(weapon: Weapon): WeaponLocalization
     }),
     [
       context,
-      localizeEquipmentName,
+      localizedEquipmentNames,
       system,
       translateDamageType,
       translateWeaponMastery,
@@ -128,7 +128,10 @@ export function localizeWeapon(
           "range.ft",
           `${formatNumber(is, context.lang)}/${formatNumber(il, context.lang)}`,
         );
-  const ammunition = weapon.ammunition_ids.map(context.localizeEquipmentName).sort().join(", ");
+  const ammunition = weapon.ammunition_ids
+    .map((id) => context.localizedEquipmentNames[id] ?? "")
+    .sort()
+    .join(", ");
   const properties = weapon.properties.map(context.translateWeaponProperty).sort().join(", ");
   const info = formatInfo([
     [context.tp("properties", weapon.properties.length), properties],

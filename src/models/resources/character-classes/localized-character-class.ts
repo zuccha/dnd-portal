@@ -23,8 +23,8 @@ import {
 } from "../localized-resource";
 import { type CharacterClass, characterClassSchema } from "./character-class";
 
-const useLocalizeEquipmentName = equipmentReferenceStore.useLocalizeResourceName;
-const useLocalizeToolName = toolStore.useLocalizeResourceName;
+const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const useLocalizedToolNames = toolStore.useLocalizedResourceNames;
 
 //------------------------------------------------------------------------------
 // Localized Character Class
@@ -54,8 +54,8 @@ export type LocalizedCharacterClass = z.infer<typeof localizedCharacterClassSche
 type CharacterClassLocalizationContext = ResourceLocalizationContext & {
   formatCp: ReturnType<typeof useFormatCp>;
   formatFeatureEntries: ReturnType<typeof useFormatFeatureEntries>;
-  localizeEquipmentName: ReturnType<typeof useLocalizeEquipmentName>;
-  localizeToolName: ReturnType<typeof useLocalizeToolName>;
+  localizedEquipmentNames: Record<string, string>;
+  localizedToolNames: Record<string, string>;
   translateArmorType: ReturnType<typeof useTranslateArmorType>;
   translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
   translateCreatureSkill: ReturnType<typeof useTranslateCreatureSkill>;
@@ -73,8 +73,15 @@ export function useCharacterClassLocalizationContext(
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
   const formatFeatureEntries = useFormatFeatureEntries(characterClass.source_id);
-  const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
-  const localizeToolName = useLocalizeToolName(context.lang);
+  const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
+  const toolNames = useLocalizedToolNames(characterClass.tool_proficiency_ids);
+  const localizedToolNames = useMemo(
+    () =>
+      Object.fromEntries(
+        characterClass.tool_proficiency_ids.map((id, index) => [id, toolNames[index] ?? ""]),
+      ),
+    [characterClass.tool_proficiency_ids, toolNames],
+  );
   const translateArmorType = useTranslateArmorType(context.lang);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateCreatureSkill = useTranslateCreatureSkill(context.lang);
@@ -86,8 +93,8 @@ export function useCharacterClassLocalizationContext(
       ...context,
       formatCp,
       formatFeatureEntries,
-      localizeEquipmentName,
-      localizeToolName,
+      localizedEquipmentNames,
+      localizedToolNames,
       translateArmorType,
       translateCreatureAbility,
       translateCreatureSkill,
@@ -98,8 +105,8 @@ export function useCharacterClassLocalizationContext(
       context,
       formatCp,
       formatFeatureEntries,
-      localizeEquipmentName,
-      localizeToolName,
+      localizedEquipmentNames,
+      localizedToolNames,
       translateArmorType,
       translateCreatureAbility,
       translateCreatureSkill,
@@ -142,7 +149,7 @@ export function localizeCharacterClass(
     .join(", ");
 
   const tool_proficiencies = characterClass.tool_proficiency_ids
-    .map(context.localizeToolName)
+    .map((id) => context.localizedToolNames[id] ?? "")
     .sort()
     .join(", ");
 
@@ -190,7 +197,7 @@ export function localizeCharacterClass(
         group.options.map((option, index) => {
           const optionText = [
             ...option.bundle.equipments.map(({ id, notes, quantity }) => {
-              const name = context.localizeEquipmentName(id);
+              const name = context.localizedEquipmentNames[id] ?? "";
               const name2 = formatEquipmentNameWithNotes(name, notes, context.lang);
               return context.tpi("equipment", quantity, name2, `${quantity}`);
             }),
