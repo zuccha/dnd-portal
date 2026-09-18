@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
@@ -47,7 +47,7 @@ type ServiceLocalizationContext = ResourceLocalizationContext & {
 // Use Service Localization Context
 //------------------------------------------------------------------------------
 
-function useServiceLocalizationContext(): ServiceLocalizationContext {
+export function useServiceLocalizationContext(_service: Service): ServiceLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const [system] = useI18nSystem();
   const formatCost = useFormatCp();
@@ -92,15 +92,6 @@ export function localizeService(
     info: formatInfo([[context.t("availability"), availability]]),
     price,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Service
-//------------------------------------------------------------------------------
-
-export function useLocalizeService(): (service: Service) => LocalizedService {
-  const context = useServiceLocalizationContext();
-  return useCallback((service) => localizeService(service, context), [context]);
 }
 
 //------------------------------------------------------------------------------

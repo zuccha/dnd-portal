@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import {
@@ -35,7 +34,9 @@ type EldritchInvocationLocalizationContext = ResourceLocalizationContext;
 // Use Eldritch Invocation Localization Context
 //------------------------------------------------------------------------------
 
-function useEldritchInvocationLocalizationContext(): EldritchInvocationLocalizationContext {
+export function useEldritchInvocationLocalizationContext(
+  _eldritchInvocation: EldritchInvocation,
+): EldritchInvocationLocalizationContext {
   return useResourceLocalizationContext(i18nContext);
 }
 
@@ -62,20 +63,6 @@ export function localizeEldritchInvocation(
     min_warlock_level: minWarlockLevel ? `${minWarlockLevel}` : "",
     other_prerequisite: otherPrerequisite || "",
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Eldritch Invocation
-//------------------------------------------------------------------------------
-
-export function useLocalizeEldritchInvocation(): (
-  eldritchInvocation: EldritchInvocation,
-) => LocalizedEldritchInvocation {
-  const context = useEldritchInvocationLocalizationContext();
-  return useCallback(
-    (eldritchInvocation) => localizeEldritchInvocation(eldritchInvocation, context),
-    [context],
-  );
 }
 
 //------------------------------------------------------------------------------

@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import {
@@ -34,7 +33,7 @@ type ManeuverLocalizationContext = ResourceLocalizationContext;
 // Use Maneuver Localization Context
 //------------------------------------------------------------------------------
 
-function useManeuverLocalizationContext(): ManeuverLocalizationContext {
+export function useManeuverLocalizationContext(_maneuver: Maneuver): ManeuverLocalizationContext {
   return useResourceLocalizationContext(i18nContext);
 }
 
@@ -59,15 +58,6 @@ export function localizeManeuver(
     ]),
     prerequisite: prerequisite || "",
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Maneuver
-//------------------------------------------------------------------------------
-
-export function useLocalizeManeuver(): (maneuver: Maneuver) => LocalizedManeuver {
-  const context = useManeuverLocalizationContext();
-  return useCallback((maneuver) => localizeManeuver(maneuver, context), [context]);
 }
 
 //------------------------------------------------------------------------------

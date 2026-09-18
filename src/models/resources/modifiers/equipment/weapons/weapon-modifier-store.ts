@@ -1,5 +1,5 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
-import { useLocalizeWeaponModifier } from "./localized-weapon-modifier";
+import { localizeEquipmentModifier } from "../localized-equipment-modifier";
 import { defaultWeaponModifier, weaponModifierTranslationFields } from "./weapon-modifier";
 import {
   defaultWeaponModifierFilters,
@@ -18,5 +18,5 @@ export const weaponModifierStore = createEquipmentModifierStore("weapon_modifier
   filtersSchema: weaponModifierFiltersSchema,
   orderOptions: weaponModifierOrderOptions,
   translationFields: weaponModifierTranslationFields,
-  useLocalizeModifier: useLocalizeWeaponModifier,
+  localizeModifier: localizeEquipmentModifier,
 });

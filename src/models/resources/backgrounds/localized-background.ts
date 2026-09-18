@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
@@ -59,7 +59,9 @@ type BackgroundLocalizationContext = ResourceLocalizationContext & {
 // Use Background Localization Context
 //------------------------------------------------------------------------------
 
-function useBackgroundLocalizationContext(): BackgroundLocalizationContext {
+export function useBackgroundLocalizationContext(
+  _background: Background,
+): BackgroundLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
   const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
@@ -94,7 +96,7 @@ function useBackgroundLocalizationContext(): BackgroundLocalizationContext {
 // Localize Background
 //------------------------------------------------------------------------------
 
-function localizeBackground(
+export function localizeBackground(
   background: Background,
   context: BackgroundLocalizationContext,
 ): LocalizedBackground {
@@ -163,15 +165,6 @@ function localizeBackground(
     starting_equipment,
     tool_proficiency,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Background
-//------------------------------------------------------------------------------
-
-export function useLocalizeBackground(): (background: Background) => LocalizedBackground {
-  const context = useBackgroundLocalizationContext();
-  return useCallback((background) => localizeBackground(background, context), [context]);
 }
 
 //------------------------------------------------------------------------------

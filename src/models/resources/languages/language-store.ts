@@ -6,7 +6,7 @@ import {
   languageFiltersSchema,
   languageOrderOptions,
 } from "./language-filters";
-import { useLocalizeLanguage } from "./localized-language";
+import { localizeLanguage, useLanguageLocalizationContext } from "./localized-language";
 
 //------------------------------------------------------------------------------
 // Language Store
@@ -20,5 +20,6 @@ export const languageStore = createResourceStore("language", {
   matchesResource: (language, filters) => matchesInclusion(language.rarity, filters.rarity),
   orderOptions: languageOrderOptions,
   translationFields: languageTranslationFields,
-  useLocalizeResource: useLocalizeLanguage,
+  localizeResource: localizeLanguage,
+  useLocalizationContext: useLanguageLocalizationContext,
 });

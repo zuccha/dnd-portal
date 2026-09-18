@@ -5,7 +5,7 @@ import {
   backgroundOrderOptions,
   defaultBackgroundFilters,
 } from "./background-filters";
-import { useLocalizeBackground } from "./localized-background";
+import { localizeBackground, useBackgroundLocalizationContext } from "./localized-background";
 
 //------------------------------------------------------------------------------
 // Background Store
@@ -18,5 +18,6 @@ export const backgroundStore = createResourceStore("background", {
   filtersSchema: backgroundFiltersSchema,
   orderOptions: backgroundOrderOptions,
   translationFields: backgroundTranslationFields,
-  useLocalizeResource: useLocalizeBackground,
+  localizeResource: localizeBackground,
+  useLocalizationContext: useBackgroundLocalizationContext,
 });

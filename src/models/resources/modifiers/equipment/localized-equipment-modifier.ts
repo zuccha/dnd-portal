@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z, { type ZodType } from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
@@ -40,7 +40,7 @@ export type LocalizedEquipmentModifier<EM extends EquipmentModifier> = z.infer<
 // Equipment Modifier Localization Context
 //------------------------------------------------------------------------------
 
-type EquipmentModifierLocalizationContext = ModifierLocalizationContext & {
+export type EquipmentModifierLocalizationContext = ModifierLocalizationContext & {
   formatCost: ReturnType<typeof useFormatCp>;
   formatWeight: ReturnType<typeof useFormatGrams>;
   translateRarity: ReturnType<typeof useTranslateEquipmentRarity>;
@@ -50,7 +50,9 @@ type EquipmentModifierLocalizationContext = ModifierLocalizationContext & {
 // Use Equipment Modifier Localization Context
 //------------------------------------------------------------------------------
 
-function useEquipmentModifierLocalizationContext(): EquipmentModifierLocalizationContext {
+export function useEquipmentModifierLocalizationContext(
+  _equipmentModifier: EquipmentModifier,
+): EquipmentModifierLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCost = useFormatCp();
   const formatWeight = useFormatGrams();
@@ -66,7 +68,7 @@ function useEquipmentModifierLocalizationContext(): EquipmentModifierLocalizatio
 // Localize Equipment Modifier
 //------------------------------------------------------------------------------
 
-function localizeEquipmentModifier<EM extends EquipmentModifier>(
+export function localizeEquipmentModifier<EM extends EquipmentModifier>(
   equipmentModifier: EM,
   context: EquipmentModifierLocalizationContext,
 ): LocalizedEquipmentModifier<EM> {
@@ -98,20 +100,6 @@ function localizeEquipmentModifier<EM extends EquipmentModifier>(
       : "",
     weight_delta: context.formatWeight(equipmentModifier.weight_delta),
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Equipment Modifier
-//------------------------------------------------------------------------------
-
-export function useLocalizeEquipmentModifier<EM extends EquipmentModifier>(): (
-  equipmentModifier: EM,
-) => LocalizedEquipmentModifier<EM> {
-  const context = useEquipmentModifierLocalizationContext();
-  return useCallback(
-    (equipmentModifier) => localizeEquipmentModifier(equipmentModifier, context),
-    [context],
-  );
 }
 
 //------------------------------------------------------------------------------

@@ -4,9 +4,9 @@ import { type ResourceMatcher, matchesBoolean, matchesInclusion } from "../resou
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import { type Equipment } from "./equipment";
 import { type EquipmentFilters } from "./equipment-filters";
-import { type LocalizedEquipment } from "./localized-equipment";
 import type { ResourceKind } from "../../types/resource-kind";
 import type { TranslationFields } from "../resource";
+import type { LocalizedEquipment } from "./localized-equipment";
 
 //------------------------------------------------------------------------------
 // Create Equipment Store
@@ -16,6 +16,7 @@ export function createEquipmentStore<
   E extends Equipment,
   L extends LocalizedEquipment<E>,
   F extends EquipmentFilters,
+  C,
 >(
   kind: ResourceKind,
   extra: {
@@ -25,11 +26,12 @@ export function createEquipmentStore<
     displayName: I18nString;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<E>[];
-    useLocalizeEquipment: (sourceId: string) => (equipment: E) => L;
+    localizeEquipment: (equipment: E, context: C) => L;
+    useEquipmentLocalizationContext: (equipment: E) => C;
     matchesEquipment?: ResourceMatcher<E, F>;
   },
-): ResourceStore<E, L, F> {
-  return createResourceStore(kind, {
+): ResourceStore<E, L, F, C> {
+  return createResourceStore<E, L, F, C>(kind, {
     defaultFilters: extra.defaultFilters,
     defaultResource: extra.defaultEquipment,
     displayName: extra.displayName,
@@ -37,7 +39,8 @@ export function createEquipmentStore<
     matchesResource: extra.matchesEquipment ?? matchesEquipment,
     orderOptions: extra.orderOptions,
     translationFields: extra.translationFields,
-    useLocalizeResource: extra.useLocalizeEquipment,
+    localizeResource: extra.localizeEquipment,
+    useLocalizationContext: extra.useEquipmentLocalizationContext,
   });
 }
 

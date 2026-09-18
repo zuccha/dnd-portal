@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { useTranslateItemType } from "../../../types/item-type";
 import {
@@ -34,8 +34,8 @@ type ItemLocalizationContext = EquipmentLocalizationContext & {
 // Use Item Localization Context
 //------------------------------------------------------------------------------
 
-function useItemLocalizationContext(sourceId: string): ItemLocalizationContext {
-  const context = useEquipmentLocalizationContext(sourceId, i18nContext);
+export function useItemLocalizationContext(item: Item): ItemLocalizationContext {
+  const context = useEquipmentLocalizationContext(item, i18nContext);
   const translateItemType = useTranslateItemType(context.lang);
 
   return useMemo(() => ({ ...context, translateItemType }), [context, translateItemType]);
@@ -45,7 +45,7 @@ function useItemLocalizationContext(sourceId: string): ItemLocalizationContext {
 // Localize Item
 //------------------------------------------------------------------------------
 
-function localizeItem(item: Item, context: ItemLocalizationContext): LocalizedItem {
+export function localizeItem(item: Item, context: ItemLocalizationContext): LocalizedItem {
   const type =
     item.type === "other"
       ? item.magic
@@ -65,15 +65,6 @@ function localizeItem(item: Item, context: ItemLocalizationContext): LocalizedIt
     rarity,
     type,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Item
-//------------------------------------------------------------------------------
-
-export function useLocalizeItem(sourceId: string): (item: Item) => LocalizedItem {
-  const context = useItemLocalizationContext(sourceId);
-  return useCallback((item) => localizeItem(item, context), [context]);
 }
 
 //------------------------------------------------------------------------------

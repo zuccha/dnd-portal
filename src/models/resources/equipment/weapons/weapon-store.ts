@@ -1,6 +1,6 @@
 import { matchesBoolean, matchesInclusion, matchesInclusionList } from "../../resource-filtering";
 import { createEquipmentStore, matchesEquipment } from "../equipment-store";
-import { useLocalizeWeapon } from "./localized-weapon";
+import { localizeWeapon, useWeaponLocalizationContext } from "./localized-weapon";
 import { defaultWeapon, weaponTranslationFields } from "./weapon";
 import { defaultWeaponFilters, weaponFiltersSchema, weaponOrderOptions } from "./weapon-filters";
 
@@ -22,5 +22,6 @@ export const weaponStore = createEquipmentStore("weapon", {
     matchesInclusionList(weapon.properties, filters.properties),
   orderOptions: weaponOrderOptions,
   translationFields: weaponTranslationFields,
-  useLocalizeEquipment: useLocalizeWeapon,
+  localizeEquipment: localizeWeapon,
+  useEquipmentLocalizationContext: useWeaponLocalizationContext,
 });

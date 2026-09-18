@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import {
@@ -27,7 +26,7 @@ type FeatureLocalizationContext = ResourceLocalizationContext;
 // Use Feature Localization Context
 //------------------------------------------------------------------------------
 
-function useFeatureLocalizationContext(): FeatureLocalizationContext {
+export function useFeatureLocalizationContext(_feature: Feature): FeatureLocalizationContext {
   return useResourceLocalizationContext(i18nContext);
 }
 
@@ -44,15 +43,6 @@ export function localizeFeature(
     descriptor: context.t("descriptor"),
     details: translate(feature.description, context.lang),
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Feature
-//------------------------------------------------------------------------------
-
-export function useLocalizeFeature(): (feature: Feature) => LocalizedFeature {
-  const context = useFeatureLocalizationContext();
-  return useCallback((feature) => localizeFeature(feature, context), [context]);
 }
 
 //------------------------------------------------------------------------------

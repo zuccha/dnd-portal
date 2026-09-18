@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import z from "zod";
 import {
   type ResourceLocalizationContext,
@@ -29,7 +28,9 @@ type CreatureTagLocalizationContext = ResourceLocalizationContext;
 // Use Creature Tag Localization Context
 //------------------------------------------------------------------------------
 
-function useCreatureTagLocalizationContext(): CreatureTagLocalizationContext {
+export function useCreatureTagLocalizationContext(
+  _creatureTag: CreatureTag,
+): CreatureTagLocalizationContext {
   return useResourceLocalizationContext();
 }
 
@@ -42,13 +43,4 @@ export function localizeCreatureTag(
   context: CreatureTagLocalizationContext,
 ): LocalizedCreatureTag {
   return localizeResource(creatureTag, context);
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Creature Tag
-//------------------------------------------------------------------------------
-
-export function useLocalizeCreatureTag(): (creatureTag: CreatureTag) => LocalizedCreatureTag {
-  const context = useCreatureTagLocalizationContext();
-  return useCallback((creatureTag) => localizeCreatureTag(creatureTag, context), [context]);
 }

@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import z, { type ZodType } from "zod";
 import { translate } from "~/i18n/i18n-string";
 import {
@@ -37,7 +36,7 @@ export type ModifierLocalizationContext = ResourceLocalizationContext;
 // Use Modifier Localization Context
 //------------------------------------------------------------------------------
 
-function useModifierLocalizationContext(): ModifierLocalizationContext {
+export function useModifierLocalizationContext(_modifier: Modifier): ModifierLocalizationContext {
   return useResourceLocalizationContext();
 }
 
@@ -58,13 +57,4 @@ export function localizeModifier<M extends Modifier>(
     applies_to: appliesTo,
     composite_name: translate(modifier.composite_name, context.lang),
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Modifier
-//------------------------------------------------------------------------------
-
-export function useLocalizeModifier<M extends Modifier>(): (modifier: M) => LocalizedModifier<M> {
-  const context = useModifierLocalizationContext();
-  return useCallback((modifier) => localizeModifier(modifier, context), [context]);
 }

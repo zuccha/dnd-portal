@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
@@ -39,8 +39,8 @@ type ToolLocalizationContext = EquipmentLocalizationContext & {
 // Use Tool Localization Context
 //------------------------------------------------------------------------------
 
-function useToolLocalizationContext(sourceId: string): ToolLocalizationContext {
-  const context = useEquipmentLocalizationContext(sourceId, i18nContext);
+export function useToolLocalizationContext(tool: Tool): ToolLocalizationContext {
+  const context = useEquipmentLocalizationContext(tool, i18nContext);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateToolType = useTranslateToolType(context.lang);
   const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
@@ -60,7 +60,7 @@ function useToolLocalizationContext(sourceId: string): ToolLocalizationContext {
 // Localize Tool
 //------------------------------------------------------------------------------
 
-function localizeTool(tool: Tool, context: ToolLocalizationContext): LocalizedTool {
+export function localizeTool(tool: Tool, context: ToolLocalizationContext): LocalizedTool {
   const equipment = localizeEquipment(tool, context);
   const type = context.translateToolType(tool.type);
   const craft = tool.craft_ids.map(context.localizeEquipmentName).sort().join(", ") + ".";
@@ -80,15 +80,6 @@ function localizeTool(tool: Tool, context: ToolLocalizationContext): LocalizedTo
     ability: context.translateCreatureAbility(tool.ability),
     type,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Tool
-//------------------------------------------------------------------------------
-
-export function useLocalizeTool(sourceId: string): (tool: Tool) => LocalizedTool {
-  const context = useToolLocalizationContext(sourceId);
-  return useCallback((tool) => localizeTool(tool, context), [context]);
 }
 
 //------------------------------------------------------------------------------

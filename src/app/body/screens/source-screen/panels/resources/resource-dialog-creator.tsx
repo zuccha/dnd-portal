@@ -61,7 +61,7 @@ export function createResourceDialogCreator<
   }
 
   const { useData, useSubmit, useSubmitError, useValid } = form;
-  const { useLocalizeResource } = store;
+  const { localizeResource, useLocalizationContext } = store;
   const { useCreatedResource, usePaletteName, useShowImage } = context;
 
   //----------------------------------------------------------------------------
@@ -73,15 +73,12 @@ export function createResourceDialogCreator<
     paletteName,
     resource,
     showImage,
-    sourceId,
   }: {
     lang: string;
     paletteName: keyof typeof palettes;
     resource: R;
     showImage: boolean;
-    sourceId: string;
   }) {
-    const localizeResource = useLocalizeResource(sourceId);
     const formData = useData();
 
     const previewResource = useMemo(() => {
@@ -94,10 +91,12 @@ export function createResourceDialogCreator<
       );
     }, [formData, lang, resource]);
 
+    const localizationContext = useLocalizationContext(previewResource);
+
     return (
       <ResourceCardPreview
         Card={PreviewCard}
-        localizedResource={localizeResource(previewResource)}
+        localizedResource={localizeResource(previewResource, localizationContext)}
         palette={palettes[paletteName]}
         showImage={showImage}
       />
@@ -152,7 +151,6 @@ export function createResourceDialogCreator<
             paletteName={paletteName}
             resource={resource}
             showImage={showImage}
-            sourceId={sourceId}
           />
         }
         primaryActionText={t("create_and_add_more")}

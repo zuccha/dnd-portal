@@ -8,7 +8,10 @@ import {
   eldritchInvocationFiltersSchema,
   eldritchInvocationOrderOptions,
 } from "./eldritch-invocation-filters";
-import { useLocalizeEldritchInvocation } from "./localized-eldritch-invocation";
+import {
+  localizeEldritchInvocation,
+  useEldritchInvocationLocalizationContext,
+} from "./localized-eldritch-invocation";
 
 //------------------------------------------------------------------------------
 // Eldritch Invocation Store
@@ -23,5 +26,6 @@ export const eldritchInvocationStore = createResourceStore("eldritch_invocation"
     eldritchInvocation.min_warlock_level <= (filters.warlock_level ?? 20),
   orderOptions: eldritchInvocationOrderOptions,
   translationFields: eldritchInvocationTranslationFields,
-  useLocalizeResource: useLocalizeEldritchInvocation,
+  localizeResource: localizeEldritchInvocation,
+  useLocalizationContext: useEldritchInvocationLocalizationContext,
 });

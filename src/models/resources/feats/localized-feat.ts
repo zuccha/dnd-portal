@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatFeatureEntries } from "../../other/feature-entries";
@@ -39,9 +39,9 @@ type FeatLocalizationContext = ResourceLocalizationContext & {
 // Use Feat Localization Context
 //------------------------------------------------------------------------------
 
-function useFeatLocalizationContext(sourceId: string): FeatLocalizationContext {
+export function useFeatLocalizationContext(feat: Feat): FeatLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
-  const formatFeatureEntries = useFormatFeatureEntries(sourceId);
+  const formatFeatureEntries = useFormatFeatureEntries(feat.source_id);
   const translateFeatCategory = useTranslateFeatCategory(context.lang);
 
   return useMemo(
@@ -54,7 +54,7 @@ function useFeatLocalizationContext(sourceId: string): FeatLocalizationContext {
 // Localize Feat
 //------------------------------------------------------------------------------
 
-function localizeFeat(feat: Feat, context: FeatLocalizationContext): LocalizedFeat {
+export function localizeFeat(feat: Feat, context: FeatLocalizationContext): LocalizedFeat {
   const category = context.translateFeatCategory(feat.category);
   const description = translate(feat.description, context.lang);
   const features = context.formatFeatureEntries(feat.feature_entries);
@@ -73,15 +73,6 @@ function localizeFeat(feat: Feat, context: FeatLocalizationContext): LocalizedFe
     min_level,
     prerequisite,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Feat
-//------------------------------------------------------------------------------
-
-export function useLocalizeFeat(sourceId: string): (feat: Feat) => LocalizedFeat {
-  const context = useFeatLocalizationContext(sourceId);
-  return useCallback((feat) => localizeFeat(feat, context), [context]);
 }
 
 //------------------------------------------------------------------------------

@@ -6,7 +6,7 @@ import {
   matchesInclusionList,
 } from "../resource-filtering";
 import { createResourceStore } from "../resource-store";
-import { useLocalizeSpell } from "./localized-spell";
+import { useSpellLocalizationContext, localizeSpell } from "./localized-spell";
 import { defaultSpell, spellTranslationFields } from "./spell";
 import { defaultSpellFilters, spellFiltersSchema, spellOrderOptions } from "./spell-filters";
 
@@ -35,5 +35,6 @@ export const spellStore = createResourceStore("spell", {
     matchesInclusionList(spell.character_class_ids, filters.character_class_ids),
   orderOptions: spellOrderOptions,
   translationFields: spellTranslationFields,
-  useLocalizeResource: useLocalizeSpell,
+  localizeResource: localizeSpell,
+  useLocalizationContext: useSpellLocalizationContext,
 });

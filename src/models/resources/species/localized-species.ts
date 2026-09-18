@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
@@ -48,12 +48,12 @@ type SpeciesLocalizationContext = ResourceLocalizationContext & {
 // Use Species Localization Context
 //------------------------------------------------------------------------------
 
-function useSpeciesLocalizationContext(sourceId: string): SpeciesLocalizationContext {
+export function useSpeciesLocalizationContext(species: Species): SpeciesLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
 
   const translateCreatureSize = useTranslateCreatureSize(context.lang);
   const translateCreatureType = useTranslateCreatureType(context.lang);
-  const formatFeatureEntries = useFormatFeatureEntries(sourceId);
+  const formatFeatureEntries = useFormatFeatureEntries(species.source_id);
 
   const [system] = useI18nSystem();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
@@ -74,7 +74,10 @@ function useSpeciesLocalizationContext(sourceId: string): SpeciesLocalizationCon
 // Localize Species
 //------------------------------------------------------------------------------
 
-function localizeSpecies(species: Species, context: SpeciesLocalizationContext): LocalizedSpecies {
+export function localizeSpecies(
+  species: Species,
+  context: SpeciesLocalizationContext,
+): LocalizedSpecies {
   const description = translate(species.description, context.lang);
   const features = context.formatFeatureEntries(species.feature_entries);
   const sizes = species.sizes.map(context.translateCreatureSize).join("/");
@@ -91,15 +94,6 @@ function localizeSpecies(species: Species, context: SpeciesLocalizationContext):
     speed,
     type,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Species
-//------------------------------------------------------------------------------
-
-export function useLocalizeSpecies(sourceId: string): (species: Species) => LocalizedSpecies {
-  const context = useSpeciesLocalizationContext(sourceId);
-  return useCallback((species) => localizeSpecies(species, context), [context]);
 }
 
 //------------------------------------------------------------------------------

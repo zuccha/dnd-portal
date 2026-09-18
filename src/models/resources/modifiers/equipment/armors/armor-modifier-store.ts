@@ -1,11 +1,11 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
+import { localizeEquipmentModifier } from "../localized-equipment-modifier";
 import { armorModifierTranslationFields, defaultArmorModifier } from "./armor-modifier";
 import {
   armorModifierFiltersSchema,
   armorModifierOrderOptions,
   defaultArmorModifierFilters,
 } from "./armor-modifier-filters";
-import { useLocalizeArmorModifier } from "./localized-armor-modifier";
 
 //------------------------------------------------------------------------------
 // Armor Modifier Store
@@ -18,5 +18,5 @@ export const armorModifierStore = createEquipmentModifierStore("armor_modifier",
   filtersSchema: armorModifierFiltersSchema,
   orderOptions: armorModifierOrderOptions,
   translationFields: armorModifierTranslationFields,
-  useLocalizeModifier: useLocalizeArmorModifier,
+  localizeModifier: localizeEquipmentModifier,
 });

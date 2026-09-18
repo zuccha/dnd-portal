@@ -3,6 +3,10 @@ import { type ResourceStore } from "../../resource-store";
 import { createModifierStore } from "../modifier-store";
 import { type EquipmentModifierFilters } from "./equipment-modifier-filters";
 import { type LocalizedEquipmentModifier } from "./localized-equipment-modifier";
+import {
+  type EquipmentModifierLocalizationContext,
+  useEquipmentModifierLocalizationContext,
+} from "./localized-equipment-modifier";
 import type { ResourceKind } from "../../../types/resource-kind";
 import type { TranslationFields } from "../../resource";
 import type { EquipmentModifier } from "./equipment-modifier";
@@ -25,16 +29,17 @@ export function createEquipmentModifierStore<
     filtersSchema: ZodType<F>;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<R>[];
-    useLocalizeModifier: (sourceId: string) => (modifier: R) => L;
+    localizeModifier: (modifier: R, context: EquipmentModifierLocalizationContext) => L;
   },
-): ResourceStore<R, L, F> {
-  return createModifierStore<R, L, F>(kind, {
+): ResourceStore<R, L, F, EquipmentModifierLocalizationContext> {
+  return createModifierStore<R, L, F, EquipmentModifierLocalizationContext>(kind, {
     defaultFilters: extra.defaultFilters,
     defaultModifier: extra.defaultModifier,
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
     orderOptions: extra.orderOptions,
     translationFields: extra.translationFields,
-    useLocalizeModifier: extra.useLocalizeModifier,
+    localizeModifier: extra.localizeModifier,
+    useModifierLocalizationContext: useEquipmentModifierLocalizationContext,
   });
 }

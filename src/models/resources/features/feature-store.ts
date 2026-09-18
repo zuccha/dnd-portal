@@ -5,7 +5,7 @@ import {
   featureFiltersSchema,
   featureOrderOptions,
 } from "./feature-filters";
-import { useLocalizeFeature } from "./localized-feature";
+import { localizeFeature, useFeatureLocalizationContext } from "./localized-feature";
 
 //------------------------------------------------------------------------------
 // Feature Store
@@ -18,5 +18,6 @@ export const featureStore = createResourceStore("feature", {
   filtersSchema: featureFiltersSchema,
   orderOptions: featureOrderOptions,
   translationFields: featureTranslationFields,
-  useLocalizeResource: useLocalizeFeature,
+  localizeResource: localizeFeature,
+  useLocalizationContext: useFeatureLocalizationContext,
 });

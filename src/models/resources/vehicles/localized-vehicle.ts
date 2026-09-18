@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
@@ -49,7 +49,7 @@ type VehicleLocalizationContext = ResourceLocalizationContext & {
 // Use Vehicle Localization Context
 //------------------------------------------------------------------------------
 
-function useVehicleLocalizationContext(): VehicleLocalizationContext {
+export function useVehicleLocalizationContext(_vehicle: Vehicle): VehicleLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCost = useFormatCp();
   const formatCmh = useFormatCmh();
@@ -96,15 +96,6 @@ export function localizeVehicle(
     passengers,
     speed,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Vehicle
-//------------------------------------------------------------------------------
-
-export function useLocalizeVehicle(): (vehicle: Vehicle) => LocalizedVehicle {
-  const context = useVehicleLocalizationContext();
-  return useCallback((vehicle) => localizeVehicle(vehicle, context), [context]);
 }
 
 //------------------------------------------------------------------------------

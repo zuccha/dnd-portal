@@ -1,5 +1,5 @@
 import { createResourceStore } from "../resource-store";
-import { useLocalizeVehicle } from "./localized-vehicle";
+import { localizeVehicle, useVehicleLocalizationContext } from "./localized-vehicle";
 import { defaultVehicle, vehicleTranslationFields } from "./vehicle";
 import {
   defaultVehicleFilters,
@@ -18,5 +18,6 @@ export const vehicleStore = createResourceStore("vehicle", {
   filtersSchema: vehicleFiltersSchema,
   orderOptions: vehicleOrderOptions,
   translationFields: vehicleTranslationFields,
-  useLocalizeResource: useLocalizeVehicle,
+  localizeResource: localizeVehicle,
+  useLocalizationContext: useVehicleLocalizationContext,
 });

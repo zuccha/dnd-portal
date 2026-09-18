@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z, { ZodType } from "zod";
 import type { I18nLangContext } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
@@ -51,14 +51,14 @@ export type EquipmentLocalizationContext = ResourceLocalizationContext & {
 //------------------------------------------------------------------------------
 
 export function useEquipmentLocalizationContext(
-  sourceId: string,
+  equipment: Equipment,
   context: I18nLangContext = i18nContext,
 ): EquipmentLocalizationContext {
   const mergedContext = useMemo(() => ({ ...i18nContext, ...context }), [context]);
   const resourceContext = useResourceLocalizationContext(mergedContext);
   const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
-  const formatFeatureEntriesDetails = useFormatFeatureEntries(sourceId);
+  const formatFeatureEntriesDetails = useFormatFeatureEntries(equipment.source_id);
   const translateRarity = useTranslateEquipmentRarity(resourceContext.lang);
 
   return useMemo(
@@ -111,17 +111,6 @@ export function localizeEquipment<E extends Equipment>(
     rarity,
     weight: equipment.weight === null ? "" : context.formatWeight(equipment.weight),
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Equipment
-//------------------------------------------------------------------------------
-
-export function useLocalizeEquipment<E extends Equipment>(
-  sourceId: string,
-): (equipment: E) => LocalizedEquipment<E> {
-  const context = useEquipmentLocalizationContext(sourceId);
-  return useCallback((equipment) => localizeEquipment(equipment, context), [context]);
 }
 
 //------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import { useTranslatePlaneCategory } from "../../types/plane-category";
@@ -38,7 +38,7 @@ type PlaneLocalizationContext = ResourceLocalizationContext & {
 // Use Plane Localization Context
 //------------------------------------------------------------------------------
 
-function usePlaneLocalizationContext(): PlaneLocalizationContext {
+export function usePlaneLocalizationContext(_plane: Plane): PlaneLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const translateCreatureAlignment = useTranslateCreatureAlignment(context.lang);
   const translatePlaneCategory = useTranslatePlaneCategory(context.lang);
@@ -64,15 +64,6 @@ export function localizePlane(plane: Plane, context: PlaneLocalizationContext): 
     category,
     info: formatInfo([[context.tp("alignments", plane.alignments.length), alignments]]),
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Plane
-//------------------------------------------------------------------------------
-
-export function useLocalizePlane(): (plane: Plane) => LocalizedPlane {
-  const context = usePlaneLocalizationContext();
-  return useCallback((plane) => localizePlane(plane, context), [context]);
 }
 
 //------------------------------------------------------------------------------

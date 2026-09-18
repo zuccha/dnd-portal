@@ -45,9 +45,16 @@ function PrintDeckEditorDialogLoaded({
   if (!registryEntry) throw new Error("Missing print deck editor registry entry");
 
   const { t, ti } = useI18nLangContext(i18nContext);
-  const { Editor, form, parseFormData, translationFields, useLocalizeResource } = registryEntry;
+  const {
+    Editor,
+    form,
+    parseFormData,
+    translationFields,
+    localizeResource,
+    useLocalizationContext,
+  } = registryEntry;
   const { useSubmit, useSubmitError, useValid } = form;
-  const localizeResource = useLocalizeResource(entry.localized_resource._raw.source_id);
+  const localizationContext = useLocalizationContext(entry.localized_resource._raw);
 
   useEffect(() => {
     form.reset();
@@ -65,7 +72,7 @@ function PrintDeckEditorDialogLoaded({
           translationFields,
         ),
       );
-      const nextLocalizedResource = localizeResource(nextRawResource);
+      const nextLocalizedResource = localizeResource(nextRawResource, localizationContext);
 
       printDeck.updateEntry(entry.id, {
         ...entry,
@@ -74,7 +81,7 @@ function PrintDeckEditorDialogLoaded({
 
       return undefined;
     },
-    [entry, localizeResource, parseFormData, translationFields],
+    [entry, localizeResource, localizationContext, parseFormData, translationFields],
   );
 
   const [submit, saving] = useSubmit(updateEntry);
@@ -122,25 +129,31 @@ function PrintDeckEditorDialogPreview({ entry }: { entry: PrintDeckEntry }) {
   const registryEntry = getPrintDeckEditorRegistryEntry(entry.localized_resource.kind);
   if (!registryEntry) throw new Error("Missing print deck editor registry entry");
 
-  const { form, parseFormData, translationFields, useLocalizeResource } = registryEntry;
+  const { form, parseFormData, translationFields, localizeResource, useLocalizationContext } =
+    registryEntry;
   const { useData } = form;
-  const localizeResource = useLocalizeResource(entry.localized_resource._raw.source_id);
   const { Card } = getPrintDeckRegistryEntry(entry.localized_resource.kind);
   const formData = useData();
 
-  const previewLocalizedResource = useMemo(() => {
+  const previewRawResource = useMemo(() => {
     const errorOrPatch = parseFormData(formData, entry.lang);
-    if (typeof errorOrPatch === "string") return entry.localized_resource;
+    if (typeof errorOrPatch === "string") return entry.localized_resource._raw;
 
-    const nextRawResource = resourceUnionSchema.parse(
+    return resourceUnionSchema.parse(
       applyResourceEditorPreviewPatch(
         entry.localized_resource._raw,
         errorOrPatch,
         translationFields,
       ),
     );
-    return localizeResource(nextRawResource);
-  }, [entry, formData, localizeResource, parseFormData, translationFields]);
+  }, [entry, formData, parseFormData, translationFields]);
+
+  const localizationContext = useLocalizationContext(entry.localized_resource._raw);
+
+  const previewLocalizedResource = useMemo(
+    () => localizeResource(previewRawResource, localizationContext),
+    [localizeResource, localizationContext, previewRawResource],
+  );
 
   return (
     <ResourceCardPreview

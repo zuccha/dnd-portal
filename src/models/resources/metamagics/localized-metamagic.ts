@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import {
@@ -35,7 +34,9 @@ type MetamagicLocalizationContext = ResourceLocalizationContext;
 // Use Metamagic Localization Context
 //------------------------------------------------------------------------------
 
-function useMetamagicLocalizationContext(): MetamagicLocalizationContext {
+export function useMetamagicLocalizationContext(
+  _metamagic: Metamagic,
+): MetamagicLocalizationContext {
   return useResourceLocalizationContext(i18nContext);
 }
 
@@ -61,15 +62,6 @@ export function localizeMetamagic(
     prerequisite: prerequisite || "",
     sorcery_points: `${metamagic.sorcery_points}`,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Metamagic
-//------------------------------------------------------------------------------
-
-export function useLocalizeMetamagic(): (metamagic: Metamagic) => LocalizedMetamagic {
-  const context = useMetamagicLocalizationContext();
-  return useCallback((metamagic) => localizeMetamagic(metamagic, context), [context]);
 }
 
 //------------------------------------------------------------------------------

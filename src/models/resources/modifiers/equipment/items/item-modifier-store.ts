@@ -1,11 +1,11 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
+import { localizeEquipmentModifier } from "../localized-equipment-modifier";
 import { defaultItemModifier, itemModifierTranslationFields } from "./item-modifier";
 import {
   defaultItemModifierFilters,
   itemModifierFiltersSchema,
   itemModifierOrderOptions,
 } from "./item-modifier-filters";
-import { useLocalizeItemModifier } from "./localized-item-modifier";
 
 //------------------------------------------------------------------------------
 // Item Modifier Store
@@ -21,5 +21,5 @@ export const itemModifierStore = createEquipmentModifierStore("item_modifier", {
   filtersSchema: itemModifierFiltersSchema,
   orderOptions: itemModifierOrderOptions,
   translationFields: itemModifierTranslationFields,
-  useLocalizeModifier: useLocalizeItemModifier,
+  localizeModifier: localizeEquipmentModifier,
 });

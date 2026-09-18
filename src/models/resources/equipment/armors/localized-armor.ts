@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { formatSigned } from "~/utils/number";
 import { useTranslateArmorType } from "../../../types/armor-type";
@@ -43,8 +43,8 @@ type ArmorLocalizationContext = EquipmentLocalizationContext & {
 // Use Armor Localization Context
 //------------------------------------------------------------------------------
 
-function useArmorLocalizationContext(sourceId: string): ArmorLocalizationContext {
-  const context = useEquipmentLocalizationContext(sourceId, i18nContext);
+export function useArmorLocalizationContext(armor: Armor): ArmorLocalizationContext {
+  const context = useEquipmentLocalizationContext(armor, i18nContext);
   const translateArmorType = useTranslateArmorType(context.lang);
 
   return useMemo(() => ({ ...context, translateArmorType }), [context, translateArmorType]);
@@ -54,7 +54,7 @@ function useArmorLocalizationContext(sourceId: string): ArmorLocalizationContext
 // Localize Armor
 //------------------------------------------------------------------------------
 
-function localizeArmor(armor: Armor, context: ArmorLocalizationContext): LocalizedArmor {
+export function localizeArmor(armor: Armor, context: ArmorLocalizationContext): LocalizedArmor {
   const { t, ti, tp } = context;
 
   const formatModifier = (ability: string, modifier: number | null | undefined) => {
@@ -113,15 +113,6 @@ function localizeArmor(armor: Armor, context: ArmorLocalizationContext): Localiz
     stealth: armor.disadvantage_on_stealth ? t("stealth.disadvantage") : t("stealth.normal"),
     type,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Armor
-//------------------------------------------------------------------------------
-
-export function useLocalizeArmor(sourceId: string): (armor: Armor) => LocalizedArmor {
-  const context = useArmorLocalizationContext(sourceId);
-  return useCallback((armor) => localizeArmor(armor, context), [context]);
 }
 
 //------------------------------------------------------------------------------

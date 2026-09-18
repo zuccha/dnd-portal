@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { cmToDistanceValue } from "~/measures/distance";
@@ -64,8 +64,8 @@ type WeaponLocalizationContext = EquipmentLocalizationContext & {
 // Use Weapon Localization Context
 //------------------------------------------------------------------------------
 
-function useWeaponLocalizationContext(sourceId: string): WeaponLocalizationContext {
-  const context = useEquipmentLocalizationContext(sourceId, i18nContext);
+export function useWeaponLocalizationContext(weapon: Weapon): WeaponLocalizationContext {
+  const context = useEquipmentLocalizationContext(weapon, i18nContext);
   const [system] = useI18nSystem();
   const translateDamageType = useTranslateDamageType(context.lang);
   const translateWeaponMastery = useTranslateWeaponMastery(context.lang);
@@ -102,7 +102,10 @@ function useWeaponLocalizationContext(sourceId: string): WeaponLocalizationConte
 // Localize Weapon
 //------------------------------------------------------------------------------
 
-function localizeWeapon(weapon: Weapon, context: WeaponLocalizationContext): LocalizedWeapon {
+export function localizeWeapon(
+  weapon: Weapon,
+  context: WeaponLocalizationContext,
+): LocalizedWeapon {
   const damage_type = context.translateDamageType(weapon.damage_type);
   const damage_extended = context.ti("damage_extended", weapon.damage, damage_type);
   const damage_modifier = weapon.properties.includes("finesse")
@@ -160,15 +163,6 @@ function localizeWeapon(weapon: Weapon, context: WeaponLocalizationContext): Loc
     ranged: weapon.ranged,
     type,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Weapon
-//------------------------------------------------------------------------------
-
-export function useLocalizeWeapon(sourceId: string): (weapon: Weapon) => LocalizedWeapon {
-  const context = useWeaponLocalizationContext(sourceId);
-  return useCallback((weapon) => localizeWeapon(weapon, context), [context]);
 }
 
 //------------------------------------------------------------------------------

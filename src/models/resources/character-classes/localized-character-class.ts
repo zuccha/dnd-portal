@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
@@ -67,10 +67,12 @@ type CharacterClassLocalizationContext = ResourceLocalizationContext & {
 // Use Character Class Localization Context
 //------------------------------------------------------------------------------
 
-function useCharacterClassLocalizationContext(sourceId: string): CharacterClassLocalizationContext {
+export function useCharacterClassLocalizationContext(
+  characterClass: CharacterClass,
+): CharacterClassLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
-  const formatFeatureEntries = useFormatFeatureEntries(sourceId);
+  const formatFeatureEntries = useFormatFeatureEntries(characterClass.source_id);
   const localizeEquipmentName = useLocalizeEquipmentName(context.lang);
   const localizeToolName = useLocalizeToolName(context.lang);
   const translateArmorType = useTranslateArmorType(context.lang);
@@ -111,7 +113,7 @@ function useCharacterClassLocalizationContext(sourceId: string): CharacterClassL
 // Localize Character Class
 //------------------------------------------------------------------------------
 
-function localizeCharacterClass(
+export function localizeCharacterClass(
   characterClass: CharacterClass,
   context: CharacterClassLocalizationContext,
 ): LocalizedCharacterClass {
@@ -226,20 +228,6 @@ function localizeCharacterClass(
     tool_proficiencies,
     weapon_proficiencies,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Character Class
-//------------------------------------------------------------------------------
-
-export function useLocalizeCharacterClass(
-  sourceId: string,
-): (characterClass: CharacterClass) => LocalizedCharacterClass {
-  const context = useCharacterClassLocalizationContext(sourceId);
-  return useCallback(
-    (characterClass) => localizeCharacterClass(characterClass, context),
-    [context],
-  );
 }
 
 //------------------------------------------------------------------------------

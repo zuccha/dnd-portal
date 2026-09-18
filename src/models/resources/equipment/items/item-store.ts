@@ -2,7 +2,7 @@ import { matchesBoolean, matchesInclusion } from "../../resource-filtering";
 import { createEquipmentStore, matchesEquipment } from "../equipment-store";
 import { defaultItem, itemTranslationFields } from "./item";
 import { defaultItemFilters, itemFiltersSchema, itemOrderOptions } from "./item-filters";
-import { useLocalizeItem } from "./localized-item";
+import { localizeItem, useItemLocalizationContext } from "./localized-item";
 
 //------------------------------------------------------------------------------
 // Item Store
@@ -20,5 +20,6 @@ export const itemStore = createEquipmentStore("item", {
     (filters.charges_min <= 0 || (item.charges ?? 0) >= filters.charges_min),
   orderOptions: itemOrderOptions,
   translationFields: itemTranslationFields,
-  useLocalizeEquipment: useLocalizeItem,
+  localizeEquipment: localizeItem,
+  useEquipmentLocalizationContext: useItemLocalizationContext,
 });

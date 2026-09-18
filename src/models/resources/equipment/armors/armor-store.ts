@@ -2,7 +2,7 @@ import { matchesInclusion } from "../../resource-filtering";
 import { createEquipmentStore, matchesEquipment } from "../equipment-store";
 import { armorTranslationFields, defaultArmor } from "./armor";
 import { armorFiltersSchema, armorOrderOptions, defaultArmorFilters } from "./armor-filters";
-import { useLocalizeArmor } from "./localized-armor";
+import { localizeArmor, useArmorLocalizationContext } from "./localized-armor";
 
 //------------------------------------------------------------------------------
 // Armor Store
@@ -17,5 +17,6 @@ export const armorStore = createEquipmentStore("armor", {
     matchesEquipment(armor, filters) && matchesInclusion(armor.type, filters.types),
   orderOptions: armorOrderOptions,
   translationFields: armorTranslationFields,
-  useLocalizeEquipment: useLocalizeArmor,
+  localizeEquipment: localizeArmor,
+  useEquipmentLocalizationContext: useArmorLocalizationContext,
 });

@@ -1,5 +1,5 @@
 import { createEquipmentModifierStore } from "../equipment-modifier-store";
-import { useLocalizeToolModifier } from "./localized-tool-modifier";
+import { localizeEquipmentModifier } from "../localized-equipment-modifier";
 import { defaultToolModifier, toolModifierTranslationFields } from "./tool-modifier";
 import {
   defaultToolModifierFilters,
@@ -18,5 +18,5 @@ export const toolModifierStore = createEquipmentModifierStore("tool_modifier", {
   filtersSchema: toolModifierFiltersSchema,
   orderOptions: toolModifierOrderOptions,
   translationFields: toolModifierTranslationFields,
-  useLocalizeModifier: useLocalizeToolModifier,
+  localizeModifier: localizeEquipmentModifier,
 });

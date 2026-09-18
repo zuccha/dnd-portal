@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { z } from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
@@ -133,7 +133,7 @@ type CreatureLocalizationContext = ResourceLocalizationContext & {
 // Use Creature Localization Context
 //------------------------------------------------------------------------------
 
-function useCreatureLocalizationContext(): CreatureLocalizationContext {
+export function useCreatureLocalizationContext(_creature: Creature): CreatureLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const [system] = useI18nSystem();
   const formatCp = useFormatCp();
@@ -195,7 +195,7 @@ function useCreatureLocalizationContext(): CreatureLocalizationContext {
 // Localize Creature
 //------------------------------------------------------------------------------
 
-function localizeCreature(
+export function localizeCreature(
   creature: Creature,
   context: CreatureLocalizationContext,
 ): LocalizedCreature {
@@ -603,15 +603,6 @@ function localizeCreature(
     reactions,
     traits,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Creature
-//------------------------------------------------------------------------------
-
-export function useLocalizeCreature(): (creature: Creature) => LocalizedCreature {
-  const context = useCreatureLocalizationContext();
-  return useCallback((creature) => localizeCreature(creature, context), [context]);
 }
 
 //------------------------------------------------------------------------------

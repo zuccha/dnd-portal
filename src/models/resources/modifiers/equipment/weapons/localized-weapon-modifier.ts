@@ -1,9 +1,6 @@
 import z from "zod";
-import {
-  localizedEquipmentModifierSchema,
-  useLocalizeEquipmentModifier,
-} from "../localized-equipment-modifier";
-import { type WeaponModifier, weaponModifierSchema } from "./weapon-modifier";
+import { localizedEquipmentModifierSchema } from "../localized-equipment-modifier";
+import { weaponModifierSchema } from "./weapon-modifier";
 
 //------------------------------------------------------------------------------
 // Localized Weapon Modifier
@@ -15,11 +12,3 @@ export const localizedWeaponModifierSchema = localizedEquipmentModifierSchema(
 ).extend({});
 
 export type LocalizedWeaponModifier = z.infer<typeof localizedWeaponModifierSchema>;
-
-//------------------------------------------------------------------------------
-// Use Localize Weapon Modifier
-//------------------------------------------------------------------------------
-
-export function useLocalizeWeaponModifier() {
-  return useLocalizeEquipmentModifier<WeaponModifier>();
-}

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { z } from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCm } from "~/measures/distance";
@@ -63,7 +63,7 @@ type SpellLocalizationContext = ResourceLocalizationContext & {
 // Use Spell Localization Context
 //------------------------------------------------------------------------------
 
-function useSpellLocalizationContext(): SpellLocalizationContext {
+export function useSpellLocalizationContext(_spell: Spell): SpellLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const translateSpellSchool = useTranslateSpellSchool(context.lang);
   const translateSpellCastingTime = useTranslateSpellCastingTime(context.lang);
@@ -153,15 +153,6 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
     ritual: spell.ritual,
     school,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Spell
-//------------------------------------------------------------------------------
-
-export function useLocalizeSpell(): (spell: Spell) => LocalizedSpell {
-  const context = useSpellLocalizationContext();
-  return useCallback((spell) => localizeSpell(spell, context), [context]);
 }
 
 //------------------------------------------------------------------------------

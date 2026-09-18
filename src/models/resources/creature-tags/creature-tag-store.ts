@@ -5,7 +5,7 @@ import {
   creatureTagOrderOptions,
   defaultCreatureTagFilters,
 } from "./creature-tag-filters";
-import { useLocalizeCreatureTag } from "./localized-creature-tag";
+import { localizeCreatureTag, useCreatureTagLocalizationContext } from "./localized-creature-tag";
 
 //------------------------------------------------------------------------------
 // Creature Tag Store
@@ -18,5 +18,6 @@ export const creatureTagStore = createResourceStore("creature_tag", {
   filtersSchema: creatureTagFiltersSchema,
   orderOptions: creatureTagOrderOptions,
   translationFields: creatureTagTranslationFields,
-  useLocalizeResource: useLocalizeCreatureTag,
+  localizeResource: localizeCreatureTag,
+  useLocalizationContext: useCreatureTagLocalizationContext,
 });

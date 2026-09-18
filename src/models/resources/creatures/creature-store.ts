@@ -6,7 +6,7 @@ import {
   creatureOrderOptions,
   defaultCreatureFilters,
 } from "./creature-filters";
-import { useLocalizeCreature } from "./localized-creature";
+import { localizeCreature, useCreatureLocalizationContext } from "./localized-creature";
 
 //------------------------------------------------------------------------------
 // Creature Store
@@ -27,5 +27,6 @@ export const creatureStore = createResourceStore("creature", {
     matchesInclusionList(creature.treasures, filters.treasures),
   orderOptions: creatureOrderOptions,
   translationFields: creatureTranslationFields,
-  useLocalizeResource: useLocalizeCreature,
+  localizeResource: localizeCreature,
+  useLocalizationContext: useCreatureLocalizationContext,
 });

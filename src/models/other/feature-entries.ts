@@ -69,6 +69,28 @@ export function useFormatFeatureEntries(
 }
 
 //------------------------------------------------------------------------------
+// Use Localized Feature Entries
+//------------------------------------------------------------------------------
+
+export function useLocalizedFeatureEntries(featureEntries: FeatureEntry[]): string {
+  const { lang, ti } = useI18nLangContext(i18nContext);
+  const featureIds = useMemo(
+    () => featureEntries.map((featureEntry) => featureEntry.id),
+    [featureEntries],
+  );
+  const features = useResources(featureIds);
+  const featureMap = useMemo(
+    () => new Map(features.map((feature) => [feature.id, feature])),
+    [features],
+  );
+
+  return useMemo(
+    () => formatFeatureEntries(featureEntries, { getFeature: featureMap.get, lang, ti }),
+    [featureEntries, featureMap, lang, ti],
+  );
+}
+
+//------------------------------------------------------------------------------
 // I18n Context
 //------------------------------------------------------------------------------
 

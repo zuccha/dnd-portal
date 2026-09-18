@@ -15,6 +15,7 @@ export function createModifierStore<
   R extends Modifier,
   L extends LocalizedResource<R>,
   F extends ModifierFilters,
+  C,
 >(
   kind: ResourceKind,
   extra: {
@@ -24,16 +25,18 @@ export function createModifierStore<
     filtersSchema: ZodType<F>;
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<R>[];
-    useLocalizeModifier: (sourceId: string) => (modifier: R) => L;
+    localizeModifier: (modifier: R, context: C) => L;
+    useModifierLocalizationContext: (modifier: R) => C;
   },
-): ResourceStore<R, L, F> {
-  return createResourceStore(kind, {
+): ResourceStore<R, L, F, C> {
+  return createResourceStore<R, L, F, C>(kind, {
     defaultFilters: extra.defaultFilters,
     defaultResource: extra.defaultModifier,
     displayName: extra.displayName,
     filtersSchema: extra.filtersSchema,
     orderOptions: extra.orderOptions,
     translationFields: extra.translationFields,
-    useLocalizeResource: extra.useLocalizeModifier,
+    localizeResource: extra.localizeModifier,
+    useLocalizationContext: extra.useModifierLocalizationContext,
   });
 }

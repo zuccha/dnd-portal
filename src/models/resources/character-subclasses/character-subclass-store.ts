@@ -6,13 +6,16 @@ import {
   characterSubclassOrderOptions,
   defaultCharacterSubclassFilters,
 } from "./character-subclass-filters";
-import { useLocalizeCharacterSubclass } from "./localized-character-subclass";
+import {
+  localizeCharacterSubclass,
+  useCharacterSubclassLocalizationContext,
+} from "./localized-character-subclass";
 
 //------------------------------------------------------------------------------
 // Character Subclass Store
 //------------------------------------------------------------------------------
 
-export const characterSubclassStore = createResourceStore("character_subclass", {
+const characterSubclassResourceStore = createResourceStore("character_subclass", {
   defaultFilters: defaultCharacterSubclassFilters,
   defaultResource: defaultCharacterSubclass,
   displayName: { en: "Subclasses", it: "Sottoclassi" },
@@ -21,5 +24,8 @@ export const characterSubclassStore = createResourceStore("character_subclass", 
     matchesInclusion(characterSubclass.character_class_id, filters.character_class_ids),
   orderOptions: characterSubclassOrderOptions,
   translationFields: characterSubclassTranslationFields,
-  useLocalizeResource: useLocalizeCharacterSubclass,
+  localizeResource: localizeCharacterSubclass,
+  useLocalizationContext: useCharacterSubclassLocalizationContext,
 });
+
+export const characterSubclassStore = characterSubclassResourceStore;

@@ -36,7 +36,30 @@ export type ResourceStore<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
-> = ReturnType<typeof createResourceStore<R, L, F>>;
+  C = any,
+> = ReturnType<typeof createResourceStore<R, L, F, C>>;
+
+//------------------------------------------------------------------------------
+// Resource Store Options
+//------------------------------------------------------------------------------
+
+type ResourceStoreOptions<
+  R extends Resource,
+  L extends LocalizedResource<R>,
+  F extends ResourceFilters,
+  C,
+> = {
+  defaultFilters: F;
+  defaultResource: R;
+  displayName: I18nString;
+  filtersSchema: ZodType<F>;
+  matchesResource?: ResourceMatcher<R, F>;
+  compareResources?: ResourceComparator<R, F>;
+  orderOptions: { label: I18nString; value: string }[];
+  translationFields: TranslationFields<R>[];
+  localizeResource: (resource: R, context: C) => L;
+  useLocalizationContext: (resource: R) => C;
+};
 
 //------------------------------------------------------------------------------
 // Create Resource Store
@@ -46,9 +69,9 @@ export function createResourceStore<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
->(
-  kind: ResourceKind,
-  {
+  C = undefined,
+>(kind: ResourceKind, options: ResourceStoreOptions<R, L, F, C>) {
+  const {
     defaultFilters,
     defaultResource,
     displayName,
@@ -57,19 +80,10 @@ export function createResourceStore<
     compareResources: compareStoreResources = compareResources,
     orderOptions,
     translationFields,
-    useLocalizeResource,
-  }: {
-    defaultFilters: F;
-    defaultResource: R;
-    displayName: I18nString;
-    filtersSchema: ZodType<F>;
-    matchesResource?: ResourceMatcher<R, F>;
-    compareResources?: ResourceComparator<R, F>;
-    orderOptions: { label: I18nString; value: string }[];
-    translationFields: TranslationFields<R>[];
-    useLocalizeResource: (sourceId: string) => (resource: R) => L;
-  },
-) {
+    localizeResource,
+    useLocalizationContext,
+  } = options;
+
   const storeId = `resources[${kind}]`;
   const catalogueResourceStore = catalogue.createResourceStore(kind);
   const resourceSelectionStore = createResourceSelectionStore(storeId);
@@ -366,8 +380,11 @@ export function createResourceStore<
 
   function useLocalizedResource(resourceId: string): L | undefined {
     const resource = useResource(resourceId);
-    const localizeResource = useLocalizeResource(resource?.source_id ?? "");
-    return resource ? localizeResource(resource) : undefined;
+    const context = useLocalizationContext(resource ?? defaultResource);
+    return useMemo(
+      () => (resource ? localizeResource(resource, context) : undefined),
+      [context, resource],
+    );
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -426,9 +443,10 @@ export function createResourceStore<
     useResourceSelection: resourceSelectionStore.useResourceSelection,
     useSelectedResourceIds: resourceSelectionStore.useSelectedResourceIds,
 
-    useLocalizeResource,
     useLocalizeResourceName,
     useLocalizeResourceNameShort,
+    localizeResource,
+    useLocalizationContext,
     useLocalizedResource,
     useLocalizedResourceName,
     useLocalizedResourceNameShort,

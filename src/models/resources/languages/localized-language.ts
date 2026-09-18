@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateLanguageRarity } from "../../types/language-rarity";
@@ -38,7 +38,7 @@ type LanguageLocalizationContext = ResourceLocalizationContext & {
 // Use Language Localization Context
 //------------------------------------------------------------------------------
 
-function useLanguageLocalizationContext(): LanguageLocalizationContext {
+export function useLanguageLocalizationContext(_language: Language): LanguageLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const translateLanguageRarity = useTranslateLanguageRarity(context.lang);
 
@@ -66,15 +66,6 @@ export function localizeLanguage(
     origin,
     rarity,
   };
-}
-
-//------------------------------------------------------------------------------
-// Use Localize Language
-//------------------------------------------------------------------------------
-
-export function useLocalizeLanguage(): (language: Language) => LocalizedLanguage {
-  const context = useLanguageLocalizationContext();
-  return useCallback((language) => localizeLanguage(language, context), [context]);
 }
 
 //------------------------------------------------------------------------------

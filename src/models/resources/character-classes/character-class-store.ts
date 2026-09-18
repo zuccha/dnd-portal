@@ -5,7 +5,10 @@ import {
   characterClassOrderOptions,
   defaultCharacterClassFilters,
 } from "./character-class-filters";
-import { useLocalizeCharacterClass } from "./localized-character-class";
+import {
+  localizeCharacterClass,
+  useCharacterClassLocalizationContext,
+} from "./localized-character-class";
 
 //------------------------------------------------------------------------------
 // Character Class Store
@@ -18,5 +21,6 @@ export const characterClassStore = createResourceStore("character_class", {
   filtersSchema: characterClassFiltersSchema,
   orderOptions: characterClassOrderOptions,
   translationFields: characterClassTranslationFields,
-  useLocalizeResource: useLocalizeCharacterClass,
+  localizeResource: localizeCharacterClass,
+  useLocalizationContext: useCharacterClassLocalizationContext,
 });
