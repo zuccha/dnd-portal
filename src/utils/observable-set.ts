@@ -4,7 +4,7 @@ import type { Callback2 } from "./callback";
 // Ids
 //------------------------------------------------------------------------------
 
-const ids = new Set<string>();
+const observables = new Map<string, ObservableSet<any, any>>();
 
 //------------------------------------------------------------------------------
 // Observable Set
@@ -23,8 +23,11 @@ export type ObservableSet<K, T> = {
 //------------------------------------------------------------------------------
 
 export function createObservableSet<K, T>(id: string): ObservableSet<K, T> {
-  if (ids.has(id)) throw new Error(`Observable Set "${id}" already exists`);
-  ids.add(id);
+  const existing = observables.get(id);
+  if (existing) {
+    if (import.meta.env.DEV) return existing;
+    throw new Error(`Observable Set "${id}" already exists`);
+  }
 
   const listenersByKey = new Map<K, Set<Callback2<T, K>>>();
   const anyListeners = new Set<Callback2<T, K>>();
@@ -55,5 +58,7 @@ export function createObservableSet<K, T>(id: string): ObservableSet<K, T> {
     anyListeners.delete(callback);
   }
 
-  return { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny };
+  const observable = { notify, subscribe, subscribeAny, unsubscribe, unsubscribeAny };
+  observables.set(id, observable);
+  return observable;
 }
