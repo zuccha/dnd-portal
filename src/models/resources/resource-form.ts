@@ -9,7 +9,6 @@ import type { Resource } from "./resource";
 export const resourceFormDataSchema = z.object({
   image_url: z.string().default(""),
   name: z.string().default(""),
-  name_short: z.string().default(""),
   page: z.number().default(0),
   visibility: resourceVisibilitySchema.default("public"),
 });
@@ -21,7 +20,7 @@ export type ResourceFormData = z.infer<typeof resourceFormDataSchema>;
 //------------------------------------------------------------------------------
 
 export type ResourceFormDataPatch = Partial<
-  Pick<Resource, "image_url" | "name" | "name_short" | "page" | "visibility">
+  Pick<Resource, "image_url" | "name" | "page" | "visibility">
 >;
 
 //------------------------------------------------------------------------------
@@ -56,7 +55,6 @@ export function resourceFormDataToResource(
   return createResourceFormDataPatch({
     image_url: data.image_url === undefined ? undefined : data.image_url || null,
     name: createResourceFormDataI18nValue(data.name, lang),
-    name_short: createResourceFormDataI18nValue(data.name_short, lang),
     page:
       data.page === undefined
         ? undefined

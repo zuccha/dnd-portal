@@ -62,7 +62,7 @@ export const sourceBundleResourcesSchema = z.object({
 // Source Bundle
 //------------------------------------------------------------------------------
 
-export const sourceBundleVersion = 2;
+export const sourceBundleVersion = 3;
 
 export const sourceBundleSchema = z.object({
   bundle_version: z.literal(sourceBundleVersion),

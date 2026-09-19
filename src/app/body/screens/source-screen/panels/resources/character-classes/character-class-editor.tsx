@@ -41,6 +41,19 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   const ResourceEditor = createResourceEditor(form);
 
   //----------------------------------------------------------------------------
+  // Abbreviation Field
+  //----------------------------------------------------------------------------
+
+  const AbbreviationField = createInputField({
+    i18nContext: {
+      label: { en: "Abbr.", it: "Abbr." },
+      placeholder: { en: "None", it: "Nessuna" },
+    },
+    translatable: true,
+    useField: form.createUseField("abbreviation"),
+  });
+
+  //----------------------------------------------------------------------------
   // Feature Entries
   //----------------------------------------------------------------------------
 
@@ -283,6 +296,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
     return (
       <ResourceEditor resource={resource}>
         <HStack gap={4} w="full">
+          <AbbreviationField defaultValue={resource.abbreviation[lang] ?? ""} maxW="8em" />
           <PrimaryAbilitiesField defaultValue={resource.primary_abilities} />
           <HpDieField defaultValue={resource.hp_die} maxW="10em" />
         </HStack>

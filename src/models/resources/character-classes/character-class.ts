@@ -19,6 +19,7 @@ import {
 //------------------------------------------------------------------------------
 
 export const characterClassBaseSchema = resourceSchema.extend({
+  abbreviation: i18nStringSchema,
   armor_proficiencies: z.array(armorTypeSchema),
   armor_proficiencies_extra: i18nStringSchema,
   feature_entries: z.array(featureEntrySchema),
@@ -46,6 +47,7 @@ export type CharacterClass = z.infer<typeof characterClassSchema>;
 
 export const defaultCharacterClass: CharacterClass = {
   ...defaultResource,
+  abbreviation: {},
   armor_proficiencies: [],
   armor_proficiencies_extra: {},
   feature_entries: [],
@@ -68,6 +70,7 @@ export const defaultCharacterClass: CharacterClass = {
 
 export const characterClassTranslationFields: TranslationFields<CharacterClass>[] = [
   ...resourceTranslationFields,
+  "abbreviation",
   "armor_proficiencies_extra",
   "weapon_proficiencies_extra",
 ];

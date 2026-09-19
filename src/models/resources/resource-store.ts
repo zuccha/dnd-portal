@@ -333,16 +333,6 @@ export function createResourceStore<
   }
 
   //------------------------------------------------------------------------------
-  // Use Localized Resource Name Short
-  //------------------------------------------------------------------------------
-
-  function useLocalizedResourceNameShort(resourceId: string): string {
-    const [lang] = useI18nLang();
-    const resource = useResource(resourceId);
-    return resource ? translate(resource.name_short, lang) : "";
-  }
-
-  //------------------------------------------------------------------------------
   // Use Localized Resource Names
   //------------------------------------------------------------------------------
 
@@ -355,24 +345,6 @@ export function createResourceStore<
         resourceIds.map((resourceId) => {
           const resource = resources.find(({ id }) => id === resourceId);
           return resource ? translate(resource.name, lang) : "";
-        }),
-      [lang, resourceIds, resources],
-    );
-  }
-
-  //------------------------------------------------------------------------------
-  // Use Localized Resource Names Short
-  //------------------------------------------------------------------------------
-
-  function useLocalizedResourceNamesShort(resourceIds: string[]): string[] {
-    const [lang] = useI18nLang();
-    const resources = useResources(resourceIds);
-
-    return useMemo(
-      () =>
-        resourceIds.map((resourceId) => {
-          const resource = resources.find(({ id }) => id === resourceId);
-          return resource ? translate(resource.name_short, lang) : "";
         }),
       [lang, resourceIds, resources],
     );
@@ -405,7 +377,6 @@ export function createResourceStore<
       .map((resource) => ({
         label: translate(resource.name, lang),
         name: resource.name,
-        name_short: resource.name_short,
         value: resource.id,
       }))
       .sort(compareObjects("label"));
@@ -451,9 +422,7 @@ export function createResourceStore<
     useLocalizationContext,
     useLocalizedResource,
     useLocalizedResourceName,
-    useLocalizedResourceNameShort,
     useLocalizedResourceNames,
-    useLocalizedResourceNamesShort,
     useResourceOptions,
   };
 }

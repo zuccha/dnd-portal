@@ -58,10 +58,6 @@ export function createEquipmentVariant<E extends Equipment>(
       (name, modifier) => composeI18nString(modifier.composite_name, name, "{1}"),
       base.name,
     ),
-    name_short: modifiers.reduce(
-      (name, modifier) => composeI18nString(modifier.composite_name, name, "{1}"),
-      Object.keys(base.name_short).length ? base.name_short : base.name,
-    ),
     notes: modifiers.reduce(
       (notes, modifier) => appendI18nString(notes, modifier.notes_delta, "\n\n"),
       base.notes,

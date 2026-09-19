@@ -34,6 +34,7 @@ export const localizedCharacterClassSchema = localizedResourceSchema(
   characterClassSchema,
   z.literal("character_class"),
 ).extend({
+  abbreviation: z.string(),
   armor_proficiencies: z.string(),
   hp_die: z.string(),
   info: z.string(),
@@ -219,6 +220,7 @@ export function localizeCharacterClass(
 
   return {
     ...localizeResource(characterClass, context),
+    abbreviation: translate(characterClass.abbreviation, context.lang),
     descriptor: context.t("descriptor"),
     details: formatDetails(
       skill_proficiencies_pool,

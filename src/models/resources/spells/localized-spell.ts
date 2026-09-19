@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { z } from "zod";
+import { useI18nLang } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCm } from "~/measures/distance";
 import { useFormatSeconds } from "~/measures/time";
@@ -17,7 +18,25 @@ import {
 } from "../localized-resource";
 import { type Spell, spellSchema } from "./spell";
 
-const useLocalizedCharacterClassNamesShort = characterClassStore.useLocalizedResourceNamesShort;
+const useCharacterClassResources = characterClassStore.useResources;
+
+//------------------------------------------------------------------------------
+// Use Localized Character Class Abbreviations
+//------------------------------------------------------------------------------
+
+function useLocalizedCharacterClassAbbreviations(resourceIds: string[]): string[] {
+  const [lang] = useI18nLang();
+  const resources = useCharacterClassResources(resourceIds);
+
+  return useMemo(
+    () =>
+      resourceIds.map((resourceId) => {
+        const resource = resources.find(({ id }) => id === resourceId);
+        return resource ? translate(resource.abbreviation, lang) : "";
+      }),
+    [lang, resourceIds, resources],
+  );
+}
 
 //------------------------------------------------------------------------------
 // Localized Spell
@@ -71,7 +90,9 @@ export function useSpellLocalizationContext(spell: Spell): SpellLocalizationCont
   const translateSpellRange = useTranslateSpellRange(context.lang);
   const formatRange = useFormatCm();
   const formatTime = useFormatSeconds();
-  const characterClassNamesShort = useLocalizedCharacterClassNamesShort(spell.character_class_ids);
+  const characterClassNamesShort = useLocalizedCharacterClassAbbreviations(
+    spell.character_class_ids,
+  );
   const localizedCharacterClassNamesShort = useMemo(
     () =>
       Object.fromEntries(

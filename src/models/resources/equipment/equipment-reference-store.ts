@@ -78,7 +78,6 @@ function useResourceOptions(): ResourceOption[] {
           return {
             label,
             name: equipment.name,
-            name_short: equipment.name_short,
             value: equipment.id,
           };
         })

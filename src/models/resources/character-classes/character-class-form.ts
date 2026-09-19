@@ -20,6 +20,7 @@ import type { CharacterClass } from "./character-class";
 //------------------------------------------------------------------------------
 
 export const characterClassFormDataSchema = resourceFormDataSchema.extend({
+  abbreviation: z.string().default(""),
   armor_proficiencies: z.array(armorTypeSchema).default([]),
   armor_proficiencies_extra: z.string().default(""),
   feature_entries: z.array(featureEntrySchema).default([]),
@@ -47,6 +48,7 @@ export function characterClassFormDataToResource(
 ): Partial<CharacterClass> {
   return createResourceFormDataPatch({
     ...resourceFormDataToResource(data, lang),
+    abbreviation: createResourceFormDataI18nValue(data.abbreviation, lang),
     armor_proficiencies: data.armor_proficiencies,
     armor_proficiencies_extra: createResourceFormDataI18nValue(
       data.armor_proficiencies_extra,

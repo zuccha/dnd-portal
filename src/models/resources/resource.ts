@@ -23,7 +23,6 @@ export const resourceSchema = z.object({
   visibility: resourceVisibilitySchema,
 
   name: i18nStringSchema,
-  name_short: i18nStringSchema,
   page: i18nNumberSchema.nullish(),
 });
 
@@ -37,7 +36,6 @@ export const defaultResource: Omit<Resource, "kind"> = {
   id: "",
   image_url: undefined,
   name: {},
-  name_short: {},
   page: {},
   source_code: "",
   source_id: "",
@@ -55,11 +53,7 @@ export type TranslationFields<R extends Resource> = KeysOfType<
   I18nNumber | I18nString | undefined | null
 >;
 
-export const resourceTranslationFields: TranslationFields<Resource>[] = [
-  "name",
-  "name_short",
-  "page",
-];
+export const resourceTranslationFields: TranslationFields<Resource>[] = ["name", "page"];
 
 //------------------------------------------------------------------------------
 // Resource Option
@@ -68,7 +62,6 @@ export const resourceTranslationFields: TranslationFields<Resource>[] = [
 export const localizedResourceOptionSchema = z.object({
   label: z.string(),
   name: i18nStringSchema,
-  name_short: i18nStringSchema,
   value: z.uuid(),
 });
 
@@ -77,6 +70,5 @@ export type ResourceOption = z.infer<typeof localizedResourceOptionSchema>;
 export const defaultResourceOption: ResourceOption = {
   label: "",
   name: {},
-  name_short: {},
   value: "",
 };
