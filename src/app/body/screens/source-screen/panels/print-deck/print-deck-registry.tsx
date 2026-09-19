@@ -1,28 +1,6 @@
-import type { LocalizedBackground } from "~/models/resources/backgrounds/localized-background";
-import type { LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
-import type { LocalizedCharacterSubclass } from "~/models/resources/character-subclasses/localized-character-subclass";
-import type { LocalizedCreatureTag } from "~/models/resources/creature-tags/localized-creature-tag";
-import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
-import type { LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
-import type { LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
-import type { LocalizedItem } from "~/models/resources/equipment/items/localized-item";
-import type { LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
-import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
-import type { LocalizedFeat } from "~/models/resources/feats/localized-feat";
-import type { LocalizedFeature } from "~/models/resources/features/localized-feature";
-import type { LocalizedLanguage } from "~/models/resources/languages/localized-language";
-import type { LocalizedManeuver } from "~/models/resources/maneuvers/localized-maneuver";
-import type { LocalizedMetamagic } from "~/models/resources/metamagics/localized-metamagic";
-import type { LocalizedArmorModifier } from "~/models/resources/modifiers/equipment/armors/localized-armor-modifier";
-import type { LocalizedItemModifier } from "~/models/resources/modifiers/equipment/items/localized-item-modifier";
-import type { LocalizedToolModifier } from "~/models/resources/modifiers/equipment/tools/localized-tool-modifier";
-import type { LocalizedWeaponModifier } from "~/models/resources/modifiers/equipment/weapons/localized-weapon-modifier";
-import type { LocalizedPlane } from "~/models/resources/planes/localized-plane";
+import type { LocalizedResource } from "~/models/resources/localized-resource";
+import type { Resource } from "~/models/resources/resource";
 import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
-import type { LocalizedService } from "~/models/resources/services/localized-service";
-import type { LocalizedSpecies } from "~/models/resources/species/localized-species";
-import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
-import type { LocalizedVehicle } from "~/models/resources/vehicles/localized-vehicle";
 import { BackgroundCard } from "../resources/backgrounds/background-card";
 import { CharacterClassCard } from "../resources/character-classes/character-class-card";
 import { CharacterSubclassCard } from "../resources/character-subclasses/character-subclass-card";
@@ -57,47 +35,24 @@ import type { ComponentType } from "react";
 export type PrintDeckResourceKind = LocalizedResourceUnion["kind"];
 
 //------------------------------------------------------------------------------
-// Print Deck Localized Resources
+// Print Deck Localized Resource
 //------------------------------------------------------------------------------
 
-export type PrintDeckLocalizedResources = {
-  armor: LocalizedArmor;
-  armor_modifier: LocalizedArmorModifier;
-  background: LocalizedBackground;
-  character_class: LocalizedCharacterClass;
-  character_subclass: LocalizedCharacterSubclass;
-  creature: LocalizedCreature;
-  creature_tag: LocalizedCreatureTag;
-  eldritch_invocation: LocalizedEldritchInvocation;
-  feat: LocalizedFeat;
-  feature: LocalizedFeature;
-  item: LocalizedItem;
-  item_modifier: LocalizedItemModifier;
-  language: LocalizedLanguage;
-  maneuver: LocalizedManeuver;
-  metamagic: LocalizedMetamagic;
-  plane: LocalizedPlane;
-  service: LocalizedService;
-  species: LocalizedSpecies;
-  spell: LocalizedSpell;
-  tool: LocalizedTool;
-  tool_modifier: LocalizedToolModifier;
-  vehicle: LocalizedVehicle;
-  weapon: LocalizedWeapon;
-  weapon_modifier: LocalizedWeaponModifier;
-};
-
-export type PrintDeckLocalizedResource<K extends PrintDeckResourceKind> =
-  PrintDeckLocalizedResources[K];
+export type PrintDeckLocalizedResource<K extends PrintDeckResourceKind> = Extract<
+  LocalizedResourceUnion,
+  { kind: K; _raw: { kind: K } }
+>;
 
 //------------------------------------------------------------------------------
 // Print Deck Card Component
 //------------------------------------------------------------------------------
 
 export type PrintDeckCardProps<K extends PrintDeckResourceKind> = Omit<
-  ResourcePokerCardProps<PrintDeckLocalizedResource<K>["_raw"], PrintDeckLocalizedResource<K>>,
-  "afterDetails" | "beforeDetails" | "firstPageInfo"
->;
+  ResourcePokerCardProps<Resource, LocalizedResource<Resource>>,
+  "afterDetails" | "beforeDetails" | "firstPageInfo" | "localizedResource"
+> & {
+  localizedResource: PrintDeckLocalizedResource<K>;
+};
 
 export type PrintDeckCardComponent<K extends PrintDeckResourceKind> = ComponentType<
   PrintDeckCardProps<K>
