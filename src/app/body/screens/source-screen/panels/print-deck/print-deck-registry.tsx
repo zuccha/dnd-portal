@@ -62,54 +62,46 @@ export type PrintDeckCardComponent<K extends PrintDeckResourceKind> = ComponentT
 };
 
 //------------------------------------------------------------------------------
-// Print Deck Registry Entry
-//------------------------------------------------------------------------------
-
-export type PrintDeckRegistryEntry<K extends PrintDeckResourceKind> = {
-  Card: PrintDeckCardComponent<K>;
-};
-
-export type PrintDeckRegistry = {
-  [K in PrintDeckResourceKind]: PrintDeckRegistryEntry<K>;
-};
-
-//------------------------------------------------------------------------------
 // Print Deck Registry
 //------------------------------------------------------------------------------
 
+export type PrintDeckRegistry = {
+  [K in PrintDeckResourceKind]: PrintDeckCardComponent<K>;
+};
+
 export const printDeckRegistry = {
-  armor: { Card: ArmorCard },
-  armor_modifier: { Card: ArmorModifierCard },
-  background: { Card: BackgroundCard },
-  character_class: { Card: CharacterClassCard },
-  character_subclass: { Card: CharacterSubclassCard },
-  creature: { Card: CreatureCard },
-  creature_tag: { Card: CreatureTagCard },
-  eldritch_invocation: { Card: EldritchInvocationCard },
-  feat: { Card: FeatCard },
-  feature: { Card: FeatureCard },
-  item: { Card: ItemCard },
-  item_modifier: { Card: ItemModifierCard },
-  language: { Card: LanguageCard },
-  maneuver: { Card: ManeuverCard },
-  metamagic: { Card: MetamagicCard },
-  plane: { Card: PlaneCard },
-  service: { Card: ServiceCard },
-  species: { Card: SpeciesCard },
-  spell: { Card: SpellCard },
-  tool: { Card: ToolCard },
-  tool_modifier: { Card: ToolModifierCard },
-  vehicle: { Card: VehicleCard },
-  weapon: { Card: WeaponCard },
-  weapon_modifier: { Card: WeaponModifierCard },
+  armor: ArmorCard,
+  armor_modifier: ArmorModifierCard,
+  background: BackgroundCard,
+  character_class: CharacterClassCard,
+  character_subclass: CharacterSubclassCard,
+  creature: CreatureCard,
+  creature_tag: CreatureTagCard,
+  eldritch_invocation: EldritchInvocationCard,
+  feat: FeatCard,
+  feature: FeatureCard,
+  item: ItemCard,
+  item_modifier: ItemModifierCard,
+  language: LanguageCard,
+  maneuver: ManeuverCard,
+  metamagic: MetamagicCard,
+  plane: PlaneCard,
+  service: ServiceCard,
+  species: SpeciesCard,
+  spell: SpellCard,
+  tool: ToolCard,
+  tool_modifier: ToolModifierCard,
+  vehicle: VehicleCard,
+  weapon: WeaponCard,
+  weapon_modifier: WeaponModifierCard,
 } satisfies PrintDeckRegistry;
 
 //------------------------------------------------------------------------------
-// Get Print Deck Registry Entry
+// Get Print Deck Card
 //------------------------------------------------------------------------------
 
-export function getPrintDeckRegistryEntry<K extends PrintDeckResourceKind>(
+export function getPrintDeckCard<K extends PrintDeckResourceKind>(
   kind: K,
-): PrintDeckRegistryEntry<K> {
-  return printDeckRegistry[kind] as PrintDeckRegistryEntry<K>;
+): PrintDeckCardComponent<K> {
+  return printDeckRegistry[kind] as PrintDeckCardComponent<K>;
 }

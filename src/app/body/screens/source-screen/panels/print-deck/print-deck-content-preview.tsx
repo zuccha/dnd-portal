@@ -22,7 +22,7 @@ import {
   useZoom,
 } from "./print-deck";
 import PrintDeckPrintModeCropMarks from "./print-deck-print-mode-crop-marks";
-import { getPrintDeckRegistryEntry } from "./print-deck-registry";
+import { getPrintDeckCard } from "./print-deck-registry";
 
 //------------------------------------------------------------------------------
 // Print Deck Content Preview
@@ -72,7 +72,7 @@ export default function PrintDeckContentPreview() {
   );
 
   const firstKind = entries[0]?.localized_resource.kind ?? "spell";
-  const cardSize = getPrintDeckRegistryEntry(firstKind).Card;
+  const cardSize = getPrintDeckCard(firstKind);
   const cardW = cardSize.w + 2 * bleed.x;
   const cardH = cardSize.h + 2 * bleed.y;
 
@@ -199,7 +199,7 @@ export default function PrintDeckContentPreview() {
           >
             {entries.map((entry) => {
               const kind = entry.localized_resource.kind;
-              const { Card } = getPrintDeckRegistryEntry(kind);
+              const Card = getPrintDeckCard(kind);
               return (
                 <Card
                   alwaysEvenPages={includeEmptyBack}

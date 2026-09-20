@@ -7,7 +7,7 @@ import ResourceCardPreview from "../resources/resource-card-preview";
 import ResourceDialog from "../resources/resource-dialog";
 import { applyResourceEditorPreviewPatch } from "../resources/resource-editor-preview";
 import { getPrintDeckEditorRegistryEntry } from "./print-deck-editor-registry";
-import { getPrintDeckRegistryEntry } from "./print-deck-registry";
+import { getPrintDeckCard } from "./print-deck-registry";
 
 //------------------------------------------------------------------------------
 // Print Deck Editor Dialog Props
@@ -132,7 +132,7 @@ function PrintDeckEditorDialogPreview({ entry }: { entry: PrintDeckEntry }) {
   const { form, parseFormData, translationFields, localizeResource, useLocalizationContext } =
     registryEntry;
   const { useData } = form;
-  const { Card } = getPrintDeckRegistryEntry(entry.localized_resource.kind);
+  const Card = getPrintDeckCard(entry.localized_resource.kind);
   const formData = useData();
 
   const previewRawResource = useMemo(() => {
