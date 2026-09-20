@@ -1,33 +1,40 @@
-import { z } from "zod";
-import { createLocalStore } from "~/store/local-store";
-import { type PaletteName, paletteNameSchema } from "~/utils/palette";
+import { createMemoryStore } from "~/store/memory-store";
+import { type PaletteName } from "~/utils/palette";
 import { createUuid } from "~/utils/uuid";
-import { localizedResourceUnionSchema } from "../resources/resource-union";
+import { loadPrintDeck, savePrintDeck } from "./print-deck-indexed-db";
+import type { PrintDeckEntry, PrintDeckEntryInput } from "./print-deck-entry";
 
-//------------------------------------------------------------------------------
-// Print Deck Entry
-//------------------------------------------------------------------------------
-
-export const printDeckEntrySchema = z.object({
-  id: z.uuid(),
-  lang: z.string(),
-  localized_resource: localizedResourceUnionSchema,
-  palette_name: paletteNameSchema,
-});
-
-export type PrintDeckEntry = z.infer<typeof printDeckEntrySchema>;
-
-export type PrintDeckEntryInput = Omit<PrintDeckEntry, "id">;
+export type { PrintDeckEntry, PrintDeckEntryInput } from "./print-deck-entry";
 
 //------------------------------------------------------------------------------
 // Print Deck Store
 //------------------------------------------------------------------------------
 
-const printDeckStore = createLocalStore<PrintDeckEntry[]>(
-  "print_deck",
-  [],
-  z.array(printDeckEntrySchema).parse,
-);
+const printDeckStore = createMemoryStore<PrintDeckEntry[]>("print_deck", []);
+let hasLocalChanges = false;
+let persistence = Promise.resolve();
+
+void loadPrintDeck().then((entries) => {
+  if (!hasLocalChanges) printDeckStore.set(entries);
+});
+
+//------------------------------------------------------------------------------
+// Persist Print Deck
+//------------------------------------------------------------------------------
+
+function persistPrintDeck(entries: PrintDeckEntry[]): void {
+  persistence = persistence.then(() => savePrintDeck(entries));
+}
+
+//------------------------------------------------------------------------------
+// Set Print Deck
+//------------------------------------------------------------------------------
+
+function setPrintDeck(update: Parameters<typeof printDeckStore.set>[0]): void {
+  hasLocalChanges = true;
+  const entries = printDeckStore.set(update);
+  persistPrintDeck(entries);
+}
 
 //------------------------------------------------------------------------------
 // Add Entries
@@ -35,7 +42,7 @@ const printDeckStore = createLocalStore<PrintDeckEntry[]>(
 
 function addEntries(entries: PrintDeckEntryInput[]): string[] {
   const ids: string[] = [];
-  printDeckStore.set((prev) => [
+  setPrintDeck((prev) => [
     ...prev,
     ...entries.map((entry) => {
       const id = createUuid();
@@ -52,7 +59,7 @@ function addEntries(entries: PrintDeckEntryInput[]): string[] {
 
 function addEntry(entry: PrintDeckEntryInput): string {
   const id = createUuid();
-  printDeckStore.set((prev) => [...prev, { ...structuredClone(entry), id }]);
+  setPrintDeck((prev) => [...prev, { ...structuredClone(entry), id }]);
   return id;
 }
 
@@ -61,7 +68,7 @@ function addEntry(entry: PrintDeckEntryInput): string {
 //------------------------------------------------------------------------------
 
 function clearEntries(): void {
-  printDeckStore.set((prev) => (prev.length ? [] : prev));
+  setPrintDeck((prev) => (prev.length ? [] : prev));
 }
 
 //------------------------------------------------------------------------------
@@ -72,7 +79,7 @@ function duplicateEntry(entryId: string): string | undefined {
   const id = createUuid();
   let duplicated = false;
 
-  printDeckStore.set((prev) => {
+  setPrintDeck((prev) => {
     const index = prev.findIndex((entry) => entry.id === entryId);
     if (index < 0) return prev;
 
@@ -98,7 +105,7 @@ function getEntry(entryId: string): PrintDeckEntry | undefined {
 //------------------------------------------------------------------------------
 
 function moveEntry(entryId: string, toIndex: number): void {
-  printDeckStore.set((prev) => {
+  setPrintDeck((prev) => {
     const fromIndex = prev.findIndex((entry) => entry.id === entryId);
     if (fromIndex < 0) return prev;
 
@@ -117,7 +124,7 @@ function moveEntry(entryId: string, toIndex: number): void {
 //------------------------------------------------------------------------------
 
 function removeEntry(entryId: string): void {
-  printDeckStore.set((prev) => {
+  setPrintDeck((prev) => {
     const entries = prev.filter((entry) => entry.id !== entryId);
     return entries.length === prev.length ? prev : entries;
   });
@@ -128,7 +135,7 @@ function removeEntry(entryId: string): void {
 //------------------------------------------------------------------------------
 
 function setEntryPalette(entryId: string, paletteName: PaletteName): void {
-  printDeckStore.set((prev) => {
+  setPrintDeck((prev) => {
     const index = prev.findIndex((entry) => entry.id === entryId);
     if (index < 0) return prev;
 
