@@ -80,8 +80,7 @@ import {
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
 import { planeForm, planeFormDataToResource } from "~/models/resources/planes/plane-form";
 import { planeStore } from "~/models/resources/planes/plane-store";
-import type { TranslationFields } from "~/models/resources/resource";
-import type { LocalizedResourceUnion, ResourceUnion } from "~/models/resources/resource-union";
+import type { ResourceUnion } from "~/models/resources/resource-union";
 import { serviceForm, serviceFormDataToResource } from "~/models/resources/services/service-form";
 import { serviceStore } from "~/models/resources/services/service-store";
 import { speciesForm, speciesFormDataToResource } from "~/models/resources/species/species-form";
@@ -90,7 +89,6 @@ import { spellForm, spellFormDataToResource } from "~/models/resources/spells/sp
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { vehicleForm, vehicleFormDataToResource } from "~/models/resources/vehicles/vehicle-form";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
-import type { Form } from "~/utils/form";
 import { createBackgroundEditor } from "../resources/backgrounds/background-editor";
 import { createCharacterClassEditor } from "../resources/character-classes/character-class-editor";
 import { createCharacterSubclassEditor } from "../resources/character-subclasses/character-subclass-editor";
@@ -115,6 +113,11 @@ import { createServiceEditor } from "../resources/services/service-editor";
 import { createSpeciesEditor } from "../resources/species/species-editor";
 import { createSpellEditor } from "../resources/spells/spell-editor";
 import { createVehicleEditor } from "../resources/vehicles/vehicle-editor";
+import {
+  createPrintDeckResourceDialog,
+  type PrintDeckResourceDialogProps,
+  type PrintDeckEditorConfiguration,
+} from "./print-deck-resource-dialog";
 import type { PrintDeckResourceKind } from "./print-deck-registry";
 
 //------------------------------------------------------------------------------
@@ -127,28 +130,22 @@ export type PrintDeckEditorPatch = Partial<ResourceUnion>;
 // Print Deck Editor Registry Entry
 //------------------------------------------------------------------------------
 
-export type PrintDeckEditorRegistryEntry = {
-  Editor: React.FC<{ resource: unknown; sourceId: string }>;
-  form: Form<Record<string, unknown>>;
-  parseFormData: (
-    data: Partial<Record<string, unknown>>,
-    lang: string,
-  ) => PrintDeckEditorPatch | string;
-  translationFields: TranslationFields<ResourceUnion>[];
-  localizeResource: (resource: unknown, context: unknown) => LocalizedResourceUnion;
-  useLocalizationContext: (resource: unknown) => unknown;
+export type PrintDeckEditorRegistryEntry = PrintDeckEditorConfiguration & {
+  Component: React.ComponentType<PrintDeckResourceDialogProps>;
 };
 
-export type PrintDeckEditorRegistry = Partial<
-  Record<PrintDeckResourceKind, PrintDeckEditorRegistryEntry>
->;
+export type PrintDeckEditorRegistry = Record<PrintDeckResourceKind, PrintDeckEditorRegistryEntry>;
 
 //------------------------------------------------------------------------------
 // Cast Entry
 //------------------------------------------------------------------------------
 
 function castEntry(entry: unknown): PrintDeckEditorRegistryEntry {
-  return entry as PrintDeckEditorRegistryEntry;
+  const configuration = entry as PrintDeckEditorConfiguration;
+  return {
+    ...configuration,
+    Component: createPrintDeckResourceDialog(configuration),
+  };
 }
 
 //------------------------------------------------------------------------------
@@ -356,6 +353,6 @@ export const printDeckEditorRegistry = {
 
 export function getPrintDeckEditorRegistryEntry(
   kind: PrintDeckResourceKind,
-): PrintDeckEditorRegistryEntry | undefined {
+): PrintDeckEditorRegistryEntry {
   return printDeckEditorRegistry[kind];
 }
