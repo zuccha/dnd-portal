@@ -102,7 +102,7 @@ export function createResourceStore<
     defaultFilters,
     filtersSchema,
   );
-  const { useEffectiveFilters, useFilters } = filterStore;
+  const { useFilters } = filterStore;
 
   //------------------------------------------------------------------------------
   // Persist Resource
@@ -295,7 +295,7 @@ export function createResourceStore<
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useFilteredResourceIds(sourceId: string): string[] {
-    const filters = useEffectiveFilters();
+    const [filters] = useFilters();
     const [lang] = useI18nLang();
     const resourceIds = useResourceIds(sourceId);
     const normalizedName = normalizeString(filters.name);

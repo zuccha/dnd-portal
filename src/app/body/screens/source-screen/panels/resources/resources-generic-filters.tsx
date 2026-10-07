@@ -8,7 +8,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { useDraftResourcesSourcesFilter } from "~/models/resources/resources-sources-filter";
+import { useResourcesSourcesFilter } from "~/models/resources/resources-sources-filter";
 import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
 import Input from "~/ui/input";
@@ -33,7 +33,7 @@ export function createResourcesGenericFilters<
   return function ResourcesGenericFilters({ sourceId }: ResourcesGenericFiltersProps) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const source = useSource(sourceId);
-    const [sources, setSources] = useDraftResourcesSourcesFilter(sourceId);
+    const [sources, setSources] = useResourcesSourcesFilter(sourceId);
     const [filters, { set: setFilters }] = useFilters();
     const [name, setName] = useState(filters.name);
 

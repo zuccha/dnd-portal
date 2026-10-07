@@ -7,12 +7,10 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import {
-  useApplyResourcesSourcesFilter,
-  useHasDraftResourcesSourcesFilter,
-  useHasResourcesSourcesFilterChanges,
-  useResetDraftResourcesSourcesFilter,
+  defaultResourcesSourcesFilter,
+  useHasResourcesSourcesFilter,
+  useResourcesSourcesFilter,
 } from "~/models/resources/resources-sources-filter";
-import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import Section from "~/ui/section";
 import { createResourcesCounter } from "./resources-counter";
@@ -48,25 +46,14 @@ export function createResourcesFilters<
   return function ResourcesFilters({ sourceId }: ResourcesFiltersProps) {
     const { t } = useI18nLangContext(i18nContext);
 
-    const [
-      ,
-      { apply: applyFilters, hasChanges: hasFilterChanges, hasFilters, reset: resetFilters },
-    ] = useFilters();
-
-    const hasSourcesFilter = useHasDraftResourcesSourcesFilter(sourceId);
-    const hasSourcesFilterChanges = useHasResourcesSourcesFilterChanges(sourceId);
-    const applySourcesFilter = useApplyResourcesSourcesFilter(sourceId);
-    const resetSourcesFilter = useResetDraftResourcesSourcesFilter(sourceId);
-
-    const applyAllFilters = useCallback(() => {
-      applyFilters();
-      applySourcesFilter();
-    }, [applyFilters, applySourcesFilter]);
+    const [, { hasFilters, reset: resetFilters }] = useFilters();
+    const [, setSources] = useResourcesSourcesFilter(sourceId);
+    const hasSourcesFilter = useHasResourcesSourcesFilter(sourceId);
 
     const clearFilters = useCallback(() => {
       resetFilters();
-      resetSourcesFilter();
-    }, [resetFilters, resetSourcesFilter]);
+      setSources(defaultResourcesSourcesFilter);
+    }, [resetFilters, setSources]);
 
     return (
       <Section
@@ -88,15 +75,6 @@ export function createResourcesFilters<
 
           <extra.Filters gap={2} sourceId={sourceId} w="full" />
 
-          <Button
-            disabled={!hasFilterChanges && !hasSourcesFilterChanges}
-            onClick={applyAllFilters}
-            size="sm"
-            w="full"
-          >
-            {t("apply_filters")}
-          </Button>
-
           <ResourcesCounter sourceId={sourceId} />
         </VStack>
       </Section>
@@ -109,10 +87,6 @@ export function createResourcesFilters<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  apply_filters: {
-    en: "Apply Filters",
-    it: "Applica filtri",
-  },
   clear_filters: {
     en: "Clear Filters",
     it: "Svuota filtri",
