@@ -68,8 +68,7 @@ export function createResourcesTableRow<
   context: ResourcesContext<R>,
   extra: ResourcesTableRowExtra<R, L>,
 ) {
-  const { toggleResourceSelection, useLocalizedResource, useResource, useResourceSelection } =
-    store;
+  const { setResourceSelection, useLocalizedResource, useResource, useResourceSelection } = store;
 
   const { usePaletteName, useResourceExpansion } = context;
 
@@ -143,7 +142,10 @@ export function createResourcesTableRow<
           });
     }, [localizedResource.id, localizedResource.name, t]);
 
-    const toggleSelection = useCallback(() => toggleResourceSelection(resource.id), [resource.id]);
+    const setSelection = useCallback(
+      (selected: boolean) => setResourceSelection(resource.id, selected),
+      [resource.id],
+    );
 
     const toggleExpansion = useCallback(() => {
       if (!extra.detailsKey) return;
@@ -169,7 +171,7 @@ export function createResourcesTableRow<
           </Table.Cell>
 
           <Table.Cell textAlign="center" w="4em">
-            <Checkbox mt={0.5} onClick={toggleSelection} size="sm" value={selected} />
+            <Checkbox mt={0.5} onValueChange={setSelection} size="sm" value={selected} />
           </Table.Cell>
 
           <Table.Cell textAlign="center" w="3em">
