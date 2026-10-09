@@ -43,7 +43,7 @@
     "vite-plugin-svgr": "^5.2.0"
   },
   "lint-staged": {
-    "*.{js,cjs,mjs,jsx,ts,tsx,json,css,md}": "oxfmt --check",
+    "!(package-lock).{js,cjs,mjs,jsx,ts,tsx,json,css,md}": "oxfmt --check",
     "*.{js,cjs,mjs,jsx,ts,tsx}": "oxlint --fix --deny-warnings"
   }
 }
