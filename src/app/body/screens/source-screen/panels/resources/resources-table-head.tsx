@@ -1,5 +1,5 @@
 import { Table, createIcon } from "@chakra-ui/react";
-import { ChevronRightIcon, EyeIcon, type LucideIcon } from "lucide-react";
+import { EyeIcon, type LucideIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
@@ -67,10 +67,6 @@ export function createResourcesTableHead<
 
     return (
       <Table.Row>
-        <Table.ColumnHeader textAlign="center" w="3em">
-          <Icon Icon={ChevronRightIcon} color="fg.muted" size="sm" />
-        </Table.ColumnHeader>
-
         <Table.ColumnHeader textAlign="center" w="4em">
           <CheckboxIndeterminate mt={0.5} onClick={toggleSelected} size="sm" value={selected} />
         </Table.ColumnHeader>

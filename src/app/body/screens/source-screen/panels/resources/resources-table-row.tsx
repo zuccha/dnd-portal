@@ -1,7 +1,5 @@
 import { Badge, Box, HStack, Table, VStack, createIcon } from "@chakra-ui/react";
 import {
-  ChevronDownIcon,
-  ChevronRightIcon,
   EditIcon,
   EyeClosedIcon,
   EyeIcon,
@@ -150,24 +148,19 @@ export function createResourcesTableRow<
     }, [resource.id]);
 
     const hasActions = true;
-    const columnCount = extra.columns.length + 4;
+    const columnCount = extra.columns.length + 3;
 
     return (
       <>
-        <Table.Row>
-          <Table.Cell textAlign="center" w="3em">
-            <IconButton
-              Icon={expanded ? ChevronDownIcon : ChevronRightIcon}
-              disabled={!extra.detailsKey}
-              label={expanded ? t("collapse") : t("expand")}
-              onClick={toggleExpansion}
-              size="2xs"
-              variant="ghost"
-            />
-          </Table.Cell>
-
+        <Table.Row cursor={extra.detailsKey ? "pointer" : undefined} onClick={toggleExpansion}>
           <Table.Cell textAlign="center" w="4em">
-            <Checkbox mt={0.5} onValueChange={setSelection} size="sm" value={selected} />
+            <Checkbox
+              mt={0.5}
+              onClick={(e) => e.stopPropagation()}
+              onValueChange={setSelection}
+              size="sm"
+              value={selected}
+            />
           </Table.Cell>
 
           <Table.Cell textAlign="center" w="3em">
@@ -313,17 +306,9 @@ const i18nContext = {
     en: "Actions",
     it: "Azioni",
   },
-  "collapse": {
-    en: "Collapse",
-    it: "Comprimi",
-  },
   "edit": {
     en: "Edit",
     it: "Modifica",
-  },
-  "expand": {
-    en: "Expand",
-    it: "Espandi",
   },
   "persistent.done": {
     en: "Resource made persistent",
