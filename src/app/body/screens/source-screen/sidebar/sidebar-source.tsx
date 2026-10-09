@@ -1,10 +1,12 @@
 import { Separator, VStack } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import { resourcePanels } from "../panels/panels";
+import { smallScreenMediaQuery } from "../responsive-sidebar-default";
 import SidebarSection from "./sidebar-section";
+import { useSidebarSetCollapsed } from "./sidebar-state";
 
 //------------------------------------------------------------------------------
 // Sidebar Source
@@ -13,6 +15,21 @@ import SidebarSection from "./sidebar-section";
 export default function SidebarSource() {
   const { t } = useI18nLangContext(i18nContext);
   const route = useRoute();
+  const setSidebarCollapsed = useSidebarSetCollapsed();
+
+  //------------------------------------------------------------------------------
+  // Navigate to Resource Panel
+  //------------------------------------------------------------------------------
+
+  const navigateToResourcePanel = useCallback(
+    (value: string) => {
+      history.pushState({}, "", value);
+      if (globalThis.matchMedia?.(smallScreenMediaQuery).matches) {
+        setSidebarCollapsed(true);
+      }
+    },
+    [setSidebarCollapsed],
+  );
 
   const localizedResourcePanels = useMemo(
     () =>
@@ -21,12 +38,12 @@ export default function SidebarSource() {
         items: items.map(({ modifier, route: value }) => ({
           label: t(value),
           modifier,
-          onClick: () => history.pushState({}, "", value),
+          onClick: () => navigateToResourcePanel(value),
           selected: route === value,
           value,
         })),
       })),
-    [route, t],
+    [navigateToResourcePanel, route, t],
   );
 
   return (
