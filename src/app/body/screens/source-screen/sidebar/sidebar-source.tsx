@@ -187,8 +187,4 @@ const i18nContext = {
     en: "Planes",
     it: "Piani",
   },
-  [Route.Settings]: {
-    en: "Settings",
-    it: "Impostazioni",
-  },
 };
