@@ -1,5 +1,5 @@
-import { Badge, Box, Menu, Portal, Theme, VStack } from "@chakra-ui/react";
-import { EditIcon, EllipsisVerticalIcon, PrinterIcon, SaveIcon } from "lucide-react";
+import { Badge, Box, Theme, VStack } from "@chakra-ui/react";
+import { EditIcon, PrinterIcon, SaveIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -13,7 +13,6 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
-import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
 import PokerCard from "~/ui/poker-card";
 import { toaster } from "~/ui/toaster";
@@ -248,59 +247,55 @@ export function createResourceCardInteractive<
               />
             )}
 
-            <Menu.Root ids={{ trigger: `actions-${resource.id}` }}>
-              <Menu.Trigger asChild>
-                <IconButton
-                  Icon={EllipsisVerticalIcon}
-                  _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
-                  className="light"
-                  label={t("actions")}
-                  onPointerDown={(e) => {
-                    e.stopPropagation();
-                  }}
-                  size="2xs"
-                  tooltipIds={{ trigger: `actions-${resource.id}` }}
-                  tooltipPositioning={{ placement: "right" }}
-                />
-              </Menu.Trigger>
+            <IconButton
+              Icon={PrinterIcon}
+              _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
+              className="light"
+              label={t("print_deck.add")}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                addToPrintDeck();
+              }}
+              size="2xs"
+              tooltipPositioning={{ placement: "right" }}
+            />
 
-              <Portal>
-                <Menu.Positioner>
-                  <Menu.Content>
-                    <Menu.Item onSelect={addToPrintDeck} value="print-deck-add">
-                      <Icon Icon={PrinterIcon} size="xs" />
-                      {t("print_deck.add")}
-                    </Menu.Item>
+            {sourceEditable && localizedResource._raw.virtual && (
+              <IconButton
+                Icon={SaveIcon}
+                _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
+                className="light"
+                label={t("persistent.make")}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  void makePersistent();
+                }}
+                size="2xs"
+                tooltipPositioning={{ placement: "right" }}
+              />
+            )}
 
-                    {sourceEditable && localizedResource._raw.virtual && (
-                      <Menu.Item onSelect={makePersistent} value="make-persistent">
-                        <Icon Icon={SaveIcon} size="xs" />
-                        {t("persistent.make")}
-                      </Menu.Item>
-                    )}
-
-                    {sourceEditable &&
-                      visibleActions.map((action, i) => {
-                        const ActionIcon = action.icon;
-                        return (
-                          <Menu.Item
-                            disabled={action.isDisabled?.(localizedResource._raw)}
-                            key={i}
-                            onSelect={() => {
-                              if (action.isDisabled?.(localizedResource._raw)) return;
-                              void action.onClick(localizedResource._raw);
-                            }}
-                            value={`action-${i}`}
-                          >
-                            <Icon Icon={ActionIcon} size="xs" />
-                            {translate(action.label, lang)}
-                          </Menu.Item>
-                        );
-                      })}
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Portal>
-            </Menu.Root>
+            {sourceEditable &&
+              visibleActions.map((action, i) => {
+                const ActionIcon = action.icon;
+                const disabled = action.isDisabled?.(localizedResource._raw) ?? false;
+                return (
+                  <IconButton
+                    Icon={ActionIcon}
+                    _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
+                    className="light"
+                    disabled={disabled}
+                    key={i}
+                    label={translate(action.label, lang)}
+                    onPointerDown={(e) => {
+                      e.stopPropagation();
+                      if (!disabled) void action.onClick(localizedResource._raw);
+                    }}
+                    size="2xs"
+                    tooltipPositioning={{ placement: "right" }}
+                  />
+                );
+              })}
           </VStack>
 
           <IconButton
