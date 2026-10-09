@@ -1,3 +1,4 @@
+import { Box, Separator, VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo, useState } from "react";
 import z from "zod";
 import useDebouncedCallback from "~/hooks/use-debounced-callback";
@@ -68,46 +69,52 @@ export function createResourcesGenericFilters<
     }, [filters.name]);
 
     return (
-      <>
-        <CaptionInput caption={t("name.placeholder")} w="full">
+      <VStack gap={3} w="full">
+        <CaptionInput caption={t("name_placeholder")} w="full">
           <Input
             groupProps={{ w: "full" }}
             id={`filter-${store.kind}-name`}
             onValueChange={setName}
-            placeholder={t("name.placeholder")}
-            size="sm"
+            placeholder={t("name_placeholder")}
+            size="md"
             value={name}
           />
         </CaptionInput>
 
-        <CaptionInput caption={t("modules")} w="full">
-          <InclusionSelect
-            buttonProps={{ disabled: !options.length }}
-            includes={sources}
-            onValueChange={(partial) => setSources((prev) => ({ ...prev, ...partial }))}
-            options={options}
-            placeholder={t("modules")}
-            size="sm"
-            w="full"
-          />
-        </CaptionInput>
+        <Box pt={1} w="full">
+          <Separator />
+        </Box>
 
-        <CaptionInput caption={t("sort_by")} w="full">
-          <Select.Enum
-            onValueChange={(value) => {
-              const order = value.split(".");
-              const order_by = order[0] ?? "name";
-              const maybe_order_dir = z.enum(["asc", "desc"]).safeParse(order[1]);
-              const order_dir = maybe_order_dir.data ?? "asc";
-              setFilters({ order_by, order_dir } as Partial<F>);
-            }}
-            options={orderOptions}
-            size="sm"
-            value={`${filters.order_by}.${filters.order_dir}`}
-            w="full"
-          />
-        </CaptionInput>
-      </>
+        <VStack gap={2} w="full">
+          <CaptionInput caption={t("modules")} w="full">
+            <InclusionSelect
+              buttonProps={{ disabled: !options.length }}
+              includes={sources}
+              onValueChange={(partial) => setSources((prev) => ({ ...prev, ...partial }))}
+              options={options}
+              placeholder={t("modules")}
+              size="sm"
+              w="full"
+            />
+          </CaptionInput>
+
+          <CaptionInput caption={t("sort_by")} w="full">
+            <Select.Enum
+              onValueChange={(value) => {
+                const order = value.split(".");
+                const order_by = order[0] ?? "name";
+                const maybe_order_dir = z.enum(["asc", "desc"]).safeParse(order[1]);
+                const order_dir = maybe_order_dir.data ?? "asc";
+                setFilters({ order_by, order_dir } as Partial<F>);
+              }}
+              options={orderOptions}
+              size="sm"
+              value={`${filters.order_by}.${filters.order_dir}`}
+              w="full"
+            />
+          </CaptionInput>
+        </VStack>
+      </VStack>
     );
   };
 }
@@ -117,19 +124,19 @@ export function createResourcesGenericFilters<
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "clear": {
+  clear: {
     en: "Clear filters",
     it: "Cancella filtri",
   },
-  "modules": {
+  modules: {
     en: "Modules",
     it: "Moduli",
   },
-  "name.placeholder": {
+  name_placeholder: {
     en: "Name",
     it: "Nome",
   },
-  "sort_by": {
+  sort_by: {
     en: "Sort by",
     it: "Ordina per",
   },
