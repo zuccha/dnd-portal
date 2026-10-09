@@ -7,6 +7,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import Section from "~/ui/section";
 import { toaster } from "~/ui/toaster";
@@ -79,21 +80,15 @@ export function createResourcesActions<
               <Menu.Positioner>
                 <Menu.Content>
                   {sourceEditable && (
-                    <Menu.ItemGroup>
-                      <Menu.Item onSelect={addNew} value="add">
-                        {t("add")}
-                      </Menu.Item>
-
-                      <Menu.Item
-                        _hover={{ bg: "bg.error", color: "fg.error" }}
-                        color="fg.error"
-                        disabled={!hasSelection}
-                        onSelect={removeSelected}
-                        value="remove"
-                      >
-                        {t("remove")}
-                      </Menu.Item>
-                    </Menu.ItemGroup>
+                    <Menu.Item
+                      _hover={{ bg: "bg.error", color: "fg.error" }}
+                      color="fg.error"
+                      disabled={!hasSelection}
+                      onSelect={removeSelected}
+                      value="remove"
+                    >
+                      {t("remove")}
+                    </Menu.Item>
                   )}
 
                   {sourceEditable && <Menu.Separator />}
@@ -121,7 +116,13 @@ export function createResourcesActions<
           </Menu.Root>
         }
         title={t("actions")}
-      />
+      >
+        {sourceEditable && (
+          <Button onClick={addNew} size="sm" variant="outline" w="full">
+            {t("add")}
+          </Button>
+        )}
+      </Section>
     );
   };
 }
