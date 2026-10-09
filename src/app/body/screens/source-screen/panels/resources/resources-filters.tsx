@@ -13,7 +13,6 @@ import {
 } from "~/models/resources/resources-sources-filter";
 import IconButton from "~/ui/icon-button";
 import Section from "~/ui/section";
-import { createResourcesCounter } from "./resources-counter";
 import { createResourcesGenericFilters } from "./resources-generic-filters";
 import type { ResourcesContext } from "./resources-context";
 
@@ -38,7 +37,6 @@ export function createResourcesFilters<
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
 >(store: ResourceStore<R, L, F>, context: ResourcesContext<R>, extra: ResourcesFiltersExtra) {
-  const ResourcesCounter = createResourcesCounter(store, context);
   const ResourcesGenericFilters = createResourcesGenericFilters(store, context);
 
   const { useFilters } = store;
@@ -74,8 +72,6 @@ export function createResourcesFilters<
           <ResourcesGenericFilters sourceId={sourceId} />
 
           <extra.Filters gap={2} sourceId={sourceId} w="full" />
-
-          <ResourcesCounter sourceId={sourceId} />
         </VStack>
       </Section>
     );

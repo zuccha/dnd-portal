@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react";
+import { HStack, VStack } from "@chakra-ui/react";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -12,6 +12,7 @@ import {
 import { type ResourcesAlbumExtra, createResourcesAlbum } from "./resources-album";
 import { createResourcesContext } from "./resources-context";
 import { type ResourcesFiltersExtra } from "./resources-filters";
+import { createResourcesHeader } from "./resources-header";
 import { createResourcesSidebar } from "./resources-sidebar";
 import { type ResourcesTableExtra, createResourcesTable } from "./resources-table";
 import type { ComponentType } from "react";
@@ -50,6 +51,7 @@ export function createResourcesPanel<
   });
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesTable = createResourcesTable(store, context, table);
+  const ResourcesHeader = createResourcesHeader(store, context);
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
 
   const { useView } = context;
@@ -58,16 +60,20 @@ export function createResourcesPanel<
     const view = useView();
 
     return (
-      <HStack flex={1} gap={0} h="full" overflow="auto" position="relative" w="full">
-        {view === "table" && <ResourcesTable sourceId={sourceId} />}
-        {view === "cards" && <ResourcesAlbum sourceId={sourceId} />}
+      <VStack flex={1} gap={0} h="full" minH={0} overflow="hidden" position="relative" w="full">
+        <ResourcesHeader sourceId={sourceId} />
 
-        <ResourcesSidebar sourceId={sourceId} />
+        <HStack flex={1} gap={0} minH={0} overflow="hidden" position="relative" w="full">
+          {view === "table" && <ResourcesTable sourceId={sourceId} />}
+          {view === "cards" && <ResourcesAlbum sourceId={sourceId} />}
 
-        <ResourceCreator sourceId={sourceId} />
-        <ResourceUpdater sourceId={sourceId} />
-        {Extra && <Extra sourceId={sourceId} />}
-      </HStack>
+          <ResourcesSidebar sourceId={sourceId} />
+
+          <ResourceCreator sourceId={sourceId} />
+          <ResourceUpdater sourceId={sourceId} />
+          {Extra && <Extra sourceId={sourceId} />}
+        </HStack>
+      </VStack>
     );
   };
 }

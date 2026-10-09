@@ -27,7 +27,7 @@ export function createResourcesCounter<
     const count = filteredResourceIds.length;
 
     return (
-      <Flex fontSize="sm" justify="flex-end" w="full">
+      <Flex color="fg.muted" fontSize="sm" justify="flex-end" w="auto">
         {tpi("count", count, `${count}`)}
       </Flex>
     );
