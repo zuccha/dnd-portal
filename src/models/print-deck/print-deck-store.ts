@@ -150,7 +150,7 @@ function setEntryPalette(entryId: string, paletteName: PaletteName): void {
 //------------------------------------------------------------------------------
 
 function updateEntry(entryId: string, nextEntry: PrintDeckEntry): void {
-  printDeckStore.set((prev) => {
+  setPrintDeck((prev) => {
     const index = prev.findIndex((entry) => entry.id === entryId);
     if (index < 0) return prev;
 
