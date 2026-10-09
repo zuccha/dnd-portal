@@ -378,15 +378,10 @@ export function ResourcePokerCardPlaceholder({
       name={name}
       pageIndicator=""
       palette={palette}
-      position="relative"
       sourceName=" "
       sourcePage=""
       sourceVersion=" "
       {...rest}
-    >
-      <AbsoluteCenter bgColor="#00000022" h="full" w="full" zIndex={1}>
-        <Spinner />
-      </AbsoluteCenter>
-    </PokerCard.Frame>
+    />
   );
 }
