@@ -32,7 +32,7 @@ export default function Sidebar() {
       position={{ base: "absolute", md: "relative" }}
       top={0}
       w={collapsed ? "2rem" : "15rem"}
-      zIndex="docked"
+      zIndex="sticky"
     >
       <IconButton
         Icon={MenuIcon}
