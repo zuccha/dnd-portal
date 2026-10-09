@@ -31,7 +31,7 @@ export default function SectionButton({
       justifyContent="flex-start"
       m={0}
       onClick={onClick}
-      pl={3 + indent}
+      pl={4 + indent}
       pr={3}
       py={1}
       size="sm"

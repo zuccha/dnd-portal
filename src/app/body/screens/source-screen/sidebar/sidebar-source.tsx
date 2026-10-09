@@ -1,4 +1,4 @@
-import { Separator, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { useCallback, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useRoute } from "~/navigation/navigation";
@@ -47,8 +47,8 @@ export default function SidebarSource() {
   );
 
   return (
-    <VStack align="flex-start" borderTopWidth={1} flex={1} gap={2} pt={1} w="full">
-      <VStack flex={1} separator={<Separator w="full" />} w="full">
+    <VStack align="flex-start" flex={1} gap={0} px={2} w="full">
+      <VStack flex={1} gap={0} w="full">
         {localizedResourcePanels.map(({ id, items }) => (
           <SidebarSection id={id} items={items} key={id} title={t(id)} />
         ))}

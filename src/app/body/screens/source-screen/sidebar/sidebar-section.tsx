@@ -1,12 +1,11 @@
 import { VStack } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronUpIcon, CornerDownRightIcon } from "lucide-react";
 import z from "zod";
-import SectionButton from "~/app/body/screens/source-screen/sidebar/section-button";
 import DotIcon from "~/icons/dot-icon";
 import { createLocalStoreSet } from "~/store/set/local-store-set";
-import Button from "~/ui/button";
 import Icon from "~/ui/icon";
-import SectionHeading from "~/ui/section-heading";
+import SectionButton from "./section-button";
+import SidebarNavigationButton from "./sidebar-navigation-button";
 
 //------------------------------------------------------------------------------
 // Sidebar Section
@@ -30,29 +29,17 @@ export default function SidebarSection({ id, items, title }: SidebarSectionProps
   const [visible, setVisible] = useVisible(id, true);
 
   return (
-    <VStack align="flex-start" gap={1} w="full">
-      <Button
-        alignItems="center"
-        cursor="pointer"
-        display="flex"
-        gap={1}
-        h={7}
+    <VStack align="flex-start" gap={0} w="full">
+      <SidebarNavigationButton
+        active={items.some((item) => item.selected)}
+        activeStyle="text"
+        label={title}
         onClick={() => setVisible((prev) => !prev)}
-        px={6}
-        textAlign="left"
-        unstyled
-        w="full"
-      >
-        <SectionHeading flex={1}>{title}</SectionHeading>
-        {visible ? (
-          <Icon Icon={ChevronUpIcon} size="sm" />
-        ) : (
-          <Icon Icon={ChevronDownIcon} size="sm" />
-        )}
-      </Button>
+        trailing={<Icon Icon={visible ? ChevronUpIcon : ChevronDownIcon} size="sm" />}
+      />
 
       {visible && (
-        <VStack gap={0} px={2} w="full">
+        <VStack gap={0} w="full">
           {items.map((item) => (
             <SectionButton
               Icon={item.modifier ? CornerDownRightIcon : DotIcon}

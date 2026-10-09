@@ -5,6 +5,7 @@ import { useActiveSourceId } from "~/models/catalogue/catalogue";
 import { useSelectedSourceVersion } from "~/models/types/source-version";
 import IconButton from "~/ui/icon-button";
 import LanguageSelect from "./language-select";
+import SidebarNavigation from "./sidebar-navigation";
 import SidebarSource from "./sidebar-source";
 import SidebarSourceSelector from "./sidebar-source-selector";
 import { useSidebarCollapsed, useSidebarSetCollapsed } from "./sidebar-state";
@@ -52,9 +53,9 @@ export default function Sidebar() {
       <VStack
         display={collapsed ? "none" : "flex"}
         flex={1}
-        gap={5}
+        gap={4}
         overflow="auto"
-        py={5}
+        py={4}
         w="full"
       >
         <HStack px={6} w="full" wrap="wrap">
@@ -64,11 +65,17 @@ export default function Sidebar() {
 
         <Separator w="full" />
 
+        <SidebarNavigation />
+
+        <Separator w="full" />
+
+        {sourceId && <SidebarSource />}
+
+        <Separator w="full" />
+
         <HStack gap={2} px={6} w="full">
           <SidebarSourceSelector versions={selectedSourceVersions} />
         </HStack>
-
-        {sourceId && <SidebarSource />}
       </VStack>
     </VStack>
   );
