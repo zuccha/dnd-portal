@@ -30,13 +30,13 @@ export default function SidebarSection({ id, items, title }: SidebarSectionProps
   const [visible, setVisible] = useVisible(id, true);
 
   return (
-    <VStack align="flex-start" gap={2} w="full">
+    <VStack align="flex-start" gap={1} w="full">
       <Button
         alignItems="center"
         cursor="pointer"
         display="flex"
         gap={1}
-        h={8}
+        h={7}
         onClick={() => setVisible((prev) => !prev)}
         px={6}
         textAlign="left"
