@@ -1,4 +1,4 @@
-import { Box, Separator, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo, useState } from "react";
 import z from "zod";
 import useDebouncedCallback from "~/hooks/use-debounced-callback";
@@ -80,10 +80,6 @@ export function createResourcesGenericFilters<
             value={name}
           />
         </CaptionInput>
-
-        <Box pt={1} w="full">
-          <Separator />
-        </Box>
 
         <VStack gap={2} w="full">
           <CaptionInput caption={t("modules")} w="full">
