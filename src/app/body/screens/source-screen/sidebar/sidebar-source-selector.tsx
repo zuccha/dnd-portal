@@ -1,5 +1,5 @@
-import { HStack, VStack } from "@chakra-ui/react";
-import { FolderIcon, UploadIcon } from "lucide-react";
+import { Box, HStack, Span, VStack } from "@chakra-ui/react";
+import { UploadIcon } from "lucide-react";
 import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue, {
@@ -12,9 +12,7 @@ import { type Source, canPublishSource } from "~/models/catalogue/source";
 import { publishSourceBundle } from "~/models/catalogue/source-bundle-sync";
 import { type SourceVersion, useTranslateSourceVersion } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
-import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
-import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
 import Select, { type SelectOption } from "~/ui/select";
 import { compareObjects } from "~/utils/object";
@@ -133,30 +131,31 @@ export default function SidebarSourceSelector({ versions }: SidebarSourceSelecto
           />
         </CaptionInput>
 
-        <IconButton
-          Icon={FolderIcon}
-          alignSelf="flex-end"
-          label={t(Route.Sources)}
-          onClick={() => history.pushState({}, "", Route.Sources)}
-          rounded="sm"
-          size="sm"
-          variant="outline"
-        />
+        {canPublishSource(selectedSource) && (
+          <Box position="relative">
+            <IconButton
+              Icon={UploadIcon}
+              disabled={!hasUnpublishedChanges || publishing}
+              label={t("publish")}
+              loading={publishing}
+              onClick={publishSource}
+              rounded="sm"
+              size="sm"
+              variant="outline"
+            />
+            {hasUnpublishedChanges && (
+              <Span
+                bg="fg.warning"
+                borderRadius="full"
+                boxSize={2}
+                position="absolute"
+                right={0}
+                top={0}
+              />
+            )}
+          </Box>
+        )}
       </HStack>
-
-      {canPublishSource(selectedSource) && (
-        <Button
-          disabled={!hasUnpublishedChanges}
-          loading={publishing}
-          onClick={publishSource}
-          size="sm"
-          variant="outline"
-          w="full"
-        >
-          <Icon Icon={UploadIcon} size="sm" />
-          {t("publish")}
-        </Button>
-      )}
     </VStack>
   );
 }

@@ -58,14 +58,13 @@ export default function Sidebar() {
         py={4}
         w="full"
       >
-        <HStack px={6} w="full" wrap="wrap">
-          <LanguageSelect />
-          <SystemSelect />
-        </HStack>
+        <SidebarNavigation />
 
         <Separator w="full" />
 
-        <SidebarNavigation />
+        <HStack gap={2} px={6} w="full">
+          <SidebarSourceSelector versions={selectedSourceVersions} />
+        </HStack>
 
         <Separator w="full" />
 
@@ -73,8 +72,9 @@ export default function Sidebar() {
 
         <Separator w="full" />
 
-        <HStack gap={2} px={6} w="full">
-          <SidebarSourceSelector versions={selectedSourceVersions} />
+        <HStack px={6} w="full" wrap="wrap">
+          <LanguageSelect />
+          <SystemSelect />
         </HStack>
       </VStack>
     </VStack>
