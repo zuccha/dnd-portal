@@ -14,6 +14,7 @@ import { printDeck } from "~/models/print-deck/print-deck-store";
 import { type ResourceKind, useTranslateResourceKind } from "~/models/types/resource-kind";
 import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
+import Link from "~/ui/link";
 import PalettePicker from "~/ui/palette-picker";
 import { type PaletteName } from "~/utils/palette";
 import PrintDeckEditorDialog from "./print-deck-editor-dialog";
@@ -126,15 +127,15 @@ function PrintDeckEntryRow({
         minW={{ base: "calc(100% - 3rem)", md: 0 }}
         textAlign="left"
       >
-        <Text fontWeight="semibold" lineClamp={2} textAlign="left">
+        <Link fontWeight="semibold" lineClamp={2} onClick={onEdit}>
           {name}
-        </Text>
+        </Link>
         <Text color="fg.muted" fontSize="xs" lineClamp={1} textAlign="left">
           {source} · {translateKind(kind)}
         </Text>
       </VStack>
 
-      <HStack gap={1} ml="auto">
+      <HStack alignSelf="center" gap={1} ml="auto">
         <IconButton
           Icon={ArrowUpIcon}
           disabled={!canMoveUp}
