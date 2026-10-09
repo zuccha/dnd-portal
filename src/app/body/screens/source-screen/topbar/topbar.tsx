@@ -1,7 +1,7 @@
 import { HStack, Span, type StackProps } from "@chakra-ui/react";
 import { MenuIcon, SlidersHorizontalIcon } from "lucide-react";
+import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
 import Button from "~/ui/button";
@@ -19,7 +19,8 @@ export type TopbarProps = StackProps;
 export default function Topbar() {
   const { t } = useI18nLangContext(i18nContext);
 
-  const route = useRoute();
+  const route = useLocation().pathname;
+  const navigate = useNavigate();
   const setSidebarCollapsed = useSidebarSetCollapsed();
   const setRightPanelCollapsed = useRightPanelSetCollapsed();
   const hasResourcesSidebar = route.startsWith(Route.Resources) || route === Route.PrintDeck;
@@ -48,7 +49,7 @@ export default function Topbar() {
           size="sm"
           variant="ghost"
         />
-        <Button cursor="pointer" onClick={() => history.pushState({}, "", Route._)} unstyled>
+        <Button cursor="pointer" onClick={() => navigate(Route._)} unstyled>
           <Span color="fg.error">D&D</Span> Portal
         </Button>
       </HStack>

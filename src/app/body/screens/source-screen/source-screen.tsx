@@ -1,5 +1,5 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
-import Content from "./panels/content";
+import { Outlet } from "react-router";
 import Sidebar from "./sidebar/sidebar";
 import Topbar from "./topbar/topbar";
 
@@ -24,7 +24,7 @@ export default function SourceScreen() {
       >
         <Sidebar />
         <Box flex={1} h="full" minH={0} minW={0} overflow="hidden">
-          <Content />
+          <Outlet />
         </Box>
       </HStack>
     </VStack>

@@ -1,4 +1,5 @@
 import { useLayoutEffect } from "react";
+import { useNavigate } from "react-router";
 import type { Route } from "./routes";
 
 //------------------------------------------------------------------------------
@@ -10,9 +11,11 @@ export type RedirectProps = {
 };
 
 export default function Redirect({ route }: RedirectProps) {
+  const navigate = useNavigate();
+
   useLayoutEffect(() => {
-    history.replaceState({}, "", route);
-  }, [route]);
+    navigate(route, { replace: true });
+  }, [navigate, route]);
 
   return null;
 }

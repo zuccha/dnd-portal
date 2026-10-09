@@ -6,12 +6,8 @@ import {
   downloadDefaultSource,
   updateInstalledSources,
 } from "~/models/catalogue/source-bundle-sync";
-import { useRoute } from "../navigation/navigation";
-import { Route } from "../navigation/routes";
+import AppRouter from "./app-router";
 import { autoUpdateSourcesStore } from "./app-settings";
-import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
-import SignUpScreen from "./body/screens/sign-up-screen/sign-up-screen";
-import SourceScreen from "./body/screens/source-screen/source-screen";
 
 //------------------------------------------------------------------------------
 // App
@@ -88,16 +84,4 @@ export default function App() {
       <AppRouter />
     </VStack>
   );
-}
-
-//------------------------------------------------------------------------------
-// App Router
-//------------------------------------------------------------------------------
-
-function AppRouter() {
-  const route = useRoute();
-
-  if (route === Route.SignIn) return <SignInScreen />;
-  if (route === Route.SignUp) return <SignUpScreen />;
-  return <SourceScreen />;
 }

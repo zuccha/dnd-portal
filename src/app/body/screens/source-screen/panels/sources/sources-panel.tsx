@@ -10,6 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { setAutoUpdateSources, useAutoUpdateSources } from "~/app/app-settings";
 import useAuth from "~/auth/use-auth";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -74,6 +75,7 @@ type SourceRemovalPrompt = {
 
 export default function SourcesPanel() {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const navigate = useNavigate();
   const auth = useAuth();
   const sources = useSources();
   const autoUpdateSources = useAutoUpdateSources();
@@ -224,8 +226,7 @@ export default function SourcesPanel() {
       ),
     );
 
-    if (navigateAfter && savedBundles[0])
-      history.pushState({}, "", sourceSettingsRoute(savedBundles[0].source.id));
+    if (navigateAfter && savedBundles[0]) navigate(sourceSettingsRoute(savedBundles[0].source.id));
   };
 
   //----------------------------------------------------------------------------
@@ -511,7 +512,7 @@ export default function SourcesPanel() {
   //------------------------------------------------------------------------------
 
   const openSourceSettings = (source: Source) => {
-    history.pushState({}, "", sourceSettingsRoute(source.id));
+    navigate(sourceSettingsRoute(source.id));
   };
 
   //----------------------------------------------------------------------------

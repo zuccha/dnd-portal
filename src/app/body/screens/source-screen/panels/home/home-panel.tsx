@@ -1,5 +1,6 @@
 import { Box, Circle, HStack, Heading, SimpleGrid, Span, Text, VStack } from "@chakra-ui/react";
 import { BookOpenIcon, PrinterIcon, ScrollTextIcon, SearchIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import DragonIcon from "~/icons/dragon-icon";
 import { Route } from "~/navigation/routes";
@@ -17,6 +18,7 @@ import owlbear from "./data/owlbear";
 
 export default function HomePanel() {
   const { lang, t } = useI18nLangContext(i18nContext);
+  const navigate = useNavigate();
 
   return (
     <VStack
@@ -46,14 +48,11 @@ export default function HomePanel() {
           </VStack>
 
           <HStack flexWrap="wrap" gap={3}>
-            <Button onClick={() => history.pushState({}, "", Route.ResourcesAbilitiesSpells)}>
+            <Button onClick={() => navigate(Route.ResourcesAbilitiesSpells)}>
               <Icon Icon={ScrollTextIcon} size="sm" />
               {t("home.action.spells")}
             </Button>
-            <Button
-              onClick={() => history.pushState({}, "", Route.ResourcesBestiaryMonsters)}
-              variant="outline"
-            >
+            <Button onClick={() => navigate(Route.ResourcesBestiaryMonsters)} variant="outline">
               <Icon Icon={DragonIcon} size="sm" />
               {t("home.action.creatures")}
             </Button>

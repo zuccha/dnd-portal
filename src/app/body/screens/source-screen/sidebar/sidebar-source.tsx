@@ -1,7 +1,7 @@
 import { VStack } from "@chakra-ui/react";
 import { useCallback, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import { resourcePanels } from "../panels/panels";
 import { smallScreenMediaQuery } from "../responsive-sidebar-default";
@@ -14,7 +14,8 @@ import { useSidebarSetCollapsed } from "./sidebar-state";
 
 export default function SidebarSource() {
   const { t } = useI18nLangContext(i18nContext);
-  const route = useRoute();
+  const route = useLocation().pathname;
+  const navigateRoute = useNavigate();
   const setSidebarCollapsed = useSidebarSetCollapsed();
 
   //------------------------------------------------------------------------------
@@ -23,12 +24,12 @@ export default function SidebarSource() {
 
   const navigateToResourcePanel = useCallback(
     (value: string) => {
-      history.pushState({}, "", value);
+      navigateRoute(value);
       if (globalThis.matchMedia?.(smallScreenMediaQuery).matches) {
         setSidebarCollapsed(true);
       }
     },
-    [setSidebarCollapsed],
+    [navigateRoute, setSidebarCollapsed],
   );
 
   const localizedResourcePanels = useMemo(

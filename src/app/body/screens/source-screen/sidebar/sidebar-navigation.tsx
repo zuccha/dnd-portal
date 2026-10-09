@@ -1,8 +1,8 @@
 import { Span, VStack } from "@chakra-ui/react";
 import { useCallback } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { printDeck } from "~/models/print-deck/print-deck-store";
-import { useRoute } from "~/navigation/navigation";
 import { Route } from "~/navigation/routes";
 import { smallScreenMediaQuery } from "../responsive-sidebar-default";
 import SidebarNavigationButton from "./sidebar-navigation-button";
@@ -15,7 +15,8 @@ import { useSidebarSetCollapsed } from "./sidebar-state";
 export default function SidebarNavigation() {
   const { t } = useI18nLangContext(i18nContext);
   const printDeckEntries = printDeck.useEntries();
-  const route = useRoute();
+  const route = useLocation().pathname;
+  const navigateRoute = useNavigate();
   const setSidebarCollapsed = useSidebarSetCollapsed();
   const printDeckCount = printDeckEntries.length;
   const printDeckCountLabel = printDeckCount > 99 ? "99+" : `${printDeckCount}`;
@@ -26,12 +27,12 @@ export default function SidebarNavigation() {
 
   const navigate = useCallback(
     (value: string) => {
-      history.pushState({}, "", value);
+      navigateRoute(value);
       if (globalThis.matchMedia?.(smallScreenMediaQuery).matches) {
         setSidebarCollapsed(true);
       }
     },
-    [setSidebarCollapsed],
+    [navigateRoute, setSidebarCollapsed],
   );
 
   return (

@@ -1,6 +1,7 @@
 import { Center, HStack, Heading, Span, VStack, chakra } from "@chakra-ui/react";
 import { ArrowLeftIcon } from "lucide-react";
 import { useCallback, useState } from "react";
+import { useNavigate } from "react-router";
 import RawDiscordIcon from "~/assets/images/icons/discord.svg?react";
 import { signInWithDiscord, signUpWithPassword } from "~/auth/auth";
 import useAuth from "~/auth/use-auth";
@@ -20,6 +21,7 @@ import Link from "~/ui/link";
 export default function SignInScreen() {
   const auth = useAuth();
   const { t } = useI18nLangContext(i18nContext);
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   // const [username, setUsername] = useState("");
@@ -76,7 +78,7 @@ export default function SignInScreen() {
 
         <Span fontSize="sm" w="full">
           {`${t("already_registered")} `}
-          <Link onClick={() => history.pushState({}, "", Route.SignIn)}>{t("signin")}</Link>
+          <Link onClick={() => navigate(Route.SignIn)}>{t("signin")}</Link>
         </Span>
 
         <Button alignSelf="flex-end" onClick={signUp} size="sm">
@@ -99,7 +101,7 @@ export default function SignInScreen() {
         Icon={ArrowLeftIcon}
         label={t("back")}
         left={4}
-        onClick={() => history.pushState({}, "", Route._)}
+        onClick={() => navigate(Route._)}
         position="absolute"
         top={4}
       />
