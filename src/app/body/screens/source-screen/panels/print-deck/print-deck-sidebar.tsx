@@ -99,7 +99,7 @@ export default function PrintDeckSidebar() {
         zIndex="docked"
       />
 
-      <VStack separator={<StackSeparator />} w="full">
+      <VStack display={sidebarCollapsed ? "none" : "flex"} separator={<StackSeparator />} w="full">
         <PrintDeckSidebarView />
 
         <PrintDeckSidebarSettings onClickPrintQualityHelp={openPrintQualityHelpDialog} />
