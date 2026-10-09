@@ -1,4 +1,4 @@
-import { HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -103,19 +103,38 @@ function PrintDeckEntryRow({
   const translateKind = useTranslateResourceKind(lang);
 
   return (
-    <HStack bgColor="bg" borderRadius="sm" borderWidth={1} gap={3} minH={14} px={3} py={2} w="full">
-      <PalettePicker onValueChange={onPaletteChange} value={paletteName} />
+    <HStack
+      align="flex-start"
+      bgColor="bg"
+      borderRadius="sm"
+      borderWidth={1}
+      gap={3}
+      minH={14}
+      px={3}
+      py={2}
+      w="full"
+      wrap={{ base: "wrap", md: "nowrap" }}
+    >
+      <Box alignSelf="center">
+        <PalettePicker onValueChange={onPaletteChange} value={paletteName} />
+      </Box>
 
-      <VStack align="flex-start" flex={1} gap={0} minW={0}>
-        <Text fontWeight="semibold" truncate>
+      <VStack
+        align="flex-start"
+        flex={1}
+        gap={0}
+        minW={{ base: "calc(100% - 3rem)", md: 0 }}
+        textAlign="left"
+      >
+        <Text fontWeight="semibold" lineClamp={2} textAlign="left">
           {name}
         </Text>
-        <Text color="fg.muted" fontSize="xs" truncate>
+        <Text color="fg.muted" fontSize="xs" lineClamp={1} textAlign="left">
           {source} · {translateKind(kind)}
         </Text>
       </VStack>
 
-      <HStack gap={1}>
+      <HStack gap={1} ml="auto">
         <IconButton
           Icon={ArrowUpIcon}
           disabled={!canMoveUp}
