@@ -1,9 +1,11 @@
 import { HStack, VStack } from "@chakra-ui/react";
+import { Grid2X2Icon, ListIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import BinaryButton, { type BinaryButtonProps } from "~/ui/binary-button";
 import CaptionInput from "~/ui/caption-input";
 import Checkbox from "~/ui/checkbox";
 import NumberInput from "~/ui/number-input";
@@ -27,59 +29,82 @@ export function createResourcesViewSettings<
 >(_store: ResourceStore<R, L, F>, context: ResourcesContext<R>) {
   const { useCardMode, usePaletteName, useShowImage, useZoom } = context;
 
-  return function ResourcesViewSwitch(_props: ResourcesViewSettingsProps) {
+  return function ResourcesViewSettings(_props: ResourcesViewSettingsProps) {
     const { t } = useI18nLangContext(i18nContext);
 
     const cardMode = useCardMode();
     const paletteName = usePaletteName();
     const showImage = useShowImage();
     const zoom = useZoom();
+    const view = context.useView();
 
     return (
-      <Section title={t("display")}>
-        <VStack align="flex-start" w="full">
-          <HStack w="full" wrap="wrap">
-            <CaptionInput caption={t("zoom")} flex={1}>
-              <NumberInput
-                formatOptions={{ style: "percent" }}
-                max={2}
-                min={0.2}
-                onValueChange={context.setZoom}
+      <Section
+        action={
+          <BinaryButton
+            labels={[t("view_list"), t("view_cards")]}
+            onValueChange={context.setView}
+            options={viewOptions}
+            value={view}
+            zoom={0.8}
+          />
+        }
+        title={t("display")}
+      >
+        {view === "cards" && (
+          <VStack align="flex-start" w="full">
+            <HStack w="full" wrap="wrap">
+              <CaptionInput caption={t("zoom")} flex={1}>
+                <NumberInput
+                  formatOptions={{ style: "percent" }}
+                  max={2}
+                  min={0.2}
+                  onValueChange={context.setZoom}
+                  size="sm"
+                  step={0.1}
+                  value={zoom * 100}
+                  w="full"
+                />
+              </CaptionInput>
+
+              <PalettePicker onValueChange={context.setPaletteName} value={paletteName} />
+            </HStack>
+
+            <CaptionInput caption={t("card_mode")} w="full">
+              <Select.Enum
+                onValueChange={context.setCardMode}
+                options={[
+                  { label: t("card_mode_scroll"), value: "scroll" },
+                  { label: t("card_mode_paginated"), value: "paginated" },
+                ]}
                 size="sm"
-                step={0.1}
-                value={zoom * 100}
+                value={cardMode}
                 w="full"
               />
             </CaptionInput>
 
-            <PalettePicker onValueChange={context.setPaletteName} value={paletteName} />
-          </HStack>
-
-          <CaptionInput caption={t("card_mode")} w="full">
-            <Select.Enum
-              onValueChange={context.setCardMode}
-              options={[
-                { label: t("card_mode_scroll"), value: "scroll" },
-                { label: t("card_mode_paginated"), value: "paginated" },
-              ]}
-              size="sm"
-              value={cardMode}
-              w="full"
-            />
-          </CaptionInput>
-
-          {cardMode === "paginated" && (
-            <Checkbox
-              label={t("show_images")}
-              onValueChange={context.setShowImage}
-              value={showImage}
-            />
-          )}
-        </VStack>
+            {cardMode === "paginated" && (
+              <Checkbox
+                label={t("show_images")}
+                onValueChange={context.setShowImage}
+                value={showImage}
+              />
+            )}
+          </VStack>
+        )}
       </Section>
     );
   };
 }
+
+//------------------------------------------------------------------------------
+// View Options
+//------------------------------------------------------------------------------
+
+const viewOptions: BinaryButtonProps<"table", "cards">["options"] = [
+  { Icon: ListIcon, value: "table" },
+  { Icon: Grid2X2Icon, value: "cards" },
+];
 
 //------------------------------------------------------------------------------
 // I18n Context
@@ -104,11 +129,19 @@ const i18nContext = {
   },
   display: {
     en: "Display",
-    it: "Visualizzazione",
+    it: "Vista",
   },
   show_images: {
     en: "Show images",
     it: "Mostra immagini",
+  },
+  view_cards: {
+    en: "Cards",
+    it: "Carte",
+  },
+  view_list: {
+    en: "List",
+    it: "Lista",
   },
   zoom: {
     en: "Zoom",

@@ -39,8 +39,6 @@ export function createResourcesSidebar<
     const { t } = useI18nLangContext(i18nContext);
     const collapsed = useRightPanelCollapsed();
     const setCollapsed = useRightPanelSetCollapsed();
-    const view = context.useView();
-
     return (
       <VStack
         align="flex-start"
@@ -78,7 +76,7 @@ export function createResourcesSidebar<
           separator={<Separator w="full" />}
           w="full"
         >
-          {view === "cards" && <ResourcesViewSettings sourceId={sourceId} />}
+          <ResourcesViewSettings sourceId={sourceId} />
           <ResourcesFilters sourceId={sourceId} />
           <ResourcesActions sourceId={sourceId} />
         </VStack>

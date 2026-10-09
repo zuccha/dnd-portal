@@ -1,4 +1,4 @@
-import { type StackProps, VStack } from "@chakra-ui/react";
+import { HStack, type StackProps, VStack } from "@chakra-ui/react";
 import { FunnelXIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -13,6 +13,7 @@ import {
 } from "~/models/resources/resources-sources-filter";
 import IconButton from "~/ui/icon-button";
 import Section from "~/ui/section";
+import { createResourcesCounter } from "./resources-counter";
 import { createResourcesGenericFilters } from "./resources-generic-filters";
 import type { ResourcesContext } from "./resources-context";
 
@@ -38,6 +39,7 @@ export function createResourcesFilters<
   F extends ResourceFilters,
 >(store: ResourceStore<R, L, F>, context: ResourcesContext<R>, extra: ResourcesFiltersExtra) {
   const ResourcesGenericFilters = createResourcesGenericFilters(store, context);
+  const ResourcesCounter = createResourcesCounter(store, context);
 
   const { useFilters } = store;
 
@@ -56,15 +58,18 @@ export function createResourcesFilters<
     return (
       <Section
         action={
-          <IconButton
-            Icon={FunnelXIcon}
-            disabled={!hasFilters && !hasSourcesFilter}
-            label={t("clear_filters")}
-            onClick={clearFilters}
-            size="xs"
-            title={t("clear")}
-            variant="ghost"
-          />
+          <HStack gap={2}>
+            <ResourcesCounter sourceId={sourceId} />
+            <IconButton
+              Icon={FunnelXIcon}
+              disabled={!hasFilters && !hasSourcesFilter}
+              label={t("clear_filters")}
+              onClick={clearFilters}
+              size="xs"
+              title={t("clear")}
+              variant="ghost"
+            />
+          </HStack>
         }
         title={t("heading")}
       >

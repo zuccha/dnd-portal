@@ -12,7 +12,6 @@ import {
 import { type ResourcesAlbumExtra, createResourcesAlbum } from "./resources-album";
 import { createResourcesContext } from "./resources-context";
 import { type ResourcesFiltersExtra } from "./resources-filters";
-import { createResourcesHeader } from "./resources-header";
 import { createResourcesSidebar } from "./resources-sidebar";
 import { type ResourcesTableExtra, createResourcesTable } from "./resources-table";
 import type { ComponentType } from "react";
@@ -51,7 +50,6 @@ export function createResourcesPanel<
   });
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesTable = createResourcesTable(store, context, table);
-  const ResourcesHeader = createResourcesHeader(store, context);
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
 
   const { useView } = context;
@@ -61,8 +59,6 @@ export function createResourcesPanel<
 
     return (
       <VStack flex={1} gap={0} h="full" minH={0} overflow="hidden" position="relative" w="full">
-        <ResourcesHeader sourceId={sourceId} />
-
         <HStack flex={1} gap={0} minH={0} overflow="hidden" position="relative" w="full">
           {view === "table" && <ResourcesTable sourceId={sourceId} />}
           {view === "cards" && <ResourcesAlbum sourceId={sourceId} />}
