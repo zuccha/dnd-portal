@@ -206,12 +206,12 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
           <Span
             display="block"
             fontSize={PokerCard.rem0625}
-            fontStyle="italic"
             lineHeight="shorter"
             textAlign="left"
             w="full"
           >
-            {t("ac.spell_level.legend")}
+            <Span>𝑋 = </Span>
+            <Span fontStyle="italic">{t("ac.spell_level.legend")}</Span>
           </Span>
         </GridItem>
       )}
@@ -448,8 +448,8 @@ const i18nContext = {
     it: "CA",
   },
   "ac.spell_level.legend": {
-    en: "X = spell level",
-    it: "X = livello dell'incantesimo",
+    en: "spell level",
+    it: "livello dell'incantesimo",
   },
   "challenge_rating": {
     en: "CR",

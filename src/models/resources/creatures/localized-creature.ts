@@ -590,7 +590,7 @@ export function localizeCreature(
                 `${additionalHpBase}`,
                 `${creature.additional_hp_per_level}`,
               )
-            : `${creature.additional_hp_per_level} × X`
+            : `${creature.additional_hp_per_level} × 𝑋`
           : `${creature.hp} ${ti(
               "hp.additional.short",
               `${creature.additional_hp_per_level}`,
@@ -774,12 +774,12 @@ const i18nContext = {
     it: "Comprende le lingue parlate dall'evocatore",
   },
   "hp.additional.short": {
-    en: "+ <1> × (X − <2>)",
-    it: "+ <1> × (X − <2>)",
+    en: "+ <1> × (𝑋 − <2>)",
+    it: "+ <1> × (𝑋 − <2>)",
   },
   "hp.additional.direct": {
-    en: "<1> + <2> × X",
-    it: "<1> + <2> × X",
+    en: "<1> + <2> × 𝑋",
+    it: "<1> + <2> × 𝑋",
   },
   "languages.telepathy": {
     en: "Telepathy <1>",
