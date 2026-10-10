@@ -35,3 +35,4 @@ _local/
 TODO.local.md
 README.codex.md
 supabase/storage
+__pycache__/
