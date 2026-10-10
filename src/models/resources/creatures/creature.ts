@@ -32,7 +32,10 @@ export const creatureBaseSchema = resourceSchema.extend({
   ability_proficiencies: z.array(creatureAbilitySchema),
   ability_str: z.number(),
   ability_wis: z.number(),
+  additional_hp_per_level: z.number().default(0),
+  additional_hp_starting_from_level: z.number().default(0),
   ac: z.number(),
+  armor_class_adds_spell_level: z.boolean().default(false),
   actions: i18nStringSchema,
   alignment: creatureAlignmentSchema,
   blindsight: z.number(),
@@ -59,6 +62,7 @@ export const creatureBaseSchema = resourceSchema.extend({
   language_additional_count: z.number(),
   language_entries: z.array(languageEntrySchema),
   language_scope: languageScopeSchema,
+  languages_spoken_by_summoner: z.boolean().default(false),
   legendary_actions: i18nStringSchema,
   legendary_actions_count: z.number(),
   passive_perception: z.number(),
@@ -80,6 +84,7 @@ export const creatureBaseSchema = resourceSchema.extend({
   tremorsense: z.number(),
   truesight: z.number(),
   type: creatureTypeSchema,
+  summoned_from_spell: z.boolean().default(false),
 });
 
 export const creatureSchema = creatureBaseSchema.extend({
@@ -101,7 +106,10 @@ export const defaultCreature: Creature = {
   ability_proficiencies: [],
   ability_str: 10,
   ability_wis: 10,
+  additional_hp_per_level: 0,
+  additional_hp_starting_from_level: 0,
   ac: 10,
+  armor_class_adds_spell_level: false,
   actions: {},
   alignment: "true_neutral",
   blindsight: 0,
@@ -129,6 +137,7 @@ export const defaultCreature: Creature = {
   language_additional_count: 0,
   language_entries: [],
   language_scope: "specific",
+  languages_spoken_by_summoner: false,
   legendary_actions: {},
   legendary_actions_count: 0,
   passive_perception: 10,
@@ -150,6 +159,7 @@ export const defaultCreature: Creature = {
   tremorsense: 0,
   truesight: 0,
   type: "beast",
+  summoned_from_spell: false,
 };
 
 //------------------------------------------------------------------------------

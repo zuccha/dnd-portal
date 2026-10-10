@@ -265,6 +265,8 @@ export function localizeCreature(
   const exp = creature.exp;
   const lair_exp = creature.lair_exp;
   const pb = creature.pb;
+  const additionalHpThreshold = Math.max(0, creature.additional_hp_starting_from_level - 1);
+  const additionalHpBase = creature.hp - creature.additional_hp_per_level * additionalHpThreshold;
 
   // Speed conversions
   const convertSpeed = (cm: number | null | undefined): string => {
@@ -483,6 +485,7 @@ export function localizeCreature(
         ? tpi("languages.understands", understoodLanguageIds.length, understoodLanguages)
         : "",
       telepathy,
+      creature.languages_spoken_by_summoner ? t("languages.summoner") : "",
     ]
       .filter(Boolean)
       .join("; ") || t("languages.none");
@@ -575,11 +578,26 @@ export function localizeCreature(
     cr,
     exp: formatNumber(exp, lang),
     lair_exp: formatNumber(lair_exp, lang),
-    pb: formatSigned(pb),
+    pb: creature.summoned_from_spell ? t("pb.summoner") : formatSigned(pb),
 
     ac: `${creature.ac}`,
-    hp: `${creature.hp}`,
-    hp_formula: creature.hp_formula,
+    hp:
+      creature.additional_hp_per_level > 0
+        ? additionalHpBase >= 0
+          ? additionalHpBase > 0
+            ? ti(
+                "hp.additional.direct",
+                `${additionalHpBase}`,
+                `${creature.additional_hp_per_level}`,
+              )
+            : `${creature.additional_hp_per_level} × X`
+          : `${creature.hp} ${ti(
+              "hp.additional.short",
+              `${creature.additional_hp_per_level}`,
+              `${additionalHpThreshold}`,
+            )}`
+        : `${creature.hp}`,
+    hp_formula: creature.summoned_from_spell ? "" : creature.hp_formula,
 
     ability_cha,
     ability_cha_mod,
@@ -751,9 +769,25 @@ const i18nContext = {
     en: "None",
     it: "Nessuna",
   },
+  "languages.summoner": {
+    en: "Understands the languages spoken by the summoner",
+    it: "Comprende le lingue parlate dall'evocatore",
+  },
+  "hp.additional.short": {
+    en: "+ <1> × (X − <2>)",
+    it: "+ <1> × (X − <2>)",
+  },
+  "hp.additional.direct": {
+    en: "<1> + <2> × X",
+    it: "<1> + <2> × X",
+  },
   "languages.telepathy": {
     en: "Telepathy <1>",
     it: "Telepatia <1>",
+  },
+  "pb.summoner": {
+    en: "equal to the summoner's",
+    it: "uguale a quello dell'evocatore",
   },
   "languages.understands/*": {
     en: "Understands <1> but can't speak",

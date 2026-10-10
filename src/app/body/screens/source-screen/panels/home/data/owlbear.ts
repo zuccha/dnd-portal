@@ -24,7 +24,10 @@ const owlbear: Record<string, LocalizedCreature> = {
       ability_proficiencies: [],
       ability_str: 20,
       ability_wis: 12,
+      additional_hp_per_level: 0,
+      additional_hp_starting_from_level: 0,
       ac: 13,
+      armor_class_adds_spell_level: false,
       actions: {
         en: "**Multiattack.** The owlbear makes two Rend attacks.\n**Rend.** Melee Attack Roll: +7, reach 5 ft. _Hit:_ 14 (2d8 + 5) Slashing damage.",
       },
@@ -53,6 +56,7 @@ const owlbear: Record<string, LocalizedCreature> = {
       language_additional_count: 0,
       language_entries: [],
       language_scope: "none",
+      languages_spoken_by_summoner: false,
       legendary_actions: { en: "" },
       legendary_actions_count: 0,
       passive_perception: 15,
@@ -74,6 +78,7 @@ const owlbear: Record<string, LocalizedCreature> = {
       tremorsense: 0,
       truesight: 0,
       type: "monstrosity",
+      summoned_from_spell: false,
     },
     descriptor: "Large Monstrosity, Unaligned",
     details:
@@ -164,7 +169,10 @@ const owlbear: Record<string, LocalizedCreature> = {
       ability_proficiencies: [],
       ability_str: 20,
       ability_wis: 12,
+      additional_hp_per_level: 0,
+      additional_hp_starting_from_level: 0,
       ac: 13,
+      armor_class_adds_spell_level: false,
       actions: {
         it: "**Multiattacco.** L'orsogufo effettua due attacchi Squarcio.\n**Squarcio.** _Tiro per colpire in mischia:_ +7, portata 1,5 m. _Colpito:_ 14 (2d8 + 5) danni taglienti.",
       },
@@ -193,6 +201,7 @@ const owlbear: Record<string, LocalizedCreature> = {
       language_additional_count: 0,
       language_entries: [],
       language_scope: "none",
+      languages_spoken_by_summoner: false,
       legendary_actions: { it: "" },
       legendary_actions_count: 0,
       passive_perception: 15,
@@ -214,6 +223,7 @@ const owlbear: Record<string, LocalizedCreature> = {
       tremorsense: 0,
       truesight: 0,
       type: "monstrosity",
+      summoned_from_spell: false,
     },
     descriptor: "Mostruosità Grande, Senza Allineamento",
     details:

@@ -104,6 +104,54 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useField: form.createUseField("ac"),
   });
 
+  const useSummonedFromSpellField = form.createUseField("summoned_from_spell");
+
+  const SummonedFromSpellField = createSwitchField({
+    i18nContext: {
+      label: { en: "Summoned", it: "Evocato" },
+    },
+    useField: useSummonedFromSpellField,
+  });
+
+  const ArmorClassAddsSpellLevelField = createSwitchField({
+    i18nContext: {
+      label: {
+        en: "Add spell level to armor class",
+        it: "Aggiungi il livello dell'incantesimo alla classe armatura",
+      },
+    },
+    useField: form.createUseField("armor_class_adds_spell_level"),
+  });
+
+  const AdditionalHpPerLevelField = createNumberInputField({
+    i18nContext: {
+      label: { en: "HP per level", it: "PF per livello" },
+    },
+    inputProps: { min: 0 },
+    useField: form.createUseField("additional_hp_per_level"),
+  });
+
+  const AdditionalHpStartingFromLevelField = createNumberInputField({
+    i18nContext: {
+      label: {
+        en: "From level",
+        it: "Dal livello",
+      },
+    },
+    inputProps: { min: 0 },
+    useField: form.createUseField("additional_hp_starting_from_level"),
+  });
+
+  const LanguagesSpokenBySummonerField = createSwitchField({
+    i18nContext: {
+      label: {
+        en: "Understands languages spoken by summoner",
+        it: "Comprende le lingue parlate dall'evocatore",
+      },
+    },
+    useField: form.createUseField("languages_spoken_by_summoner"),
+  });
+
   //----------------------------------------------------------------------------
   // Alignment
   //----------------------------------------------------------------------------
@@ -313,7 +361,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   //----------------------------------------------------------------------------
 
   const HPField = createNumberInputField({
-    i18nContext: { label: { en: "Hit Points", it: "Punti Ferita" } },
+    i18nContext: { label: { en: "HP", it: "PF" } },
     useField: form.createUseField("hp"),
   });
 
@@ -631,6 +679,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
   return function CreatureEditor({ resource, sourceId }: CreatureEditorProps) {
     const [lang] = useI18nLang();
+    const { value: summonedFromSpell } = useSummonedFromSpellField(resource.summoned_from_spell);
     const { value: hasLair } = useHasLairField(resource.has_lair);
     const { value: languageScope } = useLanguageScopeField(resource.language_scope);
     const { value: legendaryActionsCount } = useLegendaryActionsCountField(
@@ -659,22 +708,45 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
           <TreasuresField defaultValue={resource.treasures} />
         </HStack>
 
-        <HasLairField defaultValue={resource.has_lair} />
-
-        {/* AC and HP */}
         <HStack align="flex-start" gap={4} w="full">
-          <ACField defaultValue={resource.ac} />
-          <HPField defaultValue={resource.hp} />
-          <HPFormulaField defaultValue={resource.hp_formula} />
+          <HasLairField defaultValue={resource.has_lair} />
+          <SummonedFromSpellField defaultValue={resource.summoned_from_spell} />
         </HStack>
+
+        {/* AC */}
+        <VStack align="stretch" gap={2} w="full">
+          <ACField defaultValue={resource.ac} />
+          {summonedFromSpell && (
+            <ArmorClassAddsSpellLevelField defaultValue={resource.armor_class_adds_spell_level} />
+          )}
+        </VStack>
+
+        {!summonedFromSpell ? (
+          <HStack align="flex-start" gap={4} w="full">
+            <HPField defaultValue={resource.hp} />
+            <HPFormulaField defaultValue={resource.hp_formula} />
+          </HStack>
+        ) : (
+          <VStack align="stretch" gap={4} w="full">
+            <HStack align="flex-start" gap={4} w="full">
+              <HPField defaultValue={resource.hp} />
+              <AdditionalHpPerLevelField defaultValue={resource.additional_hp_per_level} />
+              <AdditionalHpStartingFromLevelField
+                defaultValue={resource.additional_hp_starting_from_level}
+              />
+            </HStack>
+          </VStack>
+        )}
 
         {/* CR, Initiative, and Speed */}
-        <HStack align="flex-start" gap={4} w="full">
-          <CRField defaultValue={resource.cr} resource={resource} />
-          <PBField defaultValue={resource.pb} />
-          <ExpField defaultValue={resource.exp} />
-          {hasLair && <LairExpField defaultValue={resource.lair_exp} />}
-        </HStack>
+        {!summonedFromSpell && (
+          <HStack align="flex-start" gap={4} w="full">
+            <CRField defaultValue={resource.cr} resource={resource} />
+            <PBField defaultValue={resource.pb} />
+            <ExpField defaultValue={resource.exp} />
+            {hasLair && <LairExpField defaultValue={resource.lair_exp} />}
+          </HStack>
+        )}
 
         <HStack align="flex-start" gap={4} w="full">
           <InitiativeField defaultValue={resource.initiative} />
@@ -761,6 +833,10 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
               w="5em"
             />
           </HStack>
+        )}
+
+        {summonedFromSpell && (
+          <LanguagesSpokenBySummonerField defaultValue={resource.languages_spoken_by_summoner} />
         )}
 
         {/* Gear */}

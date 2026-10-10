@@ -33,7 +33,10 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
   ability_proficiencies: z.array(creatureAbilitySchema).default([]),
   ability_str: z.number().default(10),
   ability_wis: z.number().default(10),
+  additional_hp_per_level: z.number().default(0),
+  additional_hp_starting_from_level: z.number().default(0),
   ac: z.number().default(10),
+  armor_class_adds_spell_level: z.boolean().default(false),
   actions: z.string().default(""),
   alignment: creatureAlignmentSchema.default("true_neutral"),
   blindsight: z.number().default(0),
@@ -60,6 +63,7 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
   language_additional_count: z.number().default(0),
   language_entries: z.array(languageEntrySchema).default([]),
   language_scope: languageScopeSchema.default("specific"),
+  languages_spoken_by_summoner: z.boolean().default(false),
   legendary_actions: z.string().default(""),
   legendary_actions_count: z.number().default(0),
   passive_perception: z.number().default(10),
@@ -81,6 +85,7 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
   tremorsense: z.number().default(0),
   truesight: z.number().default(0),
   type: creatureTypeSchema.default("humanoid"),
+  summoned_from_spell: z.boolean().default(false),
 });
 
 export type CreatureFormData = z.infer<typeof creatureFormDataSchema>;
@@ -102,7 +107,10 @@ export function creatureFormDataToResource(
     ability_proficiencies: data.ability_proficiencies,
     ability_str: data.ability_str,
     ability_wis: data.ability_wis,
+    additional_hp_per_level: data.additional_hp_per_level,
+    additional_hp_starting_from_level: data.additional_hp_starting_from_level,
     ac: data.ac,
+    armor_class_adds_spell_level: data.armor_class_adds_spell_level,
     actions: createResourceFormDataI18nValue(data.actions, lang),
     alignment: data.alignment,
     blindsight: data.blindsight,
@@ -129,6 +137,7 @@ export function creatureFormDataToResource(
     language_additional_count: data.language_additional_count,
     language_entries: data.language_entries,
     language_scope: data.language_scope,
+    languages_spoken_by_summoner: data.languages_spoken_by_summoner,
     legendary_actions: createResourceFormDataI18nValue(data.legendary_actions, lang),
     legendary_actions_count: data.legendary_actions_count,
     passive_perception: data.passive_perception,
@@ -150,6 +159,7 @@ export function creatureFormDataToResource(
     tremorsense: data.tremorsense,
     truesight: data.truesight,
     type: data.type,
+    summoned_from_spell: data.summoned_from_spell,
   });
 }
 
