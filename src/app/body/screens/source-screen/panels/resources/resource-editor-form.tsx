@@ -830,11 +830,11 @@ export function createSwitchField({
 }) {
   const context = { ...i18nContext, ...i18nContextExtra };
 
-  function SwitchField({ defaultValue }: SwitchFieldProps) {
+  function SwitchField({ defaultValue, hidden }: SwitchFieldProps) {
     const field = useField(defaultValue);
     const { t } = useI18nLangContext(context);
 
-    return <Switch label={t("label")} size="lg" {...field} />;
+    return <Switch hidden={hidden} label={t("label")} size="lg" {...field} />;
   }
 
   return SwitchField;
