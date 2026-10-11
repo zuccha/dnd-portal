@@ -167,16 +167,16 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
           <MagicField defaultValue={resource.magic} />
         </HStack>
 
-        {magic && (
-          <HStack align="flex-start" gap={4}>
-            <RarityField defaultValue={resource.rarity} />
-            <RequiredAttunementSlotsField defaultValue={resource.required_attunement_slots} />
-          </HStack>
-        )}
+        <HStack align="flex-start" gap={4} hidden={!magic}>
+          <RarityField defaultValue={resource.rarity} />
+          <RequiredAttunementSlotsField defaultValue={resource.required_attunement_slots} />
+        </HStack>
 
-        {magic && requiredAttunementSlots > 0 && (
-          <AttunementNotesField defaultValue={resource.attunement_notes[lang] ?? ""} w="full" />
-        )}
+        <AttunementNotesField
+          defaultValue={resource.attunement_notes[lang] ?? ""}
+          hidden={!magic || requiredAttunementSlots <= 0}
+          w="full"
+        />
 
         {children}
 
