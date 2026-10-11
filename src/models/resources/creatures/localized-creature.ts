@@ -3,7 +3,7 @@ import { z } from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCp } from "~/measures/cost";
-import { useFormatCmWithUnit } from "~/measures/distance";
+import { useFormatCm } from "~/measures/distance";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { formatNumber, formatNumberAsWord, formatSigned } from "~/utils/number";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
@@ -112,7 +112,7 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 //------------------------------------------------------------------------------
 
 type CreatureLocalizationContext = ResourceLocalizationContext & {
-  formatCm: ReturnType<typeof useFormatCmWithUnit>;
+  formatCm: ReturnType<typeof useFormatCm>;
   formatCp: ReturnType<typeof useFormatCp>;
   localizedEquipmentNames: Record<string, string>;
   localizedLanguageNames: Record<string, string>;
@@ -137,7 +137,7 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
   const context = useResourceLocalizationContext(i18nContext);
   const [system] = useI18nSystem();
   const formatCp = useFormatCp();
-  const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");
+  const formatCm = useFormatCm();
   const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
   const languageIds = creature.language_entries.map(({ language_id }) => language_id);
   const languageNames = useLocalizedLanguageNames(languageIds);
