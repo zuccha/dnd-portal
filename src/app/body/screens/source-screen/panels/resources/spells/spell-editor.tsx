@@ -222,9 +222,10 @@ export function createSpellEditor(form: Form<SpellFormData>) {
           <VStack w="full">
             <HStack align="flex-end" w="full">
               <CastingTimeField defaultValue={resource.casting_time} />
-              {castingTime === "value" && (
-                <CastingTimeValueField defaultValue={resource.casting_time_value ?? 0} />
-              )}
+              <CastingTimeValueField
+                defaultValue={resource.casting_time_value ?? 0}
+                hidden={castingTime !== "value"}
+              />
             </HStack>
             <RitualField defaultValue={resource.ritual} />
           </VStack>
@@ -232,9 +233,10 @@ export function createSpellEditor(form: Form<SpellFormData>) {
           <VStack w="full">
             <HStack align="flex-end" w="full">
               <DurationField defaultValue={resource.duration} />
-              {duration === "value" && (
-                <DurationValueField defaultValue={resource.duration_value ?? 0} />
-              )}
+              <DurationValueField
+                defaultValue={resource.duration_value ?? 0}
+                hidden={duration !== "value"}
+              />
             </HStack>
             <ConcentrationField defaultValue={resource.concentration} />
           </VStack>
@@ -242,7 +244,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
 
         <HStack align="flex-end" flex={1} w="full">
           <RangeField defaultValue={resource.range} />
-          {range === "value" && <RangeValueField defaultValue={resource.range_value ?? 0} />}
+          <RangeValueField defaultValue={resource.range_value ?? 0} hidden={range !== "value"} />
         </HStack>
 
         <HStack gap={8}>
@@ -251,7 +253,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
           <MaterialField defaultValue={resource.material} />
         </HStack>
 
-        {material && <MaterialsField defaultValue={resource.materials?.[lang] ?? ""} />}
+        <MaterialsField defaultValue={resource.materials?.[lang] ?? ""} hidden={!material} />
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
         <UpgradeField defaultValue={resource.upgrade?.[lang] ?? ""} />
