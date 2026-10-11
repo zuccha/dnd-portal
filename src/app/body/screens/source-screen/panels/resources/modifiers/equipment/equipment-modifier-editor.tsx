@@ -184,19 +184,17 @@ export function createEquipmentModifierEditor<F extends EquipmentModifierFormDat
 
         <HStack align="flex-start" gap={4} w="full">
           <MakeMagicField defaultValue={resource.make_magic} w="16em" />
-          {makeMagic && (
-            <>
-              <RarityMinimumField defaultValue={resource.rarity_minimum} />
-              <RequiredAttunementSlotsMinimumField
-                defaultValue={resource.required_attunement_slots_minimum}
-              />
-            </>
-          )}
+          <RarityMinimumField defaultValue={resource.rarity_minimum} hidden={!makeMagic} />
+          <RequiredAttunementSlotsMinimumField
+            defaultValue={resource.required_attunement_slots_minimum}
+            hidden={!makeMagic}
+          />
         </HStack>
 
-        {makeMagic && requiredAttunementSlotsMinimum > 0 && (
-          <AttunementNotesDeltaField defaultValue={resource.attunement_notes_delta[lang] ?? ""} />
-        )}
+        <AttunementNotesDeltaField
+          defaultValue={resource.attunement_notes_delta[lang] ?? ""}
+          hidden={!makeMagic || requiredAttunementSlotsMinimum <= 0}
+        />
 
         <NotesDeltaField defaultValue={resource.notes_delta[lang] ?? ""} />
 
