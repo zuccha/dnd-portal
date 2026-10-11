@@ -178,13 +178,16 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
 
         <HStack align="flex-start" gap={4}>
           <DamageField defaultValue={resource.damage} />
-          {properties.includes("versatile") && (
-            <DamageVersatileField defaultValue={resource.damage_versatile ?? ""} />
-          )}
+          <DamageVersatileField
+            defaultValue={resource.damage_versatile ?? ""}
+            hidden={!properties.includes("versatile")}
+          />
           <DamageTypeField defaultValue={resource.damage_type} />
-          {properties.includes("ammunition") && (
-            <AmmunitionIdsField defaultValue={resource.ammunition_ids} sourceId={sourceId} />
-          )}
+          <AmmunitionIdsField
+            defaultValue={resource.ammunition_ids}
+            hidden={!properties.includes("ammunition")}
+            sourceId={sourceId}
+          />
         </HStack>
 
         <HStack gap={8}>
@@ -192,12 +195,10 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
           <RangedField defaultValue={resource.ranged} />
         </HStack>
 
-        {ranged && (
-          <HStack align="flex-start" gap={4}>
-            <RangeShortField defaultValue={resource.range_short ?? 0} />
-            <RangeLongField defaultValue={resource.range_long ?? 0} />
-          </HStack>
-        )}
+        <HStack align="flex-start" gap={4} hidden={!ranged}>
+          <RangeShortField defaultValue={resource.range_short ?? 0} />
+          <RangeLongField defaultValue={resource.range_long ?? 0} />
+        </HStack>
       </EquipmentEditor>
     );
   };
