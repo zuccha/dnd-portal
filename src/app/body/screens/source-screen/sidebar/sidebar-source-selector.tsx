@@ -145,12 +145,12 @@ export default function SidebarSourceSelector({ versions }: SidebarSourceSelecto
             />
             {hasUnpublishedChanges && (
               <Span
-                bg="fg.warning"
+                bg="fg.error"
                 borderRadius="full"
                 boxSize={2}
                 position="absolute"
-                right={0}
-                top={0}
+                right={-0.5}
+                top={-0.5}
               />
             )}
           </Box>
