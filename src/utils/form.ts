@@ -301,7 +301,7 @@ function createStoreSetRegister<K extends PropertyKey, T>(store: StoreSet<K, T>)
     useLayoutEffect(() => {
       if (!keys.has(key)) {
         keys.set(key, 1);
-        store.set(key, defaultValue, defaultValue);
+        if (store.getOrUndefined(key) === undefined) store.set(key, defaultValue, defaultValue);
       } else {
         keys.set(key, keys.get(key)! + 1);
       }
