@@ -38,6 +38,7 @@ import Checkbox from "~/ui/checkbox";
 import { downloadFile } from "~/utils/download";
 import SourceCreateDialog from "./source-create-dialog";
 import SourceDependenciesDialog from "./source-dependencies-dialog";
+import SourceImportDialog from "./source-import-dialog";
 import SourceGroups from "./source-list";
 import {
   createSourceListEntry,
@@ -70,6 +71,15 @@ type SourceRemovalPrompt = {
 };
 
 //------------------------------------------------------------------------------
+// Source Import Prompt
+//------------------------------------------------------------------------------
+
+type SourceImportPrompt = {
+  bundle: SourceBundle;
+  source: Source;
+};
+
+//------------------------------------------------------------------------------
 // Sources Panel
 //------------------------------------------------------------------------------
 
@@ -93,6 +103,7 @@ export default function SourcesPanel() {
   const [canRegisterSources, setCanRegisterSources] = useState(false);
   const [busySourceId, setBusySourceId] = useState<string>();
   const [dependencyPrompt, setDependencyPrompt] = useState<SourceDependencyPrompt>();
+  const [importPrompt, setImportPrompt] = useState<SourceImportPrompt>();
   const [removalPrompt, setRemovalPrompt] = useState<SourceRemovalPrompt>();
   const localSourcesById = useMemo(
     () => new Map(sources.map((source) => [source.id, source])),
@@ -270,12 +281,36 @@ export default function SourcesPanel() {
     try {
       const text = await file.text();
       const bundle = parseSourceBundle(JSON.parse(text));
+
+      if (localSourcesById.has(bundle.source.id)) {
+        setImportPrompt({ bundle, source: bundle.source });
+        return;
+      }
+
       await startSourceImport(bundle);
     } catch (e) {
       console.error(e);
       setError(t("error.import"));
     } finally {
       if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  //----------------------------------------------------------------------------
+  // Complete Source Import
+  //----------------------------------------------------------------------------
+
+  const completeSourceImport = async () => {
+    const prompt = importPrompt;
+    if (!prompt) return;
+
+    setImportPrompt(undefined);
+
+    try {
+      await startSourceImport(prompt.bundle);
+    } catch (e) {
+      console.error(e);
+      setError(t("error.import"));
     }
   };
 
@@ -704,6 +739,18 @@ export default function SourcesPanel() {
         onOpenChange={setCreateOpen}
         open={createOpen}
       />
+
+      {importPrompt && (
+        <SourceImportDialog
+          onCancel={() => setImportPrompt(undefined)}
+          onConfirm={completeSourceImport}
+          onOpenChange={(open) => {
+            if (!open) setImportPrompt(undefined);
+          }}
+          open
+          source={importPrompt.source}
+        />
+      )}
 
       {dependencyPrompt && (
         <SourceDependenciesDialog

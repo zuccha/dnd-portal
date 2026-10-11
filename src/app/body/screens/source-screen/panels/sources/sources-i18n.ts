@@ -119,6 +119,22 @@ const i18nContext = {
     en: "Import",
     it: "Importa",
   },
+  "import.overwrite.confirm": {
+    en: "Overwrite source",
+    it: "Sovrascrivi fonte",
+  },
+  "import.overwrite.description": {
+    en: "This source is already installed on this device.",
+    it: "Questa fonte è già installata su questo dispositivo.",
+  },
+  "import.overwrite.title": {
+    en: "Overwrite source?",
+    it: "Sovrascrivere la fonte?",
+  },
+  "import.overwrite.warning": {
+    en: "Importing will replace its local resources and cannot be undone.",
+    it: "L'importazione sostituirà le risorse locali e non può essere annullata.",
+  },
   "make_local": {
     en: "Make local",
     it: "Rendi locale",
