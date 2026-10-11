@@ -48,12 +48,12 @@ const i18nContext = {
     it: "Fonti locali mancanti",
   },
   "dependencies.missing_description": {
-    en: "These sources are not in the repository, so they cannot be downloaded automatically.",
-    it: "Queste fonti non sono nell'archivio e non possono essere scaricate automaticamente.",
+    en: "These sources are not in the catalog, so they cannot be downloaded automatically.",
+    it: "Queste fonti non sono nel catalogo e non possono essere scaricate automaticamente.",
   },
   "dependencies.repository": {
-    en: "Repository sources",
-    it: "Fonti dell'archivio",
+    en: "Catalog sources",
+    it: "Fonti del catalogo",
   },
   "dependencies.title": {
     en: "Additional sources",
@@ -204,8 +204,8 @@ const i18nContext = {
     it: "Rimuovi fonte",
   },
   "repository": {
-    en: "Repository",
-    it: "Archivio",
+    en: "Catalog",
+    it: "Catalogo",
   },
   "settings": {
     en: "Settings",
