@@ -13,6 +13,7 @@ import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { damageTypeSchema } from "../../types/damage-type";
 import { languageScopeSchema } from "../../types/language-scope";
+import { summonerLanguageModeSchema } from "../../types/summoner-language-mode";
 import {
   type TranslationFields,
   defaultResource,
@@ -62,7 +63,7 @@ export const creatureBaseSchema = resourceSchema.extend({
   language_additional_count: z.number(),
   language_entries: z.array(languageEntrySchema),
   language_scope: languageScopeSchema,
-  languages_spoken_by_summoner: z.boolean().default(false),
+  summoner_language_mode: summonerLanguageModeSchema.default("none"),
   legendary_actions: i18nStringSchema,
   legendary_actions_count: z.number(),
   passive_perception: z.number(),
@@ -137,7 +138,7 @@ export const defaultCreature: Creature = {
   language_additional_count: 0,
   language_entries: [],
   language_scope: "specific",
-  languages_spoken_by_summoner: false,
+  summoner_language_mode: "none",
   legendary_actions: {},
   legendary_actions_count: 0,
   passive_perception: 10,

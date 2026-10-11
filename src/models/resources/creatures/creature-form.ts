@@ -13,6 +13,7 @@ import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { damageTypeSchema } from "../../types/damage-type";
 import { languageScopeSchema } from "../../types/language-scope";
+import { summonerLanguageModeSchema } from "../../types/summoner-language-mode";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
@@ -63,7 +64,7 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
   language_additional_count: z.number().default(0),
   language_entries: z.array(languageEntrySchema).default([]),
   language_scope: languageScopeSchema.default("specific"),
-  languages_spoken_by_summoner: z.boolean().default(false),
+  summoner_language_mode: summonerLanguageModeSchema.default("none"),
   legendary_actions: z.string().default(""),
   legendary_actions_count: z.number().default(0),
   passive_perception: z.number().default(10),
@@ -137,7 +138,7 @@ export function creatureFormDataToResource(
     language_additional_count: data.language_additional_count,
     language_entries: data.language_entries,
     language_scope: data.language_scope,
-    languages_spoken_by_summoner: data.languages_spoken_by_summoner,
+    summoner_language_mode: data.summoner_language_mode,
     legendary_actions: createResourceFormDataI18nValue(data.legendary_actions, lang),
     legendary_actions_count: data.legendary_actions_count,
     passive_perception: data.passive_perception,

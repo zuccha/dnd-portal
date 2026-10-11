@@ -26,6 +26,7 @@ import { useCreatureTreasureOptions } from "~/models/types/creature-treasure";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
 import { useLanguageScopeOptions } from "~/models/types/language-scope";
+import { useSummonerLanguageModeOptions } from "~/models/types/summoner-language-mode";
 import Field from "~/ui/field";
 import Icon from "~/ui/icon";
 import Select from "~/ui/select";
@@ -142,14 +143,10 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     useField: form.createUseField("additional_hp_starting_from_level"),
   });
 
-  const LanguagesSpokenBySummonerField = createSwitchField({
-    i18nContext: {
-      label: {
-        en: "Understands languages spoken by summoner",
-        it: "Comprende le lingue parlate dall'evocatore",
-      },
-    },
-    useField: form.createUseField("languages_spoken_by_summoner"),
+  const SummonerLanguageModeField = createSelectEnumField({
+    i18nContext: { label: { en: "", it: "" } },
+    useField: form.createUseField("summoner_language_mode"),
+    useOptions: useSummonerLanguageModeOptions,
   });
 
   //----------------------------------------------------------------------------
@@ -827,9 +824,10 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
           <LanguageAdditionalCountField defaultValue={resource.language_additional_count} w="5em" />
         </HStack>
 
-        <LanguagesSpokenBySummonerField
-          defaultValue={resource.languages_spoken_by_summoner}
+        <SummonerLanguageModeField
+          defaultValue={resource.summoner_language_mode}
           hidden={!summonedFromSpell}
+          mt={-1}
         />
 
         {/* Gear */}

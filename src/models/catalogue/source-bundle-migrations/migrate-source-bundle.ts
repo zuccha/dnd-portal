@@ -7,6 +7,7 @@ import {
 } from "../source-bundle";
 import { migrateSourceBundleVersion1 } from "./migrate-source-bundle-version-1";
 import { migrateSourceBundleVersion2 } from "./migrate-source-bundle-version-2";
+import { migrateSourceBundleVersion3 } from "./migrate-source-bundle-version-3";
 
 //------------------------------------------------------------------------------
 // Raw Bundle
@@ -25,6 +26,7 @@ function isRecord(value: unknown): value is RawBundle {
 const sourceBundleMigrations: Record<number, (bundle: RawBundle) => RawBundle> = {
   1: migrateSourceBundleVersion1,
   2: migrateSourceBundleVersion2,
+  3: migrateSourceBundleVersion3,
 };
 
 //------------------------------------------------------------------------------

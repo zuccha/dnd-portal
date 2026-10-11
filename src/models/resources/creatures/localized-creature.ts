@@ -478,6 +478,11 @@ export function localizeCreature(
     creature.telepathy_range > 0
       ? ti("languages.telepathy", formatCm(creature.telepathy_range))
       : "";
+  const summonerLanguages = {
+    none: "",
+    speaks: t("languages.summoner.speaks"),
+    understands: t("languages.summoner.understands"),
+  }[creature.summoner_language_mode];
   const languages =
     [
       [baseLanguages, additionalLanguages].filter(Boolean).join(" "),
@@ -485,7 +490,7 @@ export function localizeCreature(
         ? tpi("languages.understands", understoodLanguageIds.length, understoodLanguages)
         : "",
       telepathy,
-      creature.languages_spoken_by_summoner ? t("languages.summoner") : "",
+      summonerLanguages,
     ]
       .filter(Boolean)
       .join("; ") || t("languages.none");
@@ -769,9 +774,13 @@ const i18nContext = {
     en: "None",
     it: "Nessuna",
   },
-  "languages.summoner": {
+  "languages.summoner.understands": {
     en: "Understands the languages spoken by the summoner",
     it: "Comprende le lingue parlate dall'evocatore",
+  },
+  "languages.summoner.speaks": {
+    en: "Understands and speaks the languages spoken by the summoner",
+    it: "Comprende e parla le lingue parlate dall'evocatore",
   },
   "hp.additional.short": {
     en: "+ <1> × (𝑋 − <2>)",
