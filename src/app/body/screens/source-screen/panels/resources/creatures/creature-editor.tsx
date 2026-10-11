@@ -716,37 +716,34 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         {/* AC */}
         <VStack align="stretch" gap={2} w="full">
           <ACField defaultValue={resource.ac} />
-          {summonedFromSpell && (
-            <ArmorClassAddsSpellLevelField defaultValue={resource.armor_class_adds_spell_level} />
-          )}
+          <ArmorClassAddsSpellLevelField
+            defaultValue={resource.armor_class_adds_spell_level}
+            hidden={!summonedFromSpell}
+          />
         </VStack>
 
-        {!summonedFromSpell ? (
+        <HStack align="flex-start" gap={4} hidden={summonedFromSpell} w="full">
+          <HPField defaultValue={resource.hp} />
+          <HPFormulaField defaultValue={resource.hp_formula} />
+        </HStack>
+
+        <VStack align="stretch" gap={4} hidden={!summonedFromSpell} w="full">
           <HStack align="flex-start" gap={4} w="full">
             <HPField defaultValue={resource.hp} />
-            <HPFormulaField defaultValue={resource.hp_formula} />
+            <AdditionalHpPerLevelField defaultValue={resource.additional_hp_per_level} />
+            <AdditionalHpStartingFromLevelField
+              defaultValue={resource.additional_hp_starting_from_level}
+            />
           </HStack>
-        ) : (
-          <VStack align="stretch" gap={4} w="full">
-            <HStack align="flex-start" gap={4} w="full">
-              <HPField defaultValue={resource.hp} />
-              <AdditionalHpPerLevelField defaultValue={resource.additional_hp_per_level} />
-              <AdditionalHpStartingFromLevelField
-                defaultValue={resource.additional_hp_starting_from_level}
-              />
-            </HStack>
-          </VStack>
-        )}
+        </VStack>
 
         {/* CR, Initiative, and Speed */}
-        {!summonedFromSpell && (
-          <HStack align="flex-start" gap={4} w="full">
-            <CRField defaultValue={resource.cr} resource={resource} />
-            <PBField defaultValue={resource.pb} />
-            <ExpField defaultValue={resource.exp} />
-            {hasLair && <LairExpField defaultValue={resource.lair_exp} />}
-          </HStack>
-        )}
+        <HStack align="flex-start" gap={4} hidden={summonedFromSpell} w="full">
+          <CRField defaultValue={resource.cr} resource={resource} />
+          <PBField defaultValue={resource.pb} />
+          <ExpField defaultValue={resource.exp} />
+          <LairExpField defaultValue={resource.lair_exp} hidden={!hasLair} />
+        </HStack>
 
         <HStack align="flex-start" gap={4} w="full">
           <InitiativeField defaultValue={resource.initiative} />
@@ -822,22 +819,18 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         </HStack>
 
         {/* Language */}
-        {languageScope === "specific" && (
-          <HStack align="flex-start" gap={2} mt={-1} w="full">
-            <LanguageEntriesField defaultValue={resource.language_entries} sourceId={sourceId} />
-            <HStack h={10}>
-              <Icon Icon={PlusIcon} size="sm" />
-            </HStack>
-            <LanguageAdditionalCountField
-              defaultValue={resource.language_additional_count}
-              w="5em"
-            />
+        <HStack align="flex-start" gap={2} hidden={languageScope !== "specific"} mt={-1} w="full">
+          <LanguageEntriesField defaultValue={resource.language_entries} sourceId={sourceId} />
+          <HStack h={10}>
+            <Icon Icon={PlusIcon} size="sm" />
           </HStack>
-        )}
+          <LanguageAdditionalCountField defaultValue={resource.language_additional_count} w="5em" />
+        </HStack>
 
-        {summonedFromSpell && (
-          <LanguagesSpokenBySummonerField defaultValue={resource.languages_spoken_by_summoner} />
-        )}
+        <LanguagesSpokenBySummonerField
+          defaultValue={resource.languages_spoken_by_summoner}
+          hidden={!summonedFromSpell}
+        />
 
         {/* Gear */}
         <GearField defaultValue={resource.gear} sourceId={sourceId} w="full" />
@@ -850,17 +843,17 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         <VStack gap={2} w="full">
           <HStack align="flex-start" gap={4} w="full">
             <LegendaryActionsCountField defaultValue={resource.legendary_actions_count} />
-            {hasLair && (
-              <LairLegendaryActionsCountField
-                defaultValue={resource.lair_legendary_actions_count}
-              />
-            )}
+            <LairLegendaryActionsCountField
+              defaultValue={resource.lair_legendary_actions_count}
+              hidden={!hasLair}
+            />
           </HStack>
-          {(!!legendaryActionsCount || (hasLair && !!lairLegendaryActionsCount)) && (
-            <LegendaryActionsField defaultValue={resource.legendary_actions[lang] ?? ""} />
-          )}
+          <LegendaryActionsField
+            defaultValue={resource.legendary_actions[lang] ?? ""}
+            hidden={!legendaryActionsCount && !(hasLair && lairLegendaryActionsCount)}
+          />
         </VStack>
-        {hasLair && <LairEffectsField defaultValue={resource.lair_effects[lang] ?? ""} />}
+        <LairEffectsField defaultValue={resource.lair_effects[lang] ?? ""} hidden={!hasLair} />
       </ResourceEditor>
     );
   };
