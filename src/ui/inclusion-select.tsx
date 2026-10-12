@@ -39,11 +39,11 @@ export default function InclusionSelect({
   size,
   ...rest
 }: InclusionSelectProps) {
-  const count = Object.values(includes).filter((include) => include !== undefined).length;
+  const count = options.filter(({ value }) => includes[value] !== undefined).length;
 
   const reset = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const entries = options.map(({ value }) => [value, undefined]);
+    const entries = Object.keys(includes).map((value) => [value, undefined]);
     onValueChange(Object.fromEntries(entries));
   };
 
