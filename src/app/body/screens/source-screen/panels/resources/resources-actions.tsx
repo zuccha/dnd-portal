@@ -1,5 +1,3 @@
-import { Menu, Portal } from "@chakra-ui/react";
-import { EllipsisVerticalIcon, PrinterIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSourceEditable } from "~/models/catalogue/catalogue";
@@ -10,8 +8,6 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import Button from "~/ui/button";
-import Icon from "~/ui/icon";
-import IconButton from "~/ui/icon-button";
 import Section from "~/ui/section";
 import { toaster } from "~/ui/toaster";
 import type { ResourcesContext } from "./resources-context";
@@ -94,58 +90,7 @@ export function createResourcesActions<
     const allFilteredSelected = selectedFilteredResourceIds.length === filteredResourceIds.length;
 
     return (
-      <Section
-        action={
-          <Menu.Root>
-            <Menu.Trigger asChild focusRing="outside" mr={-2} rounded="full">
-              <IconButton
-                Icon={EllipsisVerticalIcon}
-                label={t("actions")}
-                size="xs"
-                variant="ghost"
-              />
-            </Menu.Trigger>
-            <Portal>
-              <Menu.Positioner>
-                <Menu.Content>
-                  {sourceEditable && (
-                    <Menu.Item
-                      _hover={{ bg: "bg.error", color: "fg.error" }}
-                      color="fg.error"
-                      disabled={!hasSelection}
-                      onSelect={removeSelected}
-                      value="remove"
-                    >
-                      {t("remove")}
-                    </Menu.Item>
-                  )}
-
-                  {sourceEditable && <Menu.Separator />}
-
-                  <Menu.ItemGroup>
-                    <Menu.Item
-                      disabled={allFilteredSelected}
-                      onSelect={() => selectResources(filteredResourceIds)}
-                      value="select-all"
-                    >
-                      {t("select_all")}
-                    </Menu.Item>
-
-                    <Menu.Item
-                      disabled={!hasSelection}
-                      onSelect={() => deselectResources(filteredResourceIds)}
-                      value="deselect-all"
-                    >
-                      {t("deselect_all")}
-                    </Menu.Item>
-                  </Menu.ItemGroup>
-                </Menu.Content>
-              </Menu.Positioner>
-            </Portal>
-          </Menu.Root>
-        }
-        title={t("actions")}
-      >
+      <Section title={t("actions")}>
         {sourceEditable && (
           <Button onClick={addNew} size="sm" variant="outline" w="full">
             {t("add")}
@@ -158,9 +103,38 @@ export function createResourcesActions<
           variant="outline"
           w="full"
         >
-          <Icon Icon={PrinterIcon} size="sm" />
           {t("print_deck.add_selected")}
         </Button>
+        <Button
+          disabled={allFilteredSelected}
+          onClick={() => selectResources(filteredResourceIds)}
+          size="sm"
+          variant="outline"
+          w="full"
+        >
+          {t("select_all")}
+        </Button>
+        <Button
+          disabled={!hasSelection}
+          onClick={() => deselectResources(filteredResourceIds)}
+          size="sm"
+          variant="outline"
+          w="full"
+        >
+          {t("deselect_all")}
+        </Button>
+        {sourceEditable && (
+          <Button
+            colorPalette="red"
+            disabled={!hasSelection}
+            onClick={removeSelected}
+            size="sm"
+            variant="outline"
+            w="full"
+          >
+            {t("remove")}
+          </Button>
+        )}
       </Section>
     );
   };
