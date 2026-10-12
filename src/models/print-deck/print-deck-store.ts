@@ -1,3 +1,4 @@
+import type { Lang } from "~/models/lang";
 import { createMemoryStore } from "~/store/memory-store";
 import { type PaletteName } from "~/utils/palette";
 import { createUuid } from "~/utils/uuid";
@@ -146,6 +147,21 @@ function setEntryPalette(entryId: string, paletteName: PaletteName): void {
 }
 
 //------------------------------------------------------------------------------
+// Set Entry Language
+//------------------------------------------------------------------------------
+
+function setEntryLanguage(entryId: string, lang: Lang): void {
+  setPrintDeck((prev) => {
+    const index = prev.findIndex((entry) => entry.id === entryId);
+    if (index < 0) return prev;
+
+    const entries = [...prev];
+    entries[index] = { ...prev[index]!, lang };
+    return entries;
+  });
+}
+
+//------------------------------------------------------------------------------
 // Update Entry
 //------------------------------------------------------------------------------
 
@@ -172,6 +188,7 @@ export const printDeck = {
   getEntry,
   moveEntry,
   removeEntry,
+  setEntryLanguage,
   setEntryPalette,
   updateEntry,
   useEntries: printDeckStore.useValue,

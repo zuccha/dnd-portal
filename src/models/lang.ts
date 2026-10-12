@@ -16,3 +16,8 @@ export const langOptions: { label: string; value: Lang }[] = [
   { label: "English", value: "en" },
   { label: "Italiano", value: "it" },
 ];
+
+export const langOptionsShort: { label: string; value: Lang }[] = [
+  { label: "EN", value: "en" },
+  { label: "IT", value: "it" },
+];

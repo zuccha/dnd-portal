@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
+import { langOptionsShort, type Lang } from "~/models/lang";
 import type { PrintDeckEntry } from "~/models/print-deck/print-deck-store";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import { type ResourceKind, useTranslateResourceKind } from "~/models/types/resource-kind";
@@ -17,6 +18,7 @@ import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import PalettePicker from "~/ui/palette-picker";
+import Select from "~/ui/select";
 import { type PaletteName } from "~/utils/palette";
 import PrintDeckEditorDialog from "./print-deck-editor-dialog";
 
@@ -52,8 +54,10 @@ export default function PrintDeckContentList() {
             onEdit={() => setEditedEntryId(entry.id)}
             onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
             onMoveUp={() => printDeck.moveEntry(entry.id, index - 1)}
+            onLanguageChange={(lang) => printDeck.setEntryLanguage(entry.id, lang)}
             onPaletteChange={(paletteName) => printDeck.setEntryPalette(entry.id, paletteName)}
             onRemove={() => printDeck.removeEntry(entry.id)}
+            entryLang={entry.lang as Lang}
             paletteName={entry.palette_name}
             source={entry.resource.source_code}
           />
@@ -76,10 +80,12 @@ type PrintDeckEntryRowProps = {
   canMoveDown: boolean;
   canMoveUp: boolean;
   kind: ResourceKind;
+  entryLang: Lang;
   name: string;
   onDuplicate: () => void;
   onEdit: () => void;
   onMoveDown: () => void;
+  onLanguageChange: (lang: Lang) => void;
   onMoveUp: () => void;
   onPaletteChange: (paletteName: PaletteName) => void;
   onRemove: () => void;
@@ -91,10 +97,12 @@ function PrintDeckEntryRow({
   canMoveDown,
   canMoveUp,
   kind,
+  entryLang,
   name,
   onDuplicate,
   onEdit,
   onMoveDown,
+  onLanguageChange,
   onMoveUp,
   onPaletteChange,
   onRemove,
@@ -120,6 +128,16 @@ function PrintDeckEntryRow({
       <Box alignSelf="center">
         <PalettePicker onValueChange={onPaletteChange} value={paletteName} />
       </Box>
+
+      <Select.Enum
+        aria-label={t("language")}
+        onValueChange={onLanguageChange}
+        options={langOptionsShort}
+        size="sm"
+        value={entryLang}
+        w="3.5em"
+        alignSelf="center"
+      />
 
       <VStack
         align="flex-start"
@@ -194,6 +212,10 @@ const i18nContext = {
   "empty.title": {
     en: "The print deck is empty",
     it: "La coda di stampa è vuota",
+  },
+  "language": {
+    en: "Language",
+    it: "Lingua",
   },
   "move_down": {
     en: "Move down",
