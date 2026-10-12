@@ -79,7 +79,7 @@ export function createResourcesActions<
       if (!entries.length) return;
 
       printDeck.addEntries(entries);
-      toaster.info({
+      toaster.success({
         description: tpi("print_deck.added.description", entries.length, `${entries.length}`),
         title: t("print_deck.added.title"),
       });

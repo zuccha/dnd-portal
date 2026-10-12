@@ -147,7 +147,7 @@ export function createResourceCardInteractive<
         resource: resourceUnionSchema.parse(localizedResource._raw),
       });
 
-      toaster.info({
+      toaster.success({
         description: localizedResource.name,
         title: t("print_deck.added"),
       });
@@ -160,7 +160,7 @@ export function createResourceCardInteractive<
             description: t("persistent.error.description"),
             title: t("persistent.error.title"),
           })
-        : toaster.info({
+        : toaster.success({
             description: localizedResource.name,
             title: t("persistent.done"),
           });
