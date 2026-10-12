@@ -16,6 +16,7 @@ import type { EquipmentModifierFilters } from "~/models/resources/modifiers/equi
 import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { useTranslateEquipmentRarity } from "~/models/types/equipment-rarity";
 import { createMemoryStore } from "~/store/memory-store";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
@@ -200,6 +201,7 @@ export function createEquipmentVariantDialog<
     const { lang, t } = useI18nLangContext(i18nContext);
     const formatCost = useFormatCp();
     const formatWeight = useFormatGrams();
+    const translateRarity = useTranslateEquipmentRarity(lang);
     const [orderedIds, setOrderedIds] = useState(orderedModifierIds);
     const [selectedModifierIds, setSelectedModifierIds] = useState<string[]>(
       request.selected_modifier_ids,
@@ -318,7 +320,7 @@ export function createEquipmentVariantDialog<
                     {preview.weight === null ? t("unspecified") : formatWeight(preview.weight)}
                   </Span>
                   <Span>{preview.magic ? t("magic") : t("non_magic")}</Span>
-                  <Span>{preview.rarity}</Span>
+                  <Span>{translateRarity(preview.rarity)}</Span>
                 </HStack>
 
                 {preview.required_attunement_slots > 0 && (
