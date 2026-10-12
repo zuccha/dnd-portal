@@ -1,5 +1,7 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { i18nLangProviderContext } from "~/i18n/i18n-lang-provider-context";
+import { translate } from "~/i18n/i18n-string";
 import type { PrintDeckEntry } from "~/models/print-deck/print-deck-entry";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import type { TranslationFields } from "~/models/resources/resource";
@@ -9,6 +11,8 @@ import { type Form } from "~/utils/form";
 import ResourceDialog from "../resources/resource-dialog";
 import { applyResourceEditorPreviewPatch } from "../resources/resource-editor-preview";
 import PrintDeckEditorPreview from "./print-deck-editor-preview";
+
+const noopSetLang = () => "";
 
 //------------------------------------------------------------------------------
 // Print Deck Editor Configuration
@@ -52,7 +56,10 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
 
   function PrintDeckResourceDialog({ entry, onClose }: PrintDeckResourceDialogProps) {
     const { t, ti } = useI18nLangContext(i18nContext);
-    const localizationContext = useLocalizationContext(entry.localized_resource._raw);
+    const langContextValue = useMemo(
+      () => ({ lang: entry.lang, setLang: noopSetLang }),
+      [entry.lang],
+    );
 
     useEffect(() => {
       form.reset();
@@ -64,22 +71,13 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
         if (typeof errorOrPatch === "string") return errorOrPatch;
 
         const nextRawResource = resourceUnionSchema.parse(
-          applyResourceEditorPreviewPatch(
-            entry.localized_resource._raw,
-            errorOrPatch,
-            translationFields,
-          ),
+          applyResourceEditorPreviewPatch(entry.resource, errorOrPatch, translationFields),
         );
-        const nextLocalizedResource = localizeResource(nextRawResource, localizationContext);
-
-        printDeck.updateEntry(entry.id, {
-          ...entry,
-          localized_resource: nextLocalizedResource,
-        });
+        printDeck.updateEntry(entry.id, { ...entry, resource: nextRawResource });
 
         return undefined;
       },
-      [entry, localizationContext],
+      [entry],
     );
 
     const [submit, saving] = useSubmit(updateEntry);
@@ -100,25 +98,24 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
         onSecondaryAction={saveAndClose}
         open
         preview={
-          <PrintDeckEditorPreview
-            entry={entry}
-            localizeResource={localizeResource}
-            parseFormData={parseFormData}
-            translationFields={translationFields}
-            useData={useData}
-            useLocalizationContext={useLocalizationContext}
-          />
+          <i18nLangProviderContext.Provider value={langContextValue}>
+            <PrintDeckEditorPreview
+              entry={entry}
+              localizeResource={localizeResource}
+              parseFormData={parseFormData}
+              translationFields={translationFields}
+              useData={useData}
+              useLocalizationContext={useLocalizationContext}
+            />
+          </i18nLangProviderContext.Provider>
         }
         primaryActionText={t("save")}
         saving={saving}
         secondaryActionText={t("save_and_close")}
-        title={ti("title", entry.localized_resource.name)}
+        title={ti("title", translate(entry.resource.name, entry.lang))}
         valid={valid}
       >
-        <Editor
-          resource={entry.localized_resource._raw}
-          sourceId={entry.localized_resource._raw.source_id}
-        />
+        <Editor resource={entry.resource} sourceId={entry.resource.source_id} />
       </ResourceDialog>
     );
   }

@@ -17,7 +17,7 @@ export type PrintDeckEditorDialogProps = {
 export default function PrintDeckEditorDialog({ entry, onClose }: PrintDeckEditorDialogProps) {
   if (!entry) return null;
 
-  const registryEntry = getPrintDeckEditorRegistryEntry(entry.localized_resource.kind);
+  const registryEntry = getPrintDeckEditorRegistryEntry(entry.resource.kind);
   const EditorComponent = registryEntry.Component;
   return <EditorComponent entry={entry} onClose={onClose} />;
 }

@@ -1,4 +1,6 @@
 import Dexie, { type Table } from "dexie";
+import { z } from "zod";
+import { localizedResourceUnionSchema } from "../resources/resource-union";
 import { printDeckEntrySchema, type PrintDeckEntry } from "./print-deck-entry";
 
 //------------------------------------------------------------------------------
@@ -34,7 +36,27 @@ function parsePrintDeckEntries(value: unknown): PrintDeckEntry[] {
   return Array.isArray(value)
     ? value.flatMap((entry) => {
         const parsed = printDeckEntrySchema.safeParse(entry);
-        return parsed.success ? [parsed.data] : [];
+        if (parsed.success) return [parsed.data];
+
+        const legacy = z
+          .object({
+            id: z.uuid(),
+            lang: z.string(),
+            localized_resource: localizedResourceUnionSchema,
+            palette_name: printDeckEntrySchema.shape.palette_name,
+          })
+          .safeParse(entry);
+
+        return legacy.success
+          ? [
+              {
+                id: legacy.data.id,
+                lang: legacy.data.lang,
+                palette_name: legacy.data.palette_name,
+                resource: legacy.data.localized_resource._raw,
+              },
+            ]
+          : [];
       })
     : [];
 }

@@ -12,7 +12,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
+import { resourceUnionSchema } from "~/models/resources/resource-union";
 import IconButton from "~/ui/icon-button";
 import PokerCard from "~/ui/poker-card";
 import { toaster } from "~/ui/toaster";
@@ -143,8 +143,8 @@ export function createResourceCardInteractive<
     const addToPrintDeck = useCallback(() => {
       printDeck.addEntry({
         lang,
-        localized_resource: localizedResourceUnionSchema.parse(localizedResource),
         palette_name: paletteName,
+        resource: resourceUnionSchema.parse(localizedResource._raw),
       });
 
       toaster.info({

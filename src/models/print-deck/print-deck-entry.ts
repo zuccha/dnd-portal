@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { paletteNameSchema } from "~/utils/palette";
-import { localizedResourceUnionSchema } from "../resources/resource-union";
+import { resourceUnionSchema } from "../resources/resource-union";
 
 //------------------------------------------------------------------------------
 // Print Deck Entry
@@ -9,8 +9,8 @@ import { localizedResourceUnionSchema } from "../resources/resource-union";
 export const printDeckEntrySchema = z.object({
   id: z.uuid(),
   lang: z.string(),
-  localized_resource: localizedResourceUnionSchema,
   palette_name: paletteNameSchema,
+  resource: resourceUnionSchema,
 });
 
 export type PrintDeckEntry = z.infer<typeof printDeckEntrySchema>;

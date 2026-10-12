@@ -39,25 +39,21 @@ export default function PrintDeckEditorPreview({
 
   const previewRawResource = useMemo(() => {
     const errorOrPatch = parseFormData(formData, entry.lang);
-    if (typeof errorOrPatch === "string") return entry.localized_resource._raw;
+    if (typeof errorOrPatch === "string") return entry.resource;
 
     return resourceUnionSchema.parse(
-      applyResourceEditorPreviewPatch(
-        entry.localized_resource._raw,
-        errorOrPatch,
-        translationFields,
-      ),
+      applyResourceEditorPreviewPatch(entry.resource, errorOrPatch, translationFields),
     );
   }, [entry, formData, parseFormData, translationFields]);
 
-  const localizationContext = useLocalizationContext(entry.localized_resource._raw);
+  const localizationContext = useLocalizationContext(entry.resource);
 
   const previewLocalizedResource = useMemo(
     () => localizeResource(previewRawResource, localizationContext),
     [localizeResource, localizationContext, previewRawResource],
   );
 
-  const Card = getPrintDeckCard(entry.localized_resource.kind);
+  const Card = getPrintDeckCard(entry.resource.kind);
 
   const Preview = ResourceCardPreview as unknown as ComponentType<{
     Card: typeof Card;

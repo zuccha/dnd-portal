@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { translate } from "~/i18n/i18n-string";
 import type { PrintDeckEntry } from "~/models/print-deck/print-deck-store";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import { type ResourceKind, useTranslateResourceKind } from "~/models/types/resource-kind";
@@ -45,8 +46,8 @@ export default function PrintDeckContentList() {
             canMoveDown={index < entries.length - 1}
             canMoveUp={index > 0}
             key={entry.id}
-            kind={entry.localized_resource.kind}
-            name={entry.localized_resource.name}
+            kind={entry.resource.kind}
+            name={translate(entry.resource.name, entry.lang)}
             onDuplicate={() => printDeck.duplicateEntry(entry.id)}
             onEdit={() => setEditedEntryId(entry.id)}
             onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
@@ -54,7 +55,7 @@ export default function PrintDeckContentList() {
             onPaletteChange={(paletteName) => printDeck.setEntryPalette(entry.id, paletteName)}
             onRemove={() => printDeck.removeEntry(entry.id)}
             paletteName={entry.palette_name}
-            source={entry.localized_resource.source}
+            source={entry.resource.source_code}
           />
         ))}
       </VStack>
