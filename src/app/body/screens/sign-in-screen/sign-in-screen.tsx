@@ -5,7 +5,9 @@ import { useNavigate } from "react-router";
 import RawDiscordIcon from "~/assets/images/icons/discord.svg?react";
 import { signInWithDiscord, signInWithPassword } from "~/auth/auth";
 import useAuth from "~/auth/use-auth";
+import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { langOptions } from "~/models/lang";
 import Redirect from "~/navigation/redirect";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
@@ -13,6 +15,7 @@ import Field from "~/ui/field";
 import IconButton from "~/ui/icon-button";
 import Input from "~/ui/input";
 import Link from "~/ui/link";
+import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
 // Sign In Screen
@@ -21,6 +24,7 @@ import Link from "~/ui/link";
 export default function SignInScreen() {
   const auth = useAuth();
   const { t } = useI18nLangContext(i18nContext);
+  const [language, setLanguage] = useI18nLang();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -86,15 +90,22 @@ export default function SignInScreen() {
         </Button>
       </VStack>
 
-      <IconButton
-        Icon={ArrowLeftIcon}
-        disabled={loading}
-        label={t("back")}
-        left={4}
-        onClick={() => navigate(Route._)}
-        position="absolute"
-        top={4}
-      />
+      <HStack justify="space-between" left={4} position="absolute" right={4} top={4}>
+        <IconButton
+          Icon={ArrowLeftIcon}
+          disabled={loading}
+          label={t("back")}
+          onClick={() => navigate(Route._)}
+        />
+        <Select.Enum
+          aria-label={t("language")}
+          onValueChange={setLanguage}
+          options={langOptions}
+          size="sm"
+          value={language}
+          w="6em"
+        />
+      </HStack>
     </Center>
   );
 }
@@ -121,6 +132,10 @@ const i18nContext = {
   "email": {
     en: "Email",
     it: "Email",
+  },
+  "language": {
+    en: "Language",
+    it: "Lingua",
   },
   "error.email.empty": {
     en: "The email address cannot be empty",

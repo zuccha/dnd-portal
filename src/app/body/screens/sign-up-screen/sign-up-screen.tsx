@@ -1,11 +1,13 @@
-import { Center, HStack, Heading, Span, VStack, chakra } from "@chakra-ui/react";
+import { Alert, Center, HStack, Heading, Span, VStack, chakra } from "@chakra-ui/react";
 import { ArrowLeftIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 import RawDiscordIcon from "~/assets/images/icons/discord.svg?react";
 import { signInWithDiscord, signUpWithPassword } from "~/auth/auth";
 import useAuth from "~/auth/use-auth";
+import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { langOptions } from "~/models/lang";
 import Redirect from "~/navigation/redirect";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
@@ -13,6 +15,7 @@ import Field from "~/ui/field";
 import IconButton from "~/ui/icon-button";
 import Input from "~/ui/input";
 import Link from "~/ui/link";
+import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
 // Sign In Screen
@@ -21,6 +24,7 @@ import Link from "~/ui/link";
 export default function SignInScreen() {
   const auth = useAuth();
   const { t } = useI18nLangContext(i18nContext);
+  const [language, setLanguage] = useI18nLang();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -48,6 +52,11 @@ export default function SignInScreen() {
     <Center bgColor="bg.subtle" minH="100vh" position="relative" w="full">
       <VStack align="flex-start" gap={4} maxW="20em" w="full">
         <Heading size="2xl">{t("title")}</Heading>
+
+        <Alert.Root status="warning" variant="outline" w="full">
+          <Alert.Indicator />
+          <Alert.Content>{t("registration_info")}</Alert.Content>
+        </Alert.Root>
 
         {/* <Field label={t("username")}>
           <Input onValueChange={setUsername} size="sm" value={username} />
@@ -97,14 +106,17 @@ export default function SignInScreen() {
         </Button>
       </VStack>
 
-      <IconButton
-        Icon={ArrowLeftIcon}
-        label={t("back")}
-        left={4}
-        onClick={() => navigate(Route._)}
-        position="absolute"
-        top={4}
-      />
+      <HStack justify="space-between" left={4} position="absolute" right={4} top={4}>
+        <IconButton Icon={ArrowLeftIcon} label={t("back")} onClick={() => navigate(Route._)} />
+        <Select.Enum
+          aria-label={t("language")}
+          onValueChange={setLanguage}
+          options={langOptions}
+          size="sm"
+          value={language}
+          w="6em"
+        />
+      </HStack>
     </Center>
   );
 }
@@ -135,6 +147,10 @@ const i18nContext = {
   "email": {
     en: "Email",
     it: "Email",
+  },
+  "language": {
+    en: "Language",
+    it: "Lingua",
   },
   "error.email.empty": {
     en: "The email address cannot be empty",
@@ -167,6 +183,10 @@ const i18nContext = {
   "password_confirmation": {
     en: "Confirm Password",
     it: "Conferma Password",
+  },
+  "registration_info": {
+    en: "Currently, registering does not provide any additional functionality.",
+    it: "Attualmente, registrarsi non fornisce alcuna funzionalità aggiuntiva.",
   },
   "signin": {
     en: "Sign in",
