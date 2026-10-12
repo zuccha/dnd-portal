@@ -47,6 +47,7 @@ export function createResourcesTable<
               borderCollapse="separate"
               borderSpacing={0}
               showColumnBorder
+              size="sm"
               stickyHeader
               variant="line"
             >
