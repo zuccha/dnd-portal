@@ -1,6 +1,7 @@
-import { Box, HStack, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Breadcrumb, Box, HStack, Heading, SimpleGrid, Tabs, Text, VStack } from "@chakra-ui/react";
 import { XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue, { useSource, useSourceEditable, useSources } from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
@@ -15,6 +16,7 @@ import {
   useSourceVersionOptions,
   useTranslateSourceVersion,
 } from "~/models/types/source-version";
+import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
 import IconButton from "~/ui/icon-button";
@@ -37,7 +39,7 @@ export type SourceSettingsPanelProps = {
 };
 
 export default function SourceSettingsPanel({ sourceId }: SourceSettingsPanelProps) {
-  const { lang, t } = useI18nLangContext(i18nContext);
+  const { t } = useI18nLangContext(i18nContext);
   const source = useSource(sourceId);
   const sources = useSources();
 
@@ -51,14 +53,6 @@ export default function SourceSettingsPanel({ sourceId }: SourceSettingsPanelPro
 
   return (
     <SourceSettingsRoot>
-      <VStack align="flex-start" gap={1} w="full">
-        <Heading>{t("title")}</Heading>
-        <Text color="fg.muted">
-          {source.code}
-          {source.name[lang] ? ` - ${source.name[lang]}` : ""}
-        </Text>
-      </VStack>
-
       <SourceSettingsForm
         initialSource={source}
         key={hash(source)}
@@ -86,6 +80,7 @@ type SourceSettingsFormProps = {
 
 function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFormProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
+  const navigate = useNavigate();
   const sourceEditable = useSourceEditable(source.id);
   const sourceTypeOptions = useSourceTypeOptions();
   const sourceVersionOptions = useSourceVersionOptions();
@@ -154,7 +149,51 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
   }, []);
 
   return (
-    <VStack align="flex-start" gap={8} w="full">
+    <VStack align="flex-start" flex={1} gap={{ base: 4, md: 6 }} w="full">
+      <HStack justify="space-between" w="full">
+        <Breadcrumb.Root size="lg" fontWeight="semibold">
+          <Breadcrumb.List>
+            <Breadcrumb.Item>
+              <Breadcrumb.Link
+                href={Route.Sources}
+                onClick={(event) => {
+                  event.preventDefault();
+                  navigate(Route.Sources);
+                }}
+              >
+                {t("sources")}
+              </Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+              <Breadcrumb.CurrentLink>
+                <Text as="span" fontStyle="italic">
+                  {source.name[lang] ?? source.code}
+                </Text>
+              </Breadcrumb.CurrentLink>
+            </Breadcrumb.Item>
+          </Breadcrumb.List>
+        </Breadcrumb.Root>
+        <HStack>
+          <Button
+            disabled={!changed || saving || !sourceEditable}
+            onClick={reset}
+            size="sm"
+            variant="outline"
+          >
+            {t("reset")}
+          </Button>
+          <Button
+            disabled={!changed || saving || !sourceEditable}
+            loading={saving}
+            onClick={save}
+            size="sm"
+          >
+            {t("save")}
+          </Button>
+        </HStack>
+      </HStack>
+
       {!sourceEditable && (
         <Box
           bgColor="bg.muted"
@@ -238,64 +277,71 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
             />
           </CaptionInput>
         </SimpleGrid>
+
+        {source.registry?.access === "creator" && (
+          <SourceRegistrySettings
+            disabled={saving || !sourceEditable}
+            onVisibilityChange={(visibility) => setDraft((prev) => ({ ...prev, visibility }))}
+            visibility={draft.visibility}
+          />
+        )}
       </VStack>
 
-      <SourceDependencyEditor
-        dependencies={draft.includes}
-        disabled={saving || !sourceEditable}
-        label={t("includes")}
-        onDependenciesChange={setIncludes}
-        otherDependencies={draft.requires}
-        placeholder={t("add_include")}
-        sourceId={source.id}
-        sources={sources}
-      />
+      <Tabs.Root
+        defaultValue="includes"
+        display="flex"
+        flex={1}
+        flexDirection="column"
+        mx={{ base: -4, md: -10 }}
+        variant="line"
+        w={{ base: "calc(100% + 2rem)", md: "calc(100% + 5rem)" }}
+      >
+        <Tabs.List borderBottomWidth={1} px={{ base: 4, md: 10 }}>
+          <Tabs.Trigger value="includes">{t("includes")}</Tabs.Trigger>
+          <Tabs.Trigger value="requires">{t("requires")}</Tabs.Trigger>
+          {source.registry && (
+            <Tabs.Trigger disabled={source.registry.access !== "creator"} value="access">
+              {t("access")}
+            </Tabs.Trigger>
+          )}
+        </Tabs.List>
 
-      <SourceDependencyEditor
-        dependencies={draft.requires}
-        disabled={saving || !sourceEditable}
-        label={t("requires")}
-        onDependenciesChange={setRequires}
-        otherDependencies={draft.includes}
-        placeholder={t("add_require")}
-        sourceId={source.id}
-        sources={sources}
-      />
+        <Tabs.Content bg="bg.muted" flex={1} px={{ base: 4, md: 10 }} pt={4} value="includes">
+          <SourceDependencyEditor
+            dependencies={draft.includes}
+            disabled={saving || !sourceEditable}
+            onDependenciesChange={setIncludes}
+            otherDependencies={draft.requires}
+            placeholder={t("add_include")}
+            sourceId={source.id}
+            sources={sources}
+          />
+        </Tabs.Content>
 
-      {source.registry?.access === "creator" && <SourceAccessPanel source={source} />}
+        <Tabs.Content bg="bg.muted" flex={1} px={{ base: 4, md: 10 }} pt={4} value="requires">
+          <SourceDependencyEditor
+            dependencies={draft.requires}
+            disabled={saving || !sourceEditable}
+            onDependenciesChange={setRequires}
+            otherDependencies={draft.includes}
+            placeholder={t("add_require")}
+            sourceId={source.id}
+            sources={sources}
+          />
+        </Tabs.Content>
 
-      {source.registry?.access === "creator" && (
-        <SourceRegistrySettings
-          disabled={saving || !sourceEditable}
-          onVisibilityChange={(visibility) => setDraft((prev) => ({ ...prev, visibility }))}
-          visibility={draft.visibility}
-        />
-      )}
+        {source.registry?.access === "creator" && (
+          <Tabs.Content bg="bg.muted" flex={1} px={{ base: 4, md: 10 }} pt={4} value="access">
+            <SourceAccessPanel source={source} />
+          </Tabs.Content>
+        )}
+      </Tabs.Root>
 
       {error && (
         <Text color="fg.error" fontSize="sm">
           {t(error)}
         </Text>
       )}
-
-      <HStack justify="flex-end" w="full">
-        <Button
-          disabled={!changed || saving || !sourceEditable}
-          onClick={reset}
-          size="sm"
-          variant="outline"
-        >
-          {t("reset")}
-        </Button>
-        <Button
-          disabled={!changed || saving || !sourceEditable}
-          loading={saving}
-          onClick={save}
-          size="sm"
-        >
-          {t("save")}
-        </Button>
-      </HStack>
     </VStack>
   );
 }
@@ -306,7 +352,17 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
 
 function SourceSettingsRoot({ children }: { children: React.ReactNode }) {
   return (
-    <VStack align="flex-start" flex={1} gap={6} h="full" overflow="auto" px={10} py={10} w="full">
+    <VStack
+      align="flex-start"
+      flex={1}
+      gap={{ base: 4, md: 6 }}
+      h="full"
+      overflow="auto"
+      pb={0}
+      pt={{ base: 4, md: 10 }}
+      px={{ base: 4, md: 10 }}
+      w="full"
+    >
       {children}
     </VStack>
   );
@@ -319,7 +375,6 @@ function SourceSettingsRoot({ children }: { children: React.ReactNode }) {
 type SourceDependencyEditorProps = {
   dependencies: SourceDependency[];
   disabled: boolean;
-  label: string;
   onDependenciesChange: (dependencies: SourceDependency[]) => void;
   otherDependencies: SourceDependency[];
   placeholder: string;
@@ -330,7 +385,6 @@ type SourceDependencyEditorProps = {
 function SourceDependencyEditor({
   dependencies,
   disabled,
-  label,
   onDependenciesChange,
   otherDependencies,
   placeholder,
@@ -390,9 +444,8 @@ function SourceDependencyEditor({
 
   return (
     <VStack align="flex-start" gap={3} w="full">
-      <SectionHeading>{label}</SectionHeading>
-
       <Search
+        bg="bg"
         categories={categories}
         disabled={disabled || !options.length}
         emptyLabel={t("empty")}
@@ -512,6 +565,10 @@ const i18nContext = {
     en: "Add required source",
     it: "Aggiungi fonte richiesta",
   },
+  "access": {
+    en: "Access",
+    it: "Accessi",
+  },
   "code": {
     en: "Code",
     it: "Codice",
@@ -576,9 +633,13 @@ const i18nContext = {
     en: "Save",
     it: "Salva",
   },
+  "sources": {
+    en: "Sources",
+    it: "Fonti",
+  },
   "title": {
-    en: "Source Settings",
-    it: "Impostazioni del Modulo",
+    en: "Settings",
+    it: "Impostazioni",
   },
   "type": {
     en: "Type",

@@ -1,8 +1,8 @@
 import {
   CloseButton,
+  Breadcrumb,
   Dialog,
   HStack,
-  Heading,
   Input,
   Portal,
   Tabs,
@@ -35,6 +35,7 @@ import { useTranslateSourceVersion } from "~/models/types/source-version";
 import { sourceSettingsRoute } from "~/navigation/routes";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
+import SectionHeading from "~/ui/section-heading";
 import { downloadFile } from "~/utils/download";
 import SourceCreateDialog from "./source-create-dialog";
 import SourceDependenciesDialog from "./source-dependencies-dialog";
@@ -596,16 +597,19 @@ export default function SourcesPanel() {
         w="full"
       >
         <HStack
-          align={{ base: "stretch", sm: "flex-start" }}
+          align="center"
           flexDirection={{ base: "column", sm: "row" }}
           gap={4}
           justify="space-between"
           w="full"
         >
-          <VStack align="flex-start" gap={1}>
-            <Heading>{t("title")}</Heading>
-            <Text color="fg.muted">{t("subtitle")}</Text>
-          </VStack>
+          <Breadcrumb.Root fontWeight="semibold" size="lg">
+            <Breadcrumb.List>
+              <Breadcrumb.Item>
+                <Breadcrumb.CurrentLink>{t("title")}</Breadcrumb.CurrentLink>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb.Root>
 
           <HStack flexWrap="wrap" justify={{ base: "flex-start", sm: "flex-end" }}>
             <Button
@@ -624,12 +628,15 @@ export default function SourcesPanel() {
           </HStack>
         </HStack>
 
-        <Checkbox
-          label={t("auto_update")}
-          maxW="max-content"
-          onValueChange={setAutoUpdateSources}
-          value={autoUpdateSources}
-        />
+        <VStack align="flex-start" gap={3} w="full">
+          <SectionHeading>{t("settings")}</SectionHeading>
+          <Checkbox
+            label={t("auto_update")}
+            maxW="max-content"
+            onValueChange={setAutoUpdateSources}
+            value={autoUpdateSources}
+          />
+        </VStack>
 
         <Input
           accept="application/json,.json"

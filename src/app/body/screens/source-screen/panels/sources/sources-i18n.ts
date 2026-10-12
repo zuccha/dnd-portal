@@ -231,10 +231,6 @@ const i18nContext = {
     en: "Update available",
     it: "Aggiornamento disponibile",
   },
-  "subtitle": {
-    en: "Download, import, and create sources",
-    it: "Scarica, importa e crea fonti",
-  },
   "title": {
     en: "Sources",
     it: "Fonti",

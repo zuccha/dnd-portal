@@ -13,7 +13,6 @@ import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
 import IconButton from "~/ui/icon-button";
 import TextInput from "~/ui/input";
-import SectionHeading from "~/ui/section-heading";
 import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
@@ -79,11 +78,10 @@ export default function SourceAccessPanel({ source }: { source: Source }) {
 
   return (
     <VStack align="flex-start" gap={3} w="full">
-      <SectionHeading>{t("access")}</SectionHeading>
-
       <HStack align="flex-end" flexWrap="wrap" gap={3} w="full">
         <CaptionInput caption={t("email")} flex={{ base: "1 1 100%", sm: 1 }} minW={0}>
           <TextInput
+            bg="bg"
             disabled={saving}
             onValueChange={setEmail}
             placeholder={t("email_placeholder")}
@@ -94,6 +92,7 @@ export default function SourceAccessPanel({ source }: { source: Source }) {
         </CaptionInput>
         <CaptionInput caption={t("permission")} minW={{ base: "8rem", sm: "8rem" }}>
           <Select.Enum
+            bg="bg"
             disabled={saving}
             onValueChange={setAccess}
             options={[

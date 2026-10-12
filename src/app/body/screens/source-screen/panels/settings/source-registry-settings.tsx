@@ -1,6 +1,5 @@
-import { VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import SectionHeading from "~/ui/section-heading";
+import CaptionInput from "~/ui/caption-input";
 import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
@@ -25,8 +24,7 @@ export default function SourceRegistrySettings({
   const { t } = useI18nLangContext(i18nContext);
 
   return (
-    <VStack align="flex-start" gap={3} w="full">
-      <SectionHeading>{t("registry")}</SectionHeading>
+    <CaptionInput caption={t("visibility")} w="full">
       <Select.Enum
         disabled={disabled}
         onValueChange={onVisibilityChange}
@@ -38,7 +36,7 @@ export default function SourceRegistrySettings({
         value={visibility}
         w="full"
       />
-    </VStack>
+    </CaptionInput>
   );
 }
 
@@ -49,5 +47,5 @@ export default function SourceRegistrySettings({
 const i18nContext = {
   private: { en: "Private", it: "Privata" },
   public: { en: "Public", it: "Pubblica" },
-  registry: { en: "Registry", it: "Registro" },
+  visibility: { en: "Visibility", it: "Visibilità" },
 };
