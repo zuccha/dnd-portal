@@ -63,15 +63,9 @@ export const paperSizes: Record<PaperType, { height: number; width: number }> = 
 // Print Dialogues
 //------------------------------------------------------------------------------
 
-export const useStandardPrintHelpDialogDismissed = createLocalStore(
-  "print_deck.settings.standard_print_help_dialog_dismissed",
-  false,
-  z.boolean().parse,
-).use;
-
-export const useHighFidelityPrintHelpDialogDismissed = createLocalStore(
-  "print_deck.settings.high_fidelity_print_help_dialog_dismissed",
-  false,
+export const useShowPrintInstructions = createLocalStore(
+  "print_deck.settings.show_print_instructions",
+  true,
   z.boolean().parse,
 ).use;
 

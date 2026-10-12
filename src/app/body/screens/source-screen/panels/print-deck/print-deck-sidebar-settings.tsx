@@ -1,11 +1,10 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import { HelpCircleIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import CaptionInput from "~/ui/caption-input";
 import Checkbox from "~/ui/checkbox";
 import ColorPicker from "~/ui/color-picker";
-import IconButton from "~/ui/icon-button";
+import Link from "~/ui/link";
 import NumberInput from "~/ui/number-input";
 import Section from "~/ui/section";
 import Select, { type SelectOption } from "~/ui/select";
@@ -106,27 +105,14 @@ export default function PrintDeckSidebarSettings({
           />
         </CaptionInput>
 
-        <HStack w="full">
-          <CaptionInput caption={t("setting.print_quality.label")} flex={1}>
-            <Select.Enum
-              onValueChange={setPrintQuality}
-              options={printQualityOptions}
-              size="sm"
-              value={printQuality}
-            />
-          </CaptionInput>
-
-          <IconButton
-            Icon={HelpCircleIcon}
-            h={5}
-            label={t("help")}
-            minW={5}
-            onClick={onClickPrintQualityHelp}
-            size="xs"
-            variant="ghost"
-            w={5}
+        <CaptionInput caption={t("setting.print_quality.label")} w="full">
+          <Select.Enum
+            onValueChange={setPrintQuality}
+            options={printQualityOptions}
+            size="sm"
+            value={printQuality}
           />
-        </HStack>
+        </CaptionInput>
 
         <HStack>
           <Checkbox onValueChange={setBleedVisible} size="sm" value={bleedVisible} />
@@ -209,6 +195,18 @@ export default function PrintDeckSidebarSettings({
             w="full"
           />
         </VStack>
+
+        <Link
+          fontSize="sm"
+          onClick={onClickPrintQualityHelp}
+          textAlign="left"
+          textDecoration="underline"
+          textDecorationStyle="dotted"
+          textUnderlineOffset="3px"
+          w="full"
+        >
+          {t("print_instructions")}
+        </Link>
       </VStack>
     </Section>
   );
@@ -223,9 +221,9 @@ const i18nContext = {
     en: "Settings",
     it: "Impostazioni",
   },
-  "help": {
-    en: "Help",
-    it: "Aiuto",
+  "print_instructions": {
+    en: "Print instructions",
+    it: "Istruzioni di stampa",
   },
   "paper_layout[landscape]": {
     en: "Landscape",
