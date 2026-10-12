@@ -201,8 +201,8 @@ const i18nContext = {
     it: "Compila il modulo per registrarti.",
   },
   "title": {
-    en: "Register for D&D Portal",
-    it: "Registrati su D&D Portal",
+    en: "Register for ZorboDnD",
+    it: "Registrati su ZorboDnD",
   },
   "username": {
     en: "Username",

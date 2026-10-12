@@ -170,7 +170,7 @@ const i18nContext = {
     it: "Registrati",
   },
   "title": {
-    en: "Sign In for D&D Portal",
-    it: "Loggati su D&D Portal",
+    en: "Sign In for ZorboDnD",
+    it: "Loggati su ZorboDnD",
   },
 };

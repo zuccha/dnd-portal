@@ -50,7 +50,7 @@ export default function Topbar() {
           variant="ghost"
         />
         <Button cursor="pointer" onClick={() => navigate(Route._)} unstyled>
-          <Span color="fg.error">D&D</Span> Portal
+          <Span color="fg.error">Zorbo</Span>DnD
         </Button>
       </HStack>
 

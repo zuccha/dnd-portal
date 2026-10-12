@@ -210,7 +210,7 @@ const i18nContext = {
     it: "Sfoglia le risorse dei manuali, raccogli le carte che ti servono e stampale per consultarle rapidamente durante il gioco.",
   },
   "home.title": {
-    en: "Welcome to D&D Portal",
-    it: "Benvenutə su D&D Portal",
+    en: "Welcome to ZorboDnD",
+    it: "Benvenutə su ZorboDnD",
   },
 };

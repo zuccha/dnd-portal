@@ -16,7 +16,7 @@ export default function PageTitle() {
 
   useEffect(() => {
     const pageTitle = sourceId && source ? source.name[lang] || source.code : t(pathname);
-    document.title = pathname === Route._ ? "D&D Portal" : `${pageTitle} - D&D Portal`;
+    document.title = pathname === Route._ ? "ZorboDnD" : `${pageTitle} - ZorboDnD`;
   }, [lang, pathname, source, sourceId, t]);
 
   return null;

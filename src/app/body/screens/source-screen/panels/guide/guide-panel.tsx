@@ -358,9 +358,9 @@ const documentation: Record<string, DocumentationContent> = {
       resources: "Working with resources",
       sources: "Working with sources",
     },
-    title: "D&D Portal Documentation",
+    title: "ZorboDnD Documentation",
     intro:
-      "D&D Portal is a local-first application for organizing, consulting, editing, and printing D&D resources. This guide documents the concepts and workflows used throughout the app.",
+      "ZorboDnD is a local-first application for organizing, consulting, editing, and printing D&D resources. This guide documents the concepts and workflows used throughout the app.",
     sections: [
       {
         id: "start",
@@ -684,9 +684,9 @@ const documentation: Record<string, DocumentationContent> = {
       resources: "Lavorare con le risorse",
       sources: "Lavorare con le fonti",
     },
-    title: "Documentazione di D&D Portal",
+    title: "Documentazione di ZorboDnD",
     intro:
-      "D&D Portal è un'applicazione local-first per organizzare, consultare, modificare e stampare le risorse di D&D. Questa guida documenta i concetti e i flussi dell'app.",
+      "ZorboDnD è un'applicazione local-first per organizzare, consultare, modificare e stampare le risorse di D&D. Questa guida documenta i concetti e i flussi dell'app.",
     sections: [
       {
         id: "start",
