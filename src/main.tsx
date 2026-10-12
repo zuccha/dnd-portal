@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "./app/app.tsx";
 import { AuthProvider } from "./auth/auth-provider.tsx";
+import AppI18nProvider from "./i18n/app-i18n-provider";
 import { queryClient } from "./supabase.ts";
 import { ThemeProvider } from "./theme/theme-provider";
 import { Toaster } from "./ui/toaster";
@@ -15,16 +16,18 @@ import "./theme/fonts.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </AuthProvider>
+    <AppI18nProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </AuthProvider>
 
-        <Toaster />
-      </ThemeProvider>
-    </QueryClientProvider>
+          <Toaster />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </AppI18nProvider>
   </StrictMode>,
 );

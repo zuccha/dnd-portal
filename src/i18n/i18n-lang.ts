@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createLocalStore } from "~/store/local-store";
+import { useI18nLangProviderContext } from "./i18n-lang-provider-context";
 import type { I18nString } from "./i18n-string";
 
 //------------------------------------------------------------------------------
@@ -24,4 +25,7 @@ export const i18nLangStore = createLocalStore("i18n.lang", "en", z.string().pars
 // Use I18n Lang
 //------------------------------------------------------------------------------
 
-export const useI18nLang = i18nLangStore.use;
+export function useI18nLang() {
+  const context = useI18nLangProviderContext();
+  return [context.lang, context.setLang] as const;
+}
