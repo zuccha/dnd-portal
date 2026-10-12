@@ -584,7 +584,8 @@ const documentation: Record<string, DocumentationContent> = {
         id: "annotations",
         title: "Text annotations in editors",
         paragraphs: [
-          "Some text areas support lightweight annotations. The editor should indicate when a field supports them. The markers are written directly in the text and are rendered in resource tables, cards, and the `Print Deck`.",
+          "Multiline text fields marked as supporting text formatting accept lightweight annotations. The markers are written directly in the text and are rendered in resource tables, cards, and the `Print Deck`.",
+          "These fields include resource descriptions, equipment notes, creature traits, actions, reactions, lair effects, spell upgrades, and other multiline text fields that display formatted content.",
         ],
         bullets: [
           "Bold: wrap text in double asterisks, for example **Important**.",
@@ -909,7 +910,8 @@ const documentation: Record<string, DocumentationContent> = {
         id: "annotations",
         title: "Annotazioni nei campi testuali",
         paragraphs: [
-          "Alcune aree di testo supportano annotazioni leggere. L'editor dovrebbe indicare quando un campo le supporta. I marcatori vengono scritti direttamente nel testo e vengono interpretati nelle tabelle, nelle carte e nel mazzo di stampa.",
+          "I campi di testo multilinea contrassegnati come compatibili con la formattazione supportano annotazioni leggere. I marcatori vengono scritti direttamente nel testo e vengono interpretati nelle tabelle, nelle carte e nel mazzo di stampa.",
+          "Questi campi includono descrizioni delle risorse, note dell'equipaggiamento, tratti, azioni, reazioni ed effetti della tana delle creature, miglioramenti degli incantesimi e altri campi multilinea che mostrano contenuti formattati.",
         ],
         bullets: [
           "Grassetto: racchiudi il testo tra due asterischi, per esempio **Importante**.",

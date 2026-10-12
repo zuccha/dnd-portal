@@ -1,4 +1,4 @@
-import { HStack, type StackProps } from "@chakra-ui/react";
+import { HStack, Text, type StackProps } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
@@ -14,6 +14,7 @@ import Checkbox from "~/ui/checkbox";
 import CostInput from "~/ui/cost-input";
 import DistanceInput from "~/ui/distance-input";
 import Field, { type FieldProps } from "~/ui/field";
+import InfoIcon from "~/ui/info-icon";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Select, { type SelectOption } from "~/ui/select";
@@ -859,7 +860,18 @@ export function createTextareaField({
   translatable?: boolean;
   useField: (defaultValue: string) => FieldBag<string, string>;
 }) {
-  const context = { ...i18nContext, ...i18nContextExtra };
+  const context = {
+    ...i18nContext,
+    ...i18nContextExtra,
+    rich_text: {
+      en: "Text formatting examples",
+      it: "Esempi di formattazione del testo",
+    },
+    rich_text_examples: {
+      en: "##Header##\n**bold**\n_italic_\n{metric|imperial}",
+      it: "##Intestazione##\n**grassetto**\n_corsivo_\n{metrico|imperiale}",
+    },
+  };
 
   function TextareaField({ defaultValue, ...rest }: TextareaFieldProps) {
     const { error, ...field } = useField(defaultValue);
@@ -867,7 +879,16 @@ export function createTextareaField({
     const message = error ? t(error) : undefined;
 
     return (
-      <Field error={message} label={t("label")} {...rest}>
+      <Field
+        error={message}
+        label={
+          <HStack gap={1} w="full">
+            <Text flex={1}>{t("label")}</Text>
+            <InfoIcon content={t("rich_text_examples")} label={t("rich_text")} />
+          </HStack>
+        }
+        {...rest}
+      >
         <Textarea
           bgColor={translatable ? "bg.info" : undefined}
           placeholder={t("placeholder")}

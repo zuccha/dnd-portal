@@ -1,11 +1,12 @@
 import { type StackProps, Text, VStack } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
 // Field
 //------------------------------------------------------------------------------
 
 export type FieldProps = StackProps & {
-  label?: string;
+  label?: ReactNode;
   error?: string;
   help?: string;
 };
@@ -14,7 +15,7 @@ export default function Field({ children, error, help, label, ...rest }: FieldPr
   return (
     <VStack align="flex-start" gap={1.5} w="full" {...rest}>
       {label && (
-        <Text fontSize="sm" fontWeight="medium" lineHeight={1.25}>
+        <Text fontSize="sm" fontWeight="medium" lineHeight={1.25} w="full">
           {label}
         </Text>
       )}
