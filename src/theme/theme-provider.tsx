@@ -1,7 +1,8 @@
 "use client";
 
-import { ChakraProvider, ClientOnly, defaultSystem, Theme as ChakraTheme } from "@chakra-ui/react";
+import { ChakraProvider, ClientOnly, Theme as ChakraTheme } from "@chakra-ui/react";
 import { type ReactNode, useLayoutEffect } from "react";
+import chakraSystem from "./chakra-system";
 import useTheme from "./use-theme";
 
 //------------------------------------------------------------------------------
@@ -20,7 +21,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, [theme]);
 
   return (
-    <ChakraProvider value={defaultSystem}>
+    <ChakraProvider value={chakraSystem}>
       <ChakraTheme appearance={theme}>
         <ClientOnly>{children}</ClientOnly>
       </ChakraTheme>
