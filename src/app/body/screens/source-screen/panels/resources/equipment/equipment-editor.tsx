@@ -1,7 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 import useBooleanOptions from "~/hooks/use-boolean-options";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { EquipmentFormData } from "~/models/resources/equipment/equipment-form";
 import type { ResourceOption } from "~/models/resources/resource";
@@ -19,6 +18,7 @@ import {
   createSelectField,
   createTextareaField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Equipment Editor
@@ -153,7 +153,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   //----------------------------------------------------------------------------
 
   return function EquipmentEditor({ children, resource, sourceId }: EquipmentEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
     const { value: magic } = useMagicField(resource.magic);
     const { value: requiredAttunementSlots } = useRequiredAttunementSlotsField(
       resource.required_attunement_slots,

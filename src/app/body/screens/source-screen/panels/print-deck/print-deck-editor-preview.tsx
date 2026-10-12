@@ -16,6 +16,7 @@ import type { PrintDeckEditorConfiguration } from "./print-deck-resource-dialog"
 
 type PrintDeckEditorPreviewProps = {
   entry: PrintDeckEntry;
+  editorLang: string;
   localizeResource: PrintDeckEditorConfiguration["localizeResource"];
   parseFormData: PrintDeckEditorConfiguration["parseFormData"];
   translationFields: TranslationFields<ResourceUnion>[];
@@ -28,6 +29,7 @@ type PrintDeckEditorPreviewProps = {
 //------------------------------------------------------------------------------
 
 export default function PrintDeckEditorPreview({
+  editorLang,
   entry,
   localizeResource,
   parseFormData,
@@ -38,13 +40,13 @@ export default function PrintDeckEditorPreview({
   const formData = useData();
 
   const previewRawResource = useMemo(() => {
-    const errorOrPatch = parseFormData(formData, entry.lang);
+    const errorOrPatch = parseFormData(formData, editorLang);
     if (typeof errorOrPatch === "string") return entry.resource;
 
     return resourceUnionSchema.parse(
       applyResourceEditorPreviewPatch(entry.resource, errorOrPatch, translationFields),
     );
-  }, [entry, formData, parseFormData, translationFields]);
+  }, [editorLang, entry, formData, parseFormData, translationFields]);
 
   const localizationContext = useLocalizationContext(entry.resource);
 

@@ -1,6 +1,5 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import { PlusIcon } from "lucide-react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { type Creature } from "~/models/resources/creatures/creature";
@@ -45,6 +44,7 @@ import {
   createSwitchField,
   createTextareaField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Creature Editor
@@ -675,7 +675,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   //----------------------------------------------------------------------------
 
   return function CreatureEditor({ resource, sourceId }: CreatureEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
     const { value: summonedFromSpell } = useSummonedFromSpellField(resource.summoned_from_spell);
     const { value: hasLair } = useHasLairField(resource.has_lair);
     const { value: languageScope } = useLanguageScopeField(resource.language_scope);

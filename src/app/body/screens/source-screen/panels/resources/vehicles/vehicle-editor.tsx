@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Vehicle } from "~/models/resources/vehicles/vehicle";
 import type { VehicleFormData } from "~/models/resources/vehicles/vehicle-form";
 import type { Form } from "~/utils/form";
@@ -11,6 +10,7 @@ import {
   createTextareaField,
   createWeightInputField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Vehicle Editor
@@ -96,7 +96,7 @@ export function createVehicleEditor(form: Form<VehicleFormData>) {
   //----------------------------------------------------------------------------
 
   return function VehicleEditor({ resource }: VehicleEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

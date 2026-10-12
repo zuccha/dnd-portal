@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Service } from "~/models/resources/services/service";
 import type { ServiceFormData } from "~/models/resources/services/service-form";
 import { useServiceCategoryOptions } from "~/models/types/service-category";
@@ -12,6 +11,7 @@ import {
   createSelectEnumField,
   createTextareaField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Service Editor
@@ -90,7 +90,7 @@ export function createServiceEditor(form: Form<ServiceFormData>) {
   //----------------------------------------------------------------------------
 
   return function ServiceEditor({ resource }: ServiceEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

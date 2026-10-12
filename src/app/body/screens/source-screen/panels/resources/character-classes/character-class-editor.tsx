@@ -22,6 +22,7 @@ import {
   createResourceSearchField,
   createSelectEnumField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 import StartingEquipmentEditor from "./starting-equipment-editor";
 
 //------------------------------------------------------------------------------
@@ -291,7 +292,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
   //----------------------------------------------------------------------------
 
   return function CharacterClassEditor({ resource, sourceId }: CharacterClassEditorProps) {
-    const { lang } = useI18nLangContext(i18nContext);
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

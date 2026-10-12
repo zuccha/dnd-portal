@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFormData } from "~/models/resources/resource-form";
 import { useResourceVisibilityOptions } from "~/models/types/resource-visibility";
@@ -9,6 +8,7 @@ import {
   createNumberInputField,
   createSelectEnumField,
 } from "./resource-editor-form";
+import { useResourceEditorLang } from "./resource-editor-language-context";
 import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
@@ -54,14 +54,8 @@ export function createResourceEditor<D extends ResourceFormData>(form: Form<D>) 
         it: "Nessuno",
       },
     },
-    i18nContextExtra: {
-      "error.empty": {
-        en: "The name cannot be empty",
-        it: "Il nome non può essere vuoto",
-      },
-    },
     translatable: true,
-    useField: form.createUseField("name", (name) => (name ? undefined : "error.empty")),
+    useField: form.createUseField("name"),
   });
 
   //----------------------------------------------------------------------------
@@ -99,7 +93,7 @@ export function createResourceEditor<D extends ResourceFormData>(form: Form<D>) 
   //----------------------------------------------------------------------------
 
   return function ResourceEditor({ children, resource }: ResourceEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <VStack align="stretch" gap={4}>

@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Feat } from "~/models/resources/feats/feat";
 import type { FeatFormData } from "~/models/resources/feats/feat-form";
 import {
@@ -17,6 +16,7 @@ import {
   createSelectField,
   createTextareaField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Feat Editor
@@ -102,7 +102,7 @@ export function createFeatEditor(form: Form<FeatFormData>) {
   //----------------------------------------------------------------------------
 
   return function FeatEditor({ resource, sourceId }: FeatEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

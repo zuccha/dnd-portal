@@ -1,4 +1,3 @@
-import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Feature } from "~/models/resources/features/feature";
 import type { FeatureFormData } from "~/models/resources/features/feature-form";
@@ -6,6 +5,7 @@ import Field from "~/ui/field";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import { createInputField, createTextareaField } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 import FeatureGrantedByEditor from "./feature-granted-by-editor";
 
 //------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
   //----------------------------------------------------------------------------
 
   return function FeatureEditor({ resource, sourceId }: FeatureEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
     const { t } = useI18nLangContext(i18nContext);
     const { error, onValueChange, value } = useGrantedByField(resource.granted_by);
 

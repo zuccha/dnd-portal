@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { Background } from "~/models/resources/backgrounds/background";
@@ -17,6 +16,7 @@ import {
   createMultipleSelectEnumField,
   createSingleResourceField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Background Editor
@@ -177,7 +177,7 @@ export function createBackgroundEditor(form: Form<BackgroundFormData>) {
   //----------------------------------------------------------------------------
 
   return function BackgroundEditor({ resource, sourceId }: BackgroundEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

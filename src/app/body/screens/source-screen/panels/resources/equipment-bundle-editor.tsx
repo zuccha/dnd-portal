@@ -16,6 +16,7 @@ import NumberInput from "~/ui/number-input";
 import Search, { type SearchRefObject } from "~/ui/search";
 import Tag from "~/ui/tag";
 import { normalizeString } from "~/utils/string";
+import { useResourceEditorLang } from "./resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Equipment Bundle Editor
@@ -37,7 +38,8 @@ export default function EquipmentBundleEditor({
   withinDialog,
   ...rest
 }: EquipmentBundleEditorProps) {
-  const { lang, t, tpi } = useI18nLangContext(i18nContext);
+  const { t, tpi } = useI18nLangContext(i18nContext);
+  const { lang } = useResourceEditorLang();
 
   const searchRef = useRef<SearchRefObject>(null);
 

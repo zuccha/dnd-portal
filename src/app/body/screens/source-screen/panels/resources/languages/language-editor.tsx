@@ -1,11 +1,11 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Language } from "~/models/resources/languages/language";
 import type { LanguageFormData } from "~/models/resources/languages/language-form";
 import { useLanguageRarityOptions } from "~/models/types/language-rarity";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import { createInputField, createSelectEnumField } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Language Editor
@@ -50,7 +50,7 @@ export function createLanguageEditor(form: Form<LanguageFormData>) {
   //----------------------------------------------------------------------------
 
   return function LanguageEditor({ resource }: LanguageEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

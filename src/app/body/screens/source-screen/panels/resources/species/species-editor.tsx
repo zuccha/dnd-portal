@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Species } from "~/models/resources/species/species";
 import type { SpeciesFormData } from "~/models/resources/species/species-form";
 import { useCreatureSizeOptions } from "~/models/types/creature-size";
@@ -13,6 +12,7 @@ import {
   createSelectEnumField,
   createTextareaField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Species Editor
@@ -93,7 +93,7 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
   //----------------------------------------------------------------------------
 
   return function SpeciesEditor({ resource, sourceId }: SpeciesEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

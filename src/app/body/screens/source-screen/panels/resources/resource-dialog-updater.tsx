@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
@@ -51,11 +51,21 @@ export function createResourceDialogUpdater<
   { Editor, form, parseFormData }: ResourceDialogUpdaterExtra<R, FF>,
   { PreviewCard }: ResourceDialogUpdaterPreviewExtra<R, L>,
 ) {
-  async function submitForm(data: Partial<FF>, { id, lang }: { id: string; lang: string }) {
+  async function submitForm(
+    data: Partial<FF>,
+    { id, lang, resource }: { id: string; lang: string; resource: R },
+  ) {
     const errorOrData = parseFormData(data, lang);
     if (typeof errorOrData === "string") return errorOrData;
 
-    return store.updateResource(id, errorOrData);
+    return store.updateResource(
+      id,
+      applyResourceEditorPreviewPatch(
+        resource,
+        errorOrData as ResourceEditorPreviewPatch<R>,
+        store.translationFields,
+      ),
+    );
   }
 
   const { useData, useSubmit, useSubmitError, useValid } = form;
@@ -111,13 +121,39 @@ export function createResourceDialogUpdater<
     const editedResource = useEditedResource();
     const editedResourceId = editedResource?.id ?? "";
     const resource = editedResource ?? store.defaultResource;
+    const formData = useData();
+    const [editorLang, setEditorLang] = useState(lang);
+    const [editorResource, setEditorResource] = useState(resource);
     const paletteName = usePaletteName();
     const showImage = useShowImage();
 
+    useEffect(() => {
+      setEditorLang(lang);
+      setEditorResource(resource);
+    }, [editedResourceId, lang, resource]);
+
+    const changeEditorLang = useCallback(
+      (nextLang: string) => {
+        const errorOrData = parseFormData(formData, editorLang);
+        if (typeof errorOrData !== "string") {
+          setEditorResource((current) =>
+            applyResourceEditorPreviewPatch(
+              current,
+              errorOrData as ResourceEditorPreviewPatch<R>,
+              store.translationFields,
+            ),
+          );
+        }
+        setEditorLang(nextLang);
+      },
+      [editorLang, formData],
+    );
+
     const [submit, saving] = useSubmit(
       useCallback(
-        (data) => submitForm(data, { id: editedResourceId, lang }),
-        [editedResourceId, lang],
+        (data) =>
+          submitForm(data, { id: editedResourceId, lang: editorLang, resource: editorResource }),
+        [editorLang, editorResource, editedResourceId],
       ),
     );
 
@@ -136,12 +172,14 @@ export function createResourceDialogUpdater<
     const valid = useValid();
     const error = useSubmitError();
 
-    const name = editedResource?.name[lang] ?? "";
+    const name = editorResource.name[editorLang] ?? "";
 
     return (
       <ResourceDialog
+        editorLang={editorLang}
         error={error}
         onClose={unsetEditedResource}
+        onEditorLangChange={changeEditorLang}
         onCopyToClipboard={form.copyDataToClipboard}
         onPasteFromClipboard={form.pasteDataFromClipboard}
         onPrimaryAction={save}
@@ -149,9 +187,9 @@ export function createResourceDialogUpdater<
         open={!!editedResource}
         preview={
           <Preview
-            lang={lang}
+            lang={editorLang}
             paletteName={paletteName}
-            resource={resource}
+            resource={editorResource}
             showImage={showImage}
           />
         }
@@ -161,7 +199,11 @@ export function createResourceDialogUpdater<
         title={name ? ti("title", name) : t("title.empty")}
         valid={valid}
       >
-        <Editor resource={editedResource ?? store.defaultResource} sourceId={sourceId} />
+        <Editor
+          key={`${editedResourceId}:${editorLang}`}
+          resource={editorResource}
+          sourceId={sourceId}
+        />
       </ResourceDialog>
     );
   };

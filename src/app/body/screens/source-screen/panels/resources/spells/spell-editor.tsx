@@ -1,5 +1,4 @@
 import { HStack, VStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { type Spell } from "~/models/resources/spells/spell";
 import type { SpellFormData } from "~/models/resources/spells/spell-form";
@@ -24,6 +23,7 @@ import {
   createTextareaField,
   createTimeInputField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Spell Editor
@@ -203,7 +203,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
   //----------------------------------------------------------------------------
 
   return function SpellEditor({ sourceId, resource }: SpellEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     const { value: castingTime } = useCastingTime(resource.casting_time);
     const { value: duration } = useDuration(resource.duration);

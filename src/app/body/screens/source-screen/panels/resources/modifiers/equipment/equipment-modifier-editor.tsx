@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
 import type { EquipmentModifierFormData } from "~/models/resources/modifiers/equipment/equipment-modifier-form";
 import type { ResourceOption } from "~/models/resources/resource";
@@ -16,6 +15,7 @@ import {
   createTextareaField,
   createWeightInputField,
 } from "../../resource-editor-form";
+import { useResourceEditorLang } from "../../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Equipment Modifier Editor
@@ -166,7 +166,7 @@ export function createEquipmentModifierEditor<F extends EquipmentModifierFormDat
   //----------------------------------------------------------------------------
 
   return function EquipmentModifierEditor({ resource, sourceId }: EquipmentModifierEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
     const { value: makeMagic } = useMakeMagic(resource.make_magic);
     const { value: requiredAttunementSlotsMinimum } = useRequiredAttunementSlotsMinimum(
       resource.required_attunement_slots_minimum,

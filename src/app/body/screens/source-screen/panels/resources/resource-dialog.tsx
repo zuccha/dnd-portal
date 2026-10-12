@@ -1,9 +1,15 @@
-import { Box, CloseButton, Dialog, Menu, Portal, Text } from "@chakra-ui/react";
+import { Box, Dialog, HStack, Menu, Portal, Text } from "@chakra-ui/react";
 import { EllipsisVerticalIcon, EyeIcon, PencilIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { i18nLangProviderContext } from "~/i18n/i18n-lang-provider-context";
+import { langOptions } from "~/models/lang";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
+import Select from "~/ui/select";
+import { resourceEditorLanguageContext } from "./resource-editor-language-context";
+
+const noopSetLang = () => "";
 
 //------------------------------------------------------------------------------
 // Resource Dialog
@@ -12,6 +18,8 @@ import IconButton from "~/ui/icon-button";
 export type ResourceDialogProps = {
   children: ReactNode;
   error: string | undefined;
+  editorLang: string;
+  onEditorLangChange: (lang: string) => void;
   title: string;
   onClose: () => void;
   onCopyToClipboard: () => Promise<void>;
@@ -29,6 +37,8 @@ export type ResourceDialogProps = {
 export default function ResourceDialog({
   children,
   error,
+  editorLang,
+  onEditorLangChange,
   onClose,
   onCopyToClipboard,
   onPasteFromClipboard,
@@ -63,33 +73,46 @@ export default function ResourceDialog({
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header alignItems="center" gap={0}>
-              <Menu.Root>
-                <Menu.Trigger asChild focusRing="outside" rounded="full">
-                  <IconButton Icon={EllipsisVerticalIcon} label={""} size="xs" variant="ghost" />
-                </Menu.Trigger>
-                <Menu.Positioner>
-                  <Menu.Content>
-                    <Menu.Item onClick={onCopyToClipboard} value="data.copy">
-                      {t("data.copy")}
-                    </Menu.Item>
-                    <Menu.Item onClick={onPasteFromClipboard} value="data.paste">
-                      {t("data.paste")}
-                    </Menu.Item>
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Menu.Root>
-
-              <IconButton
-                Icon={previewVisible ? PencilIcon : EyeIcon}
-                label={previewVisible ? t("edit") : t("preview")}
-                onClick={() => setPreviewVisible((visible) => !visible)}
-                size="xs"
-                variant="ghost"
-              />
-
-              <Dialog.Title flex={1} minW={0} ml={2}>
+              <Dialog.Title flex={1} minW={0}>
                 {title}
               </Dialog.Title>
+
+              <HStack flexShrink={0} gap={2}>
+                <IconButton
+                  Icon={previewVisible ? PencilIcon : EyeIcon}
+                  label={previewVisible ? t("edit") : t("preview")}
+                  onClick={() => setPreviewVisible((visible) => !visible)}
+                  rounded="sm"
+                  size="sm"
+                  variant="outline"
+                />
+
+                <Select.Enum
+                  flexShrink={0}
+                  onValueChange={onEditorLangChange}
+                  options={langOptions}
+                  size="sm"
+                  value={editorLang}
+                  withinDialog
+                  w="8em"
+                />
+
+                <Menu.Root>
+                  <Menu.Trigger asChild focusRing="outside" rounded="full">
+                    <IconButton Icon={EllipsisVerticalIcon} label={""} size="sm" variant="ghost" />
+                  </Menu.Trigger>
+                  <Menu.Positioner>
+                    <Menu.Content>
+                      <Menu.Item onClick={onCopyToClipboard} value="data.copy">
+                        {t("data.copy")}
+                      </Menu.Item>
+                      <Menu.Item onClick={onPasteFromClipboard} value="data.paste">
+                        {t("data.paste")}
+                      </Menu.Item>
+                    </Menu.Content>
+                  </Menu.Positioner>
+                </Menu.Root>
+              </HStack>
             </Dialog.Header>
 
             <Dialog.Body>
@@ -101,7 +124,11 @@ export default function ResourceDialog({
                   position={previewVisible ? "absolute" : "relative"}
                   w="full"
                 >
-                  {children}
+                  <resourceEditorLanguageContext.Provider
+                    value={{ lang: editorLang, setLang: () => editorLang }}
+                  >
+                    {children}
+                  </resourceEditorLanguageContext.Provider>
                 </Box>
                 <Box
                   aria-hidden={!previewVisible}
@@ -111,7 +138,11 @@ export default function ResourceDialog({
                   position={previewVisible ? "relative" : "absolute"}
                   w="full"
                 >
-                  {preview}
+                  <i18nLangProviderContext.Provider
+                    value={{ lang: editorLang, setLang: noopSetLang }}
+                  >
+                    {preview}
+                  </i18nLangProviderContext.Provider>
                 </Box>
               </Box>
 
@@ -140,10 +171,6 @@ export default function ResourceDialog({
                 {primaryActionText}
               </Button>
             </Dialog.Footer>
-
-            <Dialog.CloseTrigger asChild>
-              <CloseButton disabled={saving} size="sm" />
-            </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

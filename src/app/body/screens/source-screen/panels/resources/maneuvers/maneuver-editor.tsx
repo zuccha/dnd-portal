@@ -1,9 +1,9 @@
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Maneuver } from "~/models/resources/maneuvers/maneuver";
 import type { ManeuverFormData } from "~/models/resources/maneuvers/maneuver-form";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import { createInputField, createTextareaField } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Maneuver Editor
@@ -52,7 +52,7 @@ export function createManeuverEditor(form: Form<ManeuverFormData>) {
   //----------------------------------------------------------------------------
 
   return function ManeuverEditor({ resource }: ManeuverEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { i18nLangProviderContext } from "~/i18n/i18n-lang-provider-context";
 import { translate } from "~/i18n/i18n-string";
@@ -56,28 +56,48 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
 
   function PrintDeckResourceDialog({ entry, onClose }: PrintDeckResourceDialogProps) {
     const { t, ti } = useI18nLangContext(i18nContext);
+    const [editorLang, setEditorLang] = useState(entry.lang);
+    const formData = useData();
+    const [editorResource, setEditorResource] = useState(entry.resource);
     const langContextValue = useMemo(
-      () => ({ lang: entry.lang, setLang: noopSetLang }),
-      [entry.lang],
+      () => ({ lang: editorLang, setLang: noopSetLang }),
+      [editorLang],
     );
 
     useEffect(() => {
       form.reset();
-    }, [entry.id]);
+      setEditorLang(entry.lang);
+      setEditorResource(entry.resource);
+    }, [entry.id, entry.lang, entry.resource]);
+
+    const changeEditorLang = useCallback(
+      (nextLang: string) => {
+        const errorOrPatch = parseFormData(formData, editorLang);
+        if (typeof errorOrPatch !== "string") {
+          setEditorResource((current) =>
+            resourceUnionSchema.parse(
+              applyResourceEditorPreviewPatch(current, errorOrPatch, translationFields),
+            ),
+          );
+        }
+        setEditorLang(nextLang);
+      },
+      [editorLang, formData],
+    );
 
     const updateEntry = useCallback(
       async (data: Partial<Record<string, unknown>>) => {
-        const errorOrPatch = parseFormData(data, entry.lang);
+        const errorOrPatch = parseFormData(data, editorLang);
         if (typeof errorOrPatch === "string") return errorOrPatch;
 
         const nextRawResource = resourceUnionSchema.parse(
-          applyResourceEditorPreviewPatch(entry.resource, errorOrPatch, translationFields),
+          applyResourceEditorPreviewPatch(editorResource, errorOrPatch, translationFields),
         );
         printDeck.updateEntry(entry.id, { ...entry, resource: nextRawResource });
 
         return undefined;
       },
-      [entry],
+      [editorLang, editorResource, entry],
     );
 
     const [submit, saving] = useSubmit(updateEntry);
@@ -90,8 +110,10 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
 
     return (
       <ResourceDialog
+        editorLang={editorLang}
         error={error}
         onClose={onClose}
+        onEditorLangChange={changeEditorLang}
         onCopyToClipboard={form.copyDataToClipboard}
         onPasteFromClipboard={form.pasteDataFromClipboard}
         onPrimaryAction={save}
@@ -100,7 +122,8 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
         preview={
           <i18nLangProviderContext.Provider value={langContextValue}>
             <PrintDeckEditorPreview
-              entry={entry}
+              entry={{ ...entry, resource: editorResource }}
+              editorLang={editorLang}
               localizeResource={localizeResource}
               parseFormData={parseFormData}
               translationFields={translationFields}
@@ -112,10 +135,14 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
         primaryActionText={t("save")}
         saving={saving}
         secondaryActionText={t("save_and_close")}
-        title={ti("title", translate(entry.resource.name, entry.lang))}
+        title={ti("title", translate(editorResource.name, entry.lang))}
         valid={valid}
       >
-        <Editor resource={entry.resource} sourceId={entry.resource.source_id} />
+        <Editor
+          key={`${entry.id}:${editorLang}`}
+          resource={editorResource}
+          sourceId={entry.resource.source_id}
+        />
       </ResourceDialog>
     );
   }

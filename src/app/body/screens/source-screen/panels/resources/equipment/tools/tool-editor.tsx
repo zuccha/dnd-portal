@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import type { ToolFormData } from "~/models/resources/equipment/tools/tool-form";
@@ -12,6 +11,7 @@ import {
   createSelectEnumField,
   createTextareaField,
 } from "../../resource-editor-form";
+import { useResourceEditorLang } from "../../resource-editor-language-context";
 import { createEquipmentEditor } from "../equipment-editor";
 
 //------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ export function createToolEditor(form: Form<ToolFormData>) {
   //----------------------------------------------------------------------------
 
   return function ToolEditor({ sourceId, resource }: ToolEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <EquipmentEditor resource={resource} sourceId={sourceId}>

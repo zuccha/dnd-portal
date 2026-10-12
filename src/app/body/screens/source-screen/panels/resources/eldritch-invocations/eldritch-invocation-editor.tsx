@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { EldritchInvocation } from "~/models/resources/eldritch-invocations/eldritch-invocation";
 import type { EldritchInvocationFormData } from "~/models/resources/eldritch-invocations/eldritch-invocation-form";
 import {
@@ -10,6 +9,7 @@ import {
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import { createInputField, createSelectField, createTextareaField } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Eldritch Invocation Editor
@@ -74,7 +74,7 @@ export function createEldritchInvocationEditor(form: Form<EldritchInvocationForm
   //----------------------------------------------------------------------------
 
   return function EldritchInvocationEditor({ resource }: EldritchInvocationEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>

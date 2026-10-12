@@ -1,5 +1,4 @@
 import { HStack } from "@chakra-ui/react";
-import { useI18nLang } from "~/i18n/i18n-lang";
 import type { Metamagic } from "~/models/resources/metamagics/metamagic";
 import type { MetamagicFormData } from "~/models/resources/metamagics/metamagic-form";
 import type { Form } from "~/utils/form";
@@ -9,6 +8,7 @@ import {
   createNumberInputField,
   createTextareaField,
 } from "../resource-editor-form";
+import { useResourceEditorLang } from "../resource-editor-language-context";
 
 //------------------------------------------------------------------------------
 // Create Metamagic Editor
@@ -69,7 +69,7 @@ export function createMetamagicEditor(form: Form<MetamagicFormData>) {
   //----------------------------------------------------------------------------
 
   return function MetamagicEditor({ resource }: MetamagicEditorProps) {
-    const [lang] = useI18nLang();
+    const { lang } = useResourceEditorLang();
 
     return (
       <ResourceEditor resource={resource}>
