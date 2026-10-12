@@ -1,13 +1,16 @@
 import { Menu, Portal } from "@chakra-ui/react";
-import { EllipsisVerticalIcon } from "lucide-react";
+import { EllipsisVerticalIcon, PrinterIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSourceEditable } from "~/models/catalogue/catalogue";
+import { printDeck } from "~/models/print-deck/print-deck-store";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { resourceUnionSchema } from "~/models/resources/resource-union";
 import Button from "~/ui/button";
+import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
 import Section from "~/ui/section";
 import { toaster } from "~/ui/toaster";
@@ -27,13 +30,15 @@ export function createResourcesActions<
   F extends ResourceFilters,
 >(store: ResourceStore<R, L, F>, context: ResourcesContext<R>) {
   const { useFilteredResourceIds } = store;
+  const usePaletteName = context.usePaletteName;
 
   const { deselectResources, selectResources, useSelectedResourceIds } = store;
   return function ResourcesActions({ sourceId }: ResourcesActionsProps) {
-    const { t, tp, tpi } = useI18nLangContext(i18nContext);
+    const { lang, t, tp, tpi } = useI18nLangContext(i18nContext);
     const filteredResourceIds = useFilteredResourceIds(sourceId);
     const selectedFilteredResourceIds = useSelectedResourceIds(filteredResourceIds);
     const sourceEditable = useSourceEditable(sourceId);
+    const paletteName = usePaletteName();
 
     const addNew = useCallback(() => {
       context.setCreatedResource(store.defaultResource);
@@ -61,7 +66,31 @@ export function createResourcesActions<
       }
     }, [selectedFilteredResourceIds, t, tp, tpi]);
 
+    const addSelectedToPrintDeck = useCallback(() => {
+      const entries = selectedFilteredResourceIds.flatMap((resourceId) => {
+        const resource = store.getResource(resourceId);
+        return resource
+          ? [
+              {
+                lang,
+                palette_name: paletteName,
+                resource: resourceUnionSchema.parse(resource),
+              },
+            ]
+          : [];
+      });
+
+      if (!entries.length) return;
+
+      printDeck.addEntries(entries);
+      toaster.info({
+        description: tpi("print_deck.added.description", entries.length, `${entries.length}`),
+        title: t("print_deck.added.title"),
+      });
+    }, [lang, paletteName, selectedFilteredResourceIds, t, tpi]);
+
     const hasSelection = selectedFilteredResourceIds.length > 0;
+    const canAddSelectedToPrintDeck = hasSelection;
     const allFilteredSelected = selectedFilteredResourceIds.length === filteredResourceIds.length;
 
     return (
@@ -122,6 +151,16 @@ export function createResourcesActions<
             {t("add")}
           </Button>
         )}
+        <Button
+          disabled={!canAddSelectedToPrintDeck}
+          onClick={addSelectedToPrintDeck}
+          size="sm"
+          variant="outline"
+          w="full"
+        >
+          <Icon Icon={PrinterIcon} size="sm" />
+          {t("print_deck.add_selected")}
+        </Button>
       </Section>
     );
   };
@@ -143,6 +182,22 @@ const i18nContext = {
   "deselect_all": {
     en: "Deselect all",
     it: "Deseleziona tutti",
+  },
+  "print_deck.add_selected": {
+    en: "Add to print deck",
+    it: "Prepara per la stampa",
+  },
+  "print_deck.added.description/*": {
+    en: "<1> resources added to the print deck.",
+    it: "<1> risorse aggiunte al mazzo di stampa.",
+  },
+  "print_deck.added.description/1": {
+    en: "1 resource added to the print deck.",
+    it: "1 risorsa aggiunta al mazzo di stampa.",
+  },
+  "print_deck.added.title": {
+    en: "Added to print deck",
+    it: "Aggiunto al mazzo di stampa",
   },
   "remove": {
     en: "Delete selected",
