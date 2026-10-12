@@ -95,10 +95,6 @@ const i18nContext = {
     en: "Groups",
     it: "Gruppi",
   },
-  [Route.ResourcesBlocks]: {
-    en: "Blocks",
-    it: "Blocchi",
-  },
   [Route.ResourcesBlocksFeatures]: {
     en: "Features",
     it: "Privilegi",

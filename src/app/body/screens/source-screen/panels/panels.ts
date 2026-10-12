@@ -35,6 +35,7 @@ export const characterPanelIds = [
   panelItem(Route.ResourcesCharacterBackgrounds),
   panelItem(Route.ResourcesCharacterSpecies),
   panelItem(Route.ResourcesCharacterFeats),
+  panelItem(Route.ResourcesBlocksFeatures),
 ] as const;
 
 export type CharacterPanelId = (typeof characterPanelIds)[number]["route"];
@@ -51,14 +52,6 @@ export const abilitiesPanelIds = [
 ] as const;
 
 export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number]["route"];
-
-//------------------------------------------------------------------------------
-// Blocks Panel Ids
-//------------------------------------------------------------------------------
-
-export const blocksPanelIds = [panelItem(Route.ResourcesBlocksFeatures)] as const;
-
-export type BlocksPanelId = (typeof blocksPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // Equipment Panel Ids
@@ -105,7 +98,6 @@ export type WorldPanelId = (typeof worldPanelIds)[number]["route"];
 
 export const resourcePanels = [
   { id: Route.ResourcesCharacter, items: characterPanelIds },
-  { id: Route.ResourcesBlocks, items: blocksPanelIds },
   { id: Route.ResourcesAbilities, items: abilitiesPanelIds },
   { id: Route.ResourcesBestiary, items: bestiaryPanelIds },
   { id: Route.ResourcesEquipment, items: equipmentPanelIds },
