@@ -19,3 +19,21 @@ export function applyResourceEditorPreviewPatch<R extends Resource>(
 ): R {
   return mergeResourcePatch(resource, patch, translationFields);
 }
+
+//------------------------------------------------------------------------------
+// Apply Resource Editor Paste
+//------------------------------------------------------------------------------
+
+export function applyResourceEditorPaste<R extends Resource>(
+  resource: R,
+  pastedResource: Resource,
+  editableFields: string[],
+): R {
+  const patch = Object.fromEntries(
+    editableFields
+      .filter((field) => field in pastedResource)
+      .map((field) => [field, (pastedResource as Record<string, unknown>)[field]]),
+  ) as Partial<R>;
+
+  return { ...resource, ...patch };
+}

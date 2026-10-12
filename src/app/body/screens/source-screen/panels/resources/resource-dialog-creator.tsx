@@ -4,11 +4,14 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import { resourceUnionSchema } from "~/models/resources/resource-union";
+import { toaster } from "~/ui/toaster";
 import type { Form } from "~/utils/form";
 import { palettes } from "~/utils/palette";
 import ResourceCardPreview from "./resource-card-preview";
 import ResourceDialog from "./resource-dialog";
 import {
+  applyResourceEditorPaste,
   type ResourceEditorPreviewPatch,
   applyResourceEditorPreviewPatch,
 } from "./resource-editor-preview";
@@ -59,14 +62,13 @@ export function createResourceDialogCreator<
     const errorOrData = parseFormData(data, lang);
     if (typeof errorOrData === "string") return errorOrData;
 
-    const error = await store.createResource(
-      sourceId,
-      applyResourceEditorPreviewPatch(
-        resource,
-        errorOrData as ResourceEditorPreviewPatch<R>,
-        store.translationFields,
-      ),
+    const nextResource = applyResourceEditorPreviewPatch(
+      resource,
+      errorOrData as ResourceEditorPreviewPatch<R>,
+      store.translationFields,
     );
+    const { id: _id, ...resourcePatch } = nextResource;
+    const error = await store.createResource(sourceId, resourcePatch as Partial<R>);
 
     return error;
   }
@@ -126,6 +128,7 @@ export function createResourceDialogCreator<
     const formData = useData();
     const [editorLang, setEditorLang] = useState(lang);
     const [editorResource, setEditorResource] = useState(resource);
+    const [editorRevision, setEditorRevision] = useState(0);
     const paletteName = usePaletteName();
     const showImage = useShowImage();
 
@@ -150,6 +153,43 @@ export function createResourceDialogCreator<
       },
       [editorLang, formData],
     );
+
+    const copyResourceToClipboard = useCallback(async () => {
+      const errorOrData = parseFormData(formData, editorLang);
+      const draftResource =
+        typeof errorOrData === "string"
+          ? editorResource
+          : applyResourceEditorPreviewPatch(
+              editorResource,
+              errorOrData as ResourceEditorPreviewPatch<R>,
+              store.translationFields,
+            );
+      await navigator.clipboard.writeText(JSON.stringify(draftResource, null, 2));
+    }, [editorLang, editorResource, formData]);
+
+    const pasteResourceFromClipboard = useCallback(async () => {
+      try {
+        const pastedResource = resourceUnionSchema.parse(
+          JSON.parse(await navigator.clipboard.readText()),
+        );
+        if (pastedResource.kind !== editorResource.kind) {
+          toaster.error({
+            description: t("paste_incompatible"),
+            title: t("paste_error"),
+          });
+          return;
+        }
+        setEditorResource(
+          applyResourceEditorPaste(editorResource, pastedResource, Object.keys(formData)),
+        );
+        setEditorRevision((revision) => revision + 1);
+      } catch {
+        toaster.error({
+          description: t("paste_invalid"),
+          title: t("paste_error"),
+        });
+      }
+    }, [editorResource, formData, t]);
 
     const [submit, saving] = useSubmit(
       useCallback(
@@ -181,8 +221,8 @@ export function createResourceDialogCreator<
         error={error}
         onClose={unsetCreatedResource}
         onEditorLangChange={changeEditorLang}
-        onCopyToClipboard={form.copyDataToClipboard}
-        onPasteFromClipboard={form.pasteDataFromClipboard}
+        onCopyToClipboard={copyResourceToClipboard}
+        onPasteFromClipboard={pasteResourceFromClipboard}
         onPrimaryAction={createAndAddMore}
         onSecondaryAction={createAndClose}
         open={!!createdResource}
@@ -201,7 +241,7 @@ export function createResourceDialogCreator<
         valid={valid}
       >
         <Editor
-          key={`${createdResource?.id ?? "new"}:${editorLang}`}
+          key={`${createdResource?.id ?? "new"}:${editorLang}:${editorRevision}`}
           resource={editorResource}
           sourceId={sourceId}
         />
@@ -226,5 +266,17 @@ const i18nContext = {
   title: {
     en: "Create new",
     it: "Crea nuovo",
+  },
+  paste_error: {
+    en: "Unable to paste resource",
+    it: "Impossibile incollare la risorsa",
+  },
+  paste_incompatible: {
+    en: "The copied resource has a different type.",
+    it: "La risorsa copiata è di un tipo diverso.",
+  },
+  paste_invalid: {
+    en: "The clipboard content is not a valid resource.",
+    it: "Il contenuto degli appunti non è una risorsa valida.",
   },
 };

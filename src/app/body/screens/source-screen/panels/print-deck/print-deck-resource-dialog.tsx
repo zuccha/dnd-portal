@@ -7,9 +7,13 @@ import { printDeck } from "~/models/print-deck/print-deck-store";
 import type { TranslationFields } from "~/models/resources/resource";
 import type { LocalizedResourceUnion, ResourceUnion } from "~/models/resources/resource-union";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
+import { toaster } from "~/ui/toaster";
 import { type Form } from "~/utils/form";
 import ResourceDialog from "../resources/resource-dialog";
-import { applyResourceEditorPreviewPatch } from "../resources/resource-editor-preview";
+import {
+  applyResourceEditorPaste,
+  applyResourceEditorPreviewPatch,
+} from "../resources/resource-editor-preview";
 import PrintDeckEditorPreview from "./print-deck-editor-preview";
 
 const noopSetLang = () => "";
@@ -59,6 +63,7 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
     const [editorLang, setEditorLang] = useState(entry.lang);
     const formData = useData();
     const [editorResource, setEditorResource] = useState(entry.resource);
+    const [editorRevision, setEditorRevision] = useState(0);
     const langContextValue = useMemo(
       () => ({ lang: editorLang, setLang: noopSetLang }),
       [editorLang],
@@ -84,6 +89,41 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
       },
       [editorLang, formData],
     );
+
+    const copyResourceToClipboard = useCallback(async () => {
+      const errorOrPatch = parseFormData(formData, editorLang);
+      const draftResource =
+        typeof errorOrPatch === "string"
+          ? editorResource
+          : resourceUnionSchema.parse(
+              applyResourceEditorPreviewPatch(editorResource, errorOrPatch, translationFields),
+            );
+      await navigator.clipboard.writeText(JSON.stringify(draftResource, null, 2));
+    }, [editorLang, editorResource, formData]);
+
+    const pasteResourceFromClipboard = useCallback(async () => {
+      try {
+        const pastedResource = resourceUnionSchema.parse(
+          JSON.parse(await navigator.clipboard.readText()),
+        );
+        if (pastedResource.kind !== editorResource.kind) {
+          toaster.error({
+            description: t("paste_incompatible"),
+            title: t("paste_error"),
+          });
+          return;
+        }
+        setEditorResource(
+          applyResourceEditorPaste(editorResource, pastedResource, Object.keys(formData)),
+        );
+        setEditorRevision((revision) => revision + 1);
+      } catch {
+        toaster.error({
+          description: t("paste_invalid"),
+          title: t("paste_error"),
+        });
+      }
+    }, [editorResource, formData, t]);
 
     const updateEntry = useCallback(
       async (data: Partial<Record<string, unknown>>) => {
@@ -114,8 +154,8 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
         error={error}
         onClose={onClose}
         onEditorLangChange={changeEditorLang}
-        onCopyToClipboard={form.copyDataToClipboard}
-        onPasteFromClipboard={form.pasteDataFromClipboard}
+        onCopyToClipboard={copyResourceToClipboard}
+        onPasteFromClipboard={pasteResourceFromClipboard}
         onPrimaryAction={save}
         onSecondaryAction={saveAndClose}
         open
@@ -139,7 +179,7 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
         valid={valid}
       >
         <Editor
-          key={`${entry.id}:${editorLang}`}
+          key={`${entry.id}:${editorLang}:${editorRevision}`}
           resource={editorResource}
           sourceId={entry.resource.source_id}
         />
@@ -166,5 +206,17 @@ const i18nContext = {
   title: {
     en: 'Edit "<1>"',
     it: 'Modifica "<1>"',
+  },
+  paste_error: {
+    en: "Unable to paste resource",
+    it: "Impossibile incollare la risorsa",
+  },
+  paste_incompatible: {
+    en: "The copied resource has a different type.",
+    it: "La risorsa copiata è di un tipo diverso.",
+  },
+  paste_invalid: {
+    en: "The clipboard content is not a valid resource.",
+    it: "Il contenuto degli appunti non è una risorsa valida.",
   },
 };
