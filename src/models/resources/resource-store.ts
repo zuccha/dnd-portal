@@ -53,6 +53,11 @@ type ResourceStoreOptions<
   defaultResource: R;
   displayName: I18nString;
   filtersSchema: ZodType<F>;
+  normalizeFilters?: (
+    filters: F,
+    resourceIds: readonly string[],
+    getResource: (resourceId: string) => R | undefined,
+  ) => F;
   matchesResource?: ResourceMatcher<R, F>;
   compareResources?: ResourceComparator<R, F>;
   orderOptions: { label: I18nString; value: string }[];
@@ -76,6 +81,7 @@ export function createResourceStore<
     defaultResource,
     displayName,
     filtersSchema,
+    normalizeFilters = (filters) => filters,
     matchesResource = () => true,
     compareResources: compareStoreResources = compareResources,
     orderOptions,
@@ -298,7 +304,11 @@ export function createResourceStore<
     const [filters] = useFilters();
     const [lang] = useI18nLang();
     const resourceIds = useResourceIds(sourceId);
-    const normalizedName = normalizeString(filters.name);
+    const effectiveFilters = useMemo(
+      () => normalizeFilters(filters, resourceIds, getResource),
+      [filters, resourceIds],
+    );
+    const normalizedName = normalizeString(effectiveFilters.name);
 
     return useMemo(
       () =>
@@ -306,15 +316,17 @@ export function createResourceStore<
           .filter((resourceId) => {
             const resource = getResource(resourceId);
             if (!resource) return false;
-            return matchesName(resource, normalizedName) && matchesResource(resource, filters);
+            return (
+              matchesName(resource, normalizedName) && matchesResource(resource, effectiveFilters)
+            );
           })
           .sort((aId, bId) => {
             const a = getResource(aId);
             const b = getResource(bId);
             if (!a || !b) return 0;
-            return compareStoreResources(a, b, filters, lang);
+            return compareStoreResources(a, b, effectiveFilters, lang);
           }),
-      [filters, lang, normalizedName, resourceIds],
+      [effectiveFilters, lang, normalizedName, resourceIds],
     );
   }
 

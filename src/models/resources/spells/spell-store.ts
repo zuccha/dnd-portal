@@ -23,6 +23,14 @@ export const spellStore = createResourceStore("spell", {
   defaultResource: defaultSpell,
   displayName: { en: "Spells", it: "Incantesimi" },
   filtersSchema: spellFiltersSchema,
+  normalizeFilters: (filters, resourceIds, getResource) => ({
+    ...filters,
+    character_class_ids: Object.fromEntries(
+      Object.entries(filters.character_class_ids ?? {}).filter(([id]) =>
+        resourceIds.some((resourceId) => getResource(resourceId)?.character_class_ids.includes(id)),
+      ),
+    ),
+  }),
   matchesResource: (spell, filters) =>
     matchesBoolean(spell.concentration, filters.concentration) &&
     matchesBoolean(spell.material, filters.material) &&

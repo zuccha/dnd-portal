@@ -20,6 +20,14 @@ const characterSubclassResourceStore = createResourceStore("character_subclass",
   defaultResource: defaultCharacterSubclass,
   displayName: { en: "Subclasses", it: "Sottoclassi" },
   filtersSchema: characterSubclassFiltersSchema,
+  normalizeFilters: (filters, resourceIds, getResource) => ({
+    ...filters,
+    character_class_ids: Object.fromEntries(
+      Object.entries(filters.character_class_ids ?? {}).filter(([id]) =>
+        resourceIds.some((resourceId) => getResource(resourceId)?.character_class_id === id),
+      ),
+    ),
+  }),
   matchesResource: (characterSubclass, filters) =>
     matchesInclusion(characterSubclass.character_class_id, filters.character_class_ids),
   orderOptions: characterSubclassOrderOptions,
