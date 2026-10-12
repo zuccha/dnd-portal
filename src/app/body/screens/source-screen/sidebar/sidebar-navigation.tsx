@@ -70,6 +70,11 @@ export default function SidebarNavigation() {
         label={t("print_deck")}
         onClick={() => navigate(Route.PrintDeck)}
       />
+      <SidebarNavigationButton
+        active={route === Route.Guide}
+        label={t("info")}
+        onClick={() => navigate(Route.Guide)}
+      />
     </VStack>
   );
 }
@@ -82,6 +87,10 @@ const i18nContext = {
   home: {
     en: "Home",
     it: "Home",
+  },
+  info: {
+    en: "Guide",
+    it: "Guida",
   },
   print_deck: {
     en: "Print Deck",

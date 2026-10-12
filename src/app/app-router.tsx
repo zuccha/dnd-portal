@@ -2,6 +2,7 @@ import { Navigate, Route as RouterRoute, Routes } from "react-router";
 import { Route } from "../navigation/routes";
 import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
 import SignUpScreen from "./body/screens/sign-up-screen/sign-up-screen";
+import GuidePanel from "./body/screens/source-screen/panels/guide/guide-panel";
 import HomePanel from "./body/screens/source-screen/panels/home/home-panel";
 import PrintDeckPanel from "./body/screens/source-screen/panels/print-deck/print-deck-panel";
 import BackgroundsPanel from "./body/screens/source-screen/panels/resources/backgrounds/backgrounds-panel";
@@ -44,6 +45,7 @@ export default function AppRouter() {
       <RouterRoute element={<SignUpScreen />} path={Route.SignUp} />
       <RouterRoute element={<SourceScreen />} path="/">
         <RouterRoute element={<HomePanel />} index />
+        <RouterRoute element={<GuidePanel />} path="guide" />
         <RouterRoute element={<SourcesPanel />} path="sources" />
         <RouterRoute element={<SourceSettingsRoute />} path="sources/:sourceId" />
         <RouterRoute element={<PrintDeckPanel />} path="print-deck" />

@@ -4,6 +4,7 @@
 
 export const Route = {
   _: "/",
+  Guide: "/guide",
   PrintDeck: "/print-deck",
   Resources: "/resources",
   ResourcesAbilities: "/resources/abilities",
