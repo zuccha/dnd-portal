@@ -35,6 +35,7 @@ import { useTranslateSourceVersion } from "~/models/types/source-version";
 import { sourceSettingsRoute } from "~/navigation/routes";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
+import ConfirmationDialog from "~/ui/confirmation-dialog";
 import SectionHeading from "~/ui/section-heading";
 import { downloadFile } from "~/utils/download";
 import SourceCreateDialog from "./source-create-dialog";
@@ -81,6 +82,15 @@ type SourceImportPrompt = {
 };
 
 //------------------------------------------------------------------------------
+// Source Confirmation Prompt
+//------------------------------------------------------------------------------
+
+type SourceConfirmationPrompt = {
+  action: "make-local" | "make-official";
+  source: Source;
+};
+
+//------------------------------------------------------------------------------
 // Sources Panel
 //------------------------------------------------------------------------------
 
@@ -106,6 +116,7 @@ export default function SourcesPanel() {
   const [dependencyPrompt, setDependencyPrompt] = useState<SourceDependencyPrompt>();
   const [importPrompt, setImportPrompt] = useState<SourceImportPrompt>();
   const [removalPrompt, setRemovalPrompt] = useState<SourceRemovalPrompt>();
+  const [confirmationPrompt, setConfirmationPrompt] = useState<SourceConfirmationPrompt>();
   const localSourcesById = useMemo(
     () => new Map(sources.map((source) => [source.id, source])),
     [sources],
@@ -479,9 +490,8 @@ export default function SourcesPanel() {
   const downloadRegistrySource = async (registrySource: Source) => {
     const officialSource =
       registrySources.find(({ id }) => id === registrySource.id) ?? registrySource;
-    const installedSource = localSourcesById.get(officialSource.id);
-    if (installedSource && !confirm(ti("make_official.confirm", officialSource.code))) return;
 
+    setConfirmationPrompt(undefined);
     setBusySourceId(officialSource.id);
     setError(undefined);
 
@@ -518,8 +528,9 @@ export default function SourcesPanel() {
   //----------------------------------------------------------------------------
 
   const makeSourceLocal = async (source: Source) => {
-    if (!source.registry || !confirm(ti("make_local.confirm", source.code))) return;
+    if (!source.registry) return;
 
+    setConfirmationPrompt(undefined);
     setBusySourceId(source.id);
     setError(undefined);
 
@@ -531,6 +542,40 @@ export default function SourcesPanel() {
     } finally {
       setBusySourceId(undefined);
     }
+  };
+
+  //------------------------------------------------------------------------------
+  // Request Registry Source Download
+  //------------------------------------------------------------------------------
+
+  const requestRegistrySourceDownload = (registrySource: Source) => {
+    const officialSource =
+      registrySources.find(({ id }) => id === registrySource.id) ?? registrySource;
+    if (localSourcesById.has(officialSource.id)) {
+      setConfirmationPrompt({ action: "make-official", source: officialSource });
+      return;
+    }
+    void downloadRegistrySource(officialSource);
+  };
+
+  //------------------------------------------------------------------------------
+  // Request Source Detachment
+  //------------------------------------------------------------------------------
+
+  const requestSourceLocal = (source: Source) => {
+    if (source.registry) setConfirmationPrompt({ action: "make-local", source });
+  };
+
+  //------------------------------------------------------------------------------
+  // Confirm Source Action
+  //------------------------------------------------------------------------------
+
+  const confirmSourceAction = async () => {
+    const prompt = confirmationPrompt;
+    if (!prompt) return;
+
+    if (prompt.action === "make-official") await downloadRegistrySource(prompt.source);
+    else await makeSourceLocal(prompt.source);
   };
 
   //----------------------------------------------------------------------------
@@ -683,9 +728,9 @@ export default function SourcesPanel() {
                 busySourceId={busySourceId}
                 groups={allSourceGroups}
                 lang={lang}
-                onDownload={downloadRegistrySource}
+                onDownload={requestRegistrySourceDownload}
                 onExport={openExportDialog}
-                onMakeLocal={makeSourceLocal}
+                onMakeLocal={requestSourceLocal}
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
@@ -705,7 +750,7 @@ export default function SourcesPanel() {
                 busySourceId={busySourceId}
                 groups={localSourceGroups}
                 lang={lang}
-                onDownload={downloadRegistrySource}
+                onDownload={requestRegistrySourceDownload}
                 onExport={openExportDialog}
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
@@ -726,9 +771,9 @@ export default function SourcesPanel() {
                 busySourceId={busySourceId}
                 groups={officialSourceGroups}
                 lang={lang}
-                onDownload={downloadRegistrySource}
+                onDownload={requestRegistrySourceDownload}
                 onExport={openExportDialog}
-                onMakeLocal={makeSourceLocal}
+                onMakeLocal={requestSourceLocal}
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
@@ -791,6 +836,30 @@ export default function SourcesPanel() {
           source={removalPrompt.source}
         />
       )}
+
+      <ConfirmationDialog
+        cancelText={t("cancel")}
+        confirmText={
+          confirmationPrompt?.action === "make-official"
+            ? t("make_official.confirm_action")
+            : t("make_local.confirm_action")
+        }
+        description={
+          confirmationPrompt?.source
+            ? confirmationPrompt.action === "make-official"
+              ? ti("make_official.confirm", confirmationPrompt.source.code)
+              : ti("make_local.confirm", confirmationPrompt.source.code)
+            : ""
+        }
+        onCancel={() => setConfirmationPrompt(undefined)}
+        onConfirm={confirmSourceAction}
+        open={!!confirmationPrompt}
+        title={
+          confirmationPrompt?.action === "make-official"
+            ? t("make_official.confirm_title")
+            : t("make_local.confirm_title")
+        }
+      />
 
       <Dialog.Root
         lazyMount

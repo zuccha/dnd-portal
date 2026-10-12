@@ -143,6 +143,14 @@ const i18nContext = {
     en: "Make <1> local? It will no longer receive registry updates on this device.",
     it: "Rendere <1> locale? Non riceverà più aggiornamenti dal registro su questo dispositivo.",
   },
+  "make_local.confirm_action": {
+    en: "Make local",
+    it: "Rendi locale",
+  },
+  "make_local.confirm_title": {
+    en: "Make source local?",
+    it: "Rendere locale la fonte?",
+  },
   "make_official": {
     en: "Make official",
     it: "Rendi ufficiale",
@@ -150,6 +158,14 @@ const i18nContext = {
   "make_official.confirm": {
     en: "Download the official version of <1> and replace the local source? Local changes will be lost.",
     it: "Scaricare la versione ufficiale di <1> e sostituire la fonte locale? Le modifiche locali andranno perse.",
+  },
+  "make_official.confirm_action": {
+    en: "Download and replace",
+    it: "Scarica e sostituisci",
+  },
+  "make_official.confirm_title": {
+    en: "Replace local source?",
+    it: "Sostituire la fonte locale?",
   },
   "module": {
     en: "Module",

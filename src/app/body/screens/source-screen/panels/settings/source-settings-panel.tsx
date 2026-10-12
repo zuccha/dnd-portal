@@ -19,6 +19,7 @@ import {
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
+import ConfirmationDialog from "~/ui/confirmation-dialog";
 import IconButton from "~/ui/icon-button";
 import TextInput from "~/ui/input";
 import Search, { type SearchRefObject } from "~/ui/search";
@@ -87,6 +88,7 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
   const [draft, setDraft] = useState<SourceSettingsDraft>(sourceToSettingsDraft(initialSource));
   const [saving, setSaving] = useState(false);
   const [detaching, setDetaching] = useState(false);
+  const [detachDialogOpen, setDetachDialogOpen] = useState(false);
   const [error, setError] = useState<string>();
 
   const initialDraft = sourceToSettingsDraft(initialSource);
@@ -124,8 +126,9 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
   }, [draft, source.id, source.registry, sourceEditable]);
 
   const detach = useCallback(async () => {
-    if (sourceEditable || !confirm(t("detach_confirm"))) return;
+    if (sourceEditable) return;
 
+    setDetachDialogOpen(false);
     setDetaching(true);
     setError(undefined);
     try {
@@ -136,7 +139,7 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
     } finally {
       setDetaching(false);
     }
-  }, [source.id, sourceEditable, t]);
+  }, [source.id, sourceEditable]);
 
   const setIncludes = useCallback((includes: SourceDependency[]) => {
     setDraft((prev) => ({ ...prev, includes }));
@@ -194,6 +197,16 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
         </HStack>
       </HStack>
 
+      <ConfirmationDialog
+        cancelText={t("cancel")}
+        confirmText={t("make_local")}
+        description={t("detach_confirm")}
+        onCancel={() => setDetachDialogOpen(false)}
+        onConfirm={detach}
+        open={detachDialogOpen}
+        title={t("detach_title")}
+      />
+
       {!sourceEditable && (
         <Box
           bgColor="bg.muted"
@@ -208,7 +221,12 @@ function SourceSettingsForm({ initialSource, source, sources }: SourceSettingsFo
             <Text color="fg.muted" fontSize="sm">
               {t("readonly")}
             </Text>
-            <Button loading={detaching} onClick={detach} size="sm" variant="outline">
+            <Button
+              loading={detaching}
+              onClick={() => setDetachDialogOpen(true)}
+              size="sm"
+              variant="outline"
+            >
               {t("make_local")}
             </Button>
           </HStack>
@@ -573,9 +591,17 @@ const i18nContext = {
     en: "Code",
     it: "Codice",
   },
+  "cancel": {
+    en: "Cancel",
+    it: "Annulla",
+  },
   "detach_confirm": {
     en: "Make this official source local? It will no longer receive registry updates on this device.",
     it: "Rendere locale questa fonte ufficiale? Non riceverà più aggiornamenti dal registro su questo dispositivo.",
+  },
+  "detach_title": {
+    en: "Make source local?",
+    it: "Rendere locale la fonte?",
   },
   "empty": {
     en: "No sources found",
