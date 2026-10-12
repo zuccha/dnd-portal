@@ -29,7 +29,7 @@ export function EquipmentModifierCard({
         localizedResource.weight_delta ||
         localizedResource.magic ||
         localizedResource.required_attunement_slots_minimum ? (
-          <HStack justify="space-between" px={PokerCard.rem1000} w="full">
+          <HStack align="flex-start" justify="space-between" px={PokerCard.rem1000} w="full">
             <VStack align="flex-start" gap={0}>
               {localizedResource.weight_delta && (
                 <HStack gap={PokerCard.rem0250}>
@@ -48,7 +48,7 @@ export function EquipmentModifierCard({
 
             <VStack align="flex-end" gap={0}>
               {localizedResource.magic && (
-                <Span>{`${localizedResource.magic} (${localizedResource.rarity_minimum})`}</Span>
+                <Span>{`${localizedResource.magic}, ${localizedResource.rarity_minimum}`}</Span>
               )}
               {localizedResource.required_attunement_slots_minimum && (
                 <Span>{localizedResource.required_attunement_slots_minimum}</Span>
