@@ -21,8 +21,8 @@ const columns = createResourcesTableColumns<Creature, LocalizedCreature>([
     label: { en: "Type", it: "Tipo" },
   },
   {
-    key: "size",
-    label: { en: "Size", it: "Taglia" },
+    key: "sizes",
+    label: { en: "Sizes", it: "Taglie" },
   },
   {
     key: "alignment",

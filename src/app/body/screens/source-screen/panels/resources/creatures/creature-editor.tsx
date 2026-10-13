@@ -525,9 +525,12 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // Size
   //----------------------------------------------------------------------------
 
-  const SizeField = createSelectEnumField({
-    i18nContext: { label: { en: "Size", it: "Taglia" } },
-    useField: form.createUseField("size"),
+  const SizesField = createMultipleSelectEnumField({
+    i18nContext: {
+      label: { en: "Sizes", it: "Taglie" },
+      placeholder: { en: "None", it: "Nessuna" },
+    },
+    useField: form.createUseField("sizes"),
     useOptions: useCreatureSizeOptions,
   });
 
@@ -691,7 +694,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         {/* Type and Basic Stats */}
         <HStack align="flex-start" gap={4} w="full">
           <TypeField defaultValue={resource.type} />
-          <SizeField defaultValue={resource.size} />
+          <SizesField defaultValue={resource.sizes} />
           <AlignmentField defaultValue={resource.alignment} />
         </HStack>
 

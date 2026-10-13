@@ -21,7 +21,7 @@ export const creatureStore = createResourceStore("creature", {
     creature.cr >= filters.cr_min &&
     creature.cr <= filters.cr_max &&
     matchesInclusion(creature.alignment, filters.alignment) &&
-    matchesInclusion(creature.size, filters.size) &&
+    matchesInclusionList(creature.sizes, filters.sizes) &&
     matchesInclusion(creature.type, filters.types) &&
     matchesInclusionList(creature.habitats, filters.habitats) &&
     matchesInclusionList(creature.treasures, filters.treasures),

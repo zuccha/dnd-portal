@@ -12,7 +12,7 @@ import {
   useTranslateCreatureCondition,
 } from "../../types/creature-condition";
 import { useTranslateCreatureHabitat } from "../../types/creature-habitat";
-import { useTranslateCreatureSize } from "../../types/creature-size";
+import { creatureSizes, useTranslateCreatureSize } from "../../types/creature-size";
 import { type CreatureSkill, useTranslateCreatureSkill } from "../../types/creature-skill";
 import { useTranslateCreatureTreasure } from "../../types/creature-treasure";
 import { useTranslateCreatureType } from "../../types/creature-type";
@@ -37,6 +37,28 @@ const useLocalizedPlaneNames = planeStore.useLocalizedResourceNames;
 const useLocalizedCreatureTagNames = creatureTagStore.useLocalizedResourceNames;
 
 //------------------------------------------------------------------------------
+// Format Creature Sizes
+//------------------------------------------------------------------------------
+
+function formatCreatureSizes(
+  sizes: Creature["sizes"],
+  lang: string,
+  translateSize: (size: Creature["sizes"][number]) => string,
+): string {
+  const localizedSizes = [...sizes]
+    .sort((a, b) => creatureSizes.indexOf(b) - creatureSizes.indexOf(a))
+    .map(translateSize);
+  if (localizedSizes.length < 2) return localizedSizes[0] ?? "";
+
+  const conjunction = lang === "it" ? "o" : "or";
+  const last = localizedSizes.at(-1);
+  const preceding = localizedSizes.slice(0, -1).join(", ");
+  const separator = localizedSizes.length > 2 && lang !== "it" ? "," : "";
+
+  return `${preceding}${separator} ${conjunction} ${last}`;
+}
+
+//------------------------------------------------------------------------------
 // Localized Creature
 //------------------------------------------------------------------------------
 
@@ -47,7 +69,7 @@ export const localizedCreatureSchema = localizedResourceSchema(
   alignment: z.string(),
   habitats: z.string(),
   has_lair: z.boolean(),
-  size: z.string(),
+  sizes: z.string(),
   tags: z.string(),
   treasures: z.string(),
   type: z.string(),
@@ -234,7 +256,7 @@ export function localizeCreature(
     translateCreatureType,
     translateDamageTypeShort,
   } = context;
-  const size = translateCreatureSize(creature.size);
+  const sizes = formatCreatureSizes(creature.sizes, lang, translateCreatureSize);
   const type = translateCreatureType(creature.type);
   const alignment = translateCreatureAlignment(creature.alignment);
 
@@ -567,12 +589,12 @@ export function localizeCreature(
   return {
     ...localizeResource(creature, context),
     descriptor: tags
-      ? ti("subtitle.with_tags", size, type, alignment, tags)
-      : ti("subtitle.without_tags", size, type, alignment),
+      ? ti("subtitle.with_tags", sizes, type, alignment, tags)
+      : ti("subtitle.without_tags", sizes, type, alignment),
     details,
 
     alignment,
-    size,
+    sizes,
     tags,
     type,
 

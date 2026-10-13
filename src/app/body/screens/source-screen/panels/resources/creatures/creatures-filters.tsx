@@ -39,12 +39,12 @@ export default function CreaturesFilters(props: StackProps) {
         />
       </CaptionInput>
 
-      <CaptionInput caption={t("size")} w="full">
+      <CaptionInput caption={t("sizes")} w="full">
         <InclusionSelect
-          includes={filters.size ?? {}}
-          onValueChange={(partial) => setFilters({ size: { ...filters.size, ...partial } })}
+          includes={filters.sizes ?? {}}
+          onValueChange={(partial) => setFilters({ sizes: { ...filters.sizes, ...partial } })}
           options={sizeOptions}
-          placeholder={t("size")}
+          placeholder={t("sizes")}
           size="sm"
           w="full"
         />
@@ -134,9 +134,9 @@ const i18nContext = {
     en: "Habitats",
     it: "Habitat",
   },
-  size: {
-    en: "Size",
-    it: "Taglia",
+  sizes: {
+    en: "Sizes",
+    it: "Taglie",
   },
   treasures: {
     en: "Treasures",

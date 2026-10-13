@@ -63,7 +63,7 @@ const owlbear: Record<string, LocalizedCreature> = {
       pb: 2,
       plane_ids: [],
       reactions: { en: "" },
-      size: "large",
+      sizes: ["large"],
       skill_expertise: ["perception"],
       skill_proficiencies: [],
       speed_burrow: 0,
@@ -91,7 +91,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     sourceVersion: "D&D 5.5",
 
     alignment: "Unaligned",
-    size: "Large",
+    sizes: "Large",
     tags: "",
     type: "Monstrosity",
 
@@ -208,7 +208,7 @@ const owlbear: Record<string, LocalizedCreature> = {
       pb: 2,
       plane_ids: [],
       reactions: { it: "" },
-      size: "large",
+      sizes: ["large"],
       skill_expertise: ["perception"],
       skill_proficiencies: [],
       speed_burrow: 0,
@@ -236,7 +236,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     sourceVersion: "D&D 5.5",
 
     alignment: "Senza Allineamento",
-    size: "Grande",
+    sizes: "Grande",
     tags: "",
     type: "Mostruosità",
 

@@ -337,7 +337,7 @@ class ParsedCreature:
     name: str
     descriptor: str
     page: int
-    size: str
+    sizes: list[str]
     type: str
     alignment: str
     ac: int
@@ -776,37 +776,39 @@ def _field_text(lines: list[str], labels: tuple[str, ...], stop_labels: tuple[st
     return ""
 
 
-def _parse_descriptor(descriptor: str, language: str) -> tuple[str, str, str]:
-    sizes = ENGLISH_SIZES if language == "en" else ITALIAN_SIZES
+def _parse_descriptor(descriptor: str, language: str) -> tuple[list[str], str, str]:
+    size_names = ENGLISH_SIZES if language == "en" else ITALIAN_SIZES
     type_values = ENGLISH_TYPE_VALUES if language == "en" else ITALIAN_TYPE_VALUES
-    size = "medium"
+    sizes: list[str] = []
     descriptor_prefix = descriptor.split(",", 1)[0]
     size_matches = [
         (match.start(), candidate)
-        for candidate in sizes
+        for candidate in size_names
         for match in re.finditer(rf"\b{re.escape(candidate)}\b", descriptor_prefix, re.IGNORECASE)
     ]
-    if size_matches:
-        for _, candidate in sorted(size_matches):
-            size = {
-                "Tiny": "tiny",
-                "Small": "small",
-                "Medium": "medium",
-                "Large": "large",
-                "Huge": "huge",
-                "Gargantuan": "gargantuan",
-                "Minuscola": "tiny",
-                "Minuscolo": "tiny",
-                "Piccola": "small",
-                "Piccolo": "small",
-                "Media": "medium",
-                "Medio": "medium",
-                "Grande": "large",
-                "Enorme": "huge",
-                "Mastodontica": "gargantuan",
-                "Mastodontico": "gargantuan",
-            }[candidate]
-            break
+    for _, candidate in sorted(size_matches):
+        size = {
+            "Tiny": "tiny",
+            "Small": "small",
+            "Medium": "medium",
+            "Large": "large",
+            "Huge": "huge",
+            "Gargantuan": "gargantuan",
+            "Minuscola": "tiny",
+            "Minuscolo": "tiny",
+            "Piccola": "small",
+            "Piccolo": "small",
+            "Media": "medium",
+            "Medio": "medium",
+            "Grande": "large",
+            "Enorme": "huge",
+            "Mastodontica": "gargantuan",
+            "Mastodontico": "gargantuan",
+        }[candidate]
+        if size not in sizes:
+            sizes.append(size)
+    if not sizes:
+        sizes.append("medium")
 
     creature_type = "beast"
     for candidate, value in type_values.items():
@@ -845,7 +847,7 @@ def _parse_descriptor(descriptor: str, language: str) -> tuple[str, str, str]:
         if label in lowered:
             alignment = value
             break
-    return size, creature_type, alignment
+    return sizes, creature_type, alignment
 
 
 def _parse_abilities(lines: list[str]) -> tuple[dict[str, int], dict[str, int]]:
@@ -1084,7 +1086,7 @@ def _parse_sections(lines: list[TextLine], language: str) -> dict[str, str]:
 def _parse_block(block: CreatureBlock, page_offset: int) -> ParsedCreature:
     lines = [line.text for line in block.lines]
     text = " ".join(lines)
-    size, creature_type, alignment = _parse_descriptor(block.descriptor, block.language)
+    sizes, creature_type, alignment = _parse_descriptor(block.descriptor, block.language)
     abilities, ability_saves = _parse_abilities(lines[:12])
     abilities = {key: abilities.get(key, 10) for key in ("str", "dex", "con", "int", "wis", "cha")}
     ability_saves = {key: ability_saves.get(key, 0) for key in abilities}
@@ -1114,7 +1116,7 @@ def _parse_block(block: CreatureBlock, page_offset: int) -> ParsedCreature:
         name=block.name,
         descriptor=block.descriptor,
         page=block.page + page_offset,
-        size=size,
+        sizes=sizes,
         type=creature_type,
         alignment=alignment,
         ac=_parse_int(ac_match.group(1)) if ac_match else 10,
@@ -1404,7 +1406,7 @@ def _parse_creature_row(
         "pb": english.pb,
         "plane_ids": [],
         "reactions": sections["reactions"],
-        "size": english.size,
+        "sizes": english.sizes,
         "skill_expertise": expertise,
         "skill_proficiencies": proficiencies,
         "speed_burrow": int(speed["burrow"]),
@@ -1429,7 +1431,7 @@ def _parse_creature_row(
 
 
 def _signature(creature: ParsedCreature) -> tuple[Any, ...]:
-    return (creature.ac, creature.hp, creature.hp_formula, creature.cr, creature.type, creature.size)
+    return (creature.ac, creature.hp, creature.hp_formula, creature.cr, creature.type)
 
 
 def _collect_known_translations(data_root: Path) -> dict[str, str]:
@@ -1487,6 +1489,7 @@ def _convert_bundle(
             )
         )
     bundle["resources"]["creatures"] = rows
+    bundle["bundle_version"] = 5
     return bundle
 
 
