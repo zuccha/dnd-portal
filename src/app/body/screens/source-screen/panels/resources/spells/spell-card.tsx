@@ -82,7 +82,7 @@ export function SpellCard({
       footer={
         <Center
           aspectRatio={1.4}
-          bgColor="gray.200"
+          bgColor={rest.bgColor ?? "gray.200"}
           borderColor={palette[700]}
           borderWidth={PokerCard.rem0250}
           color={palette[700]}
