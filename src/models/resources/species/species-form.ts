@@ -9,6 +9,8 @@ import {
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
+import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
+import type { ResourceFormOutput } from "../resource-form";
 import type { Species } from "./species";
 
 //------------------------------------------------------------------------------
@@ -32,15 +34,20 @@ export type SpeciesFormData = z.infer<typeof speciesFormDataSchema>;
 export function speciesFormDataToResource(
   data: Partial<SpeciesFormData>,
   lang: string,
-): Partial<Species> {
-  return createResourceFormDataPatch({
-    ...resourceFormDataToResource(data, lang),
+): ResourceFormOutput<Species> {
+  const { feature_entries, ...resourceData } = data;
+  const resource = createResourceFormDataPatch({
+    ...resourceFormDataToResource(resourceData, lang),
     description: createResourceFormDataI18nValue(data.description, lang),
-    feature_entries: data.feature_entries,
     sizes: data.sizes,
     speed: data.speed,
     type: data.type,
   });
+  const relations: RelationEndpointUpdate[] =
+    feature_entries === undefined
+      ? []
+      : [{ group: "species_and_features", related: feature_entries }];
+  return { resource, relations };
 }
 
 //------------------------------------------------------------------------------

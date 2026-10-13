@@ -1,6 +1,7 @@
 import { HStack } from "@chakra-ui/react";
-import { type ReactNode } from "react";
+import { type ReactNode, useMemo } from "react";
 import useBooleanOptions from "~/hooks/use-boolean-options";
+import { useSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { EquipmentFormData } from "~/models/resources/equipment/equipment-form";
 import type { ResourceOption } from "~/models/resources/resource";
@@ -154,6 +155,15 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
 
   return function EquipmentEditor({ children, resource, sourceId }: EquipmentEditorProps) {
     const { lang } = useResourceEditorLang();
+    const featureEntries = useSourceRelatedResourceEntries(
+      resource.source_id,
+      "equipments_and_features",
+      resource,
+    );
+    const featureEntryValues = useMemo(
+      () => featureEntries.map(({ id, min_level = 0 }) => ({ id, min_level })),
+      [featureEntries],
+    );
     const { value: magic } = useMagicField(resource.magic);
     const { value: requiredAttunementSlots } = useRequiredAttunementSlotsField(
       resource.required_attunement_slots,
@@ -184,7 +194,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
 
         <ModifiersField defaultValue={resource.modifier_ids} sourceId={sourceId} w="full" />
 
-        <FeatureEntriesField defaultValue={resource.feature_entries} sourceId={sourceId} w="full" />
+        <FeatureEntriesField defaultValue={featureEntryValues} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

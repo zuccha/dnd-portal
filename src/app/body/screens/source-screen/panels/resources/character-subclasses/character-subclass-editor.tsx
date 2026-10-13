@@ -1,4 +1,6 @@
 import { HStack } from "@chakra-ui/react";
+import { useMemo } from "react";
+import { useSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import type { CharacterSubclass } from "~/models/resources/character-subclasses/character-subclass";
 import type { CharacterSubclassFormData } from "~/models/resources/character-subclasses/character-subclass-form";
@@ -46,13 +48,23 @@ export function createCharacterSubclassEditor(form: Form<CharacterSubclassFormDa
   //----------------------------------------------------------------------------
 
   return function CharacterSubclassEditor({ resource, sourceId }: CharacterSubclassEditorProps) {
+    const featureEntries = useSourceRelatedResourceEntries(
+      resource.source_id,
+      "character_subclasses_and_features",
+      resource,
+    );
+    const featureEntryValues = useMemo(
+      () => featureEntries.map(({ id, min_level = 0 }) => ({ id, min_level })),
+      [featureEntries],
+    );
+
     return (
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
           <CharacterClassField defaultValue={resource.character_class_id} sourceId={sourceId} />
         </HStack>
 
-        <FeatureEntriesField defaultValue={resource.feature_entries} sourceId={sourceId} w="full" />
+        <FeatureEntriesField defaultValue={featureEntryValues} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

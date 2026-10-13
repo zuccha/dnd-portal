@@ -3,6 +3,7 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCmWithUnit } from "~/measures/distance";
+import { useActiveSourceRelatedResourceEntries } from "../../catalogue/resource-relation-hooks";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateCreatureSize } from "../../types/creature-size";
 import { useTranslateCreatureType } from "../../types/creature-type";
@@ -53,7 +54,10 @@ export function useSpeciesLocalizationContext(species: Species): SpeciesLocaliza
 
   const translateCreatureSize = useTranslateCreatureSize(context.lang);
   const translateCreatureType = useTranslateCreatureType(context.lang);
-  const featureEntries = useLocalizedFeatureEntries(species.feature_entries);
+  const relatedFeatures = useActiveSourceRelatedResourceEntries("species_and_features", species);
+  const featureEntries = useLocalizedFeatureEntries(
+    relatedFeatures.map(({ id, min_level = 0 }) => ({ id, min_level })),
+  );
 
   const [system] = useI18nSystem();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");

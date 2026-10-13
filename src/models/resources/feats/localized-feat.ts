@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
+import { useActiveSourceRelatedResourceEntries } from "../../catalogue/resource-relation-hooks";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateFeatCategory } from "../../types/feat-category";
 import {
@@ -41,7 +42,10 @@ type FeatLocalizationContext = ResourceLocalizationContext & {
 
 export function useFeatLocalizationContext(feat: Feat): FeatLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
-  const featureEntries = useLocalizedFeatureEntries(feat.feature_entries);
+  const relatedFeatures = useActiveSourceRelatedResourceEntries("feats_and_features", feat);
+  const featureEntries = useLocalizedFeatureEntries(
+    relatedFeatures.map(({ id, min_level = 0 }) => ({ id, min_level })),
+  );
   const translateFeatCategory = useTranslateFeatCategory(context.lang);
 
   return useMemo(

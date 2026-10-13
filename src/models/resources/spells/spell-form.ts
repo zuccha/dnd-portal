@@ -11,6 +11,8 @@ import {
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
+import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
+import type { ResourceFormOutput } from "../resource-form";
 import type { Spell } from "./spell";
 
 //------------------------------------------------------------------------------
@@ -46,12 +48,12 @@ export type SpellFormData = z.infer<typeof spellFormDataSchema>;
 export function spellFormDataToResource(
   data: Partial<SpellFormData>,
   lang: string,
-): Partial<Spell> {
-  return createResourceFormDataPatch({
-    ...resourceFormDataToResource(data, lang),
+): ResourceFormOutput<Spell> {
+  const { character_class_ids, ...resourceData } = data;
+  const resource = createResourceFormDataPatch({
+    ...resourceFormDataToResource(resourceData, lang),
     casting_time: data.casting_time,
     casting_time_value: data.casting_time_value,
-    character_class_ids: data.character_class_ids,
     concentration: data.concentration,
     description: createResourceFormDataI18nValue(data.description, lang),
     duration: data.duration,
@@ -67,6 +69,16 @@ export function spellFormDataToResource(
     upgrade: createResourceFormDataI18nValue(data.upgrade, lang),
     verbal: data.verbal,
   });
+  const relations: RelationEndpointUpdate[] =
+    character_class_ids === undefined
+      ? []
+      : [
+          {
+            group: "character_classes_and_spells",
+            related: character_class_ids.map((id) => ({ id })),
+          },
+        ];
+  return { resource, relations };
 }
 
 //------------------------------------------------------------------------------

@@ -8,13 +8,17 @@ import {
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
+import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import type { Equipment } from "./equipment";
 
 //------------------------------------------------------------------------------
 // Equipment Form Data Patch
 //------------------------------------------------------------------------------
 
-export type EquipmentFormDataPatch = Partial<Omit<Equipment, "kind">>;
+export type EquipmentFormDataPatch = {
+  relations: RelationEndpointUpdate[];
+  resource: Partial<Omit<Equipment, "kind">>;
+};
 
 //------------------------------------------------------------------------------
 // Equipment Form Data
@@ -42,11 +46,11 @@ export function equipmentFormDataToResource(
   data: Partial<EquipmentFormData>,
   lang: string,
 ): EquipmentFormDataPatch {
-  return createResourceFormDataPatch({
-    ...resourceFormDataToResource(data, lang),
+  const { feature_entries, ...resourceData } = data;
+  const resource = createResourceFormDataPatch({
+    ...resourceFormDataToResource(resourceData, lang),
     attunement_notes: createResourceFormDataI18nValue(data.attunement_notes, lang),
     cost: data.cost,
-    feature_entries: data.feature_entries,
     magic: data.magic,
     modifier_ids: data.modifier_ids,
     notes: createResourceFormDataI18nValue(data.notes, lang),
@@ -54,6 +58,11 @@ export function equipmentFormDataToResource(
     required_attunement_slots: data.required_attunement_slots,
     weight: data.weight,
   });
+  const relations: RelationEndpointUpdate[] =
+    feature_entries === undefined
+      ? []
+      : [{ group: "equipments_and_features", related: feature_entries }];
+  return { resource, relations };
 }
 
 //------------------------------------------------------------------------------

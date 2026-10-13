@@ -10,9 +10,11 @@ import { featureEntrySchema } from "../features/feature-entry";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
+  type ResourceFormOutput,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
+import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import type { CharacterClass } from "./character-class";
 
 //------------------------------------------------------------------------------
@@ -45,22 +47,21 @@ export type CharacterClassFormData = z.infer<typeof characterClassFormDataSchema
 export function characterClassFormDataToResource(
   data: Partial<CharacterClassFormData>,
   lang: string,
-): Partial<CharacterClass> {
-  return createResourceFormDataPatch({
-    ...resourceFormDataToResource(data, lang),
+): ResourceFormOutput<CharacterClass> {
+  const { feature_entries, spell_ids, ...resourceData } = data;
+  const resource = createResourceFormDataPatch({
+    ...resourceFormDataToResource(resourceData, lang),
     abbreviation: createResourceFormDataI18nValue(data.abbreviation, lang),
     armor_proficiencies: data.armor_proficiencies,
     armor_proficiencies_extra: createResourceFormDataI18nValue(
       data.armor_proficiencies_extra,
       lang,
     ),
-    feature_entries: data.feature_entries,
     hp_die: data.hp_die,
     primary_abilities: data.primary_abilities,
     saving_throw_proficiencies: data.saving_throw_proficiencies,
     skill_proficiencies_pool: data.skill_proficiencies_pool,
     skill_proficiencies_pool_quantity: data.skill_proficiencies_pool_quantity,
-    spell_ids: data.spell_ids,
     starting_equipment: data.starting_equipment,
     tool_proficiency_ids: data.tool_proficiency_ids,
     weapon_proficiencies: data.weapon_proficiencies,
@@ -69,6 +70,20 @@ export function characterClassFormDataToResource(
       lang,
     ),
   });
+  const relations: RelationEndpointUpdate[] = [];
+  if (feature_entries !== undefined) {
+    relations.push({
+      group: "character_classes_and_features",
+      related: feature_entries,
+    });
+  }
+  if (spell_ids !== undefined) {
+    relations.push({
+      group: "character_classes_and_spells",
+      related: spell_ids.map((id) => ({ id })),
+    });
+  }
+  return { resource, relations } satisfies ResourceFormOutput<CharacterClass>;
 }
 
 //------------------------------------------------------------------------------

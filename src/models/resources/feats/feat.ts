@@ -2,7 +2,6 @@ import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { characterLevelSchema } from "../../types/character-level";
 import { featCategorySchema } from "../../types/feat-category";
-import { featureEntrySchema } from "../features/feature-entry";
 import {
   type TranslationFields,
   defaultResource,
@@ -17,7 +16,6 @@ import {
 export const featSchema = resourceSchema.extend({
   category: featCategorySchema,
   description: i18nStringSchema,
-  feature_entries: z.array(featureEntrySchema),
   kind: z.literal("feat"),
   min_level: characterLevelSchema,
   prerequisite: i18nStringSchema,
@@ -33,7 +31,6 @@ export const defaultFeat: Feat = {
   ...defaultResource,
   category: "general",
   description: {},
-  feature_entries: [],
   kind: "feat",
   min_level: 0,
   prerequisite: {},

@@ -6,7 +6,6 @@ import {
   resourceSchema,
   resourceTranslationFields,
 } from "../resource";
-import { featureGrantSchema } from "./feature-entry";
 
 //------------------------------------------------------------------------------
 // Feature
@@ -15,7 +14,6 @@ import { featureGrantSchema } from "./feature-entry";
 export const featureSchema = resourceSchema.extend({
   description: i18nStringSchema,
   display_name: i18nStringSchema,
-  granted_by: z.array(featureGrantSchema),
   kind: z.literal("feature"),
 });
 
@@ -29,7 +27,6 @@ export const defaultFeature: Feature = {
   ...defaultResource,
   description: {},
   display_name: {},
-  granted_by: [],
   kind: "feature",
 };
 

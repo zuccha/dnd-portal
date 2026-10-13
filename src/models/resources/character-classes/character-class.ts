@@ -6,7 +6,6 @@ import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
 import { dieTypeSchema } from "../../types/die_type";
 import { weaponTypeSchema } from "../../types/weapon-type";
-import { featureEntrySchema } from "../features/feature-entry";
 import {
   type TranslationFields,
   defaultResource,
@@ -22,14 +21,12 @@ export const characterClassBaseSchema = resourceSchema.extend({
   abbreviation: i18nStringSchema,
   armor_proficiencies: z.array(armorTypeSchema),
   armor_proficiencies_extra: i18nStringSchema,
-  feature_entries: z.array(featureEntrySchema),
   hp_die: dieTypeSchema,
   kind: z.literal("character_class"),
   primary_abilities: z.array(creatureAbilitySchema),
   saving_throw_proficiencies: z.array(creatureAbilitySchema),
   skill_proficiencies_pool: z.array(creatureSkillSchema),
   skill_proficiencies_pool_quantity: z.number(),
-  spell_ids: z.array(z.uuid()),
   tool_proficiency_ids: z.array(z.uuid()),
   weapon_proficiencies: z.array(weaponTypeSchema),
   weapon_proficiencies_extra: i18nStringSchema,
@@ -50,14 +47,12 @@ export const defaultCharacterClass: CharacterClass = {
   abbreviation: {},
   armor_proficiencies: [],
   armor_proficiencies_extra: {},
-  feature_entries: [],
   hp_die: "d8",
   kind: "character_class",
   primary_abilities: [],
   saving_throw_proficiencies: [],
   skill_proficiencies_pool: [],
   skill_proficiencies_pool_quantity: 2,
-  spell_ids: [],
   starting_equipment: [],
   tool_proficiency_ids: [],
   weapon_proficiencies: [],

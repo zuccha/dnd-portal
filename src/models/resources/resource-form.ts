@@ -1,6 +1,26 @@
 import z from "zod";
 import { resourceVisibilitySchema } from "../types/resource-visibility";
+import type { RelationEndpointUpdate } from "../catalogue/resource-relations";
 import type { Resource } from "./resource";
+
+//------------------------------------------------------------------------------
+// Resource Form Output
+//------------------------------------------------------------------------------
+
+export type ResourceFormOutput<R extends Resource> = {
+  relations: RelationEndpointUpdate[];
+  resource: Partial<R>;
+};
+
+export type ParsedResourceFormOutput<R extends Resource> = Partial<R> | ResourceFormOutput<R>;
+
+export function splitResourceFormOutput<R extends Resource>(
+  output: ParsedResourceFormOutput<R>,
+): ResourceFormOutput<R> {
+  return "resource" in output
+    ? { resource: output.resource, relations: output.relations }
+    : { resource: output, relations: [] };
+}
 
 //------------------------------------------------------------------------------
 // Resource Form Data

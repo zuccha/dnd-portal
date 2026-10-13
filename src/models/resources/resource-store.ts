@@ -1,11 +1,18 @@
 import { useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
-import catalogue from "~/models/catalogue/catalogue";
+import catalogue, { useActiveSourceRelationGroups } from "~/models/catalogue/catalogue";
+import {
+  type RelationEndpointUpdate,
+  removeResourceRelations,
+  updateResourceRelations,
+} from "~/models/catalogue/resource-relations";
+import type { ResourceRelations } from "~/models/catalogue/resource-relations";
 import type { SourceBundle } from "~/models/catalogue/source-bundle";
 import {
   removeSourceBundleResources,
   upsertSourceBundleResource,
+  updateSourceBundleRelations,
 } from "~/models/catalogue/source-bundle";
 import { updateSourceBundle } from "~/models/catalogue/source-bundle-indexed-db";
 import { compareObjects } from "~/utils/object";
@@ -57,6 +64,7 @@ type ResourceStoreOptions<
     filters: F,
     resourceIds: readonly string[],
     getResource: (resourceId: string) => R | undefined,
+    relations: ResourceRelations,
   ) => F;
   matchesResource?: ResourceMatcher<R, F>;
   compareResources?: ResourceComparator<R, F>;
@@ -118,10 +126,14 @@ export function createResourceStore<
     resource: R,
     updateBundle: (bundle: SourceBundle) => SourceBundle,
     operation: string,
+    relationUpdates: RelationEndpointUpdate[] = [],
   ): Promise<string | undefined> {
     try {
-      await updateSourceBundle(resource.source_id, updateBundle);
+      const bundle = await updateSourceBundle(resource.source_id, (current) =>
+        updateSourceBundleRelations(updateBundle(current), resource, relationUpdates),
+      );
       await catalogue.refreshSourceState(resource.source_id);
+      catalogue.setSourceRelations(resource.source_id, bundle.relations);
       catalogueResourceStore.upsertResource(resource);
       return undefined;
     } catch (error) {
@@ -178,6 +190,7 @@ export function createResourceStore<
   async function createResource(
     sourceId: string,
     resourcePatch: Partial<R>,
+    relationUpdates: RelationEndpointUpdate[] = [],
   ): Promise<string | undefined> {
     const source = catalogue.getSource(sourceId);
     if (!source) return "form.error.update_failure";
@@ -198,6 +211,7 @@ export function createResourceStore<
       resource,
       (bundle) => upsertSourceBundleResource(bundle, resource),
       "create_resource",
+      relationUpdates,
     );
   }
 
@@ -220,19 +234,29 @@ export function createResourceStore<
 
     try {
       await Promise.all(
-        sourceIds.map((sourceId) => {
+        sourceIds.map(async (sourceId) => {
           const ids = resources
             .filter((resource) => resource.source_id === sourceId)
             .map(({ id }) => id);
 
-          return updateSourceBundle(sourceId, (bundle) =>
+          const bundle = await updateSourceBundle(sourceId, (bundle) =>
             removeSourceBundleResources(bundle, kind, ids),
           );
+          catalogue.setSourceRelations(sourceId, bundle.relations);
         }),
       );
       await Promise.all(sourceIds.map((sourceId) => catalogue.refreshSourceState(sourceId)));
 
-      for (const resource of resources) catalogueResourceStore.removeResource(resource.id);
+      for (const resource of resources) {
+        if (resource.virtual) {
+          const relations = catalogue.getSourceRelations(resource.source_id);
+          catalogue.setSourceRelations(
+            resource.source_id,
+            removeResourceRelations(relations, resource),
+          );
+        }
+        catalogueResourceStore.removeResource(resource.id);
+      }
       resourceSelectionStore.deselectResources(resources.map(({ id }) => id));
 
       return undefined;
@@ -249,6 +273,7 @@ export function createResourceStore<
   async function updateResource(
     resourceId: string,
     resourcePatch: Partial<R>,
+    relationUpdates: RelationEndpointUpdate[] = [],
   ): Promise<string | undefined> {
     const current = getResource(resourceId);
     if (!current) return "form.error.update_failure";
@@ -268,6 +293,11 @@ export function createResourceStore<
     );
 
     if (resource.virtual) {
+      const relations = catalogue.getSourceRelations(resource.source_id);
+      catalogue.setSourceRelations(
+        resource.source_id,
+        updateResourceRelations(relations, resource, relationUpdates),
+      );
       catalogueResourceStore.upsertResource(resource);
       return undefined;
     }
@@ -276,6 +306,7 @@ export function createResourceStore<
       resource,
       (bundle) => upsertSourceBundleResource(bundle, resource),
       "update_resource",
+      relationUpdates,
     );
   }
 
@@ -304,9 +335,10 @@ export function createResourceStore<
     const [filters] = useFilters();
     const [lang] = useI18nLang();
     const resourceIds = useResourceIds(sourceId);
+    const relations = useActiveSourceRelationGroups();
     const effectiveFilters = useMemo(
-      () => normalizeFilters(filters, resourceIds, getResource),
-      [filters, resourceIds],
+      () => normalizeFilters(filters, resourceIds, getResource, relations),
+      [filters, relations, resourceIds],
     );
     const normalizedName = normalizeString(effectiveFilters.name);
 
@@ -317,7 +349,8 @@ export function createResourceStore<
             const resource = getResource(resourceId);
             if (!resource) return false;
             return (
-              matchesName(resource, normalizedName) && matchesResource(resource, effectiveFilters)
+              matchesName(resource, normalizedName) &&
+              matchesResource(resource, effectiveFilters, relations)
             );
           })
           .sort((aId, bId) => {
@@ -326,7 +359,7 @@ export function createResourceStore<
             if (!a || !b) return 0;
             return compareStoreResources(a, b, effectiveFilters, lang);
           }),
-      [effectiveFilters, lang, normalizedName, resourceIds],
+      [effectiveFilters, lang, normalizedName, relations, resourceIds],
     );
   }
 

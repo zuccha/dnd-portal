@@ -4,7 +4,7 @@ import { damageTypeSchema } from "../../../types/damage-type";
 import { weaponMasterySchema } from "../../../types/weapon-mastery";
 import { weaponPropertySchema } from "../../../types/weapon-property";
 import { weaponTypeSchema } from "../../../types/weapon-type";
-import { createResourceFormDataPatch } from "../../resource-form";
+import { createResourceFormDataPatch, type ResourceFormOutput } from "../../resource-form";
 import { equipmentFormDataSchema, equipmentFormDataToResource } from "../equipment-form";
 import type { Weapon } from "./weapon";
 
@@ -35,9 +35,10 @@ export type WeaponFormData = z.infer<typeof weaponFormDataSchema>;
 export function weaponFormDataToResource(
   data: Partial<WeaponFormData>,
   lang: string,
-): Partial<Weapon> {
-  return createResourceFormDataPatch({
-    ...equipmentFormDataToResource(data, lang),
+): ResourceFormOutput<Weapon> {
+  const base = equipmentFormDataToResource(data, lang);
+  const resource = createResourceFormDataPatch({
+    ...base.resource,
     ammunition_ids: data.ammunition_ids,
     damage: data.damage,
     damage_type: data.damage_type,
@@ -50,6 +51,7 @@ export function weaponFormDataToResource(
     ranged: data.ranged,
     type: data.type,
   });
+  return { resource, relations: base.relations };
 }
 
 //------------------------------------------------------------------------------

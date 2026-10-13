@@ -1,4 +1,6 @@
 import { HStack } from "@chakra-ui/react";
+import { useMemo } from "react";
+import { useSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import type { Feat } from "~/models/resources/feats/feat";
 import type { FeatFormData } from "~/models/resources/feats/feat-form";
 import {
@@ -103,6 +105,15 @@ export function createFeatEditor(form: Form<FeatFormData>) {
 
   return function FeatEditor({ resource, sourceId }: FeatEditorProps) {
     const { lang } = useResourceEditorLang();
+    const featureEntries = useSourceRelatedResourceEntries(
+      resource.source_id,
+      "feats_and_features",
+      resource,
+    );
+    const featureEntryValues = useMemo(
+      () => featureEntries.map(({ id, min_level = 0 }) => ({ id, min_level })),
+      [featureEntries],
+    );
 
     return (
       <ResourceEditor resource={resource}>
@@ -115,7 +126,7 @@ export function createFeatEditor(form: Form<FeatFormData>) {
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
 
-        <FeatureEntriesField defaultValue={resource.feature_entries} sourceId={sourceId} w="full" />
+        <FeatureEntriesField defaultValue={featureEntryValues} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

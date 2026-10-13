@@ -1,7 +1,6 @@
 import z from "zod";
 import { i18nStringSchema } from "~/i18n/i18n-string";
 import { equipmentRaritySchema } from "../../types/equipment-rarity";
-import { featureEntrySchema } from "../features/feature-entry";
 import {
   type TranslationFields,
   defaultResource,
@@ -16,7 +15,6 @@ import {
 export const equipmentSchema = resourceSchema.extend({
   attunement_notes: i18nStringSchema,
   cost: z.number().nullable(),
-  feature_entries: z.array(featureEntrySchema),
   kind: z.enum(["armor", "item", "tool", "weapon"]),
   magic: z.boolean(),
   modifier_ids: z.array(z.uuid()),
@@ -38,7 +36,6 @@ export const defaultEquipment: Omit<Equipment, "kind"> = {
   ...defaultResource,
   attunement_notes: {},
   cost: 0,
-  feature_entries: [],
   magic: false,
   modifier_ids: [],
   notes: {},

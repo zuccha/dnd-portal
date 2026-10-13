@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { createLocalStore } from "../../store/local-store";
 import { createMemoryStore } from "../../store/memory-store";
@@ -6,6 +6,12 @@ import { createOptionalMemoryStoreSet } from "../../store/optional-set/optional-
 import { createMemoryStoreSet } from "../../store/set/memory-store-set";
 import { areSameArray } from "../../utils/array";
 import { objectKeys } from "../../utils/object";
+import {
+  emptyResourceRelations,
+  type RelationGroup,
+  type RelationGroupRows,
+  type ResourceRelations,
+} from "./resource-relations";
 import { type Source, canEditSource } from "./source";
 import {
   type SourceBundle,
@@ -118,6 +124,37 @@ export function createCatalogue(id: string) {
   );
 
   const useSourceStateById = sourceStateById.useValue;
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Relation Rows By Source And Group
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  const relationRowsBySourceAndGroup = createOptionalMemoryStoreSet<
+    string,
+    RelationGroupRows[RelationGroup][]
+  >(`${id}/relations-by-source-and-group`);
+
+  function relationStoreKey(sourceId: string, group: RelationGroup): string {
+    return `${sourceId}\u0000${group}`;
+  }
+
+  function getSourceRelations(sourceId: string): ResourceRelations {
+    return Object.fromEntries(
+      (Object.keys(emptyResourceRelations) as RelationGroup[]).map((group) => [
+        group,
+        relationRowsBySourceAndGroup.get(relationStoreKey(sourceId, group)) ?? [],
+      ]),
+    ) as ResourceRelations;
+  }
+
+  function setSourceRelations(sourceId: string, relations: ResourceRelations): void {
+    for (const group of Object.keys(emptyResourceRelations) as RelationGroup[]) {
+      relationRowsBySourceAndGroup.set(
+        relationStoreKey(sourceId, group),
+        relations[group] as RelationGroupRows[RelationGroup][],
+      );
+    }
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Resources By Id
@@ -270,6 +307,147 @@ export function createCatalogue(id: string) {
   }
 
   //------------------------------------------------------------------------------
+  // Get Relations
+  //------------------------------------------------------------------------------
+
+  function getRelations<G extends RelationGroup>(
+    sourceIds: string[],
+    group: G,
+  ): RelationGroupRows[G][] {
+    const uniqueRows = new Map<string, RelationGroupRows[G]>();
+    for (const sourceId of sourceIds) {
+      const rows = relationRowsBySourceAndGroup.get(relationStoreKey(sourceId, group)) ?? [];
+      for (const row of rows) {
+        const minLevel = "min_level" in row ? row.min_level : "";
+        const key = `${row.resource_1_kind}:${row.resource_1_id}:${row.resource_2_kind}:${row.resource_2_id}:${minLevel}`;
+        if (!uniqueRows.has(key)) uniqueRows.set(key, row as RelationGroupRows[G]);
+      }
+    }
+    return [...uniqueRows.values()];
+  }
+
+  //------------------------------------------------------------------------------
+  // Use Relations
+  //------------------------------------------------------------------------------
+
+  function useRelations<G extends RelationGroup>(
+    sourceIds: string[],
+    group: G,
+  ): RelationGroupRows[G][] {
+    const [rows, setRows] = useState(() => getRelations(sourceIds, group));
+
+    useLayoutEffect(() => {
+      function refresh(): void {
+        setRows((previous) => {
+          const next = getRelations(sourceIds, group);
+          return areSameArray(previous, next) ? previous : next;
+        });
+      }
+
+      refresh();
+      return relationRowsBySourceAndGroup.subscribeAny(refresh);
+    }, [group, sourceIds]);
+
+    return rows;
+  }
+
+  //------------------------------------------------------------------------------
+  // Get Active Source Relations
+  //------------------------------------------------------------------------------
+
+  function getActiveSourceRelations<G extends RelationGroup>(group: G): RelationGroupRows[G][] {
+    const source = getActiveSource();
+    if (!source) return [];
+    return getRelations(
+      [
+        source.id,
+        ...source.includes.map(({ source_id }) => source_id),
+        ...source.requires.map(({ source_id }) => source_id),
+      ],
+      group,
+    );
+  }
+
+  //------------------------------------------------------------------------------
+  // Get Active Source Relation Groups
+  //------------------------------------------------------------------------------
+
+  function getActiveSourceRelationGroups(): ResourceRelations {
+    return Object.fromEntries(
+      (Object.keys(emptyResourceRelations) as RelationGroup[]).map((group) => [
+        group,
+        getActiveSourceRelations(group),
+      ]),
+    ) as ResourceRelations;
+  }
+
+  //------------------------------------------------------------------------------
+  // Use Active Source Relations
+  //------------------------------------------------------------------------------
+
+  function useActiveSourceRelations<G extends RelationGroup>(group: G): RelationGroupRows[G][] {
+    const source = useActiveSource();
+    const sourceIds = useMemo(
+      () =>
+        source
+          ? [
+              source.id,
+              ...source.includes.map(({ source_id }) => source_id),
+              ...source.requires.map(({ source_id }) => source_id),
+            ]
+          : emptyIds,
+      [source],
+    );
+    return useRelations(sourceIds, group);
+  }
+
+  //------------------------------------------------------------------------------
+  // Use Active Source Relation Groups
+  //------------------------------------------------------------------------------
+
+  function useActiveSourceRelationGroups(): ResourceRelations {
+    const source = useActiveSource();
+    const sourceIds = useMemo(
+      () =>
+        source
+          ? [
+              source.id,
+              ...source.includes.map(({ source_id }) => source_id),
+              ...source.requires.map(({ source_id }) => source_id),
+            ]
+          : emptyIds,
+      [source],
+    );
+    const [relations, setRelations] = useState(() => getActiveSourceRelationGroups());
+
+    useLayoutEffect(() => {
+      function refresh(): void {
+        setRelations((previous) => {
+          const next = Object.fromEntries(
+            (Object.keys(emptyResourceRelations) as RelationGroup[]).map((group) => [
+              group,
+              getRelations(sourceIds, group),
+            ]),
+          ) as ResourceRelations;
+          return Object.keys(next).every((group) =>
+            areSameArray(
+              previous[group as RelationGroup] as unknown[],
+              next[group as RelationGroup] as unknown[],
+            ),
+          )
+            ? previous
+            : next;
+        });
+      }
+
+      refresh();
+      return relationRowsBySourceAndGroup.subscribeAny(refresh);
+    }, [sourceIds]);
+
+    return relations;
+  }
+
+  //------------------------------------------------------------------------------
   // Set Source State
   //------------------------------------------------------------------------------
 
@@ -379,7 +557,12 @@ export function createCatalogue(id: string) {
     ) as SourceBundle["resources"];
 
     return filterSourceBundleResources(
-      { bundle_version: sourceBundleVersion, resources, source },
+      {
+        bundle_version: sourceBundleVersion,
+        relations: getSourceRelations(sourceId),
+        resources,
+        source,
+      },
       options,
     );
   }
@@ -597,6 +780,7 @@ export function createCatalogue(id: string) {
 
     sourceById.set(source.id, source);
     sourceIdList.set((prev) => (prev.includes(source.id) ? prev : [...prev, source.id]));
+    setSourceRelations(source.id, importedBundle.relations);
 
     for (const [kind, resources] of resourceImports) {
       type ResourceStoreSet = OptionalStoreSet<string, Resource>;
@@ -630,6 +814,9 @@ export function createCatalogue(id: string) {
     }
 
     sourceById.clear(sourceId);
+    for (const group of Object.keys(emptyResourceRelations) as RelationGroup[]) {
+      relationRowsBySourceAndGroup.clear(relationStoreKey(sourceId, group));
+    }
     sourceStateById.clear(sourceId);
     sourceIdList.set((prev) => prev.filter((id) => id !== sourceId));
 
@@ -646,20 +833,28 @@ export function createCatalogue(id: string) {
     detachSource,
     getActiveSource,
     getActiveSourceId: activeSourceId.get,
+    getActiveSourceRelations,
+    getActiveSourceRelationGroups,
+    getRelations,
     getSource,
     getSourceBundle,
+    getSourceRelations,
     importSourceBundle,
     isSourceEditable,
     markSourcePublished,
     refreshSourceState,
     removeSourceBundle,
     setActiveSourceId,
+    setSourceRelations,
     setSourceState,
     updateSource,
     updateSourceRegistryMetadata,
 
     useActiveSource,
     useActiveSourceId: activeSourceId.useValue,
+    useActiveSourceRelations,
+    useActiveSourceRelationGroups,
+    useRelations,
     useSource,
     useSourceEditable,
     useSourceHasUnpublishedChanges,
@@ -678,6 +873,9 @@ const {
   useSourceEditable,
   useSourceHasUnpublishedChanges,
   useSources,
+  useActiveSourceRelations,
+  useActiveSourceRelationGroups,
+  useRelations,
   ...catalogue
 } = createCatalogue("catalogue");
 
@@ -690,4 +888,7 @@ export {
   useSourceEditable,
   useSourceHasUnpublishedChanges,
   useSources,
+  useActiveSourceRelations,
+  useActiveSourceRelationGroups,
+  useRelations,
 };

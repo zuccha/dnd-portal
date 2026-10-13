@@ -24,6 +24,12 @@ import { serviceSchema } from "../resources/services/service";
 import { speciesSchema } from "../resources/species/species";
 import { spellSchema } from "../resources/spells/spell";
 import { vehicleSchema } from "../resources/vehicles/vehicle";
+import { resourceRelationsSchema } from "./resource-relations";
+import {
+  type RelationEndpointUpdate,
+  type RelationResourceEndpoint,
+  updateResourceRelations,
+} from "./resource-relations";
 import { type Source, sourceSchema } from "./source";
 import type { Resource } from "../resources/resource";
 import type { ResourceKind } from "../types/resource-kind";
@@ -64,10 +70,11 @@ export const sourceBundleResourcesSchema = z.object({
 // Source Bundle
 //------------------------------------------------------------------------------
 
-export const sourceBundleVersion = 6;
+export const sourceBundleVersion = 7;
 
 export const sourceBundleSchema = z.object({
   bundle_version: z.literal(sourceBundleVersion),
+  relations: resourceRelationsSchema,
   resources: sourceBundleResourcesSchema,
   source: sourceSchema,
 });
@@ -80,6 +87,7 @@ export type SourceBundle = z.infer<typeof sourceBundleSchema>;
 
 export const sourceBundleWithoutRegistrySchema = z.object({
   bundle_version: z.literal(sourceBundleVersion),
+  relations: resourceRelationsSchema,
   resources: sourceBundleResourcesSchema,
   source: sourceSchema.omit({ registry: true }),
 });
@@ -143,7 +151,37 @@ export function filterSourceBundleResources(
     ]),
   ) as SourceBundle["resources"];
 
-  return { ...bundle, resources };
+  const remainingIdsByKind = new Map<ResourceKind, Set<string>>();
+  for (const kind of Object.keys(sourceBundleResourceKeyByKind) as ResourceKind[]) {
+    const key = sourceBundleResourceKeyByKind[kind];
+    remainingIdsByKind.set(kind, new Set((resources[key] as Resource[]).map(({ id }) => id)));
+  }
+
+  const originalIdsByKind = new Map<ResourceKind, Set<string>>();
+  for (const kind of Object.keys(sourceBundleResourceKeyByKind) as ResourceKind[]) {
+    const key = sourceBundleResourceKeyByKind[kind];
+    originalIdsByKind.set(kind, new Set((bundle.resources[key] as Resource[]).map(({ id }) => id)));
+  }
+
+  function endpointWasFiltered(kind: ResourceKind, resourceId: string): boolean {
+    return (
+      originalIdsByKind.get(kind)?.has(resourceId) === true &&
+      remainingIdsByKind.get(kind)?.has(resourceId) !== true
+    );
+  }
+
+  const relations = Object.fromEntries(
+    Object.entries(bundle.relations).map(([group, rows]) => [
+      group,
+      rows.filter(
+        (row) =>
+          !endpointWasFiltered(row.resource_1_kind, row.resource_1_id) &&
+          !endpointWasFiltered(row.resource_2_kind, row.resource_2_id),
+      ),
+    ]),
+  ) as SourceBundle["relations"];
+
+  return { ...bundle, relations, resources };
 }
 
 //------------------------------------------------------------------------------
@@ -191,12 +229,38 @@ export function removeSourceBundleResources(
   const key = sourceBundleResourceKeyByKind[kind];
   const resourceIdSet = new Set(resourceIds);
   const resources = bundle.resources[key] as Resource[];
+  const relations = Object.fromEntries(
+    Object.entries(bundle.relations).map(([group, rows]) => [
+      group,
+      rows.filter(
+        (row) =>
+          !(row.resource_1_kind === kind && resourceIdSet.has(row.resource_1_id)) &&
+          !(row.resource_2_kind === kind && resourceIdSet.has(row.resource_2_id)),
+      ),
+    ]),
+  ) as SourceBundle["relations"];
 
   return {
     ...bundle,
+    relations,
     resources: {
       ...bundle.resources,
       [key]: resources.filter(({ id }) => !resourceIdSet.has(id)),
     },
+  };
+}
+
+//------------------------------------------------------------------------------
+// Update Source Bundle Relations
+//------------------------------------------------------------------------------
+
+export function updateSourceBundleRelations(
+  bundle: SourceBundle,
+  endpoint: RelationResourceEndpoint,
+  updates: RelationEndpointUpdate[],
+): SourceBundle {
+  return {
+    ...bundle,
+    relations: updateResourceRelations(bundle.relations, endpoint, updates),
   };
 }

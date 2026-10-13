@@ -9,6 +9,8 @@ import {
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
+import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
+import type { ResourceFormOutput } from "../resource-form";
 import type { Feat } from "./feat";
 
 //------------------------------------------------------------------------------
@@ -29,15 +31,23 @@ export type FeatFormData = z.infer<typeof featFormDataSchema>;
 // Feat Form Data To Resource
 //------------------------------------------------------------------------------
 
-export function featFormDataToResource(data: Partial<FeatFormData>, lang: string): Partial<Feat> {
-  return createResourceFormDataPatch({
-    ...resourceFormDataToResource(data, lang),
+export function featFormDataToResource(
+  data: Partial<FeatFormData>,
+  lang: string,
+): ResourceFormOutput<Feat> {
+  const { feature_entries, ...resourceData } = data;
+  const resource = createResourceFormDataPatch({
+    ...resourceFormDataToResource(resourceData, lang),
     category: data.category,
     description: createResourceFormDataI18nValue(data.description, lang),
-    feature_entries: data.feature_entries,
     min_level: data.min_level,
     prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
   });
+  const relations: RelationEndpointUpdate[] =
+    feature_entries === undefined
+      ? []
+      : [{ group: "feats_and_features", related: feature_entries }];
+  return { resource, relations };
 }
 
 //------------------------------------------------------------------------------

@@ -19,10 +19,6 @@ const fireball: Record<string, LocalizedSpell> = {
 
       casting_time: "action",
       casting_time_value: null,
-      character_class_ids: [
-        "1d67243f-0071-41c0-91f3-53f8354c6628",
-        "d44c8332-db11-4da9-85de-46c3ebd23e6d",
-      ],
       concentration: false,
       description: {
         en: "A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 8d6 Fire damage on a failed save or half as much damage on a successful one.\nFlammable objects in the area that aren't being worn or carried start burning.",
@@ -83,10 +79,6 @@ const fireball: Record<string, LocalizedSpell> = {
 
       casting_time: "action",
       casting_time_value: null,
-      character_class_ids: [
-        "1d67243f-0071-41c0-91f3-53f8354c6628",
-        "d44c8332-db11-4da9-85de-46c3ebd23e6d",
-      ],
       concentration: false,
       description: {
         it: "Una scia di luce brillante parte dall'incantatore e sfreccia fino a un punto a sua scelta entro gittata, provocando un'esplosione infuocata con un profondo boato. Ogni creatura presente in una sfera dal raggio di 6 metri e centrata su quel punto deve effettuare un tiro salvezza su Destrezza, subendo 8d6 danni da fuoco in caso di fallimento, o la metà dei danni in caso di successo.\nGli oggetti infiammabili nell'area che non sono indossati o trasportati iniziano a bruciare.",

@@ -6,6 +6,8 @@ import {
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
+import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
+import type { ResourceFormOutput } from "../resource-form";
 import type { CharacterSubclass } from "./character-subclass";
 
 //------------------------------------------------------------------------------
@@ -26,12 +28,17 @@ export type CharacterSubclassFormData = z.infer<typeof characterSubclassFormData
 export function characterSubclassFormDataToResource(
   data: Partial<CharacterSubclassFormData>,
   lang: string,
-): Partial<CharacterSubclass> {
-  return createResourceFormDataPatch({
-    ...resourceFormDataToResource(data, lang),
+): ResourceFormOutput<CharacterSubclass> {
+  const { feature_entries, ...resourceData } = data;
+  const resource = createResourceFormDataPatch({
+    ...resourceFormDataToResource(resourceData, lang),
     character_class_id: data.character_class_id,
-    feature_entries: data.feature_entries,
   });
+  const relations: RelationEndpointUpdate[] =
+    feature_entries === undefined
+      ? []
+      : [{ group: "character_subclasses_and_features", related: feature_entries }];
+  return { resource, relations };
 }
 
 //------------------------------------------------------------------------------

@@ -71,13 +71,15 @@ export default function FeatureGrantedByEditor({
   const addGrant = useCallback(() => {
     if (!resourceId) return;
     if (value.some((grant) => grant.id === resourceId && grant.min_level === minLevel)) return;
+    const option = optionMap.get(resourceId);
+    if (!option) return;
 
-    onValueChange([...value, { id: resourceId, min_level: minLevel }]);
+    onValueChange([...value, { id: resourceId, kind: option.kind, min_level: minLevel }]);
     setResourceId("");
     setMinLevel(0);
     searchRef.current?.clear();
     searchRef.current?.focus();
-  }, [minLevel, onValueChange, resourceId, value]);
+  }, [minLevel, onValueChange, optionMap, resourceId, value]);
 
   return (
     <VStack gap={1} {...rest}>

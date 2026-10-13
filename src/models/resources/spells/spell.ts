@@ -19,7 +19,6 @@ import {
 export const spellSchema = resourceSchema.extend({
   casting_time: spellCastingTimeSchema,
   casting_time_value: z.number().nullish(),
-  character_class_ids: z.array(z.uuid()),
   concentration: z.boolean(),
   description: i18nStringSchema,
   duration: spellDurationSchema,
@@ -47,7 +46,6 @@ export const defaultSpell: Spell = {
   ...defaultResource,
   casting_time: "action",
   casting_time_value: undefined,
-  character_class_ids: [],
   concentration: false,
   description: {},
   duration: "instantaneous",

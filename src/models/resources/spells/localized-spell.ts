@@ -4,6 +4,7 @@ import { useI18nLang } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCm } from "~/measures/distance";
 import { useFormatSeconds } from "~/measures/time";
+import { useActiveSourceRelatedResourceEntries } from "../../catalogue/resource-relation-hooks";
 import { useTranslateSpellCastingTime } from "../../types/spell-casting-time";
 import { useTranslateSpellDuration } from "../../types/spell-duration";
 import { useTranslateSpellRange } from "../../types/spell-range";
@@ -69,6 +70,7 @@ export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 //------------------------------------------------------------------------------
 
 type SpellLocalizationContext = ResourceLocalizationContext & {
+  characterClassIds: string[];
   formatRange: ReturnType<typeof useFormatCm>;
   formatTime: ReturnType<typeof useFormatSeconds>;
   localizedCharacterClassNamesShort: Record<string, string>;
@@ -90,20 +92,24 @@ export function useSpellLocalizationContext(spell: Spell): SpellLocalizationCont
   const translateSpellRange = useTranslateSpellRange(context.lang);
   const formatRange = useFormatCm();
   const formatTime = useFormatSeconds();
-  const characterClassNamesShort = useLocalizedCharacterClassAbbreviations(
-    spell.character_class_ids,
+  const relatedClasses = useActiveSourceRelatedResourceEntries(
+    "character_classes_and_spells",
+    spell,
   );
+  const characterClassIds = relatedClasses.map(({ id }) => id);
+  const characterClassNamesShort = useLocalizedCharacterClassAbbreviations(characterClassIds);
   const localizedCharacterClassNamesShort = useMemo(
     () =>
       Object.fromEntries(
-        spell.character_class_ids.map((id, index) => [id, characterClassNamesShort[index] ?? ""]),
+        characterClassIds.map((id, index) => [id, characterClassNamesShort[index] ?? ""]),
       ),
-    [characterClassNamesShort, spell.character_class_ids],
+    [characterClassIds, characterClassNamesShort],
   );
 
   return useMemo(
     () => ({
       ...context,
+      characterClassIds,
       formatRange,
       formatTime,
       localizedCharacterClassNamesShort,
@@ -114,6 +120,7 @@ export function useSpellLocalizationContext(spell: Spell): SpellLocalizationCont
     }),
     [
       context,
+      characterClassIds,
       formatRange,
       formatTime,
       localizedCharacterClassNamesShort,
@@ -134,7 +141,7 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
     ? context.formatTime(spell.casting_time_value)
     : context.translateSpellCastingTime(spell.casting_time);
 
-  const character_classes = spell.character_class_ids
+  const character_classes = context.characterClassIds
     .map((id) => context.localizedCharacterClassNamesShort[id] ?? "")
     .map((characterClass) => `${characterClass}.`)
     .sort()

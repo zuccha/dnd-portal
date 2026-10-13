@@ -1,4 +1,6 @@
 import { HStack, VStack } from "@chakra-ui/react";
+import { useMemo } from "react";
+import { useSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { type Spell } from "~/models/resources/spells/spell";
 import type { SpellFormData } from "~/models/resources/spells/spell-form";
@@ -204,6 +206,15 @@ export function createSpellEditor(form: Form<SpellFormData>) {
 
   return function SpellEditor({ sourceId, resource }: SpellEditorProps) {
     const { lang } = useResourceEditorLang();
+    const characterClasses = useSourceRelatedResourceEntries(
+      resource.source_id,
+      "character_classes_and_spells",
+      resource,
+    );
+    const characterClassIds = useMemo(
+      () => characterClasses.map(({ id }) => id),
+      [characterClasses],
+    );
 
     const { value: castingTime } = useCastingTime(resource.casting_time);
     const { value: duration } = useDuration(resource.duration);
@@ -213,7 +224,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
     return (
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
-          <CharacterClassIdsField defaultValue={resource.character_class_ids} sourceId={sourceId} />
+          <CharacterClassIdsField defaultValue={characterClassIds} sourceId={sourceId} />
           <SchoolField defaultValue={resource.school} w="20em" />
           <LevelField defaultValue={resource.level} w="10em" />
         </HStack>

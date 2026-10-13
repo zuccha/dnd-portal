@@ -1,4 +1,5 @@
 import z from "zod";
+import { resourceFeatureKindSchema } from "../../types/resource-feature-kind";
 
 //------------------------------------------------------------------------------
 // Feature Grant
@@ -6,6 +7,7 @@ import z from "zod";
 
 export const featureGrantSchema = z.object({
   id: z.uuid(),
+  kind: resourceFeatureKindSchema,
   min_level: z.number().min(0).max(20),
 });
 

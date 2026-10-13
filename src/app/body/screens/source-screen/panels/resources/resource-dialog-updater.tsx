@@ -1,8 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import ResourceRelationsDraftProvider from "~/models/catalogue/resource-relations-draft-provider";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
+import {
+  splitResourceFormOutput,
+  type ParsedResourceFormOutput,
+} from "~/models/resources/resource-form";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import { toaster } from "~/ui/toaster";
@@ -25,7 +30,7 @@ import type { ResourcesContext } from "./resources-context";
 export type ResourceDialogUpdaterExtra<R extends Resource, FF extends Record<string, unknown>> = {
   Editor: React.FC<{ resource: R; sourceId: string }>;
   form: Form<FF>;
-  parseFormData: (data: Partial<FF>, lang: string) => Partial<R> | string;
+  parseFormData: (data: Partial<FF>, lang: string) => ParsedResourceFormOutput<R> | string;
 };
 
 //------------------------------------------------------------------------------
@@ -61,19 +66,45 @@ export function createResourceDialogUpdater<
     const errorOrData = parseFormData(data, lang);
     if (typeof errorOrData === "string") return errorOrData;
 
+    const output = splitResourceFormOutput(errorOrData);
     return store.updateResource(
       id,
       applyResourceEditorPreviewPatch(
         resource,
-        errorOrData as ResourceEditorPreviewPatch<R>,
+        output.resource as ResourceEditorPreviewPatch<R>,
         store.translationFields,
       ),
+      output.relations,
     );
   }
 
   const { useData, useSubmit, useSubmitError, useValid } = form;
   const { localizeResource, useLocalizationContext } = store;
   const { useEditedResource, usePaletteName, useShowImage } = context;
+
+  //----------------------------------------------------------------------------
+  // Preview Card Content
+  //----------------------------------------------------------------------------
+
+  function PreviewCardContent({
+    paletteName,
+    resource,
+    showImage,
+  }: {
+    paletteName: keyof typeof palettes;
+    resource: R;
+    showImage: boolean;
+  }) {
+    const localizationContext = useLocalizationContext(resource);
+    return (
+      <ResourceCardPreview
+        Card={PreviewCard}
+        localizedResource={localizeResource(resource, localizationContext)}
+        palette={palettes[paletteName]}
+        showImage={showImage}
+      />
+    );
+  }
 
   //----------------------------------------------------------------------------
   // Preview
@@ -95,22 +126,26 @@ export function createResourceDialogUpdater<
     const previewResource = useMemo(() => {
       const errorOrData = parseFormData(formData, lang);
       if (typeof errorOrData === "string") return resource;
+      const output = splitResourceFormOutput(errorOrData);
       return applyResourceEditorPreviewPatch(
         resource,
-        errorOrData as ResourceEditorPreviewPatch<R>,
+        output.resource as ResourceEditorPreviewPatch<R>,
         store.translationFields,
       );
     }, [formData, lang, resource]);
 
-    const localizationContext = useLocalizationContext(previewResource);
+    const parsedFormData = parseFormData(formData, lang);
+    const relationUpdates =
+      typeof parsedFormData === "string" ? [] : splitResourceFormOutput(parsedFormData).relations;
 
     return (
-      <ResourceCardPreview
-        Card={PreviewCard}
-        localizedResource={localizeResource(previewResource, localizationContext)}
-        palette={palettes[paletteName]}
-        showImage={showImage}
-      />
+      <ResourceRelationsDraftProvider endpoint={previewResource} updates={relationUpdates}>
+        <PreviewCardContent
+          paletteName={paletteName}
+          resource={previewResource}
+          showImage={showImage}
+        />
+      </ResourceRelationsDraftProvider>
     );
   }
 
@@ -160,7 +195,7 @@ export function createResourceDialogUpdater<
           ? editorResource
           : applyResourceEditorPreviewPatch(
               editorResource,
-              errorOrData as ResourceEditorPreviewPatch<R>,
+              splitResourceFormOutput(errorOrData).resource as ResourceEditorPreviewPatch<R>,
               store.translationFields,
             );
       await navigator.clipboard.writeText(JSON.stringify(draftResource, null, 2));

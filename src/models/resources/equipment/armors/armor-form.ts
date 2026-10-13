@@ -1,7 +1,7 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
 import { armorTypeSchema } from "../../../types/armor-type";
-import { createResourceFormDataPatch } from "../../resource-form";
+import { createResourceFormDataPatch, type ResourceFormOutput } from "../../resource-form";
 import { equipmentFormDataSchema, equipmentFormDataToResource } from "../equipment-form";
 import type { Armor } from "./armor";
 
@@ -43,9 +43,10 @@ export type ArmorFormData = z.infer<typeof armorFormDataSchema>;
 export function armorFormDataToResource(
   data: Partial<ArmorFormData>,
   lang: string,
-): Partial<Armor> {
-  return createResourceFormDataPatch({
-    ...equipmentFormDataToResource(data, lang),
+): ResourceFormOutput<Armor> {
+  const base = equipmentFormDataToResource(data, lang);
+  const resource = createResourceFormDataPatch({
+    ...base.resource,
     armor_class_max_cha_modifier:
       data.armor_class_includes_cha_modifier === undefined
         ? undefined
@@ -93,6 +94,7 @@ export function armorFormDataToResource(
     required_wis: data.required_wis,
     type: data.type,
   });
+  return { resource, relations: base.relations };
 }
 
 //------------------------------------------------------------------------------

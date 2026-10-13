@@ -5,6 +5,7 @@ import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { joinWith } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
+import { useActiveSourceRelatedResourceEntries } from "../../catalogue/resource-relation-hooks";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateArmorType } from "../../types/armor-type";
 import { useTranslateCreatureAbility } from "../../types/creature-ability";
@@ -73,7 +74,13 @@ export function useCharacterClassLocalizationContext(
 ): CharacterClassLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
-  const featureEntries = useLocalizedFeatureEntries(characterClass.feature_entries);
+  const relatedFeatures = useActiveSourceRelatedResourceEntries(
+    "character_classes_and_features",
+    characterClass,
+  );
+  const featureEntries = useLocalizedFeatureEntries(
+    relatedFeatures.map(({ id, min_level = 0 }) => ({ id, min_level })),
+  );
   const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
   const toolNames = useLocalizedToolNames(characterClass.tool_proficiency_ids);
   const localizedToolNames = useMemo(
