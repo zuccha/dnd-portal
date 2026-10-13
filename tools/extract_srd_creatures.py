@@ -28,6 +28,7 @@ from typing import Any, Iterable
 #------------------------------------------------------------------------------
 
 CREATURE_NAMESPACE = uuid.UUID("7d8c58c1-20a8-4dcb-aeb5-cd04a2cbbd63")
+CREATURE_TAG_NAMESPACE = uuid.UUID("d2f1bb42-0b2e-4ac1-8ef2-0f6f85ccbe69")
 RESOURCE_KINDS = (
     "armors",
     "items",
@@ -313,9 +314,11 @@ SECTION_NAMES = {
 class TextLine:
     page: int
     column: int
+    x: float
     y: float
     text: str
     bold: bool
+    bold_texts: tuple[str, ...] = ()
 
 
 @dataclass
@@ -357,8 +360,10 @@ class ParsedCreature:
     immunity_text: str
     vulnerability_text: str
     sense_text: str
+    language_text: str
     speed_text: str
     equipment_names: list[str]
+    tag_names: list[str]
 
 
 #------------------------------------------------------------------------------
@@ -387,42 +392,44 @@ def _span_text(span: ElementTree.Element) -> str:
 def _extract_page_lines(path: Path, language: str, page: int) -> list[TextLine]:
     root = ElementTree.fromstring(_sanitize_xml(path.read_text(errors="replace")))
     columns: list[list[TextLine]] = [[], []]
+    lines: dict[tuple[float, int], list[tuple[float, str, bool]]] = defaultdict(list)
 
-    for line in root.findall(".//line"):
-        spans: list[tuple[float, float, str, bool]] = []
-        for span in line.findall("./span"):
-            bbox = span.attrib.get("bbox", "").split()
+    for span in root.findall(".//span"):
+        font = span.attrib.get("font", "")
+        bold = "Bold" in font
+        for char in span.findall("./char"):
+            bbox = char.attrib.get("bbox", "").split()
             if len(bbox) < 4:
                 continue
-            text = _span_text(span)
-            if not text:
-                continue
-            spans.append(
-                (
-                    float(bbox[0]),
-                    float(bbox[1]),
-                    text,
-                    "Bold" in span.attrib.get("font", ""),
-                )
-            )
+            x = float(bbox[0])
+            y = float(bbox[1])
+            column = 0 if x < 290 else 1
+            lines[(y, column)].append((x, html.unescape(char.attrib.get("c", "")), bold))
 
-        if not spans:
-            continue
-
-        x = min(span[0] for span in spans)
-        y = min(span[1] for span in spans)
-        text = re.sub(r"[ \t]+", " ", "".join(span[2] for span in sorted(spans))).strip()
+    for (y, column), chars in sorted(lines.items(), key=lambda item: (item[0][1], item[0][0])):
+        ordered_chars = sorted(chars, key=lambda char: char[0])
+        text = re.sub(r"[ \t]+", " ", "".join(char[1] for char in ordered_chars)).strip()
         if not text:
             continue
-
-        column = 0 if x < 290 else 1
+        bold_texts: list[str] = []
+        current_bold = ""
+        for _, value, is_bold in ordered_chars:
+            if is_bold:
+                current_bold += value
+            elif current_bold:
+                bold_texts.append(current_bold.strip())
+                current_bold = ""
+        if current_bold:
+            bold_texts.append(current_bold.strip())
         columns[column].append(
             TextLine(
                 page=page,
                 column=column,
+                x=min(char[0] for char in ordered_chars),
                 y=y,
                 text=text,
-                bold=any(span[3] for span in spans),
+                bold=bool(bold_texts),
+                bold_texts=tuple(bold_texts),
             )
         )
 
@@ -439,7 +446,7 @@ def _extract_lines(pdf: Path, language: str) -> list[TextLine]:
                 "-dNOPAUSE",
                 "-dBATCH",
                 "-sDEVICE=txtwrite",
-                "-dTextFormat=1",
+                "-dTextFormat=0",
                 f"-sOutputFile={output_directory / 'page-%04d.xml'}",
                 str(pdf),
             ],
@@ -493,9 +500,11 @@ def _merge_lines(lines: Iterable[TextLine]) -> list[TextLine]:
             merged[-1] = TextLine(
                 page=previous.page,
                 column=previous.column,
+                x=min(previous.x, line.x),
                 y=previous.y,
                 text=previous.text + line.text,
                 bold=previous.bold or line.bold,
+                bold_texts=previous.bold_texts + line.bold_texts,
             )
         else:
             merged.append(line)
@@ -581,6 +590,18 @@ def _reflow(lines: Iterable[str]) -> str:
     return result
 
 
+def _reflow_text_lines(lines: Iterable[TextLine]) -> tuple[str, list[str]]:
+    line_list = list(lines)
+    text = _reflow(line.text for line in line_list)
+    bold_texts = [
+        bold_text.strip()
+        for line in line_list
+        for bold_text in line.bold_texts
+        if bold_text.strip() and len(bold_text.strip()) < len(line.text.strip()) * 0.7
+    ]
+    return text, bold_texts
+
+
 #------------------------------------------------------------------------------
 # Text formatting
 #------------------------------------------------------------------------------
@@ -655,12 +676,47 @@ def _normalize_measurements(text: str, language: str) -> str:
     )
 
 
-def _format_paragraph(text: str, language: str) -> str:
+def _format_paragraph(
+    text: str,
+    language: str,
+    bold_texts: Iterable[str] = (),
+) -> str:
     text = _normalize_measurements(text, language)
     title_match = re.match(r"^(.{1,80}?\.)(?:\s+|$)", text)
-    if title_match and not text.startswith(("The ", "A ", "An ", "If ", "While ", "For ", "Il ", "La ", "Se ", "Mentre ")):
+    title = ""
+    if title_match and not text.startswith(
+        (
+            "The ",
+            "A ",
+            "An ",
+            "If ",
+            "While ",
+            "For ",
+            "Success:",
+            "Failure:",
+            "Hit:",
+            "Il ",
+            "La ",
+            "Se ",
+            "Mentre ",
+            "Successo:",
+            "Fallimento:",
+            "Colpito:",
+        )
+    ):
         title = title_match.group(1)
         text = f"**{title}**{text[len(title):]}"
+    for bold_text in sorted(set(bold_texts), key=len, reverse=True):
+        if not bold_text:
+            continue
+        search_start = len(title) if title else 0
+        start = text.find(bold_text, search_start)
+        if start < 0:
+            continue
+        end = start + len(bold_text)
+        if text[max(0, start - 2) : start] == "**" and text[end : end + 2] == "**":
+            continue
+        text = text[:start] + f"**{bold_text}**" + text[end:]
     labels = (
         "Melee Attack Roll:",
         "Ranged Attack Roll:",
@@ -848,7 +904,7 @@ def _parse_speed(text: str, language: str) -> dict[str, int | bool]:
     }
     for key, labels in speed_names.items():
         for label in labels:
-            match = re.search(rf"{re.escape(label)}[^,;]*(\d+(?:[,.]\d+)?)\s*{unit}", text, re.IGNORECASE)
+            match = re.search(rf"{re.escape(label)}[^,;]*?(\d+(?:[,.]\d+)?)\s*{unit}", text, re.IGNORECASE)
             if match:
                 result[key] = _feet_or_meters_to_cm(match.group(1), language)
                 break
@@ -884,12 +940,24 @@ def _parse_languages(text: str, language: str) -> tuple[list[str], str, str]:
     lowered = value.lower()
     if not value or lowered in {"none", "nessuna"}:
         return [], "none", "speaks"
-    if "all languages" in lowered or "tutte le lingue" in lowered:
+    if re.match(r"^(?:all|tutte le lingue)(?:\s*[;,]|$)", lowered):
         return [], "all", "speaks"
     mode = "understands" if lowered.startswith(("understands", "capisce", "comprende")) else "speaks"
     value = re.sub(r"^(understands|capisce|comprende)\s+", "", value, flags=re.IGNORECASE)
     value = re.sub(r"\s+but (?:can’t|can't) speak.*$", "", value, flags=re.IGNORECASE)
     value = re.sub(r"\s+ma non parla.*$", "", value, flags=re.IGNORECASE)
+    value = re.sub(
+        r"(?:[,;]\s*)?(?:telepathy|telepatia)\s+\d+(?:[,.]\d+)?\s*(?:ft\.?|feet|m(?:etri|eteri)?\.?)$",
+        "",
+        value,
+        flags=re.IGNORECASE,
+    ).strip(" ,;")
+    value = re.sub(
+        r"\s*(?:plus|più)\s+(?:one|two|three|four|five|uno|un'altra|un altra|due|tre|quattro|cinque)\s+(?:other\s+)?(?:languages?|lingue?)\s*$",
+        "",
+        value,
+        flags=re.IGNORECASE,
+    ).strip(" ,;")
     names = [part.strip() for part in re.split(r"[,;]", value) if part.strip()]
     return names, "specific", mode
 
@@ -916,6 +984,10 @@ def _parse_additional_language_count(text: str) -> int:
         "quattro": 4,
         "cinque": 5,
     }[match.group(1).lower()]
+
+
+def _parse_descriptor_tags(descriptor: str) -> list[str]:
+    return [value.strip() for value in re.findall(r"\(([^()]+)\)", descriptor) if value.strip()]
 
 
 def _parse_equipment_names(text: str, language: str) -> list[str]:
@@ -951,28 +1023,61 @@ def _parse_sections(lines: list[TextLine], language: str) -> dict[str, str]:
             sections[current].append(line)
 
     result: dict[str, str] = {}
+    list_item_pattern = re.compile(r"^(?:\d+(?:[–-]\d+)?|[A-Za-z])\.\s+")
     for key, section_lines in sections.items():
-        paragraphs: list[list[str]] = []
-        current_paragraph: list[str] = []
+        paragraphs: list[list[TextLine]] = []
+        current_paragraph: list[TextLine] = []
         previous: TextLine | None = None
         for line in section_lines:
-            starts_new_paragraph = bool(
+            first_sentence = line.text.split(".", 1)[0].strip()
+            starts_like_title = bool(
                 current_paragraph
                 and previous is not None
                 and previous.page == line.page
-                and previous.column == line.column
-                and line.y - previous.y > 14.5
+                and previous.column != line.column
+                and line.y < 100
+                and len(first_sentence.split()) <= 8
+                and not first_sentence.lower().startswith(
+                    ("the ", "a ", "an ", "if ", "while ", "for ", "il ", "lo ", "la ", "i ", "gli ", "le ", "se ", "mentre ")
+                )
+            )
+            starts_new_paragraph = bool(
+                current_paragraph
+                and previous is not None
+                and (
+                    (
+                        line.bold
+                        and not previous.bold
+                        and previous.text.rstrip().endswith((".", ":", ")", "!", "?"))
+                        and not first_sentence.lower().startswith(
+                            ("success", "failure", "hit:", "successo", "fallimento", "colpito:")
+                        )
+                    )
+                    or line.text.startswith(("The target repeats", "Il bersaglio ripete"))
+                    or starts_like_title
+                    or list_item_pattern.match(line.text)
+                    or (
+                        previous.page == line.page
+                        and previous.column == line.column
+                        and line.y - previous.y > 14.5
+                    )
+                )
             )
             if starts_new_paragraph:
                 paragraphs.append(current_paragraph)
                 current_paragraph = []
-            current_paragraph.append(line.text)
+            current_paragraph.append(line)
             previous = line
         if current_paragraph:
             paragraphs.append(current_paragraph)
-        result[key] = "\n\n".join(
-            _format_paragraph(_reflow(paragraph), language) for paragraph in paragraphs
-        )
+        formatted_paragraphs = []
+        for paragraph in paragraphs:
+            text, bold_texts = _reflow_text_lines(paragraph)
+            formatted = _format_paragraph(text, language, bold_texts)
+            if list_item_pattern.match(paragraph[0].text):
+                formatted = f"• {formatted}"
+            formatted_paragraphs.append(formatted)
+        result[key] = "\n".join(formatted_paragraphs)
     return result
 
 
@@ -990,7 +1095,11 @@ def _parse_block(block: CreatureBlock, page_offset: int) -> ParsedCreature:
     cr_match = re.search(r"(?:CR|GS)\s+([0-9]+(?:/[0-9]+)?|[½¼⅛])", text)
     exp_match = re.search(r"(?:XP|PE)\s+([\d.,]+)", text)
     pb_match = re.search(r"(?:PB|BC)\s+([-+−]\d+)", text)
-    speed_text = _line_after_label(lines, ("Speed", "Velocità"))
+    speed_text = _field_text(
+        lines,
+        ("Speed", "Velocità"),
+        ("AC", "CA", "Initiative", "Iniziativa", "HP", "PF"),
+    )
     sense_text = _field_text(lines, ("Senses", "Sensi"), ("Languages", "Lingue", "CR", "GS"))
     language_text = _field_text(lines, ("Languages", "Lingue"), ("CR", "GS", "Traits", "Tratti", "Actions", "Azioni"))
     resistance_text = _field_text(lines, ("Resistances", "Resistenze"), ("Immunities", "Immunità", "Vulnerabilities", "Vulnerabilità", "Senses", "Sensi"))
@@ -1028,8 +1137,10 @@ def _parse_block(block: CreatureBlock, page_offset: int) -> ParsedCreature:
         immunity_text=immunity_text,
         vulnerability_text=vulnerability_text,
         sense_text=sense_text,
+        language_text=language_text,
         speed_text=speed_text,
         equipment_names=_parse_equipment_names(equipment_text, block.language),
+        tag_names=_parse_descriptor_tags(block.descriptor),
     )
 
 
@@ -1116,6 +1227,75 @@ def _language_entries(creature: ParsedCreature, bundle: dict[str, Any]) -> list[
     return entries
 
 
+def _tag_resource(
+    english_name: str,
+    italian_name: str,
+    bundle: dict[str, Any],
+) -> dict[str, Any]:
+    source = bundle["source"]
+    return {
+        "id": str(uuid.uuid5(CREATURE_TAG_NAMESPACE, f"{source['id']}:creature_tag:{_normalize_name(english_name)}")),
+        "kind": "creature_tag",
+        "source_code": source["code"],
+        "source_id": source["id"],
+        "source_version": source["version"],
+        "image_url": None,
+        "visibility": "public",
+        "name": {"en": english_name, "it": italian_name},
+        "page": {},
+    }
+
+
+CREATURE_TAG_TRANSLATIONS = {
+    "demon": "Demone",
+    "devil": "Diavolo",
+    "chromatic": "Cromatico",
+    "metallic": "Metallico",
+    "goblinoid": "Goblinoide",
+    "angel": "Angelo",
+    "genie": "Genio",
+    "druid": "Druido",
+    "titan": "Titano",
+    "wizard": "Mago",
+    "cleric": "Chierico",
+    "lycanthrope": "Licantropo",
+    "dinosaur": "Dinosauro",
+}
+
+
+def _ensure_creature_tags(
+    english: list[ParsedCreature],
+    bundle: dict[str, Any],
+) -> dict[str, str]:
+    existing = bundle["resources"].setdefault("creature_tags", [])
+    by_name: dict[str, dict[str, Any]] = {}
+    for tag in existing:
+        name = tag.get("name", {})
+        if name.get("en"):
+            by_name[_normalize_name(name["en"])] = tag
+
+    for english_creature in english:
+        for english_name in english_creature.tag_names:
+            italian_name = CREATURE_TAG_TRANSLATIONS.get(
+                _normalize_name(english_name),
+                english_name,
+            )
+            normalized_name = _normalize_name(english_name)
+            tag = by_name.get(normalized_name)
+            if tag is None:
+                tag = _tag_resource(english_name, italian_name, bundle)
+                existing.append(tag)
+                by_name[normalized_name] = tag
+            else:
+                tag.setdefault("name", {})["en"] = english_name
+                tag.setdefault("name", {})["it"] = italian_name
+
+    return {
+        name: tag["id"]
+        for name, tag in by_name.items()
+    }
+
+
 def _equipment_bundle(
     creature: ParsedCreature,
     localized_creature: ParsedCreature,
@@ -1135,6 +1315,7 @@ def _parse_creature_row(
     italian: ParsedCreature,
     bundle: dict[str, Any],
     existing_ids: dict[str, str],
+    tag_ids_by_name: dict[str, str],
 ) -> dict[str, Any]:
     resistance_damage, resistance_conditions = _split_damage_and_conditions(english.resistance_text)
     immunity_damage, immunity_conditions = _split_damage_and_conditions(english.immunity_text)
@@ -1152,7 +1333,7 @@ def _parse_creature_row(
         uuid.uuid5(CREATURE_NAMESPACE, f"{bundle['source']['id']}:creature:{_normalize_name(english.name)}")
     )
     speed = _parse_speed(english.speed_text, "en")
-    senses = _parse_senses(english.sense_text, "en")
+    senses = _parse_senses(f"{english.sense_text}; {english.language_text}", "en")
     cr_text = next(
         (line for line in english.lines if re.search(r"(?:CR|GS)\s+", line)),
         "",
@@ -1206,7 +1387,7 @@ def _parse_creature_row(
         "darkvision": senses["darkvision"],
         "exp": english.exp,
         "habitats": [],
-        "has_lair": bool(english.sections.get("lair_effects")),
+        "has_lair": bool(english.sections.get("lair_effects") or lair_exp_match),
         "hover": bool(speed["hover"]),
         "hp": english.hp,
         "hp_formula": english.hp_formula,
@@ -1231,7 +1412,11 @@ def _parse_creature_row(
         "speed_fly": int(speed["fly"]),
         "speed_swim": int(speed["swim"]),
         "speed_walk": int(speed["walk"]),
-        "tag_ids": [],
+        "tag_ids": [
+            tag_ids_by_name[_normalize_name(name)]
+            for name in english.tag_names
+            if _normalize_name(name) in tag_ids_by_name
+        ],
         "telepathy_range": senses["telepathy"],
         "traits": sections["traits"],
         "treasures": [],
@@ -1277,6 +1462,7 @@ def _convert_bundle(
         for resource in bundle.get("resources", {}).get("creatures", [])
         if resource.get("id")
     }
+    tag_ids_by_name = _ensure_creature_tags(english, bundle)
     rows: list[dict[str, Any]] = []
     for creature in english:
         matches = italian_by_signature[_signature(creature)]
@@ -1291,7 +1477,15 @@ def _convert_bundle(
             matches.remove(italian_match)
         else:
             italian_match = matches.popleft()
-        rows.append(_parse_creature_row(creature, italian_match, bundle, existing_ids))
+        rows.append(
+            _parse_creature_row(
+                creature,
+                italian_match,
+                bundle,
+                existing_ids,
+                tag_ids_by_name,
+            )
+        )
     bundle["resources"]["creatures"] = rows
     return bundle
 
@@ -1308,7 +1502,14 @@ def _block_to_json(block: CreatureBlock) -> dict[str, Any]:
         "name": block.name,
         "descriptor": block.descriptor,
         "lines": [
-            {"page": line.page, "column": line.column, "y": line.y, "text": line.text, "bold": line.bold}
+            {
+                "page": line.page,
+                "column": line.column,
+                "y": line.y,
+                "text": line.text,
+                "bold": line.bold,
+                "bold_texts": line.bold_texts,
+            }
             for line in block.lines
         ],
     }
