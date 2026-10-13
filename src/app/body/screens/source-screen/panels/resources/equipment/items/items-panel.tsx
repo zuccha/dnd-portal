@@ -70,7 +70,7 @@ const actions: ResourcesTableExtra<Item, LocalizedItem>["actions"] = [
 
 const ItemsPanel = createResourcesPanel(
   itemStore,
-  { initialPaletteName: "teal" },
+  { initialPaletteName: "teal", initialView: "cards" },
   {
     Extra: itemVariantDialog.Dialog,
     album: { AlbumCard: ItemCard, actions },

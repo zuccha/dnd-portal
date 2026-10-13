@@ -62,7 +62,7 @@ const actions: ResourcesTableExtra<Armor, LocalizedArmor>["actions"] = [
 
 const ArmorsPanel = createResourcesPanel(
   armorStore,
-  { initialPaletteName: "gray" },
+  { initialPaletteName: "gray", initialView: "cards" },
   {
     Extra: armorVariantDialog.Dialog,
     album: { AlbumCard: ArmorCard, actions },

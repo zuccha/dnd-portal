@@ -25,6 +25,7 @@ export function createResourcesPanel<
   store: ResourceStore<R, L, F>,
   contextOptions: {
     initialPaletteName: PaletteName;
+    initialView?: "cards" | "table";
   },
   {
     album,

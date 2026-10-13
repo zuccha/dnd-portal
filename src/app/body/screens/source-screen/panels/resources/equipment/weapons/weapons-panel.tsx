@@ -79,7 +79,7 @@ const actions: ResourcesTableExtra<Weapon, LocalizedWeapon>["actions"] = [
 
 const WeaponsPanel = createResourcesPanel(
   weaponStore,
-  { initialPaletteName: "brick" },
+  { initialPaletteName: "brick", initialView: "cards" },
   {
     Extra: weaponVariantDialog.Dialog,
     album: { AlbumCard: WeaponCard, actions },

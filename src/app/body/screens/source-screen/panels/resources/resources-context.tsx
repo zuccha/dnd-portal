@@ -29,7 +29,10 @@ export type ResourcesContext<R extends Resource> = ReturnType<typeof createResou
 
 export function createResourcesContext<R extends Resource>(
   id: string,
-  { initialPaletteName }: { initialPaletteName: PaletteName },
+  {
+    initialPaletteName,
+    initialView = "table",
+  }: { initialPaletteName: PaletteName; initialView?: ResourcesContextView },
 ) {
   const createdResourceStore = createMemoryStore<R | undefined>(
     `${id}.created_resource`,
@@ -54,7 +57,7 @@ export function createResourcesContext<R extends Resource>(
 
   const showImageStore = createLocalStore<boolean>(`${id}.show_image`, true, z.boolean().parse);
 
-  const viewStore = createLocalStore(`${id}.view`, "table", resourcesContextViewSchema.parse);
+  const viewStore = createLocalStore(`${id}.view`, initialView, resourcesContextViewSchema.parse);
 
   const zoomStore = createLocalStore(`${id}.zoom`, 1.3, z.number().parse);
 
