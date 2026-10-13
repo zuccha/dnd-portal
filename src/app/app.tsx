@@ -31,7 +31,9 @@ export default function App() {
         document.fonts.load('bold italic 16px "Bookinsanity"'),
         document.fonts.load('16px "Fira Mono"'),
         document.fonts.load('bold 16px "Fira Mono"'),
-        document.fonts.load('16px "Mr Eaves"'),
+        document.fonts.load('16px "Mitr"'),
+        document.fonts.load('500 16px "Mitr"'),
+        document.fonts.load('600 16px "Mitr"'),
         document.fonts.load('16px "Mr Eaves Alt"'),
         document.fonts.load('16px "Title Wave"'),
       ]);

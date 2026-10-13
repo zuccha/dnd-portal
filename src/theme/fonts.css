@@ -81,6 +81,31 @@
 }
 
 /******************************************************************************/
+/* Mitr
+/******************************************************************************/
+
+@font-face {
+  font-family: "Mitr";
+  src: url("../assets/fonts/Mitr.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Mitr";
+  src: url("../assets/fonts/Mitr Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Mitr";
+  src: url("../assets/fonts/Mitr SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+/******************************************************************************/
 /* Mr Eaves
 /******************************************************************************/
 
