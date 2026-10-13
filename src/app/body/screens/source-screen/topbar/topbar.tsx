@@ -34,12 +34,7 @@ export default function Topbar() {
       w="full"
       zIndex="docked"
     >
-      <HStack
-        flex={1}
-        fontFamily="Title Wave"
-        fontSize={{ base: "md", md: "2xl" }}
-        fontWeight="bold"
-      >
+      <HStack flex={1} fontFamily="Mitr" fontSize={{ base: "2xl", md: "3xl" }}>
         <IconButton
           Icon={MenuIcon}
           display={{ base: "inline-flex", md: "none" }}
@@ -50,7 +45,10 @@ export default function Topbar() {
           variant="ghost"
         />
         <Button cursor="pointer" onClick={() => navigate(Route._)} unstyled>
-          <Span color="fg.error">Zorbo</Span>DnD
+          <Span fontWeight="600">Zorbo</Span>
+          <Span fontWeight="500" color="fg.error">
+            DnD
+          </Span>
         </Button>
       </HStack>
 
