@@ -560,6 +560,7 @@ export function createMultipleSelectIdsField<T extends string>({
           placeholder={t("placeholder")}
           withinDialog
           {...field}
+          disabled={options.length === 0}
         />
       </Field>
     );
