@@ -20,13 +20,9 @@ export default function App() {
     let cancelled = false;
 
     async function initializeApp(): Promise<void> {
-      const [bundles, states] = await Promise.all([
+      const [bundles] = await Promise.all([
         loadSourceBundles().catch((error) => {
           console.error("Unable to load persisted source bundles", error);
-          return [];
-        }),
-        loadSourceStates().catch((error) => {
-          console.error("Unable to load persisted source states", error);
           return [];
         }),
         document.fonts.load('16px "Bookinsanity"'),
@@ -39,6 +35,10 @@ export default function App() {
         document.fonts.load('16px "Mr Eaves Alt"'),
         document.fonts.load('16px "Title Wave"'),
       ]);
+      const states = await loadSourceStates().catch((error) => {
+        console.error("Unable to load persisted source states", error);
+        return [];
+      });
 
       if (cancelled) return;
 

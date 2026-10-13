@@ -109,7 +109,21 @@ export async function loadSourceBundles(): Promise<SourceBundle[]> {
 
   for (const record of records) {
     try {
-      bundles.push(parseSourceBundle(record.bundle));
+      const bundle = parseSourceBundle(record.bundle);
+      bundles.push(bundle);
+
+      if (record.bundle.bundle_version !== bundle.bundle_version) {
+        const currentBundleHash = await getBundleHash(bundle);
+        await db.transaction("rw", db.source_bundles, db.source_states, async () => {
+          await db.source_bundles.put({ bundle, source_id: record.source_id });
+          const previousState = await db.source_states.get(record.source_id);
+          await db.source_states.put({
+            current_bundle_hash: currentBundleHash,
+            published_bundle_hash: previousState?.published_bundle_hash,
+            source_id: record.source_id,
+          });
+        });
+      }
     } catch (error) {
       console.error("Invalid persisted source bundle", {
         error,
