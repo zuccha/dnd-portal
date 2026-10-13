@@ -9,6 +9,7 @@ import PrintDeckPanel from "./body/screens/source-screen/panels/print-deck/print
 import BackgroundsPanel from "./body/screens/source-screen/panels/resources/backgrounds/backgrounds-panel";
 import CharacterClassesPanel from "./body/screens/source-screen/panels/resources/character-classes/character-classes-panel";
 import CharacterSubclassesPanel from "./body/screens/source-screen/panels/resources/character-subclasses/character-subclasses-panel";
+import CreatureFamiliesPanel from "./body/screens/source-screen/panels/resources/creature-families/creature-families-panel";
 import CreatureTagsPanel from "./body/screens/source-screen/panels/resources/creature-tag/creature-tags-panel";
 import CreaturesPanel from "./body/screens/source-screen/panels/resources/creatures/creatures-panel";
 import EldritchInvocationsPanel from "./body/screens/source-screen/panels/resources/eldritch-invocations/eldritch-invocations-panel";
@@ -78,6 +79,7 @@ const resourceRoutes = [
   { panel: CharacterSubclassesPanel, path: Route.ResourcesCharacterSubclasses },
   { panel: CreatureTagsPanel, path: Route.ResourcesBestiaryTags },
   { panel: CreaturesPanel, path: Route.ResourcesBestiaryMonsters },
+  { panel: CreatureFamiliesPanel, path: Route.ResourcesBestiaryFamilies },
   { panel: EldritchInvocationsPanel, path: Route.ResourcesAbilitiesEldritchInvocations },
   { panel: FeatsPanel, path: Route.ResourcesCharacterFeats },
   { panel: FeaturesPanel, path: Route.ResourcesBlocksFeatures },

@@ -2,6 +2,7 @@ import type { PrintDeckEntry } from "~/models/print-deck/print-deck-entry";
 import { backgroundStore } from "~/models/resources/backgrounds/background-store";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
+import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
@@ -27,6 +28,7 @@ import type { Palette } from "~/utils/palette";
 import { BackgroundCard } from "../resources/backgrounds/background-card";
 import { CharacterClassCard } from "../resources/character-classes/character-class-card";
 import { CharacterSubclassCard } from "../resources/character-subclasses/character-subclass-card";
+import { CreatureFamilyCard } from "../resources/creature-families/creature-family-card";
 import { CreatureTagCard } from "../resources/creature-tag/creature-tag-card";
 import { CreatureCard } from "../resources/creatures/creature-card";
 import { EldritchInvocationCard } from "../resources/eldritch-invocations/eldritch-invocation-card";
@@ -55,6 +57,7 @@ const useLocalizedBackground = backgroundStore.useLocalizedResource;
 const useLocalizedCharacterClass = characterClassStore.useLocalizedResource;
 const useLocalizedCharacterSubclass = characterSubclassStore.useLocalizedResource;
 const useLocalizedCreature = creatureStore.useLocalizedResource;
+const useLocalizedCreatureFamily = creatureFamilyStore.useLocalizedResource;
 const useLocalizedCreatureTag = creatureTagStore.useLocalizedResource;
 const useLocalizedEldritchInvocation = eldritchInvocationStore.useLocalizedResource;
 const useLocalizedFeat = featStore.useLocalizedResource;
@@ -141,6 +144,15 @@ export function CharacterSubclassPrintDeckEntryCard(props: PrintDeckEntryCardPro
 export function CreaturePrintDeckEntryCard(props: PrintDeckEntryCardProps) {
   const resource = useLocalizedCreature(props.entry.resource.id);
   return resource ? <CreatureCard {...props} localizedResource={resource} /> : null;
+}
+
+//------------------------------------------------------------------------------
+// Creature Family Print Deck Entry Card
+//------------------------------------------------------------------------------
+
+export function CreatureFamilyPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
+  const resource = useLocalizedCreatureFamily(props.entry.resource.id);
+  return resource ? <CreatureFamilyCard {...props} localizedResource={resource} /> : null;
 }
 
 //------------------------------------------------------------------------------

@@ -14,6 +14,7 @@ export const Route = {
   ResourcesAbilitiesSpells: "/resources/spells",
   ResourcesBestiary: "/resources/bestiary",
   ResourcesBestiaryMonsters: "/resources/creatures",
+  ResourcesBestiaryFamilies: "/resources/creature-families",
   ResourcesBestiaryTags: "/resources/creature-tags",
   ResourcesBlocksFeatures: "/resources/features",
   ResourcesCharacter: "/resources/character",

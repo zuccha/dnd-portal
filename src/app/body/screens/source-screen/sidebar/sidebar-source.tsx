@@ -91,6 +91,10 @@ const i18nContext = {
     en: "Creatures",
     it: "Creature",
   },
+  [Route.ResourcesBestiaryFamilies]: {
+    en: "Families",
+    it: "Famiglie",
+  },
   [Route.ResourcesBestiaryTags]: {
     en: "Groups",
     it: "Gruppi",

@@ -4,6 +4,7 @@ import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
 import { BackgroundCard } from "../resources/backgrounds/background-card";
 import { CharacterClassCard } from "../resources/character-classes/character-class-card";
 import { CharacterSubclassCard } from "../resources/character-subclasses/character-subclass-card";
+import { CreatureFamilyCard } from "../resources/creature-families/creature-family-card";
 import { CreatureTagCard } from "../resources/creature-tag/creature-tag-card";
 import { CreatureCard } from "../resources/creatures/creature-card";
 import { EldritchInvocationCard } from "../resources/eldritch-invocations/eldritch-invocation-card";
@@ -76,6 +77,7 @@ export const printDeckRegistry = {
   character_class: CharacterClassCard,
   character_subclass: CharacterSubclassCard,
   creature: CreatureCard,
+  creature_family: CreatureFamilyCard,
   creature_tag: CreatureTagCard,
   eldritch_invocation: EldritchInvocationCard,
   feat: FeatCard,

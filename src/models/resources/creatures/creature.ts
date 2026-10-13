@@ -6,10 +6,8 @@ import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
 import { creatureChallengeRatingSchema } from "../../types/creature-challenge-rating";
 import { creatureConditionSchema } from "../../types/creature-condition";
-import { creatureHabitatSchema } from "../../types/creature-habitat";
 import { creatureSizeSchema } from "../../types/creature-size";
 import { creatureSkillSchema } from "../../types/creature-skill";
-import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { damageTypeSchema } from "../../types/damage-type";
 import { languageScopeSchema } from "../../types/language-scope";
@@ -49,8 +47,8 @@ export const creatureBaseSchema = resourceSchema.extend({
   damage_resistances: z.array(damageTypeSchema),
   damage_vulnerabilities: z.array(damageTypeSchema),
   darkvision: z.number(),
+  family_id: z.uuid().nullable(),
   exp: z.number(),
-  habitats: z.array(creatureHabitatSchema),
   has_lair: z.boolean(),
   hover: z.boolean(),
   hp: z.number(),
@@ -68,7 +66,6 @@ export const creatureBaseSchema = resourceSchema.extend({
   legendary_actions_count: z.number(),
   passive_perception: z.number(),
   pb: z.number(),
-  plane_ids: z.array(z.uuid()),
   reactions: i18nStringSchema,
   sizes: z.array(creatureSizeSchema).min(1),
   skill_expertise: z.array(creatureSkillSchema),
@@ -81,7 +78,6 @@ export const creatureBaseSchema = resourceSchema.extend({
   tag_ids: z.array(z.uuid()),
   telepathy_range: z.number(),
   traits: i18nStringSchema,
-  treasures: z.array(creatureTreasureSchema),
   tremorsense: z.number(),
   truesight: z.number(),
   type: creatureTypeSchema,
@@ -123,9 +119,9 @@ export const defaultCreature: Creature = {
   damage_resistances: [],
   damage_vulnerabilities: [],
   darkvision: 0,
+  family_id: null,
   exp: 0,
   gear: defaultEquipmentBundle,
-  habitats: [],
   has_lair: false,
   hover: false,
   hp: 11,
@@ -143,7 +139,6 @@ export const defaultCreature: Creature = {
   legendary_actions_count: 0,
   passive_perception: 10,
   pb: 2,
-  plane_ids: [],
   reactions: {},
   sizes: ["medium"],
   skill_expertise: [],
@@ -156,7 +151,6 @@ export const defaultCreature: Creature = {
   tag_ids: [],
   telepathy_range: 0,
   traits: {},
-  treasures: [],
   tremorsense: 0,
   truesight: 0,
   type: "beast",

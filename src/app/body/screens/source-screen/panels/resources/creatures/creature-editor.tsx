@@ -1,11 +1,11 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import { PlusIcon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { type Creature } from "~/models/resources/creatures/creature";
 import type { CreatureFormData } from "~/models/resources/creatures/creature-form";
 import { languageStore } from "~/models/resources/languages/language-store";
-import { planeStore } from "~/models/resources/planes/plane-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
 import {
@@ -18,10 +18,8 @@ import {
   useCreatureChallengeRatingOptions,
 } from "~/models/types/creature-challenge-rating";
 import { useCreatureConditionOptions } from "~/models/types/creature-condition";
-import { useCreatureHabitatOptions } from "~/models/types/creature-habitat";
 import { useCreatureSizeOptions } from "~/models/types/creature-size";
 import { useCreatureSkillOptions } from "~/models/types/creature-skill";
-import { useCreatureTreasureOptions } from "~/models/types/creature-treasure";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import { useDamageTypeOptions } from "~/models/types/damage-type";
 import { useLanguageScopeOptions } from "~/models/types/language-scope";
@@ -37,9 +35,9 @@ import {
   createInputField,
   createLanguageEntriesField,
   createMultipleSelectEnumField,
-  createMultipleSelectIdsField,
   createNumberInputField,
   createResourceSearchField,
+  createSingleResourceField,
   createSelectEnumField,
   createSwitchField,
   createTextareaField,
@@ -332,27 +330,6 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   });
 
   //----------------------------------------------------------------------------
-  // Habitat
-  //----------------------------------------------------------------------------
-
-  const HabitatsField = createMultipleSelectEnumField({
-    i18nContext: {
-      label: { en: "Habitat", it: "Habitat" },
-      placeholder: { en: "None", it: "Nessuno" },
-    },
-    useField: form.createUseField("habitats"),
-    useOptions: useCreatureHabitatOptions,
-  });
-
-  const PlaneIdsField = createMultipleSelectIdsField({
-    i18nContext: {
-      label: { en: "Planes", it: "Piani" },
-      placeholder: { en: "None", it: "Nessuno" },
-    },
-    useField: form.createUseField("plane_ids"),
-    useOptions: planeStore.useResourceOptions,
-  });
-
   //----------------------------------------------------------------------------
   // HP
   //----------------------------------------------------------------------------
@@ -651,18 +628,6 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   });
 
   //----------------------------------------------------------------------------
-  // Treasures
-  //----------------------------------------------------------------------------
-
-  const TreasuresField = createMultipleSelectEnumField({
-    i18nContext: {
-      label: { en: "Treasures", it: "Tesori" },
-      placeholder: { en: "None", it: "Nessuno" },
-    },
-    useField: form.createUseField("treasures"),
-    useOptions: useCreatureTreasureOptions,
-  });
-
   //------------------------------------------------------------------------------
   // Type
   //------------------------------------------------------------------------------
@@ -671,6 +636,19 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
     i18nContext: { label: { en: "Type", it: "Tipo" } },
     useField: form.createUseField("type"),
     useOptions: useCreatureTypeOptions,
+  });
+
+  //----------------------------------------------------------------------------
+  // Family
+  //----------------------------------------------------------------------------
+
+  const FamilyField = createSingleResourceField({
+    i18nContext: {
+      label: { en: "Family", it: "Famiglia" },
+      placeholder: { en: "None", it: "Nessuna" },
+    },
+    useField: form.createUseField("family_id"),
+    useOptions: creatureFamilyStore.useResourceOptions,
   });
 
   //----------------------------------------------------------------------------
@@ -698,14 +676,11 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
           <AlignmentField defaultValue={resource.alignment} />
         </HStack>
 
-        {/* Tags */}
-        <TagIdsField defaultValue={resource.tag_ids} sourceId={sourceId} />
-
-        {/* Treasures & Habitat */}
         <HStack align="flex-start" gap={4} w="full">
-          <HabitatsField defaultValue={resource.habitats} />
-          <PlaneIdsField defaultValue={resource.plane_ids} sourceId={sourceId} />
-          <TreasuresField defaultValue={resource.treasures} />
+          <FamilyField defaultValue={resource.family_id} flex={1} sourceId={sourceId} />
+
+          {/* Tags */}
+          <TagIdsField defaultValue={resource.tag_ids} flex={1} sourceId={sourceId} />
         </HStack>
 
         <HStack align="flex-start" gap={4} w="full">

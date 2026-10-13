@@ -14,6 +14,11 @@ import {
 } from "~/models/resources/character-subclasses/character-subclass-form";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import {
+  creatureFamilyForm,
+  creatureFamilyFormDataToResource,
+} from "~/models/resources/creature-families/creature-family-form";
+import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
+import {
   creatureTagForm,
   creatureTagFormDataToResource,
 } from "~/models/resources/creature-tags/creature-tag-form";
@@ -92,6 +97,7 @@ import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
 import { createBackgroundEditor } from "../resources/backgrounds/background-editor";
 import { createCharacterClassEditor } from "../resources/character-classes/character-class-editor";
 import { createCharacterSubclassEditor } from "../resources/character-subclasses/character-subclass-editor";
+import { createCreatureFamilyEditor } from "../resources/creature-families/creature-family-editor";
 import { createCreatureTagEditor } from "../resources/creature-tag/creature-tag-editor";
 import { createCreatureEditor } from "../resources/creatures/creature-editor";
 import { createEldritchInvocationEditor } from "../resources/eldritch-invocations/eldritch-invocation-editor";
@@ -200,6 +206,14 @@ export const printDeckEditorRegistry = {
     translationFields: creatureStore.translationFields,
     localizeResource: creatureStore.localizeResource,
     useLocalizationContext: creatureStore.useLocalizationContext,
+  }),
+  creature_family: castEntry({
+    Editor: createCreatureFamilyEditor(creatureFamilyForm),
+    form: creatureFamilyForm,
+    parseFormData: creatureFamilyFormDataToResource,
+    translationFields: creatureFamilyStore.translationFields,
+    localizeResource: creatureFamilyStore.localizeResource,
+    useLocalizationContext: creatureFamilyStore.useLocalizationContext,
   }),
   creature_tag: castEntry({
     Editor: createCreatureTagEditor(creatureTagForm),

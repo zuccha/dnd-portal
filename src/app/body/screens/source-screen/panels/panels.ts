@@ -20,6 +20,7 @@ const panelItem = <R extends Route>(route: R, extra: Omit<PanelItem, "route"> = 
 
 export const bestiaryPanelIds = [
   panelItem(Route.ResourcesBestiaryMonsters),
+  panelItem(Route.ResourcesBestiaryFamilies),
   panelItem(Route.ResourcesBestiaryTags),
 ] as const;
 

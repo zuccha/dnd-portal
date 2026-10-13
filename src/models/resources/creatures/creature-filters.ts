@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
-import { creatureHabitatSchema } from "../../types/creature-habitat";
 import { creatureSizeSchema } from "../../types/creature-size";
-import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { resourceFiltersSchema, resourceOrderOptions } from "../resource-filters";
 
@@ -18,9 +16,7 @@ export const creatureOrderOptions = resourceOrderOptions;
 
 export const creatureFiltersSchema = resourceFiltersSchema.extend({
   alignment: z.partialRecord(creatureAlignmentSchema, z.boolean().optional()).optional(),
-  habitats: z.partialRecord(creatureHabitatSchema, z.boolean().optional()).optional(),
   sizes: z.partialRecord(creatureSizeSchema, z.boolean().optional()).optional(),
-  treasures: z.partialRecord(creatureTreasureSchema, z.boolean().optional()).optional(),
   types: z.partialRecord(creatureTypeSchema, z.boolean().optional()).optional(),
 
   cr_max: z.number(),
@@ -39,9 +35,7 @@ export const defaultCreatureFilters: CreatureFilters = {
   order_dir: "asc",
 
   alignment: {},
-  habitats: {},
   sizes: {},
-  treasures: {},
   types: {},
 
   cr_max: 30,

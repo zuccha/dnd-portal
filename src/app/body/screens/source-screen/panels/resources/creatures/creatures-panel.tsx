@@ -46,10 +46,6 @@ const columns = createResourcesTableColumns<Creature, LocalizedCreature>([
     textAlign: "right",
     w: "1%",
   },
-  {
-    key: "habitats",
-    label: { en: "Habitat", it: "Habitat" },
-  },
 ]);
 
 //------------------------------------------------------------------------------

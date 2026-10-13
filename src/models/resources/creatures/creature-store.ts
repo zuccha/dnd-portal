@@ -22,9 +22,7 @@ export const creatureStore = createResourceStore("creature", {
     creature.cr <= filters.cr_max &&
     matchesInclusion(creature.alignment, filters.alignment) &&
     matchesInclusionList(creature.sizes, filters.sizes) &&
-    matchesInclusion(creature.type, filters.types) &&
-    matchesInclusionList(creature.habitats, filters.habitats) &&
-    matchesInclusionList(creature.treasures, filters.treasures),
+    matchesInclusion(creature.type, filters.types),
   orderOptions: creatureOrderOptions,
   translationFields: creatureTranslationFields,
   localizeResource: localizeCreature,

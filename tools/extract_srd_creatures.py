@@ -29,6 +29,7 @@ from typing import Any, Iterable
 
 CREATURE_NAMESPACE = uuid.UUID("7d8c58c1-20a8-4dcb-aeb5-cd04a2cbbd63")
 CREATURE_TAG_NAMESPACE = uuid.UUID("d2f1bb42-0b2e-4ac1-8ef2-0f6f85ccbe69")
+CREATURE_FAMILY_NAMESPACE = uuid.UUID("c5f0f0e4-c8a1-4e8d-9c3f-5a9bb9a9df4a")
 RESOURCE_KINDS = (
     "armors",
     "items",
@@ -327,6 +328,7 @@ class CreatureBlock:
     page: int
     column: int
     name: str
+    family_name: str
     descriptor: str
     lines: list[TextLine]
 
@@ -335,6 +337,7 @@ class CreatureBlock:
 class ParsedCreature:
     language: str
     name: str
+    family_name: str
     descriptor: str
     page: int
     sizes: list[str]
@@ -523,11 +526,27 @@ def _extract_blocks(lines: list[TextLine], language: str) -> list[CreatureBlock]
     is_descriptor = _is_english_descriptor if language == "en" else _is_italian_descriptor
     starts = [index for index, line in enumerate(lines) if is_descriptor(line.text)]
     blocks: list[CreatureBlock] = []
+    current_family = ""
 
     for position, descriptor_index in enumerate(starts):
         next_descriptor = starts[position + 1] if position + 1 < len(starts) else len(lines)
         descriptor = lines[descriptor_index]
         name = _find_name(lines, descriptor_index)
+        same_column_lines = [
+            line
+            for line in lines[:descriptor_index]
+            if line.page == descriptor.page and line.column == descriptor.column
+        ]
+        if len(same_column_lines) >= 2:
+            family_candidate, name_line = same_column_lines[-2:]
+            family_gap = name_line.y - family_candidate.y
+            if (
+                family_candidate.bold
+                and 0 < family_gap <= 22.5
+                and family_candidate.text not in SECTION_NAMES
+                and not _is_noise(family_candidate.text, language)
+            ):
+                current_family = family_candidate.text
         body = [line for line in lines[descriptor_index + 1 : next_descriptor] if not _is_noise(line.text, language)]
         next_name = _find_name(lines, next_descriptor) if next_descriptor < len(lines) else ""
         while body and body[-1].text == next_name:
@@ -538,6 +557,7 @@ def _extract_blocks(lines: list[TextLine], language: str) -> list[CreatureBlock]
                 page=descriptor.page,
                 column=descriptor.column,
                 name=name,
+                family_name=current_family,
                 descriptor=descriptor.text,
                 lines=body,
             )
@@ -1114,6 +1134,7 @@ def _parse_block(block: CreatureBlock, page_offset: int) -> ParsedCreature:
     return ParsedCreature(
         language=block.language,
         name=block.name,
+        family_name=block.family_name,
         descriptor=block.descriptor,
         page=block.page + page_offset,
         sizes=sizes,
@@ -1298,6 +1319,86 @@ def _ensure_creature_tags(
     }
 
 
+#------------------------------------------------------------------------------
+# Creature Family Resources
+#------------------------------------------------------------------------------
+
+def _creature_family_resource(
+    english_name: str,
+    italian_name: str,
+    english_page: int,
+    italian_page: int,
+    bundle: dict[str, Any],
+    existing_ids: dict[str, str],
+) -> dict[str, Any]:
+    source = bundle["source"]
+    normalized_name = _normalize_name(english_name)
+    return {
+        "id": existing_ids.get(normalized_name) or str(
+            uuid.uuid5(
+                CREATURE_FAMILY_NAMESPACE,
+                f"{source['id']}:creature_family:{normalized_name}",
+            )
+        ),
+        "kind": "creature_family",
+        "source_code": source["code"],
+        "source_id": source["id"],
+        "source_version": source["version"],
+        "image_url": None,
+        "visibility": "public",
+        "name": {"en": english_name, "it": italian_name},
+        "page": {"en": english_page, "it": italian_page},
+        "habitats": [],
+        "plane_ids": [],
+        "treasures": [],
+    }
+
+
+def _create_creature_families(
+    english: list[ParsedCreature],
+    italian_by_signature: dict[tuple[Any, ...], deque[ParsedCreature]],
+    bundle: dict[str, Any],
+) -> dict[str, str]:
+    resources = bundle["resources"].setdefault("creature_families", [])
+    existing_ids = {
+        _normalize_name(resource.get("name", {}).get("en", "")): resource["id"]
+        for resource in resources
+        if resource.get("id")
+    }
+    family_names: dict[str, tuple[str, str, int, int]] = {}
+    for creature in english:
+        normalized_name = _normalize_name(creature.family_name)
+        if not normalized_name or normalized_name in family_names:
+            continue
+        matches = italian_by_signature.get(_signature(creature), deque())
+        italian_match = next(
+            (match for match in matches if match.family_name),
+            None,
+        )
+        family_names[normalized_name] = (
+            creature.family_name,
+            italian_match.family_name if italian_match else creature.family_name,
+            creature.page,
+            italian_match.page if italian_match else creature.page,
+        )
+
+    resources[:] = [
+        _creature_family_resource(
+            english_name,
+            italian_name,
+            english_page,
+            italian_page,
+            bundle,
+            existing_ids,
+        )
+        for english_name, italian_name, english_page, italian_page in family_names.values()
+    ]
+    return {
+        normalized_name: resource["id"]
+        for normalized_name, resource in zip(family_names, resources)
+    }
+
+
 def _equipment_bundle(
     creature: ParsedCreature,
     localized_creature: ParsedCreature,
@@ -1318,6 +1419,7 @@ def _parse_creature_row(
     bundle: dict[str, Any],
     existing_ids: dict[str, str],
     tag_ids_by_name: dict[str, str],
+    family_id: str | None,
 ) -> dict[str, Any]:
     resistance_damage, resistance_conditions = _split_damage_and_conditions(english.resistance_text)
     immunity_damage, immunity_conditions = _split_damage_and_conditions(english.immunity_text)
@@ -1388,7 +1490,7 @@ def _parse_creature_row(
         "damage_vulnerabilities": vulnerability_damage,
         "darkvision": senses["darkvision"],
         "exp": english.exp,
-        "habitats": [],
+        "family_id": family_id,
         "has_lair": bool(english.sections.get("lair_effects") or lair_exp_match),
         "hover": bool(speed["hover"]),
         "hp": english.hp,
@@ -1404,7 +1506,6 @@ def _parse_creature_row(
         "legendary_actions_count": _parse_int(legendary_count_match.group(1)) if legendary_count_match else 0,
         "passive_perception": _parse_int(re.search(r"(?:Passive Perception|Percezione passiva)\s+(\d+)", english.sense_text, re.IGNORECASE).group(1)) if re.search(r"(?:Passive Perception|Percezione passiva)\s+(\d+)", english.sense_text, re.IGNORECASE) else 10,
         "pb": english.pb,
-        "plane_ids": [],
         "reactions": sections["reactions"],
         "sizes": english.sizes,
         "skill_expertise": expertise,
@@ -1421,7 +1522,6 @@ def _parse_creature_row(
         ],
         "telepathy_range": senses["telepathy"],
         "traits": sections["traits"],
-        "treasures": [],
         "tremorsense": senses["tremorsense"],
         "truesight": senses["truesight"],
         "type": english.type,
@@ -1456,6 +1556,7 @@ def _convert_bundle(
     bundle: dict[str, Any],
     known_translations: dict[str, str],
 ) -> dict[str, Any]:
+    bundle["resources"].setdefault("creature_families", [])
     italian_by_signature: dict[tuple[Any, ...], deque[ParsedCreature]] = defaultdict(deque)
     for creature in italian:
         italian_by_signature[_signature(creature)].append(creature)
@@ -1465,6 +1566,11 @@ def _convert_bundle(
         if resource.get("id")
     }
     tag_ids_by_name = _ensure_creature_tags(english, bundle)
+    family_ids_by_name = _create_creature_families(
+        english,
+        italian_by_signature,
+        bundle,
+    )
     rows: list[dict[str, Any]] = []
     for creature in english:
         matches = italian_by_signature[_signature(creature)]
@@ -1486,10 +1592,11 @@ def _convert_bundle(
                 bundle,
                 existing_ids,
                 tag_ids_by_name,
+                family_ids_by_name.get(_normalize_name(creature.family_name)),
             )
         )
     bundle["resources"]["creatures"] = rows
-    bundle["bundle_version"] = 5
+    bundle["bundle_version"] = 6
     return bundle
 
 
@@ -1503,6 +1610,7 @@ def _block_to_json(block: CreatureBlock) -> dict[str, Any]:
         "page": block.page,
         "column": block.column,
         "name": block.name,
+        "family_name": block.family_name,
         "descriptor": block.descriptor,
         "lines": [
             {

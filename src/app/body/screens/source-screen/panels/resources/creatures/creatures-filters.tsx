@@ -2,9 +2,7 @@ import { HStack, type StackProps, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { useCreatureAlignmentOptions } from "~/models/types/creature-alignment";
-import { useCreatureHabitatOptions } from "~/models/types/creature-habitat";
 import { useCreatureSizeOptions } from "~/models/types/creature-size";
-import { useCreatureTreasureOptions } from "~/models/types/creature-treasure";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import CaptionInput from "~/ui/caption-input";
 import InclusionSelect from "~/ui/inclusion-select";
@@ -21,8 +19,6 @@ export default function CreaturesFilters(props: StackProps) {
   const [filters, { set: setFilters }] = useCreatureFilters();
 
   const typeOptions = useCreatureTypeOptions();
-  const habitatOptions = useCreatureHabitatOptions();
-  const treasureOptions = useCreatureTreasureOptions();
   const alignmentOptions = useCreatureAlignmentOptions();
   const sizeOptions = useCreatureSizeOptions();
 
@@ -58,30 +54,6 @@ export default function CreaturesFilters(props: StackProps) {
           }
           options={alignmentOptions}
           placeholder={t("alignment")}
-          size="sm"
-          w="full"
-        />
-      </CaptionInput>
-
-      <CaptionInput caption={t("habitats")} w="full">
-        <InclusionSelect
-          includes={filters.habitats ?? {}}
-          onValueChange={(partial) => setFilters({ habitats: { ...filters.habitats, ...partial } })}
-          options={habitatOptions}
-          placeholder={t("habitats")}
-          size="sm"
-          w="full"
-        />
-      </CaptionInput>
-
-      <CaptionInput caption={t("treasures")} w="full">
-        <InclusionSelect
-          includes={filters.treasures ?? {}}
-          onValueChange={(partial) =>
-            setFilters({ treasures: { ...filters.treasures, ...partial } })
-          }
-          options={treasureOptions}
-          placeholder={t("treasures")}
           size="sm"
           w="full"
         />
@@ -130,17 +102,9 @@ const i18nContext = {
     en: "Min CR",
     it: "GS Min",
   },
-  habitats: {
-    en: "Habitats",
-    it: "Habitat",
-  },
   sizes: {
     en: "Sizes",
     it: "Taglie",
-  },
-  treasures: {
-    en: "Treasures",
-    it: "Tesori",
   },
   types: {
     en: "Types",

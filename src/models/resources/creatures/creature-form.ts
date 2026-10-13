@@ -6,10 +6,8 @@ import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureAlignmentSchema } from "../../types/creature-alignment";
 import { creatureChallengeRatingSchema } from "../../types/creature-challenge-rating";
 import { creatureConditionSchema } from "../../types/creature-condition";
-import { creatureHabitatSchema } from "../../types/creature-habitat";
 import { creatureSizeSchema } from "../../types/creature-size";
 import { creatureSkillSchema } from "../../types/creature-skill";
-import { creatureTreasureSchema } from "../../types/creature-treasure";
 import { creatureTypeSchema } from "../../types/creature-type";
 import { damageTypeSchema } from "../../types/damage-type";
 import { languageScopeSchema } from "../../types/language-scope";
@@ -50,9 +48,9 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
   damage_resistances: z.array(damageTypeSchema).default([]),
   damage_vulnerabilities: z.array(damageTypeSchema).default([]),
   darkvision: z.number().default(0),
+  family_id: z.uuid().nullable().default(null),
   exp: z.number().default(200),
   gear: equipmentBundleSchema.default(defaultEquipmentBundle),
-  habitats: z.array(creatureHabitatSchema).default([]),
   has_lair: z.boolean().default(false),
   hover: z.boolean().default(false),
   hp: z.number().default(10),
@@ -69,7 +67,6 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
   legendary_actions_count: z.number().default(0),
   passive_perception: z.number().default(10),
   pb: z.number().default(2),
-  plane_ids: z.array(z.uuid()).default([]),
   reactions: z.string().default(""),
   sizes: z.array(creatureSizeSchema).min(1).default(["medium"]),
   skill_expertise: z.array(creatureSkillSchema).default([]),
@@ -82,7 +79,6 @@ export const creatureFormDataSchema = resourceFormDataSchema.extend({
   tag_ids: z.array(z.uuid()).default([]),
   telepathy_range: z.number().default(0),
   traits: z.string().default(""),
-  treasures: z.array(creatureTreasureSchema).default([]),
   tremorsense: z.number().default(0),
   truesight: z.number().default(0),
   type: creatureTypeSchema.default("humanoid"),
@@ -124,9 +120,9 @@ export function creatureFormDataToResource(
     damage_resistances: data.damage_resistances,
     damage_vulnerabilities: data.damage_vulnerabilities,
     darkvision: data.darkvision,
+    family_id: data.family_id,
     exp: data.exp,
     gear: data.gear,
-    habitats: data.habitats,
     has_lair: data.has_lair,
     hover: data.hover,
     hp: data.hp,
@@ -143,7 +139,6 @@ export function creatureFormDataToResource(
     legendary_actions_count: data.legendary_actions_count,
     passive_perception: data.passive_perception,
     pb: data.pb,
-    plane_ids: data.plane_ids,
     reactions: createResourceFormDataI18nValue(data.reactions, lang),
     sizes: data.sizes,
     skill_expertise: data.skill_expertise,
@@ -156,7 +151,6 @@ export function creatureFormDataToResource(
     tag_ids: data.tag_ids,
     telepathy_range: data.telepathy_range,
     traits: createResourceFormDataI18nValue(data.traits, lang),
-    treasures: data.treasures,
     tremorsense: data.tremorsense,
     truesight: data.truesight,
     type: data.type,

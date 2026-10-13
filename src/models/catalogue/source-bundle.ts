@@ -2,6 +2,7 @@ import { z } from "zod";
 import { backgroundSchema } from "../resources/backgrounds/background";
 import { characterClassSchema } from "../resources/character-classes/character-class";
 import { characterSubclassSchema } from "../resources/character-subclasses/character-subclass";
+import { creatureFamilySchema } from "../resources/creature-families/creature-family";
 import { creatureTagSchema } from "../resources/creature-tags/creature-tag";
 import { creatureSchema } from "../resources/creatures/creature";
 import { eldritchInvocationSchema } from "../resources/eldritch-invocations/eldritch-invocation";
@@ -39,6 +40,7 @@ export const sourceBundleResourcesSchema = z.object({
   character_subclasses: characterSubclassSchema.array().default([]),
   creature_tags: creatureTagSchema.array().default([]),
   creatures: creatureSchema.array().default([]),
+  creature_families: creatureFamilySchema.array().default([]),
   eldritch_invocations: eldritchInvocationSchema.array().default([]),
   feats: featSchema.array().default([]),
   features: featureSchema.array().default([]),
@@ -62,7 +64,7 @@ export const sourceBundleResourcesSchema = z.object({
 // Source Bundle
 //------------------------------------------------------------------------------
 
-export const sourceBundleVersion = 5;
+export const sourceBundleVersion = 6;
 
 export const sourceBundleSchema = z.object({
   bundle_version: z.literal(sourceBundleVersion),
@@ -103,6 +105,7 @@ export const sourceBundleResourceKeyByKind = {
   character_class: "character_classes",
   character_subclass: "character_subclasses",
   creature: "creatures",
+  creature_family: "creature_families",
   creature_tag: "creature_tags",
   eldritch_invocation: "eldritch_invocations",
   feat: "feats",

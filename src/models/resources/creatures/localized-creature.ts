@@ -11,10 +11,8 @@ import {
   type CreatureCondition,
   useTranslateCreatureCondition,
 } from "../../types/creature-condition";
-import { useTranslateCreatureHabitat } from "../../types/creature-habitat";
 import { creatureSizes, useTranslateCreatureSize } from "../../types/creature-size";
 import { type CreatureSkill, useTranslateCreatureSkill } from "../../types/creature-skill";
-import { useTranslateCreatureTreasure } from "../../types/creature-treasure";
 import { useTranslateCreatureType } from "../../types/creature-type";
 import { type DamageType, useTranslateDamageTypeShort } from "../../types/damage-type";
 import { creatureTagStore } from "../creature-tags/creature-tag-store";
@@ -27,13 +25,11 @@ import {
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
-import { planeStore } from "../planes/plane-store";
 import { type Creature, creatureSchema } from "./creature";
 import type { CreatureAbility } from "../../types/creature-ability";
 
 const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
 const useLocalizedLanguageNames = languageStore.useLocalizedResourceNames;
-const useLocalizedPlaneNames = planeStore.useLocalizedResourceNames;
 const useLocalizedCreatureTagNames = creatureTagStore.useLocalizedResourceNames;
 
 //------------------------------------------------------------------------------
@@ -67,11 +63,9 @@ export const localizedCreatureSchema = localizedResourceSchema(
   z.literal("creature"),
 ).extend({
   alignment: z.string(),
-  habitats: z.string(),
   has_lair: z.boolean(),
   sizes: z.string(),
   tags: z.string(),
-  treasures: z.string(),
   type: z.string(),
 
   cr: z.string(),
@@ -138,15 +132,12 @@ type CreatureLocalizationContext = ResourceLocalizationContext & {
   formatCp: ReturnType<typeof useFormatCp>;
   localizedEquipmentNames: Record<string, string>;
   localizedLanguageNames: Record<string, string>;
-  localizedPlaneNames: Record<string, string>;
   localizedTagNames: Record<string, string>;
   system: ReturnType<typeof useI18nSystem>[0];
   translateCreatureAlignment: ReturnType<typeof useTranslateCreatureAlignment>;
   translateCreatureCondition: ReturnType<typeof useTranslateCreatureCondition>;
-  translateCreatureHabitat: ReturnType<typeof useTranslateCreatureHabitat>;
   translateCreatureSize: ReturnType<typeof useTranslateCreatureSize>;
   translateCreatureSkill: ReturnType<typeof useTranslateCreatureSkill>;
-  translateCreatureTreasure: ReturnType<typeof useTranslateCreatureTreasure>;
   translateCreatureType: ReturnType<typeof useTranslateCreatureType>;
   translateDamageTypeShort: ReturnType<typeof useTranslateDamageTypeShort>;
 };
@@ -163,15 +154,10 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
   const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
   const languageIds = creature.language_entries.map(({ language_id }) => language_id);
   const languageNames = useLocalizedLanguageNames(languageIds);
-  const planeNames = useLocalizedPlaneNames(creature.plane_ids);
   const tagNames = useLocalizedCreatureTagNames(creature.tag_ids);
   const localizedLanguageNames = useMemo(
     () => Object.fromEntries(languageIds.map((id, index) => [id, languageNames[index] ?? ""])),
     [languageIds, languageNames],
-  );
-  const localizedPlaneNames = useMemo(
-    () => Object.fromEntries(creature.plane_ids.map((id, index) => [id, planeNames[index] ?? ""])),
-    [creature.plane_ids, planeNames],
   );
   const localizedTagNames = useMemo(
     () => Object.fromEntries(creature.tag_ids.map((id, index) => [id, tagNames[index] ?? ""])),
@@ -180,8 +166,6 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
   const translateCreatureType = useTranslateCreatureType(context.lang);
   const translateCreatureSize = useTranslateCreatureSize(context.lang);
   const translateCreatureAlignment = useTranslateCreatureAlignment(context.lang);
-  const translateCreatureHabitat = useTranslateCreatureHabitat(context.lang);
-  const translateCreatureTreasure = useTranslateCreatureTreasure(context.lang);
   const translateCreatureSkill = useTranslateCreatureSkill(context.lang);
   const translateCreatureCondition = useTranslateCreatureCondition(context.lang);
   const translateDamageTypeShort = useTranslateDamageTypeShort(context.lang);
@@ -193,15 +177,12 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
       formatCp,
       localizedEquipmentNames,
       localizedLanguageNames,
-      localizedPlaneNames,
       localizedTagNames,
       system,
       translateCreatureAlignment,
       translateCreatureCondition,
-      translateCreatureHabitat,
       translateCreatureSize,
       translateCreatureSkill,
-      translateCreatureTreasure,
       translateCreatureType,
       translateDamageTypeShort,
     }),
@@ -211,15 +192,12 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
       formatCp,
       localizedEquipmentNames,
       localizedLanguageNames,
-      localizedPlaneNames,
       localizedTagNames,
       system,
       translateCreatureAlignment,
       translateCreatureCondition,
-      translateCreatureHabitat,
       translateCreatureSize,
       translateCreatureSkill,
-      translateCreatureTreasure,
       translateCreatureType,
       translateDamageTypeShort,
     ],
@@ -240,7 +218,6 @@ export function localizeCreature(
     lang,
     localizedEquipmentNames,
     localizedLanguageNames,
-    localizedPlaneNames,
     localizedTagNames,
     system,
     t,
@@ -249,10 +226,8 @@ export function localizeCreature(
     tpi,
     translateCreatureAlignment,
     translateCreatureCondition,
-    translateCreatureHabitat,
     translateCreatureSize,
     translateCreatureSkill,
-    translateCreatureTreasure,
     translateCreatureType,
     translateDamageTypeShort,
   } = context;
@@ -261,17 +236,6 @@ export function localizeCreature(
   const alignment = translateCreatureAlignment(creature.alignment);
 
   const tags = creature.tag_ids.map((id) => localizedTagNames[id] ?? "").join(", ");
-  const planes = creature.plane_ids.map((id) => localizedPlaneNames[id] ?? "").join(", ");
-
-  const habitats = creature.habitats
-    .map((habitat) => {
-      const label = translateCreatureHabitat(habitat);
-      return habitat === "planar" && planes ? `${label} (${planes})` : label;
-    })
-    .sort()
-    .join(", ");
-
-  const treasures = creature.treasures.map(translateCreatureTreasure).sort().join(", ");
 
   // EXP and PB from CR
   const cr =
@@ -598,9 +562,7 @@ export function localizeCreature(
     tags,
     type,
 
-    habitats,
     has_lair: creature.has_lair,
-    treasures,
 
     cr,
     exp: formatNumber(exp, lang),
