@@ -5,8 +5,8 @@ import type { ResourceUnion } from "~/models/resources/resource-union";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import type { Form } from "~/utils/form";
 import { palettes, type Palette } from "~/utils/palette";
-import ResourceCardPreview from "../resources/resource-card-preview";
-import { applyResourceEditorPreviewPatch } from "../resources/resource-editor-preview";
+import ResourceCardPreview from "../../../../resource-modules/resource-card-preview";
+import { applyResourceEditorPreviewPatch } from "../../../../resource-modules/resource-editor-preview";
 import { getPrintDeckCard } from "./print-deck-registry";
 import type { PrintDeckEditorConfiguration } from "./print-deck-resource-dialog";
 

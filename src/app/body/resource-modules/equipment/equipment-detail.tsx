@@ -1,9 +1,9 @@
 import { SimpleGrid, VStack } from "@chakra-ui/react";
-import { useI18nLangContext } from "../../../../../../../i18n/i18n-lang-context";
+import { useI18nLangContext } from "../../../../i18n/i18n-lang-context";
 import ResourceDetailContent from "../resource-detail-content";
 import ResourceDetailField from "../resource-detail-field";
-import type { Equipment } from "../../../../../../../models/resources/equipment/equipment";
-import type { LocalizedResourceUnion } from "../../../../../../../models/resources/resource-union";
+import type { Equipment } from "../../../../models/resources/equipment/equipment";
+import type { LocalizedResourceUnion } from "../../../../models/resources/resource-union";
 import type { ReactNode } from "react";
 
 type LocalizedEquipmentResource = Extract<LocalizedResourceUnion, { kind: Equipment["kind"] }>;

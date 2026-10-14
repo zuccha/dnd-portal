@@ -1,10 +1,10 @@
 import { Box, HStack, Heading, Separator, Span, Text, VStack } from "@chakra-ui/react";
-import { useI18nLangContext } from "../../../../../../i18n/i18n-lang-context";
-import { resolveSystemText, useI18nSystem } from "../../../../../../i18n/i18n-system";
-import PageTitle from "../../../../../../navigation/page-title";
-import RichText from "../../../../../../ui/rich-text";
-import ResourceDetailNotFound from "../resource-detail/resource-detail-not-found";
-import type { LocalizedResourceUnion } from "../../../../../../models/resources/resource-union";
+import { useI18nLangContext } from "../../../i18n/i18n-lang-context";
+import { resolveSystemText, useI18nSystem } from "../../../i18n/i18n-system";
+import PageTitle from "../../../navigation/page-title";
+import RichText from "../../../ui/rich-text";
+import ResourceDetailNotFound from "../screens/source-screen/panels/resource-detail/resource-detail-not-found";
+import type { LocalizedResourceUnion } from "../../../models/resources/resource-union";
 import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------

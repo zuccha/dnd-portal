@@ -1,10 +1,10 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react";
-import { useI18nLangContext } from "../../../../../../../../i18n/i18n-lang-context";
-import { equipmentReferenceStore } from "../../../../../../../../models/resources/equipment/equipment-reference-store";
+import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
+import { equipmentReferenceStore } from "../../../../../models/resources/equipment/equipment-reference-store";
 import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
-import type { EquipmentModifier } from "../../../../../../../../models/resources/modifiers/equipment/equipment-modifier";
-import type { LocalizedEquipmentModifier } from "../../../../../../../../models/resources/modifiers/equipment/localized-equipment-modifier";
+import type { EquipmentModifier } from "../../../../../models/resources/modifiers/equipment/equipment-modifier";
+import type { LocalizedEquipmentModifier } from "../../../../../models/resources/modifiers/equipment/localized-equipment-modifier";
 
 const { useLocalizedEquipmentEntries } = equipmentReferenceStore;
 

@@ -6,11 +6,11 @@ import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/local
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import PokerCard from "~/ui/poker-card";
 import { palettes } from "~/utils/palette";
-import { CreatureCard } from "../resources/creatures/panel/creature-card.tsx";
-import { ArmorCard } from "../resources/equipment/armors/panel/armor-card.tsx";
-import { ItemCard } from "../resources/equipment/items/panel/item-card.tsx";
-import { WeaponCard } from "../resources/equipment/weapons/panel/weapon-card.tsx";
-import { SpellCard } from "../resources/spells/panel/spell-card.tsx";
+import { CreatureCard } from "../../../../resource-modules/creatures/panel/creature-card.tsx";
+import { ArmorCard } from "../../../../resource-modules/equipment/armors/panel/armor-card.tsx";
+import { ItemCard } from "../../../../resource-modules/equipment/items/panel/item-card.tsx";
+import { WeaponCard } from "../../../../resource-modules/equipment/weapons/panel/weapon-card.tsx";
+import { SpellCard } from "../../../../resource-modules/spells/panel/spell-card.tsx";
 import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------

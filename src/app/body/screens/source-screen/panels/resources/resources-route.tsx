@@ -4,16 +4,16 @@ import { Route } from "~/navigation/routes";
 import type { ComponentType } from "react";
 
 //------------------------------------------------------------------------------
-// Resource Panel Route
+// Resources Route
 //------------------------------------------------------------------------------
 
-export type ResourcePanel = ComponentType<{ sourceId: string }>;
+type ResourcePanel = ComponentType<{ sourceId: string }>;
 
-export type ResourcePanelRouteProps = {
+type ResourcesRouteProps = {
   Panel: ResourcePanel;
 };
 
-export default function ResourcePanelRoute({ Panel }: ResourcePanelRouteProps) {
+export default function ResourcesRoute({ Panel }: ResourcesRouteProps) {
   const sourceId = useActiveSourceId();
 
   if (!sourceId) return <Navigate replace to={Route.Sources} />;

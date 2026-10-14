@@ -6,7 +6,10 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import IconButton from "~/ui/icon-button";
-import { useRightPanelCollapsed, useRightPanelSetCollapsed } from "../../right-panel-state";
+import {
+  useRightPanelCollapsed,
+  useRightPanelSetCollapsed,
+} from "../screens/source-screen/right-panel-state";
 import { createResourcesActions } from "./resources-actions";
 import { type ResourcesFiltersExtra, createResourcesFilters } from "./resources-filters";
 import { createResourcesViewSettings } from "./resources-view-settings";

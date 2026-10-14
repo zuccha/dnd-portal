@@ -9,11 +9,11 @@ import type { LocalizedResourceUnion, ResourceUnion } from "~/models/resources/r
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import { toaster } from "~/ui/toaster";
 import { type Form } from "~/utils/form";
-import ResourceDialog from "../resources/resource-dialog";
+import ResourceDialog from "../../../../resource-modules/resource-dialog";
 import {
   applyResourceEditorPaste,
   applyResourceEditorPreviewPatch,
-} from "../resources/resource-editor-preview";
+} from "../../../../resource-modules/resource-editor-preview";
 import PrintDeckEditorPreview from "./print-deck-editor-preview";
 
 const noopSetLang = () => "";

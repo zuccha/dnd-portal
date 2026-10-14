@@ -1,7 +1,7 @@
 import { Fragment } from "react";
-import { resourceDetailRoute } from "../../../../../../navigation/routes";
-import RouterLink from "../../../../../../ui/router-link";
-import type { ResourceKind } from "../../../../../../models/types/resource-kind";
+import { resourceDetailRoute } from "../../../navigation/routes";
+import RouterLink from "../../../ui/router-link";
+import type { ResourceKind } from "../../../models/types/resource-kind";
 
 export type ResourceDetailLinkEntry = {
   id: string;

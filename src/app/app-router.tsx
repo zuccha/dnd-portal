@@ -1,17 +1,17 @@
 import { Navigate, Route as RouterRoute, Routes } from "react-router";
 import PageTitle from "../navigation/page-title";
 import { Route } from "../navigation/routes";
+import { resourceModules } from "./body/resource-modules/resource-modules";
 import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
 import SignUpScreen from "./body/screens/sign-up-screen/sign-up-screen";
 import GuidePanel from "./body/screens/source-screen/panels/guide/guide-panel";
 import HomePanel from "./body/screens/source-screen/panels/home/home-panel";
 import PrintDeckPanel from "./body/screens/source-screen/panels/print-deck/print-deck-panel";
 import ResourceDetailRoute from "./body/screens/source-screen/panels/resource-detail/resource-detail-route";
-import { resourceModules } from "./body/screens/source-screen/panels/resources/resource-modules";
+import ResourcesRoute from "./body/screens/source-screen/panels/resources/resources-route";
 import SourceSettingsRoute from "./body/screens/source-screen/panels/settings/source-settings-route";
 import SourcesPanel from "./body/screens/source-screen/panels/sources/sources-panel";
 import SourceScreen from "./body/screens/source-screen/source-screen";
-import ResourcePanelRoute from "./resource-panel-route";
 
 //------------------------------------------------------------------------------
 // App Router
@@ -36,7 +36,7 @@ export default function AppRouter() {
           />
           {resourceModules.map(({ Panel, path }) => (
             <RouterRoute
-              element={<ResourcePanelRoute Panel={Panel} />}
+              element={<ResourcesRoute Panel={Panel} />}
               key={path}
               path={path.slice(1)}
             />
