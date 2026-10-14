@@ -12,7 +12,12 @@ import { type Feature, featureSchema } from "./feature";
 // Localized Feature
 //------------------------------------------------------------------------------
 
-export const localizedFeatureSchema = localizedResourceSchema(featureSchema, z.literal("feature"));
+export const localizedFeatureSchema = localizedResourceSchema(
+  featureSchema,
+  z.literal("feature"),
+).extend({
+  display_name: z.string(),
+});
 
 export type LocalizedFeature = z.infer<typeof localizedFeatureSchema>;
 
@@ -42,6 +47,7 @@ export function localizeFeature(
     ...localizeResource(feature, context),
     descriptor: context.t("descriptor"),
     details: translate(feature.description, context.lang),
+    display_name: translate(feature.display_name, context.lang),
   };
 }
 
