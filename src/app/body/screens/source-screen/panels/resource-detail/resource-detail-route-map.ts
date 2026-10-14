@@ -1,7 +1,7 @@
 import type { ResourceKind } from "~/models/types/resource-kind";
 import BackgroundDetailRoute from "./resources/background-detail-route";
-import CharacterClassDetailRoute from "./resources/character-class-detail-route";
-import CharacterSubclassDetailRoute from "./resources/character-subclass-detail-route";
+import CharacterClassDetailRoute from "./resources/character-class/character-class-detail-route";
+import CharacterSubclassDetailRoute from "./resources/character-subclass/character-subclass-detail-route";
 import CreatureFamilyDetailRoute from "./resources/creature-family/creature-family-detail-route";
 import CreatureTagDetailRoute from "./resources/creature-tag/creature-tag-detail-route";
 import CreatureDetailRoute from "./resources/creature/creature-detail-route";
