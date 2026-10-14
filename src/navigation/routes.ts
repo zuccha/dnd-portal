@@ -59,9 +59,17 @@ export function sourceSettingsRoute(sourceId: string): string {
 }
 
 //------------------------------------------------------------------------------
+// Resource Kind Route Segment
+//------------------------------------------------------------------------------
+
+export function resourceKindRouteSegment(kind: ResourceKind): string {
+  return kind.replaceAll("_", "-");
+}
+
+//------------------------------------------------------------------------------
 // Resource Detail Route
 //------------------------------------------------------------------------------
 
 export function resourceDetailRoute(kind: ResourceKind, resourceId: string): string {
-  return `${Route.Resources}/${encodeURIComponent(kind)}/${encodeURIComponent(resourceId)}`;
+  return `${Route.Resources}/${encodeURIComponent(resourceKindRouteSegment(kind))}/${encodeURIComponent(resourceId)}`;
 }
