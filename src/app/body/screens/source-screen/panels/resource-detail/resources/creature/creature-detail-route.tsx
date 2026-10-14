@@ -1,13 +1,17 @@
 import { GridItem, SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
+import { resourceDetailRoute } from "~/navigation/routes";
 import RichText from "~/ui/rich-text";
+import RouterLink from "~/ui/router-link";
 import ResourceDetailContent from "../../resource-detail-content";
 import ResourceDetailField from "../../resource-detail-field";
 import CreatureDetailAbilityScoreTable from "./creature-detail-ability-score-table";
 import type { ReactNode } from "react";
 
-const useLocalizedResource = creatureStore.useLocalizedResource;
+const { useLocalizedResource } = creatureStore;
+const { useLocalizedResource: useLocalizedFamily } = creatureFamilyStore;
 
 //------------------------------------------------------------------------------
 // Creature Detail Route
@@ -16,6 +20,8 @@ const useLocalizedResource = creatureStore.useLocalizedResource;
 export default function CreatureDetailRoute({ resourceId }: { resourceId: string }) {
   const { t } = useI18nLangContext(i18nContext);
   const creature = useLocalizedResource(resourceId);
+  const familyId = creature?._raw.family_id ?? "";
+  const family = useLocalizedFamily(familyId);
 
   if (!creature) return <ResourceDetailContent resource={creature} />;
 
@@ -54,9 +60,16 @@ export default function CreatureDetailRoute({ resourceId }: { resourceId: string
                 {value}
               </ResourceDetailField>
             ))}
-            <GridItem colSpan={{ base: 1, md: 2 }}>
+            <GridItem colSpan={{ base: 1, md: family ? 1 : 2 }}>
               <ResourceDetailField label={t("hit_points")}>{hitPoints}</ResourceDetailField>
             </GridItem>
+            {family && (
+              <ResourceDetailField label={t("family")}>
+                <RouterLink to={resourceDetailRoute("creature_family", familyId)}>
+                  {family.name}
+                </RouterLink>
+              </ResourceDetailField>
+            )}
           </SimpleGrid>
 
           <SimpleGrid columns={{ base: 1, md: 3 }} columnGap={6} rowGap={3}>
@@ -100,6 +113,7 @@ const i18nContext = {
   armor_class: { en: "Armor Class", it: "Classe Armatura" },
   challenge_rating: { en: "Challenge Rating", it: "Grado di Sfida" },
   experience: { en: "Experience Points", it: "Punti Esperienza" },
+  family: { en: "Family", it: "Famiglia" },
   hit_points: { en: "Hit Points", it: "Punti Ferita" },
   initiative: { en: "Initiative", it: "Iniziativa" },
   lair: { en: "in lair", it: "nella tana" },
