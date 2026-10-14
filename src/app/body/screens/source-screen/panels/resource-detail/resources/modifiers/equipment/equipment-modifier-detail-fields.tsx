@@ -4,8 +4,9 @@ import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-
 import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
 import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
 import ResourceDetailField from "../../../resource-detail-field";
+import ResourceDetailLinks from "../../../resource-detail-links";
 
-const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const { useLocalizedEquipmentEntries } = equipmentReferenceStore;
 
 //------------------------------------------------------------------------------
 // Equipment Modifier Detail Fields
@@ -17,12 +18,13 @@ export default function EquipmentModifierDetailFields({
   resource: LocalizedEquipmentModifier<EquipmentModifier>;
 }) {
   const { lang, t } = useI18nLangContext(i18nContext);
-  const equipmentNames = useLocalizedEquipmentNames(lang);
+  const equipmentEntries = useLocalizedEquipmentEntries(lang);
   const equipment = resource._raw.equipment_ids
-    .map((id) => equipmentNames[id] ?? "")
-    .filter(Boolean)
-    .sort((a, b) => a.localeCompare(b, lang))
-    .join(", ");
+    .flatMap((id) => {
+      const entry = equipmentEntries.find((equipmentEntry) => equipmentEntry.id === id);
+      return entry ? [entry] : [];
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, lang));
   const fields = [
     resource._raw.cost_delta !== 0 && [t("additional_cost"), resource.cost_delta],
     resource._raw.weight_delta !== 0 && [t("additional_weight"), resource.weight_delta],
@@ -34,7 +36,7 @@ export default function EquipmentModifierDetailFields({
     ],
   ].filter((field): field is [string, string] => Boolean(field));
 
-  if (fields.length === 0 && !equipment) return null;
+  if (fields.length === 0 && equipment.length === 0) return null;
 
   return (
     <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
@@ -43,9 +45,11 @@ export default function EquipmentModifierDetailFields({
           {value}
         </ResourceDetailField>
       ))}
-      {equipment && (
+      {equipment.length > 0 && (
         <GridItem colSpan={{ base: 1, sm: 3 }}>
-          <ResourceDetailField label={t("supported_equipment")}>{equipment}</ResourceDetailField>
+          <ResourceDetailField label={t("supported_equipment")}>
+            <ResourceDetailLinks resources={equipment} />
+          </ResourceDetailField>
         </GridItem>
       )}
     </SimpleGrid>

@@ -2,10 +2,12 @@ import { GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
+import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
 import ResourceDetailContent from "../../resource-detail-content";
 import ResourceDetailField from "../../resource-detail-field";
+import ResourceDetailLinks from "../../resource-detail-links";
 
 const { useLocalizedResource } = characterClassStore;
 const {
@@ -13,6 +15,8 @@ const {
   useResourceIds: useSubclassResourceIds,
   useResources: useSubclassResources,
 } = characterSubclassStore;
+const { useLocalizedResourceNames: useLocalizedToolNames } = toolStore;
+const noToolIds: string[] = [];
 
 //------------------------------------------------------------------------------
 // Character Class Detail Route
@@ -21,6 +25,12 @@ const {
 export default function CharacterClassDetailRoute({ resourceId }: { resourceId: string }) {
   const { t } = useI18nLangContext(i18nContext);
   const characterClass = useLocalizedResource(resourceId);
+  const toolIds = characterClass?._raw.tool_proficiency_ids ?? noToolIds;
+  const toolNames = useLocalizedToolNames(toolIds);
+  const localizedTools = toolIds.flatMap((id, index) => {
+    const name = toolNames[index];
+    return name ? [{ id, kind: "tool" as const, name }] : [];
+  });
   const subclassIds = useSubclassResourceIds(characterClass?._raw.source_id ?? "");
   const subclasses = useSubclassResources(subclassIds);
   const classSubclassIds = subclasses
@@ -40,7 +50,6 @@ export default function CharacterClassDetailRoute({ resourceId }: { resourceId: 
         { label: t("saving_throws"), value: characterClass.saving_throw_proficiencies },
         { label: t("armor_proficiencies"), value: characterClass.armor_proficiencies },
         { label: t("weapon_proficiencies"), value: characterClass.weapon_proficiencies },
-        { label: t("tool_proficiencies"), value: characterClass.tool_proficiencies },
       ].filter(({ value }) => Boolean(value))
     : [];
 
@@ -54,6 +63,11 @@ export default function CharacterClassDetailRoute({ resourceId }: { resourceId: 
                 {value}
               </ResourceDetailField>
             ))}
+            {localizedTools.length > 0 && (
+              <ResourceDetailField label={t("tool_proficiencies")}>
+                <ResourceDetailLinks resources={localizedTools} />
+              </ResourceDetailField>
+            )}
             {sortedSubclasses.length > 0 && (
               <GridItem colSpan={{ base: 1, sm: 2 }}>
                 <ResourceDetailField label={t("subclasses")}>

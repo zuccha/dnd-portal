@@ -1,27 +1,84 @@
 import { GridItem, SimpleGrid, Span, VStack } from "@chakra-ui/react";
+import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
+import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
+import { languageStore } from "~/models/resources/languages/language-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RichText from "~/ui/rich-text";
 import RouterLink from "~/ui/router-link";
 import ResourceDetailContent from "../../resource-detail-content";
 import ResourceDetailField from "../../resource-detail-field";
 import CreatureDetailAbilityScoreTable from "./creature-detail-ability-score-table";
+import type { ResourceDetailLinkEntry } from "../../resource-detail-links";
 import type { ReactNode } from "react";
 
 const { useLocalizedResource } = creatureStore;
 const { useLocalizedResource: useLocalizedFamily } = creatureFamilyStore;
+const { useLocalizedEquipmentEntries } = equipmentReferenceStore;
+const { useLocalizedResourceNames: useLocalizedLanguageNames } = languageStore;
+const noLanguageIds: string[] = [];
 
 //------------------------------------------------------------------------------
 // Creature Detail Route
 //------------------------------------------------------------------------------
 
 export default function CreatureDetailRoute({ resourceId }: { resourceId: string }) {
-  const { t } = useI18nLangContext(i18nContext);
+  const { lang, t } = useI18nLangContext(i18nContext);
   const creature = useLocalizedResource(resourceId);
   const familyId = creature?._raw.family_id ?? "";
   const family = useLocalizedFamily(familyId);
+  const equipmentEntries = useLocalizedEquipmentEntries(lang);
+  const languageIds = useMemo(
+    () => creature?._raw.language_entries.map(({ language_id }) => language_id) ?? noLanguageIds,
+    [creature],
+  );
+  const languageNames = useLocalizedLanguageNames(languageIds);
+  const linkedResources = useMemo<ResourceDetailLinkEntry[]>(() => {
+    const byId = new Map<string, ResourceDetailLinkEntry>();
+    for (const { id } of creature?._raw.gear.equipments ?? []) {
+      const equipment = equipmentEntries.find((entry) => entry.id === id);
+      if (equipment) byId.set(`${equipment.kind}:${equipment.id}`, equipment);
+    }
+    languageIds.forEach((id, index) => {
+      const name = languageNames[index];
+      if (name) byId.set(`language:${id}`, { id, kind: "language", name });
+    });
+
+    return [...byId.values()].sort((a, b) => b.name.length - a.name.length);
+  }, [creature, equipmentEntries, languageIds, languageNames]);
+  const detailInfoRichTextPatterns = useMemo(() => {
+    const idsByName = new Map<
+      string,
+      { id: string; kind: (typeof linkedResources)[number]["kind"] }[]
+    >();
+    for (const { id, kind, name } of linkedResources) {
+      idsByName.set(name, [...(idsByName.get(name) ?? []), { id, kind }]);
+    }
+    const uniqueNames = [...idsByName]
+      .filter(([, entries]) => entries.length === 1)
+      .map(([name]) => name)
+      .sort((a, b) => b.length - a.length);
+    const linkPattern = uniqueNames.length
+      ? {
+          regex: new RegExp(`(${uniqueNames.map(escapeRegExp).join("|")})`),
+          render: (value: ReactNode) => {
+            if (typeof value !== "string") return value;
+            const [entry] = idsByName.get(value) ?? [];
+            return entry ? (
+              <RouterLink to={resourceDetailRoute(entry.kind, entry.id)}>{value}</RouterLink>
+            ) : (
+              value
+            );
+          },
+        }
+      : undefined;
+
+    return linkPattern
+      ? [...creatureInfoRichTextPatterns, linkPattern]
+      : creatureInfoRichTextPatterns;
+  }, [linkedResources]);
 
   if (!creature) return <ResourceDetailContent resource={creature} />;
 
@@ -93,7 +150,7 @@ export default function CreatureDetailRoute({ resourceId }: { resourceId: string
 
           {creature.info && (
             <RichText
-              patterns={creatureInfoRichTextPatterns}
+              patterns={detailInfoRichTextPatterns}
               text={creature.info}
               whiteSpace="pre-wrap"
             />
@@ -137,3 +194,11 @@ const creatureInfoRichTextPatterns = [
   },
   ...RichText.defaultPatterns.slice(1),
 ];
+
+//------------------------------------------------------------------------------
+// Escape Regular Expression
+//------------------------------------------------------------------------------
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

@@ -8,6 +8,7 @@ import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
 import ResourceDetailContent from "../../resource-detail-content";
 import ResourceDetailField from "../../resource-detail-field";
+import ResourceDetailLinks from "../../resource-detail-links";
 
 const useLocalizedResource = creatureFamilyStore.useLocalizedResource;
 const useCreatureResourceIds = creatureStore.useResourceIds;
@@ -30,7 +31,12 @@ export default function CreatureFamilyDetailRoute({ resourceId }: { resourceId: 
     [creatures, family?._raw.id],
   );
   const creatureNames = useLocalizedCreatureNames(familyCreatureIds);
-  const planeNames = useLocalizedPlaneNames(family?._raw.plane_ids ?? noPlaneIds);
+  const planeIds = family?._raw.plane_ids ?? noPlaneIds;
+  const planeNames = useLocalizedPlaneNames(planeIds);
+  const planes = planeIds.flatMap((id, index) => {
+    const name = planeNames[index];
+    return name ? [{ id, kind: "plane" as const, name }] : [];
+  });
   const sortedCreatures = useMemo(
     () =>
       familyCreatureIds
@@ -50,9 +56,9 @@ export default function CreatureFamilyDetailRoute({ resourceId }: { resourceId: 
             {family.habitats && (
               <ResourceDetailField label={t("habitats")}>{family.habitats}</ResourceDetailField>
             )}
-            {planeNames.some(Boolean) && (
+            {planes.length > 0 && (
               <ResourceDetailField label={t("planes")}>
-                {planeNames.filter(Boolean).join(", ")}
+                <ResourceDetailLinks resources={planes} />
               </ResourceDetailField>
             )}
             {family.treasures && (

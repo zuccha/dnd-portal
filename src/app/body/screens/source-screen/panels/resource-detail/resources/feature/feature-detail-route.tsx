@@ -8,6 +8,8 @@ import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-
 import { featStore } from "~/models/resources/feats/feat-store";
 import { featureStore } from "~/models/resources/features/feature-store";
 import { speciesStore } from "~/models/resources/species/species-store";
+import { resourceDetailRoute } from "~/navigation/routes";
+import RouterLink from "~/ui/router-link";
 import ResourceDetailContent from "../../resource-detail-content";
 import ResourceDetailField from "../../resource-detail-field";
 
@@ -23,7 +25,7 @@ const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipment
 //------------------------------------------------------------------------------
 
 export default function FeatureDetailRoute({ resourceId }: { resourceId: string }) {
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
+  const { lang, t } = useI18nLangContext(i18nContext);
   const feature = useLocalizedResource(resourceId);
   const endpoint = feature ?? defaultFeatureEndpoint;
   const classEntries = useActiveSourceRelatedResourceEntries(
@@ -108,13 +110,14 @@ export default function FeatureDetailRoute({ resourceId }: { resourceId: string 
                         <Text fontSize="sm" fontWeight="medium">
                           {label}
                         </Text>
-                        <Text>
-                          {values
-                            .map(({ name, min_level }) =>
-                              min_level ? ti("name.min_level", name, `${min_level}`) : name,
-                            )
-                            .join(", ")}
-                        </Text>
+                        <VStack align="flex-start" gap={1}>
+                          {values.map(({ id, kind, name, min_level }) => (
+                            <Text as="span" key={`${kind}:${id}:${min_level ?? 0}`}>
+                              <RouterLink to={resourceDetailRoute(kind, id)}>{name}</RouterLink>
+                              {min_level ? ` (${t("level")} ${min_level})` : ""}
+                            </Text>
+                          ))}
+                        </VStack>
                       </VStack>
                     ))}
                   </VStack>
@@ -134,35 +137,32 @@ export default function FeatureDetailRoute({ resourceId }: { resourceId: string 
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "character_classes": {
+  character_classes: {
     en: "Classes",
     it: "Classi",
   },
-  "character_subclasses": {
+  character_subclasses: {
     en: "Subclasses",
     it: "Sottoclassi",
   },
-  "display_name": {
+  display_name: {
     en: "Display Name",
     it: "Nome Visualizzato",
   },
-  "equipment": {
+  equipment: {
     en: "Equipment",
     it: "Equipaggiamento",
   },
-  "feats": {
+  feats: {
     en: "Feats",
     it: "Talenti",
   },
-  "granted_by": {
+  granted_by: {
     en: "Granted By",
     it: "Concesso da",
   },
-  "name.min_level": {
-    en: "<1> (Level <2>)",
-    it: "<1> (Livello <2>)",
-  },
-  "species": {
+  level: { en: "Level", it: "Livello" },
+  species: {
     en: "Species",
     it: "Specie",
   },

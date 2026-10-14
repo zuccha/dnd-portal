@@ -1,10 +1,15 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useActiveSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
+import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
+import { defaultSpell } from "~/models/resources/spells/spell";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import ResourceDetailContent from "../../resource-detail-content";
 import ResourceDetailField from "../../resource-detail-field";
+import ResourceDetailLinks from "../../resource-detail-links";
 
-const useLocalizedResource = spellStore.useLocalizedResource;
+const { useLocalizedResource } = spellStore;
+const { useLocalizedResourceNames: useLocalizedClassNames } = characterClassStore;
 
 //------------------------------------------------------------------------------
 // Spell Detail Route
@@ -13,6 +18,16 @@ const useLocalizedResource = spellStore.useLocalizedResource;
 export default function SpellDetailRoute({ resourceId }: { resourceId: string }) {
   const { t, ti } = useI18nLangContext(i18nContext);
   const spell = useLocalizedResource(resourceId);
+  const classEntries = useActiveSourceRelatedResourceEntries(
+    "character_classes_and_spells",
+    spell ?? defaultSpell,
+  );
+  const classIds = classEntries.map(({ id }) => id);
+  const classNames = useLocalizedClassNames(classIds);
+  const classes = classEntries.flatMap((entry, index) => {
+    const name = classNames[index];
+    return name ? [{ ...entry, name }] : [];
+  });
   const fields = spell
     ? [
         [t("casting_time"), spell.casting_time_with_ritual],
@@ -22,7 +37,6 @@ export default function SpellDetailRoute({ resourceId }: { resourceId: string })
           t("duration"),
           spell.concentration ? ti("duration_with_concentration", spell.duration) : spell.duration,
         ],
-        ...(spell.character_classes ? [[t("classes"), spell.character_classes]] : []),
         ...(spell.materials ? [[t("materials"), spell.materials]] : []),
       ]
     : [];
@@ -37,6 +51,13 @@ export default function SpellDetailRoute({ resourceId }: { resourceId: string })
                 {value}
               </ResourceDetailField>
             ))}
+            {classes.length > 0 && (
+              <GridItem colSpan={{ base: 1, sm: 2 }}>
+                <ResourceDetailField label={t("classes")}>
+                  <ResourceDetailLinks resources={classes} />
+                </ResourceDetailField>
+              </GridItem>
+            )}
           </SimpleGrid>
         )
       }

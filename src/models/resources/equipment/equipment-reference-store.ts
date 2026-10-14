@@ -63,6 +63,19 @@ function useLocalizedEquipmentNames(lang: I18nLang): Record<string, string> {
 }
 
 //------------------------------------------------------------------------------
+// Use Localized Equipment Entries
+//------------------------------------------------------------------------------
+
+function useLocalizedEquipmentEntries(lang: I18nLang) {
+  const equipments = useEquipmentReferenceResources();
+
+  return useMemo(
+    () => equipments.map(({ id, kind, name }) => ({ id, kind, name: translate(name, lang) })),
+    [equipments, lang],
+  );
+}
+
+//------------------------------------------------------------------------------
 // Use Resource Options
 //------------------------------------------------------------------------------
 
@@ -91,6 +104,7 @@ function useResourceOptions(): ResourceOption[] {
 //------------------------------------------------------------------------------
 
 export const equipmentReferenceStore = {
+  useLocalizedEquipmentEntries,
   useLocalizedEquipmentNames,
   useResourceOptions,
 };

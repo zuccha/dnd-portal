@@ -2,10 +2,11 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import ResourceDetailField from "../../../resource-detail-field";
+import ResourceDetailLinks from "../../../resource-detail-links";
 import EquipmentDetailRoute from "../equipment-detail-route";
 
-const useLocalizedResource = weaponStore.useLocalizedResource;
-const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const { useLocalizedResource } = weaponStore;
+const { useLocalizedEquipmentEntries } = equipmentReferenceStore;
 
 //------------------------------------------------------------------------------
 // Weapon Detail Route
@@ -14,13 +15,13 @@ const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipment
 export default function WeaponDetailRoute({ resourceId }: { resourceId: string }) {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const weapon = useLocalizedResource(resourceId);
-  const equipmentNames = useLocalizedEquipmentNames(lang);
+  const equipmentEntries = useLocalizedEquipmentEntries(lang);
   const ammunition = weapon
-    ? weapon._raw.ammunition_ids
-        .map((id) => equipmentNames[id] ?? "")
-        .filter(Boolean)
-        .join(", ")
-    : "";
+    ? weapon._raw.ammunition_ids.flatMap((id) => {
+        const entry = equipmentEntries.find((equipmentEntry) => equipmentEntry.id === id);
+        return entry ? [entry] : [];
+      })
+    : [];
 
   return (
     <EquipmentDetailRoute resource={weapon}>
@@ -38,8 +39,10 @@ export default function WeaponDetailRoute({ resourceId }: { resourceId: string }
           {weapon.properties && (
             <ResourceDetailField label={t("properties")}>{weapon.properties}</ResourceDetailField>
           )}
-          {ammunition && (
-            <ResourceDetailField label={t("ammunition")}>{ammunition}</ResourceDetailField>
+          {ammunition.length > 0 && (
+            <ResourceDetailField label={t("ammunition")}>
+              <ResourceDetailLinks resources={ammunition} />
+            </ResourceDetailField>
           )}
         </>
       )}
