@@ -1,7 +1,8 @@
-import { Box, SimpleGrid, Text } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { spellStore } from "~/models/resources/spells/spell-store";
-import ResourceDetailContent from "../resource-detail-content";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
 
 const useLocalizedResource = spellStore.useLocalizedResource;
 
@@ -30,14 +31,11 @@ export default function SpellDetailRoute({ resourceId }: { resourceId: string })
     <ResourceDetailContent
       detailsContent={
         spell && (
-          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={8} rowGap={4}>
-            {fields.map(([label, value]) => (
-              <Box as="dl" key={label}>
-                <Text as="dt" color="fg.muted" fontSize="sm">
-                  {label}
-                </Text>
-                <Text as="dd">{value}</Text>
-              </Box>
+          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
+            {fields.map(([label, value], index) => (
+              <ResourceDetailField key={index} label={label}>
+                {value}
+              </ResourceDetailField>
             ))}
           </SimpleGrid>
         )

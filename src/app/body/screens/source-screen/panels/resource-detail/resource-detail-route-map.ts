@@ -2,9 +2,9 @@ import type { ResourceKind } from "~/models/types/resource-kind";
 import BackgroundDetailRoute from "./resources/background-detail-route";
 import CharacterClassDetailRoute from "./resources/character-class-detail-route";
 import CharacterSubclassDetailRoute from "./resources/character-subclass-detail-route";
-import CreatureDetailRoute from "./resources/creature-detail-route";
 import CreatureFamilyDetailRoute from "./resources/creature-family-detail-route";
 import CreatureTagDetailRoute from "./resources/creature-tag-detail-route";
+import CreatureDetailRoute from "./resources/creature/creature-detail-route";
 import EldritchInvocationDetailRoute from "./resources/eldritch-invocation-detail-route";
 import ArmorDetailRoute from "./resources/equipment/armor-detail-route";
 import ItemDetailRoute from "./resources/equipment/item-detail-route";
@@ -22,7 +22,7 @@ import WeaponModifierDetailRoute from "./resources/modifiers/equipment/weapon-mo
 import PlaneDetailRoute from "./resources/plane-detail-route";
 import ServiceDetailRoute from "./resources/service-detail-route";
 import SpeciesDetailRoute from "./resources/species-detail-route";
-import SpellDetailRoute from "./resources/spell-detail-route";
+import SpellDetailRoute from "./resources/spell/spell-detail-route";
 import VehicleDetailRoute from "./resources/vehicle-detail-route";
 import type { ComponentType } from "react";
 
