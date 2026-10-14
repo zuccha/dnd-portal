@@ -1,3 +1,5 @@
+import { sha256 as sha256Fallback } from "@noble/hashes/sha2.js";
+
 //------------------------------------------------------------------------------
 // Hash
 //------------------------------------------------------------------------------
@@ -21,7 +23,10 @@ export function hash(value: unknown): string {
 //------------------------------------------------------------------------------
 
 export async function sha256(value: unknown): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(hash(value)));
+  const data = new TextEncoder().encode(hash(value));
+  const digest = globalThis.crypto?.subtle
+    ? new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", data))
+    : sha256Fallback(data);
 
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  return Array.from(digest, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
