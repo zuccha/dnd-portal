@@ -1,7 +1,7 @@
-import EquipmentDetail from "~/app/body/screens/source-screen/panels/resources/equipment/detail/equipment-detail";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { itemStore } from "~/models/resources/equipment/items/item-store";
-import ResourceDetailField from "../../../detail/resource-detail-field";
+import ResourceDetailField from "../../../resource-detail-field";
+import EquipmentDetail from "../../equipment-detail";
 
 type ItemDetailResource = ReturnType<typeof itemStore.useLocalizedResource>;
 

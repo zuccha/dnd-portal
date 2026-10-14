@@ -6,13 +6,13 @@ import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { type LocalizedItem } from "~/models/resources/equipment/items/localized-item";
 import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/item-modifier-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../../resources-panel";
+import { createResourceModule } from "../../resource-module";
 import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import ItemDetail from "./detail/item-detail";
-import { ItemCard } from "./item-card";
 import { createItemEditor } from "./item-editor";
-import ItemsFilters from "./items-filters";
+import { ItemCard } from "./panel/item-card";
+import ItemsFilters from "./panel/items-filters";
 import type { ResourcesTableExtra } from "../../resources-table";
 
 //------------------------------------------------------------------------------

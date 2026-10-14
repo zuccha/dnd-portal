@@ -8,10 +8,10 @@ import { languageStore } from "~/models/resources/languages/language-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RichText from "~/ui/rich-text";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
 import CreatureDetailAbilityScoreTable from "./creature-detail-ability-score-table";
-import type { ResourceDetailLinkEntry } from "../../detail/resource-detail-links";
+import type { ResourceDetailLinkEntry } from "../../resource-detail-links";
 import type { ReactNode } from "react";
 
 type CreatureDetailResource = ReturnType<typeof creatureStore.useLocalizedResource>;

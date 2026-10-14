@@ -3,12 +3,12 @@ import { type Plane } from "~/models/resources/planes/plane";
 import { planeForm, planeFormDataToResource } from "~/models/resources/planes/plane-form";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import PlaneDetail from "./detail/plane-detail";
-import { PlaneCard } from "./plane-card";
+import { PlaneCard } from "./panel/plane-card";
+import PlanesFilters from "./panel/planes-filters";
 import { createPlaneEditor } from "./plane-editor";
-import PlanesFilters from "./planes-filters";
 
 //------------------------------------------------------------------------------
 // Columns

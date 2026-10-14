@@ -98,7 +98,7 @@ import { createBackgroundEditor } from "../resources/backgrounds/background-edit
 import { createCharacterClassEditor } from "../resources/character-classes/character-class-editor";
 import { createCharacterSubclassEditor } from "../resources/character-subclasses/character-subclass-editor";
 import { createCreatureFamilyEditor } from "../resources/creature-families/creature-family-editor";
-import { createCreatureTagEditor } from "../resources/creature-tag/creature-tag-editor";
+import { createCreatureTagEditor } from "../resources/creature-tags/creature-tag-editor";
 import { createCreatureEditor } from "../resources/creatures/creature-editor";
 import { createEldritchInvocationEditor } from "../resources/eldritch-invocations/eldritch-invocation-editor";
 import { createArmorEditor } from "../resources/equipment/armors/armor-editor";

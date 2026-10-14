@@ -3,12 +3,12 @@ import { type Species } from "~/models/resources/species/species";
 import { speciesForm, speciesFormDataToResource } from "~/models/resources/species/species-form";
 import { speciesStore } from "~/models/resources/species/species-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import SpeciesDetail from "./detail/species-detail";
-import { SpeciesCard } from "./species-card";
+import { SpeciesCard } from "./panel/species-card";
+import SpeciesFilters from "./panel/species-filters";
 import { createSpeciesEditor } from "./species-editor";
-import SpeciesFilters from "./species-filters";
 
 //------------------------------------------------------------------------------
 // Columns

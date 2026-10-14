@@ -3,12 +3,12 @@ import { featForm, featFormDataToResource } from "~/models/resources/feats/feat-
 import { featStore } from "~/models/resources/feats/feat-store";
 import { type LocalizedFeat } from "~/models/resources/feats/localized-feat";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import FeatDetail from "./detail/feat-detail";
-import { FeatCard } from "./feat-card";
 import { createFeatEditor } from "./feat-editor";
-import FeatsFilters from "./feats-filters";
+import { FeatCard } from "./panel/feat-card";
+import FeatsFilters from "./panel/feats-filters";
 
 //------------------------------------------------------------------------------
 // Columns

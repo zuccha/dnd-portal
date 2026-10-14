@@ -10,8 +10,8 @@ import { featureStore } from "~/models/resources/features/feature-store";
 import { speciesStore } from "~/models/resources/species/species-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
 
 type FeatureDetailResource = ReturnType<typeof featureStore.useLocalizedResource>;
 const useLocalizedClassNames = characterClassStore.useLocalizedResourceNames;

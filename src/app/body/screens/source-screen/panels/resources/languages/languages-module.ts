@@ -6,12 +6,12 @@ import {
 import { languageStore } from "~/models/resources/languages/language-store";
 import { type LocalizedLanguage } from "~/models/resources/languages/localized-language";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import LanguageDetail from "./detail/language-detail";
-import { LanguageCard } from "./language-card";
 import { createLanguageEditor } from "./language-editor";
-import LanguagesFilters from "./languages-filters";
+import { LanguageCard } from "./panel/language-card";
+import LanguagesFilters from "./panel/languages-filters";
 
 //------------------------------------------------------------------------------
 // Columns

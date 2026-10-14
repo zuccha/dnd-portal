@@ -6,13 +6,13 @@ import { toolForm, toolFormDataToResource } from "~/models/resources/equipment/t
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../../resources-panel";
+import { createResourceModule } from "../../resource-module";
 import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import ToolDetail from "./detail/tool-detail";
-import { ToolCard } from "./tool-card";
+import { ToolCard } from "./panel/tool-card";
+import ToolsFilters from "./panel/tools-filters";
 import { createToolEditor } from "./tool-editor";
-import ToolsFilters from "./tools-filters";
 import type { ResourcesTableExtra } from "../../resources-table";
 
 //------------------------------------------------------------------------------

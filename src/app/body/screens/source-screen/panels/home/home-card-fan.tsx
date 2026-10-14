@@ -1,7 +1,4 @@
 import { Box } from "@chakra-ui/react";
-import { ArmorCard } from "~/app/body/screens/source-screen/panels/resources/equipment/armors/armor-card";
-import { ItemCard } from "~/app/body/screens/source-screen/panels/resources/equipment/items/item-card";
-import { WeaponCard } from "~/app/body/screens/source-screen/panels/resources/equipment/weapons/weapon-card";
 import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import type { LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import type { LocalizedItem } from "~/models/resources/equipment/items/localized-item";
@@ -9,8 +6,11 @@ import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/local
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import PokerCard from "~/ui/poker-card";
 import { palettes } from "~/utils/palette";
-import { CreatureCard } from "../resources/creatures/creature-card";
-import { SpellCard } from "../resources/spells/spell-card";
+import { CreatureCard } from "../resources/creatures/panel/creature-card.tsx";
+import { ArmorCard } from "../resources/equipment/armors/panel/armor-card.tsx";
+import { ItemCard } from "../resources/equipment/items/panel/item-card.tsx";
+import { WeaponCard } from "../resources/equipment/weapons/panel/weapon-card.tsx";
+import { SpellCard } from "../resources/spells/panel/spell-card.tsx";
 import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------

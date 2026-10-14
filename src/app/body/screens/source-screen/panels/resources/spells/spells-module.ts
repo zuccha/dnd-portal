@@ -5,12 +5,12 @@ import { type Spell } from "~/models/resources/spells/spell";
 import { spellForm, spellFormDataToResource } from "~/models/resources/spells/spell-form";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import SpellDetail from "./detail/spell-detail";
-import { SpellCard } from "./spell-card";
+import { SpellCard } from "./panel/spell-card";
+import SpellsFilters from "./panel/spells-filters";
 import { createSpellEditor } from "./spell-editor";
-import SpellsFilters from "./spells-filters";
 
 //------------------------------------------------------------------------------
 // Columns

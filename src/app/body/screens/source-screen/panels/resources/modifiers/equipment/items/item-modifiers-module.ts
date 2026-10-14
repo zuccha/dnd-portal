@@ -7,9 +7,9 @@ import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/
 import { Route } from "~/navigation/routes";
 import { createEquipmentModifierModule } from "../equipment-modifiers-module";
 import ItemModifierDetail from "./detail/item-modifier-detail";
-import { ItemModifierCard } from "./item-modifier-card";
 import { createItemModifierEditor } from "./item-modifier-editor";
-import ItemModifiersFilters from "./item-modifiers-filters";
+import { ItemModifierCard } from "./panel/item-modifier-card";
+import ItemModifiersFilters from "./panel/item-modifiers-filters";
 
 //------------------------------------------------------------------------------
 // Item Modifiers Panel

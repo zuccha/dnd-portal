@@ -4,9 +4,9 @@ import { useActiveSourceRelatedResourceEntries } from "~/models/catalogue/resour
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { defaultSpell } from "~/models/resources/spells/spell";
 import { spellStore } from "~/models/resources/spells/spell-store";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
-import ResourceDetailLinks from "../../detail/resource-detail-links";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
+import ResourceDetailLinks from "../../resource-detail-links";
 
 type SpellDetailResource = ReturnType<typeof spellStore.useLocalizedResource>;
 const { useLocalizedResourceNames: useLocalizedClassNames } = characterClassStore;

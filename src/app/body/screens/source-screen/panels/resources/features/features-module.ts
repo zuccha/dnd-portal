@@ -3,12 +3,12 @@ import { featureForm, featureFormDataToResource } from "~/models/resources/featu
 import { featureStore } from "~/models/resources/features/feature-store";
 import type { LocalizedFeature } from "~/models/resources/features/localized-feature";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import FeatureDetail from "./detail/feature-detail";
-import { FeatureCard } from "./feature-card";
 import { createFeatureEditor } from "./feature-editor";
-import FeaturesFilters from "./features-filters";
+import { FeatureCard } from "./panel/feature-card";
+import FeaturesFilters from "./panel/features-filters";
 
 //------------------------------------------------------------------------------
 // Columns

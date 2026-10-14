@@ -9,13 +9,13 @@ import {
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../../resources-panel";
+import { createResourceModule } from "../../resource-module";
 import { createEquipmentTableColumns } from "../equipment-table-columns";
 import { createEquipmentVariantDialog } from "../equipment-variant-dialog";
 import WeaponDetail from "./detail/weapon-detail";
-import { WeaponCard } from "./weapon-card";
+import { WeaponCard } from "./panel/weapon-card";
+import WeaponsFilters from "./panel/weapons-filters";
 import { createWeaponEditor } from "./weapon-editor";
-import WeaponsFilters from "./weapons-filters";
 import type { ResourcesTableExtra } from "../../resources-table";
 
 //------------------------------------------------------------------------------

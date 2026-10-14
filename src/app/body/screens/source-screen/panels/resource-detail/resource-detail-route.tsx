@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import ResourceDetailNotFound from "./resource-detail-not-found";
-import type { ResourceModule } from "../resources/resources-panel";
+import type { ResourceModule } from "../resources/resource-module";
 
 //------------------------------------------------------------------------------
 // Resource Detail Route

@@ -1,8 +1,8 @@
 import { SimpleGrid } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { featStore } from "~/models/resources/feats/feat-store";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
 
 type FeatDetailResource = ReturnType<typeof featStore.useLocalizedResource>;
 

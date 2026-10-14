@@ -1,9 +1,9 @@
-import EquipmentDetail from "~/app/body/screens/source-screen/panels/resources/equipment/detail/equipment-detail";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
-import ResourceDetailField from "../../../detail/resource-detail-field";
-import ResourceDetailLinks from "../../../detail/resource-detail-links";
+import ResourceDetailField from "../../../resource-detail-field";
+import ResourceDetailLinks from "../../../resource-detail-links";
+import EquipmentDetail from "../../equipment-detail";
 
 type WeaponDetailResource = ReturnType<typeof weaponStore.useLocalizedResource>;
 const { useLocalizedEquipmentEntries } = equipmentReferenceStore;

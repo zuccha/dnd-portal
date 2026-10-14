@@ -7,9 +7,9 @@ import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weap
 import { Route } from "~/navigation/routes";
 import { createEquipmentModifierModule } from "../equipment-modifiers-module";
 import WeaponModifierDetail from "./detail/weapon-modifier-detail";
-import { WeaponModifierCard } from "./weapon-modifier-card";
+import { WeaponModifierCard } from "./panel/weapon-modifier-card";
+import WeaponModifiersFilters from "./panel/weapon-modifiers-filters";
 import { createWeaponModifierEditor } from "./weapon-modifier-editor";
-import WeaponModifiersFilters from "./weapon-modifiers-filters";
 
 //------------------------------------------------------------------------------
 // Weapon Modifiers Panel

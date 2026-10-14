@@ -6,8 +6,8 @@ import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { featStore } from "~/models/resources/feats/feat-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
 
 type BackgroundDetailResource = ReturnType<typeof backgroundStore.useLocalizedResource>;
 const { useLocalizedResourceName: useLocalizedFeatName } = featStore;

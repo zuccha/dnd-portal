@@ -5,8 +5,8 @@ import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
 
 type CreatureTagDetailResource = ReturnType<typeof creatureTagStore.useLocalizedResource>;
 const useCreatureResourceIds = creatureStore.useResourceIds;

@@ -6,10 +6,10 @@ import {
 import { armorModifierStore } from "~/models/resources/modifiers/equipment/armors/armor-modifier-store";
 import { Route } from "~/navigation/routes";
 import { createEquipmentModifierModule } from "../equipment-modifiers-module";
-import { ArmorModifierCard } from "./armor-modifier-card";
 import { createArmorModifierEditor } from "./armor-modifier-editor";
-import ArmorModifiersFilters from "./armor-modifiers-filters";
 import ArmorModifierDetail from "./detail/armor-modifier-detail";
+import { ArmorModifierCard } from "./panel/armor-modifier-card";
+import ArmorModifiersFilters from "./panel/armor-modifiers-filters";
 
 //------------------------------------------------------------------------------
 // Armor Modifiers Panel

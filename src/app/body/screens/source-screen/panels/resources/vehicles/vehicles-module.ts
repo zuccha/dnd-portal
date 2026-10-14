@@ -3,12 +3,12 @@ import { type Vehicle } from "~/models/resources/vehicles/vehicle";
 import { vehicleForm, vehicleFormDataToResource } from "~/models/resources/vehicles/vehicle-form";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import VehicleDetail from "./detail/vehicle-detail";
-import { VehicleCard } from "./vehicle-card";
+import { VehicleCard } from "./panel/vehicle-card";
+import VehiclesFilters from "./panel/vehicles-filters";
 import { createVehicleEditor } from "./vehicle-editor";
-import VehiclesFilters from "./vehicles-filters";
 
 //------------------------------------------------------------------------------
 // Columns

@@ -6,9 +6,9 @@ import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
-import ResourceDetailLinks from "../../detail/resource-detail-links";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
+import ResourceDetailLinks from "../../resource-detail-links";
 
 type CreatureFamilyDetailResource = ReturnType<typeof creatureFamilyStore.useLocalizedResource>;
 const useCreatureResourceIds = creatureStore.useResourceIds;

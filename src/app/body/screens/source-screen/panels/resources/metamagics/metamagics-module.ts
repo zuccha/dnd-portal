@@ -6,12 +6,12 @@ import {
 } from "~/models/resources/metamagics/metamagic-form";
 import { metamagicStore } from "~/models/resources/metamagics/metamagic-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import MetamagicDetail from "./detail/metamagic-detail";
-import { MetamagicCard } from "./metamagic-card";
 import { createMetamagicEditor } from "./metamagic-editor";
-import MetamagicsFilters from "./metamagics-filters";
+import { MetamagicCard } from "./panel/metamagic-card";
+import MetamagicsFilters from "./panel/metamagics-filters";
 
 //------------------------------------------------------------------------------
 // Columns

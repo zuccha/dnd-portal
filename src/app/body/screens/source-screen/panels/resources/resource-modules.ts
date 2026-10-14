@@ -2,7 +2,7 @@ import { resourceModule as backgrounds } from "./backgrounds/backgrounds-module"
 import { resourceModule as characterClasses } from "./character-classes/character-classes-module";
 import { resourceModule as characterSubclasses } from "./character-subclasses/character-subclasses-module";
 import { resourceModule as creatureFamilies } from "./creature-families/creature-families-module";
-import { resourceModule as creatureTags } from "./creature-tag/creature-tags-module";
+import { resourceModule as creatureTags } from "./creature-tags/creature-tags-module";
 import { resourceModule as creatures } from "./creatures/creatures-module";
 import { resourceModule as eldritchInvocations } from "./eldritch-invocations/eldritch-invocations-module";
 import { resourceModule as armors } from "./equipment/armors/armors-module";
@@ -23,7 +23,7 @@ import { resourceModule as services } from "./services/services-module";
 import { resourceModule as species } from "./species/species-module";
 import { resourceModule as spells } from "./spells/spells-module";
 import { resourceModule as vehicles } from "./vehicles/vehicles-module";
-import type { ResourceModule } from "./resources-panel";
+import type { ResourceModule } from "./resource-module";
 
 //------------------------------------------------------------------------------
 // Resource Modules

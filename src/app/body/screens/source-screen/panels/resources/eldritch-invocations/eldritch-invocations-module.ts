@@ -6,12 +6,12 @@ import {
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
 import { type LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import EldritchInvocationDetail from "./detail/eldritch-invocation-detail";
-import { EldritchInvocationCard } from "./eldritch-invocation-card";
 import { createEldritchInvocationEditor } from "./eldritch-invocation-editor";
-import EldritchInvocationsFilters from "./eldritch-invocations-filters";
+import { EldritchInvocationCard } from "./panel/eldritch-invocation-card";
+import EldritchInvocationsFilters from "./panel/eldritch-invocations-filters";
 
 //------------------------------------------------------------------------------
 // Columns

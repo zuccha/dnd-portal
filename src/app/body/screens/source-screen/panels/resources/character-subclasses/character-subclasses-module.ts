@@ -6,12 +6,12 @@ import {
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import { type LocalizedCharacterSubclass } from "~/models/resources/character-subclasses/localized-character-subclass";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
-import { CharacterSubclassCard } from "./character-subclass-card";
 import { createCharacterSubclassEditor } from "./character-subclass-editor";
-import CharacterSubclassesFilters from "./character-subclasses-filters";
 import CharacterSubclassDetail from "./detail/character-subclass-detail";
+import { CharacterSubclassCard } from "./panel/character-subclass-card";
+import CharacterSubclassesFilters from "./panel/character-subclasses-filters";
 
 //------------------------------------------------------------------------------
 // Columns

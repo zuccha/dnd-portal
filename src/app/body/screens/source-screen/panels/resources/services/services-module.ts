@@ -3,12 +3,12 @@ import { type Service } from "~/models/resources/services/service";
 import { serviceForm, serviceFormDataToResource } from "~/models/resources/services/service-form";
 import { serviceStore } from "~/models/resources/services/service-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import ServiceDetail from "./detail/service-detail";
-import { ServiceCard } from "./service-card";
+import { ServiceCard } from "./panel/service-card";
+import ServicesFilters from "./panel/services-filters";
 import { createServiceEditor } from "./service-editor";
-import ServicesFilters from "./services-filters";
 
 //------------------------------------------------------------------------------
 // Columns

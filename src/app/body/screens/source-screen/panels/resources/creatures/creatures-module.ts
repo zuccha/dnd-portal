@@ -6,12 +6,12 @@ import {
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { type LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
-import { CreatureCard } from "./creature-card";
 import { createCreatureEditor } from "./creature-editor";
-import CreaturesFilters from "./creatures-filters";
 import CreatureDetail from "./detail/creature-detail";
+import { CreatureCard } from "./panel/creature-card";
+import CreaturesFilters from "./panel/creatures-filters";
 
 //------------------------------------------------------------------------------
 // Columns

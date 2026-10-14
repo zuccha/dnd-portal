@@ -1,8 +1,8 @@
 import { SimpleGrid } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { planeStore } from "~/models/resources/planes/plane-store";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
 
 type PlaneDetailResource = ReturnType<typeof planeStore.useLocalizedResource>;
 

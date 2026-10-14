@@ -6,12 +6,12 @@ import {
 } from "~/models/resources/maneuvers/maneuver-form";
 import { maneuverStore } from "~/models/resources/maneuvers/maneuver-store";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
 import ManeuverDetail from "./detail/maneuver-detail";
-import { ManeuverCard } from "./maneuver-card";
 import { createManeuverEditor } from "./maneuver-editor";
-import ManeuversFilters from "./maneuvers-filters";
+import { ManeuverCard } from "./panel/maneuver-card";
+import ManeuversFilters from "./panel/maneuvers-filters";
 
 //------------------------------------------------------------------------------
 // Columns

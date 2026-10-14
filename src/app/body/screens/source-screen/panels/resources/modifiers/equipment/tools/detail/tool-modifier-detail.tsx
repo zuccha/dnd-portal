@@ -1,6 +1,6 @@
-import EquipmentModifierDetailFields from "~/app/body/screens/source-screen/panels/resources/modifiers/equipment/detail/equipment-modifier-detail-fields";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
-import ResourceDetailContent from "../../../../detail/resource-detail-content";
+import ResourceDetailContent from "../../../../resource-detail-content";
+import EquipmentModifierDetailFields from "../../equipment-modifier-detail-fields";
 
 type ToolModifierDetailResource = ReturnType<typeof toolModifierStore.useLocalizedResource>;
 

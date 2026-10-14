@@ -6,12 +6,12 @@ import {
 import { backgroundStore } from "~/models/resources/backgrounds/background-store";
 import { type LocalizedBackground } from "~/models/resources/backgrounds/localized-background";
 import { Route } from "~/navigation/routes";
-import { createResourceModule } from "../resources-panel";
+import { createResourceModule } from "../resource-module";
 import { createResourcesTableColumns } from "../resources-table-columns";
-import { BackgroundCard } from "./background-card";
 import { createBackgroundEditor } from "./background-editor";
-import BackgroundsFilters from "./backgrounds-filters";
 import BackgroundDetail from "./detail/background-detail";
+import { BackgroundCard } from "./panel/background-card";
+import BackgroundsFilters from "./panel/backgrounds-filters";
 
 //------------------------------------------------------------------------------
 // Columns

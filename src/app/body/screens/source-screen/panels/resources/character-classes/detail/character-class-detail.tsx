@@ -5,9 +5,9 @@ import { characterSubclassStore } from "~/models/resources/character-subclasses/
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../detail/resource-detail-content";
-import ResourceDetailField from "../../detail/resource-detail-field";
-import ResourceDetailLinks from "../../detail/resource-detail-links";
+import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetailField from "../../resource-detail-field";
+import ResourceDetailLinks from "../../resource-detail-links";
 
 type CharacterClassDetailResource = ReturnType<typeof characterClassStore.useLocalizedResource>;
 const {
