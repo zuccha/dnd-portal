@@ -1,4 +1,4 @@
-import { HStack, Span, type StackProps } from "@chakra-ui/react";
+import { Grid, HStack, Image, Span, type StackProps } from "@chakra-ui/react";
 import { MenuIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -6,8 +6,10 @@ import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
+import logoUrl from "../../../../../../assets/logo/logo.png";
 import { useRightPanelSetCollapsed } from "../right-panel-state";
 import { useSidebarSetCollapsed } from "../sidebar/sidebar-state";
+import ResourceSearch from "./resource-search";
 import UserButton from "./user-button";
 
 //------------------------------------------------------------------------------
@@ -23,18 +25,26 @@ export default function Topbar() {
   const navigate = useNavigate();
   const setSidebarCollapsed = useSidebarSetCollapsed();
   const setRightPanelCollapsed = useRightPanelSetCollapsed();
-  const hasResourcesSidebar = route.startsWith(Route.Resources) || route === Route.PrintDeck;
+  const routeSegments = route.split("/").filter(Boolean);
+  const hasResourcesSidebar =
+    route === Route.Resources ||
+    (route.startsWith(`${Route.Resources}/`) && routeSegments.length === 2) ||
+    route === Route.PrintDeck;
 
   return (
-    <HStack
+    <Grid
+      alignItems="center"
       borderBottomWidth={1}
+      gridTemplateColumns={{
+        base: "minmax(6rem, 1fr) minmax(0, 2fr) minmax(6rem, 1fr)",
+        md: "minmax(0, 1fr) minmax(0, 32rem) minmax(0, 1fr)",
+      }}
       h={Topbar.height}
-      justify="space-between"
       px={{ base: 3, md: 6 }}
       w="full"
       zIndex="docked"
     >
-      <HStack flex={1} fontFamily="Mitr" fontSize={{ base: "2xl", md: "3xl" }}>
+      <HStack fontFamily="Mitr" fontSize={{ base: "2xl", md: "3xl" }}>
         <IconButton
           Icon={MenuIcon}
           display={{ base: "inline-flex", md: "none" }}
@@ -44,15 +54,30 @@ export default function Topbar() {
           size="sm"
           variant="ghost"
         />
-        <Button cursor="pointer" onClick={() => navigate(Route._)} unstyled>
-          <Span fontWeight="600">Zorbo</Span>
-          <Span fontWeight="500" color="fg.error">
-            DnD
+        <Button
+          alignItems="center"
+          aria-label={t("home")}
+          cursor="pointer"
+          display="flex"
+          gap={2}
+          onClick={() => navigate(Route._)}
+          unstyled
+        >
+          <Image alt="" h={8} src={logoUrl} w={8} />
+          <Span>
+            <Span display={{ base: "none", md: "inline" }} fontWeight="600">
+              Zorbo
+            </Span>
+            <Span color="fg.error" display={{ base: "none", md: "inline" }} fontWeight="500">
+              DnD
+            </Span>
           </Span>
         </Button>
       </HStack>
 
-      <HStack gap={{ base: 1, md: 2 }}>
+      <ResourceSearch />
+
+      <HStack gap={{ base: 1, md: 2 }} justifySelf="end">
         {hasResourcesSidebar && (
           <IconButton
             Icon={SlidersHorizontalIcon}
@@ -67,7 +92,7 @@ export default function Topbar() {
         <ThemeButton />
         <UserButton />
       </HStack>
-    </HStack>
+    </Grid>
   );
 }
 
@@ -78,6 +103,10 @@ Topbar.height = "3em";
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  home: {
+    en: "Home",
+    it: "Home",
+  },
   menu: {
     en: "Menu",
     it: "Menu",

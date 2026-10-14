@@ -16,6 +16,7 @@ import { type Source, canEditSource } from "./source";
 import {
   type SourceBundle,
   type SourceBundleExportOptions,
+  canAccessPrivateResources,
   filterSourceBundleResources,
   sourceBundleResourceKeyByKind,
   sourceBundleVersion,
@@ -281,6 +282,36 @@ export function createCatalogue(id: string) {
   }
 
   //----------------------------------------------------------------------------
+  // Get Active Source Reference Resources
+  //----------------------------------------------------------------------------
+
+  function getActiveSourceReferenceResources(): Resource[] {
+    const source = getActiveSource();
+    if (!source) return [];
+
+    const sourceIds = [
+      source.id,
+      ...source.includes.map(({ source_id }) => source_id),
+      ...source.requires.map(({ source_id }) => source_id),
+    ];
+
+    return objectKeys(resourcesByIdByKind).flatMap((kind) => {
+      const resourceIds = getResourceIdsByKind(kind, sourceIds);
+      const store = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, Resource>;
+      return resourceIds.flatMap((resourceId) => {
+        const resource = store.get(resourceId);
+        if (!resource) return [];
+
+        const resourceSource = sourceById.get(resource.source_id);
+        const canAccessPrivate =
+          !resourceSource?.registry || canAccessPrivateResources(resourceSource);
+
+        return resource.visibility !== "private" || canAccessPrivate ? [resource] : [];
+      });
+    });
+  }
+
+  //----------------------------------------------------------------------------
   // Set Active Source Id
   //----------------------------------------------------------------------------
 
@@ -508,6 +539,35 @@ export function createCatalogue(id: string) {
   function useActiveSource(): Source | undefined {
     const activeSourceId = useActiveSourceId();
     return useSource(activeSourceId);
+  }
+
+  //----------------------------------------------------------------------------
+  // Use Active Source Reference Resources
+  //----------------------------------------------------------------------------
+
+  function useActiveSourceReferenceResources(): Resource[] {
+    const source = useActiveSource();
+    const [resources, setResources] = useState(getActiveSourceReferenceResources);
+
+    useLayoutEffect(() => {
+      function refresh(): void {
+        setResources((previous) => {
+          const next = getActiveSourceReferenceResources();
+          return areSameArray(previous, next) ? previous : next;
+        });
+      }
+
+      refresh();
+      const unsubscribe = objectKeys(resourcesByIdByKind).map((kind) =>
+        (resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, Resource>).subscribeAny(
+          refresh,
+        ),
+      );
+
+      return () => unsubscribe.forEach((unsubscribeKind) => unsubscribeKind());
+    }, [source]);
+
+    return resources;
   }
 
   //----------------------------------------------------------------------------
@@ -854,6 +914,7 @@ export function createCatalogue(id: string) {
     useActiveSourceId: activeSourceId.useValue,
     useActiveSourceRelations,
     useActiveSourceRelationGroups,
+    useActiveSourceReferenceResources,
     useRelations,
     useSource,
     useSourceEditable,
@@ -875,6 +936,7 @@ const {
   useSources,
   useActiveSourceRelations,
   useActiveSourceRelationGroups,
+  useActiveSourceReferenceResources,
   useRelations,
   ...catalogue
 } = createCatalogue("catalogue");
@@ -890,5 +952,6 @@ export {
   useSources,
   useActiveSourceRelations,
   useActiveSourceRelationGroups,
+  useActiveSourceReferenceResources,
   useRelations,
 };
