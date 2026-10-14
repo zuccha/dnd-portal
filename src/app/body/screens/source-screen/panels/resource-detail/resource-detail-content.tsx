@@ -59,7 +59,7 @@ export default function ResourceDetailContent({
 
           {detailsContent && details && <Separator />}
 
-          {details ? (
+          {details && (
             <RichText
               display="block"
               lineHeight="tall"
@@ -67,8 +67,6 @@ export default function ResourceDetailContent({
               text={details}
               whiteSpace="pre-wrap"
             />
-          ) : (
-            <Text color="fg.muted">{t("no_details")}</Text>
           )}
         </VStack>
       </Box>
@@ -100,10 +98,6 @@ const i18nContext = {
   "name.missing": {
     en: "Unnamed resource",
     it: "Risorsa senza nome",
-  },
-  "no_details": {
-    en: "No additional details are available for this resource.",
-    it: "Non sono disponibili altri dettagli per questa risorsa.",
   },
   "not_found": {
     en: "This resource could not be found.",
