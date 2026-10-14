@@ -13,7 +13,7 @@ import ItemDetail from "./detail/item-detail";
 import { createItemEditor } from "./item-editor";
 import { ItemCard } from "./panel/item-card";
 import ItemsFilters from "./panel/items-filters";
-import type { ResourcesTableExtra } from "../../resources-table";
+import type { ResourceAction } from "../../resource-action";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -56,13 +56,23 @@ const itemVariantDialog = createEquipmentVariantDialog(itemStore, itemModifierSt
 // Actions
 //------------------------------------------------------------------------------
 
-const actions: ResourcesTableExtra<Item, LocalizedItem>["actions"] = [
+const actions: ResourceAction<Item>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
     isVisible: ({ virtual }) => !virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: itemVariantDialog.open,
+  },
+];
+
+const detailActions: ResourceAction<Item>[] = [
+  {
+    icon: LayersIcon,
+    isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
+    isVisible: ({ virtual }) => !virtual,
+    label: { en: "Add variant", it: "Aggiungi variante" },
+    onClick: (resource) => itemVariantDialog.open(resource, { navigateAfterCreation: true }),
   },
 ];
 
@@ -76,7 +86,7 @@ export const resourceModule = createResourceModule(
   {
     Extra: itemVariantDialog.Dialog,
     album: { AlbumCard: ItemCard, actions },
-    detail: { Detail: ItemDetail, actions },
+    detail: { Detail: ItemDetail, actions: detailActions },
     filters: { Filters: ItemsFilters },
     form: {
       Editor: createItemEditor(itemForm),

@@ -26,19 +26,12 @@ import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
 import { toaster } from "~/ui/toaster";
+import type { ResourceAction } from "./resource-action";
 import type { ResourcesContext } from "./resources-context";
 
 //------------------------------------------------------------------------------
 // Resources Table Row Extra
 //------------------------------------------------------------------------------
-
-export type ResourceAction<R extends Resource> = {
-  icon: LucideIcon | ReturnType<typeof createIcon>;
-  isDisabled?: (resource: R) => boolean;
-  isVisible: (resource: R) => boolean;
-  label: I18nString;
-  onClick: (resource: R) => void | Promise<void>;
-};
 
 export type ResourcesTableRowExtra<R extends Resource, L extends LocalizedResource<R>> = {
   actions?: ResourceAction<R>[];

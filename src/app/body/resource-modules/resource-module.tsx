@@ -17,8 +17,8 @@ import { createResourcesContext } from "./resources-context";
 import { type ResourcesFiltersExtra } from "./resources-filters";
 import { createResourcesSidebar } from "./resources-sidebar";
 import { type ResourcesTableExtra, createResourcesTable } from "./resources-table";
+import type { ResourceAction } from "./resource-action";
 import type { ResourceDetailAction } from "./resource-detail";
-import type { ResourceAction } from "./resources-table-row";
 import type { ComponentType, FC } from "react";
 
 //------------------------------------------------------------------------------

@@ -20,12 +20,12 @@ import PokerCard from "~/ui/poker-card";
 import { toaster } from "~/ui/toaster";
 import { clamp } from "~/utils/math";
 import { type Palette, defaultPalette } from "~/utils/palette";
+import type { ResourceAction } from "./resource-action";
 import type {
   ResourcePokerCardPlaceholderProps,
   ResourcePokerCardProps,
 } from "./resource-poker-card";
 import type { ResourcesContext } from "./resources-context";
-import type { ResourceAction } from "./resources-table-row";
 
 //------------------------------------------------------------------------------
 // Resource Card Interactive Extra

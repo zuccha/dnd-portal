@@ -13,7 +13,7 @@ import ToolDetail from "./detail/tool-detail";
 import { ToolCard } from "./panel/tool-card";
 import ToolsFilters from "./panel/tools-filters";
 import { createToolEditor } from "./tool-editor";
-import type { ResourcesTableExtra } from "../../resources-table";
+import type { ResourceAction } from "../../resource-action";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -40,13 +40,23 @@ const toolVariantDialog = createEquipmentVariantDialog(toolStore, toolModifierSt
 // Actions
 //------------------------------------------------------------------------------
 
-const actions: ResourcesTableExtra<Tool, LocalizedTool>["actions"] = [
+const actions: ResourceAction<Tool>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
     isVisible: ({ virtual }) => !virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: toolVariantDialog.open,
+  },
+];
+
+const detailActions: ResourceAction<Tool>[] = [
+  {
+    icon: LayersIcon,
+    isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
+    isVisible: ({ virtual }) => !virtual,
+    label: { en: "Add variant", it: "Aggiungi variante" },
+    onClick: (resource) => toolVariantDialog.open(resource, { navigateAfterCreation: true }),
   },
 ];
 
@@ -60,7 +70,7 @@ export const resourceModule = createResourceModule(
   {
     Extra: toolVariantDialog.Dialog,
     album: { AlbumCard: ToolCard, actions },
-    detail: { Detail: ToolDetail, actions },
+    detail: { Detail: ToolDetail, actions: detailActions },
     filters: { Filters: ToolsFilters },
     form: {
       Editor: createToolEditor(toolForm),

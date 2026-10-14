@@ -1,6 +1,7 @@
 import { Badge, CloseButton, Dialog, HStack, Portal, Span, Text, VStack } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
@@ -17,6 +18,7 @@ import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/eq
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { useTranslateEquipmentRarity } from "~/models/types/equipment-rarity";
+import { resourceDetailRoute } from "~/navigation/routes";
 import { createMemoryStore } from "~/store/memory-store";
 import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
@@ -29,6 +31,7 @@ import { toaster } from "~/ui/toaster";
 
 type EquipmentVariantRequest<E extends Equipment> = {
   base: E;
+  navigate_after_creation: boolean;
   selected_modifier_ids: string[];
 };
 
@@ -59,12 +62,16 @@ export function createEquipmentVariantDialog<
   // Open
   //----------------------------------------------------------------------------
 
-  const open = (equipment: E): void => {
+  const open = (
+    equipment: E,
+    { navigateAfterCreation = false }: { navigateAfterCreation?: boolean } = {},
+  ): void => {
     const baseId = equipment.variant_base_id ?? equipment.id;
     const base = store.getResource(baseId) ?? equipment;
 
     pendingEquipmentVariantStore.set({
       base,
+      navigate_after_creation: navigateAfterCreation,
       selected_modifier_ids: equipment.variant_modifier_ids ?? [],
     });
   };
@@ -199,6 +206,7 @@ export function createEquipmentVariantDialog<
     sourceId: string;
   }) {
     const { lang, t } = useI18nLangContext(i18nContext);
+    const navigate = useNavigate();
     const formatCost = useFormatCp();
     const formatWeight = useFormatGrams();
     const translateRarity = useTranslateEquipmentRarity(lang);
@@ -229,8 +237,10 @@ export function createEquipmentVariantDialog<
         return;
 
       setSaving(true);
+      let createdResource: E | undefined;
       const added = await addEquipmentVariant(
         async (resource) => {
+          createdResource = resource;
           if (!makePersistent) return store.createTemporaryResource(resource);
           const error = await store.createResource(sourceId, resource);
           return !error;
@@ -250,6 +260,9 @@ export function createEquipmentVariantDialog<
       }
 
       close();
+      if (request.navigate_after_creation && createdResource) {
+        navigate(resourceDetailRoute(createdResource.kind, createdResource.id));
+      }
     };
 
     return (

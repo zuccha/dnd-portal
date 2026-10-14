@@ -13,7 +13,7 @@ import { createArmorEditor } from "./armor-editor";
 import ArmorDetail from "./detail/armor-detail";
 import { ArmorCard } from "./panel/armor-card";
 import ArmorsFilters from "./panel/armors-filters";
-import type { ResourcesTableExtra } from "../../resources-table";
+import type { ResourceAction } from "../../resource-action";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -48,13 +48,23 @@ const armorVariantDialog = createEquipmentVariantDialog(armorStore, armorModifie
 // Actions
 //------------------------------------------------------------------------------
 
-const actions: ResourcesTableExtra<Armor, LocalizedArmor>["actions"] = [
+const actions: ResourceAction<Armor>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
     isVisible: ({ virtual }) => !virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: armorVariantDialog.open,
+  },
+];
+
+const detailActions: ResourceAction<Armor>[] = [
+  {
+    icon: LayersIcon,
+    isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
+    isVisible: ({ virtual }) => !virtual,
+    label: { en: "Add variant", it: "Aggiungi variante" },
+    onClick: (resource) => armorVariantDialog.open(resource, { navigateAfterCreation: true }),
   },
 ];
 
@@ -68,7 +78,7 @@ export const resourceModule = createResourceModule(
   {
     Extra: armorVariantDialog.Dialog,
     album: { AlbumCard: ArmorCard, actions },
-    detail: { Detail: ArmorDetail, actions },
+    detail: { Detail: ArmorDetail, actions: detailActions },
     filters: { Filters: ArmorsFilters },
     form: {
       Editor: createArmorEditor(armorForm),

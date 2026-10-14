@@ -10,9 +10,9 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import { toaster } from "~/ui/toaster";
+import type { ResourceAction } from "./resource-action";
 import type { ResourceDetailAction } from "./resource-detail";
 import type { ResourcesContext } from "./resources-context";
-import type { ResourceAction } from "./resources-table-row";
 import type { ComponentType } from "react";
 
 //------------------------------------------------------------------------------

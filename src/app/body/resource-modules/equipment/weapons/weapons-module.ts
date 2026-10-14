@@ -16,7 +16,7 @@ import WeaponDetail from "./detail/weapon-detail";
 import { WeaponCard } from "./panel/weapon-card";
 import WeaponsFilters from "./panel/weapons-filters";
 import { createWeaponEditor } from "./weapon-editor";
-import type { ResourcesTableExtra } from "../../resources-table";
+import type { ResourceAction } from "../../resource-action";
 
 //------------------------------------------------------------------------------
 // Columns
@@ -65,13 +65,23 @@ const weaponVariantDialog = createEquipmentVariantDialog(weaponStore, weaponModi
 // Actions
 //------------------------------------------------------------------------------
 
-const actions: ResourcesTableExtra<Weapon, LocalizedWeapon>["actions"] = [
+const actions: ResourceAction<Weapon>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
     isVisible: ({ virtual }) => !virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: weaponVariantDialog.open,
+  },
+];
+
+const detailActions: ResourceAction<Weapon>[] = [
+  {
+    icon: LayersIcon,
+    isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
+    isVisible: ({ virtual }) => !virtual,
+    label: { en: "Add variant", it: "Aggiungi variante" },
+    onClick: (resource) => weaponVariantDialog.open(resource, { navigateAfterCreation: true }),
   },
 ];
 
@@ -85,7 +95,7 @@ export const resourceModule = createResourceModule(
   {
     Extra: weaponVariantDialog.Dialog,
     album: { AlbumCard: WeaponCard, actions },
-    detail: { Detail: WeaponDetail, actions },
+    detail: { Detail: WeaponDetail, actions: detailActions },
     filters: { Filters: WeaponsFilters },
     form: {
       Editor: createWeaponEditor(weaponForm),
