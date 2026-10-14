@@ -16,6 +16,7 @@ import {
   useSourceVersionOptions,
   useTranslateSourceVersion,
 } from "~/models/types/source-version";
+import PageTitle from "~/navigation/page-title";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
 import CaptionInput from "~/ui/caption-input";
@@ -40,27 +41,33 @@ export type SourceSettingsPanelProps = {
 };
 
 export default function SourceSettingsPanel({ sourceId }: SourceSettingsPanelProps) {
-  const { t } = useI18nLangContext(i18nContext);
+  const { lang, t } = useI18nLangContext(i18nContext);
   const source = useSource(sourceId);
   const sources = useSources();
 
   if (!source)
     return (
-      <SourceSettingsRoot>
-        <Heading>{t("title")}</Heading>
-        <Text color="fg.muted">{t("no_source")}</Text>
-      </SourceSettingsRoot>
+      <>
+        <PageTitle title={t("title")} />
+        <SourceSettingsRoot>
+          <Heading>{t("title")}</Heading>
+          <Text color="fg.muted">{t("no_source")}</Text>
+        </SourceSettingsRoot>
+      </>
     );
 
   return (
-    <SourceSettingsRoot>
-      <SourceSettingsForm
-        initialSource={source}
-        key={hash(source)}
-        source={source}
-        sources={sources}
-      />
-    </SourceSettingsRoot>
+    <>
+      <PageTitle title={source.name[lang] || source.code} />
+      <SourceSettingsRoot>
+        <SourceSettingsForm
+          initialSource={source}
+          key={hash(source)}
+          source={source}
+          sources={sources}
+        />
+      </SourceSettingsRoot>
+    </>
   );
 }
 
