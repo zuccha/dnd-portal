@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Separator, Span, Text, VStack } from "@chakra-ui/react";
+import { Badge, Box, HStack, Heading, Separator, Span, Text, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 import { useI18nLangContext } from "../../../i18n/i18n-lang-context";
 import { resolveSystemText, useI18nSystem } from "../../../i18n/i18n-system";
@@ -23,6 +23,7 @@ export type ResourceDetailAction = {
 //------------------------------------------------------------------------------
 
 type ResourceDetailHeader = {
+  _raw: { virtual?: boolean };
   descriptor: string;
   details: string;
   name: string;
@@ -61,7 +62,14 @@ export default function ResourceDetail({
         <VStack align="stretch" gap={3} mx="auto" maxW="4xl">
           <HStack align="flex-start" justify="space-between">
             <VStack align="stretch" flex={1} gap={1.5} minW={0}>
-              <Heading size="2xl">{resource.name || t("unnamed")}</Heading>
+              <HStack align="center" flexWrap="wrap" gap={3}>
+                <Heading size="2xl">{resource.name || t("unnamed")}</Heading>
+                {resource._raw.virtual && (
+                  <Badge colorPalette="orange" size="sm" variant="solid">
+                    {t("temporary")}
+                  </Badge>
+                )}
+              </HStack>
               {resource.descriptor && (
                 <Text color="fg.muted" fontSize="lg">
                   {resource.descriptor}
@@ -144,5 +152,9 @@ const i18nContext = {
   "page": {
     en: "p. <1>",
     it: "p. <1>",
+  },
+  "temporary": {
+    en: "Temporary",
+    it: "Temporanea",
   },
 };
