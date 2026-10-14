@@ -6,6 +6,7 @@ import type { ResourceStore } from "~/models/resources/resource-store";
 import type { ResourceKind } from "~/models/types/resource-kind";
 import type { PaletteName } from "~/utils/palette";
 import { createResourceDetailInteractive } from "./resource-detail-interactive";
+import ResourceDetailNotFound from "./resource-detail-not-found";
 import { type ResourceCreatorExtra, createResourceDialogCreator } from "./resource-dialog-creator";
 import {
   type ResourceDialogUpdaterExtra,
@@ -112,7 +113,7 @@ export function createResourceModule<
 
   function ResourceDetail({ resourceId }: { resourceId: string }) {
     const resource = useLocalizedResource(resourceId);
-    if (!resource) return null;
+    if (!resource) return <ResourceDetailNotFound kind={store.kind} to={path} />;
 
     return (
       <>
