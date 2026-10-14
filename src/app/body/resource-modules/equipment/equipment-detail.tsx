@@ -30,7 +30,7 @@ export default function EquipmentDetail({
   return (
     <ResourceDetail actions={actions} resource={resource}>
       {resource && (
-        <VStack align="stretch" gap={3}>
+        <VStack align="stretch" gap={2}>
           <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
             {cost && <ResourceDetailField label={t("cost")}>{cost}</ResourceDetailField>}
             {weight && <ResourceDetailField label={t("weight")}>{weight}</ResourceDetailField>}
