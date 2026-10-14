@@ -1,0 +1,120 @@
+import { WandIcon } from "lucide-react";
+import type { EquipmentModifier } from "~/models/resources/modifiers/equipment/equipment-modifier";
+import type { EquipmentModifierFilters } from "~/models/resources/modifiers/equipment/equipment-modifier-filters";
+import {
+  type EquipmentModifierFormData,
+  equipmentModifierForm,
+  equipmentModifierFormDataToResource,
+} from "~/models/resources/modifiers/equipment/equipment-modifier-form";
+import type { LocalizedEquipmentModifier } from "~/models/resources/modifiers/equipment/localized-equipment-modifier";
+import type { ResourceOption } from "~/models/resources/resource";
+import type { ResourceStore } from "~/models/resources/resource-store";
+import type { Form } from "~/utils/form";
+import type { PaletteName } from "~/utils/palette";
+import { createResourceModule } from "../../resources-panel";
+import { createResourcesTableColumns } from "../../resources-table-columns";
+import { EquipmentModifierCard } from "./equipment-modifier-card";
+import { createEquipmentModifierEditor } from "./equipment-modifier-editor";
+import EquipmentModifiersFilters from "./equipment-modifiers-filters";
+import type { ResourcesAlbumExtra } from "../../resources-album";
+import type { ResourcesFiltersExtra } from "../../resources-filters";
+import type { ResourcesTableExtra } from "../../resources-table";
+
+//------------------------------------------------------------------------------
+// Columns
+//------------------------------------------------------------------------------
+
+const columns = createResourcesTableColumns<
+  EquipmentModifier,
+  LocalizedEquipmentModifier<EquipmentModifier>
+>([
+  {
+    key: "applies_to",
+    label: { en: "Applies To", it: "Applicabile A" },
+  },
+  {
+    key: "cost_delta",
+    label: { en: "Cost", it: "Costo" },
+    textAlign: "right",
+    w: "1%",
+  },
+  {
+    key: "weight_delta",
+    label: { en: "Weight", it: "Peso" },
+    textAlign: "right",
+    w: "1%",
+  },
+  {
+    icon: WandIcon,
+    key: "make_magic",
+    label: { en: "🪄", it: "🪄" },
+    textAlign: "center",
+  },
+  {
+    key: "rarity_minimum",
+    label: { en: "Rarity", it: "Rarità" },
+  },
+]);
+
+//------------------------------------------------------------------------------
+// Create Equipment Modifiers Panel
+//------------------------------------------------------------------------------
+
+type SupportedEquipmentOptionsStore = {
+  useResourceOptions: (sourceId: string) => ResourceOption[];
+};
+
+export function createEquipmentModifierModule<
+  R extends EquipmentModifier,
+  L extends LocalizedEquipmentModifier<R>,
+  F extends EquipmentModifierFilters,
+  FF extends EquipmentModifierFormData,
+>(
+  modifierStore: ResourceStore<R, L, F>,
+  supportedEquipmentStore: SupportedEquipmentOptionsStore,
+  initialPaletteName: PaletteName,
+  path: string,
+  Detail: React.ComponentType<{ resource: L | undefined }>,
+  formOptions: {
+    form: Form<FF>;
+    parseFormData: (data: Partial<FF>, lang: string) => Partial<R>;
+  } = {
+    form: equipmentModifierForm as unknown as Form<FF>,
+    parseFormData: equipmentModifierFormDataToResource as unknown as (
+      data: Partial<FF>,
+      lang: string,
+    ) => Partial<R>,
+  },
+  uiOptions: {
+    AlbumCard?: ResourcesAlbumExtra<R, L>["AlbumCard"];
+    Filters?: ResourcesFiltersExtra["Filters"];
+    createEditor?: (
+      form: Form<FF>,
+      supportedEquipmentStore: SupportedEquipmentOptionsStore,
+    ) => React.FC<{ resource: R; sourceId: string }>;
+  } = {},
+) {
+  const AlbumCard =
+    uiOptions.AlbumCard ?? (EquipmentModifierCard as ResourcesAlbumExtra<R, L>["AlbumCard"]);
+  const Filters = uiOptions.Filters ?? EquipmentModifiersFilters;
+  const createEditor = uiOptions.createEditor ?? createEquipmentModifierEditor;
+
+  return createResourceModule(
+    modifierStore,
+    { initialPaletteName, path },
+    {
+      album: { AlbumCard },
+      Detail,
+      filters: { Filters },
+      form: {
+        Editor: createEditor(formOptions.form, supportedEquipmentStore),
+        form: formOptions.form,
+        parseFormData: formOptions.parseFormData,
+      },
+      table: {
+        columns: columns as ResourcesTableExtra<R, L>["columns"],
+        detailsKey: "details",
+      },
+    },
+  );
+}

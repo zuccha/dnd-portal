@@ -3,6 +3,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
+import type { ResourceKind } from "~/models/types/resource-kind";
 import type { PaletteName } from "~/utils/palette";
 import { type ResourceCreatorExtra, createResourceDialogCreator } from "./resource-dialog-creator";
 import {
@@ -14,9 +15,24 @@ import { createResourcesContext } from "./resources-context";
 import { type ResourcesFiltersExtra } from "./resources-filters";
 import { createResourcesSidebar } from "./resources-sidebar";
 import { type ResourcesTableExtra, createResourcesTable } from "./resources-table";
-import type { ComponentType } from "react";
+import type { ComponentType, FC } from "react";
 
-export function createResourcesPanel<
+//------------------------------------------------------------------------------
+// Resource Module
+//------------------------------------------------------------------------------
+
+export type ResourceModule = {
+  Detail: ComponentType<{ resourceId: string }>;
+  Panel: FC<{ sourceId: string }>;
+  kind: ResourceKind;
+  path: string;
+};
+
+//------------------------------------------------------------------------------
+// Create Resource Module
+//------------------------------------------------------------------------------
+
+export function createResourceModule<
   R extends Resource,
   L extends LocalizedResource<R>,
   F extends ResourceFilters,
@@ -26,22 +42,26 @@ export function createResourcesPanel<
   contextOptions: {
     initialPaletteName: PaletteName;
     initialView?: "cards" | "table";
+    path: string;
   },
   {
     album,
+    Detail,
     Extra,
     filters,
     form,
     table,
   }: {
     album: ResourcesAlbumExtra<R, L>;
+    Detail: ComponentType<{ resource: L | undefined }>;
     Extra?: ComponentType<{ sourceId: string }>;
     filters: ResourcesFiltersExtra;
     form: ResourceCreatorExtra<R, FF> & ResourceDialogUpdaterExtra<R, FF>;
     table: ResourcesTableExtra<R, L>;
   },
 ) {
-  const context = createResourcesContext<R>(store.id, contextOptions);
+  const { path, ...resourcesContextOptions } = contextOptions;
+  const context = createResourcesContext<R>(store.id, resourcesContextOptions);
 
   const ResourceCreator = createResourceDialogCreator(store, context, form, {
     PreviewCard: album.AlbumCard,
@@ -54,8 +74,13 @@ export function createResourcesPanel<
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
 
   const { useView } = context;
+  const { useLocalizedResource } = store;
 
-  return function ResourcesPanel({ sourceId }: { sourceId: string }) {
+  //------------------------------------------------------------------------------
+  // Resources Panel
+  //------------------------------------------------------------------------------
+
+  function ResourcesPanel({ sourceId }: { sourceId: string }) {
     const view = useView();
 
     return (
@@ -72,5 +97,21 @@ export function createResourcesPanel<
         </HStack>
       </VStack>
     );
-  };
+  }
+
+  //------------------------------------------------------------------------------
+  // Resource Detail
+  //------------------------------------------------------------------------------
+
+  function ResourceDetail({ resourceId }: { resourceId: string }) {
+    const resource = useLocalizedResource(resourceId);
+    return <Detail resource={resource} />;
+  }
+
+  return {
+    Detail: ResourceDetail,
+    Panel: ResourcesPanel,
+    kind: store.kind,
+    path,
+  } satisfies ResourceModule;
 }

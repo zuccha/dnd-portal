@@ -1,12 +1,13 @@
 import { Navigate } from "react-router";
 import { useActiveSourceId } from "~/models/catalogue/catalogue";
 import { Route } from "~/navigation/routes";
+import type { ComponentType } from "react";
 
 //------------------------------------------------------------------------------
 // Resource Panel Route
 //------------------------------------------------------------------------------
 
-export type ResourcePanel = (props: { sourceId: string }) => React.ReactNode;
+export type ResourcePanel = ComponentType<{ sourceId: string }>;
 
 export type ResourcePanelRouteProps = {
   Panel: ResourcePanel;

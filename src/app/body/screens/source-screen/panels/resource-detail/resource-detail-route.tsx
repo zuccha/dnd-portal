@@ -1,23 +1,22 @@
 import { useParams } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { resourceKindSchema } from "~/models/types/resource-kind";
 import ResourceDetailNotFound from "./resource-detail-not-found";
-import { resourceDetailByKind } from "./resource-detail-route-map";
+import type { ResourceModule } from "../resources/resources-panel";
 
 //------------------------------------------------------------------------------
 // Resource Detail Route
 //------------------------------------------------------------------------------
 
-export default function ResourceDetailRoute() {
+export default function ResourceDetailRoute({ modules }: { modules: ResourceModule[] }) {
   const { kind, resourceId } = useParams();
   const { t } = useI18nLangContext(i18nContext);
-  const parsedKind = resourceKindSchema.safeParse(kind);
+  const resourceModule = modules.find((module) => module.kind === kind);
 
-  if (!parsedKind.success || !resourceId) {
+  if (!resourceModule || !resourceId) {
     return <ResourceDetailNotFound message={t("not_found")} />;
   }
 
-  const ResourceDetail = resourceDetailByKind[parsedKind.data];
+  const ResourceDetail = resourceModule.Detail;
   return <ResourceDetail resourceId={resourceId} />;
 }
 
