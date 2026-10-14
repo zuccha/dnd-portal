@@ -12,8 +12,10 @@ import type { ReactNode } from "react";
 //------------------------------------------------------------------------------
 
 export default function ResourceDetailContent({
+  detailsContent,
   resource,
 }: {
+  detailsContent?: ReactNode;
   resource: LocalizedResourceUnion | undefined;
 }) {
   const { t, ti } = useI18nLangContext(i18nContext);
@@ -52,6 +54,10 @@ export default function ResourceDetailContent({
           </VStack>
 
           <Separator />
+
+          {detailsContent}
+
+          {detailsContent && details && <Separator />}
 
           {details ? (
             <RichText
