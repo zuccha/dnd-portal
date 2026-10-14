@@ -14,7 +14,7 @@ import Button from "~/ui/button";
 import Field from "~/ui/field";
 import IconButton from "~/ui/icon-button";
 import Input from "~/ui/input";
-import Link from "~/ui/link";
+import RouterLink from "~/ui/router-link";
 import Select from "~/ui/select";
 
 //------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ export default function SignInScreen() {
 
         <Span fontSize="sm" w="full">
           {`${t("already_registered")} `}
-          <Link onClick={() => navigate(Route.SignIn)}>{t("signin")}</Link>
+          <RouterLink to={Route.SignIn}>{t("signin")}</RouterLink>
         </Span>
 
         <Button alignSelf="flex-end" onClick={signUp} size="sm">

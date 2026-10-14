@@ -10,7 +10,14 @@ export type RouterLinkProps = Omit<ChakraLinkProps, "asChild" | "href"> &
 
 export default function RouterLink({ children, to, ...props }: RouterLinkProps) {
   return (
-    <ChakraLink asChild {...props}>
+    <ChakraLink
+      asChild
+      color="fg.info"
+      textDecoration="none"
+      textUnderlineOffset="0.15em"
+      _hover={{ textDecoration: "underline" }}
+      {...props}
+    >
       <ReactRouterLink to={to}>{children}</ReactRouterLink>
     </ChakraLink>
   );
