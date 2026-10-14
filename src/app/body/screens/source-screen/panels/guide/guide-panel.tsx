@@ -513,6 +513,10 @@ const documentation: Record<string, DocumentationContent> = {
             text: "The `Name` search is intended for quick lookup and matches names in any available language. Other filters narrow the list by properties such as level, school, class, type, rarity, or other fields supported by that resource kind. A filter affects only the current resource panel and source context.",
             type: "paragraph",
           },
+          {
+            text: "Click a resource name in a row or card to open its detail page. The page shows the resource's information and description, with fields depending on its kind. If the resource has an image, click it to open a larger preview.",
+            type: "paragraph",
+          },
         ],
         example:
           "In the Spells section, searching for `pall` finds both `Fireball` and `Delayed Blast Fireball`.",
@@ -521,7 +525,7 @@ const documentation: Record<string, DocumentationContent> = {
         id: "resource-actions",
         title: "Resource actions and editing rights",
         paragraphs: [
-          "Actions that apply to one resource are available on its row or card. Actions that apply to a selection are available in the selection action bar. The exact actions depend on the resource kind.",
+          "Actions that apply to one resource are available on its row, card, and detail page. Actions that apply to a selection are available in the selection action bar. The exact actions depend on the resource kind.",
           "Catalog sources opened with `Viewer` access cannot be edited. Sources you own, local sources, detached sources, and catalog sources for which you have `Editor` access can be changed. Publishing is a separate action from editing: local changes remain local until explicitly published.",
         ],
         bullets: [
@@ -839,6 +843,10 @@ const documentation: Record<string, DocumentationContent> = {
             text: "La ricerca per `Nome` serve per trovare rapidamente una voce e considera i nomi in tutte le lingue disponibili. Gli altri filtri restringono l'elenco per proprietà come livello, scuola, classe, tipo, rarità o altri campi supportati dal tipo di risorsa.",
             type: "paragraph",
           },
+          {
+            text: "Fai clic sul nome di una risorsa, in una riga o in una carta, per aprire la pagina di dettaglio. La pagina mostra le informazioni e la descrizione della risorsa, con campi che variano in base al tipo. Se la risorsa ha un'immagine, fai clic su di essa per aprire un'anteprima più grande.",
+            type: "paragraph",
+          },
         ],
         example:
           "Nella sezione Incantesimi, cercando `fireb` trovi sia `Palla di Fuoco` sia `Palla di Fuoco Ritardata`.",
@@ -847,7 +855,7 @@ const documentation: Record<string, DocumentationContent> = {
         id: "resource-actions",
         title: "Azioni sulle risorse e diritti di modifica",
         paragraphs: [
-          "Le azioni che si applicano a una singola risorsa sono disponibili sulla riga o sulla carta. Le azioni che si applicano a una selezione sono disponibili nella barra delle azioni della selezione. Le azioni esatte dipendono dal tipo di risorsa.",
+          "Le azioni che si applicano a una singola risorsa sono disponibili sulla riga, sulla carta e nella pagina di dettaglio. Le azioni che si applicano a una selezione sono disponibili nella barra delle azioni della selezione. Le azioni esatte dipendono dal tipo di risorsa.",
           "Le fonti del catalogo aperte con accesso `Lettore` non possono essere modificate. Le fonti di cui sei proprietario, locali, scollegate e quelle per cui hai accesso `Editor` possono essere modificate. Pubblicare è un'azione separata dalla modifica: le modifiche rimangono locali finché non vengono pubblicate esplicitamente.",
         ],
         bullets: [
