@@ -1,4 +1,4 @@
-import { Alert, Box, Heading, Link, List, Separator, Text, VStack } from "@chakra-ui/react";
+import { Alert, Box, Code, Heading, Link, List, Separator, Text, VStack } from "@chakra-ui/react";
 import { Fragment } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import type { ReactNode } from "react";
@@ -290,8 +290,12 @@ function DocumentationBlockView({ block }: { block: DocumentationBlock }) {
 //------------------------------------------------------------------------------
 
 function renderDocumentationText(text: string): ReactNode {
-  return text.split(/(`[^`]+`)/g).map((part, index) =>
-    part.startsWith("`") && part.endsWith("`") ? (
+  return text.split(/(``[^`]+``|`[^`]+`)/g).map((part, index) =>
+    part.startsWith("``") && part.endsWith("``") ? (
+      <Code key={`${part}-${index}`} size="sm">
+        {part.slice(2, -2)}
+      </Code>
+    ) : part.startsWith("`") && part.endsWith("`") ? (
       <Text as="span" fontStyle="italic" key={`${part}-${index}`}>
         {part.slice(1, -1)}
       </Text>
@@ -514,12 +518,16 @@ const documentation: Record<string, DocumentationContent> = {
             type: "paragraph",
           },
           {
+            text: "The global search in the top bar has three modes. Press ``⌘K`` (``Ctrl+K`` on Windows) to search resources in the active source and its included or required sources; choose a result to open its detail page. Press ``⌘⇧K`` (``Ctrl+Shift+K`` on Windows) to search installed sources by name or code; choose one to make it active. Press ``⌘⌥K`` (``Ctrl+Alt+K`` on Windows) to search resource kinds in either language and open the corresponding list. You can also switch modes using the tabs in the search window.",
+            type: "paragraph",
+          },
+          {
             text: "Click a resource name in a row or card to open its detail page. The page shows the resource's information and description, with fields depending on its kind. If the resource has an image, click it to open a larger preview.",
             type: "paragraph",
           },
         ],
         example:
-          "In the Spells section, searching for `pall` finds both `Fireball` and `Delayed Blast Fireball`.",
+          'In the Spells section, searching for "pall" finds both "Fireball" and "Delayed Blast Fireball".',
       },
       {
         id: "resource-actions",
@@ -844,12 +852,16 @@ const documentation: Record<string, DocumentationContent> = {
             type: "paragraph",
           },
           {
+            text: "La ricerca globale nella barra superiore ha tre modalità. Premi ``⌘K`` (``Ctrl+K`` su Windows) per cercare le risorse della fonte attiva e delle fonti incluse o richieste; selezionando un risultato si apre la relativa pagina di dettaglio. Premi ``⌘⇧K`` (``Ctrl+Shift+K`` su Windows) per cercare le fonti installate per nome o codice; selezionandone una, diventa la fonte attiva. Premi ``⌘⌥K`` (``Ctrl+Alt+K`` su Windows) per cercare i tipi di risorsa in entrambe le lingue e aprire il relativo elenco. Puoi anche cambiare modalità usando i tab della finestra di ricerca.",
+            type: "paragraph",
+          },
+          {
             text: "Fai clic sul nome di una risorsa, in una riga o in una carta, per aprire la pagina di dettaglio. La pagina mostra le informazioni e la descrizione della risorsa, con campi che variano in base al tipo. Se la risorsa ha un'immagine, fai clic su di essa per aprire un'anteprima più grande.",
             type: "paragraph",
           },
         ],
         example:
-          "Nella sezione Incantesimi, cercando `fireb` trovi sia `Palla di Fuoco` sia `Palla di Fuoco Ritardata`.",
+          'Nella sezione Incantesimi, cercando "fireb" trovi sia "Palla di Fuoco" sia "Palla di Fuoco Ritardata".',
       },
       {
         id: "resource-actions",
