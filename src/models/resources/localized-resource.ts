@@ -19,12 +19,14 @@ export const localizedResourceSchema = <R extends Resource>(
     _raw: resourceSchema,
     descriptor: z.string(),
     details: z.string(),
+    imageUrl: z.string().nullish(),
     id: z.uuid(),
     kind: kindSchema,
     name: z.string(),
     page: z.string(),
     source: z.string(),
     sourceVersion: z.string(),
+    temporary: z.boolean().optional(),
   });
 
 export type LocalizedResource<R extends Resource> = z.infer<
@@ -74,12 +76,14 @@ export function localizeResource<R extends Resource>(
     _raw: resource,
     descriptor: "",
     details: "",
+    imageUrl: resource.image_url,
     id: resource.id,
     kind: resource.kind,
     name: translate(resource.name, context.lang) || context.t("name.missing"),
     page: page ? context.ti("page", `${page}`) : "",
     source: resource.source_code,
     sourceVersion: context.translateSourceVersion(resource.source_version),
+    temporary: resource.virtual ?? false,
   };
 }
 
