@@ -227,8 +227,8 @@ const i18nContext = {
     it: "Creature",
   },
   "home.equipment": {
-    en: "Adventuring gear",
-    it: "Attrezzatura",
+    en: "Items",
+    it: "Oggetti",
   },
   "home.go_to_resources": {
     en: "Browse resources",

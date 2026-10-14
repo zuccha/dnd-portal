@@ -140,8 +140,8 @@ const i18nContext = {
     it: "Varianti",
   },
   [Route.ResourcesEquipmentItems]: {
-    en: "Adventuring Gear",
-    it: "Attrezzatura",
+    en: "Items",
+    it: "Oggetti",
   },
   [Route.ResourcesEquipmentItemModifiers]: {
     en: "Variants",

@@ -15,8 +15,8 @@ export const itemModifierStore = createEquipmentModifierStore("item_modifier", {
   defaultFilters: defaultItemModifierFilters,
   defaultModifier: defaultItemModifier,
   displayName: {
-    en: "Adventuring Gear Variants",
-    it: "Varianti dell'Attrezzatura",
+    en: "Item Variants",
+    it: "Varianti degli oggetti",
   },
   filtersSchema: itemModifierFiltersSchema,
   orderOptions: itemModifierOrderOptions,

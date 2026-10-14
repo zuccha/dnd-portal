@@ -11,7 +11,7 @@ import { localizeItem, useItemLocalizationContext } from "./localized-item";
 export const itemStore = createEquipmentStore("item", {
   defaultEquipment: defaultItem,
   defaultFilters: defaultItemFilters,
-  displayName: { en: "Adventuring Gear", it: "Attrezatura" },
+  displayName: { en: "Items", it: "Oggetti" },
   filtersSchema: itemFiltersSchema,
   matchesEquipment: (item, filters) =>
     matchesEquipment(item, filters) &&
