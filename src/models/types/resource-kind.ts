@@ -49,7 +49,7 @@ export const { useOptions: useResourceKindOptions, useTranslate: useTranslateRes
     character_class: { en: "Class", it: "Classe" },
     character_subclass: { en: "Subclass", it: "Sottoclasse" },
     creature: { en: "Creature", it: "Creatura" },
-    creature_family: { en: "Creature Family", it: "Famiglia di creature" },
+    creature_family: { en: "Family", it: "Famiglia" },
     creature_tag: { en: "Creature Tag", it: "Tag Creatura" },
     eldritch_invocation: { en: "Eldritch Invocation", it: "Supplica Occulta" },
     feat: { en: "Feat", it: "Talento" },
