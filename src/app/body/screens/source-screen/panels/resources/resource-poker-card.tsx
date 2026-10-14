@@ -23,6 +23,7 @@ export type ResourcePokerCardProps<
   footer?: ReactNode;
   localizedResource: L;
   mode?: "paginated" | "scroll";
+  onNameClick?: () => void;
   onPageCountChange?: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
   selectedPageIndex?: number;
@@ -38,6 +39,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
   footer,
   localizedResource,
   mode = "paginated",
+  onNameClick,
   onPageCountChange = () => {},
   palette,
   selectedPageIndex = -1,
@@ -72,6 +74,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
         firstPageInfo={firstPageInfo}
         footer={footer}
         localizedResource={localizedResource}
+        onNameClick={onNameClick}
         onPageCountChange={onPageCountChange}
         palette={palette}
         {...rest}
@@ -90,6 +93,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
       hasImage={hasImage}
       imageUrl={imageUrl}
       localizedResource={localizedResource}
+      onNameClick={onNameClick}
       onPageCountChange={handlePageCountChange}
       palette={palette}
       selectedPageIndex={selectedPageIndex}
@@ -117,6 +121,7 @@ type PaginatedResourcePokerCardProps<
   hasImage: boolean;
   imageUrl: string;
   localizedResource: L;
+  onNameClick?: () => void;
   onPageCountChange: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
   selectedPageIndex: number;
@@ -134,6 +139,7 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
   hasImage,
   imageUrl,
   localizedResource,
+  onNameClick,
   onPageCountChange,
   palette,
   selectedPageIndex,
@@ -179,6 +185,7 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
           }
           footer={footer}
           name={localizedResource.name}
+          onNameClick={onNameClick}
           pageIndicator={`1 / ${pageCount}`}
           palette={palette}
           shadow={selectedPageIndex === 0 ? "sm" : undefined}
@@ -218,6 +225,7 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
             footer={footer}
             key={pageIndex}
             name={localizedResource.name}
+            onNameClick={onNameClick}
             pageIndicator={`${adjustedPageIndex + 1} / ${pageCount}`}
             palette={palette}
             position="relative"
@@ -293,6 +301,7 @@ type ScrollableResourcePokerCardProps<
   firstPageInfo?: ReactNode;
   footer?: ReactNode;
   localizedResource: L;
+  onNameClick?: () => void;
   onPageCountChange: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
 };
@@ -304,6 +313,7 @@ function ScrollableResourcePokerCard<R extends Resource, L extends LocalizedReso
   firstPageInfo,
   footer,
   localizedResource,
+  onNameClick,
   onPageCountChange,
   palette,
   ...rest
@@ -322,6 +332,7 @@ function ScrollableResourcePokerCard<R extends Resource, L extends LocalizedReso
       }
       footer={footer}
       name={localizedResource.name}
+      onNameClick={onNameClick}
       pageIndicator=""
       palette={palette}
       sourceName={localizedResource.source}

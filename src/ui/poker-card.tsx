@@ -42,6 +42,7 @@ export type FrameProps = StackProps & {
   descriptor: ReactNode;
   footer?: ReactNode;
   name: ReactNode;
+  onNameClick?: () => void;
   palette: Palette;
   pageIndicator: string;
   sourceName: string;
@@ -56,6 +57,7 @@ function Frame({
   descriptor,
   footer,
   name,
+  onNameClick,
   palette,
   pageIndicator,
   sourceName,
@@ -65,6 +67,24 @@ function Frame({
 }: FrameProps) {
   const bleed = useBleed();
   const bgImage = `radial-gradient(circle, {colors.gray.50} 0%, {colors.gray.100} 50%, {colors.gray.200} 100%)`;
+  const cardName = onNameClick ? (
+    <Span
+      as="button"
+      _hover={{ textDecoration: "underline" }}
+      cursor="pointer"
+      fontWeight="bold"
+      onClick={(e) => {
+        e.stopPropagation();
+        onNameClick();
+      }}
+      onPointerDown={(e) => e.stopPropagation()}
+      onPointerUp={(e) => e.stopPropagation()}
+    >
+      {name}
+    </Span>
+  ) : (
+    <Span fontWeight="bold">{name}</Span>
+  );
 
   return (
     <VStack
@@ -100,7 +120,7 @@ function Frame({
           px={`${remToIn(1) + bleed.x}in`}
           w="full"
         >
-          <Span fontWeight="bold">{name}</Span>
+          {cardName}
           <Span whiteSpace="nowrap">{pageIndicator}</Span>
         </HStack>
       ) : (
@@ -112,7 +132,7 @@ function Frame({
             lineHeight={1.1}
             pt={`${remToIn(1) + bleed.y}in`}
           >
-            {name}
+            {cardName}
           </HStack>
           <HStack fontSize={rem1000} fontStyle="italic" pt={rem0375}>
             {descriptor}

@@ -1,25 +1,32 @@
 import { useEffect } from "react";
-import { useLocation, useParams } from "react-router";
+import { useLocation } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useSource } from "~/models/catalogue/catalogue";
 import { Route } from "./routes";
 
 //------------------------------------------------------------------------------
 // Page Title
 //------------------------------------------------------------------------------
 
-export default function PageTitle() {
-  const { lang, t } = useI18nLangContext(i18nContext);
+export default function PageTitle({ title }: { title?: string }) {
+  const { t } = useI18nLangContext(i18nContext);
   const { pathname } = useLocation();
-  const { sourceId } = useParams();
-  const source = useSource(sourceId);
 
   useEffect(() => {
-    const pageTitle = sourceId && source ? source.name[lang] || source.code : t(pathname);
+    if (!title && isDynamicTitlePath(pathname)) return;
+
+    const pageTitle = title ?? t(pathname);
     document.title = pathname === Route._ ? "ZorboDnD" : `${pageTitle} - ZorboDnD`;
-  }, [lang, pathname, source, sourceId, t]);
+  }, [pathname, t, title]);
 
   return null;
+}
+
+//------------------------------------------------------------------------------
+// Dynamic Title Paths
+//------------------------------------------------------------------------------
+
+function isDynamicTitlePath(pathname: string): boolean {
+  return /^\/sources\/[^/]+\/?$/.test(pathname) || /^\/resources\/[^/]+\/[^/]+\/?$/.test(pathname);
 }
 
 //------------------------------------------------------------------------------
@@ -112,8 +119,8 @@ const i18nContext = {
     it: "Varianti attrezzatura",
   },
   [Route.ResourcesEquipmentItems]: {
-    en: "Adventuring Gear",
-    it: "Attrezzatura",
+    en: "Items",
+    it: "Oggetti",
   },
   [Route.ResourcesEquipmentToolModifiers]: {
     en: "Tool Variants",

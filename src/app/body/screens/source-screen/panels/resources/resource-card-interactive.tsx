@@ -1,6 +1,7 @@
 import { Badge, Box, Theme, VStack } from "@chakra-ui/react";
 import { EditIcon, PrinterIcon, SaveIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
@@ -13,6 +14,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
+import { resourceDetailRoute } from "~/navigation/routes";
 import IconButton from "~/ui/icon-button";
 import PokerCard from "~/ui/poker-card";
 import { toaster } from "~/ui/toaster";
@@ -100,6 +102,7 @@ export function createResourceCardInteractive<
   }) {
     const resource = localizedResource._raw;
     const { lang, t } = useI18nLangContext(i18nContext);
+    const navigate = useNavigate();
     const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
     const visibleActions =
@@ -139,6 +142,10 @@ export function createResourceCardInteractive<
       if (!sourceEditable) return;
       if (localizedResource) context.setEditedResource(localizedResource._raw);
     }, [localizedResource, sourceEditable]);
+
+    const openDetails = useCallback(() => {
+      navigate(resourceDetailRoute(resource.kind, resource.id));
+    }, [navigate, resource.id, resource.kind]);
 
     const addToPrintDeck = useCallback(() => {
       printDeck.addEntry({
@@ -201,6 +208,7 @@ export function createResourceCardInteractive<
           left={0}
           localizedResource={localizedResource}
           mode={cardMode}
+          onNameClick={openDetails}
           onPageCountChange={handlePageCountChange}
           palette={palette}
           position="absolute"

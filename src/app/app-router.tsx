@@ -27,6 +27,7 @@ import ItemModifiersPanel from "./body/screens/source-screen/panels/resources/mo
 import ToolModifiersPanel from "./body/screens/source-screen/panels/resources/modifiers/equipment/tools/tool-modifiers-panel";
 import WeaponModifiersPanel from "./body/screens/source-screen/panels/resources/modifiers/equipment/weapons/weapon-modifiers-panel";
 import PlanesPanel from "./body/screens/source-screen/panels/resources/planes/planes-panel";
+import ResourceDetailRoute from "./body/screens/source-screen/panels/resources/resource-detail-route";
 import ServicesPanel from "./body/screens/source-screen/panels/resources/services/services-panel";
 import SpeciesPanel from "./body/screens/source-screen/panels/resources/species/species-panel";
 import SpellsPanel from "./body/screens/source-screen/panels/resources/spells/spells-panel";
@@ -53,6 +54,7 @@ export default function AppRouter() {
           <RouterRoute element={<SourcesPanel />} path="sources" />
           <RouterRoute element={<SourceSettingsRoute />} path="sources/:sourceId" />
           <RouterRoute element={<PrintDeckPanel />} path="print-deck" />
+          <RouterRoute element={<ResourceDetailRoute />} path="resources/:kind/:resourceId" />
           {resourceRoutes.map(({ panel: Panel, path }) => (
             <RouterRoute
               element={<ResourcePanelRoute Panel={Panel} />}

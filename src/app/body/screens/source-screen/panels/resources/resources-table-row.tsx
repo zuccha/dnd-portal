@@ -8,6 +8,7 @@ import {
   SaveIcon,
 } from "lucide-react";
 import { useCallback } from "react";
+import { useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type I18nString, translate } from "~/i18n/i18n-string";
 import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
@@ -18,6 +19,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
+import { resourceDetailRoute } from "~/navigation/routes";
 import Checkbox from "~/ui/checkbox";
 import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
@@ -90,6 +92,7 @@ export function createResourcesTableRow<
   }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const [system] = useI18nSystem();
+    const navigate = useNavigate();
 
     const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
@@ -109,6 +112,14 @@ export function createResourcesTableRow<
         if (localizedResource) context.setEditedResource(localizedResource._raw);
       },
       [localizedResource, sourceEditable],
+    );
+
+    const openDetails = useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation();
+        navigate(resourceDetailRoute(resource.kind, resource.id));
+      },
+      [navigate, resource.id, resource.kind],
     );
 
     const addToPrintDeck = useCallback(() => {
@@ -188,7 +199,7 @@ export function createResourcesTableRow<
                         {translate({ en: "Temporary", it: "Temporanea" }, lang)}
                       </Badge>
                     )}
-                    {sourceEditable ? <Link onClick={edit}>{String(value)}</Link> : String(value)}
+                    <Link onClick={openDetails}>{String(value)}</Link>
                   </HStack>
                 ) : typeof value === "boolean" ? (
                   <Checkbox disabled mt={0.5} size="sm" value={value} />

@@ -1,3 +1,5 @@
+import type { ResourceKind } from "~/models/types/resource-kind";
+
 //------------------------------------------------------------------------------
 // Route
 //------------------------------------------------------------------------------
@@ -54,4 +56,12 @@ export const routes = Object.values(Route);
 
 export function sourceSettingsRoute(sourceId: string): string {
   return `${Route.Sources}/${sourceId}`;
+}
+
+//------------------------------------------------------------------------------
+// Resource Detail Route
+//------------------------------------------------------------------------------
+
+export function resourceDetailRoute(kind: ResourceKind, resourceId: string): string {
+  return `${Route.Resources}/${encodeURIComponent(kind)}/${encodeURIComponent(resourceId)}`;
 }
