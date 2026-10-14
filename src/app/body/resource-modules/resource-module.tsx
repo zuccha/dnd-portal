@@ -5,6 +5,7 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import type { ResourceKind } from "~/models/types/resource-kind";
 import type { PaletteName } from "~/utils/palette";
+import { createResourceDetailInteractive } from "./resource-detail-interactive";
 import { type ResourceCreatorExtra, createResourceDialogCreator } from "./resource-dialog-creator";
 import {
   type ResourceDialogUpdaterExtra,
@@ -15,6 +16,8 @@ import { createResourcesContext } from "./resources-context";
 import { type ResourcesFiltersExtra } from "./resources-filters";
 import { createResourcesSidebar } from "./resources-sidebar";
 import { type ResourcesTableExtra, createResourcesTable } from "./resources-table";
+import type { ResourceDetailAction } from "./resource-detail";
+import type { ResourceAction } from "./resources-table-row";
 import type { ComponentType, FC } from "react";
 
 //------------------------------------------------------------------------------
@@ -47,13 +50,15 @@ export function createResourceModule<
   {
     album,
     Detail,
+    detail,
     Extra,
     filters,
     form,
     table,
   }: {
     album: ResourcesAlbumExtra<R, L>;
-    Detail: ComponentType<{ resource: L | undefined }>;
+    Detail: ComponentType<{ actions?: ResourceDetailAction[]; resource: L | undefined }>;
+    detail?: { actions?: ResourceAction<R>[] };
     Extra?: ComponentType<{ sourceId: string }>;
     filters: ResourcesFiltersExtra;
     form: ResourceCreatorExtra<R, FF> & ResourceDialogUpdaterExtra<R, FF>;
@@ -72,6 +77,12 @@ export function createResourceModule<
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
+  const ResourceDetailInteractive = createResourceDetailInteractive(
+    store,
+    context,
+    Detail,
+    detail?.actions,
+  );
 
   const { useView } = context;
   const { useLocalizedResource } = store;
@@ -105,7 +116,15 @@ export function createResourceModule<
 
   function ResourceDetail({ resourceId }: { resourceId: string }) {
     const resource = useLocalizedResource(resourceId);
-    return <Detail resource={resource} />;
+    if (!resource) return null;
+
+    return (
+      <>
+        <ResourceDetailInteractive resource={resource} />
+        <ResourceUpdater sourceId={resource._raw.source_id} />
+        {Extra && <Extra sourceId={resource._raw.source_id} />}
+      </>
+    );
   }
 
   return {

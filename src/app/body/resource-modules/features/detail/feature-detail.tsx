@@ -10,7 +10,7 @@ import { featureStore } from "~/models/resources/features/feature-store";
 import { speciesStore } from "~/models/resources/species/species-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 
 type FeatureDetailResource = ReturnType<typeof featureStore.useLocalizedResource>;
@@ -24,7 +24,13 @@ const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipment
 // Feature Detail
 //------------------------------------------------------------------------------
 
-export default function FeatureDetail({ resource }: { resource: FeatureDetailResource }) {
+export default function FeatureDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: FeatureDetailResource;
+}) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const feature = resource;
   const endpoint = feature ?? defaultFeatureEndpoint;
@@ -90,9 +96,8 @@ export default function FeatureDetail({ resource }: { resource: FeatureDetailRes
   ].filter(({ values }) => values.length > 0);
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        feature &&
+    <ResourceDetail actions={actions} resource={feature}>
+      {feature &&
         ((feature.display_name && feature.display_name !== feature.name) ||
           grantorGroups.length > 0) && (
           <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
@@ -125,10 +130,8 @@ export default function FeatureDetail({ resource }: { resource: FeatureDetailRes
               </GridItem>
             )}
           </SimpleGrid>
-        )
-      }
-      resource={feature}
-    />
+        )}
+    </ResourceDetail>
   );
 }
 

@@ -1,6 +1,6 @@
 import { armorModifierStore } from "~/models/resources/modifiers/equipment/armors/armor-modifier-store";
-import ResourceDetailContent from "../../../../resource-detail-content";
-import EquipmentModifierDetailFields from "../../equipment-modifier-detail-fields";
+import EquipmentModifierDetail from "../../equipment-modifier-detail";
+import type { ResourceDetailAction } from "../../../../resource-detail";
 
 type ArmorModifierDetailResource = ReturnType<typeof armorModifierStore.useLocalizedResource>;
 
@@ -9,14 +9,11 @@ type ArmorModifierDetailResource = ReturnType<typeof armorModifierStore.useLocal
 //------------------------------------------------------------------------------
 
 export default function ArmorModifierDetail({
+  actions,
   resource,
 }: {
+  actions?: ResourceDetailAction[];
   resource: ArmorModifierDetailResource;
 }) {
-  return (
-    <ResourceDetailContent
-      detailsContent={resource && <EquipmentModifierDetailFields resource={resource} />}
-      resource={resource}
-    />
-  );
+  return <EquipmentModifierDetail actions={actions} resource={resource} />;
 }

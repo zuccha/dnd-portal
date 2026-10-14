@@ -1,6 +1,6 @@
 import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/item-modifier-store";
-import ResourceDetailContent from "../../../../resource-detail-content";
-import EquipmentModifierDetailFields from "../../equipment-modifier-detail-fields";
+import EquipmentModifierDetail from "../../equipment-modifier-detail";
+import type { ResourceDetailAction } from "../../../../resource-detail";
 
 type ItemModifierDetailResource = ReturnType<typeof itemModifierStore.useLocalizedResource>;
 
@@ -8,11 +8,12 @@ type ItemModifierDetailResource = ReturnType<typeof itemModifierStore.useLocaliz
 // Item Modifier Detail
 //------------------------------------------------------------------------------
 
-export default function ItemModifierDetail({ resource }: { resource: ItemModifierDetailResource }) {
-  return (
-    <ResourceDetailContent
-      detailsContent={resource && <EquipmentModifierDetailFields resource={resource} />}
-      resource={resource}
-    />
-  );
+export default function ItemModifierDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: ItemModifierDetailResource;
+}) {
+  return <EquipmentModifierDetail actions={actions} resource={resource} />;
 }

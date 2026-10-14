@@ -5,7 +5,7 @@ import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 
 type CreatureTagDetailResource = ReturnType<typeof creatureTagStore.useLocalizedResource>;
@@ -17,7 +17,13 @@ const useLocalizedCreatureNames = creatureStore.useLocalizedResourceNames;
 // Creature Tag Detail
 //------------------------------------------------------------------------------
 
-export default function CreatureTagDetail({ resource }: { resource: CreatureTagDetailResource }) {
+export default function CreatureTagDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: CreatureTagDetailResource;
+}) {
   const { t } = useI18nLangContext(i18nContext);
   const tag = resource;
   const tagId = tag?._raw.id;
@@ -43,28 +49,25 @@ export default function CreatureTagDetail({ resource }: { resource: CreatureTagD
   );
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        tag && (
-          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={3}>
-            {sortedCreatures.length > 0 && (
-              <GridItem colSpan={{ base: 1, sm: 2 }}>
-                <ResourceDetailField label={t("creatures")}>
-                  <VStack align="flex-start" gap={1}>
-                    {sortedCreatures.map(({ id, name }) => (
-                      <RouterLink key={id} to={resourceDetailRoute("creature", id)}>
-                        {name}
-                      </RouterLink>
-                    ))}
-                  </VStack>
-                </ResourceDetailField>
-              </GridItem>
-            )}
-          </SimpleGrid>
-        )
-      }
-      resource={tag}
-    />
+    <ResourceDetail actions={actions} resource={tag}>
+      {tag && (
+        <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={3}>
+          {sortedCreatures.length > 0 && (
+            <GridItem colSpan={{ base: 1, sm: 2 }}>
+              <ResourceDetailField label={t("creatures")}>
+                <VStack align="flex-start" gap={1}>
+                  {sortedCreatures.map(({ id, name }) => (
+                    <RouterLink key={id} to={resourceDetailRoute("creature", id)}>
+                      {name}
+                    </RouterLink>
+                  ))}
+                </VStack>
+              </ResourceDetailField>
+            </GridItem>
+          )}
+        </SimpleGrid>
+      )}
+    </ResourceDetail>
   );
 }
 

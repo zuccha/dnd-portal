@@ -77,6 +77,7 @@ export const resourceModule = createResourceModule(
     Extra: itemVariantDialog.Dialog,
     album: { AlbumCard: ItemCard, actions },
     Detail: ItemDetail,
+    detail: { actions },
     filters: { Filters: ItemsFilters },
     form: {
       Editor: createItemEditor(itemForm),

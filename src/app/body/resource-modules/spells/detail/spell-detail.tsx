@@ -4,7 +4,7 @@ import { useActiveSourceRelatedResourceEntries } from "~/models/catalogue/resour
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { defaultSpell } from "~/models/resources/spells/spell";
 import { spellStore } from "~/models/resources/spells/spell-store";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
 
@@ -15,7 +15,13 @@ const { useLocalizedResourceNames: useLocalizedClassNames } = characterClassStor
 // Spell Detail
 //------------------------------------------------------------------------------
 
-export default function SpellDetail({ resource }: { resource: SpellDetailResource }) {
+export default function SpellDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: SpellDetailResource;
+}) {
   const { t, ti } = useI18nLangContext(i18nContext);
   const spell = resource;
   const classEntries = useActiveSourceRelatedResourceEntries(
@@ -42,27 +48,24 @@ export default function SpellDetail({ resource }: { resource: SpellDetailResourc
     : [];
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        spell && (
-          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-            {fields.map(([label, value], index) => (
-              <ResourceDetailField key={index} label={label}>
-                {value}
+    <ResourceDetail actions={actions} resource={spell}>
+      {spell && (
+        <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
+          {fields.map(([label, value], index) => (
+            <ResourceDetailField key={index} label={label}>
+              {value}
+            </ResourceDetailField>
+          ))}
+          {classes.length > 0 && (
+            <GridItem colSpan={{ base: 1, sm: 2 }}>
+              <ResourceDetailField label={t("classes")}>
+                <ResourceDetailLinks resources={classes} />
               </ResourceDetailField>
-            ))}
-            {classes.length > 0 && (
-              <GridItem colSpan={{ base: 1, sm: 2 }}>
-                <ResourceDetailField label={t("classes")}>
-                  <ResourceDetailLinks resources={classes} />
-                </ResourceDetailField>
-              </GridItem>
-            )}
-          </SimpleGrid>
-        )
-      }
-      resource={spell}
-    />
+            </GridItem>
+          )}
+        </SimpleGrid>
+      )}
+    </ResourceDetail>
   );
 }
 

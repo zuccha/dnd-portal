@@ -8,7 +8,7 @@ import { languageStore } from "~/models/resources/languages/language-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RichText from "~/ui/rich-text";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 import CreatureDetailAbilityScoreTable from "./creature-detail-ability-score-table";
 import type { ResourceDetailLinkEntry } from "../../resource-detail-links";
@@ -24,7 +24,13 @@ const noLanguageIds: string[] = [];
 // Creature Detail
 //------------------------------------------------------------------------------
 
-export default function CreatureDetail({ resource }: { resource: CreatureDetailResource }) {
+export default function CreatureDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: CreatureDetailResource;
+}) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const creature = resource;
   const familyId = creature?._raw.family_id ?? "";
@@ -80,19 +86,17 @@ export default function CreatureDetail({ resource }: { resource: CreatureDetailR
       : creatureInfoRichTextPatterns;
   }, [linkedResources]);
 
-  if (!creature) return <ResourceDetailContent resource={creature} />;
-
-  const hitPoints = [creature.hp, creature.hp_formula && `(${creature.hp_formula})`]
-    .filter(Boolean)
-    .join(" ");
+  const hitPoints =
+    creature &&
+    [creature.hp, creature.hp_formula && `(${creature.hp_formula})`].filter(Boolean).join(" ");
   const experience =
-    creature._raw.has_lair && creature.lair_exp !== creature.exp
+    creature?._raw.has_lair && creature.lair_exp !== creature.exp
       ? `${creature.exp} (${creature.lair_exp} ${t("lair")})`
-      : creature.exp;
+      : creature?.exp;
 
   return (
-    <ResourceDetailContent
-      detailsContent={
+    <ResourceDetail actions={actions} resource={creature}>
+      {creature && (
         <VStack align="stretch" gap={3}>
           <SimpleGrid columns={{ base: 1, md: 3 }} columnGap={6} rowGap={2}>
             {[
@@ -156,9 +160,8 @@ export default function CreatureDetail({ resource }: { resource: CreatureDetailR
             />
           )}
         </VStack>
-      }
-      resource={creature}
-    />
+      )}
+    </ResourceDetail>
   );
 }
 

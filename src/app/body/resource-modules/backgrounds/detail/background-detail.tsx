@@ -6,7 +6,7 @@ import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { featStore } from "~/models/resources/feats/feat-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 
 type BackgroundDetailResource = ReturnType<typeof backgroundStore.useLocalizedResource>;
@@ -17,7 +17,13 @@ const { useLocalizedResourceName: useLocalizedToolName } = toolStore;
 // Background Detail
 //------------------------------------------------------------------------------
 
-export default function BackgroundDetail({ resource }: { resource: BackgroundDetailResource }) {
+export default function BackgroundDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: BackgroundDetailResource;
+}) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const background = resource;
   const featId = background?._raw.feat_id ?? "";
@@ -34,36 +40,33 @@ export default function BackgroundDetail({ resource }: { resource: BackgroundDet
     : [];
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        background && (
-          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-            {fields.map(({ label, value }) => (
-              <ResourceDetailField key={label} label={label}>
-                {value}
-              </ResourceDetailField>
-            ))}
-            {featId && (
-              <ResourceDetailField label={t("feat")}>
-                <RouterLink to={resourceDetailRoute("feat", featId)}>
-                  {featName || background.feat}
-                </RouterLink>
-                {featNotes && <Span> ({featNotes})</Span>}
-              </ResourceDetailField>
-            )}
-            {toolId && (
-              <ResourceDetailField label={t("tool")}>
-                <RouterLink to={resourceDetailRoute("tool", toolId)}>
-                  {toolName || background.tool_proficiency}
-                </RouterLink>
-                {toolNotes && <Span> ({toolNotes})</Span>}
-              </ResourceDetailField>
-            )}
-          </SimpleGrid>
-        )
-      }
-      resource={background}
-    />
+    <ResourceDetail actions={actions} resource={background}>
+      {background && (
+        <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
+          {fields.map(({ label, value }) => (
+            <ResourceDetailField key={label} label={label}>
+              {value}
+            </ResourceDetailField>
+          ))}
+          {featId && (
+            <ResourceDetailField label={t("feat")}>
+              <RouterLink to={resourceDetailRoute("feat", featId)}>
+                {featName || background.feat}
+              </RouterLink>
+              {featNotes && <Span> ({featNotes})</Span>}
+            </ResourceDetailField>
+          )}
+          {toolId && (
+            <ResourceDetailField label={t("tool")}>
+              <RouterLink to={resourceDetailRoute("tool", toolId)}>
+                {toolName || background.tool_proficiency}
+              </RouterLink>
+              {toolNotes && <Span> ({toolNotes})</Span>}
+            </ResourceDetailField>
+          )}
+        </SimpleGrid>
+      )}
+    </ResourceDetail>
   );
 }
 

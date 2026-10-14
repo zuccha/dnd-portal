@@ -4,7 +4,7 @@ import { characterClassStore } from "~/models/resources/character-classes/charac
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 
 type CharacterSubclassDetailResource = ReturnType<
@@ -17,8 +17,10 @@ const { useLocalizedResource: useLocalizedCharacterClass } = characterClassStore
 //------------------------------------------------------------------------------
 
 export default function CharacterSubclassDetail({
+  actions,
   resource,
 }: {
+  actions?: ResourceDetailAction[];
   resource: CharacterSubclassDetailResource;
 }) {
   const { t } = useI18nLangContext(i18nContext);
@@ -27,20 +29,17 @@ export default function CharacterSubclassDetail({
   const characterClass = useLocalizedCharacterClass(classId);
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        characterClass && (
-          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-            <ResourceDetailField label={t("character_class")}>
-              <RouterLink to={resourceDetailRoute("character_class", classId)}>
-                {characterClass.name}
-              </RouterLink>
-            </ResourceDetailField>
-          </SimpleGrid>
-        )
-      }
-      resource={characterSubclass}
-    />
+    <ResourceDetail actions={actions} resource={characterSubclass}>
+      {characterClass && (
+        <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
+          <ResourceDetailField label={t("character_class")}>
+            <RouterLink to={resourceDetailRoute("character_class", classId)}>
+              {characterClass.name}
+            </RouterLink>
+          </ResourceDetailField>
+        </SimpleGrid>
+      )}
+    </ResourceDetail>
   );
 }
 

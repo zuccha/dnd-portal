@@ -2,6 +2,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { itemStore } from "~/models/resources/equipment/items/item-store";
 import ResourceDetailField from "../../../resource-detail-field";
 import EquipmentDetail from "../../equipment-detail";
+import type { ResourceDetailAction } from "../../../resource-detail";
 
 type ItemDetailResource = ReturnType<typeof itemStore.useLocalizedResource>;
 
@@ -9,7 +10,13 @@ type ItemDetailResource = ReturnType<typeof itemStore.useLocalizedResource>;
 // Item Detail
 //------------------------------------------------------------------------------
 
-export default function ItemDetail({ resource }: { resource: ItemDetailResource }) {
+export default function ItemDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: ItemDetailResource;
+}) {
   const { t } = useI18nLangContext(i18nContext);
   const item = resource;
   const uses = item ? (
@@ -22,7 +29,7 @@ export default function ItemDetail({ resource }: { resource: ItemDetailResource 
     ) : undefined
   ) : undefined;
 
-  return <EquipmentDetail resource={item} uses={uses} />;
+  return <EquipmentDetail actions={actions} resource={item} uses={uses} />;
 }
 
 //------------------------------------------------------------------------------

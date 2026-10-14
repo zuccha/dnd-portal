@@ -61,6 +61,7 @@ export const resourceModule = createResourceModule(
     Extra: toolVariantDialog.Dialog,
     album: { AlbumCard: ToolCard, actions },
     Detail: ToolDetail,
+    detail: { actions },
     filters: { Filters: ToolsFilters },
     form: {
       Editor: createToolEditor(toolForm),

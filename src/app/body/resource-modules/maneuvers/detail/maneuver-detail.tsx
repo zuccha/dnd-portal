@@ -1,7 +1,7 @@
 import { SimpleGrid } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { maneuverStore } from "~/models/resources/maneuvers/maneuver-store";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 
 type ManeuverDetailResource = ReturnType<typeof maneuverStore.useLocalizedResource>;
@@ -10,23 +10,26 @@ type ManeuverDetailResource = ReturnType<typeof maneuverStore.useLocalizedResour
 // Maneuver Detail
 //------------------------------------------------------------------------------
 
-export default function ManeuverDetail({ resource }: { resource: ManeuverDetailResource }) {
+export default function ManeuverDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: ManeuverDetailResource;
+}) {
   const { t } = useI18nLangContext(i18nContext);
   const maneuver = resource;
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        maneuver?.prerequisite && (
-          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-            <ResourceDetailField label={t("prerequisite")}>
-              {maneuver.prerequisite}
-            </ResourceDetailField>
-          </SimpleGrid>
-        )
-      }
-      resource={maneuver}
-    />
+    <ResourceDetail actions={actions} resource={maneuver}>
+      {maneuver?.prerequisite && (
+        <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
+          <ResourceDetailField label={t("prerequisite")}>
+            {maneuver.prerequisite}
+          </ResourceDetailField>
+        </SimpleGrid>
+      )}
+    </ResourceDetail>
   );
 }
 

@@ -6,7 +6,7 @@ import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
 
@@ -22,8 +22,10 @@ const noPlaneIds: string[] = [];
 //------------------------------------------------------------------------------
 
 export default function CreatureFamilyDetail({
+  actions,
   resource,
 }: {
+  actions?: ResourceDetailAction[];
   resource: CreatureFamilyDetailResource;
 }) {
   const { t } = useI18nLangContext(i18nContext);
@@ -53,39 +55,36 @@ export default function CreatureFamilyDetail({
   );
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        family && (
-          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={3}>
-            {family.habitats && (
-              <ResourceDetailField label={t("habitats")}>{family.habitats}</ResourceDetailField>
-            )}
-            {planes.length > 0 && (
-              <ResourceDetailField label={t("planes")}>
-                <ResourceDetailLinks resources={planes} />
+    <ResourceDetail actions={actions} resource={family}>
+      {family && (
+        <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={3}>
+          {family.habitats && (
+            <ResourceDetailField label={t("habitats")}>{family.habitats}</ResourceDetailField>
+          )}
+          {planes.length > 0 && (
+            <ResourceDetailField label={t("planes")}>
+              <ResourceDetailLinks resources={planes} />
+            </ResourceDetailField>
+          )}
+          {family.treasures && (
+            <ResourceDetailField label={t("treasures")}>{family.treasures}</ResourceDetailField>
+          )}
+          {sortedCreatures.length > 0 && (
+            <GridItem colSpan={{ base: 1, sm: 2 }}>
+              <ResourceDetailField label={t("creatures")}>
+                <VStack align="flex-start" gap={1}>
+                  {sortedCreatures.map(({ id, name }) => (
+                    <RouterLink key={id} to={resourceDetailRoute("creature", id)}>
+                      {name}
+                    </RouterLink>
+                  ))}
+                </VStack>
               </ResourceDetailField>
-            )}
-            {family.treasures && (
-              <ResourceDetailField label={t("treasures")}>{family.treasures}</ResourceDetailField>
-            )}
-            {sortedCreatures.length > 0 && (
-              <GridItem colSpan={{ base: 1, sm: 2 }}>
-                <ResourceDetailField label={t("creatures")}>
-                  <VStack align="flex-start" gap={1}>
-                    {sortedCreatures.map(({ id, name }) => (
-                      <RouterLink key={id} to={resourceDetailRoute("creature", id)}>
-                        {name}
-                      </RouterLink>
-                    ))}
-                  </VStack>
-                </ResourceDetailField>
-              </GridItem>
-            )}
-          </SimpleGrid>
-        )
-      }
-      resource={family}
-    />
+            </GridItem>
+          )}
+        </SimpleGrid>
+      )}
+    </ResourceDetail>
   );
 }
 

@@ -1,7 +1,7 @@
 import { SimpleGrid } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 
 type VehicleDetailResource = ReturnType<typeof vehicleStore.useLocalizedResource>;
@@ -10,30 +10,33 @@ type VehicleDetailResource = ReturnType<typeof vehicleStore.useLocalizedResource
 // Vehicle Detail
 //------------------------------------------------------------------------------
 
-export default function VehicleDetail({ resource }: { resource: VehicleDetailResource }) {
+export default function VehicleDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: VehicleDetailResource;
+}) {
   const { t } = useI18nLangContext(i18nContext);
   const vehicle = resource;
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        vehicle && (
-          <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
-            <ResourceDetailField label={t("armor_class")}>{vehicle.ac}</ResourceDetailField>
-            <ResourceDetailField label={t("hit_points")}>{vehicle.hp}</ResourceDetailField>
-            <ResourceDetailField label={t("damage_threshold")}>
-              {vehicle.damage_threshold}
-            </ResourceDetailField>
-            <ResourceDetailField label={t("crew")}>{vehicle.crew}</ResourceDetailField>
-            <ResourceDetailField label={t("passengers")}>{vehicle.passengers}</ResourceDetailField>
-            <ResourceDetailField label={t("cargo")}>{vehicle.cargo}</ResourceDetailField>
-            <ResourceDetailField label={t("speed")}>{vehicle.speed}</ResourceDetailField>
-            <ResourceDetailField label={t("cost")}>{vehicle.cost}</ResourceDetailField>
-          </SimpleGrid>
-        )
-      }
-      resource={vehicle}
-    />
+    <ResourceDetail actions={actions} resource={vehicle}>
+      {vehicle && (
+        <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
+          <ResourceDetailField label={t("armor_class")}>{vehicle.ac}</ResourceDetailField>
+          <ResourceDetailField label={t("hit_points")}>{vehicle.hp}</ResourceDetailField>
+          <ResourceDetailField label={t("damage_threshold")}>
+            {vehicle.damage_threshold}
+          </ResourceDetailField>
+          <ResourceDetailField label={t("crew")}>{vehicle.crew}</ResourceDetailField>
+          <ResourceDetailField label={t("passengers")}>{vehicle.passengers}</ResourceDetailField>
+          <ResourceDetailField label={t("cargo")}>{vehicle.cargo}</ResourceDetailField>
+          <ResourceDetailField label={t("speed")}>{vehicle.speed}</ResourceDetailField>
+          <ResourceDetailField label={t("cost")}>{vehicle.cost}</ResourceDetailField>
+        </SimpleGrid>
+      )}
+    </ResourceDetail>
   );
 }
 

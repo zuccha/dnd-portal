@@ -5,7 +5,7 @@ import { characterSubclassStore } from "~/models/resources/character-subclasses/
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
-import ResourceDetailContent from "../../resource-detail-content";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
 
@@ -23,8 +23,10 @@ const noToolIds: string[] = [];
 //------------------------------------------------------------------------------
 
 export default function CharacterClassDetail({
+  actions,
   resource,
 }: {
+  actions?: ResourceDetailAction[];
   resource: CharacterClassDetailResource;
 }) {
   const { t } = useI18nLangContext(i18nContext);
@@ -58,38 +60,35 @@ export default function CharacterClassDetail({
     : [];
 
   return (
-    <ResourceDetailContent
-      detailsContent={
-        characterClass && (
-          <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-            {fields.map(({ label, value }) => (
-              <ResourceDetailField key={label} label={label}>
-                {value}
+    <ResourceDetail actions={actions} resource={characterClass}>
+      {characterClass && (
+        <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
+          {fields.map(({ label, value }) => (
+            <ResourceDetailField key={label} label={label}>
+              {value}
+            </ResourceDetailField>
+          ))}
+          {localizedTools.length > 0 && (
+            <ResourceDetailField label={t("tool_proficiencies")}>
+              <ResourceDetailLinks resources={localizedTools} />
+            </ResourceDetailField>
+          )}
+          {sortedSubclasses.length > 0 && (
+            <GridItem colSpan={{ base: 1, sm: 2 }}>
+              <ResourceDetailField label={t("subclasses")}>
+                <VStack align="flex-start" gap={1}>
+                  {sortedSubclasses.map(({ id, name }) => (
+                    <RouterLink key={id} to={resourceDetailRoute("character_subclass", id)}>
+                      {name}
+                    </RouterLink>
+                  ))}
+                </VStack>
               </ResourceDetailField>
-            ))}
-            {localizedTools.length > 0 && (
-              <ResourceDetailField label={t("tool_proficiencies")}>
-                <ResourceDetailLinks resources={localizedTools} />
-              </ResourceDetailField>
-            )}
-            {sortedSubclasses.length > 0 && (
-              <GridItem colSpan={{ base: 1, sm: 2 }}>
-                <ResourceDetailField label={t("subclasses")}>
-                  <VStack align="flex-start" gap={1}>
-                    {sortedSubclasses.map(({ id, name }) => (
-                      <RouterLink key={id} to={resourceDetailRoute("character_subclass", id)}>
-                        {name}
-                      </RouterLink>
-                    ))}
-                  </VStack>
-                </ResourceDetailField>
-              </GridItem>
-            )}
-          </SimpleGrid>
-        )
-      }
-      resource={characterClass}
-    />
+            </GridItem>
+          )}
+        </SimpleGrid>
+      )}
+    </ResourceDetail>
   );
 }
 

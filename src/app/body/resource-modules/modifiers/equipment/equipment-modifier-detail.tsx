@@ -1,6 +1,7 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useI18nLangContext } from "../../../../../i18n/i18n-lang-context";
 import { equipmentReferenceStore } from "../../../../../models/resources/equipment/equipment-reference-store";
+import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
 import type { EquipmentModifier } from "../../../../../models/resources/modifiers/equipment/equipment-modifier";
@@ -9,50 +10,56 @@ import type { LocalizedEquipmentModifier } from "../../../../../models/resources
 const { useLocalizedEquipmentEntries } = equipmentReferenceStore;
 
 //------------------------------------------------------------------------------
-// Equipment Modifier Detail Fields
+// Equipment Modifier Detail
 //------------------------------------------------------------------------------
 
-export default function EquipmentModifierDetailFields({
+export default function EquipmentModifierDetail({
+  actions,
   resource,
 }: {
-  resource: LocalizedEquipmentModifier<EquipmentModifier>;
+  actions?: ResourceDetailAction[];
+  resource: LocalizedEquipmentModifier<EquipmentModifier> | undefined;
 }) {
   const { lang, t } = useI18nLangContext(i18nContext);
   const equipmentEntries = useLocalizedEquipmentEntries(lang);
-  const equipment = resource._raw.equipment_ids
+  const equipment = (resource?._raw.equipment_ids ?? [])
     .flatMap((id) => {
       const entry = equipmentEntries.find((equipmentEntry) => equipmentEntry.id === id);
       return entry ? [entry] : [];
     })
     .sort((a, b) => a.name.localeCompare(b.name, lang));
-  const fields = [
-    resource._raw.cost_delta !== 0 && [t("additional_cost"), resource.cost_delta],
-    resource._raw.weight_delta !== 0 && [t("additional_weight"), resource.weight_delta],
-    resource.make_magic && [t("magic"), resource.magic],
-    resource.make_magic && [t("minimum_rarity"), resource.rarity_minimum],
-    resource._raw.required_attunement_slots_minimum > 0 && [
-      t("minimum_attunement_slots"),
-      resource.required_attunement_slots_minimum,
-    ],
-  ].filter((field): field is [string, string] => Boolean(field));
-
-  if (fields.length === 0 && equipment.length === 0) return null;
+  const fields = resource
+    ? [
+        resource._raw.cost_delta !== 0 && [t("additional_cost"), resource.cost_delta],
+        resource._raw.weight_delta !== 0 && [t("additional_weight"), resource.weight_delta],
+        resource.make_magic && [t("magic"), resource.magic],
+        resource.make_magic && [t("minimum_rarity"), resource.rarity_minimum],
+        resource._raw.required_attunement_slots_minimum > 0 && [
+          t("minimum_attunement_slots"),
+          resource.required_attunement_slots_minimum,
+        ],
+      ].filter((field): field is [string, string] => Boolean(field))
+    : [];
 
   return (
-    <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
-      {fields.map(([label, value]) => (
-        <ResourceDetailField key={label} label={label}>
-          {value}
-        </ResourceDetailField>
-      ))}
-      {equipment.length > 0 && (
-        <GridItem colSpan={{ base: 1, sm: 3 }}>
-          <ResourceDetailField label={t("supported_equipment")}>
-            <ResourceDetailLinks resources={equipment} />
-          </ResourceDetailField>
-        </GridItem>
+    <ResourceDetail actions={actions} resource={resource}>
+      {resource && (fields.length > 0 || equipment.length > 0) && (
+        <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
+          {fields.map(([label, value]) => (
+            <ResourceDetailField key={label} label={label}>
+              {value}
+            </ResourceDetailField>
+          ))}
+          {equipment.length > 0 && (
+            <GridItem colSpan={{ base: 1, sm: 3 }}>
+              <ResourceDetailField label={t("supported_equipment")}>
+                <ResourceDetailLinks resources={equipment} />
+              </ResourceDetailField>
+            </GridItem>
+          )}
+        </SimpleGrid>
       )}
-    </SimpleGrid>
+    </ResourceDetail>
   );
 }
 

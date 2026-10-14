@@ -4,6 +4,7 @@ import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import ResourceDetailField from "../../../resource-detail-field";
 import ResourceDetailLinks from "../../../resource-detail-links";
 import EquipmentDetail from "../../equipment-detail";
+import type { ResourceDetailAction } from "../../../resource-detail";
 
 type WeaponDetailResource = ReturnType<typeof weaponStore.useLocalizedResource>;
 const { useLocalizedEquipmentEntries } = equipmentReferenceStore;
@@ -12,7 +13,13 @@ const { useLocalizedEquipmentEntries } = equipmentReferenceStore;
 // Weapon Detail
 //------------------------------------------------------------------------------
 
-export default function WeaponDetail({ resource }: { resource: WeaponDetailResource }) {
+export default function WeaponDetail({
+  actions,
+  resource,
+}: {
+  actions?: ResourceDetailAction[];
+  resource: WeaponDetailResource;
+}) {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const weapon = resource;
   const equipmentEntries = useLocalizedEquipmentEntries(lang);
@@ -24,7 +31,7 @@ export default function WeaponDetail({ resource }: { resource: WeaponDetailResou
     : [];
 
   return (
-    <EquipmentDetail resource={weapon}>
+    <EquipmentDetail actions={actions} resource={weapon}>
       {weapon && (
         <>
           <ResourceDetailField label={t("damage")}>{weapon.damage_extended}</ResourceDetailField>
