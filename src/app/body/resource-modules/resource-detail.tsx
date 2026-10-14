@@ -6,12 +6,21 @@ import PageTitle from "../../../navigation/page-title";
 import IconButton, { type IconButtonProps } from "../../../ui/icon-button";
 import RichText from "../../../ui/rich-text";
 
+//------------------------------------------------------------------------------
+// Resource Detail Action
+//------------------------------------------------------------------------------
+
 export type ResourceDetailAction = {
+  colorPalette?: IconButtonProps["colorPalette"];
   disabled?: boolean;
   Icon: IconButtonProps["Icon"];
   label: string;
   onClick: () => void;
 };
+
+//------------------------------------------------------------------------------
+// Resource Detail Header
+//------------------------------------------------------------------------------
 
 type ResourceDetailHeader = {
   descriptor: string;
@@ -71,9 +80,10 @@ export default function ResourceDetail({
               </HStack>
             </VStack>
             <HStack flexShrink={0} gap={0}>
-              {actions.map(({ disabled, Icon, label, onClick }, index) => (
+              {actions.map(({ colorPalette, disabled, Icon, label, onClick }, index) => (
                 <IconButton
                   Icon={Icon}
+                  colorPalette={colorPalette}
                   disabled={disabled}
                   key={index}
                   label={label}

@@ -1,5 +1,5 @@
 import { Badge, Box, Theme, VStack } from "@chakra-ui/react";
-import { EditIcon, PrinterIcon, SaveIcon } from "lucide-react";
+import { EditIcon, PrinterIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useI18nLang } from "~/i18n/i18n-lang";
@@ -20,6 +20,7 @@ import PokerCard from "~/ui/poker-card";
 import { toaster } from "~/ui/toaster";
 import { clamp } from "~/utils/math";
 import { type Palette, defaultPalette } from "~/utils/palette";
+import { useResourceDelete } from "./resource-delete";
 import type { ResourceAction } from "./resource-action";
 import type {
   ResourcePokerCardPlaceholderProps,
@@ -105,6 +106,12 @@ export function createResourceCardInteractive<
     const navigate = useNavigate();
     const sourceEditable = useSourceEditable(resource.source_id);
     const paletteName = usePaletteName();
+    const deleteResource = useResourceDelete(
+      store,
+      resource,
+      localizedResource.name,
+      sourceEditable,
+    );
     const visibleActions =
       extra.actions?.filter(({ isVisible }) => !isVisible || isVisible(localizedResource._raw)) ??
       [];
@@ -304,6 +311,22 @@ export function createResourceCardInteractive<
                   />
                 );
               })}
+
+            {sourceEditable && (
+              <IconButton
+                Icon={Trash2Icon}
+                _disabled={{ bgColor: "fg.subtle", opacity: 1 }}
+                className="light"
+                colorPalette="red"
+                label={t("remove")}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  deleteResource.requestDelete();
+                }}
+                size="2xs"
+                tooltipPositioning={{ placement: "right" }}
+              />
+            )}
           </VStack>
 
           <IconButton
@@ -324,6 +347,7 @@ export function createResourceCardInteractive<
             zIndex={2}
           />
         </Theme>
+        {deleteResource.dialog}
       </Box>
     );
   }
@@ -384,6 +408,10 @@ const i18nContext = {
   "print_deck.added": {
     en: "Added to print deck",
     it: "Aggiunto al mazzo di stampa",
+  },
+  "remove": {
+    en: "Delete",
+    it: "Elimina",
   },
   "selection.deselect": {
     en: "Deselect",

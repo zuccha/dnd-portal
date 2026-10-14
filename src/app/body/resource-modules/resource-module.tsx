@@ -79,7 +79,7 @@ export function createResourceModule<
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
-  const ResourceDetailInteractive = createResourceDetailInteractive(store, context, detail);
+  const ResourceDetailInteractive = createResourceDetailInteractive(store, context, detail, path);
 
   const { useView } = context;
   const { useLocalizedResource } = store;

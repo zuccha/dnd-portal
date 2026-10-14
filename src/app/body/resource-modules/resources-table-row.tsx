@@ -3,6 +3,7 @@ import {
   EditIcon,
   EyeClosedIcon,
   EyeIcon,
+  Trash2Icon,
   type LucideIcon,
   PrinterIcon,
   SaveIcon,
@@ -26,6 +27,7 @@ import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
 import { toaster } from "~/ui/toaster";
+import { useResourceDelete } from "./resource-delete";
 import type { ResourceAction } from "./resource-action";
 import type { ResourcesContext } from "./resources-context";
 
@@ -91,6 +93,12 @@ export function createResourcesTableRow<
     const paletteName = usePaletteName();
     const selected = useResourceSelection(resource.id);
     const expanded = useResourceExpansion(resource.id, false);
+    const deleteResource = useResourceDelete(
+      store,
+      resource,
+      localizedResource.name,
+      sourceEditable,
+    );
     const details =
       extra.detailsKey && localizedResource[extra.detailsKey]
         ? resolveSystemText(String(localizedResource[extra.detailsKey]), system)
@@ -259,6 +267,20 @@ export function createResourcesTableRow<
                       />
                     );
                   })}
+
+                {sourceEditable && (
+                  <IconButton
+                    Icon={Trash2Icon}
+                    colorPalette="red"
+                    label={t("remove")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteResource.requestDelete();
+                    }}
+                    size="2xs"
+                    variant="ghost"
+                  />
+                )}
               </HStack>
             </Table.Cell>
           )}
@@ -294,6 +316,7 @@ export function createResourcesTableRow<
             </Table.Cell>
           </Table.Row>
         )}
+        {deleteResource.dialog}
       </>
     );
   }
@@ -337,5 +360,9 @@ const i18nContext = {
   "print_deck.added": {
     en: "Added to print deck",
     it: "Aggiunto al mazzo di stampa",
+  },
+  "remove": {
+    en: "Delete",
+    it: "Elimina",
   },
 };

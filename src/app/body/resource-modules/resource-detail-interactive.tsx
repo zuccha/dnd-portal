@@ -1,5 +1,6 @@
-import { EditIcon, PrinterIcon, SaveIcon } from "lucide-react";
+import { EditIcon, PrinterIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
+import { useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { useSourceEditable } from "~/models/catalogue/catalogue";
@@ -10,6 +11,7 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import { toaster } from "~/ui/toaster";
+import { useResourceDelete } from "./resource-delete";
 import type { ResourceAction } from "./resource-action";
 import type { ResourceDetailAction } from "./resource-detail";
 import type { ResourcesContext } from "./resources-context";
@@ -30,6 +32,7 @@ export function createResourceDetailInteractive<
     Detail: ComponentType<{ actions?: ResourceDetailAction[]; resource: L | undefined }>;
     actions?: ResourceAction<R>[];
   },
+  listPath: string,
 ) {
   const { Detail } = detail;
   const actions = detail.actions ?? [];
@@ -41,8 +44,16 @@ export function createResourceDetailInteractive<
 
   return function ResourceDetailInteractive({ resource }: { resource: L | undefined }) {
     const { lang, t } = useI18nLangContext(i18nContext);
+    const navigate = useNavigate();
     const sourceEditable = useSourceEditable(resource?._raw.source_id ?? "");
     const paletteName = usePaletteName();
+    const deleteResource = useResourceDelete(
+      store,
+      resource?._raw,
+      resource?.name ?? "",
+      sourceEditable,
+      () => navigate(listPath, { replace: true }),
+    );
 
     const edit = useCallback(() => {
       if (resource && sourceEditable) context.setEditedResource(resource._raw);
@@ -105,9 +116,24 @@ export function createResourceDetailInteractive<
             },
           }))
         : []),
+      ...(sourceEditable
+        ? [
+            {
+              colorPalette: "red" as const,
+              Icon: Trash2Icon,
+              label: t("remove"),
+              onClick: deleteResource.requestDelete,
+            },
+          ]
+        : []),
     ];
 
-    return <Detail actions={resourceDetailActions} resource={resource} />;
+    return (
+      <>
+        <Detail actions={resourceDetailActions} resource={resource} />
+        {deleteResource.dialog}
+      </>
+    );
   };
 }
 
@@ -143,5 +169,9 @@ const i18nContext = {
   "print_deck.added": {
     en: "Added to print deck",
     it: "Aggiunto al mazzo di stampa",
+  },
+  "remove": {
+    en: "Delete",
+    it: "Elimina",
   },
 };
