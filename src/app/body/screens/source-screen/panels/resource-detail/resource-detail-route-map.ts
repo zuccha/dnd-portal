@@ -20,10 +20,10 @@ import ItemModifierDetailRoute from "./resources/modifiers/equipment/item/item-m
 import ToolModifierDetailRoute from "./resources/modifiers/equipment/tool/tool-modifier-detail-route";
 import WeaponModifierDetailRoute from "./resources/modifiers/equipment/weapon/weapon-modifier-detail-route";
 import PlaneDetailRoute from "./resources/plane-detail-route";
-import ServiceDetailRoute from "./resources/service-detail-route";
+import ServiceDetailRoute from "./resources/service/service-detail-route";
 import SpeciesDetailRoute from "./resources/species/species-detail-route";
 import SpellDetailRoute from "./resources/spell/spell-detail-route";
-import VehicleDetailRoute from "./resources/vehicle-detail-route";
+import VehicleDetailRoute from "./resources/vehicle/vehicle-detail-route";
 import type { ComponentType } from "react";
 
 type ResourceDetailRouteProps = { resourceId: string };
