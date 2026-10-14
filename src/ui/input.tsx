@@ -20,10 +20,9 @@ export type InputProps = Omit<ChakraInputProps, "onChange" | "value"> & {
 export default function Input({ groupProps, onValueChange, value, ...rest }: InputProps) {
   return (
     <InputGroup
+      {...groupProps}
       endElement={
-        !rest.disabled &&
-        value &&
-        value.length > 0 && (
+        !rest.disabled && value && value.length > 0 ? (
           <IconButton
             Icon={XIcon}
             label=""
@@ -33,9 +32,10 @@ export default function Input({ groupProps, onValueChange, value, ...rest }: Inp
             size="xs"
             variant="ghost"
           />
+        ) : (
+          groupProps?.endElement
         )
       }
-      {...groupProps}
     >
       <ChakraInput {...rest} onChange={(e) => onValueChange?.(e.target.value)} value={value} />
     </InputGroup>

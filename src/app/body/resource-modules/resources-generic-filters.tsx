@@ -1,5 +1,5 @@
-import { VStack } from "@chakra-ui/react";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { Kbd, VStack } from "@chakra-ui/react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import z from "zod";
 import useDebouncedCallback from "~/hooks/use-debounced-callback";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -37,6 +37,7 @@ export function createResourcesGenericFilters<
     const [sources, setSources] = useResourcesSourcesFilter(sourceId);
     const [filters, { set: setFilters }] = useFilters();
     const [name, setName] = useState(filters.name);
+    const nameFilterId = `filter-${store.kind}-name`;
 
     const setFiltersDebounced = useDebouncedCallback(setFilters, 200);
 
@@ -68,15 +69,39 @@ export function createResourcesGenericFilters<
       setName(filters.name);
     }, [filters.name]);
 
+    useEffect(() => {
+      function onKeyDown(event: KeyboardEvent): void {
+        if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
+
+        const target = event.target;
+        if (
+          target instanceof HTMLElement &&
+          (target.isContentEditable ||
+            target.closest('input, textarea, select, [role="dialog"], [role="textbox"]'))
+        ) {
+          return;
+        }
+
+        const input = document.getElementById(nameFilterId);
+        if (!(input instanceof HTMLInputElement)) return;
+
+        event.preventDefault();
+        input.focus();
+      }
+
+      window.addEventListener("keydown", onKeyDown);
+      return () => window.removeEventListener("keydown", onKeyDown);
+    }, [nameFilterId]);
+
     return (
       <VStack gap={3} w="full">
         <CaptionInput caption={t("name_placeholder")} w="full">
           <Input
-            groupProps={{ w: "full" }}
-            id={`filter-${store.kind}-name`}
+            groupProps={{ endElement: <Kbd size="sm">/</Kbd>, w: "full" }}
+            id={nameFilterId}
             onValueChange={setName}
             placeholder={t("name_placeholder")}
-            size="md"
+            size="sm"
             value={name}
           />
         </CaptionInput>
