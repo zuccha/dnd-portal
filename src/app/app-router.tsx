@@ -6,6 +6,7 @@ import SignUpScreen from "./body/screens/sign-up-screen/sign-up-screen";
 import GuidePanel from "./body/screens/source-screen/panels/guide/guide-panel";
 import HomePanel from "./body/screens/source-screen/panels/home/home-panel";
 import PrintDeckPanel from "./body/screens/source-screen/panels/print-deck/print-deck-panel";
+import ResourceDetailRoute from "./body/screens/source-screen/panels/resource-detail/resource-detail-route";
 import BackgroundsPanel from "./body/screens/source-screen/panels/resources/backgrounds/backgrounds-panel";
 import CharacterClassesPanel from "./body/screens/source-screen/panels/resources/character-classes/character-classes-panel";
 import CharacterSubclassesPanel from "./body/screens/source-screen/panels/resources/character-subclasses/character-subclasses-panel";
@@ -27,7 +28,6 @@ import ItemModifiersPanel from "./body/screens/source-screen/panels/resources/mo
 import ToolModifiersPanel from "./body/screens/source-screen/panels/resources/modifiers/equipment/tools/tool-modifiers-panel";
 import WeaponModifiersPanel from "./body/screens/source-screen/panels/resources/modifiers/equipment/weapons/weapon-modifiers-panel";
 import PlanesPanel from "./body/screens/source-screen/panels/resources/planes/planes-panel";
-import ResourceDetailRoute from "./body/screens/source-screen/panels/resources/resource-detail-route";
 import ServicesPanel from "./body/screens/source-screen/panels/resources/services/services-panel";
 import SpeciesPanel from "./body/screens/source-screen/panels/resources/species/species-panel";
 import SpellsPanel from "./body/screens/source-screen/panels/resources/spells/spells-panel";
