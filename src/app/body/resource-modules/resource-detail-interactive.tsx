@@ -26,9 +26,13 @@ export function createResourceDetailInteractive<
 >(
   store: ResourceStore<R, L, F>,
   context: ResourcesContext<R>,
-  Detail: ComponentType<{ actions?: ResourceDetailAction[]; resource: L | undefined }>,
-  actions: ResourceAction<R>[] = [],
+  detail: {
+    Detail: ComponentType<{ actions?: ResourceDetailAction[]; resource: L | undefined }>;
+    actions?: ResourceAction<R>[];
+  },
 ) {
+  const { Detail } = detail;
+  const actions = detail.actions ?? [];
   const { usePaletteName } = context;
 
   //------------------------------------------------------------------------------

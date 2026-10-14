@@ -34,7 +34,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "moss", path: Route.ResourcesWorldPlanes },
   {
     album: { AlbumCard: PlaneCard },
-    Detail: PlaneDetail,
+    detail: { Detail: PlaneDetail },
     filters: { Filters: PlanesFilters },
     form: {
       Editor: createPlaneEditor(planeForm),

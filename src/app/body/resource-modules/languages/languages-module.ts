@@ -37,7 +37,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "sage", path: Route.ResourcesWorldLanguages },
   {
     album: { AlbumCard: LanguageCard },
-    Detail: LanguageDetail,
+    detail: { Detail: LanguageDetail },
     filters: { Filters: LanguagesFilters },
     form: {
       Editor: createLanguageEditor(languageForm),

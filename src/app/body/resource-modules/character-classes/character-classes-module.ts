@@ -55,7 +55,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "slate", path: Route.ResourcesCharacterClasses },
   {
     album: { AlbumCard: CharacterClassCard },
-    Detail: CharacterClassDetail,
+    detail: { Detail: CharacterClassDetail },
     filters: { Filters: CharacterClassesFilters },
     form: {
       Editor: createCharacterClassEditor(characterClassForm),

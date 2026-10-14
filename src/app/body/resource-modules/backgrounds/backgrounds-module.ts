@@ -45,7 +45,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "sage", path: Route.ResourcesCharacterBackgrounds },
   {
     album: { AlbumCard: BackgroundCard },
-    Detail: BackgroundDetail,
+    detail: { Detail: BackgroundDetail },
     filters: { Filters: BackgroundsFilters },
     form: {
       Editor: createBackgroundEditor(backgroundForm),

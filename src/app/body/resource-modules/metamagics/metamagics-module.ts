@@ -39,7 +39,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "azure", path: Route.ResourcesAbilitiesMetamagic },
   {
     album: { AlbumCard: MetamagicCard },
-    Detail: MetamagicDetail,
+    detail: { Detail: MetamagicDetail },
     filters: { Filters: MetamagicsFilters },
     form: {
       Editor: createMetamagicEditor(metamagicForm),

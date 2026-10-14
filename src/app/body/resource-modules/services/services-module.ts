@@ -40,7 +40,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "gold", path: Route.ResourcesMarketServices },
   {
     album: { AlbumCard: ServiceCard },
-    Detail: ServiceDetail,
+    detail: { Detail: ServiceDetail },
     filters: { Filters: ServicesFilters },
     form: {
       Editor: createServiceEditor(serviceForm),

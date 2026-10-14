@@ -31,7 +31,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "brown", path: Route.ResourcesBestiaryFamilies },
   {
     album: { AlbumCard: CreatureFamilyCard },
-    Detail: CreatureFamilyDetail,
+    detail: { Detail: CreatureFamilyDetail },
     filters: { Filters: CreatureFamiliesFilters },
     form: {
       Editor: createCreatureFamilyEditor(creatureFamilyForm),

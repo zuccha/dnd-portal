@@ -49,7 +49,6 @@ export function createResourceModule<
   },
   {
     album,
-    Detail,
     detail,
     Extra,
     filters,
@@ -57,8 +56,10 @@ export function createResourceModule<
     table,
   }: {
     album: ResourcesAlbumExtra<R, L>;
-    Detail: ComponentType<{ actions?: ResourceDetailAction[]; resource: L | undefined }>;
-    detail?: { actions?: ResourceAction<R>[] };
+    detail: {
+      Detail: ComponentType<{ actions?: ResourceDetailAction[]; resource: L | undefined }>;
+      actions?: ResourceAction<R>[];
+    };
     Extra?: ComponentType<{ sourceId: string }>;
     filters: ResourcesFiltersExtra;
     form: ResourceCreatorExtra<R, FF> & ResourceDialogUpdaterExtra<R, FF>;
@@ -77,12 +78,7 @@ export function createResourceModule<
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesTable = createResourcesTable(store, context, table);
   const ResourcesSidebar = createResourcesSidebar(store, context, filters);
-  const ResourceDetailInteractive = createResourceDetailInteractive(
-    store,
-    context,
-    Detail,
-    detail?.actions,
-  );
+  const ResourceDetailInteractive = createResourceDetailInteractive(store, context, detail);
 
   const { useView } = context;
   const { useLocalizedResource } = store;

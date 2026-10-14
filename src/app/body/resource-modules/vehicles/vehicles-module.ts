@@ -70,7 +70,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "slate", path: Route.ResourcesMarketVehicles },
   {
     album: { AlbumCard: VehicleCard },
-    Detail: VehicleDetail,
+    detail: { Detail: VehicleDetail },
     filters: { Filters: VehiclesFilters },
     form: {
       Editor: createVehicleEditor(vehicleForm),

@@ -85,8 +85,7 @@ export const resourceModule = createResourceModule(
   {
     Extra: weaponVariantDialog.Dialog,
     album: { AlbumCard: WeaponCard, actions },
-    Detail: WeaponDetail,
-    detail: { actions },
+    detail: { Detail: WeaponDetail, actions },
     filters: { Filters: WeaponsFilters },
     form: {
       Editor: createWeaponEditor(weaponForm),

@@ -63,7 +63,7 @@ export const resourceModule = createResourceModule(
   },
   {
     album: { AlbumCard: CreatureCard },
-    Detail: CreatureDetail,
+    detail: { Detail: CreatureDetail },
     filters: { Filters: CreaturesFilters },
     form: {
       Editor: createCreatureEditor(creatureForm),

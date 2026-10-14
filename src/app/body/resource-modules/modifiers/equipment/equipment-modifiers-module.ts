@@ -104,7 +104,7 @@ export function createEquipmentModifierModule<
     { initialPaletteName, path },
     {
       album: { AlbumCard },
-      Detail,
+      detail: { Detail },
       filters: { Filters },
       form: {
         Editor: createEditor(formOptions.form, supportedEquipmentStore),

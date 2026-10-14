@@ -40,7 +40,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "chocolate", path: Route.ResourcesCharacterFeats },
   {
     album: { AlbumCard: FeatCard },
-    Detail: FeatDetail,
+    detail: { Detail: FeatDetail },
     filters: { Filters: FeatsFilters },
     form: {
       Editor: createFeatEditor(featForm),

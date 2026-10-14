@@ -28,7 +28,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "brown", path: Route.ResourcesBestiaryTags },
   {
     album: { AlbumCard: CreatureTagCard },
-    Detail: CreatureTagDetail,
+    detail: { Detail: CreatureTagDetail },
     filters: { Filters: CreatureTagsFilters },
     form: {
       Editor: createCreatureTagEditor(creatureTagForm),

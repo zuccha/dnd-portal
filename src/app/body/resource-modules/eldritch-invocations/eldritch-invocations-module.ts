@@ -39,7 +39,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "mauve", path: Route.ResourcesAbilitiesEldritchInvocations },
   {
     album: { AlbumCard: EldritchInvocationCard },
-    Detail: EldritchInvocationDetail,
+    detail: { Detail: EldritchInvocationDetail },
     filters: { Filters: EldritchInvocationsFilters },
     form: {
       Editor: createEldritchInvocationEditor(eldritchInvocationForm),

@@ -68,8 +68,7 @@ export const resourceModule = createResourceModule(
   {
     Extra: armorVariantDialog.Dialog,
     album: { AlbumCard: ArmorCard, actions },
-    Detail: ArmorDetail,
-    detail: { actions },
+    detail: { Detail: ArmorDetail, actions },
     filters: { Filters: ArmorsFilters },
     form: {
       Editor: createArmorEditor(armorForm),

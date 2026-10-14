@@ -69,7 +69,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "rose", initialView: "cards", path: Route.ResourcesAbilitiesSpells },
   {
     album: { AlbumCard: SpellCard },
-    Detail: SpellDetail,
+    detail: { Detail: SpellDetail },
     filters: { Filters: SpellsFilters },
     form: {
       Editor: createSpellEditor(spellForm),

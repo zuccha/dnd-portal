@@ -33,7 +33,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "silver", path: Route.ResourcesCharacterSubclasses },
   {
     album: { AlbumCard: CharacterSubclassCard },
-    Detail: CharacterSubclassDetail,
+    detail: { Detail: CharacterSubclassDetail },
     filters: { Filters: CharacterSubclassesFilters },
     form: {
       Editor: createCharacterSubclassEditor(characterSubclassForm),

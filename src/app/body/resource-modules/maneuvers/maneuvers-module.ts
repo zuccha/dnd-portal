@@ -33,7 +33,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "brick", path: Route.ResourcesAbilitiesManeuvers },
   {
     album: { AlbumCard: ManeuverCard },
-    Detail: ManeuverDetail,
+    detail: { Detail: ManeuverDetail },
     filters: { Filters: ManeuversFilters },
     form: {
       Editor: createManeuverEditor(maneuverForm),

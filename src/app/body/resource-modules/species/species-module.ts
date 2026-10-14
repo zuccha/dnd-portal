@@ -40,7 +40,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "green", path: Route.ResourcesCharacterSpecies },
   {
     album: { AlbumCard: SpeciesCard },
-    Detail: SpeciesDetail,
+    detail: { Detail: SpeciesDetail },
     filters: { Filters: SpeciesFilters },
     form: {
       Editor: createSpeciesEditor(speciesForm),

@@ -25,7 +25,7 @@ export const resourceModule = createResourceModule(
   { initialPaletteName: "navy", path: Route.ResourcesBlocksFeatures },
   {
     album: { AlbumCard: FeatureCard },
-    Detail: FeatureDetail,
+    detail: { Detail: FeatureDetail },
     filters: { Filters: FeaturesFilters },
     form: {
       Editor: createFeatureEditor(featureForm),
