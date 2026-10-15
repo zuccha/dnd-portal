@@ -8,6 +8,17 @@ import { type SourceVersion, useTranslateSourceVersion } from "../types/source-v
 import type { Resource } from "./resource";
 
 //------------------------------------------------------------------------------
+// Localized Field
+//------------------------------------------------------------------------------
+
+export const localizedFieldSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+});
+
+export type LocalizedField = z.infer<typeof localizedFieldSchema>;
+
+//------------------------------------------------------------------------------
 // Localized Resource
 //------------------------------------------------------------------------------
 

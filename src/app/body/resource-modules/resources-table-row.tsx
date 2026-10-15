@@ -185,6 +185,13 @@ export function createResourcesTableRow<
 
           {extra.columns.map(({ key, ...rest }) => {
             const value = localizedResource[key];
+            const displayValue =
+              value &&
+              typeof value === "object" &&
+              "value" in value &&
+              typeof value.value === "string"
+                ? value.value
+                : value;
             return (
               <Table.Cell
                 key={String(key)}
@@ -202,10 +209,10 @@ export function createResourcesTableRow<
                     )}
                     <Link onClick={openDetails}>{String(value)}</Link>
                   </HStack>
-                ) : typeof value === "boolean" ? (
-                  <Checkbox disabled mt={0.5} size="sm" value={value} />
+                ) : typeof displayValue === "boolean" ? (
+                  <Checkbox disabled mt={0.5} size="sm" value={displayValue} />
                 ) : (
-                  String(value) || "-"
+                  String(displayValue) || "-"
                 )}
               </Table.Cell>
             );
