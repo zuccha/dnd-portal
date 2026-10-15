@@ -1,8 +1,10 @@
-import { GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Box, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { defaultCharacterClass } from "~/models/resources/character-classes/character-class";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
+import { spellStore } from "~/models/resources/spells/spell-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
 import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
@@ -10,12 +12,15 @@ import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
 
 type CharacterClassDetailResource = ReturnType<typeof characterClassStore.useLocalizedResource>;
+const { useRelatedEntries: useCharacterClassRelatedEntries } = characterClassStore;
 const {
   useLocalizedResourceNames: useLocalizedSubclassNames,
   useResourceIds: useSubclassResourceIds,
   useResources: useSubclassResources,
 } = characterSubclassStore;
 const { useLocalizedResourceNames: useLocalizedToolNames } = toolStore;
+const { useLocalizedResourceNames: useLocalizedSpellNames, useResources: useSpellResources } =
+  spellStore;
 const noToolIds: string[] = [];
 
 //------------------------------------------------------------------------------
@@ -29,8 +34,29 @@ export default function CharacterClassDetail({
   actions?: ResourceDetailAction[];
   resource: CharacterClassDetailResource;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
+  const { lang, t, tpi } = useI18nLangContext(i18nContext);
   const characterClass = resource;
+  const spellEntries = useCharacterClassRelatedEntries(
+    characterClass?._raw.id ?? defaultCharacterClass.id,
+    "spells",
+  );
+  const spellIds = spellEntries.map(({ id }) => id);
+  const spellNames = useLocalizedSpellNames(spellIds);
+  const spellResources = useSpellResources(spellIds);
+  const spellLevelsById = new Map(spellResources.map(({ id, level }) => [id, level]));
+  const spells = spellEntries.flatMap((entry, index) => {
+    const name = spellNames[index];
+    const level = spellLevelsById.get(entry.id);
+    return name && level !== undefined ? [{ ...entry, level, name }] : [];
+  });
+  const spellGroups = [...new Set(spells.map(({ level }) => level))]
+    .sort((a, b) => a - b)
+    .map((level) => ({
+      level,
+      spells: spells
+        .filter((spell) => spell.level === level)
+        .sort((a, b) => a.name.localeCompare(b.name, lang)),
+    }));
   const toolIds = characterClass?._raw.tool_proficiency_ids ?? noToolIds;
   const toolNames = useLocalizedToolNames(toolIds);
   const localizedTools = toolIds.flatMap((id, index) => {
@@ -60,7 +86,26 @@ export default function CharacterClassDetail({
     : [];
 
   return (
-    <ResourceDetail actions={actions} resource={characterClass}>
+    <ResourceDetail
+      actions={actions}
+      afterDescription={
+        spells.length > 0 && (
+          <VStack align="stretch" gap={2}>
+            {spellGroups.map(({ level, spells: levelSpells }) => (
+              <ResourceDetailField
+                key={level}
+                label={level === 0 ? t("cantrips") : tpi("spell_level", level, `${level}`)}
+              >
+                <Box>
+                  <ResourceDetailLinks resources={levelSpells} />
+                </Box>
+              </ResourceDetailField>
+            ))}
+          </VStack>
+        )
+      }
+      resource={characterClass}
+    >
       {characterClass && (
         <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
           {fields.map(({ label, value }) => (
@@ -97,28 +142,30 @@ export default function CharacterClassDetail({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  armor_proficiencies: {
+  "armor_proficiencies": {
     en: "Armor Proficiencies",
     it: "Competenze nelle Armature",
   },
-  hit_die: {
+  "hit_die": {
     en: "Hit Die",
     it: "Dado Vita",
   },
-  primary_abilities: {
+  "primary_abilities": {
     en: "Primary Abilities",
     it: "Caratteristiche Primarie",
   },
-  saving_throws: {
+  "saving_throws": {
     en: "Saving Throws",
     it: "Tiri Salvezza",
   },
-  subclasses: { en: "Subclasses", it: "Sottoclassi" },
-  tool_proficiencies: {
+  "cantrips": { en: "Cantrips", it: "Trucchetti" },
+  "spell_level/*": { en: "Level <1>", it: "Livello <1>" },
+  "subclasses": { en: "Subclasses", it: "Sottoclassi" },
+  "tool_proficiencies": {
     en: "Tool Proficiencies",
     it: "Competenze negli Strumenti",
   },
-  weapon_proficiencies: {
+  "weapon_proficiencies": {
     en: "Weapon Proficiencies",
     it: "Competenze nelle Armi",
   },

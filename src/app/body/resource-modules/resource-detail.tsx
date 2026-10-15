@@ -38,10 +38,12 @@ type ResourceDetailHeader = {
 //------------------------------------------------------------------------------
 
 export default function ResourceDetail({
+  afterDescription,
   actions = [],
   children,
   resource,
 }: {
+  afterDescription?: ReactNode;
   actions?: ResourceDetailAction[];
   children?: ReactNode;
   resource: ResourceDetailHeader | undefined;
@@ -137,6 +139,13 @@ export default function ResourceDetail({
               text={details}
               whiteSpace="pre-wrap"
             />
+          )}
+
+          {afterDescription && (
+            <>
+              <Separator />
+              {afterDescription}
+            </>
           )}
         </VStack>
       </Box>
