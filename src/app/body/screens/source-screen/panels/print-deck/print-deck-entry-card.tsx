@@ -14,6 +14,7 @@ import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { featStore } from "~/models/resources/feats/feat-store";
 import { featureStore } from "~/models/resources/features/feature-store";
 import { languageStore } from "~/models/resources/languages/language-store";
+import type { LocalizedResource } from "~/models/resources/localized-resource";
 import { maneuverStore } from "~/models/resources/maneuvers/maneuver-store";
 import { metamagicStore } from "~/models/resources/metamagics/metamagic-store";
 import { armorModifierStore } from "~/models/resources/modifiers/equipment/armors/armor-modifier-store";
@@ -21,6 +22,7 @@ import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import { weaponModifierStore } from "~/models/resources/modifiers/equipment/weapons/weapon-modifier-store";
 import { planeStore } from "~/models/resources/planes/plane-store";
+import type { Resource } from "~/models/resources/resource";
 import { serviceStore } from "~/models/resources/services/service-store";
 import { speciesStore } from "~/models/resources/species/species-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
@@ -52,33 +54,7 @@ import { ServiceCard } from "../../../../resource-modules/services/panel/service
 import { SpeciesCard } from "../../../../resource-modules/species/panel/species-card.tsx";
 import { SpellCard } from "../../../../resource-modules/spells/panel/spell-card.tsx";
 import { VehicleCard } from "../../../../resource-modules/vehicles/panel/vehicle-card.tsx";
-
-const useLocalizedArmor = armorStore.useLocalizedResource;
-const useLocalizedArmorModifier = armorModifierStore.useLocalizedResource;
-const useLocalizedBackground = backgroundStore.useLocalizedResource;
-const useLocalizedCharacterClass = characterClassStore.useLocalizedResource;
-const useLocalizedCharacterSubclass = characterSubclassStore.useLocalizedResource;
-const useLocalizedCreature = creatureStore.useLocalizedResource;
-const useLocalizedCreatureFamily = creatureFamilyStore.useLocalizedResource;
-const useLocalizedCreatureHabitat = creatureHabitatStore.useLocalizedResource;
-const useLocalizedCreatureTag = creatureTagStore.useLocalizedResource;
-const useLocalizedEldritchInvocation = eldritchInvocationStore.useLocalizedResource;
-const useLocalizedFeat = featStore.useLocalizedResource;
-const useLocalizedFeature = featureStore.useLocalizedResource;
-const useLocalizedItem = itemStore.useLocalizedResource;
-const useLocalizedItemModifier = itemModifierStore.useLocalizedResource;
-const useLocalizedLanguage = languageStore.useLocalizedResource;
-const useLocalizedManeuver = maneuverStore.useLocalizedResource;
-const useLocalizedMetamagic = metamagicStore.useLocalizedResource;
-const useLocalizedPlane = planeStore.useLocalizedResource;
-const useLocalizedService = serviceStore.useLocalizedResource;
-const useLocalizedSpecies = speciesStore.useLocalizedResource;
-const useLocalizedSpell = spellStore.useLocalizedResource;
-const useLocalizedTool = toolStore.useLocalizedResource;
-const useLocalizedToolModifier = toolModifierStore.useLocalizedResource;
-const useLocalizedVehicle = vehicleStore.useLocalizedResource;
-const useLocalizedWeapon = weaponStore.useLocalizedResource;
-const useLocalizedWeaponModifier = weaponModifierStore.useLocalizedResource;
+import type { ComponentType } from "react";
 
 //------------------------------------------------------------------------------
 // Print Deck Entry Card Props
@@ -96,235 +72,235 @@ export type PrintDeckEntryCardProps = {
 };
 
 //------------------------------------------------------------------------------
+// Create Resource Print Deck Entry Card
+//------------------------------------------------------------------------------
+
+function createResourcePrintDeckEntryCard<R extends Resource, L extends LocalizedResource<R>, C>(
+  store: {
+    localizeResource: (resource: R, context: C) => L;
+    useLocalizationContext: (resource: R) => C;
+  },
+  Card: ComponentType<PrintDeckEntryCardProps & { localizedResource: L }>,
+) {
+  const { localizeResource, useLocalizationContext } = store;
+
+  return (props: PrintDeckEntryCardProps) => {
+    const rawResource = props.entry.resource as R;
+    const context = useLocalizationContext(rawResource);
+    const localizedResource = localizeResource(rawResource, context);
+    return <Card {...props} localizedResource={localizedResource} />;
+  };
+}
+
+//------------------------------------------------------------------------------
 // Armor Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function ArmorPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedArmor(props.entry.resource.id);
-  return resource ? <ArmorCard {...props} localizedResource={resource} /> : null;
-}
+export const ArmorPrintDeckEntryCard = createResourcePrintDeckEntryCard(armorStore, ArmorCard);
 
 //------------------------------------------------------------------------------
 // Armor Modifier Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function ArmorModifierPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedArmorModifier(props.entry.resource.id);
-  return resource ? <ArmorModifierCard {...props} localizedResource={resource} /> : null;
-}
+export const ArmorModifierPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  armorModifierStore,
+  ArmorModifierCard,
+);
 
 //------------------------------------------------------------------------------
 // Background Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function BackgroundPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedBackground(props.entry.resource.id);
-  return resource ? <BackgroundCard {...props} localizedResource={resource} /> : null;
-}
+export const BackgroundPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  backgroundStore,
+  BackgroundCard,
+);
 
 //------------------------------------------------------------------------------
 // Character Class Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function CharacterClassPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedCharacterClass(props.entry.resource.id);
-  return resource ? <CharacterClassCard {...props} localizedResource={resource} /> : null;
-}
+export const CharacterClassPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  characterClassStore,
+  CharacterClassCard,
+);
 
 //------------------------------------------------------------------------------
 // Character Subclass Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function CharacterSubclassPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedCharacterSubclass(props.entry.resource.id);
-  return resource ? <CharacterSubclassCard {...props} localizedResource={resource} /> : null;
-}
+export const CharacterSubclassPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  characterSubclassStore,
+  CharacterSubclassCard,
+);
 
 //------------------------------------------------------------------------------
 // Creature Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function CreaturePrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedCreature(props.entry.resource.id);
-  return resource ? <CreatureCard {...props} localizedResource={resource} /> : null;
-}
+export const CreaturePrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  creatureStore,
+  CreatureCard,
+);
 
 //------------------------------------------------------------------------------
 // Creature Family Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function CreatureFamilyPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedCreatureFamily(props.entry.resource.id);
-  return resource ? <CreatureFamilyCard {...props} localizedResource={resource} /> : null;
-}
+export const CreatureFamilyPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  creatureFamilyStore,
+  CreatureFamilyCard,
+);
 
 //------------------------------------------------------------------------------
 // Creature Habitat Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function CreatureHabitatPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedCreatureHabitat(props.entry.resource.id);
-  return resource ? <CreatureHabitatCard {...props} localizedResource={resource} /> : null;
-}
+export const CreatureHabitatPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  creatureHabitatStore,
+  CreatureHabitatCard,
+);
 
 //------------------------------------------------------------------------------
 // Creature Tag Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function CreatureTagPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedCreatureTag(props.entry.resource.id);
-  return resource ? <CreatureTagCard {...props} localizedResource={resource} /> : null;
-}
+export const CreatureTagPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  creatureTagStore,
+  CreatureTagCard,
+);
 
 //------------------------------------------------------------------------------
 // Eldritch Invocation Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function EldritchInvocationPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedEldritchInvocation(props.entry.resource.id);
-  return resource ? <EldritchInvocationCard {...props} localizedResource={resource} /> : null;
-}
+export const EldritchInvocationPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  eldritchInvocationStore,
+  EldritchInvocationCard,
+);
 
 //------------------------------------------------------------------------------
 // Feat Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function FeatPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedFeat(props.entry.resource.id);
-  return resource ? <FeatCard {...props} localizedResource={resource} /> : null;
-}
+export const FeatPrintDeckEntryCard = createResourcePrintDeckEntryCard(featStore, FeatCard);
 
 //------------------------------------------------------------------------------
 // Feature Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function FeaturePrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedFeature(props.entry.resource.id);
-  return resource ? <FeatureCard {...props} localizedResource={resource} /> : null;
-}
+export const FeaturePrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  featureStore,
+  FeatureCard,
+);
 
 //------------------------------------------------------------------------------
 // Item Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function ItemPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedItem(props.entry.resource.id);
-  return resource ? <ItemCard {...props} localizedResource={resource} /> : null;
-}
+export const ItemPrintDeckEntryCard = createResourcePrintDeckEntryCard(itemStore, ItemCard);
 
 //------------------------------------------------------------------------------
 // Item Modifier Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function ItemModifierPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedItemModifier(props.entry.resource.id);
-  return resource ? <ItemModifierCard {...props} localizedResource={resource} /> : null;
-}
+export const ItemModifierPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  itemModifierStore,
+  ItemModifierCard,
+);
 
 //------------------------------------------------------------------------------
 // Language Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function LanguagePrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedLanguage(props.entry.resource.id);
-  return resource ? <LanguageCard {...props} localizedResource={resource} /> : null;
-}
+export const LanguagePrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  languageStore,
+  LanguageCard,
+);
 
 //------------------------------------------------------------------------------
 // Maneuver Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function ManeuverPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedManeuver(props.entry.resource.id);
-  return resource ? <ManeuverCard {...props} localizedResource={resource} /> : null;
-}
+export const ManeuverPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  maneuverStore,
+  ManeuverCard,
+);
 
 //------------------------------------------------------------------------------
 // Metamagic Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function MetamagicPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedMetamagic(props.entry.resource.id);
-  return resource ? <MetamagicCard {...props} localizedResource={resource} /> : null;
-}
+export const MetamagicPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  metamagicStore,
+  MetamagicCard,
+);
 
 //------------------------------------------------------------------------------
 // Plane Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function PlanePrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedPlane(props.entry.resource.id);
-  return resource ? <PlaneCard {...props} localizedResource={resource} /> : null;
-}
+export const PlanePrintDeckEntryCard = createResourcePrintDeckEntryCard(planeStore, PlaneCard);
 
 //------------------------------------------------------------------------------
 // Service Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function ServicePrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedService(props.entry.resource.id);
-  return resource ? <ServiceCard {...props} localizedResource={resource} /> : null;
-}
+export const ServicePrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  serviceStore,
+  ServiceCard,
+);
 
 //------------------------------------------------------------------------------
 // Species Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function SpeciesPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedSpecies(props.entry.resource.id);
-  return resource ? <SpeciesCard {...props} localizedResource={resource} /> : null;
-}
+export const SpeciesPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  speciesStore,
+  SpeciesCard,
+);
 
 //------------------------------------------------------------------------------
 // Spell Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function SpellPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedSpell(props.entry.resource.id);
-  return resource ? <SpellCard {...props} localizedResource={resource} /> : null;
-}
+export const SpellPrintDeckEntryCard = createResourcePrintDeckEntryCard(spellStore, SpellCard);
 
 //------------------------------------------------------------------------------
 // Tool Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function ToolPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedTool(props.entry.resource.id);
-  return resource ? <ToolCard {...props} localizedResource={resource} /> : null;
-}
+export const ToolPrintDeckEntryCard = createResourcePrintDeckEntryCard(toolStore, ToolCard);
 
 //------------------------------------------------------------------------------
 // Tool Modifier Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function ToolModifierPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedToolModifier(props.entry.resource.id);
-  return resource ? <ToolModifierCard {...props} localizedResource={resource} /> : null;
-}
+export const ToolModifierPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  toolModifierStore,
+  ToolModifierCard,
+);
 
 //------------------------------------------------------------------------------
 // Vehicle Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function VehiclePrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedVehicle(props.entry.resource.id);
-  return resource ? <VehicleCard {...props} localizedResource={resource} /> : null;
-}
+export const VehiclePrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  vehicleStore,
+  VehicleCard,
+);
 
 //------------------------------------------------------------------------------
 // Weapon Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function WeaponPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedWeapon(props.entry.resource.id);
-  return resource ? <WeaponCard {...props} localizedResource={resource} /> : null;
-}
+export const WeaponPrintDeckEntryCard = createResourcePrintDeckEntryCard(weaponStore, WeaponCard);
 
 //------------------------------------------------------------------------------
 // Weapon Modifier Print Deck Entry Card
 //------------------------------------------------------------------------------
 
-export function WeaponModifierPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
-  const resource = useLocalizedWeaponModifier(props.entry.resource.id);
-  return resource ? <WeaponModifierCard {...props} localizedResource={resource} /> : null;
-}
+export const WeaponModifierPrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  weaponModifierStore,
+  WeaponModifierCard,
+);
