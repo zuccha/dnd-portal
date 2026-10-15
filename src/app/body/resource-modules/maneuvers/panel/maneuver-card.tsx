@@ -21,8 +21,8 @@ export function ManeuverCard({
   return (
     <ResourcePokerCard
       beforeDetails={
-        localizedResource.info && (
-          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
+        localizedResource.prerequisite.value && (
+          <PokerCard.LabeledValues fields={[localizedResource.prerequisite]} palette={palette} />
         )
       }
       localizedResource={localizedResource}

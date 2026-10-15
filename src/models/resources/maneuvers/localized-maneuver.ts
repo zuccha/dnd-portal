@@ -2,8 +2,8 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import {
   type ResourceLocalizationContext,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -17,8 +17,7 @@ export const localizedManeuverSchema = localizedResourceSchema(
   maneuverSchema,
   z.literal("maneuver"),
 ).extend({
-  info: z.string(),
-  prerequisite: z.string(),
+  prerequisite: localizedFieldSchema,
 });
 
 export type LocalizedManeuver = z.infer<typeof localizedManeuverSchema>;
@@ -51,12 +50,13 @@ export function localizeManeuver(
 
   return {
     ...localizeResource(maneuver, context),
-    descriptor: context.t("subtitle"),
+    descriptor: context.t("descriptor"),
     details: translate(maneuver.description, context.lang),
-    info: formatInfo([
-      [context.tp("prerequisites", prerequisite?.includes(",") ? 2 : 1), prerequisite ?? ""],
-    ]),
-    prerequisite: prerequisite || "",
+
+    prerequisite: {
+      label: context.tp("prerequisites", prerequisite?.includes(",") ? 2 : 1),
+      value: prerequisite ?? "",
+    },
   };
 }
 
@@ -65,6 +65,10 @@ export function localizeManeuver(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "descriptor": {
+    en: "Maneuver",
+    it: "Manovra",
+  },
   "prerequisites/*": {
     en: "Prerequisites",
     it: "Prerequisiti",
@@ -72,9 +76,5 @@ const i18nContext = {
   "prerequisites/1": {
     en: "Prerequisite",
     it: "Prerequisito",
-  },
-  "subtitle": {
-    en: "Maneuver",
-    it: "Manovra",
   },
 };
