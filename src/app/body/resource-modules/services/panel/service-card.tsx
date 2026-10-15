@@ -24,8 +24,8 @@ export function ServiceCard({
   return (
     <ResourcePokerCard
       beforeDetails={
-        localizedResource.info && (
-          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
+        localizedResource.availability.value && (
+          <PokerCard.LabeledValues fields={[localizedResource.availability]} palette={palette} />
         )
       }
       firstPageInfo={

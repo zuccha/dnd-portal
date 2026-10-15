@@ -3,12 +3,11 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useTranslateServiceCategory } from "~/models/types/service-category";
-import { useTranslateServiceCostPeriod } from "~/models/types/service-cost-period";
 import { useI18nSystem } from "../../../i18n/i18n-system";
 import {
   type ResourceLocalizationContext,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -22,12 +21,10 @@ export const localizedServiceSchema = localizedResourceSchema(
   serviceSchema,
   z.literal("service"),
 ).extend({
-  availability: z.string(),
-  category: z.string(),
+  availability: localizedFieldSchema,
+  category: localizedFieldSchema,
   cost: z.string(),
-  cost_period: z.string(),
-  info: z.string(),
-  price: z.string(),
+  price: localizedFieldSchema,
 });
 
 export type LocalizedService = z.infer<typeof localizedServiceSchema>;
@@ -40,7 +37,6 @@ type ServiceLocalizationContext = ResourceLocalizationContext & {
   formatCost: ReturnType<typeof useFormatCp>;
   system: ReturnType<typeof useI18nSystem>[0];
   translateCategory: (value: Service["category"]) => string;
-  translateCostPeriod: (value: Service["cost_period"]) => string;
 };
 
 //------------------------------------------------------------------------------
@@ -52,11 +48,10 @@ export function useServiceLocalizationContext(_service: Service): ServiceLocaliz
   const [system] = useI18nSystem();
   const formatCost = useFormatCp();
   const translateCategory = useTranslateServiceCategory(context.lang);
-  const translateCostPeriod = useTranslateServiceCostPeriod(context.lang);
 
   return useMemo(
-    () => ({ ...context, formatCost, system, translateCategory, translateCostPeriod }),
-    [context, formatCost, system, translateCategory, translateCostPeriod],
+    () => ({ ...context, formatCost, system, translateCategory }),
+    [context, formatCost, system, translateCategory],
   );
 }
 
@@ -71,7 +66,6 @@ export function localizeService(
   const availability = translate(service.availability, context.lang);
   const category = context.translateCategory(service.category);
   const cost = context.formatCost(service.cost);
-  const costPeriod = context.translateCostPeriod(service.cost_period);
   const price =
     service.cost_period === "once"
       ? cost
@@ -85,12 +79,10 @@ export function localizeService(
     ...localizeResource(service, context),
     descriptor: category,
     details: translate(service.description, context.lang),
-    availability,
-    category,
+    availability: { label: context.t("availability"), value: availability },
+    category: { label: context.t("category"), value: category },
     cost,
-    cost_period: costPeriod,
-    info: formatInfo([[context.t("availability"), availability]]),
-    price,
+    price: { label: context.t("price"), value: price },
   };
 }
 
@@ -99,6 +91,10 @@ export function localizeService(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "category": {
+    en: "Category",
+    it: "Categoria",
+  },
   "availability": {
     en: "Availability",
     it: "Disponibilità",
