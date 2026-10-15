@@ -1,5 +1,6 @@
 import type { CreatureFamily } from "~/models/resources/creature-families/creature-family";
 import type { LocalizedCreatureFamily } from "~/models/resources/creature-families/localized-creature-family";
+import PokerCard from "~/ui/poker-card";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -11,8 +12,28 @@ export type CreatureFamilyCardProps = Omit<
   "afterDetails" | "beforeDetails" | "firstPageInfo"
 >;
 
-export function CreatureFamilyCard(props: CreatureFamilyCardProps) {
-  return <ResourcePokerCard {...props} />;
+export function CreatureFamilyCard({
+  localizedResource,
+  palette,
+  ...props
+}: CreatureFamilyCardProps) {
+  return (
+    <ResourcePokerCard
+      beforeDetails={
+        <PokerCard.LabeledValues
+          fields={[
+            localizedResource.habitats,
+            localizedResource.treasures,
+            localizedResource.creatures,
+          ]}
+          palette={palette}
+        />
+      }
+      localizedResource={localizedResource}
+      palette={palette}
+      {...props}
+    />
+  );
 }
 
 CreatureFamilyCard.Placeholder = ResourcePokerCard.Placeholder;

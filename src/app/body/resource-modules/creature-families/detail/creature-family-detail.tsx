@@ -1,11 +1,5 @@
 import { GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
-import { useMemo } from "react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
-import { creatureHabitatStore } from "~/models/resources/creature-habitats/creature-habitat-store";
-import { creatureTreasureStore } from "~/models/resources/creature-treasures/creature-treasure-store";
-import { creatureStore } from "~/models/resources/creatures/creature-store";
-import { planeStore } from "~/models/resources/planes/plane-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
 import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
@@ -17,15 +11,6 @@ import ResourceDetailLinks from "../../resource-detail-links";
 //------------------------------------------------------------------------------
 
 type CreatureFamilyDetailResource = ReturnType<typeof creatureFamilyStore.useLocalizedResource>;
-const useCreatureResourceIds = creatureStore.useResourceIds;
-const useCreatureResources = creatureStore.useResources;
-const useLocalizedCreatureNames = creatureStore.useLocalizedResourceNames;
-const useLocalizedPlaneNames = planeStore.useLocalizedResourceNames;
-const useFamilyHabitatEntries = creatureFamilyStore.useRelatedEntries;
-const useFamilyTreasureEntries = creatureFamilyStore.useRelatedEntries;
-const useLocalizedHabitatNames = creatureHabitatStore.useLocalizedResourceNames;
-const useLocalizedTreasureNames = creatureTreasureStore.useLocalizedResourceNames;
-const noPlaneIds: string[] = [];
 
 //------------------------------------------------------------------------------
 // Creature Family Detail
@@ -38,72 +23,32 @@ export default function CreatureFamilyDetail({
   actions?: ResourceDetailAction[];
   resource: CreatureFamilyDetailResource;
 }) {
-  const { lang, t } = useI18nLangContext(i18nContext);
   const family = resource;
-  const habitatEntries = useFamilyHabitatEntries(family?._raw.id ?? "", "habitats");
-  const habitatNames = useLocalizedHabitatNames(habitatEntries.map(({ id }) => id));
-  const habitats = habitatEntries
-    .flatMap((entry, index) => {
-      const name = habitatNames[index];
-      return name ? [{ ...entry, name }] : [];
-    })
-    .sort((a, b) => a.name.localeCompare(b.name, lang));
-  const treasureEntries = useFamilyTreasureEntries(family?._raw.id ?? "", "treasures");
-  const treasureNames = useLocalizedTreasureNames(treasureEntries.map(({ id }) => id));
-  const treasures = treasureEntries
-    .flatMap((entry, index) => {
-      const name = treasureNames[index];
-      return name ? [{ ...entry, name }] : [];
-    })
-    .sort((a, b) => a.name.localeCompare(b.name, lang));
-  const creatureIds = useCreatureResourceIds(family?._raw.source_id ?? "");
-  const creatures = useCreatureResources(creatureIds);
-  const familyCreatureIds = useMemo(
-    () => creatures.filter(({ family_id }) => family_id === family?._raw.id).map(({ id }) => id),
-    [creatures, family?._raw.id],
-  );
-  const creatureNames = useLocalizedCreatureNames(familyCreatureIds);
-  const planeIds = family?._raw.plane_ids ?? noPlaneIds;
-  const planeNames = useLocalizedPlaneNames(planeIds);
-  const planes = planeIds.flatMap((id, index) => {
-    const name = planeNames[index];
-    return name ? [{ id, kind: "plane" as const, name }] : [];
-  });
-  const sortedCreatures = useMemo(
-    () =>
-      familyCreatureIds
-        .flatMap((id, index) => {
-          const name = creatureNames[index];
-          return name ? [{ id, name }] : [];
-        })
-        .sort((a, b) => a.name.localeCompare(b.name)),
-    [creatureNames, familyCreatureIds],
-  );
 
   return (
     <ResourceDetail actions={actions} resource={family}>
       {family && (
         <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={3}>
-          {habitats.length > 0 && (
-            <ResourceDetailField label={t("habitats")}>
-              <ResourceDetailLinks resources={habitats} />
+          {family.habitats.resources.length > 0 && (
+            <ResourceDetailField label={family.habitats.label}>
+              <ResourceDetailLinks resources={family.habitats.resources} />
             </ResourceDetailField>
           )}
-          {planes.length > 0 && (
-            <ResourceDetailField label={t("planes")}>
-              <ResourceDetailLinks resources={planes} />
+          {family.planes.resources.length > 0 && (
+            <ResourceDetailField label={family.planes.label}>
+              <ResourceDetailLinks resources={family.planes.resources} />
             </ResourceDetailField>
           )}
-          {treasures.length > 0 && (
-            <ResourceDetailField label={t("treasures")}>
-              <ResourceDetailLinks resources={treasures} />
+          {family.treasures.resources.length > 0 && (
+            <ResourceDetailField label={family.treasures.label}>
+              <ResourceDetailLinks resources={family.treasures.resources} />
             </ResourceDetailField>
           )}
-          {sortedCreatures.length > 0 && (
+          {family.creatures.resources.length > 0 && (
             <GridItem colSpan={{ base: 1, sm: 2 }}>
-              <ResourceDetailField label={t("creatures")}>
+              <ResourceDetailField label={family.creatures.label}>
                 <VStack align="flex-start" gap={1}>
-                  {sortedCreatures.map(({ id, name }) => (
+                  {family.creatures.resources.map(({ id, name }) => (
                     <RouterLink key={id} to={resourceDetailRoute("creature", id)}>
                       {name}
                     </RouterLink>
@@ -117,14 +62,3 @@ export default function CreatureFamilyDetail({
     </ResourceDetail>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  creatures: { en: "Creatures", it: "Creature" },
-  habitats: { en: "Habitats", it: "Habitat" },
-  planes: { en: "Planes", it: "Piani" },
-  treasures: { en: "Treasures", it: "Tesori" },
-};
