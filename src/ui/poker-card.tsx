@@ -1,4 +1,4 @@
-import { Box, HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
+import { Box, HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 import RichText from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
@@ -373,10 +373,12 @@ function LabeledValues({ compact, fields, palette }: LabeledValuesProps) {
       w="full"
     >
       {visibleFields.map(({ label, value }, index) => (
-        <HStack gap={1} key={`${label}-${index}`}>
-          <Span fontWeight="bold">{label}</Span>
-          <Span>{value}</Span>
-        </HStack>
+        <Text key={`${label}-${index}`} m={0}>
+          <Span fontWeight="bold" mr={1.5}>
+            {label}
+          </Span>
+          {value}
+        </Text>
       ))}
     </VStack>
   );
