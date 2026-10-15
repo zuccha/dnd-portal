@@ -19,13 +19,13 @@ import EldritchInvocationsFilters from "./panel/eldritch-invocations-filters";
 
 const columns = createResourcesTableColumns<EldritchInvocation, LocalizedEldritchInvocation>([
   {
-    key: "min_warlock_level",
+    key: "minWarlockLevel",
     label: { en: "Min. Level", it: "Livello Min." },
     textAlign: "right",
     w: "1%",
   },
   {
-    key: "other_prerequisite",
+    key: "otherPrerequisite",
     label: { en: "Other Prerequisite", it: "Altro Prerequisito" },
   },
 ]);

@@ -1,5 +1,4 @@
 import { Flex } from "@chakra-ui/react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { EldritchInvocation } from "~/models/resources/eldritch-invocations/eldritch-invocation";
 import type { LocalizedEldritchInvocation } from "~/models/resources/eldritch-invocations/localized-eldritch-invocation";
 import PokerCard from "~/ui/poker-card";
@@ -20,19 +19,20 @@ export function EldritchInvocationCard({
   palette,
   ...rest
 }: EldritchInvocationCardProps) {
-  const { ti } = useI18nLangContext(i18nContext);
-
   return (
     <ResourcePokerCard
       beforeDetails={
-        localizedResource.info && (
-          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
+        localizedResource.otherPrerequisite.value && (
+          <PokerCard.LabeledValues
+            fields={[localizedResource.otherPrerequisite]}
+            palette={palette}
+          />
         )
       }
       firstPageInfo={
-        localizedResource.min_warlock_level && (
+        localizedResource.minWarlockLevel.valueWithLabel && (
           <Flex justify="center" w="full">
-            {ti("min_warlock_level", localizedResource.min_warlock_level)}
+            {localizedResource.minWarlockLevel.valueWithLabel}
           </Flex>
         )
       }
@@ -47,14 +47,3 @@ export function EldritchInvocationCard({
 EldritchInvocationCard.Placeholder = ResourcePokerCard.Placeholder;
 EldritchInvocationCard.h = ResourcePokerCard.h;
 EldritchInvocationCard.w = ResourcePokerCard.w;
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  min_warlock_level: {
-    en: "Level <1> Warlock",
-    it: "Warlock di <1>° Livello",
-  },
-};

@@ -2,8 +2,8 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import {
   type ResourceLocalizationContext,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -17,9 +17,8 @@ export const localizedEldritchInvocationSchema = localizedResourceSchema(
   eldritchInvocationSchema,
   z.literal("eldritch_invocation"),
 ).extend({
-  info: z.string(),
-  min_warlock_level: z.string(),
-  other_prerequisite: z.string(),
+  minWarlockLevel: localizedFieldSchema.extend({ valueWithLabel: z.string() }),
+  otherPrerequisite: localizedFieldSchema,
 });
 
 export type LocalizedEldritchInvocation = z.infer<typeof localizedEldritchInvocationSchema>;
@@ -55,13 +54,20 @@ export function localizeEldritchInvocation(
 
   return {
     ...localizeResource(eldritchInvocation, context),
-    descriptor: context.t("subtitle"),
+    descriptor: context.t("descriptor"),
     details: translate(eldritchInvocation.description, context.lang),
-    info: formatInfo([
-      [context.tp("requisites", otherPrerequisite?.includes(",") ? 2 : 1), otherPrerequisite ?? ""],
-    ]),
-    min_warlock_level: minWarlockLevel ? `${minWarlockLevel}` : "",
-    other_prerequisite: otherPrerequisite || "",
+
+    minWarlockLevel: {
+      label: context.t("minimum_warlock_level"),
+      value: minWarlockLevel ? `${minWarlockLevel}` : "",
+      valueWithLabel: minWarlockLevel
+        ? context.ti("warlock_level_with_value", `${minWarlockLevel}`)
+        : "",
+    },
+    otherPrerequisite: {
+      label: context.tp("requisites", otherPrerequisite?.includes(",") ? 2 : 1),
+      value: otherPrerequisite ?? "",
+    },
   };
 }
 
@@ -70,6 +76,18 @@ export function localizeEldritchInvocation(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "descriptor": {
+    en: "Warlock's Eldritch Invocation",
+    it: "Supplica Occulta del Warlock",
+  },
+  "minimum_warlock_level": {
+    en: "Minimum Warlock Level",
+    it: "Livello minimo da Warlock",
+  },
+  "prerequisite": {
+    en: "Prerequisite",
+    it: "Prerequisito",
+  },
   "requisites/*": {
     en: "Requisites",
     it: "Requisiti",
@@ -78,8 +96,8 @@ const i18nContext = {
     en: "Requisite",
     it: "Requisito",
   },
-  "subtitle": {
-    en: "Warlock's Eldritch Invocation",
-    it: "Supplica Occulta del Warlock",
+  "warlock_level_with_value": {
+    en: "Level <1> Warlock",
+    it: "Warlock di <1>° Livello",
   },
 };
