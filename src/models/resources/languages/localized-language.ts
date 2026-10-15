@@ -4,8 +4,8 @@ import { translate } from "~/i18n/i18n-string";
 import { useTranslateLanguageRarity } from "../../types/language-rarity";
 import {
   type ResourceLocalizationContext,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -19,9 +19,8 @@ export const localizedLanguageSchema = localizedResourceSchema(
   languageSchema,
   z.literal("language"),
 ).extend({
-  info: z.string(),
-  origin: z.string(),
-  rarity: z.string(),
+  origin: localizedFieldSchema,
+  rarity: localizedFieldSchema,
 });
 
 export type LocalizedLanguage = z.infer<typeof localizedLanguageSchema>;
@@ -62,9 +61,8 @@ export function localizeLanguage(
   return {
     ...localizeResource(language, context),
     descriptor: context.ti("subtitle", rarity),
-    info: formatInfo([[context.t("origin"), origin]]),
-    origin,
-    rarity,
+    origin: { label: context.t("origin"), value: origin },
+    rarity: { label: context.t("rarity"), value: rarity },
   };
 }
 
@@ -76,6 +74,10 @@ const i18nContext = {
   origin: {
     en: "Origin",
     it: "Origine",
+  },
+  rarity: {
+    en: "Rarity",
+    it: "Rarità",
   },
   subtitle: {
     en: "<1> Language", // 1 = rarity
