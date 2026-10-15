@@ -1,5 +1,4 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { speciesStore } from "~/models/resources/species/species-store";
 import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
@@ -17,27 +16,17 @@ export default function SpeciesDetail({
   actions?: ResourceDetailAction[];
   resource: SpeciesDetailResource;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
   const species = resource;
 
   return (
     <ResourceDetail actions={actions} resource={species}>
       {species && (
         <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-          <ResourceDetailField label={t("speed")}>{species.speed}</ResourceDetailField>
+          <ResourceDetailField label={species.speed.label}>
+            {species.speed.value}
+          </ResourceDetailField>
         </SimpleGrid>
       )}
     </ResourceDetail>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  speed: {
-    en: "Speed",
-    it: "Velocità",
-  },
-};

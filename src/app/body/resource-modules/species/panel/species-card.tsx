@@ -21,9 +21,7 @@ export function SpeciesCard({
   return (
     <ResourcePokerCard
       beforeDetails={
-        localizedResource.info && (
-          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
-        )
+        <PokerCard.LabeledValues fields={[localizedResource.speed]} palette={palette} />
       }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}

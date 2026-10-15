@@ -9,8 +9,8 @@ import { useTranslateCreatureType } from "../../types/creature-type";
 import {
   type ResourceLocalizationContext,
   formatDetails,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -25,11 +25,9 @@ export const localizedSpeciesSchema = localizedResourceSchema(
   speciesSchema,
   z.literal("species"),
 ).extend({
-  details: z.string(),
-  info: z.string(),
-  sizes: z.string(),
-  speed: z.string(),
-  type: z.string(),
+  sizes: localizedFieldSchema,
+  speed: localizedFieldSchema,
+  type: localizedFieldSchema,
 });
 
 export type LocalizedSpecies = z.infer<typeof localizedSpeciesSchema>;
@@ -91,12 +89,11 @@ export function localizeSpecies(
   return {
     ...localizeResource(species, context),
     descriptor: context.ti("descriptor", sizes, type),
-
     details: formatDetails(description, features),
-    info: formatInfo([[context.t("speed"), speed]]),
-    sizes,
-    speed,
-    type,
+
+    sizes: { label: context.t("sizes"), value: sizes },
+    speed: { label: context.t("speed"), value: speed },
+    type: { label: context.t("type"), value: type },
   };
 }
 
