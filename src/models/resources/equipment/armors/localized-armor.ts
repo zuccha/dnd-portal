@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import z from "zod";
 import { formatSigned } from "~/utils/number";
 import { useTranslateArmorType } from "../../../types/armor-type";
-import { formatInfo } from "../../localized-resource";
+import { localizedFieldSchema } from "../../localized-resource";
 import {
   type EquipmentLocalizationContext,
   localizeEquipment,
@@ -19,12 +19,10 @@ export const localizedArmorSchema = localizedEquipmentSchema(
   armorSchema,
   z.literal("armor"),
 ).extend({
-  armor_class: z.string(),
+  armorClass: localizedFieldSchema,
   cost: z.string(),
-  disadvantage_on_stealth: z.boolean(),
-  info: z.string(),
-  requirements: z.string(),
-  stealth: z.string(),
+  requirements: localizedFieldSchema,
+  stealth: localizedFieldSchema,
   type: z.string(),
   weight: z.string(),
 });
@@ -98,22 +96,24 @@ export function localizeArmor(armor: Armor, context: ArmorLocalizationContext): 
   ].filter((requirement) => requirement);
   const requirements = requirementsList.join(", ");
 
-  const info = formatInfo([
-    [tp("requirements", requirementsList.length), requirements],
-    [t("stealth"), armor.disadvantage_on_stealth ? t("stealth.disadvantage") : ""],
-  ]);
-
   const type = context.translateArmorType(armor.type);
   const equipment = localizeEquipment(armor, context);
 
   return {
     ...equipment,
     descriptor: armor.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
-    armor_class: armorClass,
-    disadvantage_on_stealth: armor.disadvantage_on_stealth,
-    info,
-    requirements,
-    stealth: armor.disadvantage_on_stealth ? t("stealth.disadvantage") : t("stealth.normal"),
+    armorClass: {
+      label: t("armor_class"),
+      value: armorClass,
+    },
+    requirements: {
+      label: tp("requirements", requirementsList.length),
+      value: requirements,
+    },
+    stealth: {
+      label: t("stealth"),
+      value: armor.disadvantage_on_stealth ? t("stealth.disadvantage") : "",
+    },
     type,
   };
 }
@@ -123,6 +123,10 @@ export function localizeArmor(armor: Armor, context: ArmorLocalizationContext): 
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "armor_class": {
+    en: "Armor Class",
+    it: "Classe Armatura",
+  },
   "armor_class_ability_modifier[cha].max": {
     en: "Cha. mod. (max. <1>)",
     it: "mod. Car. (max. <1>)",
@@ -214,10 +218,6 @@ const i18nContext = {
   "stealth.disadvantage": {
     en: "Disadvantage",
     it: "Svantaggio",
-  },
-  "stealth.normal": {
-    en: "-",
-    it: "-",
   },
   "subtitle.magic": {
     en: "<1>, Magic, <2>", // 1 = type, 2 = rarity

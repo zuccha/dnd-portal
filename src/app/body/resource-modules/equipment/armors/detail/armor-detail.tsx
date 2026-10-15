@@ -1,4 +1,3 @@
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
 import ResourceDetailField from "../../../resource-detail-field";
 import EquipmentDetail from "../../equipment-detail";
@@ -17,34 +16,27 @@ export default function ArmorDetail({
   actions?: ResourceDetailAction[];
   resource: ArmorDetailResource;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
   const armor = resource;
 
   return (
     <EquipmentDetail actions={actions} resource={armor}>
       {armor && (
         <>
-          <ResourceDetailField label={t("armor_class")}>{armor.armor_class}</ResourceDetailField>
-          {armor.requirements && (
-            <ResourceDetailField label={t("requirements")}>
-              {armor.requirements}
+          <ResourceDetailField label={armor.armorClass.label}>
+            {armor.armorClass.value}
+          </ResourceDetailField>
+          {armor.requirements.value && (
+            <ResourceDetailField label={armor.requirements.label}>
+              {armor.requirements.value}
             </ResourceDetailField>
           )}
-          {armor.disadvantage_on_stealth && (
-            <ResourceDetailField label={t("stealth")}>{armor.stealth}</ResourceDetailField>
+          {armor.stealth.value && (
+            <ResourceDetailField label={armor.stealth.label}>
+              {armor.stealth.value}
+            </ResourceDetailField>
           )}
         </>
       )}
     </EquipmentDetail>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  armor_class: { en: "Armor Class", it: "Classe Armatura" },
-  requirements: { en: "Requirements", it: "Requisiti" },
-  stealth: { en: "Stealth", it: "Furtività" },
-};

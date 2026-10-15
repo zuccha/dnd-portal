@@ -25,7 +25,7 @@ const columns = createEquipmentTableColumns<Armor, LocalizedArmor>([
     label: { en: "Type", it: "Tipo" },
   },
   {
-    key: "armor_class",
+    key: "armorClass",
     label: { en: "Armor Class", it: "Classe Armatura" },
   },
   {

@@ -1,13 +1,8 @@
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Armor } from "~/models/resources/equipment/armors/armor";
 import type { LocalizedArmor } from "~/models/resources/equipment/armors/localized-armor";
 import PokerCard from "~/ui/poker-card";
 import { EquipmentCard } from "../../panel/equipment-card";
 import type { ResourcePokerCardProps } from "../../../resource-poker-card";
-
-//------------------------------------------------------------------------------
-// Armor Card
-//------------------------------------------------------------------------------
 
 export type ArmorCardProps = Omit<
   ResourcePokerCardProps<Armor, LocalizedArmor>,
@@ -20,20 +15,21 @@ export function ArmorCard({
   palette,
   ...rest
 }: ArmorCardProps) {
-  const { t } = useI18nLangContext(i18nContext);
-
   return (
     <EquipmentCard
       beforeDetails={
-        localizedResource.info && (
-          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
+        (localizedResource.requirements.value || localizedResource.stealth.value) && (
+          <PokerCard.LabeledValues
+            fields={[localizedResource.requirements, localizedResource.stealth]}
+            palette={palette}
+          />
         )
       }
       firstPageInfoRight={
         <PokerCard.Arrow
-          label={t("armor_class")}
+          label={localizedResource.armorClass.label}
           palette={palette}
-          value={localizedResource.armor_class}
+          value={localizedResource.armorClass.value}
         />
       }
       localizedResource={localizedResource}
@@ -47,14 +43,3 @@ export function ArmorCard({
 ArmorCard.Placeholder = EquipmentCard.Placeholder;
 ArmorCard.h = EquipmentCard.h;
 ArmorCard.w = EquipmentCard.w;
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  armor_class: {
-    en: "Armor Class",
-    it: "Classe Armatura",
-  },
-};
