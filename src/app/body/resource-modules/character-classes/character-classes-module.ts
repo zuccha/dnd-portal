@@ -19,27 +19,27 @@ import CharacterClassesFilters from "./panel/character-classes-filters";
 
 const columns = createResourcesTableColumns<CharacterClass, LocalizedCharacterClass>([
   {
-    key: "primary_abilities",
+    key: "primaryAbilities",
     label: { en: "Abilities", it: "Caratteristiche" },
   },
   {
-    key: "saving_throw_proficiencies",
+    key: "savingThrowProficiencies",
     label: { en: "Saving Throws", it: "Tiri Salvezza" },
   },
   {
-    key: "armor_proficiencies",
+    key: "armorProficiencies",
     label: { en: "Armors", it: "Armature" },
   },
   {
-    key: "weapon_proficiencies",
+    key: "weaponProficiencies",
     label: { en: "Weapons", it: "Armi" },
   },
   {
-    key: "tool_proficiencies",
+    key: "toolProficiencies",
     label: { en: "Tools", it: "Strumenti" },
   },
   {
-    key: "hp_die",
+    key: "hitDie",
     label: { en: "HP Die", it: "Dado Vita" },
     textAlign: "right",
     w: "1%",

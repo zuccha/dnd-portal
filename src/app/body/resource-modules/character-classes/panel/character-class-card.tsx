@@ -27,12 +27,13 @@ export function CharacterClassCard({
   palette,
   ...rest
 }: CharacterClassCardProps) {
-  const { t, tp } = useI18nLangContext(i18nContext);
-  const primaryAbilitiesCount = localizedResource._raw.primary_abilities.length;
+  const { t } = useI18nLangContext(i18nContext);
 
   return (
     <ResourcePokerCard
-      beforeDetails={<PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>}
+      beforeDetails={
+        <PokerCard.LabeledValues fields={localizedResource.proficiencies} palette={palette} />
+      }
       firstPageInfo={
         <HStack justify="space-between" px={PokerCard.rem0750} w="full">
           <HStack gap={PokerCard.rem0250}>
@@ -51,9 +52,9 @@ export function CharacterClassCard({
 
           <VStack align="flex-end" fontSize={PokerCard.rem0875} gap={0}>
             <Span fontStyle="italic" fontWeight="bold">
-              {tp("abilities", primaryAbilitiesCount)}
+              {localizedResource.primaryAbilities.label}
             </Span>
-            <Span>{localizedResource.primary_abilities ?? t("abilities.none")}</Span>
+            <Span>{localizedResource.primaryAbilities.value}</Span>
           </VStack>
         </HStack>
       }
@@ -87,22 +88,6 @@ const dieIcons = {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "abilities.none": {
-    en: "None",
-    it: "Nessuna",
-  },
-  "abilities/*": {
-    en: "Primary Abilities",
-    it: "Caratteristiche Primarie",
-  },
-  "abilities/0": {
-    en: "Primary Ability",
-    it: "Caratteristica Primaria",
-  },
-  "abilities/1": {
-    en: "Primary Ability",
-    it: "Caratteristica Primaria",
-  },
   "hp_die.bottom": {
     en: "Die",
     it: "Vita",

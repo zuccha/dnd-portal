@@ -77,11 +77,11 @@ export default function CharacterClassDetail({
     .sort((a, b) => a.name.localeCompare(b.name));
   const fields = characterClass
     ? [
-        { label: t("hit_die"), value: characterClass.hp_die },
-        { label: t("primary_abilities"), value: characterClass.primary_abilities },
-        { label: t("saving_throws"), value: characterClass.saving_throw_proficiencies },
-        { label: t("armor_proficiencies"), value: characterClass.armor_proficiencies },
-        { label: t("weapon_proficiencies"), value: characterClass.weapon_proficiencies },
+        characterClass.hitDie,
+        characterClass.primaryAbilities,
+        characterClass.savingThrowProficiencies,
+        characterClass.armorProficiencies,
+        characterClass.weaponProficiencies,
       ].filter(({ value }) => Boolean(value))
     : [];
 
@@ -114,7 +114,7 @@ export default function CharacterClassDetail({
             </ResourceDetailField>
           ))}
           {localizedTools.length > 0 && (
-            <ResourceDetailField label={t("tool_proficiencies")}>
+            <ResourceDetailField label={characterClass.toolProficiencies.label}>
               <ResourceDetailLinks resources={localizedTools} />
             </ResourceDetailField>
           )}
@@ -142,31 +142,7 @@ export default function CharacterClassDetail({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  "armor_proficiencies": {
-    en: "Armor Proficiencies",
-    it: "Competenze nelle Armature",
-  },
-  "hit_die": {
-    en: "Hit Die",
-    it: "Dado Vita",
-  },
-  "primary_abilities": {
-    en: "Primary Abilities",
-    it: "Caratteristiche Primarie",
-  },
-  "saving_throws": {
-    en: "Saving Throws",
-    it: "Tiri Salvezza",
-  },
   "cantrips": { en: "Cantrips", it: "Trucchetti" },
   "spell_level/*": { en: "Level <1>", it: "Livello <1>" },
   "subclasses": { en: "Subclasses", it: "Sottoclassi" },
-  "tool_proficiencies": {
-    en: "Tool Proficiencies",
-    it: "Competenze negli Strumenti",
-  },
-  "weapon_proficiencies": {
-    en: "Weapon Proficiencies",
-    it: "Competenze nelle Armi",
-  },
 };

@@ -16,8 +16,8 @@ import { toolStore } from "../equipment/tools/tool-store";
 import {
   type ResourceLocalizationContext,
   formatDetails,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -36,15 +36,13 @@ export const localizedCharacterClassSchema = localizedResourceSchema(
   z.literal("character_class"),
 ).extend({
   abbreviation: z.string(),
-  armor_proficiencies: z.string(),
-  hp_die: z.string(),
-  info: z.string(),
-  primary_abilities: z.string(),
-  saving_throw_proficiencies: z.string(),
-  skill_proficiencies_pool: z.string(),
-  starting_equipment: z.string(),
-  tool_proficiencies: z.string(),
-  weapon_proficiencies: z.string(),
+  armorProficiencies: localizedFieldSchema,
+  hitDie: localizedFieldSchema,
+  primaryAbilities: localizedFieldSchema,
+  proficiencies: z.array(localizedFieldSchema),
+  savingThrowProficiencies: localizedFieldSchema,
+  toolProficiencies: localizedFieldSchema,
+  weaponProficiencies: localizedFieldSchema,
 });
 
 export type LocalizedCharacterClass = z.infer<typeof localizedCharacterClassSchema>;
@@ -129,61 +127,62 @@ export function localizeCharacterClass(
 ): LocalizedCharacterClass {
   const equipmentOptionOr = context.t("equipment.option.or");
 
-  const primary_abilities = characterClass.primary_abilities
+  const primaryAbilities = characterClass.primary_abilities
     .map(context.translateCreatureAbility)
     .join(", ");
 
-  const saving_throw_proficiencies = characterClass.saving_throw_proficiencies
+  const savingThrowProficiencies = characterClass.saving_throw_proficiencies
     .map(context.translateCreatureAbility)
     .join(", ");
 
-  const armor_proficiencies = [
+  const armorProficiencies = [
     ...characterClass.armor_proficiencies.map(context.translateArmorType),
     translate(characterClass.armor_proficiencies_extra, context.lang),
   ]
     .filter((text) => text)
     .join(", ");
 
-  const weapon_proficiencies = [
+  const weaponProficiencies = [
     ...characterClass.weapon_proficiencies.map(context.translateWeaponType),
     translate(characterClass.weapon_proficiencies_extra, context.lang),
   ]
     .filter((text) => text)
     .join(", ");
 
-  const tool_proficiencies = characterClass.tool_proficiency_ids
+  const toolProficiencies = characterClass.tool_proficiency_ids
     .map((id) => context.localizedToolNames[id] ?? "")
-    .sort()
+    .sort((a, b) => a.localeCompare(b, context.lang))
     .join(", ");
 
-  const info = formatInfo([
-    [
-      context.tp("saving_throw_proficiencies", characterClass.saving_throw_proficiencies.length),
-      saving_throw_proficiencies,
-    ],
-    [
-      context.tp(
-        "weapon_proficiencies",
-        characterClass.weapon_proficiencies.length +
-          (characterClass.weapon_proficiencies_extra ? 1 : 0),
-      ),
-      weapon_proficiencies,
-    ],
-    [
-      context.tp(
-        "armor_proficiencies",
-        characterClass.armor_proficiencies.length +
-          (characterClass.armor_proficiencies_extra ? 1 : 0),
-      ),
-      armor_proficiencies,
-    ],
-    [
-      context.tp("tool_proficiencies", characterClass.tool_proficiency_ids.length),
-      tool_proficiencies,
-    ],
-  ]);
+  const savingThrowProficienciesField = {
+    label: context.tp(
+      "saving_throw_proficiencies",
+      characterClass.saving_throw_proficiencies.length,
+    ),
+    value: savingThrowProficiencies,
+  };
+  const weaponProficienciesField = {
+    label: context.tp(
+      "weapon_proficiencies",
+      characterClass.weapon_proficiencies.length +
+        (characterClass.weapon_proficiencies_extra ? 1 : 0),
+    ),
+    value: weaponProficiencies,
+  };
+  const armorProficienciesField = {
+    label: context.tp(
+      "armor_proficiencies",
+      characterClass.armor_proficiencies.length +
+        (characterClass.armor_proficiencies_extra ? 1 : 0),
+    ),
+    value: armorProficiencies,
+  };
+  const toolProficienciesField = {
+    label: context.tp("tool_proficiencies", characterClass.tool_proficiency_ids.length),
+    value: toolProficiencies,
+  };
 
-  const skill_proficiencies_pool = characterClass.skill_proficiencies_pool.length
+  const skillProficienciesPool = characterClass.skill_proficiencies_pool.length
     ? context.ti(
         "skill_proficiencies_pool",
         `${characterClass.skill_proficiencies_pool_quantity}`,
@@ -194,7 +193,7 @@ export function localizeCharacterClass(
       )
     : "";
 
-  const starting_equipment = characterClass.starting_equipment
+  const startingEquipment = characterClass.starting_equipment
     .map((group) => {
       const groupText = joinWith(
         group.map((option, index) => {
@@ -222,22 +221,31 @@ export function localizeCharacterClass(
 
   return {
     ...localizeResource(characterClass, context),
-    abbreviation: translate(characterClass.abbreviation, context.lang),
     descriptor: context.t("descriptor"),
     details: formatDetails(
-      skill_proficiencies_pool,
-      starting_equipment ? context.ti("starting_equipment", starting_equipment) : "",
+      skillProficienciesPool,
+      startingEquipment ? context.ti("starting_equipment", startingEquipment) : "",
       features,
     ),
-    armor_proficiencies,
-    hp_die: context.translateDieType(characterClass.hp_die),
-    info,
-    primary_abilities,
-    saving_throw_proficiencies,
-    skill_proficiencies_pool,
-    starting_equipment,
-    tool_proficiencies,
-    weapon_proficiencies,
+    abbreviation: translate(characterClass.abbreviation, context.lang),
+    armorProficiencies: armorProficienciesField,
+    hitDie: {
+      label: context.t("hit_die"),
+      value: context.translateDieType(characterClass.hp_die),
+    },
+    primaryAbilities: {
+      label: context.tp("primary_abilities", characterClass.primary_abilities.length),
+      value: primaryAbilities || context.t("abilities.none"),
+    },
+    proficiencies: [
+      savingThrowProficienciesField,
+      weaponProficienciesField,
+      armorProficienciesField,
+      toolProficienciesField,
+    ].filter(({ value }) => value),
+    savingThrowProficiencies: savingThrowProficienciesField,
+    toolProficiencies: toolProficienciesField,
+    weaponProficiencies: weaponProficienciesField,
   };
 }
 
@@ -254,6 +262,10 @@ const i18nContext = {
     en: "Armor",
     it: "Armatura",
   },
+  "abilities.none": {
+    en: "None",
+    it: "Nessuna",
+  },
   "descriptor": {
     en: "Character Class",
     it: "Classe Personaggio",
@@ -269,6 +281,18 @@ const i18nContext = {
   "equipment/1": {
     en: "<1>", // 1 = name
     it: "<1>", // 1 = name
+  },
+  "hit_die": {
+    en: "Hit Die",
+    it: "Dado Vita",
+  },
+  "primary_abilities/*": {
+    en: "Primary Abilities",
+    it: "Caratteristiche Primarie",
+  },
+  "primary_abilities/1": {
+    en: "Primary Ability",
+    it: "Caratteristica Primaria",
   },
   "saving_throw_proficiencies/*": {
     en: "Saving Throws",
