@@ -5,6 +5,7 @@ import { characterClassStore } from "../character-classes/character-class-store"
 import {
   type ResourceLocalizationContext,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -21,7 +22,7 @@ export const localizedCharacterSubclassSchema = localizedResourceSchema(
   characterSubclassSchema,
   z.literal("character_subclass"),
 ).extend({
-  character_class: z.string(),
+  characterClass: localizedFieldSchema.extend({ id: z.uuid() }),
 });
 
 export type LocalizedCharacterSubclass = z.infer<typeof localizedCharacterSubclassSchema>;
@@ -65,7 +66,11 @@ export function localizeCharacterSubclass(
     ...localizeResource(characterSubclass, context),
     descriptor: context.ti("descriptor", context.characterClassName),
     details: context.featureEntries,
-    character_class: context.characterClassName,
+    characterClass: {
+      id: characterSubclass.character_class_id,
+      label: context.t("character_class"),
+      value: context.characterClassName,
+    },
   };
 }
 
@@ -74,6 +79,10 @@ export function localizeCharacterSubclass(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  character_class: {
+    en: "Class",
+    it: "Classe",
+  },
   descriptor: {
     en: "<1> Subclass",
     it: "Sottoclasse <1>",
