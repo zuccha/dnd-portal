@@ -161,9 +161,12 @@ const detailRichTextPatterns = [
   {
     regex: /##(.+?)##/,
     render: (value: ReactNode) => (
-      <Span display="block" fontSize="xl" fontWeight="semibold" lineHeight="short" mt={2}>
-        {value}
-      </Span>
+      <>
+        <Span display="block" fontSize="lg" fontWeight="medium" lineHeight="short" mt={2}>
+          {value}
+        </Span>
+        <Separator mb={1} />
+      </>
     ),
   },
   ...RichText.defaultPatterns.slice(1),
