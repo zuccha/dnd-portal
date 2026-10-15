@@ -12,7 +12,6 @@ export default function usePaginatedContent(
 ) {
   const changePageCountRef = useRef(onPageCountChange);
   const contentRef = useRef("");
-  const renderCountRef = useRef(0);
 
   const [pages, setPages] = useState<
     {
@@ -47,17 +46,20 @@ export default function usePaginatedContent(
   }, [content, options.firstPageReserved]);
 
   useEffect(() => {
-    if (renderCountRef.current > 45) {
-      renderCountRef.current = 0;
-      requestAnimationFrame(() => setPages([...pages]));
-      return;
-    }
-
-    renderCountRef.current++;
+    let animationFrame = 0;
+    const setPagesOnNextFrame = (nextPages: typeof pages, nextContent: string) => {
+      animationFrame = requestAnimationFrame(() => {
+        contentRef.current = nextContent;
+        setPages(nextPages);
+      });
+    };
 
     const lastPage = pages[pages.length - 1]!;
     const element = lastPage.ref.current;
-    if (!element) return changePageCountRef.current(undefined, false);
+    if (!element) {
+      changePageCountRef.current(undefined, false);
+      return;
+    }
     const overflow = element.scrollHeight > element.clientHeight;
 
     if (overflow) {
@@ -74,30 +76,38 @@ export default function usePaginatedContent(
         return changePageCountRef.current(pages.length, getFirstPageOverflow(pages));
 
       if (right) {
-        setPages([...dropLast(pages), { ...lastPage, textTemp: left }]);
-        contentRef.current = right + contentRef.current;
+        setPagesOnNextFrame(
+          [...dropLast(pages), { ...lastPage, textTemp: left }],
+          right + contentRef.current,
+        );
       } else {
         const textTemp = lastPage.textTemp + contentRef.current;
-        setPages([
-          ...dropLast(pages),
-          { ...lastPage, textTemp: "" },
-          { ref: createRef(), text: "", textTemp },
-        ]);
-        contentRef.current = "";
+        setPagesOnNextFrame(
+          [
+            ...dropLast(pages),
+            { ...lastPage, textTemp: "" },
+            { ref: createRef(), text: "", textTemp },
+          ],
+          "",
+        );
       }
     } else if (contentRef.current.length) {
-      setPages([
-        ...dropLast(pages),
-        {
-          ...lastPage,
-          text: lastPage.text + lastPage.textTemp,
-          textTemp: contentRef.current,
-        },
-      ]);
-      contentRef.current = "";
+      setPagesOnNextFrame(
+        [
+          ...dropLast(pages),
+          {
+            ...lastPage,
+            text: lastPage.text + lastPage.textTemp,
+            textTemp: contentRef.current,
+          },
+        ],
+        "",
+      );
     } else {
       changePageCountRef.current(pages.length, getFirstPageOverflow(pages));
     }
+
+    return () => cancelAnimationFrame(animationFrame);
   }, [pages]);
 
   return pages;
