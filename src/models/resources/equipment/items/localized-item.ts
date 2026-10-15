@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import z from "zod";
 import { useTranslateItemType } from "../../../types/item-type";
+import { localizedFieldSchema } from "../../localized-resource";
 import {
   type EquipmentLocalizationContext,
   localizeEquipment,
@@ -16,8 +17,10 @@ import { type Item, itemSchema } from "./item";
 export const localizedItemSchema = localizedEquipmentSchema(itemSchema, z.literal("item")).extend({
   charges: z.string(),
   consumable: z.boolean(),
-  rarity: z.string(),
+  consumableStatus: localizedFieldSchema,
   type: z.string(),
+  usageCount: localizedFieldSchema,
+  uses: localizedFieldSchema.extend({ count: z.number() }),
 });
 
 export type LocalizedItem = z.infer<typeof localizedItemSchema>;
@@ -58,15 +61,40 @@ export function localizeItem(item: Item, context: ItemLocalizationContext): Loca
 
   const equipment = localizeEquipment(item, context);
   const rarity = item.magic ? equipment.rarity : "";
-  const descriptor = item.magic ? `${type}, ${rarity}` : type;
+  const charges = item.charges ?? 0;
+  const useCountLabel = item.consumable
+    ? context.tp("usages", charges)
+    : context.tp("charges", charges);
+  const usesLabel = item.consumable && charges === 1 ? context.t("consumable") : useCountLabel;
+  const usesValue =
+    item.consumable && charges === 1
+      ? context.ti("uses.value", `${charges}`, useCountLabel)
+      : charges > 5
+        ? context.ti("uses.remaining", `${charges}`)
+        : "";
+  const descriptor = item.magic ? context.ti("descriptor.magic", type, rarity) : type;
 
   return {
     ...equipment,
-    charges: item.charges ? `${item.charges}` : "-",
-    consumable: item.consumable,
     descriptor,
     rarity,
+
+    charges: charges > 0 ? `${charges}` : "-",
+    consumable: item.consumable,
+    consumableStatus: {
+      label: context.t("consumable"),
+      value: item.consumable ? context.t("yes") : context.t("no"),
+    },
     type,
+    usageCount: {
+      label: useCountLabel,
+      value: charges > 0 ? `${charges}` : "",
+    },
+    uses: {
+      count: charges,
+      label: usesLabel,
+      value: usesValue,
+    },
   };
 }
 
@@ -75,12 +103,25 @@ export function localizeItem(item: Item, context: ItemLocalizationContext): Loca
 //------------------------------------------------------------------------------
 
 const i18nContext = {
-  mundane_item: {
+  "charges/*": { en: "Charges", it: "Cariche" },
+  "charges/1": { en: "Charge", it: "Carica" },
+  "consumable": { en: "Consumable", it: "Consumabile" },
+  "descriptor.magic": {
+    en: "<1>, <2>", // 1 = item type, 2 = rarity
+    it: "<1>, <2>", // 1 = item type, 2 = rarity
+  },
+  "mundane_item": {
     en: "Mundane Item",
     it: "Oggetto Mondano",
   },
-  wondrous_item: {
+  "no": { en: "No", it: "No" },
+  "usages/*": { en: "Usages", it: "Utilizzi" },
+  "usages/1": { en: "Use", it: "Utilizzo" },
+  "wondrous_item": {
     en: "Wondrous Item", // 1 = rarity
     it: "Oggetto Meraviglioso", // 1 = rarity
   },
+  "uses.remaining": { en: "___ / <1>", it: "___ / <1>" },
+  "uses.value": { en: "One usage", it: "Un utilizzo" },
+  "yes": { en: "Yes", it: "Sì" },
 };

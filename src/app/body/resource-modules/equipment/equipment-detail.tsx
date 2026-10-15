@@ -37,16 +37,22 @@ export default function EquipmentDetail({
             <ResourceDetailField label={t("magic")}>
               {t(resource.magic ? "yes" : "no")}
             </ResourceDetailField>
-            {resource.magic && (
-              <ResourceDetailField label={t("rarity")}>{resource.rarity}</ResourceDetailField>
-            )}
-            {uses}
-            {resource.magic && resource._raw.required_attunement_slots > 0 && (
-              <ResourceDetailField label={t("attunement_slots")}>
-                {resource._raw.required_attunement_slots}
-              </ResourceDetailField>
-            )}
           </SimpleGrid>
+          {resource.magic && (
+            <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
+              <ResourceDetailField label={t("rarity")}>{resource.rarity}</ResourceDetailField>
+              {resource._raw.required_attunement_slots > 0 && (
+                <ResourceDetailField label={t("attunement_slots")}>
+                  {resource._raw.required_attunement_slots}
+                </ResourceDetailField>
+              )}
+            </SimpleGrid>
+          )}
+          {uses && (
+            <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
+              {uses}
+            </SimpleGrid>
+          )}
           {children && (
             <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
               {children}

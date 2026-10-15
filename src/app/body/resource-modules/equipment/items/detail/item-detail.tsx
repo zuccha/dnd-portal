@@ -1,10 +1,9 @@
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { itemStore } from "~/models/resources/equipment/items/item-store";
+import type { LocalizedItem } from "~/models/resources/equipment/items/localized-item";
 import ResourceDetailField from "../../../resource-detail-field";
 import EquipmentDetail from "../../equipment-detail";
 import type { ResourceDetailAction } from "../../../resource-detail";
 
-type ItemDetailResource = ReturnType<typeof itemStore.useLocalizedResource>;
+type ItemDetailResource = LocalizedItem | undefined;
 
 //------------------------------------------------------------------------------
 // Item Detail
@@ -17,28 +16,20 @@ export default function ItemDetail({
   actions?: ResourceDetailAction[];
   resource: ItemDetailResource;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
   const item = resource;
-  const uses = item ? (
-    item._raw.charges === 1 && item._raw.consumable ? (
-      <ResourceDetailField label={t("consumable")}>{t("yes")}</ResourceDetailField>
-    ) : item._raw.charges ? (
-      <ResourceDetailField label={t(item._raw.consumable ? "usages" : "charges")}>
-        {item.charges}
-      </ResourceDetailField>
-    ) : undefined
-  ) : undefined;
+  const uses =
+    item && (item.usageCount.value || item.consumableStatus.value) ? (
+      <>
+        <ResourceDetailField label={item.consumableStatus.label}>
+          {item.consumableStatus.value}
+        </ResourceDetailField>
+        {item.usageCount.value && (
+          <ResourceDetailField label={item.usageCount.label}>
+            {item.usageCount.value}
+          </ResourceDetailField>
+        )}
+      </>
+    ) : undefined;
 
   return <EquipmentDetail actions={actions} resource={item} uses={uses} />;
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  charges: { en: "Charges", it: "Cariche" },
-  consumable: { en: "Consumable", it: "Consumabile" },
-  usages: { en: "Usages", it: "Usi" },
-  yes: { en: "Yes", it: "Sì" },
-};
