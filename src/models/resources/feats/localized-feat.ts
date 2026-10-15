@@ -6,8 +6,8 @@ import { useTranslateFeatCategory } from "../../types/feat-category";
 import {
   type ResourceLocalizationContext,
   formatDetails,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -20,9 +20,8 @@ import type { RelatedResourceEntries } from "../../catalogue/resource-relations"
 
 export const localizedFeatSchema = localizedResourceSchema(featSchema, z.literal("feat")).extend({
   category: z.string(),
-  info: z.string(),
-  min_level: z.string(),
-  prerequisite: z.string(),
+  minLevel: localizedFieldSchema,
+  prerequisite: localizedFieldSchema,
 });
 
 export type LocalizedFeat = z.infer<typeof localizedFeatSchema>;
@@ -63,19 +62,16 @@ export function localizeFeat(feat: Feat, context: FeatLocalizationContext): Loca
   const description = translate(feat.description, context.lang);
   const features = context.featureEntries;
   const prerequisite = translate(feat.prerequisite, context.lang);
-  const min_level = feat.min_level ? `${feat.min_level}` : "";
+  const minLevel = feat.min_level ? `${feat.min_level}` : "";
 
   return {
     ...localizeResource(feat, context),
-    descriptor: context.ti("subtitle", category),
+    descriptor: context.ti("descriptor", category),
     category,
     details: formatDetails(description, features),
-    info: formatInfo([
-      [context.t("min_level"), min_level],
-      [context.t("prerequisite"), prerequisite],
-    ]),
-    min_level,
-    prerequisite,
+
+    minLevel: { label: context.t("min_level"), value: minLevel },
+    prerequisite: { label: context.t("prerequisite"), value: prerequisite },
   };
 }
 
@@ -84,6 +80,10 @@ export function localizeFeat(feat: Feat, context: FeatLocalizationContext): Loca
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  descriptor: {
+    en: "<1> Feat", // 1 = category
+    it: "Talento <1>", // 1 = category
+  },
   min_level: {
     en: "Minimum Level",
     it: "Livello Minimo",
@@ -91,9 +91,5 @@ const i18nContext = {
   prerequisite: {
     en: "Prerequisite",
     it: "Prerequisito",
-  },
-  subtitle: {
-    en: "<1> Feat", // 1 = category
-    it: "Talento <1>", // 1 = category
   },
 };
