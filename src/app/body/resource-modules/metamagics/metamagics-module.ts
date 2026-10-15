@@ -19,7 +19,7 @@ import MetamagicsFilters from "./panel/metamagics-filters";
 
 const columns = createResourcesTableColumns<Metamagic, LocalizedMetamagic>([
   {
-    key: "sorcery_points",
+    key: "sorceryPoints",
     label: { en: "Sorcery Points", it: "Punti Stregoneria" },
     textAlign: "right",
     w: "1%",

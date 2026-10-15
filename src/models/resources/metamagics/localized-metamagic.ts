@@ -2,8 +2,8 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import {
   type ResourceLocalizationContext,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -17,9 +17,8 @@ export const localizedMetamagicSchema = localizedResourceSchema(
   metamagicSchema,
   z.literal("metamagic"),
 ).extend({
-  info: z.string(),
-  prerequisite: z.string(),
-  sorcery_points: z.string(),
+  prerequisite: localizedFieldSchema,
+  sorceryPoints: localizedFieldSchema.extend({ valueWithLabel: z.string() }),
 });
 
 export type LocalizedMetamagic = z.infer<typeof localizedMetamagicSchema>;
@@ -54,13 +53,22 @@ export function localizeMetamagic(
 
   return {
     ...localizeResource(metamagic, context),
-    descriptor: context.t("subtitle"),
+    descriptor: context.t("descriptor"),
     details: translate(metamagic.description, context.lang),
-    info: formatInfo([
-      [context.tp("prerequisites", prerequisite?.includes(",") ? 2 : 1), prerequisite ?? ""],
-    ]),
-    prerequisite: prerequisite || "",
-    sorcery_points: `${metamagic.sorcery_points}`,
+
+    prerequisite: {
+      label: context.tp("prerequisites", prerequisite?.includes(",") ? 2 : 1),
+      value: prerequisite ?? "",
+    },
+    sorceryPoints: {
+      label: context.tp("sorcery_points", metamagic.sorcery_points),
+      value: `${metamagic.sorcery_points}`,
+      valueWithLabel: context.tpi(
+        "sorcery_points_with_value",
+        metamagic.sorcery_points,
+        `${metamagic.sorcery_points}`,
+      ),
+    },
   };
 }
 
@@ -69,6 +77,10 @@ export function localizeMetamagic(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "descriptor": {
+    en: "Metamagic Option",
+    it: "Opzione di Metamagia",
+  },
   "prerequisites/*": {
     en: "Prerequisites",
     it: "Prerequisiti",
@@ -77,8 +89,20 @@ const i18nContext = {
     en: "Prerequisite",
     it: "Prerequisito",
   },
-  "subtitle": {
-    en: "Metamagic Option",
-    it: "Opzione di Metamagia",
+  "sorcery_points/*": {
+    en: "Sorcery Points",
+    it: "Punti Stregoneria",
+  },
+  "sorcery_points/1": {
+    en: "Sorcery Point",
+    it: "Punto Stregoneria",
+  },
+  "sorcery_points_with_value/*": {
+    en: "<1> Sorcery Points",
+    it: "<1> Punti Stregoneria",
+  },
+  "sorcery_points_with_value/1": {
+    en: "<1> Sorcery Point",
+    it: "<1> Punto Stregoneria",
   },
 };

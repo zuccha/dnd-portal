@@ -1,5 +1,4 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { metamagicStore } from "~/models/resources/metamagics/metamagic-store";
 import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
@@ -17,19 +16,18 @@ export default function MetamagicDetail({
   actions?: ResourceDetailAction[];
   resource: MetamagicDetailResource;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
   const metamagic = resource;
 
   return (
     <ResourceDetail actions={actions} resource={metamagic}>
       {metamagic && (
         <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-          <ResourceDetailField label={t("sorcery_points")}>
-            {metamagic.sorcery_points}
+          <ResourceDetailField label={metamagic.sorceryPoints.label}>
+            {metamagic.sorceryPoints.value}
           </ResourceDetailField>
-          {metamagic.prerequisite && (
-            <ResourceDetailField label={t("prerequisite")}>
-              {metamagic.prerequisite}
+          {metamagic.prerequisite.value && (
+            <ResourceDetailField label={metamagic.prerequisite.label}>
+              {metamagic.prerequisite.value}
             </ResourceDetailField>
           )}
         </SimpleGrid>
@@ -37,18 +35,3 @@ export default function MetamagicDetail({
     </ResourceDetail>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  prerequisite: {
-    en: "Prerequisite",
-    it: "Prerequisito",
-  },
-  sorcery_points: {
-    en: "Sorcery Points",
-    it: "Punti Stregoneria",
-  },
-};
