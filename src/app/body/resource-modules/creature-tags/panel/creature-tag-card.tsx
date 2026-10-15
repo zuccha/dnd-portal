@@ -1,5 +1,6 @@
 import type { CreatureTag } from "~/models/resources/creature-tags/creature-tag";
 import type { LocalizedCreatureTag } from "~/models/resources/creature-tags/localized-creature-tag";
+import PokerCard from "~/ui/poker-card";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -19,6 +20,9 @@ export function CreatureTagCard({
 }: CreatureTagCardProps) {
   return (
     <ResourcePokerCard
+      beforeDetails={
+        <PokerCard.LabeledValues fields={[localizedResource.creatures]} palette={palette} />
+      }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}
       palette={palette}
