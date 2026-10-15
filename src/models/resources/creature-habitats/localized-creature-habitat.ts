@@ -6,6 +6,7 @@ import {
   type ResourceLocalizationContext,
   localizeResource,
   localizedFieldSchema,
+  localizedResourceLinkSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -16,11 +17,9 @@ import type { RelatedResourceEntries } from "../../catalogue/resource-relations"
 // Localized Creature Habitat Family Link
 //------------------------------------------------------------------------------
 
-const localizedCreatureHabitatFamilyLinkSchema = z.object({
-  id: z.uuid(),
-  kind: z.literal("creature_family"),
-  name: z.string(),
-});
+const localizedCreatureHabitatFamilyLinkSchema = localizedResourceLinkSchema(
+  z.literal("creature_family"),
+);
 
 //------------------------------------------------------------------------------
 // Localized Creature Habitat Family List Field

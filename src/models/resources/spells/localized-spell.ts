@@ -9,9 +9,11 @@ import { useTranslateSpellRange } from "../../types/spell-range";
 import { useTranslateSpellSchool } from "../../types/spell-school";
 import { characterClassStore } from "../character-classes/character-class-store";
 import {
+  type LocalizedResourceLink,
   type ResourceLocalizationContext,
   localizeResource,
   localizedFieldSchema,
+  localizedResourceLinkSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -28,9 +30,7 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema, z.liter
   {
     castingTime: localizedFieldSchema.extend({ valueWithRitual: z.string() }),
     characterClassAbbreviations: z.string(),
-    characterClasses: z.array(
-      z.object({ id: z.uuid(), kind: z.literal("character_class"), name: z.string() }),
-    ),
+    characterClasses: z.array(localizedResourceLinkSchema(z.literal("character_class"))),
     characterClassesLabel: z.string(),
     components: localizedFieldSchema,
     concentration: z.boolean(),
@@ -50,7 +50,7 @@ export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 //------------------------------------------------------------------------------
 
 type SpellLocalizationContext = ResourceLocalizationContext & {
-  characterClasses: { id: string; kind: "character_class"; name: string }[];
+  characterClasses: LocalizedResourceLink<"character_class">[];
   formatRange: ReturnType<typeof useFormatCm>;
   formatTime: ReturnType<typeof useFormatSeconds>;
   localizedCharacterClassAbbreviations: Record<string, string>;

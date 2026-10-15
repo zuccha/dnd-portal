@@ -28,6 +28,7 @@ import {
   formatInfo,
   localizeResource,
   localizedFieldSchema,
+  localizedResourceLinkSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -42,11 +43,7 @@ const useLocalizedCreatureTagNames = creatureTagStore.useLocalizedResourceNames;
 // Localized Creature Tag Reference
 //------------------------------------------------------------------------------
 
-const localizedCreatureTagReferenceSchema = z.object({
-  id: z.uuid(),
-  kind: z.literal("creature_tag"),
-  name: z.string(),
-});
+const localizedCreatureTagReferenceSchema = localizedResourceLinkSchema(z.literal("creature_tag"));
 
 //------------------------------------------------------------------------------
 // Format Creature Sizes

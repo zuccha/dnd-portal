@@ -5,6 +5,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translateNumber } from "~/i18n/i18n-number";
 import { translate } from "~/i18n/i18n-string";
 import { type SourceVersion, useTranslateSourceVersion } from "../types/source-version";
+import type { ResourceKind } from "../types/resource-kind";
 import type { Resource } from "./resource";
 
 //------------------------------------------------------------------------------
@@ -17,6 +18,24 @@ export const localizedFieldSchema = z.object({
 });
 
 export type LocalizedField = z.infer<typeof localizedFieldSchema>;
+
+//------------------------------------------------------------------------------
+// Localized Resource Link
+//------------------------------------------------------------------------------
+
+export function localizedResourceLinkSchema<K extends ResourceKind>(kindSchema: ZodType<K>) {
+  return z.object({
+    id: z.uuid(),
+    kind: kindSchema,
+    name: z.string(),
+  });
+}
+
+export type LocalizedResourceLink<K extends ResourceKind> = {
+  id: string;
+  kind: K;
+  name: string;
+};
 
 //------------------------------------------------------------------------------
 // Localized Resource

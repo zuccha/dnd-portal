@@ -6,6 +6,7 @@ import {
   type ResourceLocalizationContext,
   localizeResource,
   localizedFieldSchema,
+  localizedResourceLinkSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -39,9 +40,8 @@ const useSpeciesResources = speciesResources.useResources;
 // Localized Grantor Schemas
 //------------------------------------------------------------------------------
 
-const localizedFeatureGrantorSchema = z.object({
-  id: z.uuid(),
-  kind: z.enum([
+const localizedFeatureGrantorSchema = localizedResourceLinkSchema(
+  z.enum([
     "armor",
     "character_class",
     "character_subclass",
@@ -51,9 +51,7 @@ const localizedFeatureGrantorSchema = z.object({
     "tool",
     "weapon",
   ]),
-  level: z.string(),
-  name: z.string(),
-});
+).extend({ level: z.string() });
 
 const localizedFeatureGrantorGroupSchema = z.object({
   label: z.string(),

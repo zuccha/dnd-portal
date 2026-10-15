@@ -6,6 +6,7 @@ import {
   type ResourceLocalizationContext,
   localizeResource,
   localizedFieldSchema,
+  localizedResourceLinkSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -16,11 +17,7 @@ import type { Creature } from "../creatures/creature";
 // Localized Creature Tag
 //------------------------------------------------------------------------------
 
-const localizedCreatureTagLinkSchema = z.object({
-  id: z.uuid(),
-  kind: z.literal("creature"),
-  name: z.string(),
-});
+const localizedCreatureTagLinkSchema = localizedResourceLinkSchema(z.literal("creature"));
 
 export const localizedCreatureTagSchema = localizedResourceSchema(
   creatureTagSchema,
