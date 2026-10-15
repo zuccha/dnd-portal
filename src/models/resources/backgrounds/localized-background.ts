@@ -13,8 +13,8 @@ import { featStore } from "../feats/feat-store";
 import {
   type ResourceLocalizationContext,
   formatDetails,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -32,12 +32,19 @@ export const localizedBackgroundSchema = localizedResourceSchema(
   backgroundSchema,
   z.literal("background"),
 ).extend({
-  ability_scores: z.string(),
-  feat: z.string(),
-  info: z.string(),
-  skill_proficiencies: z.string(),
-  starting_equipment: z.string(),
-  tool_proficiency: z.string(),
+  abilityScores: localizedFieldSchema,
+  feat: localizedFieldSchema.extend({
+    id: z.uuid().nullable(),
+    linkText: z.string(),
+    notes: z.string(),
+  }),
+  skillProficiencies: localizedFieldSchema,
+  startingEquipment: z.string(),
+  toolProficiency: localizedFieldSchema.extend({
+    id: z.uuid().nullable(),
+    linkText: z.string(),
+    notes: z.string(),
+  }),
 });
 
 export type LocalizedBackground = z.infer<typeof localizedBackgroundSchema>;
@@ -102,22 +109,22 @@ export function localizeBackground(
 ): LocalizedBackground {
   const equipmentOptionOr = context.t("equipment.option.or");
 
-  const ability_scores = background.ability_scores.map(context.translateCreatureAbility).join(", ");
+  const abilityScores = background.ability_scores.map(context.translateCreatureAbility).join(", ");
 
   const feat_name = background.feat_id ? context.localizedFeatName : "";
   const feat_notes = translate(background.feat_notes, context.lang);
-  const feat = formatNamedNote(feat_name, feat_notes);
+  const featValue = formatNamedNote(feat_name, feat_notes);
 
-  const skill_proficiencies = background.skill_proficiencies
+  const skillProficiencies = background.skill_proficiencies
     .map(context.translateCreatureSkill)
     .sort()
     .join(", ");
 
   const tool_name = background.tool_proficiency_id ? context.localizedToolName : "";
   const tool_notes = translate(background.tool_notes, context.lang);
-  const tool_proficiency = formatNamedNote(tool_name, tool_notes);
+  const toolProficiencyValue = formatNamedNote(tool_name, tool_notes);
 
-  const starting_equipment = background.starting_equipment
+  const startingEquipment = background.starting_equipment
     .map((group) => {
       const groupText = joinWith(
         group.map((option, index) => {
@@ -142,26 +149,36 @@ export function localizeBackground(
     .filter((text) => text)
     .join("\n");
 
-  const info = formatInfo([
-    [context.tp("ability_scores", background.ability_scores.length), ability_scores],
-    [context.tp("skill_proficiencies", background.skill_proficiencies.length), skill_proficiencies],
-    [context.t("feat"), feat],
-    [context.t("tool_proficiency"), tool_proficiency],
-  ]);
-
   return {
     ...localizeResource(background, context),
     descriptor: context.t("descriptor"),
     details: formatDetails(
-      starting_equipment ? context.ti("starting_equipment", starting_equipment) : "",
+      startingEquipment ? context.ti("starting_equipment", startingEquipment) : "",
     ),
 
-    ability_scores,
-    feat,
-    info,
-    skill_proficiencies,
-    starting_equipment,
-    tool_proficiency,
+    abilityScores: {
+      label: context.tp("ability_scores", background.ability_scores.length),
+      value: abilityScores,
+    },
+    feat: {
+      id: background.feat_id,
+      label: context.t("feat"),
+      linkText: feat_name,
+      notes: feat_notes,
+      value: featValue,
+    },
+    skillProficiencies: {
+      label: context.tp("skill_proficiencies", background.skill_proficiencies.length),
+      value: skillProficiencies,
+    },
+    startingEquipment,
+    toolProficiency: {
+      id: background.tool_proficiency_id,
+      label: context.t("tool_proficiency"),
+      linkText: tool_name,
+      notes: tool_notes,
+      value: toolProficiencyValue,
+    },
   };
 }
 

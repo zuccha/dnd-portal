@@ -19,7 +19,7 @@ import BackgroundsFilters from "./panel/backgrounds-filters";
 
 const columns = createResourcesTableColumns<Background, LocalizedBackground>([
   {
-    key: "ability_scores",
+    key: "abilityScores",
     label: { en: "Ability Scores", it: "Punteggi" },
   },
   {
@@ -27,11 +27,11 @@ const columns = createResourcesTableColumns<Background, LocalizedBackground>([
     label: { en: "Feat", it: "Talento" },
   },
   {
-    key: "skill_proficiencies",
+    key: "skillProficiencies",
     label: { en: "Skills", it: "Abilità" },
   },
   {
-    key: "tool_proficiency",
+    key: "toolProficiency",
     label: { en: "Tool", it: "Strumento" },
   },
 ]);

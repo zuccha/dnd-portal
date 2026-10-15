@@ -21,9 +21,15 @@ export function BackgroundCard({
   return (
     <ResourcePokerCard
       beforeDetails={
-        localizedResource.info && (
-          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
-        )
+        <PokerCard.LabeledValues
+          fields={[
+            localizedResource.abilityScores,
+            localizedResource.feat,
+            localizedResource.skillProficiencies,
+            localizedResource.toolProficiency,
+          ]}
+          palette={palette}
+        />
       }
       localizedResource={localizedResource}
       onPageCountChange={onPageCountChange}
