@@ -8,10 +8,10 @@ import { spellSchoolSchema } from "../../types/spell-school";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
+  createIdRelationEndpointUpdates,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
-import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import type { ResourceFormOutput } from "../resource-form";
 import type { Spell } from "./spell";
 
@@ -69,15 +69,10 @@ export function spellFormDataToResource(
     upgrade: createResourceFormDataI18nValue(data.upgrade, lang),
     verbal: data.verbal,
   });
-  const relations: RelationEndpointUpdate[] =
-    character_class_ids === undefined
-      ? []
-      : [
-          {
-            group: "character_classes_and_spells",
-            related: character_class_ids.map((id) => ({ id })),
-          },
-        ];
+  const relations = createIdRelationEndpointUpdates(
+    "character_classes_and_spells",
+    character_class_ids,
+  );
   return { resource, relations };
 }
 

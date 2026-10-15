@@ -1,11 +1,11 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
 import {
+  createIdRelationEndpointUpdates,
   resourceFormDataSchema,
   resourceFormDataToResource,
   type ResourceFormOutput,
 } from "../resource-form";
-import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import type { CreatureHabitat } from "./creature-habitat";
 
 //------------------------------------------------------------------------------
@@ -28,15 +28,10 @@ export function creatureHabitatFormDataToResource(
 ): ResourceFormOutput<CreatureHabitat> {
   const { family_ids, ...resourceData } = data;
   const resource = resourceFormDataToResource(resourceData, lang);
-  const relations: RelationEndpointUpdate[] =
-    family_ids === undefined
-      ? []
-      : [
-          {
-            group: "creature_families_and_creature_habitats",
-            related: family_ids.map((id) => ({ id })),
-          },
-        ];
+  const relations = createIdRelationEndpointUpdates(
+    "creature_families_and_creature_habitats",
+    family_ids,
+  );
 
   return { resource, relations };
 }

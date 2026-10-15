@@ -1,8 +1,8 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import { type RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import { creatureTreasureSchema } from "../../types/creature-treasure";
 import {
+  createIdRelationEndpointUpdates,
   createResourceFormDataPatch,
   type ResourceFormOutput,
   resourceFormDataSchema,
@@ -36,15 +36,10 @@ export function creatureFamilyFormDataToResource(
     plane_ids: data.plane_ids,
     treasures: data.treasures,
   });
-  const relations: RelationEndpointUpdate[] =
-    habitat_ids === undefined
-      ? []
-      : [
-          {
-            group: "creature_families_and_creature_habitats",
-            related: habitat_ids.map((id) => ({ id })),
-          },
-        ];
+  const relations = createIdRelationEndpointUpdates(
+    "creature_families_and_creature_habitats",
+    habitat_ids,
+  );
 
   return { resource, relations };
 }

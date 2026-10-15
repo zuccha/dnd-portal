@@ -10,11 +10,12 @@ import { featureEntrySchema } from "../features/feature-entry";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
+  createIdRelationEndpointUpdates,
+  createRelationEndpointUpdates,
   type ResourceFormOutput,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
-import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import type { CharacterClass } from "./character-class";
 
 //------------------------------------------------------------------------------
@@ -70,19 +71,10 @@ export function characterClassFormDataToResource(
       lang,
     ),
   });
-  const relations: RelationEndpointUpdate[] = [];
-  if (feature_entries !== undefined) {
-    relations.push({
-      group: "character_classes_and_features",
-      related: feature_entries,
-    });
-  }
-  if (spell_ids !== undefined) {
-    relations.push({
-      group: "character_classes_and_spells",
-      related: spell_ids.map((id) => ({ id })),
-    });
-  }
+  const relations = [
+    ...createRelationEndpointUpdates("character_classes_and_features", feature_entries),
+    ...createIdRelationEndpointUpdates("character_classes_and_spells", spell_ids),
+  ];
   return { resource, relations } satisfies ResourceFormOutput<CharacterClass>;
 }
 

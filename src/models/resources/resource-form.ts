@@ -1,6 +1,6 @@
 import z from "zod";
 import { resourceVisibilitySchema } from "../types/resource-visibility";
-import type { RelationEndpointUpdate } from "../catalogue/resource-relations";
+import type { RelationEndpointUpdate, RelationGroup } from "../catalogue/resource-relations";
 import type { Resource } from "./resource";
 
 //------------------------------------------------------------------------------
@@ -12,7 +12,40 @@ export type ResourceFormOutput<R extends Resource> = {
   resource: Partial<R>;
 };
 
+//------------------------------------------------------------------------------
+// Parsed Resource Form Output
+//------------------------------------------------------------------------------
+
 export type ParsedResourceFormOutput<R extends Resource> = Partial<R> | ResourceFormOutput<R>;
+
+//------------------------------------------------------------------------------
+// Create Relation Endpoint Updates
+//------------------------------------------------------------------------------
+
+export function createRelationEndpointUpdates(
+  group: RelationGroup,
+  related: RelationEndpointUpdate["related"] | undefined,
+): RelationEndpointUpdate[] {
+  return related === undefined ? [] : [{ group, related }];
+}
+
+//------------------------------------------------------------------------------
+// Create Id Relation Endpoint Updates
+//------------------------------------------------------------------------------
+
+export function createIdRelationEndpointUpdates(
+  group: RelationGroup,
+  relatedIds: readonly string[] | undefined,
+): RelationEndpointUpdate[] {
+  return createRelationEndpointUpdates(
+    group,
+    relatedIds?.map((id) => ({ id })),
+  );
+}
+
+//------------------------------------------------------------------------------
+// Split Resource Form Output
+//------------------------------------------------------------------------------
 
 export function splitResourceFormOutput<R extends Resource>(
   output: ParsedResourceFormOutput<R>,

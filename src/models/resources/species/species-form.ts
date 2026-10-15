@@ -6,10 +6,10 @@ import { featureEntrySchema } from "../features/feature-entry";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
+  createRelationEndpointUpdates,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
-import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import type { ResourceFormOutput } from "../resource-form";
 import type { Species } from "./species";
 
@@ -43,10 +43,7 @@ export function speciesFormDataToResource(
     speed: data.speed,
     type: data.type,
   });
-  const relations: RelationEndpointUpdate[] =
-    feature_entries === undefined
-      ? []
-      : [{ group: "species_and_features", related: feature_entries }];
+  const relations = createRelationEndpointUpdates("species_and_features", feature_entries);
   return { resource, relations };
 }
 

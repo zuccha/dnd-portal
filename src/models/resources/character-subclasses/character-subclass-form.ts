@@ -3,10 +3,10 @@ import { createForm } from "~/utils/form";
 import { featureEntrySchema } from "../features/feature-entry";
 import {
   createResourceFormDataPatch,
+  createRelationEndpointUpdates,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
-import type { RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import type { ResourceFormOutput } from "../resource-form";
 import type { CharacterSubclass } from "./character-subclass";
 
@@ -34,10 +34,10 @@ export function characterSubclassFormDataToResource(
     ...resourceFormDataToResource(resourceData, lang),
     character_class_id: data.character_class_id,
   });
-  const relations: RelationEndpointUpdate[] =
-    feature_entries === undefined
-      ? []
-      : [{ group: "character_subclasses_and_features", related: feature_entries }];
+  const relations = createRelationEndpointUpdates(
+    "character_subclasses_and_features",
+    feature_entries,
+  );
   return { resource, relations };
 }
 

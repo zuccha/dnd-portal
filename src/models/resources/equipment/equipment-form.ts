@@ -5,6 +5,7 @@ import { featureEntrySchema } from "../features/feature-entry";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
+  createRelationEndpointUpdates,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
@@ -58,10 +59,7 @@ export function equipmentFormDataToResource(
     required_attunement_slots: data.required_attunement_slots,
     weight: data.weight,
   });
-  const relations: RelationEndpointUpdate[] =
-    feature_entries === undefined
-      ? []
-      : [{ group: "equipments_and_features", related: feature_entries }];
+  const relations = createRelationEndpointUpdates("equipments_and_features", feature_entries);
   return { resource, relations };
 }
 
