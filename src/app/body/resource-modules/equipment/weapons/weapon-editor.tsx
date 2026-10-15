@@ -44,15 +44,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
       label: { en: "Ammunition", it: "Munizione" },
       placeholder: { en: "None", it: "Nessuna" },
     },
-    i18nContextExtra: {
-      "error.empty": {
-        en: "The ammunition cannot be empty",
-        it: "La munizione non può essere vuota",
-      },
-    },
-    useField: form.createUseField("ammunition_ids", (ammunition_ids) =>
-      ammunition_ids.length > 0 ? undefined : "error.empty",
-    ),
+    useField: form.createUseField("ammunition_ids"),
     useOptions: equipmentReferenceStore.useResourceOptions,
   });
 
@@ -79,15 +71,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
       label: { en: "Versatile Damage", it: "Danni Versatili" },
       placeholder: { en: "None", it: "Nessuno" },
     },
-    i18nContextExtra: {
-      "error.empty": {
-        en: "Versatile damage cannot be empty",
-        it: "I danni versatili non possono essere vuoti",
-      },
-    },
-    useField: form.createUseField("damage_versatile", (damageVersatile) =>
-      damageVersatile ? undefined : "error.empty",
-    ),
+    useField: form.createUseField("damage_versatile"),
   });
 
   const DamageTypeField = createSelectEnumField({
