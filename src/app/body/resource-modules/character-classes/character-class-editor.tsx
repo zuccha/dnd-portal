@@ -126,7 +126,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
     i18nContext: {
       label: {
         en: "Primary Abilities",
-        it: "Abilità Primarie",
+        it: "Caratteristiche Primarie",
       },
       placeholder: {
         en: "None",

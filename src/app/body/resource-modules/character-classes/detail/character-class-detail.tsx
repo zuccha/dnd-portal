@@ -107,7 +107,7 @@ const i18nContext = {
   },
   primary_abilities: {
     en: "Primary Abilities",
-    it: "Abilità Primarie",
+    it: "Caratteristiche Primarie",
   },
   saving_throws: {
     en: "Saving Throws",

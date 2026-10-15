@@ -93,15 +93,15 @@ const i18nContext = {
   },
   "abilities/*": {
     en: "Primary Abilities",
-    it: "Abilità Primarie",
+    it: "Caratteristiche Primarie",
   },
   "abilities/0": {
     en: "Primary Ability",
-    it: "Abilità Primaria",
+    it: "Caratteristica Primaria",
   },
   "abilities/1": {
     en: "Primary Ability",
-    it: "Abilità Primaria",
+    it: "Caratteristica Primaria",
   },
   "hp_die.bottom": {
     en: "Die",

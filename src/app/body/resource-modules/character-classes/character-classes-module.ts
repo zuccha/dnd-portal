@@ -20,7 +20,7 @@ import CharacterClassesFilters from "./panel/character-classes-filters";
 const columns = createResourcesTableColumns<CharacterClass, LocalizedCharacterClass>([
   {
     key: "primary_abilities",
-    label: { en: "Abilities", it: "Abilità" },
+    label: { en: "Abilities", it: "Caratteristiche" },
   },
   {
     key: "saving_throw_proficiencies",
