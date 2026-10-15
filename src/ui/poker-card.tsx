@@ -343,6 +343,46 @@ function Info({ children, compact, palette }: InfoProps) {
 }
 
 //------------------------------------------------------------------------------
+// Labeled Values
+//------------------------------------------------------------------------------
+
+type LabeledValuesProps = {
+  compact?: boolean;
+  fields: { label: string; value: string }[];
+  palette: Palette;
+};
+
+function LabeledValues({ compact, fields, palette }: LabeledValuesProps) {
+  const bleed = useBleed();
+  const visibleFields = fields.filter(({ value }) => value);
+
+  if (!visibleFields.length) return null;
+
+  return (
+    <VStack
+      align="flex-start"
+      bgColor={`${palette[50]}99`}
+      borderColor={palette[800]}
+      borderYWidth={px1}
+      fontSize={compact ? rem0750 : undefined}
+      fontStyle="italic"
+      gap={0}
+      lineHeight={1}
+      px={`${remToIn(1) + bleed.x}in`}
+      py={rem0500}
+      w="full"
+    >
+      {visibleFields.map(({ label, value }, index) => (
+        <HStack gap={1} key={`${label}-${index}`}>
+          <Span fontWeight="bold">{label}</Span>
+          <Span>{value}</Span>
+        </HStack>
+      ))}
+    </VStack>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Separator
 //------------------------------------------------------------------------------
 
@@ -403,6 +443,7 @@ const PokerCard = {
   Entry,
   Frame,
   Info,
+  LabeledValues,
   Separator,
 
   cardH,
