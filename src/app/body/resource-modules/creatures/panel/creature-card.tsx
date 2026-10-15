@@ -1,6 +1,5 @@
 import { Box, GridItem, HStack, SimpleGrid, Span, VStack } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Creature } from "~/models/resources/creatures/creature";
 import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import PokerCard from "~/ui/poker-card";
@@ -21,7 +20,6 @@ export function CreatureCard({
   palette,
   ...rest
 }: CreatureCardProps) {
-  const { t } = useI18nLangContext(i18nContext);
   const [infoCompact, setInfoCompact] = useState(false);
 
   const handlePageCountChange = useCallback(
@@ -42,27 +40,30 @@ export function CreatureCard({
               rowGap={PokerCard.px2}
               templateColumns={`0.26in 0.22in 0.25in 0.25in`}
             >
-              <AbilityHeader mod={t("ability.mod")} save={t("ability.save")} />
-              <AbilityRow
-                category="physical"
-                label={t("ability[str]")}
-                modifier={localizedResource.ability_str_mod}
-                save={localizedResource.ability_str_save}
-                score={localizedResource.ability_str}
+              <AbilityHeader
+                mod={localizedResource.abilityScoreHeaders.modifier}
+                save={localizedResource.abilityScoreHeaders.save}
               />
               <AbilityRow
                 category="physical"
-                label={t("ability[dex]")}
-                modifier={localizedResource.ability_dex_mod}
-                save={localizedResource.ability_dex_save}
-                score={localizedResource.ability_dex}
+                label={localizedResource.abilityScores.strength.cardLabel}
+                modifier={localizedResource.abilityScores.strength.modifier}
+                save={localizedResource.abilityScores.strength.save}
+                score={localizedResource.abilityScores.strength.score}
               />
               <AbilityRow
                 category="physical"
-                label={t("ability[con]")}
-                modifier={localizedResource.ability_con_mod}
-                save={localizedResource.ability_con_save}
-                score={localizedResource.ability_con}
+                label={localizedResource.abilityScores.dexterity.cardLabel}
+                modifier={localizedResource.abilityScores.dexterity.modifier}
+                save={localizedResource.abilityScores.dexterity.save}
+                score={localizedResource.abilityScores.dexterity.score}
+              />
+              <AbilityRow
+                category="physical"
+                label={localizedResource.abilityScores.constitution.cardLabel}
+                modifier={localizedResource.abilityScores.constitution.modifier}
+                save={localizedResource.abilityScores.constitution.save}
+                score={localizedResource.abilityScores.constitution.score}
               />
             </SimpleGrid>
 
@@ -71,27 +72,30 @@ export function CreatureCard({
               rowGap={PokerCard.px2}
               templateColumns={`0.26in 0.22in 0.25in 0.25in`}
             >
-              <AbilityHeader mod={t("ability.mod")} save={t("ability.save")} />
-              <AbilityRow
-                category="mental"
-                label={t("ability[int]")}
-                modifier={localizedResource.ability_int_mod}
-                save={localizedResource.ability_int_save}
-                score={localizedResource.ability_int}
+              <AbilityHeader
+                mod={localizedResource.abilityScoreHeaders.modifier}
+                save={localizedResource.abilityScoreHeaders.save}
               />
               <AbilityRow
                 category="mental"
-                label={t("ability[wis]")}
-                modifier={localizedResource.ability_wis_mod}
-                save={localizedResource.ability_wis_save}
-                score={localizedResource.ability_wis}
+                label={localizedResource.abilityScores.intelligence.cardLabel}
+                modifier={localizedResource.abilityScores.intelligence.modifier}
+                save={localizedResource.abilityScores.intelligence.save}
+                score={localizedResource.abilityScores.intelligence.score}
               />
               <AbilityRow
                 category="mental"
-                label={t("ability[cha]")}
-                modifier={localizedResource.ability_cha_mod}
-                save={localizedResource.ability_cha_save}
-                score={localizedResource.ability_cha}
+                label={localizedResource.abilityScores.wisdom.cardLabel}
+                modifier={localizedResource.abilityScores.wisdom.modifier}
+                save={localizedResource.abilityScores.wisdom.save}
+                score={localizedResource.abilityScores.wisdom.score}
+              />
+              <AbilityRow
+                category="mental"
+                label={localizedResource.abilityScores.charisma.cardLabel}
+                modifier={localizedResource.abilityScores.charisma.modifier}
+                save={localizedResource.abilityScores.charisma.save}
+                score={localizedResource.abilityScores.charisma.score}
               />
             </SimpleGrid>
           </HStack>
@@ -105,15 +109,15 @@ export function CreatureCard({
           >
             <HStack gap={PokerCard.rem1000} w="full">
               <SkillRow
-                label={t("initiative")}
-                mod={localizedResource.initiative}
-                value={localizedResource.initiative_passive}
+                label={localizedResource.initiative.label}
+                mod={localizedResource.initiative.value}
+                value={localizedResource.initiative.passive}
               />
 
               <SkillRow
-                label={t("perception")}
-                mod={localizedResource.perception}
-                value={localizedResource.perception_passive}
+                label={localizedResource.perception.label}
+                mod={localizedResource.perception.value}
+                value={localizedResource.perception.passive}
               />
             </HStack>
 
@@ -126,8 +130,8 @@ export function CreatureCard({
               justify="space-between"
               w="full"
             >
-              <Span fontStyle="italic">{t("speed")}</Span>
-              <Span>{localizedResource.speed}</Span>
+              <Span fontStyle="italic">{localizedResource.speed.label}</Span>
+              <Span>{localizedResource.speed.value}</Span>
             </HStack>
           </VStack>
 
@@ -139,7 +143,7 @@ export function CreatureCard({
         </>
       }
       firstPageInfo={
-        localizedResource._raw.summoned_from_spell ? (
+        localizedResource.summonedFromSpell ? (
           <StatsSummoned localizedResource={localizedResource} />
         ) : (
           <StatsRegular localizedResource={localizedResource} />
@@ -171,9 +175,8 @@ type CreatureStatsProps = {
 //------------------------------------------------------------------------------
 
 function StatsSummoned({ localizedResource }: CreatureStatsProps) {
-  const { t } = useI18nLangContext(i18nContext);
-  const hasSpellLevelAcModifier = localizedResource._raw.armor_class_adds_spell_level;
-  const hasSpellLevelHpModifier = localizedResource._raw.additional_hp_per_level > 0;
+  const hasSpellLevelAcModifier = localizedResource.armorClassAddsSpellLevel;
+  const hasSpellLevelHpModifier = localizedResource.hasAdditionalHpPerLevel;
   const showSpellLevelLegend = hasSpellLevelAcModifier || hasSpellLevelHpModifier;
 
   return (
@@ -188,18 +191,20 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
       <GridItem rowSpan={showSpellLevelLegend ? 3 : 2}>
         <StatIcon
           icon={shieldIcon}
-          label={t("armor_class")}
+          label={localizedResource.armorClass.cardLabel}
           valueFontSize={hasSpellLevelAcModifier ? "0.7em" : undefined}
-          value={`${localizedResource.ac}${hasSpellLevelAcModifier ? "＋X" : ""}`}
+          value={`${localizedResource.armorClass.value}${hasSpellLevelAcModifier ? "＋X" : ""}`}
         />
       </GridItem>
       <VStack align="flex-start" gap={0} textAlign="left" w="full">
         <Span lineHeight="shorter">
-          <b>{t("hit_points")}</b> <Span>{localizedResource.hp}</Span>
+          <b>{localizedResource.hitPoints.cardLabel}</b>{" "}
+          <Span>{localizedResource.hitPoints.value}</Span>
         </Span>
       </VStack>
       <Span textAlign="left" w="full">
-        <b>{t("proficiency_bonus")}</b> <Span>{localizedResource.pb}</Span>
+        <b>{localizedResource.proficiencyBonus.cardLabel}</b>{" "}
+        <Span>{localizedResource.proficiencyBonus.value}</Span>
       </Span>
       {showSpellLevelLegend && (
         <GridItem colStart={2}>
@@ -211,7 +216,7 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
             w="full"
           >
             <Span>𝑋 = </Span>
-            <Span fontStyle="italic">{t("ac.spell_level.legend")}</Span>
+            <Span fontStyle="italic">{localizedResource.spellLevelLegend}</Span>
           </Span>
         </GridItem>
       )}
@@ -224,34 +229,45 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
 //------------------------------------------------------------------------------
 
 function StatsRegular({ localizedResource }: CreatureStatsProps) {
-  const { t } = useI18nLangContext(i18nContext);
-
   return (
     <HStack gap={0} justify="space-between" px={PokerCard.rem1000} w="full">
       <HStack gap={PokerCard.rem0750}>
-        <StatIcon icon={shieldIcon} label={t("armor_class")} value={localizedResource.ac} />
+        <StatIcon
+          icon={shieldIcon}
+          label={localizedResource.armorClass.cardLabel}
+          value={localizedResource.armorClass.value}
+        />
         <VStack align="flex-start" gap={0} maxW="7em" textAlign="center">
           <Span lineHeight="shorter">
-            <b>{t("hit_points")}</b> <Span>{localizedResource.hp}</Span>
+            <b>{localizedResource.hitPoints.cardLabel}</b>{" "}
+            <Span>{localizedResource.hitPoints.value}</Span>
           </Span>
-          <Span lineHeight="shorter">{localizedResource.hp_formula}</Span>
+          <Span lineHeight="shorter">{localizedResource.hitPoints.formula}</Span>
         </VStack>
       </HStack>
       <HStack gap={PokerCard.rem0750}>
         <VStack align="flex-end" flex={1} gap={0}>
           <Span textAlign="right" w="full">
-            <b>{t("proficiency_bonus")}</b> <Span>{localizedResource.pb}</Span>
+            <b>{localizedResource.proficiencyBonus.cardLabel}</b>{" "}
+            <Span>{localizedResource.proficiencyBonus.value}</Span>
           </Span>
           <Span textAlign="right" w="full">
-            <b>{t("exp")}</b> <Span>{localizedResource.exp}</Span>
+            <b>{localizedResource.experience.cardLabel}</b>{" "}
+            <Span>{localizedResource.experience.value}</Span>
           </Span>
-          {localizedResource.has_lair && localizedResource.exp !== localizedResource.lair_exp && (
-            <Span textAlign="right" w="full">
-              <b>{t("lair_exp")}</b> <Span>{localizedResource.lair_exp}</Span>
-            </Span>
-          )}
+          {localizedResource.hasLair &&
+            localizedResource.experience.value !== localizedResource.experience.lairValue && (
+              <Span textAlign="right" w="full">
+                <b>{localizedResource.experience.lairLabel}</b>{" "}
+                <Span>{localizedResource.experience.lairValue}</Span>
+              </Span>
+            )}
         </VStack>
-        <StatIcon icon={scrollIcon} label={t("challenge_rating")} value={localizedResource.cr} />
+        <StatIcon
+          icon={scrollIcon}
+          label={localizedResource.challengeRating.cardLabel}
+          value={localizedResource.challengeRating.value}
+        />
       </HStack>
     </HStack>
   );
@@ -406,81 +422,3 @@ const scrollIcon = encodeURIComponent(`\
 <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M10 0H90H93C94.1046 0 95 0.895431 95 2V3H97C97.5523 3 98 3.44772 98 4V7V10C98 10.5523 97.5523 11 97 11H95V12C95 13.1046 94.1046 14 93 14H90V92.9241C90 94.6103 88.6107 95.9653 86.925 95.9231L50 95L13.075 95.9231C11.3893 95.9653 10 94.6103 10 92.9241V14H7C5.89543 14 5 13.1046 5 12V11H3C2.44772 11 2 10.5523 3 3H5V2C5 0.895431 5.89543 0 7 0H10Z" fill="${PokerCard.separatorColor}"/>
 </svg>`);
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  "ability.mod": {
-    en: "MOD",
-    it: "MOD",
-  },
-  "ability.save": {
-    en: "SAVE",
-    it: "SALV",
-  },
-  "ability[cha]": {
-    en: "Cha",
-    it: "Car",
-  },
-  "ability[con]": {
-    en: "Con",
-    it: "Cos",
-  },
-  "ability[dex]": {
-    en: "Dex",
-    it: "Des",
-  },
-  "ability[int]": {
-    en: "Int",
-    it: "Int",
-  },
-  "ability[str]": {
-    en: "Str",
-    it: "For",
-  },
-  "ability[wis]": {
-    en: "Wis",
-    it: "Sag",
-  },
-  "armor_class": {
-    en: "AC",
-    it: "CA",
-  },
-  "ac.spell_level.legend": {
-    en: "spell level",
-    it: "livello dell'incantesimo",
-  },
-  "challenge_rating": {
-    en: "CR",
-    it: "GS",
-  },
-  "exp": {
-    en: "XP",
-    it: "PE",
-  },
-  "hit_points": {
-    en: "HP",
-    it: "PF",
-  },
-  "initiative": {
-    en: "Initiative",
-    it: "Iniziativa",
-  },
-  "lair_exp": {
-    en: "Lair XP",
-    it: "PE Tana",
-  },
-  "perception": {
-    en: "Perception",
-    it: "Percezione",
-  },
-  "proficiency_bonus": {
-    en: "PB",
-    it: "BC",
-  },
-  "speed": {
-    en: "Speed",
-    it: "Velocità",
-  },
-};

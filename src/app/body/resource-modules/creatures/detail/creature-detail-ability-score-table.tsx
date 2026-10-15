@@ -1,6 +1,5 @@
 import { GridItem, SimpleGrid, Span } from "@chakra-ui/react";
 import { Fragment } from "react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 
 //------------------------------------------------------------------------------
@@ -12,57 +11,14 @@ export default function CreatureDetailAbilityScoreTable({
 }: {
   creature: LocalizedCreature;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
-  const abilities: [string, string, string, string, string, "physical" | "mental"][] = [
-    [
-      "str",
-      t("ability[str]"),
-      creature.ability_str,
-      creature.ability_str_mod,
-      creature.ability_str_save,
-      "physical",
-    ],
-    [
-      "dex",
-      t("ability[dex]"),
-      creature.ability_dex,
-      creature.ability_dex_mod,
-      creature.ability_dex_save,
-      "physical",
-    ],
-    [
-      "con",
-      t("ability[con]"),
-      creature.ability_con,
-      creature.ability_con_mod,
-      creature.ability_con_save,
-      "physical",
-    ],
-    [
-      "int",
-      t("ability[int]"),
-      creature.ability_int,
-      creature.ability_int_mod,
-      creature.ability_int_save,
-      "mental",
-    ],
-    [
-      "wis",
-      t("ability[wis]"),
-      creature.ability_wis,
-      creature.ability_wis_mod,
-      creature.ability_wis_save,
-      "mental",
-    ],
-    [
-      "cha",
-      t("ability[cha]"),
-      creature.ability_cha,
-      creature.ability_cha_mod,
-      creature.ability_cha_save,
-      "mental",
-    ],
-  ];
+  const abilities = [
+    { ...creature.abilityScores.strength, category: "physical", key: "strength" },
+    { ...creature.abilityScores.dexterity, category: "physical", key: "dexterity" },
+    { ...creature.abilityScores.constitution, category: "physical", key: "constitution" },
+    { ...creature.abilityScores.intelligence, category: "mental", key: "intelligence" },
+    { ...creature.abilityScores.wisdom, category: "mental", key: "wisdom" },
+    { ...creature.abilityScores.charisma, category: "mental", key: "charisma" },
+  ] as const;
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} columnGap={6} rowGap={1}>
@@ -79,7 +35,7 @@ export default function CreatureDetailAbilityScoreTable({
             fontWeight="medium"
             textAlign="center"
           >
-            {t("ability.mod")}
+            {creature.abilityScoreHeaders.modifier}
           </Span>
           <Span
             color="fg.muted"
@@ -88,11 +44,11 @@ export default function CreatureDetailAbilityScoreTable({
             fontWeight="medium"
             textAlign="center"
           >
-            {t("ability.save")}
+            {creature.abilityScoreHeaders.save}
           </Span>
           {abilities
-            .filter(([, , , , , abilityCategory]) => abilityCategory === category)
-            .map(([key, label, score, modifier, save]) => (
+            .filter((ability) => ability.category === category)
+            .map(({ key, label, modifier, save, score }) => (
               <Fragment key={key}>
                 <Span bgColor={abilityRowColors[category].left} pl={2}>
                   {label}
@@ -117,19 +73,4 @@ export default function CreatureDetailAbilityScoreTable({
 const abilityRowColors = {
   mental: { left: "#CBCBD1", right: "#C3ACBE" },
   physical: { left: "#EFE3E2", right: "#DAC1C4" },
-};
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  "ability[cha]": { en: "Charisma", it: "Carisma" },
-  "ability[con]": { en: "Constitution", it: "Costituzione" },
-  "ability[dex]": { en: "Dexterity", it: "Destrezza" },
-  "ability[int]": { en: "Intelligence", it: "Intelligenza" },
-  "ability.mod": { en: "MOD", it: "MOD" },
-  "ability.save": { en: "SAVE", it: "SALV" },
-  "ability[str]": { en: "Strength", it: "Forza" },
-  "ability[wis]": { en: "Wisdom", it: "Saggezza" },
 };

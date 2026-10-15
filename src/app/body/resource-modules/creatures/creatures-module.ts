@@ -31,19 +31,19 @@ const columns = createResourcesTableColumns<Creature, LocalizedCreature>([
     label: { en: "Alignment", it: "Allineamento" },
   },
   {
-    key: "cr",
+    key: "challengeRating",
     label: { en: "CR", it: "GS" },
     textAlign: "right",
     w: "1%",
   },
   {
-    key: "hp",
+    key: "hitPoints",
     label: { en: "HP", it: "PF" },
     textAlign: "right",
     w: "1%",
   },
   {
-    key: "ac",
+    key: "armorClass",
     label: { en: "AC", it: "CA" },
     textAlign: "right",
     w: "1%",

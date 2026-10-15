@@ -6,6 +6,11 @@ import { useFormatCp } from "~/measures/cost";
 import { useFormatCm } from "~/measures/distance";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { formatNumber, formatNumberAsWord, formatSigned } from "~/utils/number";
+import {
+  creatureAbilitySchema,
+  useTranslateCreatureAbility,
+  useTranslateCreatureAbilityShort,
+} from "../../types/creature-ability";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import {
   type CreatureCondition,
@@ -22,6 +27,7 @@ import {
   type ResourceLocalizationContext,
   formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -62,63 +68,49 @@ export const localizedCreatureSchema = localizedResourceSchema(
   creatureSchema,
   z.literal("creature"),
 ).extend({
+  abilityScoreHeaders: z.object({ modifier: z.string(), save: z.string() }),
+  abilityScores: z.record(
+    creatureAbilitySchema,
+    z.object({
+      cardLabel: z.string(),
+      label: z.string(),
+      modifier: z.string(),
+      save: z.string(),
+      score: z.string(),
+    }),
+  ),
   alignment: z.string(),
-  has_lair: z.boolean(),
+  armorClass: localizedFieldSchema.extend({
+    cardLabel: z.string(),
+    valueWithSpellLevel: z.string(),
+  }),
+  armorClassAddsSpellLevel: z.boolean(),
+  challengeRating: localizedFieldSchema.extend({ cardLabel: z.string() }),
+  experience: localizedFieldSchema.extend({
+    cardLabel: z.string(),
+    lairLabel: z.string(),
+    lairValue: z.string(),
+    valueWithLair: z.string(),
+  }),
+  familyLabel: z.string(),
+  hasAdditionalHpPerLevel: z.boolean(),
+  hasLair: z.boolean(),
+  hitPoints: localizedFieldSchema.extend({
+    cardLabel: z.string(),
+    formula: z.string(),
+    valueWithFormula: z.string(),
+  }),
+  info: z.string(),
+  initiative: localizedFieldSchema.extend({ passive: z.string() }),
+  passivePerception: localizedFieldSchema,
+  perception: localizedFieldSchema.extend({ passive: z.string() }),
+  proficiencyBonus: localizedFieldSchema.extend({ cardLabel: z.string() }),
   sizes: z.string(),
+  speed: localizedFieldSchema,
+  spellLevelLegend: z.string(),
+  summonedFromSpell: z.boolean(),
   tags: z.string(),
   type: z.string(),
-
-  cr: z.string(),
-  exp: z.string(),
-  lair_exp: z.string(),
-  pb: z.string(),
-
-  ac: z.string(),
-  hp: z.string(),
-  hp_formula: z.string(),
-
-  ability_cha: z.string(),
-  ability_cha_mod: z.string(),
-  ability_cha_save: z.string(),
-  ability_con: z.string(),
-  ability_con_mod: z.string(),
-  ability_con_save: z.string(),
-  ability_dex: z.string(),
-  ability_dex_mod: z.string(),
-  ability_dex_save: z.string(),
-  ability_int: z.string(),
-  ability_int_mod: z.string(),
-  ability_int_save: z.string(),
-  ability_str: z.string(),
-  ability_str_mod: z.string(),
-  ability_str_save: z.string(),
-  ability_wis: z.string(),
-  ability_wis_mod: z.string(),
-  ability_wis_save: z.string(),
-
-  initiative: z.string(),
-  initiative_passive: z.string(),
-  perception: z.string(),
-  perception_passive: z.string(),
-
-  speed: z.string(),
-
-  gear: z.string(),
-  immunities: z.string(),
-  languages: z.string(),
-  resistances: z.string(),
-  senses: z.string(),
-  skills: z.string(),
-  vulnerabilities: z.string(),
-
-  info: z.string(),
-
-  actions: z.string(),
-  bonus_actions: z.string(),
-  lair_effects: z.string(),
-  legendary_actions: z.string(),
-  reactions: z.string(),
-  traits: z.string(),
 });
 
 export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
@@ -134,6 +126,8 @@ type CreatureLocalizationContext = ResourceLocalizationContext & {
   localizedLanguageNames: Record<string, string>;
   localizedTagNames: Record<string, string>;
   system: ReturnType<typeof useI18nSystem>[0];
+  translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
+  translateCreatureAbilityShort: ReturnType<typeof useTranslateCreatureAbilityShort>;
   translateCreatureAlignment: ReturnType<typeof useTranslateCreatureAlignment>;
   translateCreatureCondition: ReturnType<typeof useTranslateCreatureCondition>;
   translateCreatureSize: ReturnType<typeof useTranslateCreatureSize>;
@@ -164,6 +158,8 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
     [creature.tag_ids, tagNames],
   );
   const translateCreatureType = useTranslateCreatureType(context.lang);
+  const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
+  const translateCreatureAbilityShort = useTranslateCreatureAbilityShort(context.lang);
   const translateCreatureSize = useTranslateCreatureSize(context.lang);
   const translateCreatureAlignment = useTranslateCreatureAlignment(context.lang);
   const translateCreatureSkill = useTranslateCreatureSkill(context.lang);
@@ -179,6 +175,8 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
       localizedLanguageNames,
       localizedTagNames,
       system,
+      translateCreatureAbility,
+      translateCreatureAbilityShort,
       translateCreatureAlignment,
       translateCreatureCondition,
       translateCreatureSize,
@@ -195,6 +193,8 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
       localizedTagNames,
       system,
       translateCreatureAlignment,
+      translateCreatureAbility,
+      translateCreatureAbilityShort,
       translateCreatureCondition,
       translateCreatureSize,
       translateCreatureSkill,
@@ -225,6 +225,8 @@ export function localizeCreature(
     tp,
     tpi,
     translateCreatureAlignment,
+    translateCreatureAbility,
+    translateCreatureAbilityShort,
     translateCreatureCondition,
     translateCreatureSize,
     translateCreatureSkill,
@@ -315,6 +317,55 @@ export function localizeCreature(
   const ability_cha_mod_value = getAbilityMod(creature.ability_cha);
   const ability_cha_mod = formatMod(ability_cha_mod_value);
   const ability_cha_save = formatMod(getAbilitySave("charisma", ability_cha_mod_value));
+
+  const abilityScores = {
+    charisma: {
+      cardLabel: translateCreatureAbilityShort("charisma"),
+      label: translateCreatureAbility("charisma"),
+      modifier: ability_cha_mod,
+      save: ability_cha_save,
+      score: ability_cha,
+    },
+    constitution: {
+      cardLabel: translateCreatureAbilityShort("constitution"),
+      label: translateCreatureAbility("constitution"),
+      modifier: ability_con_mod,
+      save: ability_con_save,
+      score: ability_con,
+    },
+    dexterity: {
+      cardLabel: translateCreatureAbilityShort("dexterity"),
+      label: translateCreatureAbility("dexterity"),
+      modifier: ability_dex_mod,
+      save: ability_dex_save,
+      score: ability_dex,
+    },
+    intelligence: {
+      cardLabel: translateCreatureAbilityShort("intelligence"),
+      label: translateCreatureAbility("intelligence"),
+      modifier: ability_int_mod,
+      save: ability_int_save,
+      score: ability_int,
+    },
+    strength: {
+      cardLabel: translateCreatureAbilityShort("strength"),
+      label: translateCreatureAbility("strength"),
+      modifier: ability_str_mod,
+      save: ability_str_save,
+      score: ability_str,
+    },
+    wisdom: {
+      cardLabel: translateCreatureAbilityShort("wisdom"),
+      label: translateCreatureAbility("wisdom"),
+      modifier: ability_wis_mod,
+      save: ability_wis_save,
+      score: ability_wis,
+    },
+  };
+  const abilityScoreHeaders = {
+    modifier: t("ability.mod"),
+    save: t("ability.save"),
+  };
 
   // Get ability modifier by ability name
   const abilityModByAbility = {
@@ -550,6 +601,27 @@ export function localizeCreature(
 
   const details = details_parts.join("\n\n");
 
+  const formattedExp = formatNumber(exp, lang);
+  const formattedLairExp = formatNumber(lair_exp, lang);
+  const hitPointsValue =
+    creature.additional_hp_per_level > 0
+      ? additionalHpBase >= 0
+        ? additionalHpBase > 0
+          ? ti("hp.additional.direct", `${additionalHpBase}`, `${creature.additional_hp_per_level}`)
+          : `${creature.additional_hp_per_level} × 𝑋`
+        : `${creature.hp} ${ti(
+            "hp.additional.short",
+            `${creature.additional_hp_per_level}`,
+            `${additionalHpThreshold}`,
+          )}`
+      : `${creature.hp}`;
+  const hitPointsFormula = creature.summoned_from_spell ? "" : creature.hp_formula;
+  const armorClass = `${creature.ac}`;
+  const valueWithLair =
+    creature.has_lair && exp !== lair_exp
+      ? ti("experience.with_lair", formattedExp, formattedLairExp)
+      : formattedExp;
+
   return {
     ...localizeResource(creature, context),
     descriptor: tags
@@ -557,79 +629,67 @@ export function localizeCreature(
       : ti("subtitle.without_tags", sizes, type, alignment),
     details,
 
+    abilityScoreHeaders,
+    abilityScores,
     alignment,
+    armorClass: {
+      cardLabel: context.t("armor_class.short"),
+      label: context.t("armor_class"),
+      value: armorClass,
+      valueWithSpellLevel: creature.armor_class_adds_spell_level ? `${armorClass} + X` : armorClass,
+    },
+    armorClassAddsSpellLevel: creature.armor_class_adds_spell_level,
+    challengeRating: {
+      cardLabel: context.t("challenge_rating.short"),
+      label: context.t("challenge_rating"),
+      value: cr,
+    },
+    experience: {
+      cardLabel: context.t("experience.short"),
+      label: context.t("experience"),
+      lairLabel: context.t("experience.lair_short"),
+      lairValue: formattedLairExp,
+      value: formattedExp,
+      valueWithLair,
+    },
+    familyLabel: context.t("family"),
+    hasAdditionalHpPerLevel: creature.additional_hp_per_level > 0,
+    hasLair: creature.has_lair,
+    hitPoints: {
+      cardLabel: context.t("hit_points.short"),
+      formula: hitPointsFormula,
+      label: context.t("hit_points"),
+      value: hitPointsValue,
+      valueWithFormula: [hitPointsValue, hitPointsFormula && `(${hitPointsFormula})`]
+        .filter(Boolean)
+        .join(" "),
+    },
+    info,
+    initiative: {
+      label: context.t("initiative"),
+      passive: `${10 + creature.initiative}`,
+      value: formatSigned(creature.initiative),
+    },
+    passivePerception: {
+      label: context.t("passive_perception"),
+      value: `${creature.passive_perception}`,
+    },
+    perception: {
+      label: context.t("perception"),
+      passive: `${creature.passive_perception}`,
+      value: formatSigned(perception),
+    },
+    proficiencyBonus: {
+      cardLabel: context.t("proficiency_bonus.short"),
+      label: context.t("proficiency_bonus"),
+      value: creature.summoned_from_spell ? t("pb.summoner") : formatSigned(pb),
+    },
     sizes,
+    speed: { label: context.t("speed"), value: speed },
+    spellLevelLegend: context.t("spell_level_legend"),
+    summonedFromSpell: creature.summoned_from_spell,
     tags,
     type,
-
-    has_lair: creature.has_lair,
-
-    cr,
-    exp: formatNumber(exp, lang),
-    lair_exp: formatNumber(lair_exp, lang),
-    pb: creature.summoned_from_spell ? t("pb.summoner") : formatSigned(pb),
-
-    ac: `${creature.ac}`,
-    hp:
-      creature.additional_hp_per_level > 0
-        ? additionalHpBase >= 0
-          ? additionalHpBase > 0
-            ? ti(
-                "hp.additional.direct",
-                `${additionalHpBase}`,
-                `${creature.additional_hp_per_level}`,
-              )
-            : `${creature.additional_hp_per_level} × 𝑋`
-          : `${creature.hp} ${ti(
-              "hp.additional.short",
-              `${creature.additional_hp_per_level}`,
-              `${additionalHpThreshold}`,
-            )}`
-        : `${creature.hp}`,
-    hp_formula: creature.summoned_from_spell ? "" : creature.hp_formula,
-
-    ability_cha,
-    ability_cha_mod,
-    ability_cha_save,
-    ability_con,
-    ability_con_mod,
-    ability_con_save,
-    ability_dex,
-    ability_dex_mod,
-    ability_dex_save,
-    ability_int,
-    ability_int_mod,
-    ability_int_save,
-    ability_str,
-    ability_str_mod,
-    ability_str_save,
-    ability_wis,
-    ability_wis_mod,
-    ability_wis_save,
-
-    initiative: formatSigned(creature.initiative),
-    initiative_passive: `${10 + creature.initiative}`,
-    perception: formatSigned(perception),
-    perception_passive: `${creature.passive_perception}`,
-
-    speed,
-
-    gear,
-    immunities,
-    languages,
-    resistances,
-    senses,
-    skills,
-    vulnerabilities,
-
-    info,
-
-    actions,
-    bonus_actions,
-    lair_effects,
-    legendary_actions,
-    reactions,
-    traits,
   };
 }
 
@@ -638,6 +698,30 @@ export function localizeCreature(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "ability.mod": {
+    en: "MOD",
+    it: "MOD",
+  },
+  "ability.save": {
+    en: "SAVE",
+    it: "SALV",
+  },
+  "armor_class": {
+    en: "Armor Class",
+    it: "Classe Armatura",
+  },
+  "armor_class.short": {
+    en: "AC",
+    it: "CA",
+  },
+  "challenge_rating": {
+    en: "Challenge Rating",
+    it: "Grado di Sfida",
+  },
+  "challenge_rating.short": {
+    en: "CR",
+    it: "GS",
+  },
   "description.actions": {
     en: "##Actions##",
     it: "##Azioni##",
@@ -674,9 +758,41 @@ const i18nContext = {
     en: "<1>", // 1 = name
     it: "<1>", // 1 = name
   },
-  "exp_pb": {
-    en: "XP <2>, PB <3>",
-    it: "PE <2>, BC <3>",
+  "experience": {
+    en: "Experience Points",
+    it: "Punti Esperienza",
+  },
+  "experience.lair_short": {
+    en: "Lair XP",
+    it: "PE Tana",
+  },
+  "experience.short": {
+    en: "XP",
+    it: "PE",
+  },
+  "experience.with_lair": {
+    en: "<1> (<2> in lair)", // 1 = experience, 2 = lair experience
+    it: "<1> (<2> nella tana)", // 1 = experience, 2 = lair experience
+  },
+  "family": {
+    en: "Family",
+    it: "Famiglia",
+  },
+  "hit_points": {
+    en: "Hit Points",
+    it: "Punti Ferita",
+  },
+  "hit_points.short": {
+    en: "HP",
+    it: "PF",
+  },
+  "hp.additional.direct": {
+    en: "<1> + <2> × 𝑋",
+    it: "<1> + <2> × 𝑋",
+  },
+  "hp.additional.short": {
+    en: "+ <1> × (𝑋 − <2>)",
+    it: "+ <1> × (𝑋 − <2>)",
   },
   "info.gear/*": {
     en: "Gear",
@@ -734,6 +850,10 @@ const i18nContext = {
     en: "Vulnerability",
     it: "Vulnerabilità",
   },
+  "initiative": {
+    en: "Initiative",
+    it: "Iniziativa",
+  },
   "languages.additional/*": {
     en: "plus <1> more",
     it: "più <1> aggiuntive",
@@ -758,29 +878,17 @@ const i18nContext = {
     en: "None",
     it: "Nessuna",
   },
-  "languages.summoner.understands": {
-    en: "Understands the languages spoken by the summoner",
-    it: "Comprende le lingue parlate dall'evocatore",
-  },
   "languages.summoner.speaks": {
     en: "Understands and speaks the languages spoken by the summoner",
     it: "Comprende e parla le lingue parlate dall'evocatore",
   },
-  "hp.additional.short": {
-    en: "+ <1> × (𝑋 − <2>)",
-    it: "+ <1> × (𝑋 − <2>)",
-  },
-  "hp.additional.direct": {
-    en: "<1> + <2> × 𝑋",
-    it: "<1> + <2> × 𝑋",
+  "languages.summoner.understands": {
+    en: "Understands the languages spoken by the summoner",
+    it: "Comprende le lingue parlate dall'evocatore",
   },
   "languages.telepathy": {
     en: "Telepathy <1>",
     it: "Telepatia <1>",
-  },
-  "pb.summoner": {
-    en: "equal to the summoner's",
-    it: "uguale a quello dell'evocatore",
   },
   "languages.understands/*": {
     en: "Understands <1> but can't speak",
@@ -789,6 +897,26 @@ const i18nContext = {
   "languages.understands/1": {
     en: "Understands <1> but can't speak",
     it: "Comprende <1> ma non lo parla",
+  },
+  "passive_perception": {
+    en: "Passive Perception",
+    it: "Percezione passiva",
+  },
+  "pb.summoner": {
+    en: "equal to the summoner's",
+    it: "uguale a quello dell'evocatore",
+  },
+  "perception": {
+    en: "Perception",
+    it: "Percezione",
+  },
+  "proficiency_bonus": {
+    en: "Proficiency Bonus",
+    it: "Bonus di Competenza",
+  },
+  "proficiency_bonus.short": {
+    en: "PB",
+    it: "BC",
   },
   "senses.blindsight": {
     en: "Blindsight <1>",
@@ -805,6 +933,10 @@ const i18nContext = {
   "senses.truesight": {
     en: "Truesight <1>",
     it: "Vista Pura <1>",
+  },
+  "speed": {
+    en: "Speed",
+    it: "Velocità",
   },
   "speed.burrow": {
     en: "burrow <1>",
@@ -829,6 +961,10 @@ const i18nContext = {
   "speed.walk": {
     en: "<1>",
     it: "<1>",
+  },
+  "spell_level_legend": {
+    en: "spell level",
+    it: "livello dell'incantesimo",
   },
   "subtitle.with_tags": {
     en: "<1> <2> (<4>), <3>", // 1 = size, 2 = type, 3 = alignment
