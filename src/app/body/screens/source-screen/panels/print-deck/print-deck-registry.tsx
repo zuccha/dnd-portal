@@ -5,6 +5,7 @@ import { BackgroundCard } from "../../../../resource-modules/backgrounds/panel/b
 import { CharacterClassCard } from "../../../../resource-modules/character-classes/panel/character-class-card.tsx";
 import { CharacterSubclassCard } from "../../../../resource-modules/character-subclasses/panel/character-subclass-card.tsx";
 import { CreatureFamilyCard } from "../../../../resource-modules/creature-families/panel/creature-family-card.tsx";
+import { CreatureHabitatCard } from "../../../../resource-modules/creature-habitats/panel/creature-habitat-card.tsx";
 import { CreatureTagCard } from "../../../../resource-modules/creature-tags/panel/creature-tag-card.tsx";
 import { CreatureCard } from "../../../../resource-modules/creatures/panel/creature-card.tsx";
 import { EldritchInvocationCard } from "../../../../resource-modules/eldritch-invocations/panel/eldritch-invocation-card.tsx";
@@ -78,6 +79,7 @@ export const printDeckRegistry = {
   character_subclass: CharacterSubclassCard,
   creature: CreatureCard,
   creature_family: CreatureFamilyCard,
+  creature_habitat: CreatureHabitatCard,
   creature_tag: CreatureTagCard,
   eldritch_invocation: EldritchInvocationCard,
   feat: FeatCard,

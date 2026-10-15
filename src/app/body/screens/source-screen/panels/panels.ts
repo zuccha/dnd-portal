@@ -22,6 +22,7 @@ export const bestiaryPanelIds = [
   panelItem(Route.ResourcesBestiaryMonsters),
   panelItem(Route.ResourcesBestiaryFamilies),
   panelItem(Route.ResourcesBestiaryTags),
+  panelItem(Route.ResourcesBestiaryHabitats),
 ] as const;
 
 export type BestiaryPanelId = (typeof bestiaryPanelIds)[number]["route"];

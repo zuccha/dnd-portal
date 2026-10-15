@@ -1,8 +1,13 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
-import { creatureHabitatSchema } from "../../types/creature-habitat";
+import { type RelationEndpointUpdate } from "../../catalogue/resource-relations";
 import { creatureTreasureSchema } from "../../types/creature-treasure";
-import { resourceFormDataSchema, resourceFormDataToResource } from "../resource-form";
+import {
+  createResourceFormDataPatch,
+  type ResourceFormOutput,
+  resourceFormDataSchema,
+  resourceFormDataToResource,
+} from "../resource-form";
 import type { CreatureFamily } from "./creature-family";
 
 //------------------------------------------------------------------------------
@@ -10,7 +15,7 @@ import type { CreatureFamily } from "./creature-family";
 //------------------------------------------------------------------------------
 
 export const creatureFamilyFormDataSchema = resourceFormDataSchema.extend({
-  habitats: z.array(creatureHabitatSchema).default([]),
+  habitat_ids: z.array(z.uuid()).default([]),
   plane_ids: z.array(z.uuid()).default([]),
   treasures: z.array(creatureTreasureSchema).default([]),
 });
@@ -24,13 +29,24 @@ export type CreatureFamilyFormData = z.infer<typeof creatureFamilyFormDataSchema
 export function creatureFamilyFormDataToResource(
   data: Partial<CreatureFamilyFormData>,
   lang: string,
-): Partial<CreatureFamily> {
-  return {
-    ...resourceFormDataToResource(data, lang),
-    habitats: data.habitats ?? [],
-    plane_ids: data.plane_ids ?? [],
-    treasures: data.treasures ?? [],
-  };
+): ResourceFormOutput<CreatureFamily> {
+  const { habitat_ids, ...resourceData } = data;
+  const resource = createResourceFormDataPatch({
+    ...resourceFormDataToResource(resourceData, lang),
+    plane_ids: data.plane_ids,
+    treasures: data.treasures,
+  });
+  const relations: RelationEndpointUpdate[] =
+    habitat_ids === undefined
+      ? []
+      : [
+          {
+            group: "creature_families_and_creature_habitats",
+            related: habitat_ids.map((id) => ({ id })),
+          },
+        ];
+
+  return { resource, relations };
 }
 
 //------------------------------------------------------------------------------

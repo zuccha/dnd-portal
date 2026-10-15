@@ -5,6 +5,7 @@ import { translate } from "~/i18n/i18n-string";
 import type { PrintDeckEntry } from "~/models/print-deck/print-deck-entry";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import type { TranslationFields } from "~/models/resources/resource";
+import { splitResourceFormOutput } from "~/models/resources/resource-form";
 import type { LocalizedResourceUnion, ResourceUnion } from "~/models/resources/resource-union";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import { toaster } from "~/ui/toaster";
@@ -79,9 +80,10 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
       (nextLang: string) => {
         const errorOrPatch = parseFormData(formData, editorLang);
         if (typeof errorOrPatch !== "string") {
+          const { resource: resourcePatch } = splitResourceFormOutput(errorOrPatch);
           setEditorResource((current) =>
             resourceUnionSchema.parse(
-              applyResourceEditorPreviewPatch(current, errorOrPatch, translationFields),
+              applyResourceEditorPreviewPatch(current, resourcePatch, translationFields),
             ),
           );
         }
@@ -96,7 +98,11 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
         typeof errorOrPatch === "string"
           ? editorResource
           : resourceUnionSchema.parse(
-              applyResourceEditorPreviewPatch(editorResource, errorOrPatch, translationFields),
+              applyResourceEditorPreviewPatch(
+                editorResource,
+                splitResourceFormOutput(errorOrPatch).resource,
+                translationFields,
+              ),
             );
       await navigator.clipboard.writeText(JSON.stringify(draftResource, null, 2));
     }, [editorLang, editorResource, formData]);
@@ -131,7 +137,11 @@ export function createPrintDeckResourceDialog(configuration: PrintDeckEditorConf
         if (typeof errorOrPatch === "string") return errorOrPatch;
 
         const nextRawResource = resourceUnionSchema.parse(
-          applyResourceEditorPreviewPatch(editorResource, errorOrPatch, translationFields),
+          applyResourceEditorPreviewPatch(
+            editorResource,
+            splitResourceFormOutput(errorOrPatch).resource,
+            translationFields,
+          ),
         );
         printDeck.updateEntry(entry.id, { ...entry, resource: nextRawResource });
 

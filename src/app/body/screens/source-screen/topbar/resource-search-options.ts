@@ -77,6 +77,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "creature_habitat",
+    route: Route.ResourcesBestiaryHabitats,
+    searchNames: {
+      en: "habitat habitats",
+      it: "habitat",
+    },
+  },
+  {
     kind: "creature_tag",
     route: Route.ResourcesBestiaryTags,
     searchNames: {

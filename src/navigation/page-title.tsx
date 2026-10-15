@@ -78,6 +78,10 @@ const i18nContext = {
     en: "Creatures",
     it: "Creature",
   },
+  [Route.ResourcesBestiaryHabitats]: {
+    en: "Habitats",
+    it: "Habitat",
+  },
   [Route.ResourcesBestiaryTags]: {
     en: "Groups",
     it: "Gruppi",

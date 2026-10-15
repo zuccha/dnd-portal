@@ -3,6 +3,7 @@ import { backgroundStore } from "~/models/resources/backgrounds/background-store
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
+import { creatureHabitatStore } from "~/models/resources/creature-habitats/creature-habitat-store";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
@@ -29,6 +30,7 @@ import { BackgroundCard } from "../../../../resource-modules/backgrounds/panel/b
 import { CharacterClassCard } from "../../../../resource-modules/character-classes/panel/character-class-card.tsx";
 import { CharacterSubclassCard } from "../../../../resource-modules/character-subclasses/panel/character-subclass-card.tsx";
 import { CreatureFamilyCard } from "../../../../resource-modules/creature-families/panel/creature-family-card.tsx";
+import { CreatureHabitatCard } from "../../../../resource-modules/creature-habitats/panel/creature-habitat-card.tsx";
 import { CreatureTagCard } from "../../../../resource-modules/creature-tags/panel/creature-tag-card.tsx";
 import { CreatureCard } from "../../../../resource-modules/creatures/panel/creature-card.tsx";
 import { EldritchInvocationCard } from "../../../../resource-modules/eldritch-invocations/panel/eldritch-invocation-card.tsx";
@@ -58,6 +60,7 @@ const useLocalizedCharacterClass = characterClassStore.useLocalizedResource;
 const useLocalizedCharacterSubclass = characterSubclassStore.useLocalizedResource;
 const useLocalizedCreature = creatureStore.useLocalizedResource;
 const useLocalizedCreatureFamily = creatureFamilyStore.useLocalizedResource;
+const useLocalizedCreatureHabitat = creatureHabitatStore.useLocalizedResource;
 const useLocalizedCreatureTag = creatureTagStore.useLocalizedResource;
 const useLocalizedEldritchInvocation = eldritchInvocationStore.useLocalizedResource;
 const useLocalizedFeat = featStore.useLocalizedResource;
@@ -153,6 +156,15 @@ export function CreaturePrintDeckEntryCard(props: PrintDeckEntryCardProps) {
 export function CreatureFamilyPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
   const resource = useLocalizedCreatureFamily(props.entry.resource.id);
   return resource ? <CreatureFamilyCard {...props} localizedResource={resource} /> : null;
+}
+
+//------------------------------------------------------------------------------
+// Creature Habitat Print Deck Entry Card
+//------------------------------------------------------------------------------
+
+export function CreatureHabitatPrintDeckEntryCard(props: PrintDeckEntryCardProps) {
+  const resource = useLocalizedCreatureHabitat(props.entry.resource.id);
+  return resource ? <CreatureHabitatCard {...props} localizedResource={resource} /> : null;
 }
 
 //------------------------------------------------------------------------------

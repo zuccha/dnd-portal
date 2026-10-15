@@ -19,6 +19,11 @@ import {
 } from "~/models/resources/creature-families/creature-family-form";
 import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
 import {
+  creatureHabitatForm,
+  creatureHabitatFormDataToResource,
+} from "~/models/resources/creature-habitats/creature-habitat-form";
+import { creatureHabitatStore } from "~/models/resources/creature-habitats/creature-habitat-store";
+import {
   creatureTagForm,
   creatureTagFormDataToResource,
 } from "~/models/resources/creature-tags/creature-tag-form";
@@ -98,6 +103,7 @@ import { createBackgroundEditor } from "../../../../resource-modules/backgrounds
 import { createCharacterClassEditor } from "../../../../resource-modules/character-classes/character-class-editor";
 import { createCharacterSubclassEditor } from "../../../../resource-modules/character-subclasses/character-subclass-editor";
 import { createCreatureFamilyEditor } from "../../../../resource-modules/creature-families/creature-family-editor";
+import { createCreatureHabitatEditor } from "../../../../resource-modules/creature-habitats/creature-habitat-editor";
 import { createCreatureTagEditor } from "../../../../resource-modules/creature-tags/creature-tag-editor";
 import { createCreatureEditor } from "../../../../resource-modules/creatures/creature-editor";
 import { createEldritchInvocationEditor } from "../../../../resource-modules/eldritch-invocations/eldritch-invocation-editor";
@@ -208,12 +214,20 @@ export const printDeckEditorRegistry = {
     useLocalizationContext: creatureStore.useLocalizationContext,
   }),
   creature_family: castEntry({
-    Editor: createCreatureFamilyEditor(creatureFamilyForm),
+    Editor: createCreatureFamilyEditor(creatureFamilyForm, { showHabitatRelations: false }),
     form: creatureFamilyForm,
     parseFormData: creatureFamilyFormDataToResource,
     translationFields: creatureFamilyStore.translationFields,
     localizeResource: creatureFamilyStore.localizeResource,
     useLocalizationContext: creatureFamilyStore.useLocalizationContext,
+  }),
+  creature_habitat: castEntry({
+    Editor: createCreatureHabitatEditor(creatureHabitatForm, { showFamilyRelations: false }),
+    form: creatureHabitatForm,
+    parseFormData: creatureHabitatFormDataToResource,
+    translationFields: creatureHabitatStore.translationFields,
+    localizeResource: creatureHabitatStore.localizeResource,
+    useLocalizationContext: creatureHabitatStore.useLocalizationContext,
   }),
   creature_tag: castEntry({
     Editor: createCreatureTagEditor(creatureTagForm),

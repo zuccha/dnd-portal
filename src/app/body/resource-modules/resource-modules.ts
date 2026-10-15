@@ -2,6 +2,7 @@ import { resourceModule as backgrounds } from "./backgrounds/backgrounds-module"
 import { resourceModule as characterClasses } from "./character-classes/character-classes-module";
 import { resourceModule as characterSubclasses } from "./character-subclasses/character-subclasses-module";
 import { resourceModule as creatureFamilies } from "./creature-families/creature-families-module";
+import { resourceModule as creatureHabitats } from "./creature-habitats/creature-habitats-module";
 import { resourceModule as creatureTags } from "./creature-tags/creature-tags-module";
 import { resourceModule as creatures } from "./creatures/creatures-module";
 import { resourceModule as eldritchInvocations } from "./eldritch-invocations/eldritch-invocations-module";
@@ -36,6 +37,7 @@ export const resourceModules: ResourceModule[] = [
   characterClasses,
   characterSubclasses,
   creatureFamilies,
+  creatureHabitats,
   creatureTags,
   creatures,
   eldritchInvocations,

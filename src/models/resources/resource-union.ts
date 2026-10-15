@@ -7,6 +7,8 @@ import { characterSubclassSchema } from "./character-subclasses/character-subcla
 import { localizedCharacterSubclassSchema } from "./character-subclasses/localized-character-subclass";
 import { creatureFamilySchema } from "./creature-families/creature-family";
 import { localizedCreatureFamilySchema } from "./creature-families/localized-creature-family";
+import { creatureHabitatSchema } from "./creature-habitats/creature-habitat";
+import { localizedCreatureHabitatSchema } from "./creature-habitats/localized-creature-habitat";
 import { creatureTagSchema } from "./creature-tags/creature-tag";
 import { localizedCreatureTagSchema } from "./creature-tags/localized-creature-tag";
 import { creatureSchema } from "./creatures/creature";
@@ -47,6 +49,7 @@ export const resourceUnionSchema = z.discriminatedUnion("kind", [
   creatureTagSchema,
   creatureSchema,
   creatureFamilySchema,
+  creatureHabitatSchema,
   eldritchInvocationSchema,
   equipmentUnionSchema,
   featSchema,
@@ -75,6 +78,7 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedCreatureTagSchema,
   localizedCreatureSchema,
   localizedCreatureFamilySchema,
+  localizedCreatureHabitatSchema,
   localizedEldritchInvocationSchema,
   localizedEquipmentUnionSchema,
   localizedFeatSchema,

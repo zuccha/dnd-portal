@@ -2,6 +2,7 @@ import { GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
+import { creatureHabitatStore } from "~/models/resources/creature-habitats/creature-habitat-store";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { resourceDetailRoute } from "~/navigation/routes";
@@ -15,6 +16,8 @@ const useCreatureResourceIds = creatureStore.useResourceIds;
 const useCreatureResources = creatureStore.useResources;
 const useLocalizedCreatureNames = creatureStore.useLocalizedResourceNames;
 const useLocalizedPlaneNames = planeStore.useLocalizedResourceNames;
+const useFamilyHabitatEntries = creatureFamilyStore.useRelatedEntries;
+const useLocalizedHabitatNames = creatureHabitatStore.useLocalizedResourceNames;
 const noPlaneIds: string[] = [];
 
 //------------------------------------------------------------------------------
@@ -28,8 +31,16 @@ export default function CreatureFamilyDetail({
   actions?: ResourceDetailAction[];
   resource: CreatureFamilyDetailResource;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
+  const { lang, t } = useI18nLangContext(i18nContext);
   const family = resource;
+  const habitatEntries = useFamilyHabitatEntries(family?._raw.id ?? "", "habitats");
+  const habitatNames = useLocalizedHabitatNames(habitatEntries.map(({ id }) => id));
+  const habitats = habitatEntries
+    .flatMap((entry, index) => {
+      const name = habitatNames[index];
+      return name ? [{ ...entry, name }] : [];
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, lang));
   const creatureIds = useCreatureResourceIds(family?._raw.source_id ?? "");
   const creatures = useCreatureResources(creatureIds);
   const familyCreatureIds = useMemo(
@@ -58,8 +69,10 @@ export default function CreatureFamilyDetail({
     <ResourceDetail actions={actions} resource={family}>
       {family && (
         <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={3}>
-          {family.habitats && (
-            <ResourceDetailField label={t("habitats")}>{family.habitats}</ResourceDetailField>
+          {habitats.length > 0 && (
+            <ResourceDetailField label={t("habitats")}>
+              <ResourceDetailLinks resources={habitats} />
+            </ResourceDetailField>
           )}
           {planes.length > 0 && (
             <ResourceDetailField label={t("planes")}>

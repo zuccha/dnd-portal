@@ -1,6 +1,7 @@
 import { useMemo, type ComponentType } from "react";
 import type { PrintDeckEntry } from "~/models/print-deck/print-deck-entry";
 import type { TranslationFields } from "~/models/resources/resource";
+import { splitResourceFormOutput } from "~/models/resources/resource-form";
 import type { ResourceUnion } from "~/models/resources/resource-union";
 import { resourceUnionSchema } from "~/models/resources/resource-union";
 import type { Form } from "~/utils/form";
@@ -44,7 +45,11 @@ export default function PrintDeckEditorPreview({
     if (typeof errorOrPatch === "string") return entry.resource;
 
     return resourceUnionSchema.parse(
-      applyResourceEditorPreviewPatch(entry.resource, errorOrPatch, translationFields),
+      applyResourceEditorPreviewPatch(
+        entry.resource,
+        splitResourceFormOutput(errorOrPatch).resource,
+        translationFields,
+      ),
     );
   }, [editorLang, entry, formData, parseFormData, translationFields]);
 

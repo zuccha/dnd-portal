@@ -28,6 +28,7 @@ export type FeatureRelation<K extends ResourceKind> = ResourceRelation<K, "featu
 
 export type RelationGroupRows = {
   character_classes_and_spells: ResourceRelation<"character_class", "spell">;
+  creature_families_and_creature_habitats: ResourceRelation<"creature_family", "creature_habitat">;
   character_classes_and_features: FeatureRelation<"character_class">;
   character_subclasses_and_features: FeatureRelation<"character_subclass">;
   equipments_and_features: FeatureRelation<"armor" | "item" | "tool" | "weapon">;
@@ -71,7 +72,12 @@ export type RelatedResourceEntriesByKind = {
     features: FeatureRelatedEntry<"feature">;
   };
   creature: {};
-  creature_family: {};
+  creature_family: {
+    habitats: RelatedEntry<"creature_habitat">;
+  };
+  creature_habitat: {
+    families: RelatedEntry<"creature_family">;
+  };
   creature_tag: {};
   eldritch_invocation: {};
   feat: {
@@ -158,7 +164,12 @@ export const relationGroupByResourceKind = {
     features: "character_subclasses_and_features",
   },
   creature: {},
-  creature_family: {},
+  creature_family: {
+    habitats: "creature_families_and_creature_habitats",
+  },
+  creature_habitat: {
+    families: "creature_families_and_creature_habitats",
+  },
   creature_tag: {},
   eldritch_invocation: {},
   feat: {
@@ -241,6 +252,7 @@ export type RelationResourceEndpoint = {
 
 const relationEndpointKinds: Record<RelationGroup, [ResourceKind[], ResourceKind[]]> = {
   character_classes_and_spells: [["character_class"], ["spell"]],
+  creature_families_and_creature_habitats: [["creature_family"], ["creature_habitat"]],
   character_classes_and_features: [["character_class"], ["feature"]],
   character_subclasses_and_features: [["character_subclass"], ["feature"]],
   equipments_and_features: [["armor", "item", "tool", "weapon"], ["feature"]],
@@ -282,7 +294,8 @@ export function applyRelationEndpointUpdate<G extends RelationGroup>(
   }
 
   function updateKey(related: RelationEndpointUpdate["related"][number]): string {
-    return update.group === "character_classes_and_spells"
+    return update.group === "character_classes_and_spells" ||
+      update.group === "creature_families_and_creature_habitats"
       ? related.id
       : `${related.id}:${related.min_level}`;
   }
@@ -339,7 +352,11 @@ export function applyRelationEndpointUpdate<G extends RelationGroup>(
           resource_2_position: index,
         };
 
-    if (update.group === "character_classes_and_spells") return row;
+    if (
+      update.group === "character_classes_and_spells" ||
+      update.group === "creature_families_and_creature_habitats"
+    )
+      return row;
     if (typeof related.min_level !== "number") {
       throw new Error(`Missing min_level for ${update.group} relation ${related.id}`);
     }
@@ -422,6 +439,14 @@ export const resourceRelationsSchema = z.object({
     })
     .array()
     .default([]),
+  creature_families_and_creature_habitats: z
+    .object({
+      ...relationFields,
+      resource_1_kind: z.literal("creature_family"),
+      resource_2_kind: z.literal("creature_habitat"),
+    })
+    .array()
+    .default([]),
   character_classes_and_features: featureRelationSchema("character_class").array().default([]),
   character_subclasses_and_features: featureRelationSchema("character_subclass")
     .array()
@@ -441,6 +466,7 @@ export const resourceRelationsSchema = z.object({
 
 export const emptyResourceRelations: ResourceRelations = {
   character_classes_and_spells: [],
+  creature_families_and_creature_habitats: [],
   character_classes_and_features: [],
   character_subclasses_and_features: [],
   equipments_and_features: [],

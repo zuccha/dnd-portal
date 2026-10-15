@@ -16,6 +16,7 @@ export const resourcePanelTranslations = {
   [Route.ResourcesBestiary]: { en: "Bestiary", it: "Bestiario" },
   [Route.ResourcesBestiaryMonsters]: { en: "Creatures", it: "Creature" },
   [Route.ResourcesBestiaryFamilies]: { en: "Families", it: "Famiglie" },
+  [Route.ResourcesBestiaryHabitats]: { en: "Habitats", it: "Habitat" },
   [Route.ResourcesBestiaryTags]: { en: "Groups", it: "Gruppi" },
   [Route.ResourcesBlocksFeatures]: { en: "Features", it: "Privilegi" },
   [Route.ResourcesCharacter]: { en: "Character", it: "Personaggio" },
