@@ -1,5 +1,4 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { vehicleStore } from "~/models/resources/vehicles/vehicle-store";
 import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
@@ -17,40 +16,34 @@ export default function VehicleDetail({
   actions?: ResourceDetailAction[];
   resource: VehicleDetailResource;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
   const vehicle = resource;
 
   return (
     <ResourceDetail actions={actions} resource={vehicle}>
       {vehicle && (
         <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
-          <ResourceDetailField label={t("armor_class")}>{vehicle.ac}</ResourceDetailField>
-          <ResourceDetailField label={t("hit_points")}>{vehicle.hp}</ResourceDetailField>
-          <ResourceDetailField label={t("damage_threshold")}>
-            {vehicle.damage_threshold}
+          <ResourceDetailField label={vehicle.armorClass.label}>
+            {vehicle.armorClass.value}
           </ResourceDetailField>
-          <ResourceDetailField label={t("crew")}>{vehicle.crew}</ResourceDetailField>
-          <ResourceDetailField label={t("passengers")}>{vehicle.passengers}</ResourceDetailField>
-          <ResourceDetailField label={t("cargo")}>{vehicle.cargo}</ResourceDetailField>
-          <ResourceDetailField label={t("speed")}>{vehicle.speed}</ResourceDetailField>
-          <ResourceDetailField label={t("cost")}>{vehicle.cost}</ResourceDetailField>
+          <ResourceDetailField label={vehicle.hitPoints.label}>
+            {vehicle.hitPoints.value}
+          </ResourceDetailField>
+          <ResourceDetailField label={vehicle.damageThreshold.label}>
+            {vehicle.damageThreshold.value}
+          </ResourceDetailField>
+          <ResourceDetailField label={vehicle.crew.label}>{vehicle.crew.value}</ResourceDetailField>
+          <ResourceDetailField label={vehicle.passengers.label}>
+            {vehicle.passengers.value}
+          </ResourceDetailField>
+          <ResourceDetailField label={vehicle.cargo.label}>
+            {vehicle.cargo.value}
+          </ResourceDetailField>
+          <ResourceDetailField label={vehicle.speed.label}>
+            {vehicle.speed.value}
+          </ResourceDetailField>
+          <ResourceDetailField label={vehicle.cost.label}>{vehicle.cost.value}</ResourceDetailField>
         </SimpleGrid>
       )}
     </ResourceDetail>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  armor_class: { en: "Armor Class", it: "Classe Armatura" },
-  cargo: { en: "Cargo Capacity", it: "Capacità di Carico" },
-  cost: { en: "Cost", it: "Costo" },
-  crew: { en: "Crew Capacity", it: "Capacità Equipaggio" },
-  damage_threshold: { en: "Damage Threshold", it: "Soglia di Danno" },
-  hit_points: { en: "Hit Points", it: "Punti Ferita" },
-  passengers: { en: "Passenger Capacity", it: "Capacità Passeggeri" },
-  speed: { en: "Speed", it: "Velocità" },
-};

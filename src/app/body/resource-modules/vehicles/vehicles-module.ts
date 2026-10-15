@@ -36,19 +36,19 @@ const columns = createResourcesTableColumns<Vehicle, LocalizedVehicle>([
     textAlign: "right",
   },
   {
-    key: "ac",
+    key: "armorClass",
     label: { en: "AC", it: "CA" },
     textAlign: "right",
     w: "1%",
   },
   {
-    key: "hp",
+    key: "hitPoints",
     label: { en: "HP", it: "PF" },
     textAlign: "right",
     w: "1%",
   },
   {
-    key: "damage_threshold",
+    key: "damageThreshold",
     label: { en: "DT", it: "SD" },
     textAlign: "right",
     w: "1%",
