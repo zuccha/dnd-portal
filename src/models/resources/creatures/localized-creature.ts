@@ -39,6 +39,16 @@ const useLocalizedLanguageNames = languageStore.useLocalizedResourceNames;
 const useLocalizedCreatureTagNames = creatureTagStore.useLocalizedResourceNames;
 
 //------------------------------------------------------------------------------
+// Localized Creature Tag Reference
+//------------------------------------------------------------------------------
+
+const localizedCreatureTagReferenceSchema = z.object({
+  id: z.uuid(),
+  kind: z.literal("creature_tag"),
+  name: z.string(),
+});
+
+//------------------------------------------------------------------------------
 // Format Creature Sizes
 //------------------------------------------------------------------------------
 
@@ -109,7 +119,9 @@ export const localizedCreatureSchema = localizedResourceSchema(
   speed: localizedFieldSchema,
   spellLevelLegend: z.string(),
   summonedFromSpell: z.boolean(),
-  tags: z.string(),
+  tags: localizedFieldSchema.extend({
+    resources: z.array(localizedCreatureTagReferenceSchema),
+  }),
   type: z.string(),
 });
 
@@ -237,7 +249,11 @@ export function localizeCreature(
   const type = translateCreatureType(creature.type);
   const alignment = translateCreatureAlignment(creature.alignment);
 
-  const tags = creature.tag_ids.map((id) => localizedTagNames[id] ?? "").join(", ");
+  const tagResources = creature.tag_ids.flatMap((id) => {
+    const name = localizedTagNames[id] ?? "";
+    return name ? [{ id, kind: "creature_tag" as const, name }] : [];
+  });
+  const tagText = tagResources.map(({ name }) => name).join(", ");
 
   // EXP and PB from CR
   const cr =
@@ -624,8 +640,8 @@ export function localizeCreature(
 
   return {
     ...localizeResource(creature, context),
-    descriptor: tags
-      ? ti("subtitle.with_tags", sizes, type, alignment, tags)
+    descriptor: tagText
+      ? ti("subtitle.with_tags", sizes, type, alignment, tagText)
       : ti("subtitle.without_tags", sizes, type, alignment),
     details,
 
@@ -688,7 +704,11 @@ export function localizeCreature(
     speed: { label: context.t("speed"), value: speed },
     spellLevelLegend: context.t("spell_level_legend"),
     summonedFromSpell: creature.summoned_from_spell,
-    tags,
+    tags: {
+      label: context.t("tags"),
+      resources: tagResources,
+      value: tagText,
+    },
     type,
   };
 }
@@ -973,6 +993,10 @@ const i18nContext = {
   "subtitle.without_tags": {
     en: "<1> <2>, <3>", // 1 = size, 2 = type, 3 = alignment
     it: "<2> <1>, <3>", // 1 = size, 2 = type, 3 = alignment
+  },
+  "tags": {
+    en: "Group",
+    it: "Gruppo",
   },
 };
 

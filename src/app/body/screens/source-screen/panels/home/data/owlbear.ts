@@ -145,7 +145,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     speed: { label: "Speed", value: "12 m, climb 12 m" },
     spellLevelLegend: "spell level",
     summonedFromSpell: false,
-    tags: "",
+    tags: { label: "Tags", resources: [], value: "" },
     type: "Monstrosity",
   },
   it: {
@@ -288,7 +288,7 @@ const owlbear: Record<string, LocalizedCreature> = {
     speed: { label: "Velocità", value: "12 m, scalata 12 m" },
     spellLevelLegend: "livello dell'incantesimo",
     summonedFromSpell: false,
-    tags: "",
+    tags: { label: "Tag", resources: [], value: "" },
     type: "Mostruosità",
   },
 };

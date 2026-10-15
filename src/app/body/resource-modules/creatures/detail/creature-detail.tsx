@@ -10,6 +10,7 @@ import RichText from "~/ui/rich-text";
 import RouterLink from "~/ui/router-link";
 import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
+import ResourceDetailLinks from "../../resource-detail-links";
 import CreatureDetailAbilityScoreTable from "./creature-detail-ability-score-table";
 import type { ResourceDetailLinkEntry } from "../../resource-detail-links";
 import type { ReactNode } from "react";
@@ -106,28 +107,31 @@ export default function CreatureDetail({
             <ResourceDetailField label={creature.armorClass.label}>
               {creature.armorClass.valueWithSpellLevel}
             </ResourceDetailField>
-            <GridItem colSpan={{ base: 1, md: family ? 1 : 2 }}>
-              <ResourceDetailField label={creature.hitPoints.label}>
-                {creature.hitPoints.valueWithFormula}
-              </ResourceDetailField>
-            </GridItem>
-            {family && (
-              <ResourceDetailField label={creature.familyLabel}>
-                <RouterLink to={resourceDetailRoute("creature_family", familyId)}>
-                  {family.name}
-                </RouterLink>
-              </ResourceDetailField>
-            )}
-          </SimpleGrid>
-
-          <SimpleGrid columns={{ base: 1, md: 3 }} columnGap={6} rowGap={3}>
+            <ResourceDetailField label={creature.hitPoints.label}>
+              {creature.hitPoints.valueWithFormula}
+            </ResourceDetailField>
             <ResourceDetailField label={creature.initiative.label}>
               {creature.initiative.value} ({creature.initiative.passive})
             </ResourceDetailField>
-            <GridItem colSpan={{ base: 1, md: 2 }}>
-              <ResourceDetailField label={creature.passivePerception.label}>
-                {creature.passivePerception.value}
-              </ResourceDetailField>
+
+            <ResourceDetailField label={creature.passivePerception.label}>
+              {creature.passivePerception.value}
+            </ResourceDetailField>
+            <GridItem gridColumn={{ base: 1, md: 2 }}>
+              {family && (
+                <ResourceDetailField label={creature.familyLabel}>
+                  <RouterLink to={resourceDetailRoute("creature_family", familyId)}>
+                    {family.name}
+                  </RouterLink>
+                </ResourceDetailField>
+              )}
+            </GridItem>
+            <GridItem gridColumn={{ base: 1, md: 3 }}>
+              {creature.tags.resources.length > 0 && (
+                <ResourceDetailField label={creature.tags.label}>
+                  <ResourceDetailLinks resources={creature.tags.resources} />
+                </ResourceDetailField>
+              )}
             </GridItem>
           </SimpleGrid>
 
