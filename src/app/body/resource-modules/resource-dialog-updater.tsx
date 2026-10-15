@@ -175,10 +175,11 @@ export function createResourceDialogUpdater<
       (nextLang: string) => {
         const errorOrData = parseFormData(formData, editorLang);
         if (typeof errorOrData !== "string") {
+          const { resource: resourcePatch } = splitResourceFormOutput(errorOrData);
           setEditorResource((current) =>
             applyResourceEditorPreviewPatch(
               current,
-              errorOrData as ResourceEditorPreviewPatch<R>,
+              resourcePatch as ResourceEditorPreviewPatch<R>,
               store.translationFields,
             ),
           );
