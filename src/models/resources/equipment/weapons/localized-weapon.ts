@@ -64,8 +64,11 @@ type WeaponLocalizationContext = EquipmentLocalizationContext & {
 // Use Weapon Localization Context
 //------------------------------------------------------------------------------
 
-export function useWeaponLocalizationContext(weapon: Weapon): WeaponLocalizationContext {
-  const context = useEquipmentLocalizationContext(weapon, i18nContext);
+export function useWeaponLocalizationContext(
+  weapon: Weapon,
+  related: Parameters<typeof useEquipmentLocalizationContext>[1],
+): WeaponLocalizationContext {
+  const context = useEquipmentLocalizationContext(weapon, related, i18nContext);
   const [system] = useI18nSystem();
   const translateDamageType = useTranslateDamageType(context.lang);
   const translateWeaponMastery = useTranslateWeaponMastery(context.lang);

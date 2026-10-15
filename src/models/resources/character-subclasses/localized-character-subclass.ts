@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import z from "zod";
-import { useActiveSourceRelatedResourceEntries } from "../../catalogue/resource-relation-hooks";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { characterClassStore } from "../character-classes/character-class-store";
 import {
@@ -10,6 +9,7 @@ import {
   useResourceLocalizationContext,
 } from "../localized-resource";
 import { type CharacterSubclass, characterSubclassSchema } from "./character-subclass";
+import type { RelatedResourceEntries } from "../../catalogue/resource-relations";
 
 const { useLocalizedResourceName: useLocalizedCharacterClassName } = characterClassStore;
 
@@ -41,16 +41,11 @@ type CharacterSubclassLocalizationContext = ResourceLocalizationContext & {
 
 export function useCharacterSubclassLocalizationContext(
   characterSubclass: CharacterSubclass,
+  related: RelatedResourceEntries<"character_subclass">,
 ): CharacterSubclassLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const characterClassName = useLocalizedCharacterClassName(characterSubclass.character_class_id);
-  const relatedFeatures = useActiveSourceRelatedResourceEntries(
-    "character_subclasses_and_features",
-    characterSubclass,
-  );
-  const featureEntries = useLocalizedFeatureEntries(
-    relatedFeatures.map(({ id, min_level = 0 }) => ({ id, min_level })),
-  );
+  const featureEntries = useLocalizedFeatureEntries(related.features);
 
   return useMemo(
     () => ({ ...context, characterClassName, featureEntries }),

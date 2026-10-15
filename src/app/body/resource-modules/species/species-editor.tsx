@@ -1,8 +1,7 @@
 import { HStack } from "@chakra-ui/react";
-import { useMemo } from "react";
-import { useSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import type { Species } from "~/models/resources/species/species";
 import type { SpeciesFormData } from "~/models/resources/species/species-form";
+import { speciesStore } from "~/models/resources/species/species-store";
 import { useCreatureSizeOptions } from "~/models/types/creature-size";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import type { Form } from "~/utils/form";
@@ -15,6 +14,8 @@ import {
   createTextareaField,
 } from "../resource-editor-form";
 import { useResourceEditorLang } from "../resource-editor-language-context";
+
+const { useRelatedEntries: useSpeciesRelatedEntries } = speciesStore;
 
 //------------------------------------------------------------------------------
 // Create Species Editor
@@ -96,15 +97,7 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
 
   return function SpeciesEditor({ resource, sourceId }: SpeciesEditorProps) {
     const { lang } = useResourceEditorLang();
-    const featureEntries = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "species_and_features",
-      resource,
-    );
-    const featureEntryValues = useMemo(
-      () => featureEntries.map(({ id, min_level = 0 }) => ({ id, min_level })),
-      [featureEntries],
-    );
+    const featureEntries = useSpeciesRelatedEntries(resource.id, "features");
 
     return (
       <ResourceEditor resource={resource}>
@@ -116,7 +109,7 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
 
-        <FeatureEntriesField defaultValue={featureEntryValues} sourceId={sourceId} w="full" />
+        <FeatureEntriesField defaultValue={featureEntries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

@@ -4,7 +4,6 @@ import type { I18nLangContext } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
-import { useActiveSourceRelatedResourceEntries } from "../../catalogue/resource-relation-hooks";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import {
@@ -15,6 +14,7 @@ import {
   useResourceLocalizationContext,
 } from "../localized-resource";
 import { type Equipment } from "./equipment";
+import type { RelatedResourceEntries } from "../../catalogue/resource-relations";
 
 //------------------------------------------------------------------------------
 // Localized Equipment
@@ -52,20 +52,15 @@ export type EquipmentLocalizationContext = ResourceLocalizationContext & {
 //------------------------------------------------------------------------------
 
 export function useEquipmentLocalizationContext(
-  equipment: Equipment,
+  _equipment: Equipment,
+  related: RelatedResourceEntries<Equipment["kind"]>,
   context: I18nLangContext = i18nContext,
 ): EquipmentLocalizationContext {
   const mergedContext = useMemo(() => ({ ...i18nContext, ...context }), [context]);
   const resourceContext = useResourceLocalizationContext(mergedContext);
   const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
-  const relatedFeatures = useActiveSourceRelatedResourceEntries(
-    "equipments_and_features",
-    equipment,
-  );
-  const featureEntries = useLocalizedFeatureEntries(
-    relatedFeatures.map(({ id, min_level = 0 }) => ({ id, min_level })),
-  );
+  const featureEntries = useLocalizedFeatureEntries(related.features);
   const translateRarity = useTranslateEquipmentRarity(resourceContext.lang);
 
   return useMemo(

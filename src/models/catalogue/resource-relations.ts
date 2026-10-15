@@ -35,7 +35,183 @@ export type RelationGroupRows = {
   species_and_features: FeatureRelation<"species">;
 };
 
+//------------------------------------------------------------------------------
+// Related Resource Group
+//------------------------------------------------------------------------------
+
 export type RelationGroup = keyof RelationGroupRows;
+
+//------------------------------------------------------------------------------
+// Related Entry
+//------------------------------------------------------------------------------
+
+type RelatedEntry<K extends ResourceKind> = { id: string; kind: K };
+
+//------------------------------------------------------------------------------
+// Feature Related Entry
+//------------------------------------------------------------------------------
+
+type FeatureRelatedEntry<K extends ResourceKind> = RelatedEntry<K> & { min_level: number };
+
+//------------------------------------------------------------------------------
+// Related Resource Entries By Kind
+//------------------------------------------------------------------------------
+
+export type RelatedResourceEntriesByKind = {
+  armor: {
+    features: FeatureRelatedEntry<"feature">;
+  };
+  armor_modifier: {};
+  background: {};
+  character_class: {
+    features: FeatureRelatedEntry<"feature">;
+    spells: RelatedEntry<"spell">;
+  };
+  character_subclass: {
+    features: FeatureRelatedEntry<"feature">;
+  };
+  creature: {};
+  creature_family: {};
+  creature_tag: {};
+  eldritch_invocation: {};
+  feat: {
+    features: FeatureRelatedEntry<"feature">;
+  };
+  feature: {
+    character_classes: FeatureRelatedEntry<"character_class">;
+    character_subclasses: FeatureRelatedEntry<"character_subclass">;
+    equipments: FeatureRelatedEntry<"armor" | "item" | "tool" | "weapon">;
+    feats: FeatureRelatedEntry<"feat">;
+    species: FeatureRelatedEntry<"species">;
+  };
+  item: {
+    features: FeatureRelatedEntry<"feature">;
+  };
+  item_modifier: {};
+  language: {};
+  maneuver: {};
+  metamagic: {};
+  plane: {};
+  service: {};
+  species: {
+    features: FeatureRelatedEntry<"feature">;
+  };
+  spell: {
+    character_classes: RelatedEntry<"character_class">;
+  };
+  tool: {
+    features: FeatureRelatedEntry<"feature">;
+  };
+  tool_modifier: {};
+  vehicle: {};
+  weapon: {
+    features: FeatureRelatedEntry<"feature">;
+  };
+  weapon_modifier: {};
+};
+
+//------------------------------------------------------------------------------
+// Related Resource Name
+//------------------------------------------------------------------------------
+
+export type RelatedResourceName<K extends ResourceKind> =
+  K extends keyof RelatedResourceEntriesByKind
+    ? keyof RelatedResourceEntriesByKind[K] & string
+    : never;
+
+//------------------------------------------------------------------------------
+// Related Resource Entry By Name
+//------------------------------------------------------------------------------
+
+export type RelatedResourceEntryByName<
+  K extends ResourceKind,
+  N extends RelatedResourceName<K>,
+> = K extends keyof RelatedResourceEntriesByKind
+  ? N extends keyof RelatedResourceEntriesByKind[K]
+    ? RelatedResourceEntriesByKind[K][N]
+    : never
+  : never;
+
+//------------------------------------------------------------------------------
+// Related Resource Entries
+//------------------------------------------------------------------------------
+
+export type RelatedResourceEntries<K extends ResourceKind> = {
+  [N in RelatedResourceName<K>]: RelatedResourceEntryByName<K, N>[];
+};
+
+//------------------------------------------------------------------------------
+// Relation Group By Resource Kind
+//------------------------------------------------------------------------------
+
+export const relationGroupByResourceKind = {
+  armor: {
+    features: "equipments_and_features",
+  },
+  armor_modifier: {},
+  background: {},
+  character_class: {
+    features: "character_classes_and_features",
+    spells: "character_classes_and_spells",
+  },
+  character_subclass: {
+    features: "character_subclasses_and_features",
+  },
+  creature: {},
+  creature_family: {},
+  creature_tag: {},
+  eldritch_invocation: {},
+  feat: {
+    features: "feats_and_features",
+  },
+  feature: {
+    character_classes: "character_classes_and_features",
+    character_subclasses: "character_subclasses_and_features",
+    equipments: "equipments_and_features",
+    feats: "feats_and_features",
+    species: "species_and_features",
+  },
+  item: { features: "equipments_and_features" },
+  item_modifier: {},
+  language: {},
+  maneuver: {},
+  metamagic: {},
+  plane: {},
+  service: {},
+  species: {
+    features: "species_and_features",
+  },
+  spell: {
+    character_classes: "character_classes_and_spells",
+  },
+  tool: {
+    features: "equipments_and_features",
+  },
+  tool_modifier: {},
+  vehicle: {},
+  weapon: {
+    features: "equipments_and_features",
+  },
+  weapon_modifier: {},
+} as const satisfies {
+  [K in ResourceKind]: Record<RelatedResourceName<K>, RelationGroup>;
+};
+
+//------------------------------------------------------------------------------
+// Get Relation Group
+//------------------------------------------------------------------------------
+
+export function getRelationGroup<K extends ResourceKind, N extends RelatedResourceName<K>>(
+  kind: K,
+  name: N,
+): RelationGroup {
+  const definitions = relationGroupByResourceKind as Partial<
+    Record<ResourceKind, Partial<Record<string, RelationGroup>>>
+  >;
+  const group = definitions[kind]?.[name];
+  if (!group) throw new Error(`Unknown relation ${kind}.${name}`);
+  return group;
+}
 
 export type ResourceRelations = { [G in RelationGroup]: RelationGroupRows[G][] };
 
@@ -48,16 +224,6 @@ export type ResourceRelationRow<G extends RelationGroup> = RelationGroupRows[G];
 export type RelationEndpointUpdate = {
   group: RelationGroup;
   related: { id: string; kind?: ResourceKind; min_level?: number }[];
-};
-
-//------------------------------------------------------------------------------
-// Related Resource Entry
-//------------------------------------------------------------------------------
-
-export type RelatedResourceEntry = {
-  id: string;
-  kind: ResourceKind;
-  min_level?: number;
 };
 
 //------------------------------------------------------------------------------
@@ -221,45 +387,6 @@ export function removeResourceRelations(
       ),
     ]),
   ) as ResourceRelations;
-}
-
-//------------------------------------------------------------------------------
-// Get Related Resource Entries
-//------------------------------------------------------------------------------
-
-export function getRelatedResourceEntries<G extends RelationGroup>(
-  rows: ResourceRelationRow<G>[],
-  endpoint: RelationResourceEndpoint,
-): RelatedResourceEntry[] {
-  const related = (rows as ResourceRelation<ResourceKind, ResourceKind>[])
-    .flatMap((row) => {
-      if (row.resource_1_kind === endpoint.kind && row.resource_1_id === endpoint.id) {
-        return [
-          {
-            id: row.resource_2_id,
-            kind: row.resource_2_kind,
-            min_level:
-              "min_level" in row && typeof row.min_level === "number" ? row.min_level : undefined,
-            position: row.resource_1_position,
-          },
-        ];
-      }
-      if (row.resource_2_kind === endpoint.kind && row.resource_2_id === endpoint.id) {
-        return [
-          {
-            id: row.resource_1_id,
-            kind: row.resource_1_kind,
-            min_level:
-              "min_level" in row && typeof row.min_level === "number" ? row.min_level : undefined,
-            position: row.resource_2_position,
-          },
-        ];
-      }
-      return [];
-    })
-    .sort((a, b) => a.position - b.position);
-
-  return related.map(({ id, kind, min_level }) => ({ id, kind, min_level }));
 }
 
 //------------------------------------------------------------------------------

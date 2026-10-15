@@ -1,7 +1,6 @@
 import { GridItem, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useActiveSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
@@ -14,6 +13,7 @@ import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail
 import ResourceDetailField from "../../resource-detail-field";
 
 type FeatureDetailResource = ReturnType<typeof featureStore.useLocalizedResource>;
+const { useRelatedEntries: useFeatureRelatedEntries } = featureStore;
 const useLocalizedClassNames = characterClassStore.useLocalizedResourceNames;
 const useLocalizedSubclassNames = characterSubclassStore.useLocalizedResourceNames;
 const useLocalizedFeatNames = featStore.useLocalizedResourceNames;
@@ -34,20 +34,11 @@ export default function FeatureDetail({
   const { lang, t } = useI18nLangContext(i18nContext);
   const feature = resource;
   const endpoint = feature ?? defaultFeatureEndpoint;
-  const classEntries = useActiveSourceRelatedResourceEntries(
-    "character_classes_and_features",
-    endpoint,
-  );
-  const subclassEntries = useActiveSourceRelatedResourceEntries(
-    "character_subclasses_and_features",
-    endpoint,
-  );
-  const equipmentEntries = useActiveSourceRelatedResourceEntries(
-    "equipments_and_features",
-    endpoint,
-  );
-  const featEntries = useActiveSourceRelatedResourceEntries("feats_and_features", endpoint);
-  const speciesEntries = useActiveSourceRelatedResourceEntries("species_and_features", endpoint);
+  const classEntries = useFeatureRelatedEntries(endpoint.id, "character_classes");
+  const subclassEntries = useFeatureRelatedEntries(endpoint.id, "character_subclasses");
+  const equipmentEntries = useFeatureRelatedEntries(endpoint.id, "equipments");
+  const featEntries = useFeatureRelatedEntries(endpoint.id, "feats");
+  const speciesEntries = useFeatureRelatedEntries(endpoint.id, "species");
   const classIds = useMemo(() => classEntries.map(({ id }) => id), [classEntries]);
   const subclassIds = useMemo(() => subclassEntries.map(({ id }) => id), [subclassEntries]);
   const featIds = useMemo(() => featEntries.map(({ id }) => id), [featEntries]);

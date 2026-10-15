@@ -1,6 +1,7 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import type { Item } from "~/models/resources/equipment/items/item";
 import type { ItemFormData } from "~/models/resources/equipment/items/item-form";
+import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { itemModifierStore } from "~/models/resources/modifiers/equipment/items/item-modifier-store";
 import { useItemTypeOptions } from "~/models/types/item-type";
 import type { Form } from "~/utils/form";
@@ -25,7 +26,7 @@ export function createItemEditor(form: Form<ItemFormData>) {
   // Equipment Editor
   //----------------------------------------------------------------------------
 
-  const EquipmentEditor = createEquipmentEditor(form, itemModifierStore);
+  const EquipmentEditor = createEquipmentEditor(form, itemStore, itemModifierStore);
 
   //----------------------------------------------------------------------------
   // Charges

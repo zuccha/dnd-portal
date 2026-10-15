@@ -23,23 +23,17 @@ export const spellStore = createResourceStore("spell", {
   defaultResource: defaultSpell,
   displayName: { en: "Spells", it: "Incantesimi" },
   filtersSchema: spellFiltersSchema,
-  normalizeFilters: (filters, resourceIds, _getResource, relations) => {
-    const visibleSpellIds = new Set(resourceIds);
-    const filtersClassIds = Object.entries(filters.character_class_ids ?? {});
-    const availableClassIds = new Set(
-      relations.character_classes_and_spells
-        .filter(({ resource_2_id }) => visibleSpellIds.has(resource_2_id))
-        .map(({ resource_1_id }) => resource_1_id),
-    );
-
-    return {
-      ...filters,
-      character_class_ids: Object.fromEntries(
-        filtersClassIds.filter(([id]) => availableClassIds.has(id)),
+  normalizeFilters: (filters, resourceIds, _getResource, getRelatedIds) => ({
+    ...filters,
+    character_class_ids: Object.fromEntries(
+      Object.entries(filters.character_class_ids ?? {}).filter(([id]) =>
+        resourceIds.some((resourceId) =>
+          getRelatedIds(resourceId, "character_classes").includes(id),
+        ),
       ),
-    };
-  },
-  matchesResource: (spell, filters, relations) =>
+    ),
+  }),
+  matchesResource: (spell, filters, getRelatedIds) =>
     matchesBoolean(spell.concentration, filters.concentration) &&
     matchesBoolean(spell.material, filters.material) &&
     matchesBoolean(spell.ritual, filters.ritual) &&
@@ -48,12 +42,7 @@ export const spellStore = createResourceStore("spell", {
     matchesInclusion(spell.casting_time, filters.casting_time) &&
     matchesInclusion(spell.level, filters.levels) &&
     matchesInclusion(spell.school, filters.schools) &&
-    matchesInclusionList(
-      relations.character_classes_and_spells
-        .filter(({ resource_2_id }) => resource_2_id === spell.id)
-        .map(({ resource_1_id }) => resource_1_id),
-      filters.character_class_ids,
-    ),
+    matchesInclusionList(getRelatedIds(spell.id, "character_classes"), filters.character_class_ids),
   orderOptions: spellOrderOptions,
   translationFields: spellTranslationFields,
   localizeResource: localizeSpell,

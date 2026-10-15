@@ -1,10 +1,9 @@
 import { HStack } from "@chakra-ui/react";
-import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { CharacterClass } from "~/models/resources/character-classes/character-class";
 import { type CharacterClassFormData } from "~/models/resources/character-classes/character-class-form";
+import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
@@ -26,6 +25,9 @@ import {
 } from "../resource-editor-form";
 import { useResourceEditorLang } from "../resource-editor-language-context";
 import StartingEquipmentEditor from "./starting-equipment-editor";
+
+const { useRelatedEntries: useCharacterClassRelatedEntries } = characterClassStore;
+const { useRelatedIds: useCharacterClassRelatedIds } = characterClassStore;
 
 //------------------------------------------------------------------------------
 // Character Class Editor
@@ -295,21 +297,8 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
 
   return function CharacterClassEditor({ resource, sourceId }: CharacterClassEditorProps) {
     const { lang } = useResourceEditorLang();
-    const featureEntries = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "character_classes_and_features",
-      resource,
-    );
-    const spellEntries = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "character_classes_and_spells",
-      resource,
-    );
-    const spellIds = useMemo(() => spellEntries.map(({ id }) => id), [spellEntries]);
-    const featureEntryValues = useMemo(
-      () => featureEntries.map(({ id, min_level = 0 }) => ({ id, min_level })),
-      [featureEntries],
-    );
+    const featureEntries = useCharacterClassRelatedEntries(resource.id, "features");
+    const spellIds = useCharacterClassRelatedIds(resource.id, "spells");
 
     return (
       <ResourceEditor resource={resource}>
@@ -350,7 +339,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
 
         <SpellIdsField defaultValue={spellIds} sourceId={sourceId} w="full" />
 
-        <FeatureEntriesField defaultValue={featureEntryValues} sourceId={sourceId} w="full" />
+        <FeatureEntriesField defaultValue={featureEntries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

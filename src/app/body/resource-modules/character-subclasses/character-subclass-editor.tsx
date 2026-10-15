@@ -1,12 +1,13 @@
 import { HStack } from "@chakra-ui/react";
-import { useMemo } from "react";
-import { useSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import type { CharacterSubclass } from "~/models/resources/character-subclasses/character-subclass";
 import type { CharacterSubclassFormData } from "~/models/resources/character-subclasses/character-subclass-form";
+import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import { createFeatureEntriesField, createSelectIdField } from "../resource-editor-form";
+
+const { useRelatedEntries: useSubclassRelatedEntries } = characterSubclassStore;
 
 //------------------------------------------------------------------------------
 // Create CharacterSubclass Editor
@@ -48,15 +49,7 @@ export function createCharacterSubclassEditor(form: Form<CharacterSubclassFormDa
   //----------------------------------------------------------------------------
 
   return function CharacterSubclassEditor({ resource, sourceId }: CharacterSubclassEditorProps) {
-    const featureEntries = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "character_subclasses_and_features",
-      resource,
-    );
-    const featureEntryValues = useMemo(
-      () => featureEntries.map(({ id, min_level = 0 }) => ({ id, min_level })),
-      [featureEntries],
-    );
+    const featureEntries = useSubclassRelatedEntries(resource.id, "features");
 
     return (
       <ResourceEditor resource={resource}>
@@ -64,7 +57,7 @@ export function createCharacterSubclassEditor(form: Form<CharacterSubclassFormDa
           <CharacterClassField defaultValue={resource.character_class_id} sourceId={sourceId} />
         </HStack>
 
-        <FeatureEntriesField defaultValue={featureEntryValues} sourceId={sourceId} w="full" />
+        <FeatureEntriesField defaultValue={featureEntries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

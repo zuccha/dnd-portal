@@ -39,8 +39,11 @@ type ToolLocalizationContext = EquipmentLocalizationContext & {
 // Use Tool Localization Context
 //------------------------------------------------------------------------------
 
-export function useToolLocalizationContext(tool: Tool): ToolLocalizationContext {
-  const context = useEquipmentLocalizationContext(tool, i18nContext);
+export function useToolLocalizationContext(
+  tool: Tool,
+  related: Parameters<typeof useEquipmentLocalizationContext>[1],
+): ToolLocalizationContext {
+  const context = useEquipmentLocalizationContext(tool, related, i18nContext);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateToolType = useTranslateToolType(context.lang);
   const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);

@@ -1,6 +1,5 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useActiveSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { defaultSpell } from "~/models/resources/spells/spell";
 import { spellStore } from "~/models/resources/spells/spell-store";
@@ -10,6 +9,7 @@ import ResourceDetailLinks from "../../resource-detail-links";
 
 type SpellDetailResource = ReturnType<typeof spellStore.useLocalizedResource>;
 const { useLocalizedResourceNames: useLocalizedClassNames } = characterClassStore;
+const { useRelatedEntries: useSpellRelatedEntries } = spellStore;
 
 //------------------------------------------------------------------------------
 // Spell Detail
@@ -24,10 +24,7 @@ export default function SpellDetail({
 }) {
   const { t, ti } = useI18nLangContext(i18nContext);
   const spell = resource;
-  const classEntries = useActiveSourceRelatedResourceEntries(
-    "character_classes_and_spells",
-    spell ?? defaultSpell,
-  );
+  const classEntries = useSpellRelatedEntries((spell ?? defaultSpell).id, "character_classes");
   const classIds = classEntries.map(({ id }) => id);
   const classNames = useLocalizedClassNames(classIds);
   const classes = classEntries.flatMap((entry, index) => {

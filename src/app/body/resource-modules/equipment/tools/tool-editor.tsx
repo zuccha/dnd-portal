@@ -2,6 +2,7 @@ import { HStack } from "@chakra-ui/react";
 import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import type { ToolFormData } from "~/models/resources/equipment/tools/tool-form";
+import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { toolModifierStore } from "~/models/resources/modifiers/equipment/tools/tool-modifier-store";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useToolTypeOptions } from "~/models/types/tool-type";
@@ -28,7 +29,7 @@ export function createToolEditor(form: Form<ToolFormData>) {
   // Equipment Editor
   //----------------------------------------------------------------------------
 
-  const EquipmentEditor = createEquipmentEditor(form, toolModifierStore);
+  const EquipmentEditor = createEquipmentEditor(form, toolStore, toolModifierStore);
 
   //------------------------------------------------------------------------------
   // Ability

@@ -5,18 +5,12 @@ import { useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useActiveSource } from "~/models/catalogue/catalogue";
 import { printDeck } from "~/models/print-deck/print-deck-store";
-import {
-  localizeArmor,
-  useArmorLocalizationContext,
-} from "~/models/resources/equipment/armors/localized-armor";
-import {
-  localizeItem,
-  useItemLocalizationContext,
-} from "~/models/resources/equipment/items/localized-item";
-import {
-  localizeWeapon,
-  useWeaponLocalizationContext,
-} from "~/models/resources/equipment/weapons/localized-weapon";
+import { armorStore } from "~/models/resources/equipment/armors/armor-store";
+import { localizeArmor } from "~/models/resources/equipment/armors/localized-armor";
+import { itemStore } from "~/models/resources/equipment/items/item-store";
+import { localizeItem } from "~/models/resources/equipment/items/localized-item";
+import { localizeWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
+import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
@@ -27,6 +21,10 @@ import healingPotion from "./data/healing-potion";
 import lightCrossbow from "./data/light-crossbow";
 import owlbear from "./data/owlbear";
 import HomeCardFan from "./home-card-fan";
+
+const { useLocalizationContext: useArmorLocalizationContext } = armorStore;
+const { useLocalizationContext: useItemLocalizationContext } = itemStore;
+const { useLocalizationContext: useWeaponLocalizationContext } = weaponStore;
 
 //------------------------------------------------------------------------------
 // Home Panel

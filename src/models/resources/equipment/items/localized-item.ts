@@ -34,8 +34,11 @@ type ItemLocalizationContext = EquipmentLocalizationContext & {
 // Use Item Localization Context
 //------------------------------------------------------------------------------
 
-export function useItemLocalizationContext(item: Item): ItemLocalizationContext {
-  const context = useEquipmentLocalizationContext(item, i18nContext);
+export function useItemLocalizationContext(
+  item: Item,
+  related: Parameters<typeof useEquipmentLocalizationContext>[1],
+): ItemLocalizationContext {
+  const context = useEquipmentLocalizationContext(item, related, i18nContext);
   const translateItemType = useTranslateItemType(context.lang);
 
   return useMemo(() => ({ ...context, translateItemType }), [context, translateItemType]);

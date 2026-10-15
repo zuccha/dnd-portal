@@ -3,7 +3,6 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCmWithUnit } from "~/measures/distance";
-import { useActiveSourceRelatedResourceEntries } from "../../catalogue/resource-relation-hooks";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateCreatureSize } from "../../types/creature-size";
 import { useTranslateCreatureType } from "../../types/creature-type";
@@ -16,6 +15,7 @@ import {
   useResourceLocalizationContext,
 } from "../localized-resource";
 import { type Species, speciesSchema } from "./species";
+import type { RelatedResourceEntries } from "../../catalogue/resource-relations";
 
 //------------------------------------------------------------------------------
 // Localized Species
@@ -49,15 +49,15 @@ type SpeciesLocalizationContext = ResourceLocalizationContext & {
 // Use Species Localization Context
 //------------------------------------------------------------------------------
 
-export function useSpeciesLocalizationContext(species: Species): SpeciesLocalizationContext {
+export function useSpeciesLocalizationContext(
+  _species: Species,
+  related: RelatedResourceEntries<"species">,
+): SpeciesLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
 
   const translateCreatureSize = useTranslateCreatureSize(context.lang);
   const translateCreatureType = useTranslateCreatureType(context.lang);
-  const relatedFeatures = useActiveSourceRelatedResourceEntries("species_and_features", species);
-  const featureEntries = useLocalizedFeatureEntries(
-    relatedFeatures.map(({ id, min_level = 0 }) => ({ id, min_level })),
-  );
+  const featureEntries = useLocalizedFeatureEntries(related.features);
 
   const [system] = useI18nSystem();
   const formatCm = useFormatCmWithUnit(system === "metric" ? "m" : "ft");

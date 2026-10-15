@@ -1,6 +1,6 @@
 import { translate } from "~/i18n/i18n-string";
 import { normalizeString } from "~/utils/string";
-import type { ResourceRelations } from "../catalogue/resource-relations";
+import type { RelatedResourceName } from "../catalogue/resource-relations";
 import type { Resource } from "./resource";
 import type { ResourceFilters } from "./resource-filters";
 
@@ -21,7 +21,10 @@ export type InclusionFilter = Record<string, boolean | undefined> | undefined;
 export type ResourceMatcher<R extends Resource, F extends ResourceFilters> = (
   resource: R,
   filters: F,
-  relations: ResourceRelations,
+  getRelatedIds: <N extends RelatedResourceName<R["kind"]>>(
+    resourceId: string,
+    name: N,
+  ) => string[],
 ) => boolean;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

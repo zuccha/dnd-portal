@@ -4,6 +4,7 @@ import { type ResourceMatcher, matchesBoolean, matchesInclusion } from "../resou
 import { type ResourceStore, createResourceStore } from "../resource-store";
 import { type Equipment } from "./equipment";
 import { type EquipmentFilters } from "./equipment-filters";
+import type { RelatedResourceEntries } from "../../catalogue/resource-relations";
 import type { ResourceKind } from "../../types/resource-kind";
 import type { TranslationFields } from "../resource";
 import type { LocalizedEquipment } from "./localized-equipment";
@@ -27,7 +28,10 @@ export function createEquipmentStore<
     orderOptions: { label: I18nString; value: string }[];
     translationFields: TranslationFields<E>[];
     localizeEquipment: (equipment: E, context: C) => L;
-    useEquipmentLocalizationContext: (equipment: E) => C;
+    useEquipmentLocalizationContext: (
+      equipment: E,
+      related: RelatedResourceEntries<E["kind"]>,
+    ) => C;
     matchesEquipment?: ResourceMatcher<E, F>;
   },
 ): ResourceStore<E, L, F, C> {

@@ -4,7 +4,6 @@ import { useI18nLang } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCm } from "~/measures/distance";
 import { useFormatSeconds } from "~/measures/time";
-import { useActiveSourceRelatedResourceEntries } from "../../catalogue/resource-relation-hooks";
 import { useTranslateSpellCastingTime } from "../../types/spell-casting-time";
 import { useTranslateSpellDuration } from "../../types/spell-duration";
 import { useTranslateSpellRange } from "../../types/spell-range";
@@ -18,6 +17,7 @@ import {
   useResourceLocalizationContext,
 } from "../localized-resource";
 import { type Spell, spellSchema } from "./spell";
+import type { RelatedResourceEntries } from "../../catalogue/resource-relations";
 
 const useCharacterClassResources = characterClassStore.useResources;
 
@@ -84,7 +84,10 @@ type SpellLocalizationContext = ResourceLocalizationContext & {
 // Use Spell Localization Context
 //------------------------------------------------------------------------------
 
-export function useSpellLocalizationContext(spell: Spell): SpellLocalizationContext {
+export function useSpellLocalizationContext(
+  _spell: Spell,
+  related: RelatedResourceEntries<"spell">,
+): SpellLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const translateSpellSchool = useTranslateSpellSchool(context.lang);
   const translateSpellCastingTime = useTranslateSpellCastingTime(context.lang);
@@ -92,11 +95,7 @@ export function useSpellLocalizationContext(spell: Spell): SpellLocalizationCont
   const translateSpellRange = useTranslateSpellRange(context.lang);
   const formatRange = useFormatCm();
   const formatTime = useFormatSeconds();
-  const relatedClasses = useActiveSourceRelatedResourceEntries(
-    "character_classes_and_spells",
-    spell,
-  );
-  const characterClassIds = relatedClasses.map(({ id }) => id);
+  const characterClassIds = related.character_classes.map(({ id }) => id);
   const characterClassNamesShort = useLocalizedCharacterClassAbbreviations(characterClassIds);
   const localizedCharacterClassNamesShort = useMemo(
     () =>

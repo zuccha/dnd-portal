@@ -1,15 +1,16 @@
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { useSourceRelatedResourceEntries } from "~/models/catalogue/resource-relation-hooks";
 import type { Feature } from "~/models/resources/features/feature";
 import type { FeatureFormData } from "~/models/resources/features/feature-form";
-import { resourceFeatureKindSchema } from "~/models/types/resource-feature-kind";
+import { featureStore } from "~/models/resources/features/feature-store";
 import Field from "~/ui/field";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import { createInputField, createTextareaField } from "../resource-editor-form";
 import { useResourceEditorLang } from "../resource-editor-language-context";
 import FeatureGrantedByEditor from "./feature-granted-by-editor";
+
+const { useRelatedEntries: useFeatureRelatedEntries } = featureStore;
 
 //------------------------------------------------------------------------------
 // Create Feature Editor
@@ -67,40 +68,13 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
   return function FeatureEditor({ resource, sourceId }: FeatureEditorProps) {
     const { lang } = useResourceEditorLang();
     const { t } = useI18nLangContext(i18nContext);
-    const classes = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "character_classes_and_features",
-      resource,
-    );
-    const subclasses = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "character_subclasses_and_features",
-      resource,
-    );
-    const equipments = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "equipments_and_features",
-      resource,
-    );
-    const feats = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "feats_and_features",
-      resource,
-    );
-    const species = useSourceRelatedResourceEntries(
-      resource.source_id,
-      "species_and_features",
-      resource,
-    );
+    const classes = useFeatureRelatedEntries(resource.id, "character_classes");
+    const subclasses = useFeatureRelatedEntries(resource.id, "character_subclasses");
+    const equipments = useFeatureRelatedEntries(resource.id, "equipments");
+    const feats = useFeatureRelatedEntries(resource.id, "feats");
+    const species = useFeatureRelatedEntries(resource.id, "species");
     const grantedBy = useMemo(
-      () =>
-        [...classes, ...subclasses, ...equipments, ...feats, ...species].map(
-          ({ id, kind, min_level = 0 }) => ({
-            id,
-            kind: resourceFeatureKindSchema.parse(kind),
-            min_level,
-          }),
-        ),
+      () => [...classes, ...subclasses, ...equipments, ...feats, ...species],
       [classes, equipments, feats, species, subclasses],
     );
     const { error, onValueChange, value } = useGrantedByField(grantedBy);

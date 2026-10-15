@@ -1,13 +1,25 @@
-import { useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
 import { type I18nString, translate } from "~/i18n/i18n-string";
-import catalogue, { useActiveSourceRelationGroups } from "~/models/catalogue/catalogue";
+import catalogue, {
+  useActiveSourceRelationGroups,
+  useActiveSourceRelations,
+} from "~/models/catalogue/catalogue";
 import {
+  applyRelationEndpointUpdate,
+  getRelationGroup,
+  relationGroupByResourceKind,
+  type RelatedResourceEntries,
+  type RelatedResourceEntryByName,
+  type RelatedResourceName,
   type RelationEndpointUpdate,
+  type RelationGroup,
+  type RelationGroupRows,
+  type ResourceRelation,
   removeResourceRelations,
   updateResourceRelations,
 } from "~/models/catalogue/resource-relations";
-import type { ResourceRelations } from "~/models/catalogue/resource-relations";
+import { resourceRelationDraftContext } from "~/models/catalogue/resource-relations-draft-context";
 import type { SourceBundle } from "~/models/catalogue/source-bundle";
 import {
   removeSourceBundleResources,
@@ -64,14 +76,17 @@ type ResourceStoreOptions<
     filters: F,
     resourceIds: readonly string[],
     getResource: (resourceId: string) => R | undefined,
-    relations: ResourceRelations,
+    getRelatedIds: <N extends RelatedResourceName<R["kind"]>>(
+      resourceId: string,
+      name: N,
+    ) => string[],
   ) => F;
   matchesResource?: ResourceMatcher<R, F>;
   compareResources?: ResourceComparator<R, F>;
   orderOptions: { label: I18nString; value: string }[];
   translationFields: TranslationFields<R>[];
   localizeResource: (resource: R, context: C) => L;
-  useLocalizationContext: (resource: R) => C;
+  useLocalizationContext: (resource: R, related: RelatedResourceEntries<R["kind"]>) => C;
 };
 
 //------------------------------------------------------------------------------
@@ -95,8 +110,13 @@ export function createResourceStore<
     orderOptions,
     translationFields,
     localizeResource,
-    useLocalizationContext,
+    useLocalizationContext: createLocalizationContext,
   } = options;
+  const hasRelatedResourcesInLocalization =
+    Object.keys(relationGroupByResourceKind[kind]).length > 0;
+  const relatedRelationGroups = [
+    ...new Set(Object.values(relationGroupByResourceKind[kind])),
+  ] as RelationGroup[];
 
   const storeId = `resources[${kind}]`;
   const catalogueResourceStore = catalogue.createResourceStore(kind);
@@ -335,10 +355,15 @@ export function createResourceStore<
     const [filters] = useFilters();
     const [lang] = useI18nLang();
     const resourceIds = useResourceIds(sourceId);
-    const relations = useActiveSourceRelationGroups();
+    const relations = useActiveSourceRelationGroups(relatedRelationGroups);
+    const getRelatedIds = useCallback(
+      <N extends RelatedResourceName<R["kind"]>>(resourceId: string, name: N) =>
+        getRelatedEntriesFromRelations(relations, resourceId, name).map(({ id }) => id),
+      [relations],
+    );
     const effectiveFilters = useMemo(
-      () => normalizeFilters(filters, resourceIds, getResource, relations),
-      [filters, relations, resourceIds],
+      () => normalizeFilters(filters, resourceIds, getResource, getRelatedIds),
+      [filters, getRelatedIds, resourceIds],
     );
     const normalizedName = normalizeString(effectiveFilters.name);
 
@@ -350,7 +375,7 @@ export function createResourceStore<
             if (!resource) return false;
             return (
               matchesName(resource, normalizedName) &&
-              matchesResource(resource, effectiveFilters, relations)
+              matchesResource(resource, effectiveFilters, getRelatedIds)
             );
           })
           .sort((aId, bId) => {
@@ -359,17 +384,200 @@ export function createResourceStore<
             if (!a || !b) return 0;
             return compareStoreResources(a, b, effectiveFilters, lang);
           }),
-      [effectiveFilters, lang, normalizedName, relations, resourceIds],
+      [effectiveFilters, getRelatedIds, lang, normalizedName, resourceIds],
     );
   }
+
+  //----------------------------------------------------------------------------
+  // Related Resources
+  //----------------------------------------------------------------------------
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get Related Entries
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function getRelatedEntries<N extends RelatedResourceName<R["kind"]>>(
+    resourceId: string,
+    name: N,
+  ): RelatedResourceEntryByName<R["kind"], N>[] {
+    return getRelatedEntriesFromRelations(
+      catalogue.getActiveSourceRelationGroups(),
+      resourceId,
+      name,
+    );
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get Related Entries From Relations
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function getRelatedEntriesFromRelations<N extends RelatedResourceName<R["kind"]>>(
+    relations: ReturnType<typeof catalogue.getActiveSourceRelationGroups>,
+    resourceId: string,
+    name: N,
+  ): RelatedResourceEntryByName<R["kind"], N>[] {
+    const group = getRelationGroup(kind as R["kind"], name);
+    return getRelatedEntriesFromRows(relations[group] as RelationGroupRows[typeof group][], {
+      id: resourceId,
+      kind: kind as R["kind"],
+    }) as RelatedResourceEntryByName<R["kind"], N>[];
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get Related Entries From Rows
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function getRelatedEntriesFromRows(
+    rows: RelationGroupRows[keyof RelationGroupRows][],
+    endpoint: { id: string; kind: ResourceKind },
+  ): { id: string; kind: ResourceKind; min_level?: number }[] {
+    const related = (rows as ResourceRelation<ResourceKind, ResourceKind>[])
+      .flatMap((row) => {
+        if (row.resource_1_kind === endpoint.kind && row.resource_1_id === endpoint.id) {
+          return [
+            {
+              id: row.resource_2_id,
+              kind: row.resource_2_kind,
+              min_level:
+                "min_level" in row && typeof row.min_level === "number" ? row.min_level : undefined,
+              position: row.resource_1_position,
+            },
+          ];
+        }
+        if (row.resource_2_kind === endpoint.kind && row.resource_2_id === endpoint.id) {
+          return [
+            {
+              id: row.resource_1_id,
+              kind: row.resource_1_kind,
+              min_level:
+                "min_level" in row && typeof row.min_level === "number" ? row.min_level : undefined,
+              position: row.resource_2_position,
+            },
+          ];
+        }
+        return [];
+      })
+      .sort((a, b) => a.position - b.position);
+
+    return related.map(({ id, kind, min_level }) => ({ id, kind, min_level }));
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get Related Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function getRelatedIds<N extends RelatedResourceName<R["kind"]>>(
+    resourceId: string,
+    name: N,
+  ): string[] {
+    return getRelatedEntries(resourceId, name).map(({ id }) => id);
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Related Entries
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useRelatedEntries<N extends RelatedResourceName<R["kind"]>>(
+    resourceId: string,
+    name: N,
+  ): RelatedResourceEntryByName<R["kind"], N>[] {
+    const group = getRelationGroup(kind as R["kind"], name);
+    const rows = useActiveSourceRelations(group);
+    const draft = useContext(resourceRelationDraftContext);
+    const effectiveRows = useMemo(() => {
+      if (!draft || draft.endpoint.id !== resourceId || draft.endpoint.kind !== kind) {
+        return rows;
+      }
+      const update = draft.updates.find((entry) => entry.group === group);
+      return update
+        ? (applyRelationEndpointUpdate(
+            rows,
+            { id: resourceId, kind },
+            update,
+          ) as RelationGroupRows[typeof group][])
+        : rows;
+    }, [draft, group, resourceId, rows]);
+
+    return useMemo(
+      () =>
+        getRelatedEntriesFromRows(effectiveRows, {
+          id: resourceId,
+          kind,
+        }) as RelatedResourceEntryByName<R["kind"], N>[],
+      [effectiveRows, resourceId],
+    );
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Related Ids
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useRelatedIds<N extends RelatedResourceName<R["kind"]>>(
+    resourceId: string,
+    name: N,
+  ): string[] {
+    const entries = useRelatedEntries(resourceId, name);
+    return useMemo(() => entries.map(({ id }) => id), [entries]);
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Related Resources For Localization
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useRelatedResourcesForLocalization(resource: R): RelatedResourceEntries<R["kind"]> {
+    const relations = useActiveSourceRelationGroups(relatedRelationGroups);
+    const draft = useContext(resourceRelationDraftContext);
+
+    return useMemo(() => {
+      let effectiveRelations = relations;
+
+      if (draft?.endpoint.id === resource.id && draft.endpoint.kind === kind) {
+        effectiveRelations = { ...relations };
+        for (const update of draft.updates) {
+          effectiveRelations[update.group] = applyRelationEndpointUpdate(
+            effectiveRelations[update.group],
+            draft.endpoint,
+            update,
+          ) as never;
+        }
+      }
+
+      const names = Object.keys(relationGroupByResourceKind[kind]) as RelatedResourceName<
+        R["kind"]
+      >[];
+      return Object.fromEntries(
+        names.map((name) => [
+          name,
+          getRelatedEntriesFromRelations(effectiveRelations, resource.id, name),
+        ]),
+      ) as RelatedResourceEntries<R["kind"]>;
+    }, [draft, relations, resource]);
+  }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Localization Context
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useLocalizationContextWithoutRelatedResources(resource: R): C {
+    return createLocalizationContext(resource, {} as RelatedResourceEntries<R["kind"]>);
+  }
+
+  function useLocalizationContextWithRelatedResources(resource: R): C {
+    const relatedResources = useRelatedResourcesForLocalization(resource);
+    return createLocalizationContext(resource, relatedResources);
+  }
+
+  const useStoreLocalizationContext = hasRelatedResourcesInLocalization
+    ? useLocalizationContextWithRelatedResources
+    : useLocalizationContextWithoutRelatedResources;
 
   //----------------------------------------------------------------------------
   // Localization
   //----------------------------------------------------------------------------
 
-  //------------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Localized Resource Name
-  //------------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizedResourceName(resourceId: string): string {
     const [lang] = useI18nLang();
@@ -377,9 +585,9 @@ export function createResourceStore<
     return resource ? translate(resource.name, lang) : "";
   }
 
-  //------------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Localized Resource Names
-  //------------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizedResourceNames(resourceIds: string[]): string[] {
     const [lang] = useI18nLang();
@@ -395,18 +603,38 @@ export function createResourceStore<
     );
   }
 
-  //------------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Localized Resource
-  //------------------------------------------------------------------------------
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   function useLocalizedResource(resourceId: string): L | undefined {
     const resource = useResource(resourceId);
-    const context = useLocalizationContext(resource ?? defaultResource);
+    const context = useLocalizationContextWithoutRelatedResources(resource ?? defaultResource);
     return useMemo(
       () => (resource ? localizeResource(resource, context) : undefined),
       [context, resource],
     );
   }
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Use Localized Resource With Related Resources
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  function useLocalizedResourceWithRelatedResources(resourceId: string): L | undefined {
+    const resource = useResource(resourceId);
+    const endpoint = resource ?? defaultResource;
+    const relatedResources = useRelatedResourcesForLocalization(endpoint);
+    const context = createLocalizationContext(endpoint, relatedResources);
+
+    return useMemo(
+      () => (resource ? localizeResource(resource, context) : undefined),
+      [context, resource],
+    );
+  }
+
+  const useLocalizedResourceWithContext = hasRelatedResourcesInLocalization
+    ? useLocalizedResourceWithRelatedResources
+    : useLocalizedResource;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Use Resource Options
@@ -446,8 +674,12 @@ export function createResourceStore<
     createResource,
     deleteResources,
     getResource,
+    getRelatedEntries,
+    getRelatedIds,
     setResourceTemporary,
     updateResource,
+    useRelatedEntries,
+    useRelatedIds,
     useResource,
     useResourceIds,
     useResources,
@@ -464,8 +696,8 @@ export function createResourceStore<
     useSelectedResourceIds: resourceSelectionStore.useSelectedResourceIds,
 
     localizeResource,
-    useLocalizationContext,
-    useLocalizedResource,
+    useLocalizationContext: useStoreLocalizationContext,
+    useLocalizedResource: useLocalizedResourceWithContext,
     useLocalizedResourceName,
     useLocalizedResourceNames,
     useResourceOptions,

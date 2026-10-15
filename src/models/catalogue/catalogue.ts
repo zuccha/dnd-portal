@@ -150,10 +150,10 @@ export function createCatalogue(id: string) {
 
   function setSourceRelations(sourceId: string, relations: ResourceRelations): void {
     for (const group of Object.keys(emptyResourceRelations) as RelationGroup[]) {
-      relationRowsBySourceAndGroup.set(
-        relationStoreKey(sourceId, group),
-        relations[group] as RelationGroupRows[RelationGroup][],
-      );
+      const key = relationStoreKey(sourceId, group);
+      const previous = relationRowsBySourceAndGroup.get(key) ?? [];
+      const next = relations[group] as RelationGroupRows[RelationGroup][];
+      if (!areSameRelationRows(previous, next)) relationRowsBySourceAndGroup.set(key, next);
     }
   }
 
@@ -358,6 +358,44 @@ export function createCatalogue(id: string) {
   }
 
   //------------------------------------------------------------------------------
+  // Are Same Relation Rows
+  //------------------------------------------------------------------------------
+
+  function areSameRelationRows(
+    rows1: RelationGroupRows[RelationGroup][],
+    rows2: RelationGroupRows[RelationGroup][],
+  ): boolean {
+    return (
+      rows1.length === rows2.length &&
+      rows1.every((row, index) => {
+        const other = rows2[index];
+        if (!other) return false;
+        const keys = Object.keys(row) as (keyof typeof row)[];
+        return (
+          keys.length === Object.keys(other).length && keys.every((key) => row[key] === other[key])
+        );
+      })
+    );
+  }
+
+  //------------------------------------------------------------------------------
+  // Subscribe To Relations
+  //------------------------------------------------------------------------------
+
+  function subscribeToRelations(
+    sourceIds: string[],
+    groups: readonly RelationGroup[],
+    callback: () => void,
+  ): () => void {
+    const unsubscribe = sourceIds.flatMap((sourceId) =>
+      groups.map((group) =>
+        relationRowsBySourceAndGroup.subscribe(relationStoreKey(sourceId, group), callback),
+      ),
+    );
+    return () => unsubscribe.forEach((unsubscribeKey) => unsubscribeKey());
+  }
+
+  //------------------------------------------------------------------------------
   // Use Relations
   //------------------------------------------------------------------------------
 
@@ -376,7 +414,7 @@ export function createCatalogue(id: string) {
       }
 
       refresh();
-      return relationRowsBySourceAndGroup.subscribeAny(refresh);
+      return subscribeToRelations(sourceIds, [group], refresh);
     }, [group, sourceIds]);
 
     return rows;
@@ -403,11 +441,14 @@ export function createCatalogue(id: string) {
   // Get Active Source Relation Groups
   //------------------------------------------------------------------------------
 
-  function getActiveSourceRelationGroups(): ResourceRelations {
+  function getActiveSourceRelationGroups(
+    groups: readonly RelationGroup[] = Object.keys(emptyResourceRelations) as RelationGroup[],
+  ): ResourceRelations {
+    const groupsToRead = new Set(groups);
     return Object.fromEntries(
       (Object.keys(emptyResourceRelations) as RelationGroup[]).map((group) => [
         group,
-        getActiveSourceRelations(group),
+        groupsToRead.has(group) ? getActiveSourceRelations(group) : [],
       ]),
     ) as ResourceRelations;
   }
@@ -436,7 +477,7 @@ export function createCatalogue(id: string) {
   // Use Active Source Relation Groups
   //------------------------------------------------------------------------------
 
-  function useActiveSourceRelationGroups(): ResourceRelations {
+  function useActiveSourceRelationGroups(groups: readonly RelationGroup[]): ResourceRelations {
     const source = useActiveSource();
     const sourceIds = useMemo(
       () =>
@@ -449,7 +490,7 @@ export function createCatalogue(id: string) {
           : emptyIds,
       [source],
     );
-    const [relations, setRelations] = useState(() => getActiveSourceRelationGroups());
+    const [relations, setRelations] = useState(() => getActiveSourceRelationGroups(groups));
 
     useLayoutEffect(() => {
       function refresh(): void {
@@ -457,7 +498,7 @@ export function createCatalogue(id: string) {
           const next = Object.fromEntries(
             (Object.keys(emptyResourceRelations) as RelationGroup[]).map((group) => [
               group,
-              getRelations(sourceIds, group),
+              groups.includes(group) ? getRelations(sourceIds, group) : [],
             ]),
           ) as ResourceRelations;
           return Object.keys(next).every((group) =>
@@ -472,8 +513,8 @@ export function createCatalogue(id: string) {
       }
 
       refresh();
-      return relationRowsBySourceAndGroup.subscribeAny(refresh);
-    }, [sourceIds]);
+      return subscribeToRelations(sourceIds, groups, refresh);
+    }, [groups, sourceIds]);
 
     return relations;
   }

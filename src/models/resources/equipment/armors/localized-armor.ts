@@ -43,8 +43,11 @@ type ArmorLocalizationContext = EquipmentLocalizationContext & {
 // Use Armor Localization Context
 //------------------------------------------------------------------------------
 
-export function useArmorLocalizationContext(armor: Armor): ArmorLocalizationContext {
-  const context = useEquipmentLocalizationContext(armor, i18nContext);
+export function useArmorLocalizationContext(
+  armor: Armor,
+  related: Parameters<typeof useEquipmentLocalizationContext>[1],
+): ArmorLocalizationContext {
+  const context = useEquipmentLocalizationContext(armor, related, i18nContext);
   const translateArmorType = useTranslateArmorType(context.lang);
 
   return useMemo(() => ({ ...context, translateArmorType }), [context, translateArmorType]);
