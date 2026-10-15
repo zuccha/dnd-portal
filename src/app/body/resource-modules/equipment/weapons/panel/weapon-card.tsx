@@ -1,4 +1,3 @@
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import PokerCard from "~/ui/poker-card";
@@ -20,20 +19,23 @@ export function WeaponCard({
   palette,
   ...rest
 }: WeaponCardProps) {
-  const { ti } = useI18nLangContext(i18nContext);
-
   return (
     <EquipmentCard
       beforeDetails={
-        localizedResource.info && (
-          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
-        )
+        <PokerCard.LabeledValues
+          fields={[
+            localizedResource.properties,
+            localizedResource.range,
+            localizedResource.ammunition,
+          ]}
+          palette={palette}
+        />
       }
       firstPageInfoRight={
         <PokerCard.Arrow
-          label={ti("damage", localizedResource.damage_type)}
+          label={localizedResource.damageType.label}
           palette={palette}
-          value={localizedResource.damage_line}
+          value={localizedResource.damageLine}
         />
       }
       localizedResource={localizedResource}
@@ -47,14 +49,3 @@ export function WeaponCard({
 WeaponCard.Placeholder = EquipmentCard.Placeholder;
 WeaponCard.h = EquipmentCard.h;
 WeaponCard.w = EquipmentCard.w;
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  damage: {
-    en: "<1> Damage",
-    it: "Danni <1>",
-  },
-};

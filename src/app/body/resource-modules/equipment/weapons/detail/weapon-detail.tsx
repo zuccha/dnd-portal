@@ -1,5 +1,3 @@
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
 import ResourceDetailField from "../../../resource-detail-field";
 import ResourceDetailLinks from "../../../resource-detail-links";
@@ -7,7 +5,6 @@ import EquipmentDetail from "../../equipment-detail";
 import type { ResourceDetailAction } from "../../../resource-detail";
 
 type WeaponDetailResource = ReturnType<typeof weaponStore.useLocalizedResource>;
-const { useLocalizedEquipmentEntries } = equipmentReferenceStore;
 
 //------------------------------------------------------------------------------
 // Weapon Detail
@@ -20,35 +17,33 @@ export default function WeaponDetail({
   actions?: ResourceDetailAction[];
   resource: WeaponDetailResource;
 }) {
-  const { lang, t, ti } = useI18nLangContext(i18nContext);
   const weapon = resource;
-  const equipmentEntries = useLocalizedEquipmentEntries(lang);
-  const ammunition = weapon
-    ? weapon._raw.ammunition_ids.flatMap((id) => {
-        const entry = equipmentEntries.find((equipmentEntry) => equipmentEntry.id === id);
-        return entry ? [entry] : [];
-      })
-    : [];
 
   return (
     <EquipmentDetail actions={actions} resource={weapon}>
       {weapon && (
         <>
-          <ResourceDetailField label={t("damage")}>{weapon.damage_extended}</ResourceDetailField>
-          {weapon.damage_versatile && (
-            <ResourceDetailField label={t("versatile")}>
-              {ti("damage_extended", weapon.damage_versatile, weapon.damage_type)}
+          <ResourceDetailField label={weapon.damage.label}>
+            {weapon.damage.value}
+          </ResourceDetailField>
+          {weapon.damageVersatile.value && (
+            <ResourceDetailField label={weapon.damageVersatile.label}>
+              {weapon.damageVersatile.value}
             </ResourceDetailField>
           )}
-          {weapon.ranged && weapon.range && (
-            <ResourceDetailField label={t("range")}>{weapon.range}</ResourceDetailField>
+          {weapon.ranged && weapon.range.value && (
+            <ResourceDetailField label={weapon.range.label}>
+              {weapon.range.value}
+            </ResourceDetailField>
           )}
-          {weapon.properties && (
-            <ResourceDetailField label={t("properties")}>{weapon.properties}</ResourceDetailField>
+          {weapon.properties.value && (
+            <ResourceDetailField label={weapon.properties.label}>
+              {weapon.properties.value}
+            </ResourceDetailField>
           )}
-          {ammunition.length > 0 && (
-            <ResourceDetailField label={t("ammunition")}>
-              <ResourceDetailLinks resources={ammunition} />
+          {weapon.ammunition.resources.length > 0 && (
+            <ResourceDetailField label={weapon.ammunition.label}>
+              <ResourceDetailLinks resources={weapon.ammunition.resources} />
             </ResourceDetailField>
           )}
         </>
@@ -56,16 +51,3 @@ export default function WeaponDetail({
     </EquipmentDetail>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  ammunition: { en: "Ammunition", it: "Munizioni" },
-  damage: { en: "Damage", it: "Danni" },
-  damage_extended: { en: "<1> <2>", it: "<1> <2>" },
-  properties: { en: "Properties", it: "Proprietà" },
-  range: { en: "Range", it: "Gittata" },
-  versatile: { en: "Two-Handed Damage", it: "Danni a Due Mani" },
-};

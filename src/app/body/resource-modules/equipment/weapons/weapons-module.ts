@@ -28,7 +28,7 @@ const columns = createEquipmentTableColumns<Weapon, LocalizedWeapon>([
     label: { en: "Type", it: "Tipo" },
   },
   {
-    key: "damage_extended",
+    key: "damage",
     label: { en: "Damage", it: "Danni" },
   },
   {
