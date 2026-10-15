@@ -23,7 +23,6 @@ export const localizedServiceSchema = localizedResourceSchema(
 ).extend({
   availability: localizedFieldSchema,
   category: localizedFieldSchema,
-  cost: z.string(),
   price: localizedFieldSchema,
 });
 
@@ -79,9 +78,9 @@ export function localizeService(
     ...localizeResource(service, context),
     descriptor: category,
     details: translate(service.description, context.lang),
+
     availability: { label: context.t("availability"), value: availability },
     category: { label: context.t("category"), value: category },
-    cost,
     price: { label: context.t("price"), value: price },
   };
 }

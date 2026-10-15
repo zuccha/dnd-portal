@@ -31,7 +31,7 @@ export function ServiceCard({
       firstPageInfo={
         <HStack gap={PokerCard.rem0250} px={PokerCard.rem1000} w="full">
           <Icon Icon={CoinsIcon} size="xs" />
-          <Span>{localizedResource.cost}</Span>
+          <Span>{localizedResource.price.value}</Span>
         </HStack>
       }
       localizedResource={localizedResource}
