@@ -7,3 +7,5 @@
   // Descriptive Name
   //------------------------------------------------------------------------------
   ```
+
+- When an object literal has sibling properties where one value is formatted across multiple lines, format all sibling properties with object values across multiple lines for consistency.
