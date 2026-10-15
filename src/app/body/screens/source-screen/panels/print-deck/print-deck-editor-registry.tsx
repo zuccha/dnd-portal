@@ -29,6 +29,11 @@ import {
 } from "~/models/resources/creature-tags/creature-tag-form";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
 import {
+  creatureTreasureForm,
+  creatureTreasureFormDataToResource,
+} from "~/models/resources/creature-treasures/creature-treasure-form";
+import { creatureTreasureStore } from "~/models/resources/creature-treasures/creature-treasure-store";
+import {
   creatureForm,
   creatureFormDataToResource,
 } from "~/models/resources/creatures/creature-form";
@@ -105,6 +110,7 @@ import { createCharacterSubclassEditor } from "../../../../resource-modules/char
 import { createCreatureFamilyEditor } from "../../../../resource-modules/creature-families/creature-family-editor";
 import { createCreatureHabitatEditor } from "../../../../resource-modules/creature-habitats/creature-habitat-editor";
 import { createCreatureTagEditor } from "../../../../resource-modules/creature-tags/creature-tag-editor";
+import { createCreatureTreasureEditor } from "../../../../resource-modules/creature-treasures/creature-treasure-editor";
 import { createCreatureEditor } from "../../../../resource-modules/creatures/creature-editor";
 import { createEldritchInvocationEditor } from "../../../../resource-modules/eldritch-invocations/eldritch-invocation-editor";
 import { createArmorEditor } from "../../../../resource-modules/equipment/armors/armor-editor";
@@ -145,6 +151,10 @@ export type PrintDeckEditorPatch = Partial<ResourceUnion>;
 export type PrintDeckEditorRegistryEntry = PrintDeckEditorConfiguration & {
   Component: React.ComponentType<PrintDeckResourceDialogProps>;
 };
+
+//------------------------------------------------------------------------------
+// Print Deck Editor Registry
+//------------------------------------------------------------------------------
 
 export type PrintDeckEditorRegistry = Record<PrintDeckResourceKind, PrintDeckEditorRegistryEntry>;
 
@@ -214,7 +224,7 @@ export const printDeckEditorRegistry = {
     useLocalizationContext: creatureStore.useLocalizationContext,
   }),
   creature_family: castEntry({
-    Editor: createCreatureFamilyEditor(creatureFamilyForm, { showHabitatRelations: false }),
+    Editor: createCreatureFamilyEditor(creatureFamilyForm),
     form: creatureFamilyForm,
     parseFormData: creatureFamilyFormDataToResource,
     translationFields: creatureFamilyStore.translationFields,
@@ -222,7 +232,7 @@ export const printDeckEditorRegistry = {
     useLocalizationContext: creatureFamilyStore.useLocalizationContext,
   }),
   creature_habitat: castEntry({
-    Editor: createCreatureHabitatEditor(creatureHabitatForm, { showFamilyRelations: false }),
+    Editor: createCreatureHabitatEditor(creatureHabitatForm),
     form: creatureHabitatForm,
     parseFormData: creatureHabitatFormDataToResource,
     translationFields: creatureHabitatStore.translationFields,
@@ -236,6 +246,14 @@ export const printDeckEditorRegistry = {
     translationFields: creatureTagStore.translationFields,
     localizeResource: creatureTagStore.localizeResource,
     useLocalizationContext: creatureTagStore.useLocalizationContext,
+  }),
+  creature_treasure: castEntry({
+    Editor: createCreatureTreasureEditor(creatureTreasureForm),
+    form: creatureTreasureForm,
+    parseFormData: creatureTreasureFormDataToResource,
+    translationFields: creatureTreasureStore.translationFields,
+    localizeResource: creatureTreasureStore.localizeResource,
+    useLocalizationContext: creatureTreasureStore.useLocalizationContext,
   }),
   eldritch_invocation: castEntry({
     Editor: createEldritchInvocationEditor(eldritchInvocationForm),

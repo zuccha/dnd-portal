@@ -23,7 +23,12 @@ export const bestiaryPanelIds = [
   panelItem(Route.ResourcesBestiaryFamilies),
   panelItem(Route.ResourcesBestiaryTags),
   panelItem(Route.ResourcesBestiaryHabitats),
+  panelItem(Route.ResourcesBestiaryTreasures),
 ] as const;
+
+//------------------------------------------------------------------------------
+// Bestiary Panel Id
+//------------------------------------------------------------------------------
 
 export type BestiaryPanelId = (typeof bestiaryPanelIds)[number]["route"];
 
@@ -40,6 +45,10 @@ export const characterPanelIds = [
   panelItem(Route.ResourcesBlocksFeatures),
 ] as const;
 
+//------------------------------------------------------------------------------
+// Character Panel Id
+//------------------------------------------------------------------------------
+
 export type CharacterPanelId = (typeof characterPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
@@ -52,6 +61,10 @@ export const abilitiesPanelIds = [
   panelItem(Route.ResourcesAbilitiesManeuvers),
   panelItem(Route.ResourcesAbilitiesMetamagic),
 ] as const;
+
+//------------------------------------------------------------------------------
+// Abilities Panel Id
+//------------------------------------------------------------------------------
 
 export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number]["route"];
 
@@ -70,6 +83,10 @@ export const equipmentPanelIds = [
   panelItem(Route.ResourcesEquipmentToolModifiers, { modifier: true }),
 ] as const;
 
+//------------------------------------------------------------------------------
+// Equipment Panel Id
+//------------------------------------------------------------------------------
+
 export type EquipmentPanelId = (typeof equipmentPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
@@ -81,6 +98,10 @@ export const marketPanelIds = [
   panelItem(Route.ResourcesMarketServices),
 ] as const;
 
+//------------------------------------------------------------------------------
+// Market Panel Id
+//------------------------------------------------------------------------------
+
 export type MarketPanelId = (typeof marketPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
@@ -91,6 +112,10 @@ export const worldPanelIds = [
   panelItem(Route.ResourcesWorldLanguages),
   panelItem(Route.ResourcesWorldPlanes),
 ] as const;
+
+//------------------------------------------------------------------------------
+// World Panel Id
+//------------------------------------------------------------------------------
 
 export type WorldPanelId = (typeof worldPanelIds)[number]["route"];
 

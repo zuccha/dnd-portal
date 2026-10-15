@@ -7,6 +7,7 @@ import { CharacterSubclassCard } from "../../../../resource-modules/character-su
 import { CreatureFamilyCard } from "../../../../resource-modules/creature-families/panel/creature-family-card.tsx";
 import { CreatureHabitatCard } from "../../../../resource-modules/creature-habitats/panel/creature-habitat-card.tsx";
 import { CreatureTagCard } from "../../../../resource-modules/creature-tags/panel/creature-tag-card.tsx";
+import { CreatureTreasureCard } from "../../../../resource-modules/creature-treasures/panel/creature-treasure-card.tsx";
 import { CreatureCard } from "../../../../resource-modules/creatures/panel/creature-card.tsx";
 import { EldritchInvocationCard } from "../../../../resource-modules/eldritch-invocations/panel/eldritch-invocation-card.tsx";
 import { ArmorCard } from "../../../../resource-modules/equipment/armors/panel/armor-card.tsx";
@@ -56,6 +57,10 @@ export type PrintDeckCardProps<K extends PrintDeckResourceKind> = Omit<
   localizedResource: PrintDeckLocalizedResource<K>;
 };
 
+//------------------------------------------------------------------------------
+// Print Deck Card Component
+//------------------------------------------------------------------------------
+
 export type PrintDeckCardComponent<K extends PrintDeckResourceKind> = ComponentType<
   PrintDeckCardProps<K>
 > & {
@@ -71,6 +76,10 @@ export type PrintDeckRegistry = {
   [K in PrintDeckResourceKind]: PrintDeckCardComponent<K>;
 };
 
+//------------------------------------------------------------------------------
+// Print Deck Registry
+//------------------------------------------------------------------------------
+
 export const printDeckRegistry = {
   armor: ArmorCard,
   armor_modifier: ArmorModifierCard,
@@ -81,6 +90,7 @@ export const printDeckRegistry = {
   creature_family: CreatureFamilyCard,
   creature_habitat: CreatureHabitatCard,
   creature_tag: CreatureTagCard,
+  creature_treasure: CreatureTreasureCard,
   eldritch_invocation: EldritchInvocationCard,
   feat: FeatCard,
   feature: FeatureCard,

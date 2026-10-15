@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
 import { creatureHabitatStore } from "~/models/resources/creature-habitats/creature-habitat-store";
+import { creatureTreasureStore } from "~/models/resources/creature-treasures/creature-treasure-store";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { planeStore } from "~/models/resources/planes/plane-store";
 import { resourceDetailRoute } from "~/navigation/routes";
@@ -11,13 +12,19 @@ import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail
 import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
 
+//------------------------------------------------------------------------------
+// Creature Family Detail Resource
+//------------------------------------------------------------------------------
+
 type CreatureFamilyDetailResource = ReturnType<typeof creatureFamilyStore.useLocalizedResource>;
 const useCreatureResourceIds = creatureStore.useResourceIds;
 const useCreatureResources = creatureStore.useResources;
 const useLocalizedCreatureNames = creatureStore.useLocalizedResourceNames;
 const useLocalizedPlaneNames = planeStore.useLocalizedResourceNames;
 const useFamilyHabitatEntries = creatureFamilyStore.useRelatedEntries;
+const useFamilyTreasureEntries = creatureFamilyStore.useRelatedEntries;
 const useLocalizedHabitatNames = creatureHabitatStore.useLocalizedResourceNames;
+const useLocalizedTreasureNames = creatureTreasureStore.useLocalizedResourceNames;
 const noPlaneIds: string[] = [];
 
 //------------------------------------------------------------------------------
@@ -38,6 +45,14 @@ export default function CreatureFamilyDetail({
   const habitats = habitatEntries
     .flatMap((entry, index) => {
       const name = habitatNames[index];
+      return name ? [{ ...entry, name }] : [];
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, lang));
+  const treasureEntries = useFamilyTreasureEntries(family?._raw.id ?? "", "treasures");
+  const treasureNames = useLocalizedTreasureNames(treasureEntries.map(({ id }) => id));
+  const treasures = treasureEntries
+    .flatMap((entry, index) => {
+      const name = treasureNames[index];
       return name ? [{ ...entry, name }] : [];
     })
     .sort((a, b) => a.name.localeCompare(b.name, lang));
@@ -79,8 +94,10 @@ export default function CreatureFamilyDetail({
               <ResourceDetailLinks resources={planes} />
             </ResourceDetailField>
           )}
-          {family.treasures && (
-            <ResourceDetailField label={t("treasures")}>{family.treasures}</ResourceDetailField>
+          {treasures.length > 0 && (
+            <ResourceDetailField label={t("treasures")}>
+              <ResourceDetailLinks resources={treasures} />
+            </ResourceDetailField>
           )}
           {sortedCreatures.length > 0 && (
             <GridItem colSpan={{ base: 1, sm: 2 }}>

@@ -1,5 +1,4 @@
 import z from "zod";
-import { creatureTreasureSchema } from "../../types/creature-treasure";
 import {
   type TranslationFields,
   defaultResource,
@@ -14,8 +13,11 @@ import {
 export const creatureFamilySchema = resourceSchema.extend({
   kind: z.literal("creature_family"),
   plane_ids: z.array(z.uuid()).default([]),
-  treasures: z.array(creatureTreasureSchema).default([]),
 });
+
+//------------------------------------------------------------------------------
+// Creature Family
+//------------------------------------------------------------------------------
 
 export type CreatureFamily = z.infer<typeof creatureFamilySchema>;
 
@@ -27,7 +29,6 @@ export const defaultCreatureFamily: CreatureFamily = {
   ...defaultResource,
   kind: "creature_family",
   plane_ids: [],
-  treasures: [],
 };
 
 //------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import z from "zod";
-import { useTranslateCreatureTreasure } from "../../types/creature-treasure";
 import { creatureHabitatStore } from "../creature-habitats/creature-habitat-store";
+import { creatureTreasureStore } from "../creature-treasures/creature-treasure-store";
 import {
   type ResourceLocalizationContext,
   localizeResource,
@@ -23,6 +23,10 @@ export const localizedCreatureFamilySchema = localizedResourceSchema(
   treasures: z.string(),
 });
 
+//------------------------------------------------------------------------------
+// Localized Creature Family
+//------------------------------------------------------------------------------
+
 export type LocalizedCreatureFamily = z.infer<typeof localizedCreatureFamilySchema>;
 
 //------------------------------------------------------------------------------
@@ -31,10 +35,11 @@ export type LocalizedCreatureFamily = z.infer<typeof localizedCreatureFamilySche
 
 type CreatureFamilyLocalizationContext = ResourceLocalizationContext & {
   habitats: string;
-  translateTreasure: ReturnType<typeof useTranslateCreatureTreasure>;
+  treasures: string;
 };
 
 const useLocalizedHabitatNames = creatureHabitatStore.useLocalizedResourceNames;
+const useLocalizedTreasureNames = creatureTreasureStore.useLocalizedResourceNames;
 
 //------------------------------------------------------------------------------
 // Use Creature Family Localization Context
@@ -46,13 +51,11 @@ export function useCreatureFamilyLocalizationContext(
 ): CreatureFamilyLocalizationContext {
   const context = useResourceLocalizationContext();
   const habitatNames = useLocalizedHabitatNames(related.habitats.map(({ id }) => id));
-  const translateTreasure = useTranslateCreatureTreasure(context.lang);
+  const treasureNames = useLocalizedTreasureNames(related.treasures.map(({ id }) => id));
   const habitats = habitatNames.filter(Boolean).join(", ");
+  const treasures = treasureNames.filter(Boolean).join(", ");
 
-  return useMemo(
-    () => ({ ...context, habitats, translateTreasure }),
-    [context, habitats, translateTreasure],
-  );
+  return useMemo(() => ({ ...context, habitats, treasures }), [context, habitats, treasures]);
 }
 
 //------------------------------------------------------------------------------
@@ -66,6 +69,6 @@ export function localizeCreatureFamily(
   return {
     ...localizeResource(family, context),
     habitats: context.habitats,
-    treasures: (family.treasures ?? []).map(context.translateTreasure).join(", "),
+    treasures: context.treasures,
   };
 }

@@ -5,6 +5,7 @@ import { characterSubclassStore } from "~/models/resources/character-subclasses/
 import { creatureFamilyStore } from "~/models/resources/creature-families/creature-family-store";
 import { creatureHabitatStore } from "~/models/resources/creature-habitats/creature-habitat-store";
 import { creatureTagStore } from "~/models/resources/creature-tags/creature-tag-store";
+import { creatureTreasureStore } from "~/models/resources/creature-treasures/creature-treasure-store";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { eldritchInvocationStore } from "~/models/resources/eldritch-invocations/eldritch-invocation-store";
 import { armorStore } from "~/models/resources/equipment/armors/armor-store";
@@ -34,6 +35,7 @@ import { CharacterSubclassCard } from "../../../../resource-modules/character-su
 import { CreatureFamilyCard } from "../../../../resource-modules/creature-families/panel/creature-family-card.tsx";
 import { CreatureHabitatCard } from "../../../../resource-modules/creature-habitats/panel/creature-habitat-card.tsx";
 import { CreatureTagCard } from "../../../../resource-modules/creature-tags/panel/creature-tag-card.tsx";
+import { CreatureTreasureCard } from "../../../../resource-modules/creature-treasures/panel/creature-treasure-card.tsx";
 import { CreatureCard } from "../../../../resource-modules/creatures/panel/creature-card.tsx";
 import { EldritchInvocationCard } from "../../../../resource-modules/eldritch-invocations/panel/eldritch-invocation-card.tsx";
 import { ArmorCard } from "../../../../resource-modules/equipment/armors/panel/armor-card.tsx";
@@ -168,6 +170,15 @@ export const CreatureHabitatPrintDeckEntryCard = createResourcePrintDeckEntryCar
 export const CreatureTagPrintDeckEntryCard = createResourcePrintDeckEntryCard(
   creatureTagStore,
   CreatureTagCard,
+);
+
+//------------------------------------------------------------------------------
+// Creature Treasure Print Deck Entry Card
+//------------------------------------------------------------------------------
+
+export const CreatureTreasurePrintDeckEntryCard = createResourcePrintDeckEntryCard(
+  creatureTreasureStore,
+  CreatureTreasureCard,
 );
 
 //------------------------------------------------------------------------------

@@ -36,6 +36,7 @@ import type { CharacterSubclass } from "../resources/character-subclasses/charac
 import type { CreatureFamily } from "../resources/creature-families/creature-family";
 import type { CreatureHabitat } from "../resources/creature-habitats/creature-habitat";
 import type { CreatureTag } from "../resources/creature-tags/creature-tag";
+import type { CreatureTreasure } from "../resources/creature-treasures/creature-treasure";
 import type { Creature } from "../resources/creatures/creature";
 import type { EldritchInvocation } from "../resources/eldritch-invocations/eldritch-invocation";
 import type { Armor } from "../resources/equipment/armors/armor";
@@ -172,6 +173,7 @@ export function createCatalogue(id: string) {
     creature_family: createResourcesById<CreatureFamily>("creature_family"),
     creature_habitat: createResourcesById<CreatureHabitat>("creature_habitat"),
     creature_tag: createResourcesById<CreatureTag>("creature_tag"),
+    creature_treasure: createResourcesById<CreatureTreasure>("creature_treasure"),
     eldritch_invocation: createResourcesById<EldritchInvocation>("eldritch_invocation"),
     feat: createResourcesById<Feat>("feat"),
     feature: createResourcesById<Feature>("feature"),
@@ -205,6 +207,7 @@ export function createCatalogue(id: string) {
     creature_family: createResourcesIdsBySourceId("creature_family"),
     creature_habitat: createResourcesIdsBySourceId("creature_habitat"),
     creature_tag: createResourcesIdsBySourceId("creature_tag"),
+    creature_treasure: createResourcesIdsBySourceId("creature_treasure"),
     eldritch_invocation: createResourcesIdsBySourceId("eldritch_invocation"),
     feat: createResourcesIdsBySourceId("feat"),
     feature: createResourcesIdsBySourceId("feature"),
@@ -864,6 +867,7 @@ export function createCatalogue(id: string) {
       ["creature_family", importedBundle.resources.creature_families],
       ["creature_habitat", importedBundle.resources.creature_habitats],
       ["creature_tag", importedBundle.resources.creature_tags],
+      ["creature_treasure", importedBundle.resources.creature_treasures],
       ["eldritch_invocation", importedBundle.resources.eldritch_invocations],
       ["feat", importedBundle.resources.feats],
       ["feature", importedBundle.resources.features],

@@ -5,6 +5,7 @@ import { characterSubclassSchema } from "../resources/character-subclasses/chara
 import { creatureFamilySchema } from "../resources/creature-families/creature-family";
 import { creatureHabitatSchema } from "../resources/creature-habitats/creature-habitat";
 import { creatureTagSchema } from "../resources/creature-tags/creature-tag";
+import { creatureTreasureSchema } from "../resources/creature-treasures/creature-treasure";
 import { creatureSchema } from "../resources/creatures/creature";
 import { eldritchInvocationSchema } from "../resources/eldritch-invocations/eldritch-invocation";
 import { armorSchema } from "../resources/equipment/armors/armor";
@@ -46,6 +47,7 @@ export const sourceBundleResourcesSchema = z.object({
   character_classes: characterClassSchema.array().default([]),
   character_subclasses: characterSubclassSchema.array().default([]),
   creature_tags: creatureTagSchema.array().default([]),
+  creature_treasures: creatureTreasureSchema.array().default([]),
   creatures: creatureSchema.array().default([]),
   creature_families: creatureFamilySchema.array().default([]),
   creature_habitats: creatureHabitatSchema.array().default([]),
@@ -69,10 +71,14 @@ export const sourceBundleResourcesSchema = z.object({
 });
 
 //------------------------------------------------------------------------------
-// Source Bundle
+// Source Bundle Version
 //------------------------------------------------------------------------------
 
-export const sourceBundleVersion = 8;
+export const sourceBundleVersion = 9;
+
+//------------------------------------------------------------------------------
+// Source Bundle Schema
+//------------------------------------------------------------------------------
 
 export const sourceBundleSchema = z.object({
   bundle_version: z.literal(sourceBundleVersion),
@@ -80,6 +86,10 @@ export const sourceBundleSchema = z.object({
   resources: sourceBundleResourcesSchema,
   source: sourceSchema,
 });
+
+//------------------------------------------------------------------------------
+// Source Bundle
+//------------------------------------------------------------------------------
 
 export type SourceBundle = z.infer<typeof sourceBundleSchema>;
 
@@ -93,6 +103,10 @@ export const sourceBundleWithoutRegistrySchema = z.object({
   resources: sourceBundleResourcesSchema,
   source: sourceSchema.omit({ registry: true }),
 });
+
+//------------------------------------------------------------------------------
+// Source Bundle Without Registry
+//------------------------------------------------------------------------------
 
 export type SourceBundleWithoutRegistry = z.infer<typeof sourceBundleWithoutRegistrySchema>;
 
@@ -118,6 +132,7 @@ export const sourceBundleResourceKeyByKind = {
   creature_family: "creature_families",
   creature_habitat: "creature_habitats",
   creature_tag: "creature_tags",
+  creature_treasure: "creature_treasures",
   eldritch_invocation: "eldritch_invocations",
   feat: "feats",
   feature: "features",

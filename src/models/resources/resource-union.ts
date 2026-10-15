@@ -11,6 +11,8 @@ import { creatureHabitatSchema } from "./creature-habitats/creature-habitat";
 import { localizedCreatureHabitatSchema } from "./creature-habitats/localized-creature-habitat";
 import { creatureTagSchema } from "./creature-tags/creature-tag";
 import { localizedCreatureTagSchema } from "./creature-tags/localized-creature-tag";
+import { creatureTreasureSchema } from "./creature-treasures/creature-treasure";
+import { localizedCreatureTreasureSchema } from "./creature-treasures/localized-creature-treasure";
 import { creatureSchema } from "./creatures/creature";
 import { localizedCreatureSchema } from "./creatures/localized-creature";
 import { eldritchInvocationSchema } from "./eldritch-invocations/eldritch-invocation";
@@ -47,6 +49,7 @@ export const resourceUnionSchema = z.discriminatedUnion("kind", [
   characterClassSchema,
   characterSubclassSchema,
   creatureTagSchema,
+  creatureTreasureSchema,
   creatureSchema,
   creatureFamilySchema,
   creatureHabitatSchema,
@@ -65,6 +68,10 @@ export const resourceUnionSchema = z.discriminatedUnion("kind", [
   vehicleSchema,
 ]);
 
+//------------------------------------------------------------------------------
+// Resource Union
+//------------------------------------------------------------------------------
+
 export type ResourceUnion = z.infer<typeof resourceUnionSchema>;
 
 //------------------------------------------------------------------------------
@@ -76,6 +83,7 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedCharacterClassSchema,
   localizedCharacterSubclassSchema,
   localizedCreatureTagSchema,
+  localizedCreatureTreasureSchema,
   localizedCreatureSchema,
   localizedCreatureFamilySchema,
   localizedCreatureHabitatSchema,
@@ -93,5 +101,9 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedSpellSchema,
   localizedVehicleSchema,
 ]);
+
+//------------------------------------------------------------------------------
+// Localized Resource Union
+//------------------------------------------------------------------------------
 
 export type LocalizedResourceUnion = z.infer<typeof localizedResourceUnionSchema>;

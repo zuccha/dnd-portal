@@ -93,6 +93,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "creature_treasure",
+    route: Route.ResourcesBestiaryTreasures,
+    searchNames: {
+      en: "treasure treasures creature creatures",
+      it: "tesoro tesori creatura creature",
+    },
+  },
+  {
     kind: "eldritch_invocation",
     route: Route.ResourcesAbilitiesEldritchInvocations,
     searchNames: {

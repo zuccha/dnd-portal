@@ -12,6 +12,7 @@ import { migrateSourceBundleVersion4 } from "./migrate-source-bundle-version-4";
 import { migrateSourceBundleVersion5 } from "./migrate-source-bundle-version-5";
 import { migrateSourceBundleVersion6 } from "./migrate-source-bundle-version-6";
 import { migrateSourceBundleVersion7 } from "./migrate-source-bundle-version-7";
+import { migrateSourceBundleVersion8 } from "./migrate-source-bundle-version-8";
 
 //------------------------------------------------------------------------------
 // Raw Bundle
@@ -35,6 +36,7 @@ const sourceBundleMigrations: Record<number, (bundle: RawBundle) => RawBundle> =
   5: migrateSourceBundleVersion5,
   6: migrateSourceBundleVersion6,
   7: migrateSourceBundleVersion7,
+  8: migrateSourceBundleVersion8,
 };
 
 //------------------------------------------------------------------------------

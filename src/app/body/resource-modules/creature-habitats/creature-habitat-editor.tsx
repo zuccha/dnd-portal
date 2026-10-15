@@ -12,21 +12,16 @@ const useCreatureHabitatRelatedIds = creatureHabitatStore.useRelatedIds;
 // Create Creature Habitat Editor
 //------------------------------------------------------------------------------
 
-export function createCreatureHabitatEditor(
-  form: Form<CreatureHabitatFormData>,
-  { showFamilyRelations = true }: { showFamilyRelations?: boolean } = {},
-) {
+export function createCreatureHabitatEditor(form: Form<CreatureHabitatFormData>) {
   const ResourceEditor = createResourceEditor(form);
-  const FamilyIdsField = showFamilyRelations
-    ? createMultipleSelectIdsField({
-        i18nContext: {
-          label: { en: "Families", it: "Famiglie" },
-          placeholder: { en: "None", it: "Nessuna" },
-        },
-        useField: form.createUseField("family_ids"),
-        useOptions: creatureFamilyStore.useResourceOptions,
-      })
-    : undefined;
+  const FamilyIdsField = createMultipleSelectIdsField({
+    i18nContext: {
+      label: { en: "Families", it: "Famiglie" },
+      placeholder: { en: "None", it: "Nessuna" },
+    },
+    useField: form.createUseField("family_ids"),
+    useOptions: creatureFamilyStore.useResourceOptions,
+  });
 
   return function CreatureHabitatEditor({
     resource,
@@ -39,7 +34,7 @@ export function createCreatureHabitatEditor(
 
     return (
       <ResourceEditor resource={resource}>
-        {FamilyIdsField && <FamilyIdsField defaultValue={familyIds} sourceId={sourceId} />}
+        <FamilyIdsField defaultValue={familyIds} sourceId={sourceId} />
       </ResourceEditor>
     );
   };

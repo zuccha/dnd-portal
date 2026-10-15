@@ -15,6 +15,7 @@ export const resourceKindSchema = z.enum([
   "creature_family",
   "creature_habitat",
   "creature_tag",
+  "creature_treasure",
   "eldritch_invocation",
   "feat",
   "feature",
@@ -34,7 +35,15 @@ export const resourceKindSchema = z.enum([
   "weapon_modifier",
 ]);
 
+//------------------------------------------------------------------------------
+// Resource Kinds
+//------------------------------------------------------------------------------
+
 export const resourceKinds = resourceKindSchema.options;
+
+//------------------------------------------------------------------------------
+// Resource Kind
+//------------------------------------------------------------------------------
 
 export type ResourceKind = z.infer<typeof resourceKindSchema>;
 
@@ -53,6 +62,7 @@ export const { useOptions: useResourceKindOptions, useTranslate: useTranslateRes
     creature_family: { en: "Family", it: "Famiglia" },
     creature_habitat: { en: "Habitat", it: "Habitat" },
     creature_tag: { en: "Creature Tag", it: "Tag Creatura" },
+    creature_treasure: { en: "Treasure", it: "Tesoro" },
     eldritch_invocation: { en: "Eldritch Invocation", it: "Supplica Occulta" },
     feat: { en: "Feat", it: "Talento" },
     feature: { en: "Feature", it: "Privilegio" },
