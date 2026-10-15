@@ -4,8 +4,8 @@ import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import { useTranslatePlaneCategory } from "../../types/plane-category";
 import {
   type ResourceLocalizationContext,
-  formatInfo,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -17,9 +17,8 @@ import { type Plane, planeSchema } from "./plane";
 
 export const localizedPlaneSchema = localizedResourceSchema(planeSchema, z.literal("plane")).extend(
   {
-    alignments: z.string(),
-    category: z.string(),
-    info: z.string(),
+    alignments: localizedFieldSchema,
+    category: localizedFieldSchema,
   },
 );
 
@@ -60,9 +59,14 @@ export function localizePlane(plane: Plane, context: PlaneLocalizationContext): 
   return {
     ...localizeResource(plane, context),
     descriptor: category,
-    alignments,
-    category,
-    info: formatInfo([[context.tp("alignments", plane.alignments.length), alignments]]),
+    alignments: {
+      label: context.tp("alignments", plane.alignments.length),
+      value: alignments,
+    },
+    category: {
+      label: context.t("category"),
+      value: category,
+    },
   };
 }
 
@@ -78,5 +82,9 @@ const i18nContext = {
   "alignments/1": {
     en: "Alignment",
     it: "Allineamento",
+  },
+  "category": {
+    en: "Category",
+    it: "Categoria",
   },
 };

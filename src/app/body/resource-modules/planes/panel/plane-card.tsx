@@ -21,8 +21,8 @@ export function PlaneCard({
   return (
     <ResourcePokerCard
       beforeDetails={
-        localizedResource.info && (
-          <PokerCard.Info palette={palette}>{localizedResource.info}</PokerCard.Info>
+        localizedResource.alignments.value && (
+          <PokerCard.LabeledValues fields={[localizedResource.alignments]} palette={palette} />
         )
       }
       localizedResource={localizedResource}
