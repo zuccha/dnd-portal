@@ -1,11 +1,34 @@
+import { useMemo } from "react";
 import z from "zod";
+import { translate } from "~/i18n/i18n-string";
+import catalogue from "~/models/catalogue/catalogue";
 import {
   type ResourceLocalizationContext,
   localizeResource,
+  localizedFieldSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
 import { type CreatureTreasure, creatureTreasureSchema } from "./creature-treasure";
+import type { RelatedResourceEntries } from "../../catalogue/resource-relations";
+
+//------------------------------------------------------------------------------
+// Localized Creature Treasure Family Link
+//------------------------------------------------------------------------------
+
+const localizedCreatureTreasureFamilyLinkSchema = z.object({
+  id: z.uuid(),
+  kind: z.literal("creature_family"),
+  name: z.string(),
+});
+
+//------------------------------------------------------------------------------
+// Localized Creature Treasure Family List Field
+//------------------------------------------------------------------------------
+
+const localizedCreatureTreasureFamilyListFieldSchema = localizedFieldSchema.extend({
+  resources: z.array(localizedCreatureTreasureFamilyLinkSchema),
+});
 
 //------------------------------------------------------------------------------
 // Localized Creature Treasure Schema
@@ -14,7 +37,9 @@ import { type CreatureTreasure, creatureTreasureSchema } from "./creature-treasu
 export const localizedCreatureTreasureSchema = localizedResourceSchema(
   creatureTreasureSchema,
   z.literal("creature_treasure"),
-);
+).extend({
+  families: localizedCreatureTreasureFamilyListFieldSchema,
+});
 
 //------------------------------------------------------------------------------
 // Localized Creature Treasure
@@ -23,13 +48,40 @@ export const localizedCreatureTreasureSchema = localizedResourceSchema(
 export type LocalizedCreatureTreasure = z.infer<typeof localizedCreatureTreasureSchema>;
 
 //------------------------------------------------------------------------------
+// Creature Treasure Localization Context
+//------------------------------------------------------------------------------
+
+type CreatureTreasureLocalizationContext = ResourceLocalizationContext & {
+  families: LocalizedCreatureTreasure["families"]["resources"];
+};
+
+const creatureFamilyResources = catalogue.createResourceStore("creature_family");
+const useCreatureFamilyResources = creatureFamilyResources.useResources;
+
+//------------------------------------------------------------------------------
 // Use Creature Treasure Localization Context
 //------------------------------------------------------------------------------
 
 export function useCreatureTreasureLocalizationContext(
   _treasure: CreatureTreasure,
-): ResourceLocalizationContext {
-  return useResourceLocalizationContext();
+  related: RelatedResourceEntries<"creature_treasure">,
+): CreatureTreasureLocalizationContext {
+  const context = useResourceLocalizationContext(i18nContext);
+  const families = useCreatureFamilyResources(related.families.map(({ id }) => id));
+  const localizedFamilies = useMemo(
+    () =>
+      families
+        .map(({ id, name }) => ({
+          id,
+          kind: "creature_family" as const,
+          name: translate(name, context.lang),
+        }))
+        .filter(({ name }) => name)
+        .sort((a, b) => a.name.localeCompare(b.name, context.lang)),
+    [context, families],
+  );
+
+  return useMemo(() => ({ ...context, families: localizedFamilies }), [context, localizedFamilies]);
 }
 
 //------------------------------------------------------------------------------
@@ -38,7 +90,25 @@ export function useCreatureTreasureLocalizationContext(
 
 export function localizeCreatureTreasure(
   treasure: CreatureTreasure,
-  context: ResourceLocalizationContext,
+  context: CreatureTreasureLocalizationContext,
 ): LocalizedCreatureTreasure {
-  return localizeResource(treasure, context);
+  const families = context.families;
+
+  return {
+    ...localizeResource(treasure, context),
+
+    families: {
+      label: context.t("families"),
+      resources: families,
+      value: families.map(({ name }) => name).join(", "),
+    },
+  };
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  families: { en: "Families", it: "Famiglie" },
+};
