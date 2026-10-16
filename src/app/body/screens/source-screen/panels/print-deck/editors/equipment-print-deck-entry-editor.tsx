@@ -8,19 +8,23 @@ import Field from "~/ui/field";
 import Input from "~/ui/input";
 import ResourcePrintDeckEntryEditor from "./resource-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "../print-deck-entry-editor-props";
+import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
 // Equipment Print Deck Entry Editor Props
 //------------------------------------------------------------------------------
 
 type EquipmentLocalizedResource = LocalizedArmor | LocalizedItem | LocalizedTool | LocalizedWeapon;
-type EquipmentPrintDeckEntryEditorProps = PrintDeckEntryEditorProps<EquipmentLocalizedResource>;
+type EquipmentPrintDeckEntryEditorProps = PrintDeckEntryEditorProps<EquipmentLocalizedResource> & {
+  children?: ReactNode;
+};
 
 //------------------------------------------------------------------------------
 // Equipment Print Deck Entry Editor
 //------------------------------------------------------------------------------
 
 export default function EquipmentPrintDeckEntryEditor({
+  children,
   localizedResource,
   onLocalizedResourceUpdate,
 }: EquipmentPrintDeckEntryEditorProps) {
@@ -51,6 +55,7 @@ export default function EquipmentPrintDeckEntryEditor({
           />
         </Field>
       </HStack>
+      {children}
     </ResourcePrintDeckEntryEditor>
   );
 }
