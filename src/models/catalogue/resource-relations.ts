@@ -258,6 +258,19 @@ export type RelationEndpointUpdate = {
 };
 
 //------------------------------------------------------------------------------
+// Is Feature Relation
+//------------------------------------------------------------------------------
+
+function isFeatureRelation(value: unknown): value is { min_level: number } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "min_level" in value &&
+    typeof value.min_level === "number"
+  );
+}
+
+//------------------------------------------------------------------------------
 // Relation Resource Endpoint
 //------------------------------------------------------------------------------
 
@@ -311,15 +324,11 @@ export function applyRelationEndpointUpdate<G extends RelationGroup>(
   );
   function relationKey(row: ResourceRelation<ResourceKind, ResourceKind>): string {
     const relatedId = resource1Side ? row.resource_2_id : row.resource_1_id;
-    return "min_level" in row ? `${relatedId}:${row.min_level}` : relatedId;
+    return isFeatureRelation(row) ? `${relatedId}:${row.min_level}` : relatedId;
   }
 
   function updateKey(related: RelationEndpointUpdate["related"][number]): string {
-    return update.group === "character_classes_and_spells" ||
-      update.group === "creature_families_and_creature_habitats" ||
-      update.group === "creature_families_and_creature_treasures"
-      ? related.id
-      : `${related.id}:${related.min_level}`;
+    return isFeatureRelation(related) ? `${related.id}:${related.min_level}` : related.id;
   }
 
   const existingByRelatedId = new Map(
@@ -374,19 +383,12 @@ export function applyRelationEndpointUpdate<G extends RelationGroup>(
           resource_2_position: index,
         };
 
-    if (
-      update.group === "character_classes_and_spells" ||
-      update.group === "creature_families_and_creature_habitats" ||
-      update.group === "creature_families_and_creature_treasures"
-    )
-      return row;
-    if (typeof related.min_level !== "number") {
-      throw new Error(`Missing min_level for ${update.group} relation ${related.id}`);
-    }
-    return { ...row, min_level: related.min_level };
+    return isFeatureRelation(related) ? { ...row, min_level: related.min_level } : row;
   });
 
-  return [...retained, ...nextRows] as ResourceRelationRow<G>[];
+  return resourceRelationsSchema.parse({
+    [update.group]: [...retained, ...nextRows],
+  })[update.group] as ResourceRelationRow<G>[];
 }
 
 //------------------------------------------------------------------------------
