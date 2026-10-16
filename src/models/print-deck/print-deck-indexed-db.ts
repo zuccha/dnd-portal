@@ -1,6 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import { z } from "zod";
-import { localizedResourceUnionSchema } from "../resources/resource-union";
+import { resourceUnionSchema } from "../resources/resource-union";
 import { printDeckEntrySchema, type PrintDeckEntry } from "./print-deck-entry";
 
 //------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ function parsePrintDeckEntries(value: unknown): PrintDeckEntry[] {
           .object({
             id: z.uuid(),
             lang: z.string(),
-            localized_resource: localizedResourceUnionSchema,
+            localized_resource: z.looseObject({ _raw: resourceUnionSchema }),
             palette_name: printDeckEntrySchema.shape.palette_name,
           })
           .safeParse(entry);

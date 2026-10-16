@@ -42,39 +42,45 @@ export function createResourceDetailInteractive<
   // Resource Detail Interactive
   //------------------------------------------------------------------------------
 
-  return function ResourceDetailInteractive({ resource }: { resource: L | undefined }) {
+  return function ResourceDetailInteractive({
+    localizedResource,
+    resource,
+  }: {
+    localizedResource: L | undefined;
+    resource: R | undefined;
+  }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const navigate = useNavigate();
-    const sourceEditable = useSourceEditable(resource?.sourceId ?? "");
+    const sourceEditable = useSourceEditable(resource?.source_id ?? "");
     const paletteName = usePaletteName();
     const deleteResource = useResourceDelete(
       store,
-      resource?._raw,
-      resource?.name ?? "",
+      resource,
+      localizedResource?.name ?? "",
       sourceEditable,
       () => navigate(listPath, { replace: true }),
     );
 
     const edit = useCallback(() => {
-      if (resource && sourceEditable) context.setEditedResource(resource._raw);
+      if (resource && sourceEditable) context.setEditedResource(resource);
     }, [resource, sourceEditable]);
 
     const addToPrintDeck = useCallback(() => {
-      if (!resource) return;
+      if (!resource || !localizedResource) return;
 
       printDeck.addEntry({
         lang,
         palette_name: paletteName,
-        resource: resourceUnionSchema.parse(resource._raw),
+        resource: resourceUnionSchema.parse(resource),
       });
       toaster.success({
-        description: resource.name,
+        description: localizedResource.name,
         title: t("print_deck.added"),
       });
-    }, [lang, paletteName, resource, t]);
+    }, [lang, localizedResource, paletteName, resource, t]);
 
     const makePersistent = useCallback(async () => {
-      if (!resource) return;
+      if (!resource || !localizedResource) return;
 
       const error = await store.setResourceTemporary(resource.id, false);
       if (error) {
@@ -84,17 +90,15 @@ export function createResourceDetailInteractive<
         });
       } else {
         toaster.success({
-          description: resource.name,
+          description: localizedResource.name,
           title: t("persistent.done"),
         });
       }
-    }, [resource, t]);
+    }, [localizedResource, resource, t]);
 
-    if (!resource) return <Detail actions={[]} resource={undefined} />;
+    if (!localizedResource || !resource) return <Detail actions={[]} resource={undefined} />;
 
-    const visibleActions = actions.filter(
-      ({ isVisible }) => !isVisible || isVisible(resource._raw),
-    );
+    const visibleActions = actions.filter(({ isVisible }) => !isVisible || isVisible(resource));
     const resourceDetailActions: ResourceDetailAction[] = [
       ...(sourceEditable ? [{ Icon: EditIcon, label: t("edit"), onClick: edit }] : []),
       {
@@ -109,10 +113,10 @@ export function createResourceDetailInteractive<
         ? visibleActions.map((action) => ({
             Icon: action.icon,
             label: translate(action.label, lang),
-            disabled: action.isDisabled?.(resource._raw) ?? false,
+            disabled: action.isDisabled?.(resource) ?? false,
             onClick: () => {
-              const disabled = action.isDisabled?.(resource._raw) ?? false;
-              if (!disabled) void action.onClick(resource._raw);
+              const disabled = action.isDisabled?.(resource) ?? false;
+              if (resource && !disabled) void action.onClick(resource);
             },
           }))
         : []),
@@ -130,7 +134,7 @@ export function createResourceDetailInteractive<
 
     return (
       <>
-        <Detail actions={resourceDetailActions} resource={resource} />
+        <Detail actions={resourceDetailActions} resource={localizedResource} />
         {deleteResource.dialog}
       </>
     );

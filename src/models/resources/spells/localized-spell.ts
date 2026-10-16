@@ -34,6 +34,7 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema, z.liter
     characterClassesLabel: z.string(),
     components: localizedFieldSchema,
     concentration: z.boolean(),
+    emphasizeCastingTime: z.boolean(),
     duration: localizedFieldSchema.extend({ valueWithConcentration: z.string() }),
     level: z.string(),
     materials: localizedFieldSchema,
@@ -176,6 +177,8 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
           .join(", ") || "—",
     },
     concentration: spell.concentration,
+    emphasizeCastingTime:
+      spell.casting_time === "bonus_action" || spell.casting_time === "reaction",
     details:
       details && upgrade
         ? `${details}\n\n${context.tp("upgrade", spell.level)}\r${upgrade}`

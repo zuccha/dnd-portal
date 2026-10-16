@@ -4,6 +4,7 @@ import { translate } from "~/i18n/i18n-string";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatCm } from "~/measures/distance";
+import catalogue from "~/models/catalogue/catalogue";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { formatNumber, formatNumberAsWord, formatSigned } from "~/utils/number";
 import {
@@ -34,16 +35,33 @@ import {
 } from "../localized-resource";
 import { type Creature, creatureSchema } from "./creature";
 import type { CreatureAbility } from "../../types/creature-ability";
+import type { CreatureFamily } from "../creature-families/creature-family";
 
-const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const useLocalizedEquipmentEntries = equipmentReferenceStore.useLocalizedEquipmentEntries;
 const useLocalizedLanguageNames = languageStore.useLocalizedResourceNames;
 const useLocalizedCreatureTagNames = creatureTagStore.useLocalizedResourceNames;
+const creatureFamilyResources = catalogue.createResourceStore("creature_family");
+const useCreatureFamilyResources = creatureFamilyResources.useResources as (
+  ids: string[],
+) => CreatureFamily[];
 
 //------------------------------------------------------------------------------
 // Localized Creature Tag Reference
 //------------------------------------------------------------------------------
 
 const localizedCreatureTagReferenceSchema = localizedResourceLinkSchema(z.literal("creature_tag"));
+
+//------------------------------------------------------------------------------
+// Localized Creature Related Resource Links
+//------------------------------------------------------------------------------
+
+const localizedCreatureEquipmentReferenceSchema = localizedResourceLinkSchema(
+  z.enum(["armor", "item", "tool", "weapon"]),
+);
+const localizedCreatureFamilyReferenceSchema = localizedResourceLinkSchema(
+  z.literal("creature_family"),
+);
+const localizedCreatureLanguageReferenceSchema = localizedResourceLinkSchema(z.literal("language"));
 
 //------------------------------------------------------------------------------
 // Format Creature Sizes
@@ -99,7 +117,12 @@ export const localizedCreatureSchema = localizedResourceSchema(
     lairValue: z.string(),
     valueWithLair: z.string(),
   }),
-  familyLabel: z.string(),
+  equipment: localizedFieldSchema.extend({
+    resources: z.array(localizedCreatureEquipmentReferenceSchema),
+  }),
+  family: localizedFieldSchema.extend({
+    resource: localizedCreatureFamilyReferenceSchema.nullable(),
+  }),
   hasAdditionalHpPerLevel: z.boolean(),
   hasLair: z.boolean(),
   hitPoints: localizedFieldSchema.extend({
@@ -109,6 +132,9 @@ export const localizedCreatureSchema = localizedResourceSchema(
   }),
   info: z.string(),
   initiative: localizedFieldSchema.extend({ passive: z.string() }),
+  languages: localizedFieldSchema.extend({
+    resources: z.array(localizedCreatureLanguageReferenceSchema),
+  }),
   passivePerception: localizedFieldSchema,
   perception: localizedFieldSchema.extend({ passive: z.string() }),
   proficiencyBonus: localizedFieldSchema.extend({ cardLabel: z.string() }),
@@ -131,7 +157,8 @@ export type LocalizedCreature = z.infer<typeof localizedCreatureSchema>;
 type CreatureLocalizationContext = ResourceLocalizationContext & {
   formatCm: ReturnType<typeof useFormatCm>;
   formatCp: ReturnType<typeof useFormatCp>;
-  localizedEquipmentNames: Record<string, string>;
+  family: z.infer<typeof localizedCreatureFamilyReferenceSchema> | null;
+  localizedEquipmentEntries: ReturnType<typeof useLocalizedEquipmentEntries>;
   localizedLanguageNames: Record<string, string>;
   localizedTagNames: Record<string, string>;
   system: ReturnType<typeof useI18nSystem>[0];
@@ -154,9 +181,24 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
   const [system] = useI18nSystem();
   const formatCp = useFormatCp();
   const formatCm = useFormatCm();
-  const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
+  const localizedEquipmentEntries = useLocalizedEquipmentEntries(context.lang);
   const languageIds = creature.language_entries.map(({ language_id }) => language_id);
   const languageNames = useLocalizedLanguageNames(languageIds);
+  const familyResources = useCreatureFamilyResources(
+    creature.family_id ? [creature.family_id] : [],
+  );
+  const familyResource = familyResources[0];
+  const family = useMemo(
+    () =>
+      familyResource
+        ? {
+            id: familyResource.id,
+            kind: "creature_family" as const,
+            name: translate(familyResource.name, context.lang),
+          }
+        : null,
+    [context.lang, familyResource],
+  );
   const tagNames = useLocalizedCreatureTagNames(creature.tag_ids);
   const localizedLanguageNames = useMemo(
     () => Object.fromEntries(languageIds.map((id, index) => [id, languageNames[index] ?? ""])),
@@ -178,9 +220,10 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
   return useMemo(
     () => ({
       ...context,
+      family,
       formatCm,
       formatCp,
-      localizedEquipmentNames,
+      localizedEquipmentEntries,
       localizedLanguageNames,
       localizedTagNames,
       system,
@@ -195,9 +238,10 @@ export function useCreatureLocalizationContext(creature: Creature): CreatureLoca
     }),
     [
       context,
+      family,
       formatCm,
       formatCp,
-      localizedEquipmentNames,
+      localizedEquipmentEntries,
       localizedLanguageNames,
       localizedTagNames,
       system,
@@ -225,7 +269,8 @@ export function localizeCreature(
     formatCm,
     formatCp,
     lang,
-    localizedEquipmentNames,
+    family,
+    localizedEquipmentEntries,
     localizedLanguageNames,
     localizedTagNames,
     system,
@@ -251,6 +296,20 @@ export function localizeCreature(
     return name ? [{ id, kind: "creature_tag" as const, name }] : [];
   });
   const tagText = tagResources.map(({ name }) => name).join(", ");
+  const equipmentResources = [
+    ...new Map(
+      creature.gear.equipments.flatMap(({ id }) => {
+        const equipment = localizedEquipmentEntries.find((entry) => entry.id === id);
+        return equipment ? [[`${equipment.kind}:${equipment.id}`, equipment] as const] : [];
+      }),
+    ).values(),
+  ].sort((a, b) => b.name.length - a.name.length);
+  const languageResources = creature.language_entries.flatMap(({ language_id }) => {
+    const name = localizedLanguageNames[language_id] ?? "";
+    return name ? [{ id: language_id, kind: "language" as const, name }] : [];
+  });
+  const equipmentText = equipmentResources.map(({ name }) => name).join(", ");
+  const languageText = languageResources.map(({ name }) => name).join(", ");
 
   // EXP and PB from CR
   const cr =
@@ -479,7 +538,7 @@ export function localizeCreature(
   // Gear
   const gear = [
     ...creature.gear.equipments.map(({ id, notes, quantity }) => {
-      const name = localizedEquipmentNames[id] ?? "";
+      const name = localizedEquipmentEntries.find((entry) => entry.id === id)?.name ?? "";
       const nameWithNotes = formatEquipmentNameWithNotes(name, notes, lang);
       return tpi("equipment", quantity, nameWithNotes, `${quantity}`);
     }),
@@ -665,7 +724,16 @@ export function localizeCreature(
       value: formattedExp,
       valueWithLair,
     },
-    familyLabel: context.t("family"),
+    equipment: {
+      label: context.t("equipment"),
+      resources: equipmentResources,
+      value: equipmentText,
+    },
+    family: {
+      label: context.t("family"),
+      resource: family,
+      value: family?.name ?? "",
+    },
     hasAdditionalHpPerLevel: creature.additional_hp_per_level > 0,
     hasLair: creature.has_lair,
     hitPoints: {
@@ -682,6 +750,11 @@ export function localizeCreature(
       label: context.t("initiative"),
       passive: `${10 + creature.initiative}`,
       value: formatSigned(creature.initiative),
+    },
+    languages: {
+      label: context.t("languages"),
+      resources: languageResources,
+      value: languageText,
     },
     passivePerception: {
       label: context.t("passive_perception"),

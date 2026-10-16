@@ -1,9 +1,7 @@
 import { Box, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { defaultCharacterClass } from "~/models/resources/character-classes/character-class";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
-import { toolStore } from "~/models/resources/equipment/tools/tool-store";
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
@@ -18,10 +16,8 @@ const {
   useResourceIds: useSubclassResourceIds,
   useResources: useSubclassResources,
 } = characterSubclassStore;
-const { useLocalizedResourceNames: useLocalizedToolNames } = toolStore;
 const { useLocalizedResourceNames: useLocalizedSpellNames, useResources: useSpellResources } =
   spellStore;
-const noToolIds: string[] = [];
 
 //------------------------------------------------------------------------------
 // Character Class Detail
@@ -36,10 +32,7 @@ export default function CharacterClassDetail({
 }) {
   const { lang, t, tpi } = useI18nLangContext(i18nContext);
   const characterClass = resource;
-  const spellEntries = useCharacterClassRelatedEntries(
-    characterClass?._raw.id ?? defaultCharacterClass.id,
-    "spells",
-  );
+  const spellEntries = useCharacterClassRelatedEntries(characterClass?.id ?? "", "spells");
   const spellIds = spellEntries.map(({ id }) => id);
   const spellNames = useLocalizedSpellNames(spellIds);
   const spellResources = useSpellResources(spellIds);
@@ -57,16 +50,10 @@ export default function CharacterClassDetail({
         .filter((spell) => spell.level === level)
         .sort((a, b) => a.name.localeCompare(b.name, lang)),
     }));
-  const toolIds = characterClass?._raw.tool_proficiency_ids ?? noToolIds;
-  const toolNames = useLocalizedToolNames(toolIds);
-  const localizedTools = toolIds.flatMap((id, index) => {
-    const name = toolNames[index];
-    return name ? [{ id, kind: "tool" as const, name }] : [];
-  });
   const subclassIds = useSubclassResourceIds(characterClass?.sourceId ?? "");
   const subclasses = useSubclassResources(subclassIds);
   const classSubclassIds = subclasses
-    .filter(({ character_class_id }) => character_class_id === characterClass?._raw.id)
+    .filter(({ character_class_id }) => character_class_id === characterClass?.id)
     .map(({ id }) => id);
   const subclassNames = useLocalizedSubclassNames(classSubclassIds);
   const sortedSubclasses = classSubclassIds
@@ -113,9 +100,9 @@ export default function CharacterClassDetail({
               {value}
             </ResourceDetailField>
           ))}
-          {localizedTools.length > 0 && (
+          {characterClass.toolProficiencies.resources.length > 0 && (
             <ResourceDetailField label={characterClass.toolProficiencies.label}>
-              <ResourceDetailLinks resources={localizedTools} />
+              <ResourceDetailLinks resources={characterClass.toolProficiencies.resources} />
             </ResourceDetailField>
           )}
           {sortedSubclasses.length > 0 && (

@@ -103,16 +103,15 @@ export function createResourcesTableRow<
       extra.detailsKey && localizedResource[extra.detailsKey]
         ? resolveSystemText(String(localizedResource[extra.detailsKey]), system)
         : "";
-    const visibleActions =
-      extra.actions?.filter((action) => action.isVisible(localizedResource._raw)) ?? [];
+    const visibleActions = extra.actions?.filter((action) => action.isVisible(resource)) ?? [];
 
     const edit = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
         if (!sourceEditable) return;
-        if (localizedResource) context.setEditedResource(localizedResource._raw);
+        context.setEditedResource(resource);
       },
-      [localizedResource, sourceEditable],
+      [resource, sourceEditable],
     );
 
     const openDetails = useCallback(
@@ -127,14 +126,14 @@ export function createResourcesTableRow<
       printDeck.addEntry({
         lang,
         palette_name: paletteName,
-        resource: resourceUnionSchema.parse(localizedResource._raw),
+        resource: resourceUnionSchema.parse(resource),
       });
 
       toaster.success({
         description: localizedResource.name,
         title: t("print_deck.added"),
       });
-    }, [lang, localizedResource, paletteName, t]);
+    }, [lang, localizedResource.name, paletteName, resource, t]);
 
     const makePersistent = useCallback(async () => {
       const error = await store.setResourceTemporary(localizedResource.id, false);
@@ -258,7 +257,7 @@ export function createResourcesTableRow<
                 {sourceEditable &&
                   visibleActions.map((action, i) => {
                     const ActionIcon = action.icon;
-                    const disabled = action.isDisabled?.(localizedResource._raw) ?? false;
+                    const disabled = action.isDisabled?.(resource) ?? false;
                     return (
                       <IconButton
                         Icon={ActionIcon}
@@ -267,7 +266,7 @@ export function createResourcesTableRow<
                         label={translate(action.label, lang)}
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (!disabled) void action.onClick(localizedResource._raw);
+                          if (!disabled) void action.onClick(resource);
                         }}
                         size="2xs"
                         variant="ghost"

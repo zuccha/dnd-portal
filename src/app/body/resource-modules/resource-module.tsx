@@ -82,7 +82,7 @@ export function createResourceModule<
   const ResourceDetailInteractive = createResourceDetailInteractive(store, context, detail, path);
 
   const { useView } = context;
-  const { useLocalizedResource } = store;
+  const { useLocalizedResource, useResource } = store;
 
   //------------------------------------------------------------------------------
   // Resources Panel
@@ -112,14 +112,16 @@ export function createResourceModule<
   //------------------------------------------------------------------------------
 
   function ResourceDetail({ resourceId }: { resourceId: string }) {
-    const resource = useLocalizedResource(resourceId);
-    if (!resource) return <ResourceDetailNotFound kind={store.kind} to={path} />;
+    const resource = useResource(resourceId);
+    const localizedResource = useLocalizedResource(resourceId);
+    if (!resource || !localizedResource)
+      return <ResourceDetailNotFound kind={store.kind} to={path} />;
 
     return (
       <>
-        <ResourceDetailInteractive resource={resource} />
-        <ResourceUpdater sourceId={resource.sourceId} />
-        {Extra && <Extra sourceId={resource.sourceId} />}
+        <ResourceDetailInteractive localizedResource={localizedResource} resource={resource} />
+        <ResourceUpdater sourceId={resource.source_id} />
+        {Extra && <Extra sourceId={resource.source_id} />}
       </>
     );
   }

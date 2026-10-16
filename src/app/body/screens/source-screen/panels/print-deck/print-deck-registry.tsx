@@ -43,7 +43,7 @@ export type PrintDeckResourceKind = LocalizedResourceUnion["kind"];
 
 export type PrintDeckLocalizedResource<K extends PrintDeckResourceKind> = Extract<
   LocalizedResourceUnion,
-  { kind: K; _raw: { kind: K } }
+  { kind: K }
 >;
 
 //------------------------------------------------------------------------------

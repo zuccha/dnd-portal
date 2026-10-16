@@ -43,11 +43,10 @@ export type LocalizedResourceLink<K extends ResourceKind> = {
 //------------------------------------------------------------------------------
 
 export const localizedResourceSchema = <R extends Resource>(
-  resourceSchema: ZodType<R>,
+  _resourceSchema: ZodType<R>,
   kindSchema: ZodType<R["kind"]>,
 ) =>
   z.object({
-    _raw: resourceSchema,
     descriptor: z.string(),
     details: z.string(),
     id: z.uuid(),
@@ -106,7 +105,6 @@ export function localizeResource<R extends Resource>(
 ): LocalizedResource<R> {
   const page = translateNumber(resource.page ?? {}, context.lang);
   return {
-    _raw: resource,
     descriptor: "",
     details: "",
     id: resource.id,

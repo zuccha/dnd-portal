@@ -106,7 +106,6 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
     .sort((a, b) => a.name.localeCompare(b.name, context.lang));
   return {
     ...localizeModifier(equipmentModifier, context),
-    _raw: equipmentModifier,
     descriptor: appliesTo,
     details: formatDetails(notesDelta, attunementNotesDelta),
 

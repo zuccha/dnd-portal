@@ -78,13 +78,15 @@ export function createResourceCardInteractive<
     resourceId,
     zoom,
   }: ResourceCardInteractiveProps) {
+    const resource = useResource(resourceId);
     const localizedResource = useLocalizedResource(resourceId);
-    if (!localizedResource) return null;
+    if (!resource || !localizedResource) return null;
 
     return (
       <ResourcesAlbumCardInteractiveContent
         palette={palette}
         localizedResource={localizedResource}
+        resource={resource}
         zoom={zoom}
       />
     );
@@ -97,11 +99,12 @@ export function createResourceCardInteractive<
   function ResourcesAlbumCardInteractiveContent({
     palette = defaultPalette,
     localizedResource,
+    resource,
     zoom,
   }: Omit<ResourceCardInteractiveProps, "resourceId"> & {
     localizedResource: L;
+    resource: R;
   }) {
-    const resource = localizedResource._raw;
     const { lang, t } = useI18nLangContext(i18nContext);
     const navigate = useNavigate();
     const sourceEditable = useSourceEditable(localizedResource.sourceId);
@@ -113,8 +116,7 @@ export function createResourceCardInteractive<
       sourceEditable,
     );
     const visibleActions =
-      extra.actions?.filter(({ isVisible }) => !isVisible || isVisible(localizedResource._raw)) ??
-      [];
+      extra.actions?.filter(({ isVisible }) => !isVisible || isVisible(resource)) ?? [];
 
     const cardMode = useCardMode();
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
@@ -147,8 +149,8 @@ export function createResourceCardInteractive<
 
     const edit = useCallback(() => {
       if (!sourceEditable) return;
-      if (localizedResource) context.setEditedResource(localizedResource._raw);
-    }, [localizedResource, sourceEditable]);
+      context.setEditedResource(resource);
+    }, [resource, sourceEditable]);
 
     const openDetails = useCallback(() => {
       navigate(resourceDetailRoute(resource.kind, resource.id));
@@ -158,14 +160,14 @@ export function createResourceCardInteractive<
       printDeck.addEntry({
         lang,
         palette_name: paletteName,
-        resource: resourceUnionSchema.parse(localizedResource._raw),
+        resource: resourceUnionSchema.parse(resource),
       });
 
       toaster.success({
         description: localizedResource.name,
         title: t("print_deck.added"),
       });
-    }, [lang, localizedResource, paletteName, t]);
+    }, [lang, localizedResource.name, paletteName, resource, t]);
 
     const makePersistent = useCallback(async () => {
       const error = await store.setResourceTemporary(localizedResource.id, false);
@@ -293,7 +295,7 @@ export function createResourceCardInteractive<
             {sourceEditable &&
               visibleActions.map((action, i) => {
                 const ActionIcon = action.icon;
-                const disabled = action.isDisabled?.(localizedResource._raw) ?? false;
+                const disabled = action.isDisabled?.(resource) ?? false;
                 return (
                   <IconButton
                     Icon={ActionIcon}
@@ -304,7 +306,7 @@ export function createResourceCardInteractive<
                     label={translate(action.label, lang)}
                     onPointerDown={(e) => {
                       e.stopPropagation();
-                      if (!disabled) void action.onClick(localizedResource._raw);
+                      if (!disabled) void action.onClick(resource);
                     }}
                     size="2xs"
                     tooltipPositioning={{ placement: "right" }}

@@ -9,7 +9,7 @@ import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateArmorType } from "../../types/armor-type";
 import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
-import { useTranslateDieType } from "../../types/die_type";
+import { dieTypeSchema, useTranslateDieType } from "../../types/die_type";
 import { useTranslateWeaponType } from "../../types/weapon-type";
 import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
 import { toolStore } from "../equipment/tools/tool-store";
@@ -18,6 +18,7 @@ import {
   formatDetails,
   localizeResource,
   localizedFieldSchema,
+  localizedResourceLinkSchema,
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
@@ -26,6 +27,7 @@ import type { RelatedResourceEntries } from "../../catalogue/resource-relations"
 
 const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
 const useLocalizedToolNames = toolStore.useLocalizedResourceNames;
+const localizedToolReferenceSchema = localizedResourceLinkSchema(z.literal("tool"));
 
 //------------------------------------------------------------------------------
 // Localized Character Class
@@ -38,10 +40,13 @@ export const localizedCharacterClassSchema = localizedResourceSchema(
   abbreviation: z.string(),
   armorProficiencies: localizedFieldSchema,
   hitDie: localizedFieldSchema,
+  hitDieType: dieTypeSchema,
   primaryAbilities: localizedFieldSchema,
   proficiencies: z.array(localizedFieldSchema),
   savingThrowProficiencies: localizedFieldSchema,
-  toolProficiencies: localizedFieldSchema,
+  toolProficiencies: localizedFieldSchema.extend({
+    resources: z.array(localizedToolReferenceSchema),
+  }),
   weaponProficiencies: localizedFieldSchema,
 });
 
@@ -149,10 +154,13 @@ export function localizeCharacterClass(
     .filter((text) => text)
     .join(", ");
 
-  const toolProficiencies = characterClass.tool_proficiency_ids
-    .map((id) => context.localizedToolNames[id] ?? "")
-    .sort((a, b) => a.localeCompare(b, context.lang))
-    .join(", ");
+  const toolProficiencyResources = characterClass.tool_proficiency_ids
+    .flatMap((id) => {
+      const name = context.localizedToolNames[id] ?? "";
+      return name ? [{ id, kind: "tool" as const, name }] : [];
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, context.lang));
+  const toolProficiencies = toolProficiencyResources.map(({ name }) => name).join(", ");
 
   const savingThrowProficienciesField = {
     label: context.tp(
@@ -179,6 +187,7 @@ export function localizeCharacterClass(
   };
   const toolProficienciesField = {
     label: context.tp("tool_proficiencies", characterClass.tool_proficiency_ids.length),
+    resources: toolProficiencyResources,
     value: toolProficiencies,
   };
 
@@ -233,6 +242,7 @@ export function localizeCharacterClass(
       label: context.t("hit_die"),
       value: context.translateDieType(characterClass.hp_die),
     },
+    hitDieType: characterClass.hp_die,
     primaryAbilities: {
       label: context.tp("primary_abilities", characterClass.primary_abilities.length),
       value: primaryAbilities || context.t("abilities.none"),

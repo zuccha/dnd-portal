@@ -25,11 +25,7 @@ export function SpellCard({
   const components = localizedResource.components;
   const duration = localizedResource.duration.value;
 
-  const castingTimeColor =
-    localizedResource._raw.casting_time === "bonus_action" ||
-    localizedResource._raw.casting_time === "reaction"
-      ? palette[800]
-      : undefined;
+  const castingTimeColor = localizedResource.emphasizeCastingTime ? palette[800] : undefined;
 
   return (
     <ResourcePokerCard
