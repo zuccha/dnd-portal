@@ -27,7 +27,7 @@ function formatFeatureEntries(
       ).replace(" ", " ");
       const description = translate(feature.description, lang);
       return [
-        entry.min_level ? ti("name.min_level", name, `${entry.min_level}`) : `##${name}##`,
+        entry.minimum_level ? ti("name.min_level", name, `${entry.minimum_level}`) : `##${name}##`,
         description,
       ]
         .filter(Boolean)

@@ -25,8 +25,8 @@ export default function ItemsFilters(props: StackProps) {
   return (
     <EquipmentFilters filters={filters} onFiltersChange={setFilters} {...props}>
       <InclusionButton
-        include={filters.consumable}
-        onValueChange={(consumable) => setFilters({ consumable })}
+        include={filters.is_consumable}
+        onValueChange={(is_consumable) => setFilters({ is_consumable })}
         size="sm"
         w="full"
       >

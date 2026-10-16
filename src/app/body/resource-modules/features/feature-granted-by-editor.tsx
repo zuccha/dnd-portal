@@ -70,11 +70,11 @@ export default function FeatureGrantedByEditor({
 
   const addGrant = useCallback(() => {
     if (!resourceId) return;
-    if (value.some((grant) => grant.id === resourceId && grant.min_level === minLevel)) return;
+    if (value.some((grant) => grant.id === resourceId && grant.minimum_level === minLevel)) return;
     const option = optionMap.get(resourceId);
     if (!option) return;
 
-    onValueChange([...value, { id: resourceId, kind: option.kind, min_level: minLevel }]);
+    onValueChange([...value, { id: resourceId, kind: option.kind, minimum_level: minLevel }]);
     setResourceId("");
     setMinLevel(0);
     searchRef.current?.clear();
@@ -122,16 +122,16 @@ export default function FeatureGrantedByEditor({
         <HStack gap={1} w="full" wrap="wrap">
           {value.map((grant) => (
             <Tag
-              key={`${grant.id}.${grant.min_level}`}
+              key={`${grant.id}.${grant.minimum_level}`}
               label={formatGrantLabel(
                 optionMap.get(grant.id)?.label ?? t("unknown"),
-                grant.min_level,
+                grant.minimum_level,
                 t,
               )}
               onClose={() =>
                 onValueChange(
                   value.filter(
-                    (other) => other.id !== grant.id || other.min_level !== grant.min_level,
+                    (other) => other.id !== grant.id || other.minimum_level !== grant.minimum_level,
                   ),
                 )
               }

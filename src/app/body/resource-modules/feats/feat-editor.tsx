@@ -83,7 +83,7 @@ export function createFeatEditor(form: Form<FeatFormData>) {
       parse: parseCharacterLevel,
       stringify: stringifyCharacterLevel,
     },
-    useField: form.createUseField("min_level"),
+    useField: form.createUseField("minimum_level"),
     useOptions: useCharacterLevelOptions,
   });
 
@@ -113,7 +113,7 @@ export function createFeatEditor(form: Form<FeatFormData>) {
         <CategoryField defaultValue={resource.category} />
 
         <HStack align="flex-start" gap={4}>
-          <MinLevelField defaultValue={resource.min_level} w="5em" />
+          <MinLevelField defaultValue={resource.minimum_level} w="5em" />
           <PrerequisiteField defaultValue={resource.prerequisite[lang] ?? ""} />
         </HStack>
 

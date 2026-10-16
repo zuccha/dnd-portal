@@ -99,7 +99,7 @@ export function localizeArmor(armor: Armor, context: ArmorLocalizationContext): 
 
   return {
     ...equipment,
-    descriptor: armor.magic ? ti("subtitle.magic", type, equipment.rarity.value) : type,
+    descriptor: armor.is_magic ? ti("subtitle.magic", type, equipment.rarity.value) : type,
     armorClass: {
       label: t("armor_class"),
       value: armorClass,
@@ -110,7 +110,7 @@ export function localizeArmor(armor: Armor, context: ArmorLocalizationContext): 
     },
     stealth: {
       label: t("stealth"),
-      value: armor.disadvantage_on_stealth ? t("stealth.disadvantage") : "",
+      value: armor.imposes_stealth_disadvantage ? t("stealth.disadvantage") : "",
     },
     type,
   };

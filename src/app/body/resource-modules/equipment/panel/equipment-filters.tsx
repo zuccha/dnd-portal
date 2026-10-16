@@ -30,8 +30,8 @@ export default function EquipmentFilters({
   return (
     <VStack {...rest}>
       <InclusionButton
-        include={filters.magic}
-        onValueChange={(magic) => onFiltersChange({ magic })}
+        include={filters.is_magic}
+        onValueChange={(is_magic) => onFiltersChange({ is_magic })}
         size="sm"
         w="full"
       >

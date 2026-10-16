@@ -64,7 +64,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
 
   const RitualField = createSwitchField({
     i18nContext: { label: { en: "Ritual", it: "Rituale" } },
-    useField: form.createUseField("ritual"),
+    useField: form.createUseField("has_ritual"),
   });
 
   //----------------------------------------------------------------------------
@@ -84,9 +84,9 @@ export function createSpellEditor(form: Form<SpellFormData>) {
   // Components
   //------------------------------------------------------------------------------
 
-  const useVerbal = form.createUseField("verbal");
-  const useSomatic = form.createUseField("somatic");
-  const useMaterial = form.createUseField("material");
+  const useVerbal = form.createUseField("is_verbal");
+  const useSomatic = form.createUseField("is_somatic");
+  const useMaterial = form.createUseField("is_material");
 
   const VerbalField = createSwitchField({
     i18nContext: { label: { en: "Verbal", it: "Verbale" } },
@@ -156,7 +156,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
 
   const ConcentrationField = createSwitchField({
     i18nContext: { label: { en: "Concentration", it: "Concentrazione" } },
-    useField: form.createUseField("concentration"),
+    useField: form.createUseField("has_concentration"),
   });
 
   //------------------------------------------------------------------------------
@@ -212,7 +212,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
     const { value: castingTime } = useCastingTime(resource.casting_time);
     const { value: duration } = useDuration(resource.duration);
     const { value: range } = useRange(resource.range);
-    const { value: material } = useMaterial(resource.material);
+    const { value: material } = useMaterial(resource.is_material);
 
     return (
       <ResourceEditor resource={resource}>
@@ -231,7 +231,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
                 hidden={castingTime !== "value"}
               />
             </HStack>
-            <RitualField defaultValue={resource.ritual} />
+            <RitualField defaultValue={resource.has_ritual} />
           </VStack>
 
           <VStack w="full">
@@ -242,7 +242,7 @@ export function createSpellEditor(form: Form<SpellFormData>) {
                 hidden={duration !== "value"}
               />
             </HStack>
-            <ConcentrationField defaultValue={resource.concentration} />
+            <ConcentrationField defaultValue={resource.has_concentration} />
           </VStack>
         </HStack>
 
@@ -252,9 +252,9 @@ export function createSpellEditor(form: Form<SpellFormData>) {
         </HStack>
 
         <HStack gap={8}>
-          <VerbalField defaultValue={resource.verbal} />
-          <SomaticField defaultValue={resource.somatic} />
-          <MaterialField defaultValue={resource.material} />
+          <VerbalField defaultValue={resource.is_verbal} />
+          <SomaticField defaultValue={resource.is_somatic} />
+          <MaterialField defaultValue={resource.is_material} />
         </HStack>
 
         <MaterialsField defaultValue={resource.materials?.[lang] ?? ""} hidden={!material} />

@@ -57,7 +57,7 @@ export function matchesEquipment<E extends Equipment, F extends EquipmentFilters
   filters: F,
 ): boolean {
   return (
-    matchesBoolean(equipment.magic, filters.magic) &&
+    matchesBoolean(equipment.is_magic, filters.is_magic) &&
     matchesBoolean(equipment.required_attunement_slots > 0, filters.requires_attunement) &&
     matchesInclusion(equipment.rarity, filters.rarities)
   );

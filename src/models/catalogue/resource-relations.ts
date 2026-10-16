@@ -19,7 +19,7 @@ export type ResourceRelation<K1 extends ResourceKind, K2 extends ResourceKind> =
 //------------------------------------------------------------------------------
 
 export type FeatureRelation<K extends ResourceKind> = ResourceRelation<K, "feature"> & {
-  min_level: number;
+  minimum_level: number;
 };
 
 //------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ type RelatedEntry<K extends ResourceKind> = { id: string; kind: K };
 // Feature Related Entry
 //------------------------------------------------------------------------------
 
-type FeatureRelatedEntry<K extends ResourceKind> = RelatedEntry<K> & { min_level: number };
+type FeatureRelatedEntry<K extends ResourceKind> = RelatedEntry<K> & { minimum_level: number };
 
 //------------------------------------------------------------------------------
 // Related Resource Entries By Kind
@@ -254,19 +254,19 @@ export type ResourceRelationRow<G extends RelationGroup> = RelationGroupRows[G];
 
 export type RelationEndpointUpdate = {
   group: RelationGroup;
-  related: { id: string; kind?: ResourceKind; min_level?: number }[];
+  related: { id: string; kind?: ResourceKind; minimum_level?: number }[];
 };
 
 //------------------------------------------------------------------------------
 // Is Feature Relation
 //------------------------------------------------------------------------------
 
-function isFeatureRelation(value: unknown): value is { min_level: number } {
+function isFeatureRelation(value: unknown): value is { minimum_level: number } {
   return (
     typeof value === "object" &&
     value !== null &&
-    "min_level" in value &&
-    typeof value.min_level === "number"
+    "minimum_level" in value &&
+    typeof value.minimum_level === "number"
   );
 }
 
@@ -324,11 +324,11 @@ export function applyRelationEndpointUpdate<G extends RelationGroup>(
   );
   function relationKey(row: ResourceRelation<ResourceKind, ResourceKind>): string {
     const relatedId = resource1Side ? row.resource_2_id : row.resource_1_id;
-    return isFeatureRelation(row) ? `${relatedId}:${row.min_level}` : relatedId;
+    return isFeatureRelation(row) ? `${relatedId}:${row.minimum_level}` : relatedId;
   }
 
   function updateKey(related: RelationEndpointUpdate["related"][number]): string {
-    return isFeatureRelation(related) ? `${related.id}:${related.min_level}` : related.id;
+    return isFeatureRelation(related) ? `${related.id}:${related.minimum_level}` : related.id;
   }
 
   const existingByRelatedId = new Map(
@@ -383,7 +383,7 @@ export function applyRelationEndpointUpdate<G extends RelationGroup>(
           resource_2_position: index,
         };
 
-    return isFeatureRelation(related) ? { ...row, min_level: related.min_level } : row;
+    return isFeatureRelation(related) ? { ...row, minimum_level: related.minimum_level } : row;
   });
 
   return resourceRelationsSchema.parse({
@@ -449,7 +449,7 @@ const relationFields = {
 function featureRelationSchema<K extends ResourceKind>(kind: K) {
   return z.object({
     ...relationFields,
-    min_level: z.number().min(0).max(20),
+    minimum_level: z.number().min(0).max(20),
     resource_1_kind: z.literal(kind),
     resource_2_kind: z.literal("feature"),
   });

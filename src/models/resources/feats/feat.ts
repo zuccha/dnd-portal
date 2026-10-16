@@ -17,7 +17,7 @@ export const featSchema = resourceSchema.extend({
   category: featCategorySchema,
   description: i18nStringSchema,
   kind: z.literal("feat"),
-  min_level: characterLevelSchema,
+  minimum_level: characterLevelSchema,
   prerequisite: i18nStringSchema,
 });
 
@@ -32,7 +32,7 @@ export const defaultFeat: Feat = {
   category: "general",
   description: {},
   kind: "feat",
-  min_level: 0,
+  minimum_level: 0,
   prerequisite: {},
 };
 

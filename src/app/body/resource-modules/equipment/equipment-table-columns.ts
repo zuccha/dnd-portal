@@ -15,7 +15,7 @@ export function createEquipmentTableColumns<R extends Equipment, L extends Local
     ...others,
     {
       icon: WandIcon,
-      key: "magic",
+      key: "isMagic",
       label: { en: "🪄", it: "🪄" },
       textAlign: "center",
       w: "1%",

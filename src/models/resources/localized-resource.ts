@@ -115,7 +115,7 @@ export function localizeResource<R extends Resource>(
     sourceCode: resource.source_code,
     sourceId: resource.source_id,
     sourceVersion: context.translateSourceVersion(resource.source_version),
-    virtual: resource.virtual ?? false,
+    virtual: resource.is_virtual ?? false,
     visibility: resource.visibility,
   };
 }

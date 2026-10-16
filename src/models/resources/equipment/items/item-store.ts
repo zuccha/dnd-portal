@@ -15,7 +15,7 @@ export const itemStore = createEquipmentStore("item", {
   filtersSchema: itemFiltersSchema,
   matchesEquipment: (item, filters) =>
     matchesEquipment(item, filters) &&
-    matchesBoolean(item.consumable, filters.consumable) &&
+    matchesBoolean(item.is_consumable, filters.is_consumable) &&
     matchesInclusion(item.type, filters.types) &&
     (filters.charges_min <= 0 || (item.charges ?? 0) >= filters.charges_min),
   orderOptions: itemOrderOptions,

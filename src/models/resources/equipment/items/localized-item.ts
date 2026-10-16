@@ -16,7 +16,7 @@ import { type Item, itemSchema } from "./item";
 
 export const localizedItemSchema = localizedEquipmentSchema(itemSchema, z.literal("item")).extend({
   charges: z.string(),
-  consumable: z.boolean(),
+  isConsumable: z.boolean(),
   consumableStatus: localizedFieldSchema,
   type: z.string(),
   usageCount: localizedFieldSchema,
@@ -54,35 +54,35 @@ export function useItemLocalizationContext(
 export function localizeItem(item: Item, context: ItemLocalizationContext): LocalizedItem {
   const type =
     item.type === "other"
-      ? item.magic
+      ? item.is_magic
         ? context.ti("wondrous_item")
         : context.t("mundane_item")
       : context.translateItemType(item.type);
 
   const equipment = localizeEquipment(item, context);
-  const rarity = item.magic ? equipment.rarity.value : "";
+  const rarity = item.is_magic ? equipment.rarity.value : "";
   const charges = item.charges ?? 0;
-  const useCountLabel = item.consumable
+  const useCountLabel = item.is_consumable
     ? context.tp("usages", charges)
     : context.tp("charges", charges);
-  const usesLabel = item.consumable && charges === 1 ? context.t("consumable") : useCountLabel;
+  const usesLabel = item.is_consumable && charges === 1 ? context.t("consumable") : useCountLabel;
   const usesValue =
-    item.consumable && charges === 1
+    item.is_consumable && charges === 1
       ? context.ti("uses.value", `${charges}`, useCountLabel)
       : charges > 5
         ? context.ti("uses.remaining", `${charges}`)
         : "";
-  const descriptor = item.magic ? context.ti("descriptor.magic", type, rarity) : type;
+  const descriptor = item.is_magic ? context.ti("descriptor.magic", type, rarity) : type;
 
   return {
     ...equipment,
     descriptor,
 
     charges: charges > 0 ? `${charges}` : "-",
-    consumable: item.consumable,
+    isConsumable: item.is_consumable,
     consumableStatus: {
       label: context.t("consumable"),
-      value: item.consumable ? context.t("yes") : context.t("no"),
+      value: item.is_consumable ? context.t("yes") : context.t("no"),
     },
     type,
     usageCount: {

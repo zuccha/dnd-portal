@@ -202,14 +202,14 @@ export function localizeFeature(
 //------------------------------------------------------------------------------
 
 function localizeFeatureGrantor(
-  entry: { id: string; kind: string; min_level: number },
+  entry: { id: string; kind: string; minimum_level: number },
   name: string,
   context: ResourceLocalizationContext,
 ) {
   return {
     id: entry.id,
     kind: entry.kind as z.infer<typeof localizedFeatureGrantorSchema>["kind"],
-    level: entry.min_level ? context.ti("level_with_value", `${entry.min_level}`) : "",
+    level: entry.minimum_level ? context.ti("level_with_value", `${entry.minimum_level}`) : "",
     name,
   };
 }

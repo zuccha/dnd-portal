@@ -41,7 +41,7 @@ export default function EquipmentDetail({
               {resource.magicStatus.value}
             </ResourceDetailField>
           </SimpleGrid>
-          {resource.magic && (
+          {resource.isMagic && (
             <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
               <ResourceDetailField label={resource.rarity.label}>
                 {resource.rarity.value}

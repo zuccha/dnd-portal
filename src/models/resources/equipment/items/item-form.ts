@@ -11,7 +11,7 @@ import type { Item } from "./item";
 
 export const itemFormDataSchema = equipmentFormDataSchema.extend({
   charges: z.number().default(0),
-  consumable: z.boolean().default(false),
+  is_consumable: z.boolean().default(false),
   type: itemTypeSchema.default("other"),
 });
 
@@ -29,7 +29,7 @@ export function itemFormDataToResource(
   const resource = createResourceFormDataPatch({
     ...base.resource,
     charges: data.charges === undefined ? undefined : (data.charges ?? null),
-    consumable: data.consumable,
+    is_consumable: data.is_consumable,
     type: data.type,
   });
   return { resource, relations: base.relations };

@@ -13,8 +13,8 @@ export const equipmentModifierSchema = modifierSchema.extend({
   cost_delta: z.number(),
   equipment_ids: z.array(z.uuid()),
   kind: z.enum(["armor_modifier", "item_modifier", "tool_modifier", "weapon_modifier"]),
-  make_magic: z.boolean(),
-  notes_delta: i18nStringSchema,
+  makes_equipment_magic: z.boolean(),
+  description_delta: i18nStringSchema,
   rarity_minimum: equipmentRaritySchema,
   required_attunement_slots_minimum: z.number(),
   weight_delta: z.number(),
@@ -31,8 +31,8 @@ export const defaultEquipmentModifier: Omit<EquipmentModifier, "kind"> = {
   attunement_notes_delta: {},
   cost_delta: 0,
   equipment_ids: [],
-  make_magic: false,
-  notes_delta: {},
+  makes_equipment_magic: false,
+  description_delta: {},
   rarity_minimum: "common",
   required_attunement_slots_minimum: 0,
   weight_delta: 0,
@@ -45,5 +45,5 @@ export const defaultEquipmentModifier: Omit<EquipmentModifier, "kind"> = {
 export const equipmentModifierTranslationFields: TranslationFields<EquipmentModifier>[] = [
   ...modifierTranslationFields,
   "attunement_notes_delta",
-  "notes_delta",
+  "description_delta",
 ];

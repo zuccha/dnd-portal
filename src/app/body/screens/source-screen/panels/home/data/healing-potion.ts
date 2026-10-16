@@ -18,9 +18,9 @@ const healingPotion = itemSchema.parse({
   attunement_notes: { en: null, it: null },
   cost: 5000,
   feature_entries: [],
-  magic: true,
+  is_magic: true,
   modifier_ids: [],
-  notes: {
+  description: {
     en: "As a Bonus Action, you can drink it or administer it to another creature within 5 feet of yourself. The creature that drinks the magical red fluid in this vial regains 2d4 + 2 Hit Points.",
     it: "Come azione bonus, il personaggio può berne una o somministrarla a un'altra creatura entro 1,5 metri da sé. Chi beve il fluido magico rosso contenuto in questa fiala recupera 2d4 + 2 punti ferita.",
   },
@@ -29,7 +29,7 @@ const healingPotion = itemSchema.parse({
   variant_modifier_ids: [],
   weight: 250,
   charges: 1,
-  consumable: true,
+  is_consumable: true,
   type: "potion",
 });
 

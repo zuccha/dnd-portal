@@ -52,7 +52,7 @@ const actions: ResourceAction<Armor>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
-    isVisible: ({ virtual }) => !virtual,
+    isVisible: ({ is_virtual }) => !is_virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: armorVariantDialog.open,
   },
@@ -62,7 +62,7 @@ const detailActions: ResourceAction<Armor>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
-    isVisible: ({ virtual }) => !virtual,
+    isVisible: ({ is_virtual }) => !is_virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: (resource) => armorVariantDialog.open(resource, { navigateAfterCreation: true }),
   },

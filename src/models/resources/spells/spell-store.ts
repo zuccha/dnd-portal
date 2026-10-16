@@ -34,11 +34,11 @@ export const spellStore = createResourceStore("spell", {
     ),
   }),
   matchesResource: (spell, filters, getRelatedIds) =>
-    matchesBoolean(spell.concentration, filters.concentration) &&
-    matchesBoolean(spell.material, filters.material) &&
-    matchesBoolean(spell.ritual, filters.ritual) &&
-    matchesBoolean(spell.somatic, filters.somatic) &&
-    matchesBoolean(spell.verbal, filters.verbal) &&
+    matchesBoolean(spell.has_concentration, filters.concentration) &&
+    matchesBoolean(spell.is_material, filters.material) &&
+    matchesBoolean(spell.has_ritual, filters.ritual) &&
+    matchesBoolean(spell.is_somatic, filters.somatic) &&
+    matchesBoolean(spell.is_verbal, filters.verbal) &&
     matchesInclusion(spell.casting_time, filters.casting_time) &&
     matchesInclusion(spell.level, filters.levels) &&
     matchesInclusion(spell.school, filters.schools) &&

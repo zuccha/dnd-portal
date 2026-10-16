@@ -52,7 +52,7 @@ export function createEldritchInvocationEditor(form: Form<EldritchInvocationForm
       parse: parseCharacterLevel,
       stringify: stringifyCharacterLevel,
     },
-    useField: form.createUseField("min_warlock_level"),
+    useField: form.createUseField("minimum_warlock_level"),
     useOptions: useCharacterLevelOptions,
   });
 
@@ -62,7 +62,7 @@ export function createEldritchInvocationEditor(form: Form<EldritchInvocationForm
 
   const PrerequisiteField = createInputField({
     i18nContext: {
-      label: { en: "Prerequisite", it: "Prerequisito" },
+      label: { en: "Prerequisites", it: "Prerequisiti" },
       placeholder: { en: "None", it: "Nessuno" },
     },
     translatable: true,
@@ -79,7 +79,7 @@ export function createEldritchInvocationEditor(form: Form<EldritchInvocationForm
     return (
       <ResourceEditor resource={resource}>
         <HStack align="flex-start" gap={4}>
-          <MinWarlockLevelField defaultValue={resource.min_warlock_level} w="5em" />
+          <MinWarlockLevelField defaultValue={resource.minimum_warlock_level} w="5em" />
           <PrerequisiteField defaultValue={resource.prerequisite[lang] ?? ""} />
         </HStack>
 

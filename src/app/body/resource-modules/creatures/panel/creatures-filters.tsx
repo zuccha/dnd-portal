@@ -63,21 +63,21 @@ export default function CreaturesFilters(props: StackProps) {
         <CaptionInput caption={t("cr_min")} flex={1}>
           <NumberInput
             inputProps={{ minW: "4em" }}
-            max={filters.cr_max}
+            max={filters.challenge_rating_maximum}
             min={0}
-            onValueChange={(value) => setFilters({ cr_min: value })}
+            onValueChange={(value) => setFilters({ challenge_rating_minimum: value })}
             size="sm"
-            value={filters.cr_min}
+            value={filters.challenge_rating_minimum}
           />
         </CaptionInput>
 
         <CaptionInput caption={t("cr_max")} flex={1}>
           <NumberInput
             inputProps={{ minW: "4em" }}
-            min={filters.cr_min}
-            onValueChange={(value) => setFilters({ cr_max: value })}
+            min={filters.challenge_rating_minimum}
+            onValueChange={(value) => setFilters({ challenge_rating_maximum: value })}
             size="sm"
-            value={filters.cr_max}
+            value={filters.challenge_rating_maximum}
           />
         </CaptionInput>
       </HStack>

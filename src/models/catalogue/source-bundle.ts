@@ -74,7 +74,7 @@ export const sourceBundleResourcesSchema = z.object({
 // Source Bundle Version
 //------------------------------------------------------------------------------
 
-export const sourceBundleVersion = 9;
+export const sourceBundleVersion = 10;
 
 //------------------------------------------------------------------------------
 // Source Bundle Schema
@@ -164,7 +164,7 @@ export function filterSourceBundleResources(
     Object.entries(bundle.resources).map(([key, resources]) => [
       key,
       resources.filter(
-        (resource) => (includePrivate || resource.visibility !== "private") && !resource.virtual,
+        (resource) => (includePrivate || resource.visibility !== "private") && !resource.is_virtual,
       ),
     ]),
   ) as SourceBundle["resources"];
@@ -218,7 +218,7 @@ export function upsertSourceBundleResource<R extends Resource>(
   bundle: SourceBundle,
   resource: R,
 ): SourceBundle {
-  if (resource.virtual) return bundle;
+  if (resource.is_virtual) return bundle;
 
   const key = sourceBundleResourceKeyByKind[resource.kind];
   const resources = bundle.resources[key] as Resource[];

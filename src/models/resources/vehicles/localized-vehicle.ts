@@ -80,7 +80,7 @@ export function localizeVehicle(
     armorClass: {
       label: context.t("armor_class"),
       shortLabel: context.t("armor_class.short"),
-      value: formatNumber(vehicle.ac, context.lang),
+      value: formatNumber(vehicle.armor_class, context.lang),
     },
     cargo: {
       label: context.t("cargo"),
@@ -103,7 +103,7 @@ export function localizeVehicle(
     hitPoints: {
       label: context.t("hit_points"),
       shortLabel: context.t("hit_points.short"),
-      value: formatNumber(vehicle.hp, context.lang),
+      value: formatNumber(vehicle.hit_points, context.lang),
     },
     passengers: {
       label: context.t("passengers"),

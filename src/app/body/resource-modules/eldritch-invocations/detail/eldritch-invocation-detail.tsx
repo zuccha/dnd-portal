@@ -22,11 +22,11 @@ export default function EldritchInvocationDetail({
 
   return (
     <ResourceDetail actions={actions} resource={invocation}>
-      {invocation && (invocation.minWarlockLevel.value || invocation.otherPrerequisite.value) && (
+      {invocation && (invocation.minWarlockLevel.value || invocation.prerequisite.value) && (
         <SimpleGrid columns={1} columnGap={6} rowGap={2}>
-          {invocation.otherPrerequisite.value && (
-            <ResourceDetailField label={invocation.otherPrerequisite.label}>
-              {invocation.otherPrerequisite.value}
+          {invocation.prerequisite.value && (
+            <ResourceDetailField label={invocation.prerequisite.label}>
+              {invocation.prerequisite.value}
             </ResourceDetailField>
           )}
           {invocation.minWarlockLevel.value && (

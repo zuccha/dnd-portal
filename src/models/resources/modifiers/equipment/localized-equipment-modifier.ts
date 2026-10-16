@@ -34,11 +34,11 @@ export function localizedEquipmentModifierSchema<EM extends EquipmentModifier>(
     attunement: localizedFieldSchema.optional(),
     attunementNotesDelta: z.string(),
     costDelta: z.string(),
+    descriptionDelta: z.string(),
     magic: z.string(),
     magicStatus: localizedFieldSchema,
     makeMagic: z.boolean(),
     minimumRarity: localizedFieldSchema.optional(),
-    notesDelta: z.string(),
     rarityMinimum: z.string(),
     requiredAttunementSlotsMinimum: z.string(),
     supportedEquipment: localizedFieldSchema.extend({
@@ -92,7 +92,7 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
 ): LocalizedEquipmentModifier<EM> {
   const appliesTo = translate(equipmentModifier.applies_to, context.lang);
   const attunementNotesDelta = translate(equipmentModifier.attunement_notes_delta, context.lang);
-  const notesDelta = translate(equipmentModifier.notes_delta, context.lang);
+  const descriptionDelta = translate(equipmentModifier.description_delta, context.lang);
   const rarityMinimum = equipmentModifier.rarity_minimum
     ? context.translateRarity(equipmentModifier.rarity_minimum)
     : "";
@@ -107,7 +107,7 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
   return {
     ...localizeModifier(equipmentModifier, context),
     descriptor: appliesTo,
-    details: formatDetails(notesDelta, attunementNotesDelta),
+    details: formatDetails(descriptionDelta, attunementNotesDelta),
 
     additionalCost:
       equipmentModifier.cost_delta !== 0
@@ -120,7 +120,7 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
       label: context.t("additional_weight"),
       value: context.formatWeight(equipmentModifier.weight_delta),
     },
-    attunement: equipmentModifier.make_magic
+    attunement: equipmentModifier.makes_equipment_magic
       ? {
           label: context.t("attunement_label"),
           value:
@@ -136,19 +136,19 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
       : undefined,
     attunementNotesDelta,
     costDelta: context.formatCost(equipmentModifier.cost_delta),
-    magic: equipmentModifier.make_magic ? context.t("magic") : "",
+    descriptionDelta,
+    magic: equipmentModifier.makes_equipment_magic ? context.t("magic") : "",
     magicStatus: {
       label: context.t("magic"),
-      value: context.t(equipmentModifier.make_magic ? "yes" : "no"),
+      value: context.t(equipmentModifier.makes_equipment_magic ? "yes" : "no"),
     },
-    makeMagic: equipmentModifier.make_magic,
-    minimumRarity: equipmentModifier.make_magic
+    makeMagic: equipmentModifier.makes_equipment_magic,
+    minimumRarity: equipmentModifier.makes_equipment_magic
       ? {
           label: context.t("minimum_rarity"),
           value: rarityMinimum,
         }
       : undefined,
-    notesDelta,
     rarityMinimum,
     requiredAttunementSlotsMinimum: requiredAttunementSlotsMinimum
       ? context.ti("attunement_slots_minimum", requiredAttunementSlotsMinimum)

@@ -15,9 +15,7 @@ import type { EldritchInvocation } from "./eldritch-invocation";
 
 export const eldritchInvocationFormDataSchema = resourceFormDataSchema.extend({
   description: z.string().default(""),
-  min_warlock_level: characterLevelSchema.default(0),
-  name: z.string().default(""),
-  page: z.number().default(0),
+  minimum_warlock_level: characterLevelSchema.default(0),
   prerequisite: z.string().default(""),
 });
 
@@ -34,7 +32,7 @@ export function eldritchInvocationFormDataToResource(
   return createResourceFormDataPatch({
     ...resourceFormDataToResource(data, lang),
     description: createResourceFormDataI18nValue(data.description, lang),
-    min_warlock_level: data.min_warlock_level,
+    minimum_warlock_level: data.minimum_warlock_level,
     prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
   });
 }

@@ -15,10 +15,10 @@ import {
 export const equipmentSchema = resourceSchema.extend({
   attunement_notes: i18nStringSchema,
   cost: z.number().nullable(),
+  description: i18nStringSchema,
+  is_magic: z.boolean(),
   kind: z.enum(["armor", "item", "tool", "weapon"]),
-  magic: z.boolean(),
   modifier_ids: z.array(z.uuid()),
-  notes: i18nStringSchema,
   rarity: equipmentRaritySchema,
   required_attunement_slots: z.number(),
   variant_base_id: z.uuid().nullish(),
@@ -36,9 +36,9 @@ export const defaultEquipment: Omit<Equipment, "kind"> = {
   ...defaultResource,
   attunement_notes: {},
   cost: 0,
-  magic: false,
+  description: {},
+  is_magic: false,
   modifier_ids: [],
-  notes: {},
   rarity: "common",
   required_attunement_slots: 0,
   variant_base_id: undefined,
@@ -53,5 +53,5 @@ export const defaultEquipment: Omit<Equipment, "kind"> = {
 export const equipmentTranslationFields: TranslationFields<Equipment>[] = [
   ...resourceTranslationFields,
   "attunement_notes",
-  "notes",
+  "description",
 ];

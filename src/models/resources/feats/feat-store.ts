@@ -14,7 +14,7 @@ export const featStore = createResourceStore("feat", {
   displayName: { en: "Feats", it: "Talenti" },
   filtersSchema: featFiltersSchema,
   matchesResource: (feat, filters) =>
-    feat.min_level <= filters.level && matchesInclusion(feat.category, filters.categories),
+    feat.minimum_level <= filters.level && matchesInclusion(feat.category, filters.categories),
   orderOptions: featOrderOptions,
   translationFields: featTranslationFields,
   localizeResource: localizeFeat,

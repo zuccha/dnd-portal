@@ -14,7 +14,7 @@ export function addEquipmentVariant<E extends Equipment>(
   modifiers: EquipmentModifier[],
   { temporary = true }: { temporary?: boolean } = {},
 ): boolean | Promise<boolean> {
-  if (base.virtual) return false;
+  if (base.is_virtual) return false;
   if (modifiers.length === 0) return false;
 
   const baseId = base.variant_base_id ?? base.id;
@@ -29,7 +29,7 @@ export function addEquipmentVariant<E extends Equipment>(
 //------------------------------------------------------------------------------
 
 export function hasAvailableEquipmentModifier(equipment: Equipment): boolean {
-  if (equipment.virtual) return false;
+  if (equipment.is_virtual) return false;
   return !!getFirstAvailableModifierId(equipment);
 }
 
@@ -53,15 +53,16 @@ export function createEquipmentVariant<E extends Equipment>(
     ),
     cost: (base.cost ?? 0) + modifiers.reduce((total, modifier) => total + modifier.cost_delta, 0),
     id,
-    magic: base.magic || modifiers.some(({ make_magic }) => make_magic),
     name: modifiers.reduce(
       (name, modifier) => composeI18nString(modifier.composite_name, name, "{1}"),
       base.name,
     ),
-    notes: modifiers.reduce(
-      (notes, modifier) => appendI18nString(notes, modifier.notes_delta, "\n\n"),
-      base.notes,
+    description: modifiers.reduce(
+      (notes, modifier) => appendI18nString(notes, modifier.description_delta, "\n\n"),
+      base.description,
     ),
+    is_magic: base.is_magic || modifiers.some(({ makes_equipment_magic }) => makes_equipment_magic),
+    is_virtual: temporary,
     rarity: modifiers.reduce(
       (rarity, modifier) => getMaxEquipmentRarity(rarity, modifier.rarity_minimum),
       base.rarity,
@@ -74,7 +75,6 @@ export function createEquipmentVariant<E extends Equipment>(
     ),
     variant_base_id: base.variant_base_id ?? base.id,
     variant_modifier_ids: [...(base.variant_modifier_ids ?? []), ...modifierIds],
-    virtual: temporary,
     weight:
       (base.weight ?? 0) + modifiers.reduce((total, modifier) => total + modifier.weight_delta, 0),
   };

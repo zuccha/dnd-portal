@@ -170,7 +170,7 @@ export function createResourceStore<
     if (!catalogue.isSourceEditable(resource.source_id)) return false;
     if (getResource(resource.id)) return false;
 
-    catalogueResourceStore.upsertResource({ ...resource, virtual: true });
+    catalogueResourceStore.upsertResource({ ...resource, is_virtual: true });
     return true;
   }
 
@@ -185,9 +185,9 @@ export function createResourceStore<
     const resource = getResource(resourceId);
     if (!resource) return "form.error.update_failure";
     if (!catalogue.isSourceEditable(resource.source_id)) return "form.error.update_failure";
-    if (resource.virtual === temporary) return undefined;
+    if (resource.is_virtual === temporary) return undefined;
 
-    const updatedResource = { ...resource, virtual: temporary };
+    const updatedResource = { ...resource, is_virtual: temporary };
 
     return persistResource(
       updatedResource,
@@ -224,7 +224,7 @@ export function createResourceStore<
       source_code: source.code,
       source_id: source.id,
       source_version: source.version,
-      virtual: false,
+      is_virtual: false,
     } as R;
 
     return persistResource(
@@ -248,7 +248,7 @@ export function createResourceStore<
 
     const sourceIds = [
       ...new Set(
-        resources.filter((resource) => !resource.virtual).map(({ source_id }) => source_id),
+        resources.filter((resource) => !resource.is_virtual).map(({ source_id }) => source_id),
       ),
     ];
 
@@ -268,7 +268,7 @@ export function createResourceStore<
       await Promise.all(sourceIds.map((sourceId) => catalogue.refreshSourceState(sourceId)));
 
       for (const resource of resources) {
-        if (resource.virtual) {
+        if (resource.is_virtual) {
           const relations = catalogue.getSourceRelations(resource.source_id);
           catalogue.setSourceRelations(
             resource.source_id,
@@ -312,7 +312,7 @@ export function createResourceStore<
       translationFields,
     );
 
-    if (resource.virtual) {
+    if (resource.is_virtual) {
       const relations = catalogue.getSourceRelations(resource.source_id);
       catalogue.setSourceRelations(
         resource.source_id,
@@ -430,7 +430,7 @@ export function createResourceStore<
   function getRelatedEntriesFromRows(
     rows: RelationGroupRows[keyof RelationGroupRows][],
     endpoint: { id: string; kind: ResourceKind },
-  ): { id: string; kind: ResourceKind; min_level?: number }[] {
+  ): { id: string; kind: ResourceKind; minimum_level?: number }[] {
     const related = (rows as ResourceRelation<ResourceKind, ResourceKind>[])
       .flatMap((row) => {
         if (row.resource_1_kind === endpoint.kind && row.resource_1_id === endpoint.id) {
@@ -438,8 +438,10 @@ export function createResourceStore<
             {
               id: row.resource_2_id,
               kind: row.resource_2_kind,
-              min_level:
-                "min_level" in row && typeof row.min_level === "number" ? row.min_level : undefined,
+              minimum_level:
+                "minimum_level" in row && typeof row.minimum_level === "number"
+                  ? row.minimum_level
+                  : undefined,
               position: row.resource_1_position,
             },
           ];
@@ -449,8 +451,10 @@ export function createResourceStore<
             {
               id: row.resource_1_id,
               kind: row.resource_1_kind,
-              min_level:
-                "min_level" in row && typeof row.min_level === "number" ? row.min_level : undefined,
+              minimum_level:
+                "minimum_level" in row && typeof row.minimum_level === "number"
+                  ? row.minimum_level
+                  : undefined,
               position: row.resource_2_position,
             },
           ];
@@ -459,7 +463,7 @@ export function createResourceStore<
       })
       .sort((a, b) => a.position - b.position);
 
-    return related.map(({ id, kind, min_level }) => ({ id, kind, min_level }));
+    return related.map(({ id, kind, minimum_level }) => ({ id, kind, minimum_level }));
   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

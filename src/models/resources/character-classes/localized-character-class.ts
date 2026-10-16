@@ -240,9 +240,9 @@ export function localizeCharacterClass(
     armorProficiencies: armorProficienciesField,
     hitDie: {
       label: context.t("hit_die"),
-      value: context.translateDieType(characterClass.hp_die),
+      value: context.translateDieType(characterClass.hit_point_die),
     },
-    hitDieType: characterClass.hp_die,
+    hitDieType: characterClass.hit_point_die,
     primaryAbilities: {
       label: context.tp("primary_abilities", characterClass.primary_abilities.length),
       value: primaryAbilities || context.t("abilities.none"),

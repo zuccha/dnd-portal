@@ -19,8 +19,8 @@ export const creatureFiltersSchema = resourceFiltersSchema.extend({
   sizes: z.partialRecord(creatureSizeSchema, z.boolean().optional()).optional(),
   types: z.partialRecord(creatureTypeSchema, z.boolean().optional()).optional(),
 
-  cr_max: z.number(),
-  cr_min: z.number(),
+  challenge_rating_maximum: z.number(),
+  challenge_rating_minimum: z.number(),
 });
 
 export type CreatureFilters = z.infer<typeof creatureFiltersSchema>;
@@ -38,6 +38,6 @@ export const defaultCreatureFilters: CreatureFilters = {
   sizes: {},
   types: {},
 
-  cr_max: 30,
-  cr_min: 0,
+  challenge_rating_maximum: 30,
+  challenge_rating_minimum: 0,
 };

@@ -25,8 +25,8 @@ const columns = createResourcesTableColumns<EldritchInvocation, LocalizedEldritc
     w: "1%",
   },
   {
-    key: "otherPrerequisite",
-    label: { en: "Other Prerequisite", it: "Altro Prerequisito" },
+    key: "prerequisite",
+    label: { en: "Prerequisite", it: "Prerequisito" },
   },
 ]);
 

@@ -18,8 +18,8 @@ export const creatureStore = createResourceStore("creature", {
   displayName: { en: "Creatures", it: "Creature" },
   filtersSchema: creatureFiltersSchema,
   matchesResource: (creature, filters) =>
-    creature.cr >= filters.cr_min &&
-    creature.cr <= filters.cr_max &&
+    creature.challenge_rating >= filters.challenge_rating_minimum &&
+    creature.challenge_rating <= filters.challenge_rating_maximum &&
     matchesInclusion(creature.alignment, filters.alignment) &&
     matchesInclusionList(creature.sizes, filters.sizes) &&
     matchesInclusion(creature.type, filters.types),

@@ -116,7 +116,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
         it: "Dado Vita",
       },
     },
-    useField: form.createUseField("hp_die"),
+    useField: form.createUseField("hit_point_die"),
     useOptions: useDieTypeOptions,
   });
 
@@ -305,7 +305,7 @@ export function createCharacterClassEditor(form: Form<CharacterClassFormData>) {
         <HStack gap={4} w="full">
           <AbbreviationField defaultValue={resource.abbreviation[lang] ?? ""} maxW="8em" />
           <PrimaryAbilitiesField defaultValue={resource.primary_abilities} />
-          <HpDieField defaultValue={resource.hp_die} maxW="10em" />
+          <HpDieField defaultValue={resource.hit_point_die} maxW="10em" />
         </HStack>
 
         <SavingThrowProficienciesField defaultValue={resource.saving_throw_proficiencies} />

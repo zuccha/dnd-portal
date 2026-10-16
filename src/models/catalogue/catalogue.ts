@@ -356,7 +356,7 @@ export function createCatalogue(id: string) {
     for (const sourceId of sourceIds) {
       const rows = relationRowsBySourceAndGroup.get(relationStoreKey(sourceId, group)) ?? [];
       for (const row of rows) {
-        const minLevel = "min_level" in row ? row.min_level : "";
+        const minLevel = "minimum_level" in row ? row.minimum_level : "";
         const key = `${row.resource_1_kind}:${row.resource_1_id}:${row.resource_2_kind}:${row.resource_2_id}:${minLevel}`;
         if (!uniqueRows.has(key)) uniqueRows.set(key, row as RelationGroupRows[G]);
       }

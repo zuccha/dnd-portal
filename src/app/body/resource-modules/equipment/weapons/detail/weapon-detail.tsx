@@ -31,7 +31,7 @@ export default function WeaponDetail({
               {weapon.damageVersatile.value}
             </ResourceDetailField>
           )}
-          {weapon.ranged && weapon.range.value && (
+          {weapon.isRanged && weapon.range.value && (
             <ResourceDetailField label={weapon.range.label}>
               {weapon.range.value}
             </ResourceDetailField>

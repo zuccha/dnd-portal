@@ -19,8 +19,8 @@ export const weaponFiltersSchema = equipmentFiltersSchema.extend({
   properties: z.partialRecord(weaponPropertySchema, z.boolean().optional()).optional(),
   types: z.partialRecord(weaponTypeSchema, z.boolean().optional()).optional(),
 
-  melee: z.boolean().optional(),
-  ranged: z.boolean().optional(),
+  is_melee: z.boolean().optional(),
+  is_ranged: z.boolean().optional(),
 });
 
 export type WeaponFilters = z.infer<typeof weaponFiltersSchema>;

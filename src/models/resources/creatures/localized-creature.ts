@@ -326,20 +326,21 @@ export function localizeCreature(
 
   // EXP and PB from CR
   const cr =
-    creature.cr === 0
+    creature.challenge_rating === 0
       ? "0"
-      : creature.cr <= 0.125
+      : creature.challenge_rating <= 0.125
         ? "⅛"
-        : creature.cr <= 0.25
+        : creature.challenge_rating <= 0.25
           ? "¼"
-          : creature.cr <= 0.5
+          : creature.challenge_rating <= 0.5
             ? "½"
-            : `${creature.cr}`;
-  const exp = creature.exp;
-  const lair_exp = creature.lair_exp;
-  const pb = creature.pb;
+            : `${creature.challenge_rating}`;
+  const exp = creature.experience_points;
+  const lair_exp = creature.lair_experience_points;
+  const pb = creature.proficiency_bonus;
   const additionalHpThreshold = Math.max(0, creature.additional_hp_starting_from_level - 1);
-  const additionalHpBase = creature.hp - creature.additional_hp_per_level * additionalHpThreshold;
+  const additionalHpBase =
+    creature.hit_points - creature.additional_hp_per_level * additionalHpThreshold;
 
   // Speed conversions
   const convertSpeed = (cm: number | null | undefined): string => {
@@ -352,7 +353,7 @@ export function localizeCreature(
   const speed_fly = convertSpeed(creature.speed_fly);
   const speed_swim = convertSpeed(creature.speed_swim);
   const speed_fly_label =
-    speed_fly && creature.hover
+    speed_fly && creature.can_hover
       ? ti("speed.fly_hover", speed_fly)
       : speed_fly
         ? ti("speed.fly", speed_fly)
@@ -750,14 +751,14 @@ export function localizeCreature(
         ? additionalHpBase > 0
           ? ti("hp.additional.direct", `${additionalHpBase}`, `${creature.additional_hp_per_level}`)
           : `${creature.additional_hp_per_level} × 𝑋`
-        : `${creature.hp} ${ti(
+        : `${creature.hit_points} ${ti(
             "hp.additional.short",
             `${creature.additional_hp_per_level}`,
             `${additionalHpThreshold}`,
           )}`
-      : `${creature.hp}`;
-  const hitPointsFormula = creature.summoned_from_spell ? "" : creature.hp_formula;
-  const armorClass = `${creature.ac}${creature.armor_class_adds_spell_level ? "＋X" : ""}`;
+      : `${creature.hit_points}`;
+  const hitPointsFormula = creature.is_summoned_from_spell ? "" : creature.hit_points_formula;
+  const armorClass = `${creature.armor_class}${creature.adds_spell_level_to_armor_class ? "＋X" : ""}`;
   const valueWithLair =
     creature.has_lair && exp !== lair_exp
       ? ti("experience.with_lair", formattedExp, formattedLairExp)
@@ -832,7 +833,7 @@ export function localizeCreature(
     proficiencyBonus: {
       cardLabel: context.t("proficiency_bonus.short"),
       label: context.t("proficiency_bonus"),
-      value: creature.summoned_from_spell ? t("pb.summoner") : formatSigned(pb),
+      value: creature.is_summoned_from_spell ? t("pb.summoner") : formatSigned(pb),
     },
     resistances: resistancesInfo,
     senses: sensesInfo,
@@ -840,10 +841,10 @@ export function localizeCreature(
     skills: skillsInfo,
     speed: { label: context.t("speed"), value: speed },
     spellLevelLegend:
-      creature.armor_class_adds_spell_level || creature.additional_hp_per_level > 0
+      creature.adds_spell_level_to_armor_class || creature.additional_hp_per_level > 0
         ? context.t("spell_level_legend")
         : "",
-    summonedFromSpell: creature.summoned_from_spell,
+    summonedFromSpell: creature.is_summoned_from_spell,
     tags: {
       label: context.t("tags"),
       resources: tagResources,

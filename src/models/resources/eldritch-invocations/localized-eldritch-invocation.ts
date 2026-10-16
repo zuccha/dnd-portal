@@ -18,7 +18,7 @@ export const localizedEldritchInvocationSchema = localizedResourceSchema(
   z.literal("eldritch_invocation"),
 ).extend({
   minWarlockLevel: localizedFieldSchema.extend({ valueWithLabel: z.string() }),
-  otherPrerequisite: localizedFieldSchema,
+  prerequisite: localizedFieldSchema,
 });
 
 export type LocalizedEldritchInvocation = z.infer<typeof localizedEldritchInvocationSchema>;
@@ -47,8 +47,8 @@ export function localizeEldritchInvocation(
   eldritchInvocation: EldritchInvocation,
   context: EldritchInvocationLocalizationContext,
 ): LocalizedEldritchInvocation {
-  const minWarlockLevel = eldritchInvocation.min_warlock_level;
-  const otherPrerequisite = eldritchInvocation.prerequisite
+  const minWarlockLevel = eldritchInvocation.minimum_warlock_level;
+  const prerequisite = eldritchInvocation.prerequisite
     ? translate(eldritchInvocation.prerequisite, context.lang)
     : undefined;
 
@@ -64,9 +64,9 @@ export function localizeEldritchInvocation(
         ? context.ti("warlock_level_with_value", `${minWarlockLevel}`)
         : "",
     },
-    otherPrerequisite: {
-      label: context.tp("requisites", otherPrerequisite?.includes(",") ? 2 : 1),
-      value: otherPrerequisite ?? "",
+    prerequisite: {
+      label: context.tp("requisites", prerequisite?.includes(",") ? 2 : 1),
+      value: prerequisite ?? "",
     },
   };
 }

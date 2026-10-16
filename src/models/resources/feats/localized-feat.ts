@@ -62,7 +62,7 @@ export function localizeFeat(feat: Feat, context: FeatLocalizationContext): Loca
   const description = translate(feat.description, context.lang);
   const features = context.featureEntries;
   const prerequisite = translate(feat.prerequisite, context.lang);
-  const minLevel = feat.min_level ? `${feat.min_level}` : "";
+  const minLevel = feat.minimum_level ? `${feat.minimum_level}` : "";
 
   return {
     ...localizeResource(feat, context),

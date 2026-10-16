@@ -41,14 +41,14 @@ const columns = createEquipmentTableColumns<Weapon, LocalizedWeapon>([
   },
   {
     icon: SwordsIcon,
-    key: "melee",
+    key: "isMelee",
     label: { en: "⚔️", it: "⚔️" },
     textAlign: "center",
     w: "1%",
   },
   {
     icon: BowArrowIcon,
-    key: "ranged",
+    key: "isRanged",
     label: { en: "🏹", it: "🏹" },
     textAlign: "center",
     w: "1%",
@@ -69,7 +69,7 @@ const actions: ResourceAction<Weapon>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
-    isVisible: ({ virtual }) => !virtual,
+    isVisible: ({ is_virtual }) => !is_virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: weaponVariantDialog.open,
   },
@@ -79,7 +79,7 @@ const detailActions: ResourceAction<Weapon>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
-    isVisible: ({ virtual }) => !virtual,
+    isVisible: ({ is_virtual }) => !is_virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: (resource) => weaponVariantDialog.open(resource, { navigateAfterCreation: true }),
   },

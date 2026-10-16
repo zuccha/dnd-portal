@@ -12,13 +12,13 @@ import {
 //------------------------------------------------------------------------------
 
 export const vehicleSchema = resourceSchema.extend({
-  ac: z.number(),
+  armor_class: z.number(),
   cargo: z.number(),
   cost: z.number(),
   crew_capacity: z.number(),
   damage_threshold: z.number(),
   description: i18nStringSchema,
-  hp: z.number(),
+  hit_points: z.number(),
   kind: z.literal("vehicle"),
   passenger_capacity: z.number(),
   speed: z.number(),
@@ -32,13 +32,13 @@ export type Vehicle = z.infer<typeof vehicleSchema>;
 
 export const defaultVehicle: Vehicle = {
   ...defaultResource,
-  ac: 0,
+  armor_class: 0,
   cargo: 0,
   cost: 0,
   crew_capacity: 0,
   damage_threshold: 0,
   description: {},
-  hp: 0,
+  hit_points: 0,
   kind: "vehicle",
   passenger_capacity: 0,
   speed: 0,

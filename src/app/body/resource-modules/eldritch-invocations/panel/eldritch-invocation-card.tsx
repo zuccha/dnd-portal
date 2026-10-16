@@ -22,11 +22,8 @@ export function EldritchInvocationCard({
   return (
     <ResourcePokerCard
       beforeDetails={
-        localizedResource.otherPrerequisite.value && (
-          <PokerCard.LabeledValues
-            fields={[localizedResource.otherPrerequisite]}
-            palette={palette}
-          />
+        localizedResource.prerequisite.value && (
+          <PokerCard.LabeledValues fields={[localizedResource.prerequisite]} palette={palette} />
         )
       }
       firstPageInfo={

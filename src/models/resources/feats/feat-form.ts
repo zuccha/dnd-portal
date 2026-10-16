@@ -21,7 +21,7 @@ export const featFormDataSchema = resourceFormDataSchema.extend({
   category: featCategorySchema.default("general"),
   description: z.string().default(""),
   feature_entries: z.array(featureEntrySchema).default([]),
-  min_level: characterLevelSchema.default(0),
+  minimum_level: characterLevelSchema.default(0),
   prerequisite: z.string().default(""),
 });
 
@@ -40,7 +40,7 @@ export function featFormDataToResource(
     ...resourceFormDataToResource(resourceData, lang),
     category: data.category,
     description: createResourceFormDataI18nValue(data.description, lang),
-    min_level: data.min_level,
+    minimum_level: data.minimum_level,
     prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
   });
   const relations = createRelationEndpointUpdates("feats_and_features", feature_entries);

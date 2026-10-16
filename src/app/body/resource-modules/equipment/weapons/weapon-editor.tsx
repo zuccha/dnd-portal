@@ -96,7 +96,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
 
   const MeleeField = createSwitchField({
     i18nContext: { label: { en: "Melee", it: "Mischia" } },
-    useField: form.createUseField("melee"),
+    useField: form.createUseField("is_melee"),
   });
 
   //------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
   // Range
   //----------------------------------------------------------------------------
 
-  const useRangedField = form.createUseField("ranged");
+  const useRangedField = form.createUseField("is_ranged");
 
   const RangedField = createSwitchField({
     i18nContext: { label: { en: "Ranged", it: "A distanza" } },
@@ -150,7 +150,7 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
   //----------------------------------------------------------------------------
 
   return function WeaponEditor({ resource, sourceId }: WeaponEditorProps) {
-    const { value: ranged } = useRangedField(resource.ranged);
+    const { value: ranged } = useRangedField(resource.is_ranged);
     const { value: properties } = usePropertiesField(resource.properties);
 
     return (
@@ -176,8 +176,8 @@ export function createWeaponEditor(form: Form<WeaponFormData>) {
         </HStack>
 
         <HStack gap={8}>
-          <MeleeField defaultValue={resource.melee} />
-          <RangedField defaultValue={resource.ranged} />
+          <MeleeField defaultValue={resource.is_melee} />
+          <RangedField defaultValue={resource.is_ranged} />
         </HStack>
 
         <HStack align="flex-start" gap={4} hidden={!ranged}>

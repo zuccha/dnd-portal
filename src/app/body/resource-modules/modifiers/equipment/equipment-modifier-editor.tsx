@@ -62,7 +62,7 @@ export function createEquipmentModifierEditor<F extends EquipmentModifierFormDat
   // Make Magic
   //----------------------------------------------------------------------------
 
-  const useMakeMagic = form.createUseField("make_magic");
+  const useMakeMagic = form.createUseField("makes_equipment_magic");
 
   const MakeMagicField = createLargeSwitchField({
     i18nContext: { label: { en: "Make Magic", it: "Rendi Magico" } },
@@ -135,17 +135,17 @@ export function createEquipmentModifierEditor<F extends EquipmentModifierFormDat
   });
 
   //----------------------------------------------------------------------------
-  // Notes Delta
+  // Description Delta
   //----------------------------------------------------------------------------
 
-  const NotesDeltaField = createTextareaField({
+  const DescriptionDeltaField = createTextareaField({
     i18nContext: {
-      label: { en: "Notes", it: "Note" },
+      label: { en: "Description", it: "Descrizione" },
       placeholder: { en: "None", it: "Nessuna" },
     },
     inputProps: { rows: 5 },
     translatable: true,
-    useField: form.createUseField("notes_delta"),
+    useField: form.createUseField("description_delta"),
   });
 
   //----------------------------------------------------------------------------
@@ -167,7 +167,7 @@ export function createEquipmentModifierEditor<F extends EquipmentModifierFormDat
 
   return function EquipmentModifierEditor({ resource, sourceId }: EquipmentModifierEditorProps) {
     const { lang } = useResourceEditorLang();
-    const { value: makeMagic } = useMakeMagic(resource.make_magic);
+    const { value: makeMagic } = useMakeMagic(resource.makes_equipment_magic);
     const { value: requiredAttunementSlotsMinimum } = useRequiredAttunementSlotsMinimum(
       resource.required_attunement_slots_minimum,
     );
@@ -183,7 +183,7 @@ export function createEquipmentModifierEditor<F extends EquipmentModifierFormDat
         </HStack>
 
         <HStack align="flex-start" gap={4} w="full">
-          <MakeMagicField defaultValue={resource.make_magic} w="16em" />
+          <MakeMagicField defaultValue={resource.makes_equipment_magic} w="16em" />
           <RarityMinimumField defaultValue={resource.rarity_minimum} hidden={!makeMagic} />
           <RequiredAttunementSlotsMinimumField
             defaultValue={resource.required_attunement_slots_minimum}
@@ -196,7 +196,7 @@ export function createEquipmentModifierEditor<F extends EquipmentModifierFormDat
           hidden={!makeMagic || requiredAttunementSlotsMinimum <= 0}
         />
 
-        <NotesDeltaField defaultValue={resource.notes_delta[lang] ?? ""} />
+        <DescriptionDeltaField defaultValue={resource.description_delta[lang] ?? ""} />
 
         <EquipmentField defaultValue={resource.equipment_ids} sourceId={sourceId} w="full" />
       </ResourceEditor>

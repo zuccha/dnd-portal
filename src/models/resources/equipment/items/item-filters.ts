@@ -14,7 +14,7 @@ export const itemOrderOptions = equipmentOrderOptions;
 
 export const itemFiltersSchema = equipmentFiltersSchema.extend({
   charges_min: z.number().min(0).default(0),
-  consumable: z.boolean().optional(),
+  is_consumable: z.boolean().optional(),
   types: z.partialRecord(itemTypeSchema, z.boolean().optional()).optional(),
 });
 

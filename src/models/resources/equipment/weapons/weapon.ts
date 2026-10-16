@@ -16,12 +16,12 @@ export const weaponSchema = equipmentSchema.extend({
   damage_type: damageTypeSchema,
   damage_versatile: z.string().nullish(),
   kind: z.literal("weapon"),
+  is_melee: z.boolean(),
+  is_ranged: z.boolean(),
   mastery: weaponMasterySchema,
-  melee: z.boolean(),
   properties: z.array(weaponPropertySchema),
   range_long: z.number().nullish(),
   range_short: z.number().nullish(),
-  ranged: z.boolean(),
   type: weaponTypeSchema,
 });
 
@@ -38,12 +38,12 @@ export const defaultWeapon: Weapon = {
   damage_type: "slashing",
   damage_versatile: undefined,
   kind: "weapon",
+  is_melee: true,
+  is_ranged: false,
   mastery: "cleave",
-  melee: true,
   properties: [],
   range_long: undefined,
   range_short: undefined,
-  ranged: false,
   type: "simple",
 };
 

@@ -162,7 +162,7 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
     castingTime: {
       label: context.t("casting_time"),
       value: castingTime,
-      valueWithRitual: spell.ritual
+      valueWithRitual: spell.has_ritual
         ? context.ti("casting_time_with_ritual", castingTime)
         : castingTime,
     },
@@ -172,11 +172,11 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
     components: {
       label: context.t("components"),
       value:
-        [spell.verbal ? "V" : "", spell.somatic ? "S" : "", spell.material ? "M" : ""]
+        [spell.is_verbal ? "V" : "", spell.is_somatic ? "S" : "", spell.is_material ? "M" : ""]
           .filter((component) => component)
           .join(", ") || "—",
     },
-    concentration: spell.concentration,
+    concentration: spell.has_concentration,
     emphasizeCastingTime:
       spell.casting_time === "bonus_action" || spell.casting_time === "reaction",
     details:
@@ -185,8 +185,8 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
         : details,
     duration: {
       label: context.t("duration"),
-      value: spell.concentration ? context.ti("duration_up_to", durationValue) : durationValue,
-      valueWithConcentration: spell.concentration
+      value: spell.has_concentration ? context.ti("duration_up_to", durationValue) : durationValue,
+      valueWithConcentration: spell.has_concentration
         ? context.ti("duration_with_concentration", durationValue)
         : durationValue,
     },
@@ -199,7 +199,7 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
       label: context.t("range"),
       value: rangeValue,
     },
-    ritual: spell.ritual,
+    ritual: spell.has_ritual,
     school,
   };
 }

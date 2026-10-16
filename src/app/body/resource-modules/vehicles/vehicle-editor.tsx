@@ -64,13 +64,13 @@ export function createVehicleEditor(form: Form<VehicleFormData>) {
   const AcField = createNumberInputField({
     i18nContext: { label: { en: "Armor Class", it: "Classe Armatura" } },
     inputProps: { min: 0 },
-    useField: form.createUseField("ac"),
+    useField: form.createUseField("armor_class"),
   });
 
   const HpField = createNumberInputField({
     i18nContext: { label: { en: "Hit Points", it: "Punti Ferita" } },
     inputProps: { min: 0 },
-    useField: form.createUseField("hp"),
+    useField: form.createUseField("hit_points"),
   });
 
   const DamageThresholdField = createNumberInputField({
@@ -112,8 +112,8 @@ export function createVehicleEditor(form: Form<VehicleFormData>) {
         </HStack>
 
         <HStack w="full">
-          <HpField defaultValue={resource.hp} />
-          <AcField defaultValue={resource.ac} />
+          <HpField defaultValue={resource.hit_points} />
+          <AcField defaultValue={resource.armor_class} />
           <DamageThresholdField defaultValue={resource.damage_threshold} />
         </HStack>
 

@@ -51,7 +51,7 @@ export function featureFormDataToResource(
   });
   const relatedByGroup = new Map<
     string,
-    { id: string; kind: ResourceFeatureKind; min_level: number }[]
+    { id: string; kind: ResourceFeatureKind; minimum_level: number }[]
   >();
   for (const grant of granted_by ?? []) {
     const group = featureRelationGroupByGrantorKind[grant.kind];

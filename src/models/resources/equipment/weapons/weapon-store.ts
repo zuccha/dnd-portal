@@ -15,8 +15,8 @@ export const weaponStore = createEquipmentStore("weapon", {
   filtersSchema: weaponFiltersSchema,
   matchesEquipment: (weapon, filters) =>
     matchesEquipment(weapon, filters) &&
-    matchesBoolean(weapon.melee, filters.melee) &&
-    matchesBoolean(weapon.ranged, filters.ranged) &&
+    matchesBoolean(weapon.is_melee, filters.is_melee) &&
+    matchesBoolean(weapon.is_ranged, filters.is_ranged) &&
     matchesInclusion(weapon.mastery, filters.masteries) &&
     matchesInclusion(weapon.type, filters.types) &&
     matchesInclusionList(weapon.properties, filters.properties),

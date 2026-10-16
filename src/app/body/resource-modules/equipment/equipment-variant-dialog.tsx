@@ -324,7 +324,7 @@ export function createEquipmentVariantDialog<
               >
                 <HStack justify="space-between">
                   <Text fontWeight="medium">{translate(preview.name, lang)}</Text>
-                  {preview.virtual && <Badge colorPalette="gray">{t("temporary")}</Badge>}
+                  {preview.is_virtual && <Badge colorPalette="gray">{t("temporary")}</Badge>}
                 </HStack>
 
                 <HStack color="fg.muted" fontSize="sm" gap={4}>
@@ -332,7 +332,7 @@ export function createEquipmentVariantDialog<
                   <Span>
                     {preview.weight === null ? t("unspecified") : formatWeight(preview.weight)}
                   </Span>
-                  <Span>{preview.magic ? t("magic") : t("non_magic")}</Span>
+                  <Span>{preview.is_magic ? t("magic") : t("non_magic")}</Span>
                   <Span>{translateRarity(preview.rarity)}</Span>
                 </HStack>
 
@@ -342,9 +342,9 @@ export function createEquipmentVariantDialog<
                   </Text>
                 )}
 
-                {translate(preview.notes, lang) && (
+                {translate(preview.description, lang) && (
                   <Text fontSize="sm" whiteSpace="pre-wrap">
-                    {translate(preview.notes, lang)}
+                    {translate(preview.description, lang)}
                   </Text>
                 )}
               </VStack>

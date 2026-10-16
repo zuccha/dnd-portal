@@ -67,8 +67,8 @@ export default function WeaponsFilters(props: StackProps) {
       </CaptionInput>
 
       <InclusionButton
-        include={filters.melee}
-        onValueChange={(melee) => setFilters({ melee })}
+        include={filters.is_melee}
+        onValueChange={(is_melee) => setFilters({ is_melee })}
         size="sm"
         w="full"
       >
@@ -76,8 +76,8 @@ export default function WeaponsFilters(props: StackProps) {
       </InclusionButton>
 
       <InclusionButton
-        include={filters.ranged}
-        onValueChange={(ranged) => setFilters({ ranged })}
+        include={filters.is_ranged}
+        onValueChange={(is_ranged) => setFilters({ is_ranged })}
         size="sm"
         w="full"
       >

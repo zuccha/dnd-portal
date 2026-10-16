@@ -15,7 +15,7 @@ import {
 export const eldritchInvocationSchema = resourceSchema.extend({
   description: i18nStringSchema,
   kind: z.literal("eldritch_invocation"),
-  min_warlock_level: characterLevelSchema,
+  minimum_warlock_level: characterLevelSchema,
   prerequisite: i18nStringSchema,
 });
 
@@ -29,7 +29,7 @@ export const defaultEldritchInvocation: EldritchInvocation = {
   ...defaultResource,
   description: {},
   kind: "eldritch_invocation",
-  min_warlock_level: 0,
+  minimum_warlock_level: 0,
   prerequisite: {},
 };
 

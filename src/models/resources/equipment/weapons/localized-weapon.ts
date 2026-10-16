@@ -37,11 +37,11 @@ export const localizedWeaponSchema = localizedEquipmentSchema(
   damageLine: z.string(),
   damageType: localizedFieldSchema,
   damageVersatile: localizedFieldSchema,
+  isRanged: z.boolean(),
+  isMelee: z.boolean(),
   mastery: localizedFieldSchema,
-  melee: z.boolean(),
   properties: localizedFieldSchema,
   range: localizedFieldSchema,
-  ranged: z.boolean(),
   type: z.string(),
 });
 
@@ -119,7 +119,7 @@ export function localizeWeapon(
     : "";
   const damageModifier = weapon.properties.includes("finesse")
     ? context.t("damage_modifier.dex_or_str")
-    : !weapon.ranged || weapon.properties.includes("throw")
+    : !weapon.is_ranged || weapon.properties.includes("throw")
       ? context.t("damage_modifier.str")
       : context.t("damage_modifier.dex");
   const damageLine = weapon.damage_versatile
@@ -154,7 +154,7 @@ export function localizeWeapon(
 
   return {
     ...equipment,
-    descriptor: weapon.magic ? context.ti("subtitle.magic", type, equipment.rarity.value) : type,
+    descriptor: weapon.is_magic ? context.ti("subtitle.magic", type, equipment.rarity.value) : type,
     details: [
       equipment.details,
       weapon.mastery !== "none"
@@ -186,11 +186,12 @@ export function localizeWeapon(
       label: context.t("versatile"),
       value: damageVersatileValue,
     },
+    isMelee: weapon.is_melee,
+    isRanged: weapon.is_ranged,
     mastery: {
       label: context.t("mastery"),
       value: masteryValue,
     },
-    melee: weapon.melee,
     properties: {
       label: context.tp("properties", weapon.properties.length),
       value: propertiesValue,
@@ -199,7 +200,6 @@ export function localizeWeapon(
       label: context.t("range"),
       value: hasRange ? rangeValue : "",
     },
-    ranged: weapon.ranged,
     type,
   };
 }

@@ -88,7 +88,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
     true: { en: "Magic", it: "Magico" },
   };
 
-  const useMagicField = form.createUseField("magic");
+  const useMagicField = form.createUseField("is_magic");
 
   const MagicField = createSelectField({
     i18nContext: { label: { en: "Magic", it: "Magico" } },
@@ -134,17 +134,17 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   });
 
   //----------------------------------------------------------------------------
-  // Notes
+  // Description
   //----------------------------------------------------------------------------
 
-  const NotesField = createTextareaField({
+  const DescriptionField = createTextareaField({
     i18nContext: {
-      label: { en: "Notes", it: "Note" },
+      label: { en: "Description", it: "Descrizione" },
       placeholder: { en: "None", it: "Nessuna" },
     },
     inputProps: { rows: 10 },
     translatable: true,
-    useField: form.createUseField("notes"),
+    useField: form.createUseField("description"),
   });
 
   //----------------------------------------------------------------------------
@@ -163,7 +163,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
   return function EquipmentEditor({ children, resource, sourceId }: EquipmentEditorProps) {
     const { lang } = useResourceEditorLang();
     const featureEntries = useEquipmentRelatedEntries(resource.id, "features");
-    const { value: magic } = useMagicField(resource.magic);
+    const { value: magic } = useMagicField(resource.is_magic);
     const { value: requiredAttunementSlots } = useRequiredAttunementSlotsField(
       resource.required_attunement_slots,
     );
@@ -173,7 +173,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
         <HStack align="flex-start" gap={4}>
           <WeightField defaultValue={resource.weight} />
           <CostField defaultValue={resource.cost} />
-          <MagicField defaultValue={resource.magic} />
+          <MagicField defaultValue={resource.is_magic} />
         </HStack>
 
         <HStack align="flex-start" gap={4} hidden={!magic}>
@@ -189,7 +189,7 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
 
         {children}
 
-        <NotesField defaultValue={resource.notes[lang] ?? ""} />
+        <DescriptionField defaultValue={resource.description[lang] ?? ""} />
 
         <ModifiersField defaultValue={resource.modifier_ids} sourceId={sourceId} w="full" />
 

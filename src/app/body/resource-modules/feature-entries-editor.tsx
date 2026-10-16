@@ -52,9 +52,9 @@ export default function FeatureEntriesEditor({
 
   const addFeature = useCallback(() => {
     if (!featureId) return;
-    if (value.some((entry) => entry.id === featureId && entry.min_level === minLevel)) return;
+    if (value.some((entry) => entry.id === featureId && entry.minimum_level === minLevel)) return;
 
-    onValueChange([...value, { id: featureId, min_level: minLevel }]);
+    onValueChange([...value, { id: featureId, minimum_level: minLevel }]);
     setFeatureId("");
     setMinLevel(0);
     searchRef.current?.clear();
@@ -118,7 +118,7 @@ export default function FeatureEntriesEditor({
               borderColor="border"
               borderWidth={1}
               gap={2}
-              key={`${entry.id}.${entry.min_level}.${index}`}
+              key={`${entry.id}.${entry.minimum_level}.${index}`}
               minH={9}
               px={2}
               py={1}
@@ -133,9 +133,9 @@ export default function FeatureEntriesEditor({
                 {optionMap.get(entry.id)?.label ?? t("unknown")}
               </Text>
 
-              {entry.min_level > 0 && (
+              {entry.minimum_level > 0 && (
                 <Span color="fg.muted" flexShrink={0} fontSize="sm">
-                  {formatLevelLabel(entry.min_level, t)}
+                  {formatLevelLabel(entry.minimum_level, t)}
                 </Span>
               )}
 

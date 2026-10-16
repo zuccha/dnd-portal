@@ -39,7 +39,7 @@ const columns = createEquipmentTableColumns<Item, LocalizedItem>([
   },
   {
     icon: FlaskConicalIcon,
-    key: "consumable",
+    key: "isConsumable",
     label: { en: "🧪", it: "🧪" },
     textAlign: "center",
     w: "1%",
@@ -60,7 +60,7 @@ const actions: ResourceAction<Item>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
-    isVisible: ({ virtual }) => !virtual,
+    isVisible: ({ is_virtual }) => !is_virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: itemVariantDialog.open,
   },
@@ -70,7 +70,7 @@ const detailActions: ResourceAction<Item>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
-    isVisible: ({ virtual }) => !virtual,
+    isVisible: ({ is_virtual }) => !is_virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: (resource) => itemVariantDialog.open(resource, { navigateAfterCreation: true }),
   },

@@ -107,7 +107,7 @@ export function createResourceDetailInteractive<
         label: t("print_deck.add"),
         onClick: addToPrintDeck,
       },
-      ...(sourceEditable && resource.virtual
+      ...(sourceEditable && resource.is_virtual
         ? [{ Icon: SaveIcon, label: t("persistent.make"), onClick: () => void makePersistent() }]
         : []),
       ...(sourceEditable

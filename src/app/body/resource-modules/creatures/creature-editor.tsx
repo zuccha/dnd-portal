@@ -100,10 +100,10 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
   const ACField = createNumberInputField({
     i18nContext: { label: { en: "Armor Class", it: "Classe Armatura" } },
-    useField: form.createUseField("ac"),
+    useField: form.createUseField("armor_class"),
   });
 
-  const useSummonedFromSpellField = form.createUseField("summoned_from_spell");
+  const useSummonedFromSpellField = form.createUseField("is_summoned_from_spell");
 
   const SummonedFromSpellField = createSwitchField({
     i18nContext: {
@@ -119,7 +119,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
         it: "Aggiungi il livello dell'incantesimo alla classe armatura",
       },
     },
-    useField: form.createUseField("armor_class_adds_spell_level"),
+    useField: form.createUseField("adds_spell_level_to_armor_class"),
   });
 
   const AdditionalHpPerLevelField = createNumberInputField({
@@ -210,10 +210,10 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   // CR
   //----------------------------------------------------------------------------
 
-  const useCRField = form.createUseField("cr");
-  const useExpField = form.createUseField("exp");
-  const useLairExpField = form.createUseField("lair_exp");
-  const usePBField = form.createUseField("pb");
+  const useCRField = form.createUseField("challenge_rating");
+  const useExpField = form.createUseField("experience_points");
+  const useLairExpField = form.createUseField("lair_experience_points");
+  const usePBField = form.createUseField("proficiency_bonus");
 
   const crI18nContext = {
     label: { en: "Challenge Rating", it: "Grado Sfida" },
@@ -228,9 +228,9 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   }) {
     const options = useCreatureChallengeRatingOptions();
     const { error, onValueChange, ...field } = useCRField(defaultValue);
-    const expField = useExpField(resource.exp);
-    const lairExpField = useLairExpField(resource.lair_exp);
-    const pbField = usePBField(resource.pb);
+    const expField = useExpField(resource.experience_points);
+    const lairExpField = useLairExpField(resource.lair_experience_points);
+    const pbField = usePBField(resource.proficiency_bonus);
     const { t } = useI18nLangContext(crI18nContext);
     const message = error ? t(error) : undefined;
 
@@ -336,7 +336,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
   const HPField = createNumberInputField({
     i18nContext: { label: { en: "HP", it: "PF" } },
-    useField: form.createUseField("hp"),
+    useField: form.createUseField("hit_points"),
   });
 
   const HPFormulaField = createInputField({
@@ -344,7 +344,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
       label: { en: "HP Formula", it: "Formula PF" },
       placeholder: { en: "None", it: "Nessuna" },
     },
-    useField: form.createUseField("hp_formula"),
+    useField: form.createUseField("hit_points_formula"),
   });
 
   //----------------------------------------------------------------------------
@@ -535,7 +535,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
   const HoverField = createSwitchField({
     i18nContext: { label: { en: "Hover", it: "Fluttuare" } },
-    useField: form.createUseField("hover"),
+    useField: form.createUseField("can_hover"),
   });
 
   const SpeedSwimField = createDistanceInputField({
@@ -657,7 +657,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
   return function CreatureEditor({ resource, sourceId }: CreatureEditorProps) {
     const { lang } = useResourceEditorLang();
-    const { value: summonedFromSpell } = useSummonedFromSpellField(resource.summoned_from_spell);
+    const { value: summonedFromSpell } = useSummonedFromSpellField(resource.is_summoned_from_spell);
     const { value: hasLair } = useHasLairField(resource.has_lair);
     const { value: languageScope } = useLanguageScopeField(resource.language_scope);
     const { value: legendaryActionsCount } = useLegendaryActionsCountField(
@@ -685,26 +685,26 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
         <HStack align="flex-start" gap={4} w="full">
           <HasLairField defaultValue={resource.has_lair} />
-          <SummonedFromSpellField defaultValue={resource.summoned_from_spell} />
+          <SummonedFromSpellField defaultValue={resource.is_summoned_from_spell} />
         </HStack>
 
         {/* AC */}
         <VStack align="stretch" gap={2} w="full">
-          <ACField defaultValue={resource.ac} />
+          <ACField defaultValue={resource.armor_class} />
           <ArmorClassAddsSpellLevelField
-            defaultValue={resource.armor_class_adds_spell_level}
+            defaultValue={resource.adds_spell_level_to_armor_class}
             hidden={!summonedFromSpell}
           />
         </VStack>
 
         <HStack align="flex-start" gap={4} hidden={summonedFromSpell} w="full">
-          <HPField defaultValue={resource.hp} />
-          <HPFormulaField defaultValue={resource.hp_formula} />
+          <HPField defaultValue={resource.hit_points} />
+          <HPFormulaField defaultValue={resource.hit_points_formula} />
         </HStack>
 
         <VStack align="stretch" gap={4} hidden={!summonedFromSpell} w="full">
           <HStack align="flex-start" gap={4} w="full">
-            <HPField defaultValue={resource.hp} />
+            <HPField defaultValue={resource.hit_points} />
             <AdditionalHpPerLevelField defaultValue={resource.additional_hp_per_level} />
             <AdditionalHpStartingFromLevelField
               defaultValue={resource.additional_hp_starting_from_level}
@@ -714,10 +714,10 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
         {/* CR, Initiative, and Speed */}
         <HStack align="flex-start" gap={4} hidden={summonedFromSpell} w="full">
-          <CRField defaultValue={resource.cr} resource={resource} />
-          <PBField defaultValue={resource.pb} />
-          <ExpField defaultValue={resource.exp} />
-          <LairExpField defaultValue={resource.lair_exp} hidden={!hasLair} />
+          <CRField defaultValue={resource.challenge_rating} resource={resource} />
+          <PBField defaultValue={resource.proficiency_bonus} />
+          <ExpField defaultValue={resource.experience_points} />
+          <LairExpField defaultValue={resource.lair_experience_points} hidden={!hasLair} />
         </HStack>
 
         <HStack align="flex-start" gap={4} w="full">
@@ -737,7 +737,7 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
           </HStack>
         </HStack>
 
-        <HoverField defaultValue={resource.hover ?? false} />
+        <HoverField defaultValue={resource.can_hover ?? false} />
 
         {/* Ability Scores */}
         <HStack align="flex-start" gap={4} w="full" wrap="wrap">

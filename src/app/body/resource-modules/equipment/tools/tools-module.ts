@@ -44,7 +44,7 @@ const actions: ResourceAction<Tool>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
-    isVisible: ({ virtual }) => !virtual,
+    isVisible: ({ is_virtual }) => !is_virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: toolVariantDialog.open,
   },
@@ -54,7 +54,7 @@ const detailActions: ResourceAction<Tool>[] = [
   {
     icon: LayersIcon,
     isDisabled: (resource) => !hasAvailableEquipmentModifier(resource),
-    isVisible: ({ virtual }) => !virtual,
+    isVisible: ({ is_virtual }) => !is_virtual,
     label: { en: "Add variant", it: "Aggiungi variante" },
     onClick: (resource) => toolVariantDialog.open(resource, { navigateAfterCreation: true }),
   },

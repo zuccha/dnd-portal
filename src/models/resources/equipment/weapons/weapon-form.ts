@@ -17,12 +17,12 @@ export const weaponFormDataSchema = equipmentFormDataSchema.extend({
   damage: z.string().default(""),
   damage_type: damageTypeSchema.default("slashing"),
   damage_versatile: z.string().default(""),
+  is_melee: z.boolean().default(true),
+  is_ranged: z.boolean().default(false),
   mastery: weaponMasterySchema.default("cleave"),
-  melee: z.boolean().default(true),
   properties: z.array(weaponPropertySchema).default([]),
   range_long: z.number().default(0),
   range_short: z.number().default(0),
-  ranged: z.boolean().default(false),
   type: weaponTypeSchema.default("simple"),
 });
 
@@ -43,12 +43,12 @@ export function weaponFormDataToResource(
     damage: data.damage,
     damage_type: data.damage_type,
     damage_versatile: data.damage_versatile,
+    is_melee: data.is_melee,
+    is_ranged: data.is_ranged,
     mastery: data.mastery,
-    melee: data.melee,
     properties: data.properties,
     range_long: data.range_long,
     range_short: data.range_short,
-    ranged: data.ranged,
     type: data.type,
   });
   return { resource, relations: base.relations };

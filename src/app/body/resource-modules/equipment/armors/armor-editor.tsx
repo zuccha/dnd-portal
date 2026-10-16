@@ -135,7 +135,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
     i18nContext: {
       label: { en: "Disadvantage on stealth", it: "Svantaggio su furtività" },
     },
-    useField: form.createUseField("disadvantage_on_stealth"),
+    useField: form.createUseField("imposes_stealth_disadvantage"),
   });
 
   //------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ export function createArmorEditor(form: Form<ArmorFormData>) {
         </HStack>
 
         <HStack align="flex-start" gap={4}>
-          <DisadvantageOnStealth defaultValue={resource.disadvantage_on_stealth} />
+          <DisadvantageOnStealth defaultValue={resource.imposes_stealth_disadvantage} />
         </HStack>
       </EquipmentEditor>
     );

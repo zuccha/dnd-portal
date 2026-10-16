@@ -28,7 +28,7 @@ export const localizedEquipmentSchema = <E extends Equipment>(
   localizedResourceSchema(equipmentSchema, kindSchema).extend({
     attunement: localizedFieldSchema,
     cost: localizedFieldSchema,
-    magic: z.boolean(),
+    isMagic: z.boolean(),
     magicStatus: localizedFieldSchema,
     rarity: localizedFieldSchema,
     weight: localizedFieldSchema,
@@ -89,7 +89,7 @@ export function localizeEquipment<E extends Equipment>(
   const attunementNotes = translate(equipment.attunement_notes, context.lang);
   const attunementSlots = equipment.required_attunement_slots;
   const attunement =
-    equipment.magic && attunementSlots > 0
+    equipment.is_magic && attunementSlots > 0
       ? attunementNotes
         ? context.tpi(
             "attunement.with_notes",
@@ -99,7 +99,7 @@ export function localizeEquipment<E extends Equipment>(
           )
         : context.tpi("attunement", attunementSlots, `${attunementSlots}`)
       : "";
-  const notes = translate(equipment.notes, context.lang);
+  const notes = translate(equipment.description, context.lang);
   const features = context.featureEntries;
   const cost = equipment.cost === null ? "" : context.formatCost(equipment.cost);
   const attunementValue =
@@ -122,10 +122,10 @@ export function localizeEquipment<E extends Equipment>(
       label: context.t("cost"),
       value: cost,
     },
-    magic: equipment.magic,
+    isMagic: equipment.is_magic,
     magicStatus: {
       label: context.t("magic"),
-      value: context.t(equipment.magic ? "yes" : "no"),
+      value: context.t(equipment.is_magic ? "yes" : "no"),
     },
     rarity: {
       label: context.t("rarity"),

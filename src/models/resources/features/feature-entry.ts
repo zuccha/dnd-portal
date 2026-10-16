@@ -8,7 +8,7 @@ import { resourceFeatureKindSchema } from "../../types/resource-feature-kind";
 export const featureGrantSchema = z.object({
   id: z.uuid(),
   kind: resourceFeatureKindSchema,
-  min_level: z.number().min(0).max(20),
+  minimum_level: z.number().min(0).max(20),
 });
 
 export type FeatureGrant = z.infer<typeof featureGrantSchema>;
@@ -19,7 +19,7 @@ export type FeatureGrant = z.infer<typeof featureGrantSchema>;
 
 export const featureEntrySchema = z.object({
   id: z.uuid(),
-  min_level: z.number().min(0).max(20),
+  minimum_level: z.number().min(0).max(20),
 });
 
 export type FeatureEntry = z.infer<typeof featureEntrySchema>;
