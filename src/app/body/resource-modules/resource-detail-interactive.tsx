@@ -45,7 +45,7 @@ export function createResourceDetailInteractive<
   return function ResourceDetailInteractive({ resource }: { resource: L | undefined }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const navigate = useNavigate();
-    const sourceEditable = useSourceEditable(resource?._raw.source_id ?? "");
+    const sourceEditable = useSourceEditable(resource?.sourceId ?? "");
     const paletteName = usePaletteName();
     const deleteResource = useResourceDelete(
       store,
@@ -102,7 +102,7 @@ export function createResourceDetailInteractive<
         label: t("print_deck.add"),
         onClick: addToPrintDeck,
       },
-      ...(sourceEditable && resource._raw.virtual
+      ...(sourceEditable && resource.virtual
         ? [{ Icon: SaveIcon, label: t("persistent.make"), onClick: () => void makePersistent() }]
         : []),
       ...(sourceEditable

@@ -24,13 +24,14 @@ export type ResourceDetailAction = {
 //------------------------------------------------------------------------------
 
 type ResourceDetailHeader = {
-  _raw: { image_url?: string | null; virtual?: boolean };
   descriptor: string;
   details: string;
+  imageUrl?: string | null;
   name: string;
   page: string;
-  source: string;
+  sourceCode: string;
   sourceVersion: string;
+  virtual: boolean;
 };
 
 //------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ export default function ResourceDetail({
     /[\r\n]*##(.+?)##[\r\n]*/g,
     "##$1##",
   );
-  const imageUrl = resource._raw.image_url?.trim();
+  const imageUrl = resource.imageUrl?.trim();
 
   return (
     <>
@@ -72,7 +73,7 @@ export default function ResourceDetail({
           >
             <HStack align="center" flexWrap="wrap" gap={3} gridColumn={1} gridRow={1} minW={0}>
               <Heading size="2xl">{resource.name || t("unnamed")}</Heading>
-              {resource._raw.virtual && (
+              {resource.virtual && (
                 <Badge colorPalette="orange" size="sm" variant="solid">
                   {t("temporary")}
                 </Badge>
@@ -107,7 +108,7 @@ export default function ResourceDetail({
             >
               <Text>{resource.sourceVersion}</Text>
               <Text aria-hidden="true">·</Text>
-              <Text>{resource.source}</Text>
+              <Text>{resource.sourceCode}</Text>
               {resource.page && (
                 <>
                   <Text aria-hidden="true">·</Text>

@@ -4,6 +4,7 @@ import type { I18nLang, I18nLangContext } from "~/i18n/i18n-lang";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translateNumber } from "~/i18n/i18n-number";
 import { translate } from "~/i18n/i18n-string";
+import { resourceVisibilitySchema } from "../types/resource-visibility";
 import { type SourceVersion, useTranslateSourceVersion } from "../types/source-version";
 import type { ResourceKind } from "../types/resource-kind";
 import type { Resource } from "./resource";
@@ -49,14 +50,16 @@ export const localizedResourceSchema = <R extends Resource>(
     _raw: resourceSchema,
     descriptor: z.string(),
     details: z.string(),
-    imageUrl: z.string().nullish(),
     id: z.uuid(),
+    imageUrl: z.string().nullish(),
     kind: kindSchema,
     name: z.string(),
     page: z.string(),
-    source: z.string(),
+    sourceCode: z.string(),
+    sourceId: z.string(),
     sourceVersion: z.string(),
-    temporary: z.boolean().optional(),
+    virtual: z.boolean(),
+    visibility: resourceVisibilitySchema,
   });
 
 export type LocalizedResource<R extends Resource> = z.infer<
@@ -106,14 +109,16 @@ export function localizeResource<R extends Resource>(
     _raw: resource,
     descriptor: "",
     details: "",
-    imageUrl: resource.image_url,
     id: resource.id,
+    imageUrl: resource.image_url,
     kind: resource.kind,
     name: translate(resource.name, context.lang) || context.t("name.missing"),
     page: page ? context.ti("page", `${page}`) : "",
-    source: resource.source_code,
+    sourceCode: resource.source_code,
+    sourceId: resource.source_id,
     sourceVersion: context.translateSourceVersion(resource.source_version),
-    temporary: resource.virtual ?? false,
+    virtual: resource.virtual ?? false,
+    visibility: resource.visibility,
   };
 }
 

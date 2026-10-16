@@ -47,7 +47,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
   startDetailsOnSecondPage = false,
   ...rest
 }: ResourcePokerCardProps<R, L>) {
-  const imageUrl = localizedResource._raw.image_url?.trim() ?? "";
+  const imageUrl = localizedResource.imageUrl?.trim() ?? "";
   const hasImage = showImage && imageUrl.length > 0;
   const firstPageIndexWithoutImage = hasImage ? 1 : 0;
   const [system] = useI18nSystem();
@@ -189,7 +189,7 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
           pageIndicator={`1 / ${pageCount}`}
           palette={palette}
           shadow={selectedPageIndex === 0 ? "sm" : undefined}
-          sourceName={localizedResource.source}
+          sourceName={localizedResource.sourceCode}
           sourcePage={localizedResource.page}
           sourceVersion={localizedResource.sourceVersion}
           zIndex={0 === selectedPageIndex ? 1 : 0}
@@ -230,7 +230,7 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
             palette={palette}
             position="relative"
             shadow={adjustedPageIndex === selectedPageIndex ? "sm" : undefined}
-            sourceName={localizedResource.source}
+            sourceName={localizedResource.sourceCode}
             sourcePage={localizedResource.page}
             sourceVersion={localizedResource.sourceVersion}
             zIndex={adjustedPageIndex === selectedPageIndex ? 1 : 0}
@@ -335,7 +335,7 @@ function ScrollableResourcePokerCard<R extends Resource, L extends LocalizedReso
       onNameClick={onNameClick}
       pageIndicator=""
       palette={palette}
-      sourceName={localizedResource.source}
+      sourceName={localizedResource.sourceCode}
       sourcePage={localizedResource.page}
       sourceVersion={localizedResource.sourceVersion}
       {...rest}

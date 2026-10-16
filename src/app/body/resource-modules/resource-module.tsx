@@ -118,8 +118,8 @@ export function createResourceModule<
     return (
       <>
         <ResourceDetailInteractive resource={resource} />
-        <ResourceUpdater sourceId={resource._raw.source_id} />
-        {Extra && <Extra sourceId={resource._raw.source_id} />}
+        <ResourceUpdater sourceId={resource.sourceId} />
+        {Extra && <Extra sourceId={resource.sourceId} />}
       </>
     );
   }

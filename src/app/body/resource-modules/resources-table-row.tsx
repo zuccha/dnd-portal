@@ -177,7 +177,7 @@ export function createResourcesTableRow<
 
           <Table.Cell textAlign="center" w="3em">
             <Icon
-              Icon={localizedResource._raw.visibility === "public" ? EyeIcon : EyeClosedIcon}
+              Icon={localizedResource.visibility === "public" ? EyeIcon : EyeClosedIcon}
               color="fg.muted"
               size="sm"
             />
@@ -202,7 +202,7 @@ export function createResourcesTableRow<
               >
                 {key === "name" ? (
                   <HStack gap={2} minW={0}>
-                    {localizedResource._raw.virtual && (
+                    {localizedResource.virtual && (
                       <Badge colorPalette="orange" size="xs" variant="solid">
                         {translate({ en: "Temporary", it: "Temporanea" }, lang)}
                       </Badge>
@@ -242,7 +242,7 @@ export function createResourcesTableRow<
                   variant="ghost"
                 />
 
-                {sourceEditable && localizedResource._raw.virtual && (
+                {sourceEditable && localizedResource.virtual && (
                   <IconButton
                     Icon={SaveIcon}
                     label={t("persistent.make")}

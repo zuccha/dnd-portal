@@ -63,7 +63,7 @@ export default function CharacterClassDetail({
     const name = toolNames[index];
     return name ? [{ id, kind: "tool" as const, name }] : [];
   });
-  const subclassIds = useSubclassResourceIds(characterClass?._raw.source_id ?? "");
+  const subclassIds = useSubclassResourceIds(characterClass?.sourceId ?? "");
   const subclasses = useSubclassResources(subclassIds);
   const classSubclassIds = subclasses
     .filter(({ character_class_id }) => character_class_id === characterClass?._raw.id)
