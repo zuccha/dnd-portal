@@ -1,12 +1,5 @@
 import { Box, HStack, Span, Text, VStack } from "@chakra-ui/react";
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  CopyPlusIcon,
-  PencilIcon,
-  RatIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { CopyPlusIcon, PencilIcon, RatIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { PrintDeckEntryUnion } from "~/models/print-deck/print-deck-entry";
@@ -15,6 +8,9 @@ import { type ResourceKind, useTranslateResourceKind } from "~/models/types/reso
 import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
 import PalettePicker from "~/ui/palette-picker";
+import SortableListDropIndicator from "~/ui/sortable-list-drop-indicator";
+import SortableListHandle from "~/ui/sortable-list-handle";
+import { useSortableList, type SortableListItemProps } from "~/ui/use-sortable-list";
 import { type PaletteName } from "~/utils/palette";
 import PrintDeckEntryEditorDialog from "./print-deck-entry-editor-dialog";
 
@@ -28,6 +24,7 @@ export default function PrintDeckContentList() {
   const entries = useEntries();
   const { t } = useI18nLangContext(i18nContext);
   const [editingEntry, setEditingEntry] = useState<PrintDeckEntryUnion>();
+  const getSortableItemProps = useSortableList(entries, printDeck.moveEntry);
 
   return (
     <>
@@ -42,17 +39,14 @@ export default function PrintDeckContentList() {
         <VStack bgColor="bg.subtle" flex={1} gap={2} h="full" overflow="auto" p={4}>
           {entries.map((entry, index) => (
             <PrintDeckEntryRow
-              canMoveDown={index < entries.length - 1}
-              canMoveUp={index > 0}
               key={entry.id}
               kind={entry.resource.kind}
               name={entry.resource.name}
               onEdit={() => setEditingEntry(entry)}
               onDuplicate={() => printDeck.duplicateEntry(entry.id)}
-              onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
-              onMoveUp={() => printDeck.moveEntry(entry.id, index - 1)}
               onPaletteChange={(paletteName) => printDeck.setEntryPalette(entry.id, paletteName)}
               onRemove={() => printDeck.removeEntry(entry.id)}
+              sortableProps={getSortableItemProps(entry.id, index)}
               entryLang={entry.lang}
               paletteName={entry.palette_name}
               source={entry.resource.source_code}
@@ -76,33 +70,27 @@ export default function PrintDeckContentList() {
 //------------------------------------------------------------------------------
 
 type PrintDeckEntryRowProps = {
-  canMoveDown: boolean;
-  canMoveUp: boolean;
   kind: ResourceKind;
   entryLang: string;
   name: string;
   onDuplicate: () => void;
   onEdit: () => void;
-  onMoveDown: () => void;
-  onMoveUp: () => void;
   onPaletteChange: (paletteName: PaletteName) => void;
   onRemove: () => void;
   paletteName: PaletteName;
+  sortableProps: SortableListItemProps;
   source: string;
 };
 
 function PrintDeckEntryRow({
-  canMoveDown,
-  canMoveUp,
   kind,
   name,
   onEdit,
   onDuplicate,
-  onMoveDown,
-  onMoveUp,
   onPaletteChange,
   onRemove,
   paletteName,
+  sortableProps,
   source,
 }: PrintDeckEntryRowProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
@@ -110,17 +98,25 @@ function PrintDeckEntryRow({
 
   return (
     <HStack
-      align="flex-start"
+      align="center"
       bgColor="bg"
+      borderColor="border"
       borderRadius="sm"
       borderWidth={1}
       gap={3}
       minH={14}
       px={3}
       py={2}
+      position="relative"
       w="full"
       wrap={{ base: "wrap", md: "nowrap" }}
+      {...sortableProps.itemProps}
     >
+      {sortableProps.dropPosition && (
+        <SortableListDropIndicator gap={2} position={sortableProps.dropPosition} />
+      )}
+      <SortableListHandle label={t("drag_to_reorder")} {...sortableProps.dragHandleProps} />
+
       <Box alignSelf="center">
         <PalettePicker onValueChange={onPaletteChange} value={paletteName} />
       </Box>
@@ -149,22 +145,6 @@ function PrintDeckEntryRow({
       </VStack>
 
       <HStack alignSelf="center" gap={1} ml="auto">
-        <IconButton
-          Icon={ArrowUpIcon}
-          disabled={!canMoveUp}
-          label={t("move_up")}
-          onClick={onMoveUp}
-          size="xs"
-          variant="ghost"
-        />
-        <IconButton
-          Icon={ArrowDownIcon}
-          disabled={!canMoveDown}
-          label={t("move_down")}
-          onClick={onMoveDown}
-          size="xs"
-          variant="ghost"
-        />
         <IconButton
           Icon={PencilIcon}
           label={t("edit")}
@@ -213,13 +193,9 @@ const i18nContext = {
     en: "Edit",
     it: "Modifica",
   },
-  "move_down": {
-    en: "Move down",
-    it: "Sposta sotto",
-  },
-  "move_up": {
-    en: "Move up",
-    it: "Sposta sopra",
+  "drag_to_reorder": {
+    en: "Drag to reorder",
+    it: "Trascina per riordinare",
   },
   "name.missing": {
     en: "Unnamed",

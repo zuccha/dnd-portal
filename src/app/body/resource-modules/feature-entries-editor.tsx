@@ -1,5 +1,5 @@
 import { HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/react";
-import { ArrowDownIcon, ArrowUpIcon, GripVerticalIcon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { FeatureEntry } from "~/models/resources/features/feature-entry";
@@ -9,6 +9,9 @@ import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import NumberInput from "~/ui/number-input";
 import Search, { type SearchRefObject } from "~/ui/search";
+import SortableListDropIndicator from "~/ui/sortable-list-drop-indicator";
+import SortableListHandle from "~/ui/sortable-list-handle";
+import { useSortableList } from "~/ui/use-sortable-list";
 import { normalizeString } from "~/utils/string";
 
 //------------------------------------------------------------------------------
@@ -42,6 +45,16 @@ export default function FeatureEntriesEditor({
     () => new Map(options.map((option) => [option.value, option])),
     [options],
   );
+  const sortableItems = useMemo(() => {
+    const occurrences = new Map<string, number>();
+
+    return value.map((entry) => {
+      const key = `${entry.id}.${entry.minimum_level}`;
+      const occurrence = occurrences.get(key) ?? 0;
+      occurrences.set(key, occurrence + 1);
+      return { id: `${key}.${occurrence}` };
+    });
+  }, [value]);
 
   const filterResourceOptions = useCallback((option: ResourceOption, search: string): boolean => {
     const normalizedFilter = normalizeString(search);
@@ -62,19 +75,26 @@ export default function FeatureEntriesEditor({
   }, [featureId, minLevel, onValueChange, value]);
 
   const moveFeature = useCallback(
-    (index: number, delta: number) => {
-      const nextIndex = index + delta;
-      if (nextIndex < 0 || nextIndex >= value.length) return;
+    (fromIndex: number, toIndex: number) => {
+      if (toIndex < 0 || toIndex >= value.length || fromIndex === toIndex) return;
 
       const next = [...value];
-      const [entry] = next.splice(index, 1);
+      const [entry] = next.splice(fromIndex, 1);
       if (!entry) return;
 
-      next.splice(nextIndex, 0, entry);
+      next.splice(toIndex, 0, entry);
       onValueChange(next);
     },
     [onValueChange, value],
   );
+  const moveSortableFeature = useCallback(
+    (itemId: string, toIndex: number) => {
+      const fromIndex = sortableItems.findIndex(({ id }) => id === itemId);
+      if (fromIndex >= 0) moveFeature(fromIndex, toIndex);
+    },
+    [moveFeature, sortableItems],
+  );
+  const getSortableItemProps = useSortableList(sortableItems, moveSortableFeature);
 
   const removeFeature = useCallback(
     (index: number) => {
@@ -113,49 +133,41 @@ export default function FeatureEntriesEditor({
 
       {value.length > 0 && (
         <VStack align="stretch" gap={1} w="full">
-          {value.map((entry, index) => (
-            <HStack
-              borderColor="border"
-              borderWidth={1}
-              gap={2}
-              key={`${entry.id}.${entry.minimum_level}.${index}`}
-              minH={9}
-              px={2}
-              py={1}
-              rounded="sm"
-              w="full"
-            >
-              <Span color="fg.muted" flexShrink={0}>
-                <GripVerticalIcon size={16} />
-              </Span>
+          {value.map((entry, index) => {
+            const sortableProps = getSortableItemProps(sortableItems[index]!.id, index);
 
-              <Text flex={1} minW={0} truncate>
-                {optionMap.get(entry.id)?.label ?? t("unknown")}
-              </Text>
-
-              {entry.minimum_level > 0 && (
-                <Span color="fg.muted" flexShrink={0} fontSize="sm">
-                  {formatLevelLabel(entry.minimum_level, t)}
-                </Span>
-              )}
-
-              <HStack flexShrink={0} gap={0}>
-                <IconButton
-                  Icon={ArrowUpIcon}
-                  disabled={index === 0}
-                  label={t("move_up")}
-                  onClick={() => moveFeature(index, -1)}
-                  size="xs"
-                  variant="ghost"
+            return (
+              <HStack
+                borderColor="border"
+                borderWidth={1}
+                gap={2}
+                key={sortableItems[index]!.id}
+                minH={9}
+                position="relative"
+                px={2}
+                py={1}
+                rounded="sm"
+                w="full"
+                {...sortableProps.itemProps}
+              >
+                {sortableProps.dropPosition && (
+                  <SortableListDropIndicator gap={1} position={sortableProps.dropPosition} />
+                )}
+                <SortableListHandle
+                  label={t("drag_to_reorder")}
+                  {...sortableProps.dragHandleProps}
                 />
-                <IconButton
-                  Icon={ArrowDownIcon}
-                  disabled={index === value.length - 1}
-                  label={t("move_down")}
-                  onClick={() => moveFeature(index, 1)}
-                  size="xs"
-                  variant="ghost"
-                />
+
+                <Text flex={1} minW={0} truncate>
+                  {optionMap.get(entry.id)?.label ?? t("unknown")}
+                </Text>
+
+                {entry.minimum_level > 0 && (
+                  <Span color="fg.muted" flexShrink={0} fontSize="sm">
+                    {formatLevelLabel(entry.minimum_level, t)}
+                  </Span>
+                )}
+
                 <IconButton
                   Icon={XIcon}
                   label={t("remove")}
@@ -164,8 +176,8 @@ export default function FeatureEntriesEditor({
                   variant="ghost"
                 />
               </HStack>
-            </HStack>
-          ))}
+            );
+          })}
         </VStack>
       )}
     </VStack>
@@ -189,17 +201,13 @@ const i18nContext = {
     en: "Add",
     it: "Aggiungi",
   },
+  drag_to_reorder: {
+    en: "Drag to reorder",
+    it: "Trascina per riordinare",
+  },
   level: {
     en: "Level <1>",
     it: "Livello <1>",
-  },
-  move_down: {
-    en: "Move down",
-    it: "Sposta giù",
-  },
-  move_up: {
-    en: "Move up",
-    it: "Sposta su",
   },
   no_result: {
     en: "No result",
