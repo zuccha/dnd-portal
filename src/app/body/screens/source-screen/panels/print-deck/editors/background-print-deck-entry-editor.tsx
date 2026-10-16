@@ -17,7 +17,7 @@ export default function BackgroundPrintDeckEntryEditor({
 
   return (
     <VStack align="stretch" gap={3}>
-      <Field label={localizedResource.abilityScores.label}>
+      <Field label={t("ability_scores")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("abilityScores", {
@@ -29,7 +29,7 @@ export default function BackgroundPrintDeckEntryEditor({
           value={localizedResource.abilityScores.value}
         />
       </Field>
-      <Field label={localizedResource.feat.label}>
+      <Field label={t("feat")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("feat", { ...localizedResource.feat, value })
@@ -38,7 +38,7 @@ export default function BackgroundPrintDeckEntryEditor({
           value={localizedResource.feat.value}
         />
       </Field>
-      <Field label={localizedResource.skillProficiencies.label}>
+      <Field label={t("skill_proficiencies")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("skillProficiencies", {
@@ -50,7 +50,7 @@ export default function BackgroundPrintDeckEntryEditor({
           value={localizedResource.skillProficiencies.value}
         />
       </Field>
-      <Field label={localizedResource.toolProficiency.label}>
+      <Field label={t("tool_proficiencies")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("toolProficiency", {
@@ -71,17 +71,33 @@ export default function BackgroundPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "ability_scores": {
+    en: "Ability Scores",
+    it: "Caratteristiche",
+  },
   "ability_scores.placeholder": {
     en: "e.g. Dexterity, Wisdom, Charisma",
     it: "Es. Destrezza, Saggezza, Carisma",
+  },
+  "feat": {
+    en: "Feat",
+    it: "Talento",
   },
   "feat.placeholder": {
     en: "e.g. Alert",
     it: "Es. Allerta",
   },
+  "skill_proficiencies": {
+    en: "Skill Proficiencies",
+    it: "Competenze nelle Abilità",
+  },
   "skill_proficiencies.placeholder": {
     en: "e.g. Insight, Religion",
     it: "Es. Intuizione, Religione",
+  },
+  "tool_proficiencies": {
+    en: "Tool Proficiencies",
+    it: "Competenze negli Strumenti",
   },
   "tool_proficiency.placeholder": {
     en: "e.g. Calligrapher's Supplies",

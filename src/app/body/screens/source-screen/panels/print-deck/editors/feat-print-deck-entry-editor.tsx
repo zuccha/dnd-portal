@@ -17,7 +17,7 @@ export default function FeatPrintDeckEntryEditor({
 
   return (
     <VStack align="stretch" gap={3}>
-      <Field label={localizedResource.minLevel.label}>
+      <Field label={t("min_level")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("minLevel", { ...localizedResource.minLevel, value })
@@ -26,7 +26,7 @@ export default function FeatPrintDeckEntryEditor({
           value={localizedResource.minLevel.value}
         />
       </Field>
-      <Field label={localizedResource.prerequisite.label}>
+      <Field label={t("prerequisite")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("prerequisite", {
@@ -47,9 +47,17 @@ export default function FeatPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "min_level": {
+    en: "Minimum Level",
+    it: "Livello Minimo",
+  },
   "min_level.placeholder": {
     en: "E.g. 4",
     it: "Es. 4",
+  },
+  "prerequisite": {
+    en: "Prerequisite",
+    it: "Prerequisito",
   },
   "prerequisite.placeholder": {
     en: "E.g. Strength 13 or higher",

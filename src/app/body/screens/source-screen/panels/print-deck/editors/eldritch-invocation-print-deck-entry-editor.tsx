@@ -17,7 +17,7 @@ export default function EldritchInvocationPrintDeckEntryEditor({
 
   return (
     <VStack align="stretch" gap={3}>
-      <Field label={localizedResource.minWarlockLevel.label}>
+      <Field label={t("min_warlock_level")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("minWarlockLevel", {
@@ -29,7 +29,7 @@ export default function EldritchInvocationPrintDeckEntryEditor({
           value={localizedResource.minWarlockLevel.valueWithLabel}
         />
       </Field>
-      <Field label={localizedResource.otherPrerequisite.label}>
+      <Field label={t("other_prerequisites")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("otherPrerequisite", {
@@ -50,9 +50,17 @@ export default function EldritchInvocationPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "min_warlock_level": {
+    en: "Minimum Warlock Level",
+    it: "Livello Minimo da Warlock",
+  },
   "min_warlock_level.placeholder": {
     en: "E.g. Level 5 Warlock",
     it: "Es. Warlock di 5° livello",
+  },
+  "other_prerequisites": {
+    en: "Other Prerequisites",
+    it: "Altri Prerequisiti",
   },
   "prerequisite.placeholder": {
     en: "E.g. Pact of the Blade feature",

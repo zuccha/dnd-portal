@@ -39,7 +39,7 @@ export default function CreaturePrintDeckEntryEditor({
   return (
     <VStack align="stretch" gap={3}>
       <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
-        <Field label={localizedResource.armorClass.label}>
+        <Field label={t("armor_class")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("armorClass", { ...localizedResource.armorClass, value })
@@ -48,7 +48,7 @@ export default function CreaturePrintDeckEntryEditor({
             value={localizedResource.armorClass.value}
           />
         </Field>
-        <Field label={localizedResource.hitPoints.label}>
+        <Field label={t("hit_points")}>
           <HStack>
             <Input
               onValueChange={(value) =>
@@ -73,7 +73,7 @@ export default function CreaturePrintDeckEntryEditor({
             />
           </HStack>
         </Field>
-        <Field label={localizedResource.proficiencyBonus.label}>
+        <Field label={t("proficiency_bonus")}>
           <Input
             disabled={summonedFromSpell}
             onValueChange={(value) =>
@@ -86,7 +86,7 @@ export default function CreaturePrintDeckEntryEditor({
             value={localizedResource.proficiencyBonus.value}
           />
         </Field>
-        <Field label={localizedResource.challengeRating.label}>
+        <Field label={t("challenge_rating")}>
           <Input
             disabled={summonedFromSpell}
             onValueChange={(value) =>
@@ -101,7 +101,7 @@ export default function CreaturePrintDeckEntryEditor({
         </Field>
         <HStack align="flex-start" gridColumn={{ base: "auto", sm: "span 2", xl: "span 6" }}>
           <HStack align="flex-end" flex={1}>
-            <Field label={localizedResource.experience.label}>
+            <Field label={t("experience")}>
               <Input
                 disabled={summonedFromSpell}
                 onValueChange={(value) => updateExperience({ value })}
@@ -109,7 +109,7 @@ export default function CreaturePrintDeckEntryEditor({
                 value={localizedResource.experience.value}
               />
             </Field>
-            <Field label={localizedResource.experience.lair.label}>
+            <Field label={t("lair_experience.label")}>
               <Input
                 disabled={summonedFromSpell}
                 onValueChange={(value) =>
@@ -152,7 +152,7 @@ export default function CreaturePrintDeckEntryEditor({
 
           return (
             <SimpleGrid columns={4} gap={2} key={ability}>
-              <Span alignSelf="center">{score.label}</Span>
+              <Span alignSelf="center">{t(`ability.${ability}`)}</Span>
               <Input
                 aria-label={`${score.label} ${t("score")}`}
                 onValueChange={(value) =>
@@ -192,7 +192,7 @@ export default function CreaturePrintDeckEntryEditor({
       </VStack>
 
       <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
-        <Field label={localizedResource.initiative.label}>
+        <Field label={t("initiative")}>
           <HStack>
             <Input
               onValueChange={(value) =>
@@ -213,7 +213,7 @@ export default function CreaturePrintDeckEntryEditor({
             />
           </HStack>
         </Field>
-        <Field label={localizedResource.perception.label}>
+        <Field label={t("perception")}>
           <HStack>
             <Input
               onValueChange={(value) =>
@@ -236,7 +236,7 @@ export default function CreaturePrintDeckEntryEditor({
         </Field>
       </SimpleGrid>
 
-      <Field label={localizedResource.speed.label}>
+      <Field label={t("speed")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("speed", { ...localizedResource.speed, value })
@@ -247,7 +247,7 @@ export default function CreaturePrintDeckEntryEditor({
       </Field>
 
       <SimpleGrid columns={1} gap={3}>
-        <Field label={localizedResource.skills.label}>
+        <Field label={t("skills")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("skills", { ...localizedResource.skills, value })
@@ -256,7 +256,7 @@ export default function CreaturePrintDeckEntryEditor({
             value={localizedResource.skills.value}
           />
         </Field>
-        <Field label={localizedResource.immunities.label}>
+        <Field label={t("immunities")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("immunities", { ...localizedResource.immunities, value })
@@ -265,7 +265,7 @@ export default function CreaturePrintDeckEntryEditor({
             value={localizedResource.immunities.value}
           />
         </Field>
-        <Field label={localizedResource.resistances.label}>
+        <Field label={t("resistances")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("resistances", { ...localizedResource.resistances, value })
@@ -274,7 +274,7 @@ export default function CreaturePrintDeckEntryEditor({
             value={localizedResource.resistances.value}
           />
         </Field>
-        <Field label={localizedResource.vulnerabilities.label}>
+        <Field label={t("vulnerabilities")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("vulnerabilities", {
@@ -286,7 +286,7 @@ export default function CreaturePrintDeckEntryEditor({
             value={localizedResource.vulnerabilities.value}
           />
         </Field>
-        <Field label={localizedResource.gear.label}>
+        <Field label={t("gear")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("gear", {
@@ -300,7 +300,7 @@ export default function CreaturePrintDeckEntryEditor({
             value={localizedResource.gear.value}
           />
         </Field>
-        <Field label={localizedResource.languagesInfo.label}>
+        <Field label={t("languages")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("languagesInfo", {
@@ -312,7 +312,7 @@ export default function CreaturePrintDeckEntryEditor({
             value={localizedResource.languagesInfo.value}
           />
         </Field>
-        <Field label={localizedResource.senses.label}>
+        <Field label={t("senses")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("senses", { ...localizedResource.senses, value })
@@ -331,9 +331,45 @@ export default function CreaturePrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "ability.charisma": {
+    en: "Charisma",
+    it: "Carisma",
+  },
+  "ability.constitution": {
+    en: "Constitution",
+    it: "Costituzione",
+  },
+  "ability.dexterity": {
+    en: "Dexterity",
+    it: "Destrezza",
+  },
+  "ability.intelligence": {
+    en: "Intelligence",
+    it: "Intelligenza",
+  },
+  "ability.strength": {
+    en: "Strength",
+    it: "Forza",
+  },
+  "ability.wisdom": {
+    en: "Wisdom",
+    it: "Saggezza",
+  },
+  "armor_class": {
+    en: "Armor Class",
+    it: "Classe Armatura",
+  },
   "challenge_rating.placeholder": {
     en: "E.g. 1/4",
     it: "Es. 1/4",
+  },
+  "challenge_rating": {
+    en: "Challenge Rating",
+    it: "Grado di Sfida",
+  },
+  "experience": {
+    en: "Experience Points",
+    it: "Punti Esperienza",
   },
   "experience.placeholder": {
     en: "E.g. 200",
@@ -347,13 +383,33 @@ const i18nContext = {
     en: "E.g. 4d8 + 4",
     it: "Es. 4d8 + 4",
   },
+  "gear": {
+    en: "Equipment",
+    it: "Equipaggiamento",
+  },
+  "hit_points": {
+    en: "Hit Points",
+    it: "Punti Ferita",
+  },
   "has_lair": {
     en: "Display lair XP",
     it: "Mostra PE della tana",
   },
+  "immunities": {
+    en: "Immunities",
+    it: "Immunità",
+  },
+  "initiative": {
+    en: "Initiative",
+    it: "Iniziativa",
+  },
+  "languages": {
+    en: "Languages",
+    it: "Lingue",
+  },
   "lair_experience.label": {
-    en: "XP in lair",
-    it: "PE nella tana",
+    en: "XP in Lair",
+    it: "PE nella Tana",
   },
   "lair_experience.placeholder": {
     en: "E.g. 250",
@@ -371,13 +427,25 @@ const i18nContext = {
     en: "E.g. 10",
     it: "Es. 10",
   },
+  "perception": {
+    en: "Perception",
+    it: "Percezione",
+  },
   "passive.placeholder": {
     en: "E.g. 13",
     it: "Es. 13",
   },
+  "proficiency_bonus": {
+    en: "Proficiency Bonus",
+    it: "Bonus di Competenza",
+  },
   "proficiency_bonus.placeholder": {
     en: "E.g. +4",
     it: "Es. +4",
+  },
+  "resistances": {
+    en: "Resistances",
+    it: "Resistenze",
   },
   "save": {
     en: "Save",
@@ -386,6 +454,14 @@ const i18nContext = {
   "score": {
     en: "Score",
     it: "Valore",
+  },
+  "senses": {
+    en: "Senses",
+    it: "Sensi",
+  },
+  "skills": {
+    en: "Skills",
+    it: "Abilità",
   },
   "spell_level_legend": {
     en: "Spell level legend",
@@ -402,6 +478,10 @@ const i18nContext = {
   "summoned_from_spell": {
     en: "Summoned from a spell",
     it: "Evocato da un incantesimo",
+  },
+  "speed": {
+    en: "Speed",
+    it: "Velocità",
   },
   "gear.placeholder": {
     en: "E.g. Shortsword, Leather Armor",
@@ -430,5 +510,9 @@ const i18nContext = {
   "vulnerabilities.placeholder": {
     en: "E.g. Fire",
     it: "Es. Fuoco",
+  },
+  "vulnerabilities": {
+    en: "Vulnerabilities",
+    it: "Vulnerabilità",
   },
 };

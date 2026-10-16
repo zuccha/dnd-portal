@@ -17,7 +17,7 @@ export default function ManeuverPrintDeckEntryEditor({
 
   return (
     <VStack align="stretch" gap={3}>
-      <Field label={localizedResource.prerequisite.label}>
+      <Field label={t("prerequisite")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("prerequisite", {
@@ -38,6 +38,10 @@ export default function ManeuverPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "prerequisite": {
+    en: "Prerequisite",
+    it: "Prerequisito",
+  },
   "prerequisite.placeholder": {
     en: "E.g. Strength 13 or higher",
     it: "Es. Forza 13 o superiore",

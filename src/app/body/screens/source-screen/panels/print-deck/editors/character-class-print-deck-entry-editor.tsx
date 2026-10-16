@@ -16,17 +16,33 @@ export default function CharacterClassPrintDeckEntryEditor({
   onLocalizedResourceUpdate,
 }: PrintDeckEntryEditorProps<LocalizedCharacterClass>) {
   const { t } = useI18nLangContext(i18nContext);
-  const proficiencyPlaceholders = {
-    [localizedResource.armorProficiencies.label]: t("armor_proficiencies.placeholder"),
-    [localizedResource.savingThrowProficiencies.label]: t("saving_throw_proficiencies.placeholder"),
-    [localizedResource.toolProficiencies.label]: t("tool_proficiencies.placeholder"),
-    [localizedResource.weaponProficiencies.label]: t("weapon_proficiencies.placeholder"),
-  };
+  const proficiencyFields = [
+    {
+      field: localizedResource.savingThrowProficiencies,
+      label: t("saving_throw_proficiencies"),
+      placeholder: t("saving_throw_proficiencies.placeholder"),
+    },
+    {
+      field: localizedResource.weaponProficiencies,
+      label: t("weapon_proficiencies"),
+      placeholder: t("weapon_proficiencies.placeholder"),
+    },
+    {
+      field: localizedResource.armorProficiencies,
+      label: t("armor_proficiencies"),
+      placeholder: t("armor_proficiencies.placeholder"),
+    },
+    {
+      field: localizedResource.toolProficiencies,
+      label: t("tool_proficiencies"),
+      placeholder: t("tool_proficiencies.placeholder"),
+    },
+  ].filter(({ field }) => field.value);
 
   return (
     <VStack align="stretch" gap={3}>
       <HStack align="stretch">
-        <Field label={localizedResource.primaryAbilities.label}>
+        <Field label={t("primary_abilities")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("primaryAbilities", {
@@ -38,7 +54,7 @@ export default function CharacterClassPrintDeckEntryEditor({
             value={localizedResource.primaryAbilities.value}
           />
         </Field>
-        <Field label={localizedResource.hitDie.label}>
+        <Field label={t("hit_die")}>
           <Select.Enum
             onValueChange={(hitDieType) => onLocalizedResourceUpdate("hitDieType", hitDieType)}
             options={dieTypes.map((value) => ({ label: value, value }))}
@@ -48,19 +64,19 @@ export default function CharacterClassPrintDeckEntryEditor({
           />
         </Field>
       </HStack>
-      {localizedResource.proficiencies.map((proficiency, index) => (
-        <Field key={proficiency.label} label={proficiency.label}>
+      {proficiencyFields.map(({ field, label, placeholder }, index) => (
+        <Field key={label} label={label}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate(
                 "proficiencies",
-                localizedResource.proficiencies.map((field, fieldIndex) =>
-                  fieldIndex === index ? { ...field, value } : field,
+                localizedResource.proficiencies.map((proficiency, fieldIndex) =>
+                  fieldIndex === index ? { ...proficiency, value } : proficiency,
                 ),
               )
             }
-            placeholder={proficiencyPlaceholders[proficiency.label]}
-            value={proficiency.value}
+            placeholder={placeholder}
+            value={field.value}
           />
         </Field>
       ))}
@@ -73,25 +89,49 @@ export default function CharacterClassPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "armor_proficiencies": {
+    en: "Armor Proficiencies",
+    it: "Competenze nelle Armature",
+  },
   "armor_proficiencies.placeholder": {
     en: "e.g. Light Armor, Shields",
     it: "Es. Armature Leggere, Scudi",
+  },
+  "hit_die": {
+    en: "Hit Die",
+    it: "Dado Vita",
   },
   "hit_die.placeholder": {
     en: "Select a die",
     it: "Seleziona un dado",
   },
+  "primary_abilities": {
+    en: "Primary Abilities",
+    it: "Caratteristiche Primarie",
+  },
   "primary_abilities.placeholder": {
     en: "e.g. Strength, Dexterity",
     it: "Es. Forza, Destrezza",
+  },
+  "saving_throw_proficiencies": {
+    en: "Saving Throw Proficiencies",
+    it: "Competenze nei Tiri Salvezza",
   },
   "saving_throw_proficiencies.placeholder": {
     en: "e.g. Strength, Constitution",
     it: "Es. Forza, Costituzione",
   },
+  "tool_proficiencies": {
+    en: "Tool Proficiencies",
+    it: "Competenze negli Strumenti",
+  },
   "tool_proficiencies.placeholder": {
     en: "e.g. Thieves' Tools",
     it: "Es. Attrezzi da Ladro",
+  },
+  "weapon_proficiencies": {
+    en: "Weapon Proficiencies",
+    it: "Competenze nelle Armi",
   },
   "weapon_proficiencies.placeholder": {
     en: "e.g. Simple Weapons",

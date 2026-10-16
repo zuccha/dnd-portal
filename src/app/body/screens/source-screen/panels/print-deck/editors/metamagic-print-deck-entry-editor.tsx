@@ -17,7 +17,7 @@ export default function MetamagicPrintDeckEntryEditor({
 
   return (
     <VStack align="stretch" gap={3}>
-      <Field label={localizedResource.prerequisite.label}>
+      <Field label={t("prerequisite")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("prerequisite", {
@@ -29,7 +29,7 @@ export default function MetamagicPrintDeckEntryEditor({
           value={localizedResource.prerequisite.value}
         />
       </Field>
-      <Field label={localizedResource.sorceryPoints.label}>
+      <Field label={t("sorcery_points")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("sorceryPoints", {
@@ -50,9 +50,17 @@ export default function MetamagicPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "prerequisite": {
+    en: "Prerequisite",
+    it: "Prerequisito",
+  },
   "prerequisite.placeholder": {
     en: "E.g. Charisma 13 or higher",
     it: "Es. Carisma 13 o superiore",
+  },
+  "sorcery_points": {
+    en: "Sorcery Points",
+    it: "Punti Stregoneria",
   },
   "sorcery_points.placeholder": {
     en: "E.g. 2 Sorcery Points",

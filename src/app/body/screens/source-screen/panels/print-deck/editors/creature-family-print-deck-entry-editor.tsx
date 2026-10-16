@@ -16,7 +16,7 @@ export default function CreatureFamilyPrintDeckEntryEditor({
 
   return (
     <>
-      <Field label={localizedResource.habitats.label}>
+      <Field label={t("habitats")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("habitats", { ...localizedResource.habitats, value })
@@ -25,7 +25,7 @@ export default function CreatureFamilyPrintDeckEntryEditor({
           value={localizedResource.habitats.value}
         />
       </Field>
-      <Field label={localizedResource.treasures.label}>
+      <Field label={t("treasures")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("treasures", { ...localizedResource.treasures, value })
@@ -34,7 +34,7 @@ export default function CreatureFamilyPrintDeckEntryEditor({
           value={localizedResource.treasures.value}
         />
       </Field>
-      <Field label={localizedResource.creatures.label}>
+      <Field label={t("creatures")}>
         <Input
           onValueChange={(value) =>
             onLocalizedResourceUpdate("creatures", { ...localizedResource.creatures, value })
@@ -52,13 +52,25 @@ export default function CreatureFamilyPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "creatures": {
+    en: "Creatures",
+    it: "Creature",
+  },
   "creatures.placeholder": {
     en: "E.g. Owlbear, Winter Wolf",
     it: "Es. Orsogufo, Lupo Invernale",
   },
+  "habitats": {
+    en: "Habitats",
+    it: "Habitat",
+  },
   "habitats.placeholder": {
     en: "E.g. Arctic, Forest",
     it: "Es. Artico, Foresta",
+  },
+  "treasures": {
+    en: "Treasures",
+    it: "Tesori",
   },
   "treasures.placeholder": {
     en: "E.g. Armaments, Individual",

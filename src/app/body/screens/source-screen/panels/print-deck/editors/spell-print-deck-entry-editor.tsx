@@ -27,7 +27,7 @@ export default function SpellPrintDeckEntryEditor({
             value={localizedResource.level}
           />
         </Field>
-        <Field label={localizedResource.characterClassesLabel}>
+        <Field label={t("classes")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("characterClassAbbreviations", value)
@@ -38,7 +38,7 @@ export default function SpellPrintDeckEntryEditor({
         </Field>
       </HStack>
       <HStack align="stretch">
-        <Field label={localizedResource.castingTime.label}>
+        <Field label={t("casting_time")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("castingTime", {
@@ -50,7 +50,7 @@ export default function SpellPrintDeckEntryEditor({
             value={localizedResource.castingTime.value}
           />
         </Field>
-        <Field label={localizedResource.range.label}>
+        <Field label={t("range")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("range", { ...localizedResource.range, value })
@@ -61,7 +61,7 @@ export default function SpellPrintDeckEntryEditor({
         </Field>
       </HStack>
       <HStack align="stretch">
-        <Field label={localizedResource.components.label}>
+        <Field label={t("components")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("components", { ...localizedResource.components, value })
@@ -70,7 +70,7 @@ export default function SpellPrintDeckEntryEditor({
             value={localizedResource.components.value}
           />
         </Field>
-        <Field label={localizedResource.duration.label}>
+        <Field label={t("duration")}>
           <Input
             onValueChange={(value) =>
               onLocalizedResourceUpdate("duration", {
@@ -83,7 +83,7 @@ export default function SpellPrintDeckEntryEditor({
           />
         </Field>
       </HStack>
-      <Field label={localizedResource.materials.label}>
+      <Field label={t("materials")}>
         <Textarea
           onValueChange={(value) =>
             onLocalizedResourceUpdate("materials", { ...localizedResource.materials, value })
@@ -119,13 +119,25 @@ export default function SpellPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "casting_time": {
+    en: "Casting Time",
+    it: "Lancio",
+  },
   "casting_time.placeholder": {
     en: "E.g. 1 action",
     it: "Es. 1 azione",
   },
+  "classes": {
+    en: "Classes",
+    it: "Classi",
+  },
   "classes.placeholder": {
     en: "E.g. BRD. CLE. DRU.",
     it: "Es. BAR. CHR. DRU.",
+  },
+  "components": {
+    en: "Components",
+    it: "Componenti",
   },
   "components.placeholder": {
     en: "E.g. V, S, M",
@@ -134,6 +146,10 @@ const i18nContext = {
   "concentration": {
     en: "Concentration",
     it: "Concentrazione",
+  },
+  "duration": {
+    en: "Duration",
+    it: "Durata",
   },
   "duration.placeholder": {
     en: "E.g. 1 minute",
@@ -151,9 +167,17 @@ const i18nContext = {
     en: "E.g. 1",
     it: "Es. 1",
   },
+  "materials": {
+    en: "Materials",
+    it: "Materiali",
+  },
   "materials.placeholder": {
     en: "E.g. A pearl worth 100 GP",
     it: "Es. Una perla del valore di 100 mo",
+  },
+  "range": {
+    en: "Range",
+    it: "Gittata",
   },
   "range.placeholder": {
     en: "E.g. 30 ft",

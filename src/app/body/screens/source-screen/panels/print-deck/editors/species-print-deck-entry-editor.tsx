@@ -15,7 +15,7 @@ export default function SpeciesPrintDeckEntryEditor({
   const { t } = useI18nLangContext(i18nContext);
 
   return (
-    <Field label={localizedResource.speed.label}>
+    <Field label={t("speed")}>
       <Input
         onValueChange={(value) =>
           onLocalizedResourceUpdate("speed", { ...localizedResource.speed, value })
@@ -32,6 +32,10 @@ export default function SpeciesPrintDeckEntryEditor({
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "speed": {
+    en: "Speed",
+    it: "Velocità",
+  },
   "speed.placeholder": {
     en: "E.g. 30 ft",
     it: "Es. 9 m",
