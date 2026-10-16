@@ -13,3 +13,5 @@
 - Order properties within object literals alphabetically.
 
 - When returning a localized resource by extending `localizeResource(...)`, place properties from the shared localized resource immediately after the spread, then add a blank line before resource-specific properties.
+
+- Ensure fallback and default values satisfy their runtime schemas, even when TypeScript accepts a value that does not.
