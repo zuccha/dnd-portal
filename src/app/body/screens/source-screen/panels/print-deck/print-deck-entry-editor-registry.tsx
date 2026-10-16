@@ -22,6 +22,7 @@ import SpeciesPrintDeckEntryEditor from "./editors/species-print-deck-entry-edit
 import SpellPrintDeckEntryEditor from "./editors/spell-print-deck-entry-editor";
 import ToolModifierPrintDeckEntryEditor from "./editors/tool-modifier-print-deck-entry-editor";
 import ToolPrintDeckEntryEditor from "./editors/tool-print-deck-entry-editor";
+import VehiclePrintDeckEntryEditor from "./editors/vehicle-print-deck-entry-editor";
 import WeaponModifierPrintDeckEntryEditor from "./editors/weapon-modifier-print-deck-entry-editor";
 import WeaponPrintDeckEntryEditor from "./editors/weapon-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "./print-deck-entry-editor-props";
@@ -74,6 +75,7 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   spell: SpellPrintDeckEntryEditor,
   tool: ToolPrintDeckEntryEditor,
   tool_modifier: ToolModifierPrintDeckEntryEditor,
+  vehicle: VehiclePrintDeckEntryEditor,
   weapon: WeaponPrintDeckEntryEditor,
   weapon_modifier: WeaponModifierPrintDeckEntryEditor,
 };
