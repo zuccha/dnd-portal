@@ -2,6 +2,7 @@ import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
 import BackgroundPrintDeckEntryEditor from "./editors/background-print-deck-entry-editor";
 import CharacterClassPrintDeckEntryEditor from "./editors/character-class-print-deck-entry-editor";
 import CharacterSubclassPrintDeckEntryEditor from "./editors/character-subclass-print-deck-entry-editor";
+import CreaturePrintDeckEntryEditor from "./editors/creature-print-deck-entry-editor";
 import EldritchInvocationPrintDeckEntryEditor from "./editors/eldritch-invocation-print-deck-entry-editor";
 import FeatPrintDeckEntryEditor from "./editors/feat-print-deck-entry-editor";
 import FeaturePrintDeckEntryEditor from "./editors/feature-print-deck-entry-editor";
@@ -41,6 +42,7 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   background: BackgroundPrintDeckEntryEditor,
   character_class: CharacterClassPrintDeckEntryEditor,
   character_subclass: CharacterSubclassPrintDeckEntryEditor,
+  creature: CreaturePrintDeckEntryEditor,
   eldritch_invocation: EldritchInvocationPrintDeckEntryEditor,
   feat: FeatPrintDeckEntryEditor,
   feature: FeaturePrintDeckEntryEditor,
