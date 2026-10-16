@@ -2,6 +2,7 @@ import { createMemoryStore } from "~/store/memory-store";
 import { type PaletteName } from "~/utils/palette";
 import { createUuid } from "~/utils/uuid";
 import { loadPrintDeck, savePrintDeck } from "./print-deck-indexed-db";
+import type { LocalizedResourceUnion } from "../resources/resource-union";
 import type { PrintDeckEntryInputUnion, PrintDeckEntryUnion } from "./print-deck-entry";
 
 export type { PrintDeckEntryInputUnion, PrintDeckEntryUnion } from "./print-deck-entry";
@@ -146,6 +147,21 @@ function setEntryPalette(entryId: string, paletteName: PaletteName): void {
 }
 
 //------------------------------------------------------------------------------
+// Update Entry Resource
+//------------------------------------------------------------------------------
+
+function updateEntryResource(entryId: string, resource: LocalizedResourceUnion): void {
+  setPrintDeck((prev) => {
+    const index = prev.findIndex((entry) => entry.id === entryId);
+    if (index < 0) return prev;
+
+    const entries = [...prev];
+    entries[index] = { ...prev[index]!, resource: structuredClone(resource) };
+    return entries;
+  });
+}
+
+//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 // Print Deck
 //------------------------------------------------------------------------------
@@ -159,5 +175,6 @@ export const printDeck = {
   moveEntry,
   removeEntry,
   setEntryPalette,
+  updateEntryResource,
   useEntries: printDeckStore.useValue,
 };
