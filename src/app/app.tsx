@@ -1,5 +1,6 @@
-import { VStack } from "@chakra-ui/react";
+import { Center, Span, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useState } from "react";
+import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
 import { loadSourceBundles, loadSourceStates } from "~/models/catalogue/source-bundle-indexed-db";
 import {
@@ -14,6 +15,8 @@ import { autoUpdateSourcesStore } from "./app-settings";
 //------------------------------------------------------------------------------
 
 export default function App() {
+  const { t } = useI18nLangContext(i18nContext);
+  const [downloadingDefaultSource, setDownloadingDefaultSource] = useState(false);
   const [ready, setReady] = useState(false);
 
   useLayoutEffect(() => {
@@ -49,6 +52,7 @@ export default function App() {
 
       if (!localStorage.getItem("initialized")) {
         if (!bundles.length) {
+          if (!cancelled) setDownloadingDefaultSource(true);
           try {
             await downloadDefaultSource(import.meta.env["VITE_DEFAULT_SOURCE_ID"]);
             localStorage.setItem("initialized", "true");
@@ -79,7 +83,26 @@ export default function App() {
     };
   }, []);
 
-  if (!ready) return null;
+  if (!ready)
+    return (
+      <Center h="100vh" w="full">
+        <VStack gap={4}>
+          <Text fontFamily="Mitr" fontSize="3xl" fontWeight="600">
+            <Span>Zorbo</Span>
+            <Span color="fg.error" fontWeight="500">
+              DnD
+            </Span>
+          </Text>
+          <Spinner
+            aria-label={t(downloadingDefaultSource ? "downloading_srd" : "loading")}
+            size="xl"
+          />
+          <Text color="fg.muted" fontSize="sm">
+            {t(downloadingDefaultSource ? "downloading_srd" : "loading")}
+          </Text>
+        </VStack>
+      </Center>
+    );
 
   return (
     <VStack gap={0} h="100vh" overflow="hidden" w="full">
@@ -87,3 +110,18 @@ export default function App() {
     </VStack>
   );
 }
+
+//------------------------------------------------------------------------------
+// I18n Context
+//------------------------------------------------------------------------------
+
+const i18nContext = {
+  downloading_srd: {
+    en: "Downloading SRD…",
+    it: "Download della SRD…",
+  },
+  loading: {
+    en: "Loading…",
+    it: "Caricamento…",
+  },
+};
