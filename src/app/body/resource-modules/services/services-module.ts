@@ -47,6 +47,6 @@ export const resourceModule = createResourceModule(
       form: serviceForm,
       parseFormData: serviceFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

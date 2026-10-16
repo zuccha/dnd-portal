@@ -47,10 +47,10 @@ export default function ResourcePrintDeckEntryEditor({
         }
       >
         <Textarea
-          onValueChange={(value) => onLocalizedResourceUpdate("details", value)}
+          onValueChange={(value) => onLocalizedResourceUpdate("description", value)}
           placeholder={t("details.placeholder")}
           rows={8}
-          value={localizedResource.details}
+          value={localizedResource.description}
         />
       </Field>
       <HStack align="flex-start" gap={4}>

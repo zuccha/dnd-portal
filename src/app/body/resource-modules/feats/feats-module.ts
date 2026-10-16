@@ -47,6 +47,6 @@ export const resourceModule = createResourceModule(
       form: featForm,
       parseFormData: featFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

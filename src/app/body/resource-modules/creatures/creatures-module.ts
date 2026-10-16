@@ -70,6 +70,6 @@ export const resourceModule = createResourceModule(
       form: creatureForm,
       parseFormData: creatureFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

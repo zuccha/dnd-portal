@@ -25,7 +25,7 @@ export type ResourceDetailAction = {
 
 type ResourceDetailHeader = {
   descriptor: string;
-  details: string;
+  description: string;
   image_url?: string | null;
   name: string;
   page: string;
@@ -54,7 +54,7 @@ export default function ResourceDetail({
 
   if (!resource) return null;
 
-  const details = resolveSystemText(resource.details, system).replace(
+  const details = resolveSystemText(resource.description, system).replace(
     /[\r\n]*##(.+?)##[\r\n]*/g,
     "##$1##",
   );

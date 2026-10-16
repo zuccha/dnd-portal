@@ -62,6 +62,6 @@ export const resourceModule = createResourceModule(
       form: characterClassForm,
       parseFormData: characterClassFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

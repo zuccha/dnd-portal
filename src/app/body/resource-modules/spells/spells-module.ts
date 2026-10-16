@@ -76,6 +76,6 @@ export const resourceModule = createResourceModule(
       form: spellForm,
       parseFormData: spellFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

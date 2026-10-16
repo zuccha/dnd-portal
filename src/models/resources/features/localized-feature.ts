@@ -186,7 +186,7 @@ export function localizeFeature(
   return {
     ...localizeResource(feature, context),
     descriptor: context.t("descriptor"),
-    details: translate(feature.description, context.lang),
+    description: translate(feature.description, context.lang),
 
     display_name: {
       label: context.t("display_name"),

@@ -77,7 +77,7 @@ export function localizeService(
   return {
     ...localizeResource(service, context),
     descriptor: category,
-    details: translate(service.description, context.lang),
+    description: translate(service.description, context.lang),
 
     availability: { label: context.t("availability"), value: availability },
     category: { label: context.t("category"), value: category },

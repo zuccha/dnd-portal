@@ -5,7 +5,7 @@ import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateFeatCategory } from "../../types/feat-category";
 import {
   type ResourceLocalizationContext,
-  formatDetails,
+  formatDescription,
   localizeResource,
   localizedFieldSchema,
   localizedResourceSchema,
@@ -68,7 +68,7 @@ export function localizeFeat(feat: Feat, context: FeatLocalizationContext): Loca
     ...localizeResource(feat, context),
     descriptor: context.ti("descriptor", category),
     category,
-    details: formatDetails(description, features),
+    description: formatDescription(description, features),
 
     minimum_level: { label: context.t("min_level"), value: minLevel },
     prerequisite: { label: context.t("prerequisite"), value: prerequisite },

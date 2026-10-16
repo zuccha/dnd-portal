@@ -61,8 +61,8 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
   );
 
   const details = useMemo(
-    () => resolveSystemText(localizedResource.details, system),
-    [localizedResource.details, system],
+    () => resolveSystemText(localizedResource.description, system),
+    [localizedResource.description, system],
   );
 
   if (mode === "scroll")

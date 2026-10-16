@@ -229,15 +229,15 @@ function Arrow({ label, palette, value }: ArrowProps) {
 }
 
 //------------------------------------------------------------------------------
-// Details
+// Description
 //------------------------------------------------------------------------------
 
-type DetailsProps = {
+type DescriptionProps = {
   children: string;
   palette: Palette;
 };
 
-function Details({ children, palette }: DetailsProps) {
+function Description({ children, palette }: DescriptionProps) {
   const bleed = useBleed();
 
   return (
@@ -269,75 +269,6 @@ function Details({ children, palette }: DetailsProps) {
           <RichText hyphens="auto" key={paragraphIndex} text={paragraph} />
         ),
       )}
-    </VStack>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Entry
-//------------------------------------------------------------------------------
-
-type EntryProps = {
-  children: string;
-  label: string;
-  palette: Palette;
-};
-
-function Entry({ children, label, palette }: EntryProps) {
-  const bleed = useBleed();
-  const px = `${remToIn(1) + bleed.x}in`;
-
-  return (
-    <VStack align="flex-start" lineHeight={1} px={px} w="full">
-      <VStack
-        align="flex-start"
-        borderColor={palette["800"]}
-        borderLeftWidth={px3}
-        gap={0}
-        pl={rem0500}
-        w="full"
-      >
-        <Span color={palette["800"]} fontWeight="bold">
-          {label}
-        </Span>
-        {children.split("\n").map((paragraph, paragraphIndex) => (
-          <RichText key={paragraphIndex} text={paragraph} />
-        ))}
-      </VStack>
-    </VStack>
-  );
-}
-
-//------------------------------------------------------------------------------
-// Info
-//------------------------------------------------------------------------------
-
-type InfoProps = {
-  children: string;
-  compact?: boolean;
-  palette: Palette;
-};
-
-function Info({ children, compact, palette }: InfoProps) {
-  const bleed = useBleed();
-
-  return (
-    <VStack
-      align="flex-start"
-      bgColor={`${palette[50]}99`}
-      borderColor={palette[800]}
-      borderYWidth={px1}
-      fontSize={compact ? rem0750 : undefined}
-      fontStyle="italic"
-      gap={0}
-      lineHeight={1}
-      px={`${remToIn(1) + bleed.x}in`}
-      py={rem0500}
-      w="full"
-    >
-      {children.split("\n").map((paragraph, paragraphIndex) => (
-        <RichText key={paragraphIndex} text={paragraph} />
-      ))}
     </VStack>
   );
 }
@@ -441,10 +372,8 @@ function BleedGuide({ corner, x, y }: BleedGuideProps) {
 
 const PokerCard = {
   Arrow,
-  Details,
-  Entry,
+  Details: Description,
   Frame,
-  Info,
   LabeledValues,
   Separator,
 

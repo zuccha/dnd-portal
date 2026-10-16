@@ -52,6 +52,6 @@ export const resourceModule = createResourceModule(
       form: backgroundForm,
       parseFormData: backgroundFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

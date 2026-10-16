@@ -42,7 +42,7 @@ export type ResourcesTableRowExtra<R extends Resource, L extends LocalizedResour
     key: keyof L;
     label: I18nString;
   })[];
-  detailsKey?: keyof L;
+  hasDescription?: boolean;
 };
 
 //------------------------------------------------------------------------------
@@ -99,9 +99,9 @@ export function createResourcesTableRow<
       localizedResource.name,
       sourceEditable,
     );
-    const details =
-      extra.detailsKey && localizedResource[extra.detailsKey]
-        ? resolveSystemText(String(localizedResource[extra.detailsKey]), system)
+    const description =
+      extra.hasDescription && localizedResource.description
+        ? resolveSystemText(String(localizedResource.description), system)
         : "";
     const visibleActions = extra.actions?.filter((action) => action.isVisible(resource)) ?? [];
 
@@ -154,7 +154,7 @@ export function createResourcesTableRow<
     );
 
     const toggleExpansion = useCallback(() => {
-      if (!extra.detailsKey) return;
+      if (!extra.hasDescription) return;
       context.setResourceExpansion(resource.id, false, (prev) => !prev);
     }, [resource.id]);
 
@@ -163,7 +163,7 @@ export function createResourcesTableRow<
 
     return (
       <>
-        <Table.Row cursor={extra.detailsKey ? "pointer" : undefined} onClick={toggleExpansion}>
+        <Table.Row cursor={extra.hasDescription ? "pointer" : undefined} onClick={toggleExpansion}>
           <Table.Cell textAlign="center" w="4em">
             <Checkbox
               mt={0.5}
@@ -292,13 +292,13 @@ export function createResourcesTableRow<
           )}
         </Table.Row>
 
-        {extra.detailsKey && expanded && (
+        {extra.hasDescription && expanded && (
           <Table.Row bgColor="bg.muted" w="full">
             <Table.Cell colSpan={columnCount}>
               <Box contain="inline-size" w="full">
                 <VStack align="flex-start" gap={1} minW={0} w="full">
-                  {details ? (
-                    details
+                  {description ? (
+                    description
                       .split(/[\n\r]/)
                       .map((paragraph, i) => (
                         <RichText

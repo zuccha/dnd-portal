@@ -13,7 +13,7 @@ import { toolStore } from "../equipment/tools/tool-store";
 import { featStore } from "../feats/feat-store";
 import {
   type ResourceLocalizationContext,
-  formatDetails,
+  formatDescription,
   localizeResource,
   localizedFieldSchema,
   localizedResourceSchema,
@@ -153,7 +153,7 @@ export function localizeBackground(
   return {
     ...localizeResource(background, context),
     descriptor: context.t("descriptor"),
-    details: formatDetails(
+    description: formatDescription(
       startingEquipment ? context.ti("starting_equipment", startingEquipment) : "",
     ),
 

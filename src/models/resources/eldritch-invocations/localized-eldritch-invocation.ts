@@ -55,7 +55,7 @@ export function localizeEldritchInvocation(
   return {
     ...localizeResource(eldritchInvocation, context),
     descriptor: context.t("descriptor"),
-    details: translate(eldritchInvocation.description, context.lang),
+    description: translate(eldritchInvocation.description, context.lang),
 
     minimum_warlock_level: {
       label: context.t("minimum_warlock_level"),

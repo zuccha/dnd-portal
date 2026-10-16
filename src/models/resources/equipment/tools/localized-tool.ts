@@ -78,10 +78,10 @@ export function localizeTool(tool: Tool, context: ToolLocalizationContext): Loca
   return {
     ...equipment,
     descriptor: tool.is_magic ? context.ti("subtitle.magic", type, equipment.rarity.value) : type,
-    details: [
+    description: [
       context.tpi("utilize", utilizeCount, utilize),
       context.tpi("craft", tool.craft_ids.length, craft),
-      equipment.details,
+      equipment.description,
     ]
       .filter((text) => text)
       .join("\n\n"),

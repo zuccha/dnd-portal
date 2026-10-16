@@ -54,7 +54,7 @@ export function localizeMetamagic(
   return {
     ...localizeResource(metamagic, context),
     descriptor: context.t("descriptor"),
-    details: translate(metamagic.description, context.lang),
+    description: translate(metamagic.description, context.lang),
 
     prerequisite: {
       label: context.tp("prerequisites", prerequisite?.includes(",") ? 2 : 1),

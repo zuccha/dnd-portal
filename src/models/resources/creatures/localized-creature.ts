@@ -769,7 +769,7 @@ export function localizeCreature(
     descriptor: tagText
       ? ti("subtitle.with_tags", sizes, type, alignment, tagText)
       : ti("subtitle.without_tags", sizes, type, alignment),
-    details,
+    description: details,
 
     ability_score_headers: abilityScoreHeaders,
     ability_scores: abilityScores,

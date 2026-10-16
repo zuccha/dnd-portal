@@ -15,7 +15,7 @@ import { equipmentReferenceStore } from "../equipment/equipment-reference-store"
 import { toolStore } from "../equipment/tools/tool-store";
 import {
   type ResourceLocalizationContext,
-  formatDetails,
+  formatDescription,
   localizeResource,
   localizedFieldSchema,
   localizedResourceLinkSchema,
@@ -231,7 +231,7 @@ export function localizeCharacterClass(
   return {
     ...localizeResource(characterClass, context),
     descriptor: context.t("descriptor"),
-    details: formatDetails(
+    description: formatDescription(
       skillProficienciesPool,
       startingEquipment ? context.ti("starting_equipment", startingEquipment) : "",
       features,

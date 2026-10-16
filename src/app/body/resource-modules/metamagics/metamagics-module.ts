@@ -46,6 +46,6 @@ export const resourceModule = createResourceModule(
       form: metamagicForm,
       parseFormData: metamagicFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

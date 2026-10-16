@@ -51,7 +51,7 @@ export function localizeManeuver(
   return {
     ...localizeResource(maneuver, context),
     descriptor: context.t("descriptor"),
-    details: translate(maneuver.description, context.lang),
+    description: translate(maneuver.description, context.lang),
 
     prerequisite: {
       label: context.tp("prerequisites", prerequisite?.includes(",") ? 2 : 1),

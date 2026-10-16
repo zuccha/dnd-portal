@@ -32,6 +32,6 @@ export const resourceModule = createResourceModule(
       form: featureForm,
       parseFormData: featureFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

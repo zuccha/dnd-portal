@@ -80,7 +80,7 @@ export const resourceModule = createResourceModule(
     table: {
       actions,
       columns,
-      detailsKey: "details",
+      hasDescription: true,
     },
   },
 );

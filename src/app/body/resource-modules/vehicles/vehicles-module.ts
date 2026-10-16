@@ -77,6 +77,6 @@ export const resourceModule = createResourceModule(
       form: vehicleForm,
       parseFormData: vehicleFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

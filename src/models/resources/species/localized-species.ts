@@ -8,7 +8,7 @@ import { useTranslateCreatureSize } from "../../types/creature-size";
 import { useTranslateCreatureType } from "../../types/creature-type";
 import {
   type ResourceLocalizationContext,
-  formatDetails,
+  formatDescription,
   localizeResource,
   localizedFieldSchema,
   localizedResourceSchema,
@@ -89,7 +89,7 @@ export function localizeSpecies(
   return {
     ...localizeResource(species, context),
     descriptor: context.ti("descriptor", sizes, type),
-    details: formatDetails(description, features),
+    description: formatDescription(description, features),
 
     sizes: { label: context.t("sizes"), value: sizes },
     speed: { label: context.t("speed"), value: speed },

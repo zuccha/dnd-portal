@@ -40,6 +40,6 @@ export const resourceModule = createResourceModule(
       form: maneuverForm,
       parseFormData: maneuverFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

@@ -8,7 +8,7 @@ import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import {
   type ResourceLocalizationContext,
-  formatDetails,
+  formatDescription,
   localizedFieldSchema,
   localizeResource,
   localizedResourceSchema,
@@ -112,7 +112,7 @@ export function localizeEquipment<E extends Equipment>(
 
   return {
     ...localizeResource(equipment, context),
-    details: formatDetails(attunement, notes, features),
+    description: formatDescription(attunement, notes, features),
 
     attunement: {
       label: context.t("attunement.label"),

@@ -65,7 +65,7 @@ export function localizeCharacterSubclass(
   return {
     ...localizeResource(characterSubclass, context),
     descriptor: context.ti("descriptor", context.characterClassName),
-    details: context.featureEntries,
+    description: context.featureEntries,
     character_class: {
       id: characterSubclass.character_class_id,
       label: context.t("character_class"),

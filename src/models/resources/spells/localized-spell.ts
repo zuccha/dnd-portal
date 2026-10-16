@@ -179,7 +179,7 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
     concentration: spell.has_concentration,
     emphasize_casting_time:
       spell.casting_time === "bonus_action" || spell.casting_time === "reaction",
-    details:
+    description:
       details && upgrade
         ? `${details}\n\n${context.tp("upgrade", spell.level)}\r${upgrade}`
         : details,

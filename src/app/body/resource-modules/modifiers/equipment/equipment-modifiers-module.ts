@@ -113,7 +113,7 @@ export function createEquipmentModifierModule<
       },
       table: {
         columns: columns as ResourcesTableExtra<R, L>["columns"],
-        detailsKey: "details",
+        hasDescription: true,
       },
     },
   );

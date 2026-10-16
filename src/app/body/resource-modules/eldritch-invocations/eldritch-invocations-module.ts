@@ -46,6 +46,6 @@ export const resourceModule = createResourceModule(
       form: eldritchInvocationForm,
       parseFormData: eldritchInvocationFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );

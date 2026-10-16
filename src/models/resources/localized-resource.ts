@@ -48,7 +48,7 @@ export const localizedResourceSchema = <R extends Resource>(
 ) =>
   z.object({
     descriptor: z.string(),
-    details: z.string(),
+    description: z.string(),
     id: z.uuid(),
     image_url: z.string().nullish(),
     is_virtual: z.boolean(),
@@ -106,7 +106,7 @@ export function localizeResource<R extends Resource>(
   const page = translateNumber(resource.page ?? {}, context.lang);
   return {
     descriptor: "",
-    details: "",
+    description: "",
     id: resource.id,
     image_url: resource.image_url,
     is_virtual: resource.is_virtual ?? false,
@@ -124,7 +124,7 @@ export function localizeResource<R extends Resource>(
 // Format Details
 //------------------------------------------------------------------------------
 
-export function formatDetails(...details: string[]): string {
+export function formatDescription(...details: string[]): string {
   return details.filter(Boolean).join("\n\n");
 }
 

@@ -75,7 +75,7 @@ export function localizeVehicle(
   return {
     ...localizeResource(vehicle, context),
     descriptor: context.t("descriptor"),
-    details: translate(vehicle.description, context.lang),
+    description: translate(vehicle.description, context.lang),
 
     armor_class: {
       label: context.t("armor_class"),

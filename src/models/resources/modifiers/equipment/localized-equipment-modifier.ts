@@ -6,7 +6,7 @@ import { useFormatGrams } from "~/measures/weight";
 import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import { useTranslateEquipmentRarity } from "~/models/types/equipment-rarity";
 import {
-  formatDetails,
+  formatDescription,
   localizedFieldSchema,
   localizedResourceLinkSchema,
   useResourceLocalizationContext,
@@ -107,7 +107,7 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
   return {
     ...localizeModifier(equipmentModifier, context),
     descriptor: appliesTo,
-    details: formatDetails(descriptionDelta, attunementNotesDelta),
+    description: formatDescription(descriptionDelta, attunementNotesDelta),
 
     additional_cost:
       equipmentModifier.cost_delta !== 0

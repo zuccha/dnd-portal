@@ -47,6 +47,6 @@ export const resourceModule = createResourceModule(
       form: speciesForm,
       parseFormData: speciesFormDataToResource,
     },
-    table: { columns, detailsKey: "details" },
+    table: { columns, hasDescription: true },
   },
 );
