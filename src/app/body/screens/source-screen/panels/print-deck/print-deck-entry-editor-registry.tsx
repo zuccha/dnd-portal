@@ -1,4 +1,5 @@
 import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
+import ArmorPrintDeckEntryEditor from "./editors/armor-print-deck-entry-editor";
 import BackgroundPrintDeckEntryEditor from "./editors/background-print-deck-entry-editor";
 import CharacterClassPrintDeckEntryEditor from "./editors/character-class-print-deck-entry-editor";
 import CharacterSubclassPrintDeckEntryEditor from "./editors/character-subclass-print-deck-entry-editor";
@@ -10,12 +11,15 @@ import CreatureTreasurePrintDeckEntryEditor from "./editors/creature-treasure-pr
 import EldritchInvocationPrintDeckEntryEditor from "./editors/eldritch-invocation-print-deck-entry-editor";
 import FeatPrintDeckEntryEditor from "./editors/feat-print-deck-entry-editor";
 import FeaturePrintDeckEntryEditor from "./editors/feature-print-deck-entry-editor";
+import ItemPrintDeckEntryEditor from "./editors/item-print-deck-entry-editor";
 import LanguagePrintDeckEntryEditor from "./editors/language-print-deck-entry-editor";
 import ManeuverPrintDeckEntryEditor from "./editors/maneuver-print-deck-entry-editor";
 import MetamagicPrintDeckEntryEditor from "./editors/metamagic-print-deck-entry-editor";
 import PlanePrintDeckEntryEditor from "./editors/plane-print-deck-entry-editor";
 import SpeciesPrintDeckEntryEditor from "./editors/species-print-deck-entry-editor";
 import SpellPrintDeckEntryEditor from "./editors/spell-print-deck-entry-editor";
+import ToolPrintDeckEntryEditor from "./editors/tool-print-deck-entry-editor";
+import WeaponPrintDeckEntryEditor from "./editors/weapon-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "./print-deck-entry-editor-props";
 import type { ComponentType } from "react";
 
@@ -43,6 +47,7 @@ type PrintDeckEntryEditorRegistry = Partial<{
 //------------------------------------------------------------------------------
 
 export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
+  armor: ArmorPrintDeckEntryEditor,
   background: BackgroundPrintDeckEntryEditor,
   character_class: CharacterClassPrintDeckEntryEditor,
   character_subclass: CharacterSubclassPrintDeckEntryEditor,
@@ -54,10 +59,13 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   eldritch_invocation: EldritchInvocationPrintDeckEntryEditor,
   feat: FeatPrintDeckEntryEditor,
   feature: FeaturePrintDeckEntryEditor,
+  item: ItemPrintDeckEntryEditor,
   language: LanguagePrintDeckEntryEditor,
   maneuver: ManeuverPrintDeckEntryEditor,
   metamagic: MetamagicPrintDeckEntryEditor,
   plane: PlanePrintDeckEntryEditor,
   species: SpeciesPrintDeckEntryEditor,
   spell: SpellPrintDeckEntryEditor,
+  tool: ToolPrintDeckEntryEditor,
+  weapon: WeaponPrintDeckEntryEditor,
 };
