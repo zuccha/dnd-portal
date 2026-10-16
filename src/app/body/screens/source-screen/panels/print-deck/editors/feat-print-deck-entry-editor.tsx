@@ -3,6 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedFeat } from "~/models/resources/feats/localized-feat";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
+import ResourcePrintDeckEntryEditor from "./resource-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "../print-deck-entry-editor-props";
 
 //------------------------------------------------------------------------------
@@ -16,29 +17,34 @@ export default function FeatPrintDeckEntryEditor({
   const { t } = useI18nLangContext(i18nContext);
 
   return (
-    <VStack align="stretch" gap={3}>
-      <Field label={t("min_level")}>
-        <Input
-          onValueChange={(value) =>
-            onLocalizedResourceUpdate("minLevel", { ...localizedResource.minLevel, value })
-          }
-          placeholder={t("min_level.placeholder")}
-          value={localizedResource.minLevel.value}
-        />
-      </Field>
-      <Field label={t("prerequisite")}>
-        <Input
-          onValueChange={(value) =>
-            onLocalizedResourceUpdate("prerequisite", {
-              ...localizedResource.prerequisite,
-              value,
-            })
-          }
-          placeholder={t("prerequisite.placeholder")}
-          value={localizedResource.prerequisite.value}
-        />
-      </Field>
-    </VStack>
+    <ResourcePrintDeckEntryEditor
+      localizedResource={localizedResource}
+      onLocalizedResourceUpdate={onLocalizedResourceUpdate}
+    >
+      <VStack align="stretch" gap={3}>
+        <Field label={t("min_level")}>
+          <Input
+            onValueChange={(value) =>
+              onLocalizedResourceUpdate("minLevel", { ...localizedResource.minLevel, value })
+            }
+            placeholder={t("min_level.placeholder")}
+            value={localizedResource.minLevel.value}
+          />
+        </Field>
+        <Field label={t("prerequisite")}>
+          <Input
+            onValueChange={(value) =>
+              onLocalizedResourceUpdate("prerequisite", {
+                ...localizedResource.prerequisite,
+                value,
+              })
+            }
+            placeholder={t("prerequisite.placeholder")}
+            value={localizedResource.prerequisite.value}
+          />
+        </Field>
+      </VStack>
+    </ResourcePrintDeckEntryEditor>
   );
 }
 

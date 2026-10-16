@@ -3,6 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedMetamagic } from "~/models/resources/metamagics/localized-metamagic";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
+import ResourcePrintDeckEntryEditor from "./resource-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "../print-deck-entry-editor-props";
 
 //------------------------------------------------------------------------------
@@ -16,32 +17,37 @@ export default function MetamagicPrintDeckEntryEditor({
   const { t } = useI18nLangContext(i18nContext);
 
   return (
-    <VStack align="stretch" gap={3}>
-      <Field label={t("prerequisite")}>
-        <Input
-          onValueChange={(value) =>
-            onLocalizedResourceUpdate("prerequisite", {
-              ...localizedResource.prerequisite,
-              value,
-            })
-          }
-          placeholder={t("prerequisite.placeholder")}
-          value={localizedResource.prerequisite.value}
-        />
-      </Field>
-      <Field label={t("sorcery_points")}>
-        <Input
-          onValueChange={(value) =>
-            onLocalizedResourceUpdate("sorceryPoints", {
-              ...localizedResource.sorceryPoints,
-              valueWithLabel: value,
-            })
-          }
-          placeholder={t("sorcery_points.placeholder")}
-          value={localizedResource.sorceryPoints.valueWithLabel}
-        />
-      </Field>
-    </VStack>
+    <ResourcePrintDeckEntryEditor
+      localizedResource={localizedResource}
+      onLocalizedResourceUpdate={onLocalizedResourceUpdate}
+    >
+      <VStack align="stretch" gap={3}>
+        <Field label={t("prerequisite")}>
+          <Input
+            onValueChange={(value) =>
+              onLocalizedResourceUpdate("prerequisite", {
+                ...localizedResource.prerequisite,
+                value,
+              })
+            }
+            placeholder={t("prerequisite.placeholder")}
+            value={localizedResource.prerequisite.value}
+          />
+        </Field>
+        <Field label={t("sorcery_points")}>
+          <Input
+            onValueChange={(value) =>
+              onLocalizedResourceUpdate("sorceryPoints", {
+                ...localizedResource.sorceryPoints,
+                valueWithLabel: value,
+              })
+            }
+            placeholder={t("sorcery_points.placeholder")}
+            value={localizedResource.sorceryPoints.valueWithLabel}
+          />
+        </Field>
+      </VStack>
+    </ResourcePrintDeckEntryEditor>
   );
 }
 

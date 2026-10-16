@@ -5,6 +5,7 @@ import { dieTypes } from "~/models/types/die_type";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
 import Select from "~/ui/select";
+import ResourcePrintDeckEntryEditor from "./resource-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "../print-deck-entry-editor-props";
 
 //------------------------------------------------------------------------------
@@ -40,47 +41,52 @@ export default function CharacterClassPrintDeckEntryEditor({
   ].filter(({ field }) => field.value);
 
   return (
-    <VStack align="stretch" gap={3}>
-      <HStack align="stretch">
-        <Field label={t("primary_abilities")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("primaryAbilities", {
-                ...localizedResource.primaryAbilities,
-                value,
-              })
-            }
-            placeholder={t("primary_abilities.placeholder")}
-            value={localizedResource.primaryAbilities.value}
-          />
-        </Field>
-        <Field label={t("hit_die")}>
-          <Select.Enum
-            onValueChange={(hitDieType) => onLocalizedResourceUpdate("hitDieType", hitDieType)}
-            options={dieTypes.map((value) => ({ label: value, value }))}
-            placeholder={t("hit_die.placeholder")}
-            value={localizedResource.hitDieType}
-            withinDialog
-          />
-        </Field>
-      </HStack>
-      {proficiencyFields.map(({ field, label, placeholder }, index) => (
-        <Field key={label} label={label}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate(
-                "proficiencies",
-                localizedResource.proficiencies.map((proficiency, fieldIndex) =>
-                  fieldIndex === index ? { ...proficiency, value } : proficiency,
-                ),
-              )
-            }
-            placeholder={placeholder}
-            value={field.value}
-          />
-        </Field>
-      ))}
-    </VStack>
+    <ResourcePrintDeckEntryEditor
+      localizedResource={localizedResource}
+      onLocalizedResourceUpdate={onLocalizedResourceUpdate}
+    >
+      <VStack align="stretch" gap={3}>
+        <HStack align="stretch">
+          <Field label={t("primary_abilities")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("primaryAbilities", {
+                  ...localizedResource.primaryAbilities,
+                  value,
+                })
+              }
+              placeholder={t("primary_abilities.placeholder")}
+              value={localizedResource.primaryAbilities.value}
+            />
+          </Field>
+          <Field label={t("hit_die")}>
+            <Select.Enum
+              onValueChange={(hitDieType) => onLocalizedResourceUpdate("hitDieType", hitDieType)}
+              options={dieTypes.map((value) => ({ label: value, value }))}
+              placeholder={t("hit_die.placeholder")}
+              value={localizedResource.hitDieType}
+              withinDialog
+            />
+          </Field>
+        </HStack>
+        {proficiencyFields.map(({ field, label, placeholder }, index) => (
+          <Field key={label} label={label}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate(
+                  "proficiencies",
+                  localizedResource.proficiencies.map((proficiency, fieldIndex) =>
+                    fieldIndex === index ? { ...proficiency, value } : proficiency,
+                  ),
+                )
+              }
+              placeholder={placeholder}
+              value={field.value}
+            />
+          </Field>
+        ))}
+      </VStack>
+    </ResourcePrintDeckEntryEditor>
   );
 }
 

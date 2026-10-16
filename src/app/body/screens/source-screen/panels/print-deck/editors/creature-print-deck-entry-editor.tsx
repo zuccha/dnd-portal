@@ -5,6 +5,7 @@ import type { CreatureAbility } from "~/models/types/creature-ability";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
 import Switch from "~/ui/switch";
+import ResourcePrintDeckEntryEditor from "./resource-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "../print-deck-entry-editor-props";
 
 //------------------------------------------------------------------------------
@@ -37,292 +38,306 @@ export default function CreaturePrintDeckEntryEditor({
   ];
 
   return (
-    <VStack align="stretch" gap={3}>
-      <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
-        <Field label={t("armor_class")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("armorClass", { ...localizedResource.armorClass, value })
-            }
-            placeholder={t("number.placeholder")}
-            value={localizedResource.armorClass.value}
-          />
-        </Field>
-        <Field label={t("hit_points")}>
-          <HStack>
+    <ResourcePrintDeckEntryEditor
+      localizedResource={localizedResource}
+      onLocalizedResourceUpdate={onLocalizedResourceUpdate}
+    >
+      <VStack align="stretch" gap={3}>
+        <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
+          <Field label={t("armor_class")}>
             <Input
               onValueChange={(value) =>
-                onLocalizedResourceUpdate("hitPoints", {
-                  ...localizedResource.hitPoints,
-                  value,
-                })
+                onLocalizedResourceUpdate("armorClass", { ...localizedResource.armorClass, value })
               }
               placeholder={t("number.placeholder")}
-              value={localizedResource.hitPoints.value}
+              value={localizedResource.armorClass.value}
             />
-            <Input
-              disabled={summonedFromSpell}
-              onValueChange={(formula) =>
-                onLocalizedResourceUpdate("hitPoints", {
-                  ...localizedResource.hitPoints,
-                  formula,
-                })
-              }
-              placeholder={t("formula.placeholder")}
-              value={localizedResource.hitPoints.formula}
-            />
-          </HStack>
-        </Field>
-        <Field label={t("proficiency_bonus")}>
-          <Input
-            disabled={summonedFromSpell}
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("proficiencyBonus", {
-                ...localizedResource.proficiencyBonus,
-                value,
-              })
-            }
-            placeholder={t("proficiency_bonus.placeholder")}
-            value={localizedResource.proficiencyBonus.value}
-          />
-        </Field>
-        <Field label={t("challenge_rating")}>
-          <Input
-            disabled={summonedFromSpell}
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("challengeRating", {
-                ...localizedResource.challengeRating,
-                value,
-              })
-            }
-            placeholder={t("challenge_rating.placeholder")}
-            value={localizedResource.challengeRating.value}
-          />
-        </Field>
-        <HStack align="flex-start" gridColumn={{ base: "auto", sm: "span 2", xl: "span 6" }}>
-          <HStack align="flex-end" flex={1}>
-            <Field label={t("experience")}>
+          </Field>
+          <Field label={t("hit_points")}>
+            <HStack>
               <Input
-                disabled={summonedFromSpell}
-                onValueChange={(value) => updateExperience({ value })}
-                placeholder={t("experience.placeholder")}
-                value={localizedResource.experience.value}
-              />
-            </Field>
-            <Field label={t("lair_experience.label")}>
-              <Input
-                disabled={summonedFromSpell}
                 onValueChange={(value) =>
-                  updateExperience({
-                    lair: { ...localizedResource.experience.lair, value },
-                  })
-                }
-                placeholder={t("lair_experience.placeholder")}
-                value={localizedResource.experience.lair.value}
-              />
-            </Field>
-          </HStack>
-          <VStack align="stretch" flex={1} gap={1}>
-            <Field label={t("spell_level_legend")}>
-              <Input
-                disabled={!localizedResource.summonedFromSpell}
-                onValueChange={(value) => onLocalizedResourceUpdate("spellLevelLegend", value)}
-                placeholder={t("spell_level_legend.placeholder")}
-                value={localizedResource.spellLevelLegend}
-              />
-            </Field>
-            <Switch
-              label={t("summoned_from_spell")}
-              onValueChange={(value) => onLocalizedResourceUpdate("summonedFromSpell", value)}
-              value={summonedFromSpell}
-            />
-          </VStack>
-        </HStack>
-      </SimpleGrid>
-
-      <VStack align="stretch" gap={2}>
-        <SimpleGrid columns={4} gap={2}>
-          <Span />
-          <Span fontSize="sm">{t("score")}</Span>
-          <Span fontSize="sm">{t("modifier")}</Span>
-          <Span fontSize="sm">{t("save")}</Span>
-        </SimpleGrid>
-        {abilities.map((ability) => {
-          const score = localizedResource.abilityScores[ability];
-
-          return (
-            <SimpleGrid columns={4} gap={2} key={ability}>
-              <Span alignSelf="center">{t(`ability.${ability}`)}</Span>
-              <Input
-                aria-label={`${score.label} ${t("score")}`}
-                onValueChange={(value) =>
-                  onLocalizedResourceUpdate("abilityScores", {
-                    ...localizedResource.abilityScores,
-                    [ability]: { ...score, score: value },
+                  onLocalizedResourceUpdate("hitPoints", {
+                    ...localizedResource.hitPoints,
+                    value,
                   })
                 }
                 placeholder={t("number.placeholder")}
-                value={score.score}
+                value={localizedResource.hitPoints.value}
               />
               <Input
-                aria-label={`${score.label} ${t("modifier")}`}
+                disabled={summonedFromSpell}
+                onValueChange={(formula) =>
+                  onLocalizedResourceUpdate("hitPoints", {
+                    ...localizedResource.hitPoints,
+                    formula,
+                  })
+                }
+                placeholder={t("formula.placeholder")}
+                value={localizedResource.hitPoints.formula}
+              />
+            </HStack>
+          </Field>
+          <Field label={t("proficiency_bonus")}>
+            <Input
+              disabled={summonedFromSpell}
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("proficiencyBonus", {
+                  ...localizedResource.proficiencyBonus,
+                  value,
+                })
+              }
+              placeholder={t("proficiency_bonus.placeholder")}
+              value={localizedResource.proficiencyBonus.value}
+            />
+          </Field>
+          <Field label={t("challenge_rating")}>
+            <Input
+              disabled={summonedFromSpell}
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("challengeRating", {
+                  ...localizedResource.challengeRating,
+                  value,
+                })
+              }
+              placeholder={t("challenge_rating.placeholder")}
+              value={localizedResource.challengeRating.value}
+            />
+          </Field>
+          <HStack align="flex-start" gridColumn={{ base: "auto", sm: "span 2", xl: "span 6" }}>
+            <HStack align="flex-end" flex={1}>
+              <Field label={t("experience")}>
+                <Input
+                  disabled={summonedFromSpell}
+                  onValueChange={(value) => updateExperience({ value })}
+                  placeholder={t("experience.placeholder")}
+                  value={localizedResource.experience.value}
+                />
+              </Field>
+              <Field label={t("lair_experience.label")}>
+                <Input
+                  disabled={summonedFromSpell}
+                  onValueChange={(value) =>
+                    updateExperience({
+                      lair: { ...localizedResource.experience.lair, value },
+                    })
+                  }
+                  placeholder={t("lair_experience.placeholder")}
+                  value={localizedResource.experience.lair.value}
+                />
+              </Field>
+            </HStack>
+            <VStack align="stretch" flex={1} gap={1}>
+              <Field label={t("spell_level_legend")}>
+                <Input
+                  disabled={!localizedResource.summonedFromSpell}
+                  onValueChange={(value) => onLocalizedResourceUpdate("spellLevelLegend", value)}
+                  placeholder={t("spell_level_legend.placeholder")}
+                  value={localizedResource.spellLevelLegend}
+                />
+              </Field>
+              <Switch
+                label={t("summoned_from_spell")}
+                onValueChange={(value) => onLocalizedResourceUpdate("summonedFromSpell", value)}
+                value={summonedFromSpell}
+              />
+            </VStack>
+          </HStack>
+        </SimpleGrid>
+
+        <VStack align="stretch" gap={2}>
+          <SimpleGrid columns={4} gap={2}>
+            <Span />
+            <Span fontSize="sm">{t("score")}</Span>
+            <Span fontSize="sm">{t("modifier")}</Span>
+            <Span fontSize="sm">{t("save")}</Span>
+          </SimpleGrid>
+          {abilities.map((ability) => {
+            const score = localizedResource.abilityScores[ability];
+
+            return (
+              <SimpleGrid columns={4} gap={2} key={ability}>
+                <Span alignSelf="center">{t(`ability.${ability}`)}</Span>
+                <Input
+                  aria-label={`${score.label} ${t("score")}`}
+                  onValueChange={(value) =>
+                    onLocalizedResourceUpdate("abilityScores", {
+                      ...localizedResource.abilityScores,
+                      [ability]: { ...score, score: value },
+                    })
+                  }
+                  placeholder={t("number.placeholder")}
+                  value={score.score}
+                />
+                <Input
+                  aria-label={`${score.label} ${t("modifier")}`}
+                  onValueChange={(value) =>
+                    onLocalizedResourceUpdate("abilityScores", {
+                      ...localizedResource.abilityScores,
+                      [ability]: { ...score, modifier: value },
+                    })
+                  }
+                  placeholder={t("modifier.placeholder")}
+                  value={score.modifier}
+                />
+                <Input
+                  aria-label={`${score.label} ${t("save")}`}
+                  onValueChange={(value) =>
+                    onLocalizedResourceUpdate("abilityScores", {
+                      ...localizedResource.abilityScores,
+                      [ability]: { ...score, save: value },
+                    })
+                  }
+                  placeholder={t("modifier.placeholder")}
+                  value={score.save}
+                />
+              </SimpleGrid>
+            );
+          })}
+        </VStack>
+
+        <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
+          <Field label={t("initiative")}>
+            <HStack>
+              <Input
                 onValueChange={(value) =>
-                  onLocalizedResourceUpdate("abilityScores", {
-                    ...localizedResource.abilityScores,
-                    [ability]: { ...score, modifier: value },
+                  onLocalizedResourceUpdate("initiative", {
+                    ...localizedResource.initiative,
+                    value,
                   })
                 }
                 placeholder={t("modifier.placeholder")}
-                value={score.modifier}
+                value={localizedResource.initiative.value}
               />
               <Input
-                aria-label={`${score.label} ${t("save")}`}
+                onValueChange={(passive) =>
+                  onLocalizedResourceUpdate("initiative", {
+                    ...localizedResource.initiative,
+                    passive,
+                  })
+                }
+                placeholder={t("passive.placeholder")}
+                value={localizedResource.initiative.passive}
+              />
+            </HStack>
+          </Field>
+          <Field label={t("perception")}>
+            <HStack>
+              <Input
                 onValueChange={(value) =>
-                  onLocalizedResourceUpdate("abilityScores", {
-                    ...localizedResource.abilityScores,
-                    [ability]: { ...score, save: value },
+                  onLocalizedResourceUpdate("perception", {
+                    ...localizedResource.perception,
+                    value,
                   })
                 }
                 placeholder={t("modifier.placeholder")}
-                value={score.save}
+                value={localizedResource.perception.value}
               />
-            </SimpleGrid>
-          );
-        })}
+              <Input
+                onValueChange={(passive) =>
+                  onLocalizedResourceUpdate("perception", {
+                    ...localizedResource.perception,
+                    passive,
+                  })
+                }
+                placeholder={t("passive.placeholder")}
+                value={localizedResource.perception.passive}
+              />
+            </HStack>
+          </Field>
+        </SimpleGrid>
+
+        <Field label={t("speed")}>
+          <Input
+            onValueChange={(value) =>
+              onLocalizedResourceUpdate("speed", { ...localizedResource.speed, value })
+            }
+            placeholder={t("speed.placeholder")}
+            value={localizedResource.speed.value}
+          />
+        </Field>
+
+        <SimpleGrid columns={1} gap={3}>
+          <Field label={t("skills")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("skills", { ...localizedResource.skills, value })
+              }
+              placeholder={t("skills.placeholder")}
+              value={localizedResource.skills.value}
+            />
+          </Field>
+          <Field label={t("immunities")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("immunities", { ...localizedResource.immunities, value })
+              }
+              placeholder={t("immunities.placeholder")}
+              value={localizedResource.immunities.value}
+            />
+          </Field>
+          <Field label={t("resistances")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("resistances", {
+                  ...localizedResource.resistances,
+                  value,
+                })
+              }
+              placeholder={t("resistances.placeholder")}
+              value={localizedResource.resistances.value}
+            />
+          </Field>
+          <Field label={t("vulnerabilities")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("vulnerabilities", {
+                  ...localizedResource.vulnerabilities,
+                  value,
+                })
+              }
+              placeholder={t("vulnerabilities.placeholder")}
+              value={localizedResource.vulnerabilities.value}
+            />
+          </Field>
+          <Field label={t("gear")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("gear", {
+                  ...localizedResource.gear,
+                  currency: "",
+                  entries: [],
+                  value,
+                })
+              }
+              placeholder={t("gear.placeholder")}
+              value={localizedResource.gear.value}
+            />
+          </Field>
+          <Field label={t("languages")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("languagesInfo", {
+                  ...localizedResource.languagesInfo,
+                  value,
+                })
+              }
+              placeholder={t("languages.placeholder")}
+              value={localizedResource.languagesInfo.value}
+            />
+          </Field>
+          <Field label={t("senses")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("senses", { ...localizedResource.senses, value })
+              }
+              placeholder={t("senses.placeholder")}
+              value={localizedResource.senses.value}
+            />
+          </Field>
+        </SimpleGrid>
       </VStack>
-
-      <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
-        <Field label={t("initiative")}>
-          <HStack>
-            <Input
-              onValueChange={(value) =>
-                onLocalizedResourceUpdate("initiative", { ...localizedResource.initiative, value })
-              }
-              placeholder={t("modifier.placeholder")}
-              value={localizedResource.initiative.value}
-            />
-            <Input
-              onValueChange={(passive) =>
-                onLocalizedResourceUpdate("initiative", {
-                  ...localizedResource.initiative,
-                  passive,
-                })
-              }
-              placeholder={t("passive.placeholder")}
-              value={localizedResource.initiative.passive}
-            />
-          </HStack>
-        </Field>
-        <Field label={t("perception")}>
-          <HStack>
-            <Input
-              onValueChange={(value) =>
-                onLocalizedResourceUpdate("perception", { ...localizedResource.perception, value })
-              }
-              placeholder={t("modifier.placeholder")}
-              value={localizedResource.perception.value}
-            />
-            <Input
-              onValueChange={(passive) =>
-                onLocalizedResourceUpdate("perception", {
-                  ...localizedResource.perception,
-                  passive,
-                })
-              }
-              placeholder={t("passive.placeholder")}
-              value={localizedResource.perception.passive}
-            />
-          </HStack>
-        </Field>
-      </SimpleGrid>
-
-      <Field label={t("speed")}>
-        <Input
-          onValueChange={(value) =>
-            onLocalizedResourceUpdate("speed", { ...localizedResource.speed, value })
-          }
-          placeholder={t("speed.placeholder")}
-          value={localizedResource.speed.value}
-        />
-      </Field>
-
-      <SimpleGrid columns={1} gap={3}>
-        <Field label={t("skills")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("skills", { ...localizedResource.skills, value })
-            }
-            placeholder={t("skills.placeholder")}
-            value={localizedResource.skills.value}
-          />
-        </Field>
-        <Field label={t("immunities")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("immunities", { ...localizedResource.immunities, value })
-            }
-            placeholder={t("immunities.placeholder")}
-            value={localizedResource.immunities.value}
-          />
-        </Field>
-        <Field label={t("resistances")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("resistances", { ...localizedResource.resistances, value })
-            }
-            placeholder={t("resistances.placeholder")}
-            value={localizedResource.resistances.value}
-          />
-        </Field>
-        <Field label={t("vulnerabilities")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("vulnerabilities", {
-                ...localizedResource.vulnerabilities,
-                value,
-              })
-            }
-            placeholder={t("vulnerabilities.placeholder")}
-            value={localizedResource.vulnerabilities.value}
-          />
-        </Field>
-        <Field label={t("gear")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("gear", {
-                ...localizedResource.gear,
-                currency: "",
-                entries: [],
-                value,
-              })
-            }
-            placeholder={t("gear.placeholder")}
-            value={localizedResource.gear.value}
-          />
-        </Field>
-        <Field label={t("languages")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("languagesInfo", {
-                ...localizedResource.languagesInfo,
-                value,
-              })
-            }
-            placeholder={t("languages.placeholder")}
-            value={localizedResource.languagesInfo.value}
-          />
-        </Field>
-        <Field label={t("senses")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("senses", { ...localizedResource.senses, value })
-            }
-            placeholder={t("senses.placeholder")}
-            value={localizedResource.senses.value}
-          />
-        </Field>
-      </SimpleGrid>
-    </VStack>
+    </ResourcePrintDeckEntryEditor>
   );
 }
 

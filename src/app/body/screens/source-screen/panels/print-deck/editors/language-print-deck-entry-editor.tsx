@@ -2,6 +2,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedLanguage } from "~/models/resources/languages/localized-language";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
+import ResourcePrintDeckEntryEditor from "./resource-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "../print-deck-entry-editor-props";
 
 //------------------------------------------------------------------------------
@@ -15,15 +16,20 @@ export default function LanguagePrintDeckEntryEditor({
   const { t } = useI18nLangContext(i18nContext);
 
   return (
-    <Field label={t("origin")}>
-      <Input
-        onValueChange={(value) =>
-          onLocalizedResourceUpdate("origin", { ...localizedResource.origin, value })
-        }
-        placeholder={t("origin.placeholder")}
-        value={localizedResource.origin.value}
-      />
-    </Field>
+    <ResourcePrintDeckEntryEditor
+      localizedResource={localizedResource}
+      onLocalizedResourceUpdate={onLocalizedResourceUpdate}
+    >
+      <Field label={t("origin")}>
+        <Input
+          onValueChange={(value) =>
+            onLocalizedResourceUpdate("origin", { ...localizedResource.origin, value })
+          }
+          placeholder={t("origin.placeholder")}
+          value={localizedResource.origin.value}
+        />
+      </Field>
+    </ResourcePrintDeckEntryEditor>
   );
 }
 

@@ -2,6 +2,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedSpecies } from "~/models/resources/species/localized-species";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
+import ResourcePrintDeckEntryEditor from "./resource-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "../print-deck-entry-editor-props";
 
 //------------------------------------------------------------------------------
@@ -15,15 +16,20 @@ export default function SpeciesPrintDeckEntryEditor({
   const { t } = useI18nLangContext(i18nContext);
 
   return (
-    <Field label={t("speed")}>
-      <Input
-        onValueChange={(value) =>
-          onLocalizedResourceUpdate("speed", { ...localizedResource.speed, value })
-        }
-        placeholder={t("speed.placeholder")}
-        value={localizedResource.speed.value}
-      />
-    </Field>
+    <ResourcePrintDeckEntryEditor
+      localizedResource={localizedResource}
+      onLocalizedResourceUpdate={onLocalizedResourceUpdate}
+    >
+      <Field label={t("speed")}>
+        <Input
+          onValueChange={(value) =>
+            onLocalizedResourceUpdate("speed", { ...localizedResource.speed, value })
+          }
+          placeholder={t("speed.placeholder")}
+          value={localizedResource.speed.value}
+        />
+      </Field>
+    </ResourcePrintDeckEntryEditor>
   );
 }
 

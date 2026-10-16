@@ -5,6 +5,7 @@ import Field from "~/ui/field";
 import Input from "~/ui/input";
 import Switch from "~/ui/switch";
 import Textarea from "~/ui/textarea";
+import ResourcePrintDeckEntryEditor from "./resource-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "../print-deck-entry-editor-props";
 
 //------------------------------------------------------------------------------
@@ -18,99 +19,104 @@ export default function SpellPrintDeckEntryEditor({
   const { t } = useI18nLangContext(i18nContext);
 
   return (
-    <VStack align="stretch" gap={3}>
-      <HStack align="stretch">
-        <Field label={t("level")}>
-          <Input
-            onValueChange={(value) => onLocalizedResourceUpdate("level", value)}
-            placeholder={t("level.placeholder")}
-            value={localizedResource.level}
-          />
-        </Field>
-        <Field label={t("classes")}>
-          <Input
+    <ResourcePrintDeckEntryEditor
+      localizedResource={localizedResource}
+      onLocalizedResourceUpdate={onLocalizedResourceUpdate}
+    >
+      <VStack align="stretch" gap={3}>
+        <HStack align="stretch">
+          <Field label={t("level")}>
+            <Input
+              onValueChange={(value) => onLocalizedResourceUpdate("level", value)}
+              placeholder={t("level.placeholder")}
+              value={localizedResource.level}
+            />
+          </Field>
+          <Field label={t("classes")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("characterClassAbbreviations", value)
+              }
+              placeholder={t("classes.placeholder")}
+              value={localizedResource.characterClassAbbreviations}
+            />
+          </Field>
+        </HStack>
+        <HStack align="stretch">
+          <Field label={t("casting_time")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("castingTime", {
+                  ...localizedResource.castingTime,
+                  value,
+                })
+              }
+              placeholder={t("casting_time.placeholder")}
+              value={localizedResource.castingTime.value}
+            />
+          </Field>
+          <Field label={t("range")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("range", { ...localizedResource.range, value })
+              }
+              placeholder={t("range.placeholder")}
+              value={localizedResource.range.value}
+            />
+          </Field>
+        </HStack>
+        <HStack align="stretch">
+          <Field label={t("components")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("components", { ...localizedResource.components, value })
+              }
+              placeholder={t("components.placeholder")}
+              value={localizedResource.components.value}
+            />
+          </Field>
+          <Field label={t("duration")}>
+            <Input
+              onValueChange={(value) =>
+                onLocalizedResourceUpdate("duration", {
+                  ...localizedResource.duration,
+                  value,
+                })
+              }
+              placeholder={t("duration.placeholder")}
+              value={localizedResource.duration.value}
+            />
+          </Field>
+        </HStack>
+        <Field label={t("materials")}>
+          <Textarea
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("characterClassAbbreviations", value)
+              onLocalizedResourceUpdate("materials", { ...localizedResource.materials, value })
             }
-            placeholder={t("classes.placeholder")}
-            value={localizedResource.characterClassAbbreviations}
+            placeholder={t("materials.placeholder")}
+            rows={2}
+            value={localizedResource.materials.value}
           />
         </Field>
-      </HStack>
-      <HStack align="stretch">
-        <Field label={t("casting_time")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("castingTime", {
-                ...localizedResource.castingTime,
-                value,
-              })
-            }
-            placeholder={t("casting_time.placeholder")}
-            value={localizedResource.castingTime.value}
+        <HStack gap={4} wrap="wrap">
+          <Switch
+            label={t("ritual")}
+            onValueChange={(value) => onLocalizedResourceUpdate("ritual", value)}
+            value={localizedResource.ritual}
           />
-        </Field>
-        <Field label={t("range")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("range", { ...localizedResource.range, value })
-            }
-            placeholder={t("range.placeholder")}
-            value={localizedResource.range.value}
+          <Switch
+            label={t("concentration")}
+            onValueChange={(value) => onLocalizedResourceUpdate("concentration", value)}
+            value={localizedResource.concentration}
           />
-        </Field>
-      </HStack>
-      <HStack align="stretch">
-        <Field label={t("components")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("components", { ...localizedResource.components, value })
-            }
-            placeholder={t("components.placeholder")}
-            value={localizedResource.components.value}
+          <Switch
+            label={t("emphasize_casting_time")}
+            onValueChange={(value) => onLocalizedResourceUpdate("emphasizeCastingTime", value)}
+            value={localizedResource.emphasizeCastingTime}
           />
-        </Field>
-        <Field label={t("duration")}>
-          <Input
-            onValueChange={(value) =>
-              onLocalizedResourceUpdate("duration", {
-                ...localizedResource.duration,
-                value,
-              })
-            }
-            placeholder={t("duration.placeholder")}
-            value={localizedResource.duration.value}
-          />
-        </Field>
-      </HStack>
-      <Field label={t("materials")}>
-        <Textarea
-          onValueChange={(value) =>
-            onLocalizedResourceUpdate("materials", { ...localizedResource.materials, value })
-          }
-          placeholder={t("materials.placeholder")}
-          rows={2}
-          value={localizedResource.materials.value}
-        />
-      </Field>
-      <HStack gap={4} wrap="wrap">
-        <Switch
-          label={t("ritual")}
-          onValueChange={(value) => onLocalizedResourceUpdate("ritual", value)}
-          value={localizedResource.ritual}
-        />
-        <Switch
-          label={t("concentration")}
-          onValueChange={(value) => onLocalizedResourceUpdate("concentration", value)}
-          value={localizedResource.concentration}
-        />
-        <Switch
-          label={t("emphasize_casting_time")}
-          onValueChange={(value) => onLocalizedResourceUpdate("emphasizeCastingTime", value)}
-          value={localizedResource.emphasizeCastingTime}
-        />
-      </HStack>
-    </VStack>
+        </HStack>
+      </VStack>
+    </ResourcePrintDeckEntryEditor>
   );
 }
 
