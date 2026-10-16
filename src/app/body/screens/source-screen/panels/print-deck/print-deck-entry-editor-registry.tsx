@@ -1,5 +1,6 @@
 import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
 import LanguagePrintDeckEntryEditor from "./editors/language-print-deck-entry-editor";
+import PlanePrintDeckEntryEditor from "./editors/plane-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "./print-deck-entry-editor-props";
 import type { ComponentType } from "react";
 
@@ -28,4 +29,5 @@ type PrintDeckEntryEditorRegistry = Partial<{
 
 export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   language: LanguagePrintDeckEntryEditor,
+  plane: PlanePrintDeckEntryEditor,
 };

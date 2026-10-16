@@ -13,13 +13,10 @@ import type { PrintDeckEntryEditorProps } from "./print-deck-entry-editor-props"
 import type { ComponentType } from "react";
 
 //------------------------------------------------------------------------------
-// Localized Resource Draft
+// Keys Of Union
 //------------------------------------------------------------------------------
 
-type LocalizedResourceDraftFields = Pick<
-  LocalizedResourceUnion,
-  "descriptor" | "details" | "imageUrl" | "name" | "page" | "sourceCode" | "sourceVersion"
->;
+type KeysOfUnion<T> = T extends T ? keyof T : never;
 
 //------------------------------------------------------------------------------
 // Print Deck Entry Editor Dialog Props
@@ -48,11 +45,9 @@ export default function PrintDeckEntryEditorDialog({
     setDraft(structuredClone(entry.resource));
   }, [entry]);
 
-  const updateDraft = (resource: LocalizedResourceUnion) => setDraft(resource);
-
-  const updateDraftField = <K extends keyof LocalizedResourceDraftFields>(
+  const updateDraftField = <K extends KeysOfUnion<LocalizedResourceUnion>>(
     key: K,
-    value: LocalizedResourceDraftFields[K],
+    value: unknown,
   ) => setDraft((previous) => ({ ...previous, [key]: value }) as LocalizedResourceUnion);
 
   const ResourceEditor = printDeckEntryEditors[draft.kind] as
@@ -97,7 +92,7 @@ export default function PrintDeckEntryEditorDialog({
                 {ResourceEditor && (
                   <ResourceEditor
                     localizedResource={draft}
-                    onLocalizedResourceUpdate={updateDraft}
+                    onLocalizedResourceUpdate={updateDraftField}
                   />
                 )}
                 <Field

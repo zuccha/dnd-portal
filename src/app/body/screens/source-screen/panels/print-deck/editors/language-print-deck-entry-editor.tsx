@@ -18,10 +18,7 @@ export default function LanguagePrintDeckEntryEditor({
     <Field label={t("origin")}>
       <Input
         onValueChange={(value) =>
-          onLocalizedResourceUpdate({
-            ...localizedResource,
-            origin: { ...localizedResource.origin, value },
-          })
+          onLocalizedResourceUpdate("origin", { ...localizedResource.origin, value })
         }
         placeholder={t("origin.placeholder")}
         value={localizedResource.origin.value}
