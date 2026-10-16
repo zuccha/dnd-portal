@@ -7,6 +7,7 @@ import FeaturePrintDeckEntryEditor from "./editors/feature-print-deck-entry-edit
 import LanguagePrintDeckEntryEditor from "./editors/language-print-deck-entry-editor";
 import PlanePrintDeckEntryEditor from "./editors/plane-print-deck-entry-editor";
 import SpeciesPrintDeckEntryEditor from "./editors/species-print-deck-entry-editor";
+import SpellPrintDeckEntryEditor from "./editors/spell-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "./print-deck-entry-editor-props";
 import type { ComponentType } from "react";
 
@@ -42,4 +43,5 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   language: LanguagePrintDeckEntryEditor,
   plane: PlanePrintDeckEntryEditor,
   species: SpeciesPrintDeckEntryEditor,
+  spell: SpellPrintDeckEntryEditor,
 };
