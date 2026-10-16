@@ -4,6 +4,7 @@ import CharacterClassPrintDeckEntryEditor from "./editors/character-class-print-
 import CharacterSubclassPrintDeckEntryEditor from "./editors/character-subclass-print-deck-entry-editor";
 import LanguagePrintDeckEntryEditor from "./editors/language-print-deck-entry-editor";
 import PlanePrintDeckEntryEditor from "./editors/plane-print-deck-entry-editor";
+import SpeciesPrintDeckEntryEditor from "./editors/species-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "./print-deck-entry-editor-props";
 import type { ComponentType } from "react";
 
@@ -36,4 +37,5 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   character_subclass: CharacterSubclassPrintDeckEntryEditor,
   language: LanguagePrintDeckEntryEditor,
   plane: PlanePrintDeckEntryEditor,
+  species: SpeciesPrintDeckEntryEditor,
 };
