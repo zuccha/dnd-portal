@@ -18,6 +18,7 @@ import LanguagePrintDeckEntryEditor from "./editors/language-print-deck-entry-ed
 import ManeuverPrintDeckEntryEditor from "./editors/maneuver-print-deck-entry-editor";
 import MetamagicPrintDeckEntryEditor from "./editors/metamagic-print-deck-entry-editor";
 import PlanePrintDeckEntryEditor from "./editors/plane-print-deck-entry-editor";
+import ServicePrintDeckEntryEditor from "./editors/service-print-deck-entry-editor";
 import SpeciesPrintDeckEntryEditor from "./editors/species-print-deck-entry-editor";
 import SpellPrintDeckEntryEditor from "./editors/spell-print-deck-entry-editor";
 import ToolModifierPrintDeckEntryEditor from "./editors/tool-modifier-print-deck-entry-editor";
@@ -71,6 +72,7 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   maneuver: ManeuverPrintDeckEntryEditor,
   metamagic: MetamagicPrintDeckEntryEditor,
   plane: PlanePrintDeckEntryEditor,
+  service: ServicePrintDeckEntryEditor,
   species: SpeciesPrintDeckEntryEditor,
   spell: SpellPrintDeckEntryEditor,
   tool: ToolPrintDeckEntryEditor,
