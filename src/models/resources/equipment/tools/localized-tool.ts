@@ -77,7 +77,7 @@ export function localizeTool(tool: Tool, context: ToolLocalizationContext): Loca
 
   return {
     ...equipment,
-    descriptor: tool.magic ? context.ti("subtitle.magic", type, equipment.rarity) : type,
+    descriptor: tool.magic ? context.ti("subtitle.magic", type, equipment.rarity.value) : type,
     details: [
       context.tpi("utilize", utilizeCount, utilize),
       context.tpi("craft", tool.craft_ids.length, craft),

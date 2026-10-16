@@ -154,7 +154,7 @@ export function localizeWeapon(
 
   return {
     ...equipment,
-    descriptor: weapon.magic ? context.ti("subtitle.magic", type, equipment.rarity) : type,
+    descriptor: weapon.magic ? context.ti("subtitle.magic", type, equipment.rarity.value) : type,
     details: [
       equipment.details,
       weapon.mastery !== "none"

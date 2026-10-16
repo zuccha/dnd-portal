@@ -29,20 +29,20 @@ export function EquipmentCard<E extends Equipment, L extends LocalizedEquipment<
   return (
     <ResourcePokerCard
       firstPageInfo={
-        localizedResource.cost || localizedResource.weight || firstPageInfoRight ? (
+        localizedResource.cost.value || localizedResource.weight.value || firstPageInfoRight ? (
           <HStack align="flex-end" justify="space-between" px={PokerCard.rem1000} w="full">
             <VStack align="flex-start" gap={0}>
-              {localizedResource.weight && (
+              {localizedResource.weight.value && (
                 <HStack gap={PokerCard.rem0250}>
                   <Icon Icon={ScaleIcon} size="xs" />
-                  <Span>{localizedResource.weight}</Span>
+                  <Span>{localizedResource.weight.value}</Span>
                 </HStack>
               )}
 
-              {localizedResource.cost && (
+              {localizedResource.cost.value && (
                 <HStack gap={PokerCard.rem0250}>
                   <Icon Icon={CoinsIcon} size="xs" />
-                  <Span>{localizedResource.cost}</Span>
+                  <Span>{localizedResource.cost.value}</Span>
                 </HStack>
               )}
             </VStack>

@@ -1,5 +1,4 @@
 import { SimpleGrid, VStack } from "@chakra-ui/react";
-import { useI18nLangContext } from "../../../../i18n/i18n-lang-context";
 import ResourceDetail, { type ResourceDetailAction } from "../resource-detail";
 import ResourceDetailField from "../resource-detail-field";
 import type { Equipment } from "../../../../models/resources/equipment/equipment";
@@ -23,29 +22,33 @@ export default function EquipmentDetail({
   resource: LocalizedEquipmentResource | undefined;
   uses?: ReactNode;
 }) {
-  const { t } = useI18nLangContext(i18nContext);
-  const cost = resource?.cost ?? "";
-  const weight = resource?.weight ?? "";
-
   return (
     <ResourceDetail actions={actions} resource={resource}>
       {resource && (
         <VStack align="stretch" gap={2}>
           <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
-            {cost && <ResourceDetailField label={t("cost")}>{cost}</ResourceDetailField>}
-            {weight && <ResourceDetailField label={t("weight")}>{weight}</ResourceDetailField>}
-            <ResourceDetailField label={t("magic")}>
-              {t(resource.magic ? "yes" : "no")}
+            {resource.cost.value && (
+              <ResourceDetailField label={resource.cost.label}>
+                {resource.cost.value}
+              </ResourceDetailField>
+            )}
+            {resource.weight.value && (
+              <ResourceDetailField label={resource.weight.label}>
+                {resource.weight.value}
+              </ResourceDetailField>
+            )}
+            <ResourceDetailField label={resource.magicStatus.label}>
+              {resource.magicStatus.value}
             </ResourceDetailField>
           </SimpleGrid>
           {resource.magic && (
             <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
-              <ResourceDetailField label={t("rarity")}>{resource.rarity}</ResourceDetailField>
-              {resource._raw.required_attunement_slots > 0 && (
-                <ResourceDetailField label={t("attunement_slots")}>
-                  {resource._raw.required_attunement_slots}
-                </ResourceDetailField>
-              )}
+              <ResourceDetailField label={resource.rarity.label}>
+                {resource.rarity.value}
+              </ResourceDetailField>
+              <ResourceDetailField label={resource.attunement.label}>
+                {resource.attunement.value}
+              </ResourceDetailField>
             </SimpleGrid>
           )}
           {uses && (
@@ -63,17 +66,3 @@ export default function EquipmentDetail({
     </ResourceDetail>
   );
 }
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  attunement_slots: { en: "Attunement Slots", it: "Slot di Sintonia" },
-  cost: { en: "Cost", it: "Costo" },
-  magic: { en: "Magical", it: "Magico" },
-  no: { en: "No", it: "No" },
-  rarity: { en: "Rarity", it: "Rarità" },
-  yes: { en: "Yes", it: "Sì" },
-  weight: { en: "Weight", it: "Peso" },
-};

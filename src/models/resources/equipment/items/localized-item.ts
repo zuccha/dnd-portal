@@ -60,7 +60,7 @@ export function localizeItem(item: Item, context: ItemLocalizationContext): Loca
       : context.translateItemType(item.type);
 
   const equipment = localizeEquipment(item, context);
-  const rarity = item.magic ? equipment.rarity : "";
+  const rarity = item.magic ? equipment.rarity.value : "";
   const charges = item.charges ?? 0;
   const useCountLabel = item.consumable
     ? context.tp("usages", charges)
@@ -77,7 +77,6 @@ export function localizeItem(item: Item, context: ItemLocalizationContext): Loca
   return {
     ...equipment,
     descriptor,
-    rarity,
 
     charges: charges > 0 ? `${charges}` : "-",
     consumable: item.consumable,
@@ -114,7 +113,6 @@ const i18nContext = {
     en: "Mundane Item",
     it: "Oggetto Mondano",
   },
-  "no": { en: "No", it: "No" },
   "usages/*": { en: "Usages", it: "Utilizzi" },
   "usages/1": { en: "Use", it: "Utilizzo" },
   "wondrous_item": {
@@ -123,5 +121,4 @@ const i18nContext = {
   },
   "uses.remaining": { en: "___ / <1>", it: "___ / <1>" },
   "uses.value": { en: "One usage", it: "Un utilizzo" },
-  "yes": { en: "Yes", it: "Sì" },
 };

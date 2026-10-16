@@ -9,6 +9,7 @@ import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import {
   type ResourceLocalizationContext,
   formatDetails,
+  localizedFieldSchema,
   localizeResource,
   localizedResourceSchema,
   useResourceLocalizationContext,
@@ -25,11 +26,12 @@ export const localizedEquipmentSchema = <E extends Equipment>(
   kindSchema: ZodType<E["kind"]>,
 ) =>
   localizedResourceSchema(equipmentSchema, kindSchema).extend({
-    cost: z.string(),
+    attunement: localizedFieldSchema,
+    cost: localizedFieldSchema,
     magic: z.boolean(),
-    magic_type: z.string(),
-    rarity: z.string(),
-    weight: z.string(),
+    magicStatus: localizedFieldSchema,
+    rarity: localizedFieldSchema,
+    weight: localizedFieldSchema,
   });
 
 export type LocalizedEquipment<E extends Equipment> = z.infer<
@@ -66,8 +68,8 @@ export function useEquipmentLocalizationContext(
   return useMemo(
     () => ({
       ...resourceContext,
-      formatCost,
       featureEntries,
+      formatCost,
       formatWeight,
       translateRarity,
     }),
@@ -99,19 +101,40 @@ export function localizeEquipment<E extends Equipment>(
       : "";
   const notes = translate(equipment.notes, context.lang);
   const features = context.featureEntries;
+  const cost = equipment.cost === null ? "" : context.formatCost(equipment.cost);
+  const attunementValue =
+    attunementSlots <= 0
+      ? context.t("no")
+      : attunementSlots === 1
+        ? context.t("yes")
+        : context.ti("attunement.slots", `${attunementSlots}`);
+  const weight = equipment.weight === null ? "" : context.formatWeight(equipment.weight);
 
   return {
     ...localizeResource(equipment, context),
     details: formatDetails(attunement, notes, features),
-    cost: equipment.cost === null ? "" : context.formatCost(equipment.cost),
+
+    attunement: {
+      label: context.t("attunement.label"),
+      value: attunementValue,
+    },
+    cost: {
+      label: context.t("cost"),
+      value: cost,
+    },
     magic: equipment.magic,
-    magic_type: equipment.magic
-      ? equipment.rarity === "artifact"
-        ? context.t("magic_type.magic.artifact")
-        : context.ti("magic_type.magic", rarity)
-      : context.t("magic_type.non_magic"),
-    rarity,
-    weight: equipment.weight === null ? "" : context.formatWeight(equipment.weight),
+    magicStatus: {
+      label: context.t("magic"),
+      value: context.t(equipment.magic ? "yes" : "no"),
+    },
+    rarity: {
+      label: context.t("rarity"),
+      value: rarity,
+    },
+    weight: {
+      label: context.t("weight"),
+      value: weight,
+    },
   };
 }
 
@@ -120,6 +143,8 @@ export function localizeEquipment<E extends Equipment>(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "attunement.label": { en: "Attunement", it: "Sintonia" },
+  "attunement.slots": { en: "<1> slots", it: "<1> slot" },
   "attunement.with_notes/*": {
     en: "_Requires attunement <2> (<1> slots)._",
     it: "_Richiede sintonia <2> (<1> slot)._",
@@ -136,16 +161,10 @@ const i18nContext = {
     en: "_Requires attunement._",
     it: "_Richiede sintonia._",
   },
-  "magic_type.magic": {
-    en: "<1> Magic Item",
-    it: "Oggetto Magico <1>",
-  },
-  "magic_type.magic.artifact": {
-    en: "Magic Artifact",
-    it: "Artefatto Magico",
-  },
-  "magic_type.non_magic": {
-    en: "Nonmagic Item",
-    it: "Oggetto Non Magico",
-  },
+  "cost": { en: "Cost", it: "Costo" },
+  "magic": { en: "Magical", it: "Magico" },
+  "no": { en: "No", it: "No" },
+  "rarity": { en: "Rarity", it: "Rarità" },
+  "weight": { en: "Weight", it: "Peso" },
+  "yes": { en: "Yes", it: "Sì" },
 };

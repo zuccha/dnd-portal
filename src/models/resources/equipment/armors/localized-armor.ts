@@ -20,11 +20,9 @@ export const localizedArmorSchema = localizedEquipmentSchema(
   z.literal("armor"),
 ).extend({
   armorClass: localizedFieldSchema,
-  cost: z.string(),
   requirements: localizedFieldSchema,
   stealth: localizedFieldSchema,
   type: z.string(),
-  weight: z.string(),
 });
 
 export type LocalizedArmor = z.infer<typeof localizedArmorSchema>;
@@ -101,7 +99,7 @@ export function localizeArmor(armor: Armor, context: ArmorLocalizationContext): 
 
   return {
     ...equipment,
-    descriptor: armor.magic ? ti("subtitle.magic", type, equipment.rarity) : type,
+    descriptor: armor.magic ? ti("subtitle.magic", type, equipment.rarity.value) : type,
     armorClass: {
       label: t("armor_class"),
       value: armorClass,
