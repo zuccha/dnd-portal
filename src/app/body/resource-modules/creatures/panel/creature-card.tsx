@@ -135,11 +135,19 @@ export function CreatureCard({
             </HStack>
           </VStack>
 
-          {localizedResource.info && (
-            <PokerCard.Info compact={infoCompact} palette={palette}>
-              {localizedResource.info}
-            </PokerCard.Info>
-          )}
+          <PokerCard.LabeledValues
+            compact={infoCompact}
+            fields={[
+              localizedResource.skills,
+              localizedResource.immunities,
+              localizedResource.resistances,
+              localizedResource.vulnerabilities,
+              localizedResource.gear,
+              localizedResource.languagesInfo,
+              localizedResource.senses,
+            ]}
+            palette={palette}
+          />
         </>
       }
       firstPageInfo={
@@ -175,9 +183,7 @@ type CreatureStatsProps = {
 //------------------------------------------------------------------------------
 
 function StatsSummoned({ localizedResource }: CreatureStatsProps) {
-  const hasSpellLevelAcModifier = localizedResource.armorClassAddsSpellLevel;
-  const hasSpellLevelHpModifier = localizedResource.hasAdditionalHpPerLevel;
-  const showSpellLevelLegend = hasSpellLevelAcModifier || hasSpellLevelHpModifier;
+  const showSpellLevelLegend = Boolean(localizedResource.spellLevelLegend);
 
   return (
     <SimpleGrid
@@ -191,9 +197,9 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
       <GridItem rowSpan={showSpellLevelLegend ? 3 : 2}>
         <StatIcon
           icon={shieldIcon}
-          label={localizedResource.armorClass.cardLabel}
-          valueFontSize={hasSpellLevelAcModifier ? "0.7em" : undefined}
-          value={`${localizedResource.armorClass.value}${hasSpellLevelAcModifier ? "＋X" : ""}`}
+          label={localizedResource.armorClass.shortLabel}
+          valueFontSize={localizedResource.armorClass.value.length > 2 ? "0.7em" : undefined}
+          value={localizedResource.armorClass.value}
         />
       </GridItem>
       <VStack align="flex-start" gap={0} textAlign="left" w="full">
@@ -215,7 +221,6 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
             textAlign="left"
             w="full"
           >
-            <Span>𝑋 = </Span>
             <Span fontStyle="italic">{localizedResource.spellLevelLegend}</Span>
           </Span>
         </GridItem>
@@ -234,7 +239,7 @@ function StatsRegular({ localizedResource }: CreatureStatsProps) {
       <HStack gap={PokerCard.rem0750}>
         <StatIcon
           icon={shieldIcon}
-          label={localizedResource.armorClass.cardLabel}
+          label={localizedResource.armorClass.shortLabel}
           value={localizedResource.armorClass.value}
         />
         <VStack align="flex-start" gap={0} maxW="7em" textAlign="center">
@@ -252,20 +257,20 @@ function StatsRegular({ localizedResource }: CreatureStatsProps) {
             <Span>{localizedResource.proficiencyBonus.value}</Span>
           </Span>
           <Span textAlign="right" w="full">
-            <b>{localizedResource.experience.cardLabel}</b>{" "}
+            <b>{localizedResource.experience.shortLabel}</b>{" "}
             <Span>{localizedResource.experience.value}</Span>
           </Span>
-          {localizedResource.hasLair &&
-            localizedResource.experience.value !== localizedResource.experience.lairValue && (
+          {localizedResource.experience.lair.value &&
+            localizedResource.experience.value !== localizedResource.experience.lair.value && (
               <Span textAlign="right" w="full">
-                <b>{localizedResource.experience.lairLabel}</b>{" "}
-                <Span>{localizedResource.experience.lairValue}</Span>
+                <b>{localizedResource.experience.lair.label}</b>{" "}
+                <Span>{localizedResource.experience.lair.value}</Span>
               </Span>
             )}
         </VStack>
         <StatIcon
           icon={scrollIcon}
-          label={localizedResource.challengeRating.cardLabel}
+          label={localizedResource.challengeRating.shortLabel}
           value={localizedResource.challengeRating.value}
         />
       </HStack>

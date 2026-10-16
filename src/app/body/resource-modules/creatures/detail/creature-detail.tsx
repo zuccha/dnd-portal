@@ -1,15 +1,12 @@
-import { GridItem, SimpleGrid, Span, VStack } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Fragment } from "react";
 import { creatureStore } from "~/models/resources/creatures/creature-store";
 import { resourceDetailRoute } from "~/navigation/routes";
-import RichText from "~/ui/rich-text";
 import RouterLink from "~/ui/router-link";
 import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
 import CreatureDetailAbilityScoreTable from "./creature-detail-ability-score-table";
-import type { ResourceDetailLinkEntry } from "../../resource-detail-links";
-import type { ReactNode } from "react";
 
 type CreatureDetailResource = ReturnType<typeof creatureStore.useLocalizedResource>;
 
@@ -25,43 +22,23 @@ export default function CreatureDetail({
   resource: CreatureDetailResource;
 }) {
   const creature = resource;
-  const linkedResources = useMemo<ResourceDetailLinkEntry[]>(() => {
-    return [
-      ...(creature?.equipment.resources ?? []),
-      ...(creature?.languages.resources ?? []),
-    ].sort((a, b) => b.name.length - a.name.length);
-  }, [creature?.equipment.resources, creature?.languages.resources]);
-  const detailInfoRichTextPatterns = useMemo(() => {
-    const idsByName = new Map<
-      string,
-      { id: string; kind: (typeof linkedResources)[number]["kind"] }[]
-    >();
-    for (const { id, kind, name } of linkedResources) {
-      idsByName.set(name, [...(idsByName.get(name) ?? []), { id, kind }]);
-    }
-    const uniqueNames = [...idsByName]
-      .filter(([, entries]) => entries.length === 1)
-      .map(([name]) => name)
-      .sort((a, b) => b.length - a.length);
-    const linkPattern = uniqueNames.length
-      ? {
-          regex: new RegExp(`(${uniqueNames.map(escapeRegExp).join("|")})`),
-          render: (value: ReactNode) => {
-            if (typeof value !== "string") return value;
-            const [entry] = idsByName.get(value) ?? [];
-            return entry ? (
-              <RouterLink to={resourceDetailRoute(entry.kind, entry.id)}>{value}</RouterLink>
-            ) : (
-              value
-            );
-          },
-        }
-      : undefined;
-
-    return linkPattern
-      ? [...creatureInfoRichTextPatterns, linkPattern]
-      : creatureInfoRichTextPatterns;
-  }, [linkedResources]);
+  const infoFields: {
+    currency?: string;
+    detailParts?: NonNullable<CreatureDetailResource>["languagesInfo"]["detailParts"];
+    entries?: NonNullable<CreatureDetailResource>["gear"]["entries"];
+    label: string;
+    value: string;
+  }[] = creature
+    ? [
+        { ...creature.skills, detailParts: undefined },
+        { ...creature.immunities, detailParts: undefined },
+        { ...creature.resistances, detailParts: undefined },
+        { ...creature.vulnerabilities, detailParts: undefined },
+        creature.gear,
+        creature.languagesInfo,
+        { ...creature.senses, detailParts: undefined },
+      ].filter(({ value }) => value)
+    : [];
 
   return (
     <ResourceDetail actions={actions} resource={creature}>
@@ -81,7 +58,7 @@ export default function CreatureDetail({
 
           <SimpleGrid columns={{ base: 1, md: 3 }} columnGap={6} rowGap={3}>
             <ResourceDetailField label={creature.armorClass.label}>
-              {creature.armorClass.valueWithSpellLevel}
+              {creature.armorClass.value}
             </ResourceDetailField>
             <ResourceDetailField label={creature.hitPoints.label}>
               {creature.hitPoints.valueWithFormula}
@@ -122,39 +99,57 @@ export default function CreatureDetail({
 
           <CreatureDetailAbilityScoreTable creature={creature} />
 
-          {creature.info && (
-            <RichText
-              patterns={detailInfoRichTextPatterns}
-              text={creature.info}
-              whiteSpace="pre-wrap"
-            />
-          )}
+          <VStack align="stretch" gap={1}>
+            {infoFields.map((field) => (
+              <ResourceDetailField key={field.label} label={field.label}>
+                {field.entries
+                  ? field.entries.length || field.currency
+                    ? [
+                        ...field.entries.map((entry, index) => (
+                          <Fragment key={`${entry.resource?.kind}:${entry.resource?.id}:${index}`}>
+                            {index > 0 && ", "}
+                            {entry.resource ? (
+                              <RouterLink
+                                to={resourceDetailRoute(entry.resource.kind, entry.resource.id)}
+                              >
+                                {entry.resource.name}
+                              </RouterLink>
+                            ) : (
+                              entry.name
+                            )}
+                            {entry.notes && ` (${entry.notes})`}
+                            {entry.quantity && ` (${entry.quantity})`}
+                          </Fragment>
+                        )),
+                        ...(field.currency
+                          ? [
+                              <Fragment key="currency">
+                                {field.entries.length > 0 && ", "}
+                                {field.currency}
+                              </Fragment>,
+                            ]
+                          : []),
+                      ]
+                    : field.value
+                  : field.detailParts
+                    ? field.detailParts.map((part, index) =>
+                        part.type === "resource" ? (
+                          <RouterLink
+                            key={`${part.resource.kind}:${part.resource.id}`}
+                            to={resourceDetailRoute(part.resource.kind, part.resource.id)}
+                          >
+                            {part.resource.name}
+                          </RouterLink>
+                        ) : (
+                          <span key={index}>{part.value}</span>
+                        ),
+                      )
+                    : field.value}
+              </ResourceDetailField>
+            ))}
+          </VStack>
         </VStack>
       )}
     </ResourceDetail>
   );
-}
-
-//------------------------------------------------------------------------------
-// Creature Info Rich Text Patterns
-//------------------------------------------------------------------------------
-
-const creatureInfoRichTextPatterns = [
-  {
-    regex: /\*\*(.+?)\*\*/,
-    render: (value: ReactNode) => (
-      <Span color="fg.muted" fontSize="sm" fontWeight="medium">
-        {value}
-      </Span>
-    ),
-  },
-  ...RichText.defaultPatterns.slice(1),
-];
-
-//------------------------------------------------------------------------------
-// Escape Regular Expression
-//------------------------------------------------------------------------------
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
