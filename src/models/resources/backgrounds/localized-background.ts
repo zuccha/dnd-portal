@@ -5,6 +5,7 @@ import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { joinWith } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
+import { nilUuid } from "~/utils/uuid";
 import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
 import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
@@ -72,8 +73,8 @@ export function useBackgroundLocalizationContext(
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
   const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
-  const localizedFeatName = useLocalizedFeatName(background.feat_id ?? "");
-  const localizedToolName = useLocalizedToolName(background.tool_proficiency_id ?? "");
+  const localizedFeatName = useLocalizedFeatName(background.feat_id ?? nilUuid);
+  const localizedToolName = useLocalizedToolName(background.tool_proficiency_id ?? nilUuid);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateCreatureSkill = useTranslateCreatureSkill(context.lang);
 

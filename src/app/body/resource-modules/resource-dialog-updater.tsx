@@ -157,7 +157,7 @@ export function createResourceDialogUpdater<
     const { lang, t, ti } = useI18nLangContext(i18nContext);
 
     const editedResource = useEditedResource();
-    const editedResourceId = editedResource?.id ?? "";
+    const editedResourceId = editedResource?.id;
     const resource = editedResource ?? store.defaultResource;
     const formData = useData();
     const [editorLang, setEditorLang] = useState(lang);
@@ -229,7 +229,9 @@ export function createResourceDialogUpdater<
     const [submit, saving] = useSubmit(
       useCallback(
         (data) =>
-          submitForm(data, { id: editedResourceId, lang: editorLang, resource: editorResource }),
+          editedResourceId
+            ? submitForm(data, { id: editedResourceId, lang: editorLang, resource: editorResource })
+            : Promise.resolve(undefined),
         [editorLang, editorResource, editedResourceId],
       ),
     );

@@ -16,6 +16,7 @@ import CaptionInput from "~/ui/caption-input";
 import IconButton from "~/ui/icon-button";
 import Select, { type SelectOption } from "~/ui/select";
 import { compareObjects } from "~/utils/object";
+import { nilUuid } from "~/utils/uuid";
 
 //------------------------------------------------------------------------------
 // Sidebar Source Selector
@@ -27,9 +28,9 @@ export type SidebarSourceSelectorProps = {
 
 export default function SidebarSourceSelector({ versions }: SidebarSourceSelectorProps) {
   const selectedSourceId = useActiveSourceId();
-  const selectedSource = useSource(selectedSourceId);
+  const selectedSource = useSource(selectedSourceId ?? nilUuid);
   const selectedSourceReadonly = selectedSource?.registry?.access === "read";
-  const hasUnpublishedChanges = useSourceHasUnpublishedChanges(selectedSourceId ?? "");
+  const hasUnpublishedChanges = useSourceHasUnpublishedChanges(selectedSourceId ?? nilUuid);
   const [publishing, setPublishing] = useState(false);
 
   const setSourceId = useCallback((sourceId: string | undefined) => {

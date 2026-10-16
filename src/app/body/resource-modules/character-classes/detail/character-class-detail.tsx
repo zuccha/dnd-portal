@@ -5,6 +5,7 @@ import { characterSubclassStore } from "~/models/resources/character-subclasses/
 import { spellStore } from "~/models/resources/spells/spell-store";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RouterLink from "~/ui/router-link";
+import { nilUuid } from "~/utils/uuid";
 import ResourceDetail, { type ResourceDetailAction } from "../../resource-detail";
 import ResourceDetailField from "../../resource-detail-field";
 import ResourceDetailLinks from "../../resource-detail-links";
@@ -32,7 +33,7 @@ export default function CharacterClassDetail({
 }) {
   const { lang, t, tpi } = useI18nLangContext(i18nContext);
   const characterClass = resource;
-  const spellEntries = useCharacterClassRelatedEntries(characterClass?.id ?? "", "spells");
+  const spellEntries = useCharacterClassRelatedEntries(characterClass?.id ?? nilUuid, "spells");
   const spellIds = spellEntries.map(({ id }) => id);
   const spellNames = useLocalizedSpellNames(spellIds);
   const spellResources = useSpellResources(spellIds);
@@ -50,7 +51,7 @@ export default function CharacterClassDetail({
         .filter((spell) => spell.level === level)
         .sort((a, b) => a.name.localeCompare(b.name, lang)),
     }));
-  const subclassIds = useSubclassResourceIds(characterClass?.sourceId ?? "");
+  const subclassIds = useSubclassResourceIds(characterClass?.sourceId ?? nilUuid);
   const subclasses = useSubclassResources(subclassIds);
   const classSubclassIds = subclasses
     .filter(({ character_class_id }) => character_class_id === characterClass?.id)

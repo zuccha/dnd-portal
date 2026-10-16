@@ -6,6 +6,7 @@ import { createOptionalMemoryStoreSet } from "../../store/optional-set/optional-
 import { createMemoryStoreSet } from "../../store/set/memory-store-set";
 import { areSameArray } from "../../utils/array";
 import { objectKeys } from "../../utils/object";
+import { nilUuid } from "../../utils/uuid";
 import {
   emptyResourceRelations,
   type RelationGroup,
@@ -575,8 +576,8 @@ export function createCatalogue(id: string) {
   // Use Source
   //----------------------------------------------------------------------------
 
-  function useSource(sourceId: string | undefined): Source | undefined {
-    return useSourceById(sourceId ?? "");
+  function useSource(sourceId: string): Source | undefined {
+    return useSourceById(sourceId);
   }
 
   //----------------------------------------------------------------------------
@@ -585,7 +586,7 @@ export function createCatalogue(id: string) {
 
   function useActiveSource(): Source | undefined {
     const activeSourceId = useActiveSourceId();
-    return useSource(activeSourceId);
+    return useSource(activeSourceId ?? nilUuid);
   }
 
   //----------------------------------------------------------------------------
@@ -621,7 +622,7 @@ export function createCatalogue(id: string) {
   // Use Source Editable
   //----------------------------------------------------------------------------
 
-  function useSourceEditable(sourceId: string | undefined): boolean {
+  function useSourceEditable(sourceId: string): boolean {
     const source = useSource(sourceId);
     return canEditSource(source);
   }

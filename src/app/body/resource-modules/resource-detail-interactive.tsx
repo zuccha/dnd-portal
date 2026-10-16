@@ -11,6 +11,7 @@ import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
 import { toaster } from "~/ui/toaster";
+import { nilUuid } from "~/utils/uuid";
 import { useResourceDelete } from "./resource-delete";
 import type { ResourceAction } from "./resource-action";
 import type { ResourceDetailAction } from "./resource-detail";
@@ -51,7 +52,7 @@ export function createResourceDetailInteractive<
   }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const navigate = useNavigate();
-    const sourceEditable = useSourceEditable(resource?.source_id ?? "");
+    const sourceEditable = useSourceEditable(resource?.source_id ?? nilUuid);
     const paletteName = usePaletteName();
     const deleteResource = useResourceDelete(
       store,

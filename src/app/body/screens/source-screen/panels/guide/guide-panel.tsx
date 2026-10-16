@@ -95,7 +95,10 @@ export default function GuidePanel() {
 
       {content.sections.map((section, index) => {
         const group = documentationGroupBySectionId[section.id]!;
-        const previousGroup = documentationGroupBySectionId[content.sections[index - 1]?.id ?? ""];
+        const previousSection = content.sections[index - 1];
+        const previousGroup = previousSection
+          ? documentationGroupBySectionId[previousSection.id]
+          : undefined;
 
         return (
           <Fragment key={section.id}>
@@ -131,7 +134,10 @@ function DocumentationContents({
       <Box color="fg.muted" fontSize="sm">
         {sections.map((section, index) => {
           const group = documentationGroupBySectionId[section.id]!;
-          const previousGroup = documentationGroupBySectionId[sections[index - 1]?.id ?? ""];
+          const previousSection = sections[index - 1];
+          const previousGroup = previousSection
+            ? documentationGroupBySectionId[previousSection.id]
+            : undefined;
           const sectionLink = (
             <Link href={`#${section.id}`} _hover={{ color: "fg" }}>
               {index + 1}. {section.title}

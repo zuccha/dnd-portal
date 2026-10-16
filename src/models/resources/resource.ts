@@ -2,6 +2,7 @@ import z from "zod";
 import { type I18nNumber, i18nNumberSchema } from "~/i18n/i18n-number";
 import { type I18nString, i18nStringSchema } from "~/i18n/i18n-string";
 import type { KeysOfType } from "~/types";
+import { nilUuid } from "~/utils/uuid";
 import { resourceKindSchema } from "../types/resource-kind";
 import { resourceVisibilitySchema } from "../types/resource-visibility";
 import { sourceVersionSchema } from "../types/source-version";
@@ -33,12 +34,12 @@ export type Resource = z.infer<typeof resourceSchema>;
 //------------------------------------------------------------------------------
 
 export const defaultResource: Omit<Resource, "kind"> = {
-  id: "",
+  id: nilUuid,
   image_url: undefined,
   name: {},
   page: {},
   source_code: "",
-  source_id: "",
+  source_id: nilUuid,
   source_version: "dnd5_5",
   virtual: false,
   visibility: "public",
@@ -70,5 +71,5 @@ export type ResourceOption = z.infer<typeof localizedResourceOptionSchema>;
 export const defaultResourceOption: ResourceOption = {
   label: "",
   name: {},
-  value: "",
+  value: nilUuid,
 };
