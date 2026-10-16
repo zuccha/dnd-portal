@@ -23,6 +23,7 @@ const rem0250 = `${remToIn(0.25)}in`;
 const rem0375 = `${remToIn(0.375)}in`;
 const rem0500 = `${remToIn(0.5)}in`;
 const rem0625 = `${remToIn(0.625)}in`;
+const rem0700 = `${remToIn(0.7)}in`;
 const rem0750 = `${remToIn(0.75)}in`;
 const rem0875 = `${remToIn(0.875)}in`;
 const rem1000 = `${remToIn(1)}in`;
@@ -387,6 +388,7 @@ const PokerCard = {
   rem0375,
   rem0500,
   rem0625,
+  rem0700,
   rem0750,
   rem0875,
   rem1000,

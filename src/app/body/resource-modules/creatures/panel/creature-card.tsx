@@ -198,7 +198,9 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
         <StatIcon
           icon={shieldIcon}
           label={localizedResource.armor_class.short_label}
-          valueFontSize={localizedResource.armor_class.value.length > 2 ? "0.7em" : undefined}
+          valueFontSize={
+            localizedResource.armor_class.value.length > 2 ? PokerCard.rem0700 : undefined
+          }
           value={localizedResource.armor_class.value}
         />
       </GridItem>
