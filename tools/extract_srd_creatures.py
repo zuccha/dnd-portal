@@ -128,6 +128,74 @@ ITALIAN_TYPE_VALUES = {
     "Vegetale": "plant",
 }
 
+ITALIAN_TITLE_LOWERCASE_WORDS = frozenset(
+    {
+        "a",
+        "ad",
+        "al",
+        "alla",
+        "alle",
+        "allo",
+        "ai",
+        "agli",
+        "all",
+        "anche",
+        "che",
+        "chi",
+        "coi",
+        "col",
+        "come",
+        "con",
+        "contro",
+        "da",
+        "dal",
+        "dalla",
+        "dalle",
+        "dallo",
+        "dai",
+        "dagli",
+        "dei",
+        "degli",
+        "del",
+        "della",
+        "delle",
+        "dello",
+        "di",
+        "ed",
+        "e",
+        "fra",
+        "gli",
+        "i",
+        "il",
+        "in",
+        "la",
+        "le",
+        "lo",
+        "ma",
+        "nei",
+        "negli",
+        "nel",
+        "nella",
+        "nelle",
+        "nello",
+        "non",
+        "o",
+        "od",
+        "per",
+        "tra",
+        "su",
+        "sugli",
+        "sui",
+        "sul",
+        "sulla",
+        "sulle",
+        "sullo",
+        "un",
+        "una",
+        "uno",
+    }
+)
+
 ABILITY_NAMES = {
     "str": "str",
     "for": "str",
@@ -483,6 +551,25 @@ def _is_italian_descriptor(text: str) -> bool:
     )
 
 
+#------------------------------------------------------------------------------
+# Capitalize Italian Creature Name
+#------------------------------------------------------------------------------
+
+def _capitalize_italian_creature_name(name: str) -> str:
+    word_index = 0
+
+    def capitalize(match: re.Match[str]) -> str:
+        nonlocal word_index
+        word = match.group(0)
+        is_lowercase_word = word.casefold() in ITALIAN_TITLE_LOWERCASE_WORDS
+        word_index += 1
+        if word_index > 1 and is_lowercase_word:
+            return word.lower()
+        return word[0].upper() + word[1:].lower()
+
+    return re.sub(r"[^\W\d_]+", capitalize, name, flags=re.UNICODE)
+
+
 def _is_noise(text: str, language: str) -> bool:
     if not text:
         return True
@@ -532,6 +619,8 @@ def _extract_blocks(lines: list[TextLine], language: str) -> list[CreatureBlock]
         next_descriptor = starts[position + 1] if position + 1 < len(starts) else len(lines)
         descriptor = lines[descriptor_index]
         name = _find_name(lines, descriptor_index)
+        if language == "it":
+            name = _capitalize_italian_creature_name(name)
         same_column_lines = [
             line
             for line in lines[:descriptor_index]
@@ -1476,7 +1565,7 @@ def _parse_creature_row(
         "ability_proficiencies": _parse_ability_proficiencies(english),
         "ability_str": english.abilities["str"],
         "ability_wis": english.abilities["wis"],
-        "ac": english.ac,
+        "armor_class": english.ac,
         "actions": sections["actions"],
         "alignment": english.alignment,
         "blindsight": senses["blindsight"],
@@ -1484,20 +1573,20 @@ def _parse_creature_row(
         "condition_immunities": immunity_conditions,
         "condition_resistances": resistance_conditions,
         "condition_vulnerabilities": vulnerability_conditions,
-        "cr": english.cr,
+        "challenge_rating": english.cr,
         "damage_immunities": immunity_damage,
         "damage_resistances": resistance_damage,
         "damage_vulnerabilities": vulnerability_damage,
         "darkvision": senses["darkvision"],
-        "exp": english.exp,
+        "experience_points": english.exp,
         "family_id": family_id,
         "has_lair": bool(english.sections.get("lair_effects") or lair_exp_match),
-        "hover": bool(speed["hover"]),
-        "hp": english.hp,
-        "hp_formula": english.hp_formula,
+        "can_hover": bool(speed["hover"]),
+        "hit_points": english.hp,
+        "hit_points_formula": english.hp_formula,
         "initiative": english.initiative,
         "lair_effects": sections["lair_effects"],
-        "lair_exp": _parse_int(lair_exp_match.group(1).replace(",", "")) if lair_exp_match else english.exp,
+        "lair_experience_points": _parse_int(lair_exp_match.group(1).replace(",", "")) if lair_exp_match else english.exp,
         "lair_legendary_actions_count": _parse_int(lair_legendary_count_match.group(1)) if lair_legendary_count_match else 0,
         "language_additional_count": english.language_additional_count,
         "language_entries": _language_entries(english, bundle),
@@ -1505,7 +1594,7 @@ def _parse_creature_row(
         "legendary_actions": sections["legendary_actions"],
         "legendary_actions_count": _parse_int(legendary_count_match.group(1)) if legendary_count_match else 0,
         "passive_perception": _parse_int(re.search(r"(?:Passive Perception|Percezione passiva)\s+(\d+)", english.sense_text, re.IGNORECASE).group(1)) if re.search(r"(?:Passive Perception|Percezione passiva)\s+(\d+)", english.sense_text, re.IGNORECASE) else 10,
-        "pb": english.pb,
+        "proficiency_bonus": english.pb,
         "reactions": sections["reactions"],
         "sizes": english.sizes,
         "skill_expertise": expertise,
