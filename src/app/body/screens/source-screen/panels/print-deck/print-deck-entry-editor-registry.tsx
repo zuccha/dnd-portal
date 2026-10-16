@@ -3,6 +3,7 @@ import BackgroundPrintDeckEntryEditor from "./editors/background-print-deck-entr
 import CharacterClassPrintDeckEntryEditor from "./editors/character-class-print-deck-entry-editor";
 import CharacterSubclassPrintDeckEntryEditor from "./editors/character-subclass-print-deck-entry-editor";
 import FeatPrintDeckEntryEditor from "./editors/feat-print-deck-entry-editor";
+import FeaturePrintDeckEntryEditor from "./editors/feature-print-deck-entry-editor";
 import LanguagePrintDeckEntryEditor from "./editors/language-print-deck-entry-editor";
 import PlanePrintDeckEntryEditor from "./editors/plane-print-deck-entry-editor";
 import SpeciesPrintDeckEntryEditor from "./editors/species-print-deck-entry-editor";
@@ -37,6 +38,7 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   character_class: CharacterClassPrintDeckEntryEditor,
   character_subclass: CharacterSubclassPrintDeckEntryEditor,
   feat: FeatPrintDeckEntryEditor,
+  feature: FeaturePrintDeckEntryEditor,
   language: LanguagePrintDeckEntryEditor,
   plane: PlanePrintDeckEntryEditor,
   species: SpeciesPrintDeckEntryEditor,
