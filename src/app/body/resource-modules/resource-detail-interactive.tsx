@@ -9,7 +9,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { resourceUnionSchema } from "~/models/resources/resource-union";
+import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
 import { toaster } from "~/ui/toaster";
 import { useResourceDelete } from "./resource-delete";
 import type { ResourceAction } from "./resource-action";
@@ -71,7 +71,7 @@ export function createResourceDetailInteractive<
       printDeck.addEntry({
         lang,
         palette_name: paletteName,
-        resource: resourceUnionSchema.parse(resource),
+        resource: localizedResourceUnionSchema.parse(localizedResource),
       });
       toaster.success({
         description: localizedResource.name,

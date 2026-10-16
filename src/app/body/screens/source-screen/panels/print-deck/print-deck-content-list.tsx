@@ -1,26 +1,12 @@
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  CopyPlusIcon,
-  EditIcon,
-  RatIcon,
-  Trash2Icon,
-} from "lucide-react";
-import { useState } from "react";
+import { ArrowDownIcon, ArrowUpIcon, CopyPlusIcon, RatIcon, Trash2Icon } from "lucide-react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { translate } from "~/i18n/i18n-string";
-import { langOptionsShort, type Lang } from "~/models/lang";
-import type { PrintDeckEntry } from "~/models/print-deck/print-deck-store";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import { type ResourceKind, useTranslateResourceKind } from "~/models/types/resource-kind";
 import EmptyState from "~/ui/empty-state";
 import IconButton from "~/ui/icon-button";
-import Link from "~/ui/link";
 import PalettePicker from "~/ui/palette-picker";
-import Select from "~/ui/select";
 import { type PaletteName } from "~/utils/palette";
-import PrintDeckEditorDialog from "./print-deck-editor-dialog";
 
 //------------------------------------------------------------------------------
 // Print Deck Content List
@@ -30,9 +16,7 @@ const { useEntries } = printDeck;
 
 export default function PrintDeckContentList() {
   const entries = useEntries();
-  const [editedEntryId, setEditedEntryId] = useState<string>();
   const { t } = useI18nLangContext(i18nContext);
-  const editedEntry = entries.find((entry) => entry.id === editedEntryId);
 
   if (entries.length === 0) {
     return (
@@ -41,34 +25,25 @@ export default function PrintDeckContentList() {
   }
 
   return (
-    <>
-      <VStack bgColor="bg.subtle" flex={1} gap={2} h="full" overflow="auto" p={4}>
-        {entries.map((entry, index) => (
-          <PrintDeckEntryRow
-            canMoveDown={index < entries.length - 1}
-            canMoveUp={index > 0}
-            key={entry.id}
-            kind={entry.resource.kind}
-            name={translate(entry.resource.name, entry.lang)}
-            onDuplicate={() => printDeck.duplicateEntry(entry.id)}
-            onEdit={() => setEditedEntryId(entry.id)}
-            onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
-            onMoveUp={() => printDeck.moveEntry(entry.id, index - 1)}
-            onLanguageChange={(lang) => printDeck.setEntryLanguage(entry.id, lang)}
-            onPaletteChange={(paletteName) => printDeck.setEntryPalette(entry.id, paletteName)}
-            onRemove={() => printDeck.removeEntry(entry.id)}
-            entryLang={entry.lang as Lang}
-            paletteName={entry.palette_name}
-            source={entry.resource.source_code}
-          />
-        ))}
-      </VStack>
-
-      <PrintDeckEditorDialog
-        entry={editedEntry as PrintDeckEntry | undefined}
-        onClose={() => setEditedEntryId(undefined)}
-      />
-    </>
+    <VStack bgColor="bg.subtle" flex={1} gap={2} h="full" overflow="auto" p={4}>
+      {entries.map((entry, index) => (
+        <PrintDeckEntryRow
+          canMoveDown={index < entries.length - 1}
+          canMoveUp={index > 0}
+          key={entry.id}
+          kind={entry.resource.kind}
+          name={entry.resource.name}
+          onDuplicate={() => printDeck.duplicateEntry(entry.id)}
+          onMoveDown={() => printDeck.moveEntry(entry.id, index + 1)}
+          onMoveUp={() => printDeck.moveEntry(entry.id, index - 1)}
+          onPaletteChange={(paletteName) => printDeck.setEntryPalette(entry.id, paletteName)}
+          onRemove={() => printDeck.removeEntry(entry.id)}
+          entryLang={entry.lang}
+          paletteName={entry.palette_name}
+          source={entry.resource.sourceCode}
+        />
+      ))}
+    </VStack>
   );
 }
 
@@ -80,12 +55,10 @@ type PrintDeckEntryRowProps = {
   canMoveDown: boolean;
   canMoveUp: boolean;
   kind: ResourceKind;
-  entryLang: Lang;
+  entryLang: string;
   name: string;
   onDuplicate: () => void;
-  onEdit: () => void;
   onMoveDown: () => void;
-  onLanguageChange: (lang: Lang) => void;
   onMoveUp: () => void;
   onPaletteChange: (paletteName: PaletteName) => void;
   onRemove: () => void;
@@ -97,12 +70,9 @@ function PrintDeckEntryRow({
   canMoveDown,
   canMoveUp,
   kind,
-  entryLang,
   name,
   onDuplicate,
-  onEdit,
   onMoveDown,
-  onLanguageChange,
   onMoveUp,
   onPaletteChange,
   onRemove,
@@ -129,16 +99,6 @@ function PrintDeckEntryRow({
         <PalettePicker onValueChange={onPaletteChange} value={paletteName} />
       </Box>
 
-      <Select.Enum
-        aria-label={t("language")}
-        onValueChange={onLanguageChange}
-        options={langOptionsShort}
-        size="sm"
-        value={entryLang}
-        w="3.5em"
-        alignSelf="center"
-      />
-
       <VStack
         align="flex-start"
         flex={1}
@@ -146,9 +106,9 @@ function PrintDeckEntryRow({
         minW={{ base: "calc(100% - 3rem)", md: 0 }}
         textAlign="left"
       >
-        <Link fontWeight="semibold" lineClamp={2} onClick={onEdit}>
+        <Text fontWeight="semibold" lineClamp={2}>
           {name}
-        </Link>
+        </Text>
         <Text color="fg.muted" fontSize="xs" lineClamp={1} textAlign="left">
           {source} · {translateKind(kind)}
         </Text>
@@ -171,7 +131,6 @@ function PrintDeckEntryRow({
           size="xs"
           variant="ghost"
         />
-        <IconButton Icon={EditIcon} label={t("edit")} onClick={onEdit} size="xs" variant="ghost" />
         <IconButton
           Icon={CopyPlusIcon}
           label={t("clone")}
@@ -201,10 +160,6 @@ const i18nContext = {
     en: "Clone",
     it: "Duplica",
   },
-  "edit": {
-    en: "Edit",
-    it: "Modifica",
-  },
   "empty.subtitle": {
     en: "Add resources to the print deck and they will appear here.",
     it: "Aggiungi risorse alla coda di stampa e visualizzale qui.",
@@ -212,10 +167,6 @@ const i18nContext = {
   "empty.title": {
     en: "The print deck is empty",
     it: "La coda di stampa è vuota",
-  },
-  "language": {
-    en: "Language",
-    it: "Lingua",
   },
   "move_down": {
     en: "Move down",

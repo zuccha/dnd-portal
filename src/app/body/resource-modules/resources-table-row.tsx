@@ -19,7 +19,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
-import { resourceUnionSchema } from "~/models/resources/resource-union";
+import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
 import { resourceDetailRoute } from "~/navigation/routes";
 import Checkbox from "~/ui/checkbox";
 import Icon from "~/ui/icon";
@@ -126,14 +126,14 @@ export function createResourcesTableRow<
       printDeck.addEntry({
         lang,
         palette_name: paletteName,
-        resource: resourceUnionSchema.parse(resource),
+        resource: localizedResourceUnionSchema.parse(localizedResource),
       });
 
       toaster.success({
         description: localizedResource.name,
         title: t("print_deck.added"),
       });
-    }, [lang, localizedResource.name, paletteName, resource, t]);
+    }, [lang, localizedResource, paletteName, t]);
 
     const makePersistent = useCallback(async () => {
       const error = await store.setResourceTemporary(localizedResource.id, false);

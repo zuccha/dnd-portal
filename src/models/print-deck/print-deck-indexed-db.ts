@@ -1,14 +1,12 @@
 import Dexie, { type Table } from "dexie";
-import { z } from "zod";
-import { resourceUnionSchema } from "../resources/resource-union";
-import { printDeckEntrySchema, type PrintDeckEntry } from "./print-deck-entry";
+import { printDeckEntryUnionSchema, type PrintDeckEntryUnion } from "./print-deck-entry";
 
 //------------------------------------------------------------------------------
 // Persisted Print Deck
 //------------------------------------------------------------------------------
 
 type PersistedPrintDeck = {
-  entries: PrintDeckEntry[];
+  entries: PrintDeckEntryUnion[];
   id: string;
 };
 
@@ -32,47 +30,27 @@ const deckId = "default";
 // Parse Print Deck Entries
 //------------------------------------------------------------------------------
 
-function parsePrintDeckEntries(value: unknown): PrintDeckEntry[] {
-  return Array.isArray(value)
-    ? value.flatMap((entry) => {
-        const parsed = printDeckEntrySchema.safeParse(entry);
-        if (parsed.success) return [parsed.data];
+function parsePrintDeckEntries(value: unknown): PrintDeckEntryUnion[] {
+  if (!Array.isArray(value)) return [];
 
-        const legacy = z
-          .object({
-            id: z.uuid(),
-            lang: z.string(),
-            localized_resource: z.looseObject({ _raw: resourceUnionSchema }),
-            palette_name: printDeckEntrySchema.shape.palette_name,
-          })
-          .safeParse(entry);
-
-        return legacy.success
-          ? [
-              {
-                id: legacy.data.id,
-                lang: legacy.data.lang,
-                palette_name: legacy.data.palette_name,
-                resource: legacy.data.localized_resource._raw,
-              },
-            ]
-          : [];
-      })
-    : [];
+  return value.flatMap((entry) => {
+    const parsed = printDeckEntryUnionSchema.safeParse(entry);
+    return parsed.success ? [parsed.data] : [];
+  });
 }
 
 //------------------------------------------------------------------------------
 // Load Print Deck
 //------------------------------------------------------------------------------
 
-export async function loadPrintDeck(): Promise<PrintDeckEntry[]> {
+export async function loadPrintDeck(): Promise<PrintDeckEntryUnion[]> {
   const persisted = await db.decks.get(deckId);
   if (persisted) return parsePrintDeckEntries(persisted.entries);
 
   const legacyValue = localStorage.getItem("print_deck");
   if (legacyValue === null) return [];
 
-  let entries: PrintDeckEntry[] = [];
+  let entries: PrintDeckEntryUnion[] = [];
   try {
     entries = parsePrintDeckEntries(JSON.parse(legacyValue));
   } catch {
@@ -88,6 +66,6 @@ export async function loadPrintDeck(): Promise<PrintDeckEntry[]> {
 // Save Print Deck
 //------------------------------------------------------------------------------
 
-export async function savePrintDeck(entries: PrintDeckEntry[]): Promise<void> {
+export async function savePrintDeck(entries: PrintDeckEntryUnion[]): Promise<void> {
   await db.decks.put({ entries: structuredClone(entries), id: deckId });
 }

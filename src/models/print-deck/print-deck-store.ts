@@ -1,17 +1,16 @@
-import type { Lang } from "~/models/lang";
 import { createMemoryStore } from "~/store/memory-store";
 import { type PaletteName } from "~/utils/palette";
 import { createUuid } from "~/utils/uuid";
 import { loadPrintDeck, savePrintDeck } from "./print-deck-indexed-db";
-import type { PrintDeckEntry, PrintDeckEntryInput } from "./print-deck-entry";
+import type { PrintDeckEntryInputUnion, PrintDeckEntryUnion } from "./print-deck-entry";
 
-export type { PrintDeckEntry, PrintDeckEntryInput } from "./print-deck-entry";
+export type { PrintDeckEntryInputUnion, PrintDeckEntryUnion } from "./print-deck-entry";
 
 //------------------------------------------------------------------------------
 // Print Deck Store
 //------------------------------------------------------------------------------
 
-const printDeckStore = createMemoryStore<PrintDeckEntry[]>("print_deck", []);
+const printDeckStore = createMemoryStore<PrintDeckEntryUnion[]>("print_deck", []);
 let hasLocalChanges = false;
 let persistence = Promise.resolve();
 
@@ -23,7 +22,7 @@ void loadPrintDeck().then((entries) => {
 // Persist Print Deck
 //------------------------------------------------------------------------------
 
-function persistPrintDeck(entries: PrintDeckEntry[]): void {
+function persistPrintDeck(entries: PrintDeckEntryUnion[]): void {
   persistence = persistence.then(() => savePrintDeck(entries));
 }
 
@@ -41,7 +40,7 @@ function setPrintDeck(update: Parameters<typeof printDeckStore.set>[0]): void {
 // Add Entries
 //------------------------------------------------------------------------------
 
-function addEntries(entries: PrintDeckEntryInput[]): string[] {
+function addEntries(entries: PrintDeckEntryInputUnion[]): string[] {
   const ids: string[] = [];
   setPrintDeck((prev) => [
     ...prev,
@@ -58,7 +57,7 @@ function addEntries(entries: PrintDeckEntryInput[]): string[] {
 // Add Entry
 //------------------------------------------------------------------------------
 
-function addEntry(entry: PrintDeckEntryInput): string {
+function addEntry(entry: PrintDeckEntryInputUnion): string {
   const id = createUuid();
   setPrintDeck((prev) => [...prev, { ...structuredClone(entry), id }]);
   return id;
@@ -97,7 +96,7 @@ function duplicateEntry(entryId: string): string | undefined {
 // Get Entry
 //------------------------------------------------------------------------------
 
-function getEntry(entryId: string): PrintDeckEntry | undefined {
+function getEntry(entryId: string): PrintDeckEntryUnion | undefined {
   return printDeckStore.get().find((entry) => entry.id === entryId);
 }
 
@@ -147,35 +146,6 @@ function setEntryPalette(entryId: string, paletteName: PaletteName): void {
 }
 
 //------------------------------------------------------------------------------
-// Set Entry Language
-//------------------------------------------------------------------------------
-
-function setEntryLanguage(entryId: string, lang: Lang): void {
-  setPrintDeck((prev) => {
-    const index = prev.findIndex((entry) => entry.id === entryId);
-    if (index < 0) return prev;
-
-    const entries = [...prev];
-    entries[index] = { ...prev[index]!, lang };
-    return entries;
-  });
-}
-
-//------------------------------------------------------------------------------
-// Update Entry
-//------------------------------------------------------------------------------
-
-function updateEntry(entryId: string, nextEntry: PrintDeckEntry): void {
-  setPrintDeck((prev) => {
-    const index = prev.findIndex((entry) => entry.id === entryId);
-    if (index < 0) return prev;
-
-    const entries = [...prev];
-    entries[index] = structuredClone(nextEntry);
-    return entries;
-  });
-}
-
 //------------------------------------------------------------------------------
 // Print Deck
 //------------------------------------------------------------------------------
@@ -188,8 +158,6 @@ export const printDeck = {
   getEntry,
   moveEntry,
   removeEntry,
-  setEntryLanguage,
   setEntryPalette,
-  updateEntry,
   useEntries: printDeckStore.useValue,
 };

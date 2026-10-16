@@ -1,6 +1,5 @@
 import { Box, Flex, VStack } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
-import { i18nLangProviderContext } from "~/i18n/i18n-lang-provider-context";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import { BleedContext } from "~/ui/bleed-context";
 import { range } from "~/utils/array";
@@ -22,7 +21,6 @@ import {
   useShowImage,
   useZoom,
 } from "./print-deck";
-import { printDeckEntryCards } from "./print-deck-entry-card-registry";
 import PrintDeckPrintModeCropMarks from "./print-deck-print-mode-crop-marks";
 import { getPrintDeckCard } from "./print-deck-registry";
 
@@ -31,14 +29,9 @@ import { getPrintDeckCard } from "./print-deck-registry";
 //------------------------------------------------------------------------------
 
 const { useEntries } = printDeck;
-const noopSetLang = () => "";
 
 export default function PrintDeckContentPreview() {
   const entries = useEntries();
-  const langContextValues = useMemo(
-    () => new Map(entries.map((entry) => [entry.id, { lang: entry.lang, setLang: noopSetLang }])),
-    [entries],
-  );
 
   const [paperLayout] = usePaperLayout();
   const [paperType] = usePaperType();
@@ -205,30 +198,26 @@ export default function PrintDeckContentPreview() {
             wrap="wrap"
           >
             {entries.map((entry) => {
-              const Card = printDeckEntryCards[entry.resource.kind];
+              const Card = getPrintDeckCard(entry.resource.kind);
               return (
-                <i18nLangProviderContext.Provider
+                <Card
+                  alwaysEvenPages={includeEmptyBack}
+                  bgColor={backgroundColorVisible ? undefined : "white"}
+                  borderRadius={0}
+                  css={albumCardCss}
                   key={entry.id}
-                  value={langContextValues.get(entry.id)!}
-                >
-                  <Card
-                    alwaysEvenPages={includeEmptyBack}
-                    bgColor={backgroundColorVisible ? undefined : "white"}
-                    borderRadius={0}
-                    css={albumCardCss}
-                    entry={entry}
-                    onPageCountChange={(count) => {
-                      setPagesCounts((prev) => {
-                        const next = { ...prev };
-                        if (count) next[entry.id] = count;
-                        else delete next[entry.id];
-                        return next;
-                      });
-                    }}
-                    palette={palettes[entry.palette_name]}
-                    showImage={showImage}
-                  />
-                </i18nLangProviderContext.Provider>
+                  localizedResource={entry.resource}
+                  onPageCountChange={(count) => {
+                    setPagesCounts((prev) => {
+                      const next = { ...prev };
+                      if (count) next[entry.id] = count;
+                      else delete next[entry.id];
+                      return next;
+                    });
+                  }}
+                  palette={palettes[entry.palette_name]}
+                  showImage={showImage}
+                />
               );
             })}
           </Flex>
