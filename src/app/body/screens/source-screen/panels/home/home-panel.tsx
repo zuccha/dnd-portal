@@ -11,6 +11,7 @@ import { itemStore } from "~/models/resources/equipment/items/item-store";
 import { localizeItem } from "~/models/resources/equipment/items/localized-item";
 import { localizeWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
+import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
 import { useTranslateSourceVersion } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
@@ -25,6 +26,18 @@ import HomeCardFan from "./home-card-fan";
 const { useLocalizationContext: useArmorLocalizationContext } = armorStore;
 const { useLocalizationContext: useItemLocalizationContext } = itemStore;
 const { useLocalizationContext: useWeaponLocalizationContext } = weaponStore;
+
+//------------------------------------------------------------------------------
+// Sample Print Deck Cards
+//------------------------------------------------------------------------------
+
+const samplePrintDeckCards = [
+  { palette_name: "copper", resource: "owlbear" },
+  { palette_name: "brick", resource: "fireball" },
+  { palette_name: "red", resource: "potion" },
+  { palette_name: "slate", resource: "breastplate" },
+  { palette_name: "brown", resource: "crossbow" },
+] as const;
 
 //------------------------------------------------------------------------------
 // Home Panel
@@ -51,6 +64,13 @@ export default function HomePanel() {
     () => localizeWeapon(lightCrossbow, weaponContext),
     [weaponContext],
   );
+  const sampleResources = {
+    breastplate: localizedBreastplate,
+    crossbow: localizedCrossbow,
+    fireball: fireball[lang]!,
+    owlbear: owlbear[lang]!,
+    potion: localizedPotion,
+  };
 
   return (
     <VStack align="stretch" flex={1} gap={0} h="full" overflowY="auto">
@@ -149,16 +169,33 @@ export default function HomePanel() {
                   )
                 : t("home.print_deck_empty")}
             </Text>
-            <Button
-              alignSelf="flex-start"
-              onClick={() =>
-                navigate(printDeckEntries.length ? Route.PrintDeck : Route.ResourcesAbilitiesSpells)
-              }
-              size="sm"
-              variant="outline"
-            >
-              {printDeckEntries.length ? t("home.open_print_deck") : t("home.go_to_resources")}
-            </Button>
+            {printDeckEntries.length > 0 ? (
+              <Button
+                alignSelf="flex-start"
+                onClick={() => navigate(Route.PrintDeck)}
+                size="sm"
+                variant="outline"
+              >
+                {t("home.open_print_deck")}
+              </Button>
+            ) : (
+              <Button
+                alignSelf="flex-start"
+                onClick={() =>
+                  printDeck.addEntries([
+                    ...samplePrintDeckCards.map(({ palette_name, resource }) => ({
+                      lang,
+                      palette_name,
+                      resource: localizedResourceUnionSchema.parse(sampleResources[resource]),
+                    })),
+                  ])
+                }
+                size="sm"
+                variant="outline"
+              >
+                {t("home.add_sample_cards")}
+              </Button>
+            )}
           </VStack>
         </SimpleGrid>
       </VStack>
@@ -212,6 +249,10 @@ const i18nContext = {
     en: "Active source",
     it: "Fonte attiva",
   },
+  "home.add_sample_cards": {
+    en: "Add sample cards",
+    it: "Aggiungi carte di esempio",
+  },
   "home.browse": {
     en: "Browse resources",
     it: "Sfoglia le risorse",
@@ -227,10 +268,6 @@ const i18nContext = {
   "home.equipment": {
     en: "Items",
     it: "Oggetti",
-  },
-  "home.go_to_resources": {
-    en: "Browse resources",
-    it: "Sfoglia le risorse",
   },
   "home.manage_sources": {
     en: "Manage sources",
