@@ -8,12 +8,15 @@ import Field from "~/ui/field";
 import InfoIcon from "~/ui/info-icon";
 import Input from "~/ui/input";
 import Textarea from "~/ui/textarea";
+import { printDeckEntryEditors } from "./print-deck-entry-editor-registry";
+import type { PrintDeckEntryEditorProps } from "./print-deck-entry-editor-props";
+import type { ComponentType } from "react";
 
 //------------------------------------------------------------------------------
 // Localized Resource Draft
 //------------------------------------------------------------------------------
 
-type LocalizedResourceDraft = Pick<
+type LocalizedResourceDraftFields = Pick<
   LocalizedResourceUnion,
   "descriptor" | "details" | "imageUrl" | "name" | "page" | "sourceCode" | "sourceVersion"
 >;
@@ -29,21 +32,6 @@ type PrintDeckEntryEditorDialogProps = {
 };
 
 //------------------------------------------------------------------------------
-// Create Localized Resource Draft
-//------------------------------------------------------------------------------
-
-function createLocalizedResourceDraft(entry: PrintDeckEntryUnion): LocalizedResourceDraft {
-  return {
-    descriptor: entry.resource.descriptor,
-    details: entry.resource.details,
-    imageUrl: entry.resource.imageUrl,
-    name: entry.resource.name,
-    page: entry.resource.page,
-    sourceCode: entry.resource.sourceCode,
-    sourceVersion: entry.resource.sourceVersion,
-  };
-}
-
 //------------------------------------------------------------------------------
 // Print Deck Entry Editor Dialog
 //------------------------------------------------------------------------------
@@ -54,16 +42,22 @@ export default function PrintDeckEntryEditorDialog({
   onSave,
 }: PrintDeckEntryEditorDialogProps) {
   const { t } = useI18nLangContext(i18nContext);
-  const [draft, setDraft] = useState(() => createLocalizedResourceDraft(entry));
+  const [draft, setDraft] = useState(() => structuredClone(entry.resource));
 
   useEffect(() => {
-    if (entry) setDraft(createLocalizedResourceDraft(entry));
+    setDraft(structuredClone(entry.resource));
   }, [entry]);
 
-  const updateDraft = <K extends keyof LocalizedResourceDraft>(
+  const updateDraft = (resource: LocalizedResourceUnion) => setDraft(resource);
+
+  const updateDraftField = <K extends keyof LocalizedResourceDraftFields>(
     key: K,
-    value: LocalizedResourceDraft[K],
-  ) => setDraft((previous) => ({ ...previous, [key]: value }));
+    value: LocalizedResourceDraftFields[K],
+  ) => setDraft((previous) => ({ ...previous, [key]: value }) as LocalizedResourceUnion);
+
+  const ResourceEditor = printDeckEntryEditors[draft.kind] as
+    | ComponentType<PrintDeckEntryEditorProps<LocalizedResourceUnion>>
+    | undefined;
 
   return (
     <Dialog.Root
@@ -88,18 +82,24 @@ export default function PrintDeckEntryEditorDialog({
               <VStack align="stretch" gap={4}>
                 <Field label={t("name")}>
                   <Input
-                    onValueChange={(value) => updateDraft("name", value)}
+                    onValueChange={(value) => updateDraftField("name", value)}
                     placeholder={t("name.placeholder")}
                     value={draft.name}
                   />
                 </Field>
                 <Field label={t("descriptor")}>
                   <Input
-                    onValueChange={(value) => updateDraft("descriptor", value)}
+                    onValueChange={(value) => updateDraftField("descriptor", value)}
                     placeholder={t("descriptor.placeholder")}
                     value={draft.descriptor}
                   />
                 </Field>
+                {ResourceEditor && (
+                  <ResourceEditor
+                    localizedResource={draft}
+                    onLocalizedResourceUpdate={updateDraft}
+                  />
+                )}
                 <Field
                   label={
                     <HStack gap={1} w="full">
@@ -109,7 +109,7 @@ export default function PrintDeckEntryEditorDialog({
                   }
                 >
                   <Textarea
-                    onValueChange={(value) => updateDraft("details", value)}
+                    onValueChange={(value) => updateDraftField("details", value)}
                     placeholder={t("details.placeholder")}
                     rows={8}
                     value={draft.details}
@@ -118,21 +118,21 @@ export default function PrintDeckEntryEditorDialog({
                 <HStack align="flex-start" gap={4}>
                   <Field flex={1} label={t("source_code")}>
                     <Input
-                      onValueChange={(value) => updateDraft("sourceCode", value)}
+                      onValueChange={(value) => updateDraftField("sourceCode", value)}
                       placeholder={t("source_code.placeholder")}
                       value={draft.sourceCode}
                     />
                   </Field>
                   <Field flex={1} label={t("page")}>
                     <Input
-                      onValueChange={(value) => updateDraft("page", value)}
+                      onValueChange={(value) => updateDraftField("page", value)}
                       placeholder={t("page.placeholder")}
                       value={draft.page}
                     />
                   </Field>
                   <Field flex={1} label={t("source_version")}>
                     <Input
-                      onValueChange={(value) => updateDraft("sourceVersion", value)}
+                      onValueChange={(value) => updateDraftField("sourceVersion", value)}
                       placeholder={t("source_version.placeholder")}
                       value={draft.sourceVersion}
                     />
@@ -140,7 +140,7 @@ export default function PrintDeckEntryEditorDialog({
                 </HStack>
                 <Field label={t("image_url")}>
                   <Input
-                    onValueChange={(value) => updateDraft("imageUrl", value || null)}
+                    onValueChange={(value) => updateDraftField("imageUrl", value || null)}
                     placeholder={t("image_url.placeholder")}
                     value={draft.imageUrl ?? ""}
                   />
@@ -154,7 +154,7 @@ export default function PrintDeckEntryEditorDialog({
               </Button>
               <Button
                 onClick={() => {
-                  onSave(entry.id, { ...entry.resource, ...draft });
+                  onSave(entry.id, draft);
                   onClose();
                 }}
               >
