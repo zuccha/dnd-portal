@@ -1,4 +1,5 @@
 import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
+import ArmorModifierPrintDeckEntryEditor from "./editors/armor-modifier-print-deck-entry-editor";
 import ArmorPrintDeckEntryEditor from "./editors/armor-print-deck-entry-editor";
 import BackgroundPrintDeckEntryEditor from "./editors/background-print-deck-entry-editor";
 import CharacterClassPrintDeckEntryEditor from "./editors/character-class-print-deck-entry-editor";
@@ -11,6 +12,7 @@ import CreatureTreasurePrintDeckEntryEditor from "./editors/creature-treasure-pr
 import EldritchInvocationPrintDeckEntryEditor from "./editors/eldritch-invocation-print-deck-entry-editor";
 import FeatPrintDeckEntryEditor from "./editors/feat-print-deck-entry-editor";
 import FeaturePrintDeckEntryEditor from "./editors/feature-print-deck-entry-editor";
+import ItemModifierPrintDeckEntryEditor from "./editors/item-modifier-print-deck-entry-editor";
 import ItemPrintDeckEntryEditor from "./editors/item-print-deck-entry-editor";
 import LanguagePrintDeckEntryEditor from "./editors/language-print-deck-entry-editor";
 import ManeuverPrintDeckEntryEditor from "./editors/maneuver-print-deck-entry-editor";
@@ -18,7 +20,9 @@ import MetamagicPrintDeckEntryEditor from "./editors/metamagic-print-deck-entry-
 import PlanePrintDeckEntryEditor from "./editors/plane-print-deck-entry-editor";
 import SpeciesPrintDeckEntryEditor from "./editors/species-print-deck-entry-editor";
 import SpellPrintDeckEntryEditor from "./editors/spell-print-deck-entry-editor";
+import ToolModifierPrintDeckEntryEditor from "./editors/tool-modifier-print-deck-entry-editor";
 import ToolPrintDeckEntryEditor from "./editors/tool-print-deck-entry-editor";
+import WeaponModifierPrintDeckEntryEditor from "./editors/weapon-modifier-print-deck-entry-editor";
 import WeaponPrintDeckEntryEditor from "./editors/weapon-print-deck-entry-editor";
 import type { PrintDeckEntryEditorProps } from "./print-deck-entry-editor-props";
 import type { ComponentType } from "react";
@@ -48,6 +52,7 @@ type PrintDeckEntryEditorRegistry = Partial<{
 
 export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   armor: ArmorPrintDeckEntryEditor,
+  armor_modifier: ArmorModifierPrintDeckEntryEditor,
   background: BackgroundPrintDeckEntryEditor,
   character_class: CharacterClassPrintDeckEntryEditor,
   character_subclass: CharacterSubclassPrintDeckEntryEditor,
@@ -60,6 +65,7 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   feat: FeatPrintDeckEntryEditor,
   feature: FeaturePrintDeckEntryEditor,
   item: ItemPrintDeckEntryEditor,
+  item_modifier: ItemModifierPrintDeckEntryEditor,
   language: LanguagePrintDeckEntryEditor,
   maneuver: ManeuverPrintDeckEntryEditor,
   metamagic: MetamagicPrintDeckEntryEditor,
@@ -67,5 +73,7 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   species: SpeciesPrintDeckEntryEditor,
   spell: SpellPrintDeckEntryEditor,
   tool: ToolPrintDeckEntryEditor,
+  tool_modifier: ToolModifierPrintDeckEntryEditor,
   weapon: WeaponPrintDeckEntryEditor,
+  weapon_modifier: WeaponModifierPrintDeckEntryEditor,
 };
