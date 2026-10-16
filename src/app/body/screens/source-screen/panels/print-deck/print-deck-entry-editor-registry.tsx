@@ -1,4 +1,5 @@
 import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
+import BackgroundPrintDeckEntryEditor from "./editors/background-print-deck-entry-editor";
 import CharacterClassPrintDeckEntryEditor from "./editors/character-class-print-deck-entry-editor";
 import CharacterSubclassPrintDeckEntryEditor from "./editors/character-subclass-print-deck-entry-editor";
 import LanguagePrintDeckEntryEditor from "./editors/language-print-deck-entry-editor";
@@ -30,6 +31,7 @@ type PrintDeckEntryEditorRegistry = Partial<{
 //------------------------------------------------------------------------------
 
 export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
+  background: BackgroundPrintDeckEntryEditor,
   character_class: CharacterClassPrintDeckEntryEditor,
   character_subclass: CharacterSubclassPrintDeckEntryEditor,
   language: LanguagePrintDeckEntryEditor,
