@@ -132,7 +132,15 @@ function PrintDeckEntryRow({
         minW={{ base: "calc(100% - 3rem)", md: 0 }}
         textAlign="left"
       >
-        <Text fontWeight="semibold" lineClamp={2}>
+        <Text
+          as="button"
+          cursor="pointer"
+          fontWeight="semibold"
+          lineClamp={2}
+          onClick={onEdit}
+          textAlign="left"
+          _hover={{ textDecoration: "underline" }}
+        >
           {name}
         </Text>
         <Text color="fg.muted" fontSize="xs" lineClamp={1} textAlign="left">
@@ -141,13 +149,6 @@ function PrintDeckEntryRow({
       </VStack>
 
       <HStack alignSelf="center" gap={1} ml="auto">
-        <IconButton
-          Icon={PencilIcon}
-          label={t("edit")}
-          onClick={onEdit}
-          size="xs"
-          variant="ghost"
-        />
         <IconButton
           Icon={ArrowUpIcon}
           disabled={!canMoveUp}
@@ -161,6 +162,13 @@ function PrintDeckEntryRow({
           disabled={!canMoveDown}
           label={t("move_down")}
           onClick={onMoveDown}
+          size="xs"
+          variant="ghost"
+        />
+        <IconButton
+          Icon={PencilIcon}
+          label={t("edit")}
+          onClick={onEdit}
           size="xs"
           variant="ghost"
         />
