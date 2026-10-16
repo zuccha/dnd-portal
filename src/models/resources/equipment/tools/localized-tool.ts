@@ -3,6 +3,7 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
 import { useTranslateToolType } from "../../../types/tool-type";
+import { localizedFieldSchema } from "../../localized-resource";
 import { equipmentReferenceStore } from "../equipment-reference-store";
 import {
   type EquipmentLocalizationContext,
@@ -19,7 +20,7 @@ const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipment
 //------------------------------------------------------------------------------
 
 export const localizedToolSchema = localizedEquipmentSchema(toolSchema, z.literal("tool")).extend({
-  ability: z.string(),
+  ability: localizedFieldSchema,
   type: z.string(),
 });
 
@@ -84,7 +85,11 @@ export function localizeTool(tool: Tool, context: ToolLocalizationContext): Loca
     ]
       .filter((text) => text)
       .join("\n\n"),
-    ability: context.translateCreatureAbility(tool.ability),
+
+    ability: {
+      label: context.t("ability"),
+      value: context.translateCreatureAbility(tool.ability),
+    },
     type,
   };
 }
@@ -94,6 +99,10 @@ export function localizeTool(tool: Tool, context: ToolLocalizationContext): Loca
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "ability": {
+    en: "Ability",
+    it: "Abilità",
+  },
   "craft/*": {
     en: "##Craft##\r<1>",
     it: "##Creazioni##\r<1>",

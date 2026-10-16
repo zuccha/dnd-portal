@@ -1,5 +1,4 @@
 import { Span, VStack } from "@chakra-ui/react";
-import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedTool } from "~/models/resources/equipment/tools/localized-tool";
 import type { Tool } from "~/models/resources/equipment/tools/tool";
 import PokerCard from "~/ui/poker-card";
@@ -21,16 +20,14 @@ export function ToolCard({
   palette,
   ...rest
 }: ToolCardProps) {
-  const { t } = useI18nLangContext(i18nContext);
-
   return (
     <EquipmentCard
       firstPageInfoRight={
         <VStack align="flex-end" fontSize={PokerCard.rem0875} gap={0}>
           <Span fontStyle="italic" fontWeight="bold">
-            {t("ability")}
+            {localizedResource.ability.label}
           </Span>
-          <Span>{localizedResource.ability}</Span>
+          <Span>{localizedResource.ability.value}</Span>
         </VStack>
       }
       localizedResource={localizedResource}
@@ -44,14 +41,3 @@ export function ToolCard({
 ToolCard.Placeholder = EquipmentCard.Placeholder;
 ToolCard.h = EquipmentCard.h;
 ToolCard.w = EquipmentCard.w;
-
-//------------------------------------------------------------------------------
-// I18n Context
-//------------------------------------------------------------------------------
-
-const i18nContext = {
-  ability: {
-    en: "Ability",
-    it: "Abilità",
-  },
-};
