@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Span, Text, VStack } from "@chakra-ui/react";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -141,10 +141,10 @@ function PrintDeckEntryRow({
           textAlign="left"
           _hover={{ textDecoration: "underline" }}
         >
-          {name}
+          {name || <Span fontStyle="italic">{t("name.missing")}</Span>}
         </Text>
         <Text color="fg.muted" fontSize="xs" lineClamp={1} textAlign="left">
-          {source} · {translateKind(kind)}
+          {source ? `${source} · ${translateKind(kind)}` : translateKind(kind)}
         </Text>
       </VStack>
 
@@ -220,6 +220,10 @@ const i18nContext = {
   "move_up": {
     en: "Move up",
     it: "Sposta sopra",
+  },
+  "name.missing": {
+    en: "Unnamed",
+    it: "Senza Nome",
   },
   "palette": {
     en: "Change palette",
