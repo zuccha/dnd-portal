@@ -25,33 +25,33 @@ export function EquipmentModifierCard({
   return (
     <ResourcePokerCard
       firstPageInfo={
-        localizedResource.cost_delta ||
-        localizedResource.weight_delta ||
+        localizedResource.costDelta ||
+        localizedResource.weightDelta ||
         localizedResource.magic ||
-        localizedResource.required_attunement_slots_minimum ? (
+        localizedResource.requiredAttunementSlotsMinimum ? (
           <HStack align="flex-start" justify="space-between" px={PokerCard.rem1000} w="full">
             <VStack align="flex-start" gap={0}>
-              {localizedResource.weight_delta && (
+              {localizedResource.weightDelta && (
                 <HStack gap={PokerCard.rem0250}>
                   <Icon Icon={ScaleIcon} size="xs" />
-                  <Span>{localizedResource.weight_delta}</Span>
+                  <Span>{localizedResource.weightDelta}</Span>
                 </HStack>
               )}
 
-              {localizedResource.cost_delta && (
+              {localizedResource.costDelta && (
                 <HStack gap={PokerCard.rem0250}>
                   <Icon Icon={CoinsIcon} size="xs" />
-                  <Span>{localizedResource.cost_delta}</Span>
+                  <Span>{localizedResource.costDelta}</Span>
                 </HStack>
               )}
             </VStack>
 
             <VStack align="flex-end" gap={0}>
               {localizedResource.magic && (
-                <Span>{`${localizedResource.magic}, ${localizedResource.rarity_minimum}`}</Span>
+                <Span>{`${localizedResource.magic}, ${localizedResource.rarityMinimum}`}</Span>
               )}
-              {localizedResource.required_attunement_slots_minimum && (
-                <Span>{localizedResource.required_attunement_slots_minimum}</Span>
+              {localizedResource.requiredAttunementSlotsMinimum && (
+                <Span>{localizedResource.requiredAttunementSlotsMinimum}</Span>
               )}
             </VStack>
           </HStack>
