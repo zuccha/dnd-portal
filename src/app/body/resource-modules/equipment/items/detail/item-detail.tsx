@@ -18,14 +18,14 @@ export default function ItemDetail({
 }) {
   const item = resource;
   const uses =
-    item && (item.usageCount.value || item.consumableStatus.value) ? (
+    item && (item.usage_count.value || item.consumable_status.value) ? (
       <>
-        <ResourceDetailField label={item.consumableStatus.label}>
-          {item.consumableStatus.value}
+        <ResourceDetailField label={item.consumable_status.label}>
+          {item.consumable_status.value}
         </ResourceDetailField>
-        {item.usageCount.value && (
-          <ResourceDetailField label={item.usageCount.label}>
-            {item.usageCount.value}
+        {item.usage_count.value && (
+          <ResourceDetailField label={item.usage_count.label}>
+            {item.usage_count.value}
           </ResourceDetailField>
         )}
       </>

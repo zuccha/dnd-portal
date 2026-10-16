@@ -27,9 +27,9 @@ export function EldritchInvocationCard({
         )
       }
       firstPageInfo={
-        localizedResource.minWarlockLevel.valueWithLabel && (
+        localizedResource.minimum_warlock_level.value_with_label && (
           <Flex justify="center" w="full">
-            {localizedResource.minWarlockLevel.valueWithLabel}
+            {localizedResource.minimum_warlock_level.value_with_label}
           </Flex>
         )
       }

@@ -25,13 +25,13 @@ export default function EldritchInvocationPrintDeckEntryEditor({
         <Field label={t("min_warlock_level")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("minWarlockLevel", {
-                ...localizedResource.minWarlockLevel,
-                valueWithLabel: value,
+              onLocalizedResourceUpdate("minimum_warlock_level", {
+                ...localizedResource.minimum_warlock_level,
+                value_with_label: value,
               })
             }
             placeholder={t("min_warlock_level.placeholder")}
-            value={localizedResource.minWarlockLevel.valueWithLabel}
+            value={localizedResource.minimum_warlock_level.value_with_label}
           />
         </Field>
         <Field label={t("prerequisites")}>

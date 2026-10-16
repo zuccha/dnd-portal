@@ -33,17 +33,17 @@ export const localizedBackgroundSchema = localizedResourceSchema(
   backgroundSchema,
   z.literal("background"),
 ).extend({
-  abilityScores: localizedFieldSchema,
+  ability_scores: localizedFieldSchema,
   feat: localizedFieldSchema.extend({
     id: z.uuid().nullable(),
-    linkText: z.string(),
+    link_text: z.string(),
     notes: z.string(),
   }),
-  skillProficiencies: localizedFieldSchema,
-  startingEquipment: z.string(),
-  toolProficiency: localizedFieldSchema.extend({
+  skill_proficiencies: localizedFieldSchema,
+  starting_equipment: z.string(),
+  tool_proficiency: localizedFieldSchema.extend({
     id: z.uuid().nullable(),
-    linkText: z.string(),
+    link_text: z.string(),
     notes: z.string(),
   }),
 });
@@ -157,26 +157,26 @@ export function localizeBackground(
       startingEquipment ? context.ti("starting_equipment", startingEquipment) : "",
     ),
 
-    abilityScores: {
+    ability_scores: {
       label: context.tp("ability_scores", background.ability_scores.length),
       value: abilityScores,
     },
     feat: {
       id: background.feat_id,
       label: context.t("feat"),
-      linkText: feat_name,
+      link_text: feat_name,
       notes: feat_notes,
       value: featValue,
     },
-    skillProficiencies: {
+    skill_proficiencies: {
       label: context.tp("skill_proficiencies", background.skill_proficiencies.length),
       value: skillProficiencies,
     },
-    startingEquipment,
-    toolProficiency: {
+    starting_equipment: startingEquipment,
+    tool_proficiency: {
       id: background.tool_proficiency_id,
       label: context.t("tool_proficiency"),
-      linkText: tool_name,
+      link_text: tool_name,
       notes: tool_notes,
       value: toolProficiencyValue,
     },

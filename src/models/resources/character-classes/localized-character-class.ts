@@ -38,16 +38,16 @@ export const localizedCharacterClassSchema = localizedResourceSchema(
   z.literal("character_class"),
 ).extend({
   abbreviation: z.string(),
-  armorProficiencies: localizedFieldSchema,
-  hitDie: localizedFieldSchema,
-  hitDieType: dieTypeSchema,
-  primaryAbilities: localizedFieldSchema,
+  armor_proficiencies: localizedFieldSchema,
+  hit_die: localizedFieldSchema,
+  hit_die_type: dieTypeSchema,
+  primary_abilities: localizedFieldSchema,
   proficiencies: z.array(localizedFieldSchema),
-  savingThrowProficiencies: localizedFieldSchema,
-  toolProficiencies: localizedFieldSchema.extend({
+  saving_throw_proficiencies: localizedFieldSchema,
+  tool_proficiencies: localizedFieldSchema.extend({
     resources: z.array(localizedToolReferenceSchema),
   }),
-  weaponProficiencies: localizedFieldSchema,
+  weapon_proficiencies: localizedFieldSchema,
 });
 
 export type LocalizedCharacterClass = z.infer<typeof localizedCharacterClassSchema>;
@@ -237,13 +237,13 @@ export function localizeCharacterClass(
       features,
     ),
     abbreviation: translate(characterClass.abbreviation, context.lang),
-    armorProficiencies: armorProficienciesField,
-    hitDie: {
+    armor_proficiencies: armorProficienciesField,
+    hit_die: {
       label: context.t("hit_die"),
       value: context.translateDieType(characterClass.hit_point_die),
     },
-    hitDieType: characterClass.hit_point_die,
-    primaryAbilities: {
+    hit_die_type: characterClass.hit_point_die,
+    primary_abilities: {
       label: context.tp("primary_abilities", characterClass.primary_abilities.length),
       value: primaryAbilities || context.t("abilities.none"),
     },
@@ -253,9 +253,9 @@ export function localizeCharacterClass(
       armorProficienciesField,
       toolProficienciesField,
     ].filter(({ value }) => value),
-    savingThrowProficiencies: savingThrowProficienciesField,
-    toolProficiencies: toolProficienciesField,
-    weaponProficiencies: weaponProficienciesField,
+    saving_throw_proficiencies: savingThrowProficienciesField,
+    tool_proficiencies: toolProficienciesField,
+    weapon_proficiencies: weaponProficienciesField,
   };
 }
 

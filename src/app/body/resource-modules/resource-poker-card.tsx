@@ -47,7 +47,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
   startDetailsOnSecondPage = false,
   ...rest
 }: ResourcePokerCardProps<R, L>) {
-  const imageUrl = localizedResource.imageUrl?.trim() ?? "";
+  const imageUrl = localizedResource.image_url?.trim() ?? "";
   const hasImage = showImage && imageUrl.length > 0;
   const firstPageIndexWithoutImage = hasImage ? 1 : 0;
   const [system] = useI18nSystem();
@@ -189,9 +189,9 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
           pageIndicator={`1 / ${pageCount}`}
           palette={palette}
           shadow={selectedPageIndex === 0 ? "sm" : undefined}
-          sourceName={localizedResource.sourceCode}
+          sourceName={localizedResource.source_code}
           sourcePage={localizedResource.page}
-          sourceVersion={localizedResource.sourceVersion}
+          sourceVersion={localizedResource.source_version}
           zIndex={0 === selectedPageIndex ? 1 : 0}
           {...rest}
         >
@@ -230,9 +230,9 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
             palette={palette}
             position="relative"
             shadow={adjustedPageIndex === selectedPageIndex ? "sm" : undefined}
-            sourceName={localizedResource.sourceCode}
+            sourceName={localizedResource.source_code}
             sourcePage={localizedResource.page}
-            sourceVersion={localizedResource.sourceVersion}
+            sourceVersion={localizedResource.source_version}
             zIndex={adjustedPageIndex === selectedPageIndex ? 1 : 0}
             {...rest}
           >
@@ -335,9 +335,9 @@ function ScrollableResourcePokerCard<R extends Resource, L extends LocalizedReso
       onNameClick={onNameClick}
       pageIndicator=""
       palette={palette}
-      sourceName={localizedResource.sourceCode}
+      sourceName={localizedResource.source_code}
       sourcePage={localizedResource.page}
-      sourceVersion={localizedResource.sourceVersion}
+      sourceVersion={localizedResource.source_version}
       {...rest}
     >
       <PokerCard.Separator mt={PokerCard.rem0750} />

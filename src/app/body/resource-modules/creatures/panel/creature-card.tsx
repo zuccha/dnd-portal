@@ -41,29 +41,29 @@ export function CreatureCard({
               templateColumns={`0.26in 0.22in 0.25in 0.25in`}
             >
               <AbilityHeader
-                mod={localizedResource.abilityScoreHeaders.modifier}
-                save={localizedResource.abilityScoreHeaders.save}
+                mod={localizedResource.ability_score_headers.modifier}
+                save={localizedResource.ability_score_headers.save}
               />
               <AbilityRow
                 category="physical"
-                label={localizedResource.abilityScores.strength.cardLabel}
-                modifier={localizedResource.abilityScores.strength.modifier}
-                save={localizedResource.abilityScores.strength.save}
-                score={localizedResource.abilityScores.strength.score}
+                label={localizedResource.ability_scores.strength.card_label}
+                modifier={localizedResource.ability_scores.strength.modifier}
+                save={localizedResource.ability_scores.strength.save}
+                score={localizedResource.ability_scores.strength.score}
               />
               <AbilityRow
                 category="physical"
-                label={localizedResource.abilityScores.dexterity.cardLabel}
-                modifier={localizedResource.abilityScores.dexterity.modifier}
-                save={localizedResource.abilityScores.dexterity.save}
-                score={localizedResource.abilityScores.dexterity.score}
+                label={localizedResource.ability_scores.dexterity.card_label}
+                modifier={localizedResource.ability_scores.dexterity.modifier}
+                save={localizedResource.ability_scores.dexterity.save}
+                score={localizedResource.ability_scores.dexterity.score}
               />
               <AbilityRow
                 category="physical"
-                label={localizedResource.abilityScores.constitution.cardLabel}
-                modifier={localizedResource.abilityScores.constitution.modifier}
-                save={localizedResource.abilityScores.constitution.save}
-                score={localizedResource.abilityScores.constitution.score}
+                label={localizedResource.ability_scores.constitution.card_label}
+                modifier={localizedResource.ability_scores.constitution.modifier}
+                save={localizedResource.ability_scores.constitution.save}
+                score={localizedResource.ability_scores.constitution.score}
               />
             </SimpleGrid>
 
@@ -73,29 +73,29 @@ export function CreatureCard({
               templateColumns={`0.26in 0.22in 0.25in 0.25in`}
             >
               <AbilityHeader
-                mod={localizedResource.abilityScoreHeaders.modifier}
-                save={localizedResource.abilityScoreHeaders.save}
+                mod={localizedResource.ability_score_headers.modifier}
+                save={localizedResource.ability_score_headers.save}
               />
               <AbilityRow
                 category="mental"
-                label={localizedResource.abilityScores.intelligence.cardLabel}
-                modifier={localizedResource.abilityScores.intelligence.modifier}
-                save={localizedResource.abilityScores.intelligence.save}
-                score={localizedResource.abilityScores.intelligence.score}
+                label={localizedResource.ability_scores.intelligence.card_label}
+                modifier={localizedResource.ability_scores.intelligence.modifier}
+                save={localizedResource.ability_scores.intelligence.save}
+                score={localizedResource.ability_scores.intelligence.score}
               />
               <AbilityRow
                 category="mental"
-                label={localizedResource.abilityScores.wisdom.cardLabel}
-                modifier={localizedResource.abilityScores.wisdom.modifier}
-                save={localizedResource.abilityScores.wisdom.save}
-                score={localizedResource.abilityScores.wisdom.score}
+                label={localizedResource.ability_scores.wisdom.card_label}
+                modifier={localizedResource.ability_scores.wisdom.modifier}
+                save={localizedResource.ability_scores.wisdom.save}
+                score={localizedResource.ability_scores.wisdom.score}
               />
               <AbilityRow
                 category="mental"
-                label={localizedResource.abilityScores.charisma.cardLabel}
-                modifier={localizedResource.abilityScores.charisma.modifier}
-                save={localizedResource.abilityScores.charisma.save}
-                score={localizedResource.abilityScores.charisma.score}
+                label={localizedResource.ability_scores.charisma.card_label}
+                modifier={localizedResource.ability_scores.charisma.modifier}
+                save={localizedResource.ability_scores.charisma.save}
+                score={localizedResource.ability_scores.charisma.score}
               />
             </SimpleGrid>
           </HStack>
@@ -143,7 +143,7 @@ export function CreatureCard({
               localizedResource.resistances,
               localizedResource.vulnerabilities,
               localizedResource.gear,
-              localizedResource.languagesInfo,
+              localizedResource.languages_info,
               localizedResource.senses,
             ]}
             palette={palette}
@@ -151,7 +151,7 @@ export function CreatureCard({
         </>
       }
       firstPageInfo={
-        localizedResource.summonedFromSpell ? (
+        localizedResource.summoned_from_spell ? (
           <StatsSummoned localizedResource={localizedResource} />
         ) : (
           <StatsRegular localizedResource={localizedResource} />
@@ -183,7 +183,7 @@ type CreatureStatsProps = {
 //------------------------------------------------------------------------------
 
 function StatsSummoned({ localizedResource }: CreatureStatsProps) {
-  const showSpellLevelLegend = Boolean(localizedResource.spellLevelLegend);
+  const showSpellLevelLegend = Boolean(localizedResource.spell_level_legend);
 
   return (
     <SimpleGrid
@@ -197,20 +197,20 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
       <GridItem rowSpan={showSpellLevelLegend ? 3 : 2}>
         <StatIcon
           icon={shieldIcon}
-          label={localizedResource.armorClass.shortLabel}
-          valueFontSize={localizedResource.armorClass.value.length > 2 ? "0.7em" : undefined}
-          value={localizedResource.armorClass.value}
+          label={localizedResource.armor_class.short_label}
+          valueFontSize={localizedResource.armor_class.value.length > 2 ? "0.7em" : undefined}
+          value={localizedResource.armor_class.value}
         />
       </GridItem>
       <VStack align="flex-start" gap={0} textAlign="left" w="full">
         <Span lineHeight="shorter">
-          <b>{localizedResource.hitPoints.cardLabel}</b>{" "}
-          <Span>{localizedResource.hitPoints.value}</Span>
+          <b>{localizedResource.hit_points.card_label}</b>{" "}
+          <Span>{localizedResource.hit_points.value}</Span>
         </Span>
       </VStack>
       <Span textAlign="left" w="full">
-        <b>{localizedResource.proficiencyBonus.cardLabel}</b>{" "}
-        <Span>{localizedResource.proficiencyBonus.value}</Span>
+        <b>{localizedResource.proficiency_bonus.card_label}</b>{" "}
+        <Span>{localizedResource.proficiency_bonus.value}</Span>
       </Span>
       {showSpellLevelLegend && (
         <GridItem colStart={2}>
@@ -221,7 +221,7 @@ function StatsSummoned({ localizedResource }: CreatureStatsProps) {
             textAlign="left"
             w="full"
           >
-            <Span fontStyle="italic">{localizedResource.spellLevelLegend}</Span>
+            <Span fontStyle="italic">{localizedResource.spell_level_legend}</Span>
           </Span>
         </GridItem>
       )}
@@ -239,25 +239,25 @@ function StatsRegular({ localizedResource }: CreatureStatsProps) {
       <HStack gap={PokerCard.rem0750}>
         <StatIcon
           icon={shieldIcon}
-          label={localizedResource.armorClass.shortLabel}
-          value={localizedResource.armorClass.value}
+          label={localizedResource.armor_class.short_label}
+          value={localizedResource.armor_class.value}
         />
         <VStack align="flex-start" gap={0} maxW="7em" textAlign="center">
           <Span lineHeight="shorter">
-            <b>{localizedResource.hitPoints.cardLabel}</b>{" "}
-            <Span>{localizedResource.hitPoints.value}</Span>
+            <b>{localizedResource.hit_points.card_label}</b>{" "}
+            <Span>{localizedResource.hit_points.value}</Span>
           </Span>
-          <Span lineHeight="shorter">{localizedResource.hitPoints.formula}</Span>
+          <Span lineHeight="shorter">{localizedResource.hit_points.formula}</Span>
         </VStack>
       </HStack>
       <HStack gap={PokerCard.rem0750}>
         <VStack align="flex-end" flex={1} gap={0}>
           <Span textAlign="right" w="full">
-            <b>{localizedResource.proficiencyBonus.cardLabel}</b>{" "}
-            <Span>{localizedResource.proficiencyBonus.value}</Span>
+            <b>{localizedResource.proficiency_bonus.card_label}</b>{" "}
+            <Span>{localizedResource.proficiency_bonus.value}</Span>
           </Span>
           <Span textAlign="right" w="full">
-            <b>{localizedResource.experience.shortLabel}</b>{" "}
+            <b>{localizedResource.experience.short_label}</b>{" "}
             <Span>{localizedResource.experience.value}</Span>
           </Span>
           {localizedResource.experience.lair.value &&
@@ -270,8 +270,8 @@ function StatsRegular({ localizedResource }: CreatureStatsProps) {
         </VStack>
         <StatIcon
           icon={scrollIcon}
-          label={localizedResource.challengeRating.shortLabel}
-          value={localizedResource.challengeRating.value}
+          label={localizedResource.challenge_rating.short_label}
+          value={localizedResource.challenge_rating.value}
         />
       </HStack>
     </HStack>

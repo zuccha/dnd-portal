@@ -107,7 +107,7 @@ export function createResourceCardInteractive<
   }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const navigate = useNavigate();
-    const sourceEditable = useSourceEditable(localizedResource.sourceId);
+    const sourceEditable = useSourceEditable(localizedResource.source_id);
     const paletteName = usePaletteName();
     const deleteResource = useResourceDelete(
       store,
@@ -226,7 +226,7 @@ export function createResourceCardInteractive<
           top={0}
         />
         <Theme appearance="light">
-          {localizedResource.virtual && (
+          {localizedResource.is_virtual && (
             <Badge
               colorPalette="orange"
               position="absolute"
@@ -277,7 +277,7 @@ export function createResourceCardInteractive<
               tooltipPositioning={{ placement: "right" }}
             />
 
-            {sourceEditable && localizedResource.virtual && (
+            {sourceEditable && localizedResource.is_virtual && (
               <IconButton
                 Icon={SaveIcon}
                 _disabled={{ bgColor: "fg.subtle", opacity: 1 }}

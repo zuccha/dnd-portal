@@ -22,8 +22,8 @@ export default function MetamagicDetail({
     <ResourceDetail actions={actions} resource={metamagic}>
       {metamagic && (
         <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-          <ResourceDetailField label={metamagic.sorceryPoints.label}>
-            {metamagic.sorceryPoints.value}
+          <ResourceDetailField label={metamagic.sorcery_points.label}>
+            {metamagic.sorcery_points.value}
           </ResourceDetailField>
           {metamagic.prerequisite.value && (
             <ResourceDetailField label={metamagic.prerequisite.label}>

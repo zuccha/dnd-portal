@@ -19,7 +19,7 @@ import CharacterSubclassesFilters from "./panel/character-subclasses-filters";
 
 const columns = createResourcesTableColumns<CharacterSubclass, LocalizedCharacterSubclass>([
   {
-    key: "characterClass",
+    key: "character_class",
     label: { en: "Class", it: "Classe" },
   },
 ]);

@@ -22,14 +22,14 @@ export default function VehicleDetail({
     <ResourceDetail actions={actions} resource={vehicle}>
       {vehicle && (
         <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
-          <ResourceDetailField label={vehicle.armorClass.label}>
-            {vehicle.armorClass.value}
+          <ResourceDetailField label={vehicle.armor_class.label}>
+            {vehicle.armor_class.value}
           </ResourceDetailField>
-          <ResourceDetailField label={vehicle.hitPoints.label}>
-            {vehicle.hitPoints.value}
+          <ResourceDetailField label={vehicle.hit_points.label}>
+            {vehicle.hit_points.value}
           </ResourceDetailField>
-          <ResourceDetailField label={vehicle.damageThreshold.label}>
-            {vehicle.damageThreshold.value}
+          <ResourceDetailField label={vehicle.damage_threshold.label}>
+            {vehicle.damage_threshold.value}
           </ResourceDetailField>
           <ResourceDetailField label={vehicle.crew.label}>{vehicle.crew.value}</ResourceDetailField>
           <ResourceDetailField label={vehicle.passengers.label}>

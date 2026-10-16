@@ -24,13 +24,13 @@ export default function CharacterSubclassDetail({
 
   return (
     <ResourceDetail actions={actions} resource={characterSubclass}>
-      {characterSubclass?.characterClass.value && (
+      {characterSubclass?.character_class.value && (
         <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-          <ResourceDetailField label={characterSubclass.characterClass.label}>
+          <ResourceDetailField label={characterSubclass.character_class.label}>
             <RouterLink
-              to={resourceDetailRoute("character_class", characterSubclass.characterClass.id)}
+              to={resourceDetailRoute("character_class", characterSubclass.character_class.id)}
             >
-              {characterSubclass.characterClass.value}
+              {characterSubclass.character_class.value}
             </RouterLink>
           </ResourceDetailField>
         </SimpleGrid>

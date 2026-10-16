@@ -25,31 +25,31 @@ export default function VehiclePrintDeckEntryEditor({
         <Field label={t("armor_class")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("armorClass", { ...localizedResource.armorClass, value })
+              onLocalizedResourceUpdate("armor_class", { ...localizedResource.armor_class, value })
             }
             placeholder={t("armor_class.placeholder")}
-            value={localizedResource.armorClass.value}
+            value={localizedResource.armor_class.value}
           />
         </Field>
         <Field label={t("hit_points")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("hitPoints", { ...localizedResource.hitPoints, value })
+              onLocalizedResourceUpdate("hit_points", { ...localizedResource.hit_points, value })
             }
             placeholder={t("hit_points.placeholder")}
-            value={localizedResource.hitPoints.value}
+            value={localizedResource.hit_points.value}
           />
         </Field>
         <Field label={t("damage_threshold")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("damageThreshold", {
-                ...localizedResource.damageThreshold,
+              onLocalizedResourceUpdate("damage_threshold", {
+                ...localizedResource.damage_threshold,
                 value,
               })
             }
             placeholder={t("damage_threshold.placeholder")}
-            value={localizedResource.damageThreshold.value}
+            value={localizedResource.damage_threshold.value}
           />
         </Field>
         <Field label={t("crew")}>

@@ -33,16 +33,16 @@ export default function EquipmentModifierPrintDeckEntryEditor({
       <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
         <Field label={t("cost_delta")}>
           <Input
-            onValueChange={(value) => onLocalizedResourceUpdate("costDelta", value)}
+            onValueChange={(value) => onLocalizedResourceUpdate("cost_delta", value)}
             placeholder={t("cost_delta.placeholder")}
-            value={localizedResource.costDelta}
+            value={localizedResource.cost_delta}
           />
         </Field>
         <Field label={t("weight_delta")}>
           <Input
-            onValueChange={(value) => onLocalizedResourceUpdate("weightDelta", value)}
+            onValueChange={(value) => onLocalizedResourceUpdate("weight_delta", value)}
             placeholder={t("weight_delta.placeholder")}
-            value={localizedResource.weightDelta}
+            value={localizedResource.weight_delta}
           />
         </Field>
       </SimpleGrid>
@@ -56,18 +56,18 @@ export default function EquipmentModifierPrintDeckEntryEditor({
         </Field>
         <Field label={t("minimum_rarity")}>
           <Input
-            onValueChange={(value) => onLocalizedResourceUpdate("rarityMinimum", value)}
+            onValueChange={(value) => onLocalizedResourceUpdate("rarity_minimum", value)}
             placeholder={t("minimum_rarity.placeholder")}
-            value={localizedResource.rarityMinimum}
+            value={localizedResource.rarity_minimum}
           />
         </Field>
         <Field label={t("minimum_attunement")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("requiredAttunementSlotsMinimum", value)
+              onLocalizedResourceUpdate("required_attunement_slots_minimum", value)
             }
             placeholder={t("minimum_attunement.placeholder")}
-            value={localizedResource.requiredAttunementSlotsMinimum}
+            value={localizedResource.required_attunement_slots_minimum}
           />
         </Field>
       </SimpleGrid>

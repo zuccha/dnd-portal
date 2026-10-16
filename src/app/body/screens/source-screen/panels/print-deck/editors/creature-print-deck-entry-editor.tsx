@@ -17,15 +17,15 @@ export default function CreaturePrintDeckEntryEditor({
   onLocalizedResourceUpdate,
 }: PrintDeckEntryEditorProps<LocalizedCreature>) {
   const { t, ti } = useI18nLangContext(i18nContext);
-  const summonedFromSpell = localizedResource.summonedFromSpell;
+  const summonedFromSpell = localizedResource.summoned_from_spell;
 
   const updateExperience = (update: Partial<typeof localizedResource.experience>) => {
     const experience = { ...localizedResource.experience, ...update };
-    const valueWithLair =
+    const value_with_lair =
       experience.lair.value && experience.value !== experience.lair.value
         ? ti("experience.with_lair", experience.value, experience.lair.value)
         : experience.value;
-    onLocalizedResourceUpdate("experience", { ...experience, valueWithLair });
+    onLocalizedResourceUpdate("experience", { ...experience, value_with_lair });
   };
 
   const abilities: CreatureAbility[] = [
@@ -47,34 +47,37 @@ export default function CreaturePrintDeckEntryEditor({
           <Field label={t("armor_class")}>
             <Input
               onValueChange={(value) =>
-                onLocalizedResourceUpdate("armorClass", { ...localizedResource.armorClass, value })
+                onLocalizedResourceUpdate("armor_class", {
+                  ...localizedResource.armor_class,
+                  value,
+                })
               }
               placeholder={t("number.placeholder")}
-              value={localizedResource.armorClass.value}
+              value={localizedResource.armor_class.value}
             />
           </Field>
           <Field label={t("hit_points")}>
             <HStack>
               <Input
                 onValueChange={(value) =>
-                  onLocalizedResourceUpdate("hitPoints", {
-                    ...localizedResource.hitPoints,
+                  onLocalizedResourceUpdate("hit_points", {
+                    ...localizedResource.hit_points,
                     value,
                   })
                 }
                 placeholder={t("number.placeholder")}
-                value={localizedResource.hitPoints.value}
+                value={localizedResource.hit_points.value}
               />
               <Input
                 disabled={summonedFromSpell}
                 onValueChange={(formula) =>
-                  onLocalizedResourceUpdate("hitPoints", {
-                    ...localizedResource.hitPoints,
+                  onLocalizedResourceUpdate("hit_points", {
+                    ...localizedResource.hit_points,
                     formula,
                   })
                 }
                 placeholder={t("formula.placeholder")}
-                value={localizedResource.hitPoints.formula}
+                value={localizedResource.hit_points.formula}
               />
             </HStack>
           </Field>
@@ -82,26 +85,26 @@ export default function CreaturePrintDeckEntryEditor({
             <Input
               disabled={summonedFromSpell}
               onValueChange={(value) =>
-                onLocalizedResourceUpdate("proficiencyBonus", {
-                  ...localizedResource.proficiencyBonus,
+                onLocalizedResourceUpdate("proficiency_bonus", {
+                  ...localizedResource.proficiency_bonus,
                   value,
                 })
               }
               placeholder={t("proficiency_bonus.placeholder")}
-              value={localizedResource.proficiencyBonus.value}
+              value={localizedResource.proficiency_bonus.value}
             />
           </Field>
           <Field label={t("challenge_rating")}>
             <Input
               disabled={summonedFromSpell}
               onValueChange={(value) =>
-                onLocalizedResourceUpdate("challengeRating", {
-                  ...localizedResource.challengeRating,
+                onLocalizedResourceUpdate("challenge_rating", {
+                  ...localizedResource.challenge_rating,
                   value,
                 })
               }
               placeholder={t("challenge_rating.placeholder")}
-              value={localizedResource.challengeRating.value}
+              value={localizedResource.challenge_rating.value}
             />
           </Field>
           <HStack align="flex-start" gridColumn={{ base: "auto", sm: "span 2", xl: "span 6" }}>
@@ -130,15 +133,15 @@ export default function CreaturePrintDeckEntryEditor({
             <VStack align="stretch" flex={1} gap={1}>
               <Field label={t("spell_level_legend")}>
                 <Input
-                  disabled={!localizedResource.summonedFromSpell}
-                  onValueChange={(value) => onLocalizedResourceUpdate("spellLevelLegend", value)}
+                  disabled={!localizedResource.summoned_from_spell}
+                  onValueChange={(value) => onLocalizedResourceUpdate("spell_level_legend", value)}
                   placeholder={t("spell_level_legend.placeholder")}
-                  value={localizedResource.spellLevelLegend}
+                  value={localizedResource.spell_level_legend}
                 />
               </Field>
               <Switch
                 label={t("summoned_from_spell")}
-                onValueChange={(value) => onLocalizedResourceUpdate("summonedFromSpell", value)}
+                onValueChange={(value) => onLocalizedResourceUpdate("summoned_from_spell", value)}
                 value={summonedFromSpell}
               />
             </VStack>
@@ -153,7 +156,7 @@ export default function CreaturePrintDeckEntryEditor({
             <Span fontSize="sm">{t("save")}</Span>
           </SimpleGrid>
           {abilities.map((ability) => {
-            const score = localizedResource.abilityScores[ability];
+            const score = localizedResource.ability_scores[ability];
 
             return (
               <SimpleGrid columns={4} gap={2} key={ability}>
@@ -161,8 +164,8 @@ export default function CreaturePrintDeckEntryEditor({
                 <Input
                   aria-label={`${score.label} ${t("score")}`}
                   onValueChange={(value) =>
-                    onLocalizedResourceUpdate("abilityScores", {
-                      ...localizedResource.abilityScores,
+                    onLocalizedResourceUpdate("ability_scores", {
+                      ...localizedResource.ability_scores,
                       [ability]: { ...score, score: value },
                     })
                   }
@@ -172,8 +175,8 @@ export default function CreaturePrintDeckEntryEditor({
                 <Input
                   aria-label={`${score.label} ${t("modifier")}`}
                   onValueChange={(value) =>
-                    onLocalizedResourceUpdate("abilityScores", {
-                      ...localizedResource.abilityScores,
+                    onLocalizedResourceUpdate("ability_scores", {
+                      ...localizedResource.ability_scores,
                       [ability]: { ...score, modifier: value },
                     })
                   }
@@ -183,8 +186,8 @@ export default function CreaturePrintDeckEntryEditor({
                 <Input
                   aria-label={`${score.label} ${t("save")}`}
                   onValueChange={(value) =>
-                    onLocalizedResourceUpdate("abilityScores", {
-                      ...localizedResource.abilityScores,
+                    onLocalizedResourceUpdate("ability_scores", {
+                      ...localizedResource.ability_scores,
                       [ability]: { ...score, save: value },
                     })
                   }
@@ -317,13 +320,13 @@ export default function CreaturePrintDeckEntryEditor({
           <Field label={t("languages")}>
             <Input
               onValueChange={(value) =>
-                onLocalizedResourceUpdate("languagesInfo", {
-                  ...localizedResource.languagesInfo,
+                onLocalizedResourceUpdate("languages_info", {
+                  ...localizedResource.languages_info,
                   value,
                 })
               }
               placeholder={t("languages.placeholder")}
-              value={localizedResource.languagesInfo.value}
+              value={localizedResource.languages_info.value}
             />
           </Field>
           <Field label={t("senses")}>

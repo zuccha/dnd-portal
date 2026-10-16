@@ -41,14 +41,14 @@ const columns = createEquipmentTableColumns<Weapon, LocalizedWeapon>([
   },
   {
     icon: SwordsIcon,
-    key: "isMelee",
+    key: "is_melee",
     label: { en: "⚔️", it: "⚔️" },
     textAlign: "center",
     w: "1%",
   },
   {
     icon: BowArrowIcon,
-    key: "isRanged",
+    key: "is_ranged",
     label: { en: "🏹", it: "🏹" },
     textAlign: "center",
     w: "1%",

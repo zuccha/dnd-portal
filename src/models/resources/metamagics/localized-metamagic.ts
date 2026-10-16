@@ -18,7 +18,7 @@ export const localizedMetamagicSchema = localizedResourceSchema(
   z.literal("metamagic"),
 ).extend({
   prerequisite: localizedFieldSchema,
-  sorceryPoints: localizedFieldSchema.extend({ valueWithLabel: z.string() }),
+  sorcery_points: localizedFieldSchema.extend({ value_with_label: z.string() }),
 });
 
 export type LocalizedMetamagic = z.infer<typeof localizedMetamagicSchema>;
@@ -60,10 +60,10 @@ export function localizeMetamagic(
       label: context.tp("prerequisites", prerequisite?.includes(",") ? 2 : 1),
       value: prerequisite ?? "",
     },
-    sorceryPoints: {
+    sorcery_points: {
       label: context.tp("sorcery_points", metamagic.sorcery_points),
       value: `${metamagic.sorcery_points}`,
-      valueWithLabel: context.tpi(
+      value_with_label: context.tpi(
         "sorcery_points_with_value",
         metamagic.sorcery_points,
         `${metamagic.sorcery_points}`,

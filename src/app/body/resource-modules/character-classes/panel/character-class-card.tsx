@@ -37,7 +37,7 @@ export function CharacterClassCard({
       firstPageInfo={
         <HStack justify="space-between" px={PokerCard.rem0750} w="full">
           <HStack gap={PokerCard.rem0250}>
-            <Icon Icon={dieIcons[localizedResource.hitDieType]} size="lg" />
+            <Icon Icon={dieIcons[localizedResource.hit_die_type]} size="lg" />
             <VStack
               align="flex-start"
               fontSize={PokerCard.rem0750}
@@ -52,9 +52,9 @@ export function CharacterClassCard({
 
           <VStack align="flex-end" fontSize={PokerCard.rem0875} gap={0}>
             <Span fontStyle="italic" fontWeight="bold">
-              {localizedResource.primaryAbilities.label}
+              {localizedResource.primary_abilities.label}
             </Span>
-            <Span>{localizedResource.primaryAbilities.value}</Span>
+            <Span>{localizedResource.primary_abilities.value}</Span>
           </VStack>
         </HStack>
       }

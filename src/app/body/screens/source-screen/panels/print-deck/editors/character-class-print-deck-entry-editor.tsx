@@ -19,22 +19,22 @@ export default function CharacterClassPrintDeckEntryEditor({
   const { t } = useI18nLangContext(i18nContext);
   const proficiencyFields = [
     {
-      field: localizedResource.savingThrowProficiencies,
+      field: localizedResource.saving_throw_proficiencies,
       label: t("saving_throw_proficiencies"),
       placeholder: t("saving_throw_proficiencies.placeholder"),
     },
     {
-      field: localizedResource.weaponProficiencies,
+      field: localizedResource.weapon_proficiencies,
       label: t("weapon_proficiencies"),
       placeholder: t("weapon_proficiencies.placeholder"),
     },
     {
-      field: localizedResource.armorProficiencies,
+      field: localizedResource.armor_proficiencies,
       label: t("armor_proficiencies"),
       placeholder: t("armor_proficiencies.placeholder"),
     },
     {
-      field: localizedResource.toolProficiencies,
+      field: localizedResource.tool_proficiencies,
       label: t("tool_proficiencies"),
       placeholder: t("tool_proficiencies.placeholder"),
     },
@@ -50,21 +50,21 @@ export default function CharacterClassPrintDeckEntryEditor({
           <Field label={t("primary_abilities")}>
             <Input
               onValueChange={(value) =>
-                onLocalizedResourceUpdate("primaryAbilities", {
-                  ...localizedResource.primaryAbilities,
+                onLocalizedResourceUpdate("primary_abilities", {
+                  ...localizedResource.primary_abilities,
                   value,
                 })
               }
               placeholder={t("primary_abilities.placeholder")}
-              value={localizedResource.primaryAbilities.value}
+              value={localizedResource.primary_abilities.value}
             />
           </Field>
           <Field label={t("hit_die")}>
             <Select.Enum
-              onValueChange={(hitDieType) => onLocalizedResourceUpdate("hitDieType", hitDieType)}
+              onValueChange={(hitDieType) => onLocalizedResourceUpdate("hit_die_type", hitDieType)}
               options={dieTypes.map((value) => ({ label: value, value }))}
               placeholder={t("hit_die.placeholder")}
-              value={localizedResource.hitDieType}
+              value={localizedResource.hit_die_type}
               withinDialog
             />
           </Field>

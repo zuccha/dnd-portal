@@ -22,7 +22,7 @@ export const localizedCharacterSubclassSchema = localizedResourceSchema(
   characterSubclassSchema,
   z.literal("character_subclass"),
 ).extend({
-  characterClass: localizedFieldSchema.extend({ id: z.uuid() }),
+  character_class: localizedFieldSchema.extend({ id: z.uuid() }),
 });
 
 export type LocalizedCharacterSubclass = z.infer<typeof localizedCharacterSubclassSchema>;
@@ -66,7 +66,7 @@ export function localizeCharacterSubclass(
     ...localizeResource(characterSubclass, context),
     descriptor: context.ti("descriptor", context.characterClassName),
     details: context.featureEntries,
-    characterClass: {
+    character_class: {
       id: characterSubclass.character_class_id,
       label: context.t("character_class"),
       value: context.characterClassName,

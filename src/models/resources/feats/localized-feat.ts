@@ -20,7 +20,7 @@ import type { RelatedResourceEntries } from "../../catalogue/resource-relations"
 
 export const localizedFeatSchema = localizedResourceSchema(featSchema, z.literal("feat")).extend({
   category: z.string(),
-  minLevel: localizedFieldSchema,
+  minimum_level: localizedFieldSchema,
   prerequisite: localizedFieldSchema,
 });
 
@@ -70,7 +70,7 @@ export function localizeFeat(feat: Feat, context: FeatLocalizationContext): Loca
     category,
     details: formatDetails(description, features),
 
-    minLevel: { label: context.t("min_level"), value: minLevel },
+    minimum_level: { label: context.t("min_level"), value: minLevel },
     prerequisite: { label: context.t("prerequisite"), value: prerequisite },
   };
 }

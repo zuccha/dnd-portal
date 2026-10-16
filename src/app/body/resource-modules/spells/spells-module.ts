@@ -28,7 +28,7 @@ const columns = createResourcesTableColumns<Spell, LocalizedSpell>([
     label: { en: "School", it: "Scuola" },
   },
   {
-    key: "castingTime",
+    key: "casting_time",
     label: { en: "Cast", it: "Lancio" },
   },
   {

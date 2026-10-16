@@ -22,10 +22,10 @@ export default function EquipmentModifierDetail({
         <VStack align="stretch" gap={2}>
           <SimpleGrid columns={{ base: 1, sm: 3 }} columnGap={6} rowGap={2}>
             {[
-              { field: resource.additionalCost, key: "additionalCost" },
-              { field: resource.additionalWeight, key: "additionalWeight" },
-              { field: resource.magicStatus, key: "magicStatus" },
-              { field: resource.minimumRarity, key: "minimumRarity" },
+              { field: resource.additional_cost, key: "additional_cost" },
+              { field: resource.additional_weight, key: "additional_weight" },
+              { field: resource.magic_status, key: "magic_status" },
+              { field: resource.minimum_rarity, key: "minimum_rarity" },
               { field: resource.attunement, key: "attunement" },
             ].map(({ field, key }) =>
               field ? (
@@ -37,9 +37,9 @@ export default function EquipmentModifierDetail({
               ),
             )}
           </SimpleGrid>
-          {resource.supportedEquipment.resources.length > 0 && (
-            <ResourceDetailField label={resource.supportedEquipment.label}>
-              <ResourceDetailLinks resources={resource.supportedEquipment.resources} />
+          {resource.supported_equipment.resources.length > 0 && (
+            <ResourceDetailField label={resource.supported_equipment.label}>
+              <ResourceDetailLinks resources={resource.supported_equipment.resources} />
             </ResourceDetailField>
           )}
         </VStack>

@@ -20,24 +20,24 @@ export function SpellCard({
   palette,
   ...rest
 }: SpellCardProps) {
-  const castingTime = localizedResource.castingTime.value;
+  const castingTime = localizedResource.casting_time.value;
   const range = localizedResource.range.value;
   const components = localizedResource.components;
   const duration = localizedResource.duration.value;
 
-  const castingTimeColor = localizedResource.emphasizeCastingTime ? palette[800] : undefined;
+  const castingTimeColor = localizedResource.emphasize_casting_time ? palette[800] : undefined;
 
   return (
     <ResourcePokerCard
       afterDescriptor={
-        localizedResource.characterClassAbbreviations ? (
+        localizedResource.character_class_abbreviations ? (
           <Center
             fontFamily="Mr Eaves"
             fontSize={PokerCard.rem0750}
             fontStyle="normal"
             textTransform="uppercase"
           >
-            {localizedResource.characterClassAbbreviations}
+            {localizedResource.character_class_abbreviations}
           </Center>
         ) : null
       }
@@ -46,7 +46,7 @@ export function SpellCard({
           <SimpleGrid columns={2} gap={0} px={PokerCard.rem1000} w="full">
             <Cell
               color={castingTimeColor}
-              label={localizedResource.castingTime.label}
+              label={localizedResource.casting_time.label}
               value={castingTime}
             >
               {localizedResource.ritual && (

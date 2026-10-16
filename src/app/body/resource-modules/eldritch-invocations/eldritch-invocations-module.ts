@@ -19,7 +19,7 @@ import EldritchInvocationsFilters from "./panel/eldritch-invocations-filters";
 
 const columns = createResourcesTableColumns<EldritchInvocation, LocalizedEldritchInvocation>([
   {
-    key: "minWarlockLevel",
+    key: "minimum_warlock_level",
     label: { en: "Min. Level", it: "Livello Min." },
     textAlign: "right",
     w: "1%",

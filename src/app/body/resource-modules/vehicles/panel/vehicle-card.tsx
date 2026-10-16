@@ -28,8 +28,8 @@ export function VehicleCard({
         <PokerCard.LabeledValues
           fields={[
             localizedResource.speed,
-            { ...localizedResource.crew, label: localizedResource.crew.shortLabel },
-            { ...localizedResource.passengers, label: localizedResource.passengers.shortLabel },
+            { ...localizedResource.crew, label: localizedResource.crew.short_label },
+            { ...localizedResource.passengers, label: localizedResource.passengers.short_label },
           ]}
           palette={palette}
         />
@@ -39,17 +39,17 @@ export function VehicleCard({
           <HStack gap={PokerCard.rem0750}>
             <StatIcon
               icon={shieldIcon}
-              label={localizedResource.armorClass.shortLabel}
-              value={localizedResource.armorClass.value}
+              label={localizedResource.armor_class.short_label}
+              value={localizedResource.armor_class.value}
             />
             <VStack align="flex-start" gap={0}>
               <Span>
-                <b>{localizedResource.hitPoints.shortLabel}</b>{" "}
-                <Span>{localizedResource.hitPoints.value}</Span>
+                <b>{localizedResource.hit_points.short_label}</b>{" "}
+                <Span>{localizedResource.hit_points.value}</Span>
               </Span>
               <Span>
-                <b>{localizedResource.damageThreshold.shortLabel}</b>{" "}
-                <Span>{localizedResource.damageThreshold.value}</Span>
+                <b>{localizedResource.damage_threshold.short_label}</b>{" "}
+                <Span>{localizedResource.damage_threshold.value}</Span>
               </Span>
             </VStack>
           </HStack>

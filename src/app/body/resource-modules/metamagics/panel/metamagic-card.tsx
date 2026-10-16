@@ -28,7 +28,7 @@ export function MetamagicCard({
       }
       firstPageInfo={
         <Flex justify="center" w="full">
-          {localizedResource.sorceryPoints.valueWithLabel}
+          {localizedResource.sorcery_points.value_with_label}
         </Flex>
       }
       localizedResource={localizedResource}

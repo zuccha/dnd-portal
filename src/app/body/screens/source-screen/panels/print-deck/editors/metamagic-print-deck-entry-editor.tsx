@@ -37,13 +37,13 @@ export default function MetamagicPrintDeckEntryEditor({
         <Field label={t("sorcery_points")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("sorceryPoints", {
-                ...localizedResource.sorceryPoints,
-                valueWithLabel: value,
+              onLocalizedResourceUpdate("sorcery_points", {
+                ...localizedResource.sorcery_points,
+                value_with_label: value,
               })
             }
             placeholder={t("sorcery_points.placeholder")}
-            value={localizedResource.sorceryPoints.valueWithLabel}
+            value={localizedResource.sorcery_points.value_with_label}
           />
         </Field>
       </VStack>

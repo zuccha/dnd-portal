@@ -35,10 +35,10 @@ export default function SpellPrintDeckEntryEditor({
           <Field label={t("classes")}>
             <Input
               onValueChange={(value) =>
-                onLocalizedResourceUpdate("characterClassAbbreviations", value)
+                onLocalizedResourceUpdate("character_class_abbreviations", value)
               }
               placeholder={t("classes.placeholder")}
-              value={localizedResource.characterClassAbbreviations}
+              value={localizedResource.character_class_abbreviations}
             />
           </Field>
         </HStack>
@@ -46,13 +46,13 @@ export default function SpellPrintDeckEntryEditor({
           <Field label={t("casting_time")}>
             <Input
               onValueChange={(value) =>
-                onLocalizedResourceUpdate("castingTime", {
-                  ...localizedResource.castingTime,
+                onLocalizedResourceUpdate("casting_time", {
+                  ...localizedResource.casting_time,
                   value,
                 })
               }
               placeholder={t("casting_time.placeholder")}
-              value={localizedResource.castingTime.value}
+              value={localizedResource.casting_time.value}
             />
           </Field>
           <Field label={t("range")}>
@@ -111,8 +111,8 @@ export default function SpellPrintDeckEntryEditor({
           />
           <Switch
             label={t("emphasize_casting_time")}
-            onValueChange={(value) => onLocalizedResourceUpdate("emphasizeCastingTime", value)}
-            value={localizedResource.emphasizeCastingTime}
+            onValueChange={(value) => onLocalizedResourceUpdate("emphasize_casting_time", value)}
+            value={localizedResource.emphasize_casting_time}
           />
         </HStack>
       </VStack>

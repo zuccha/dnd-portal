@@ -201,7 +201,7 @@ export function createResourcesTableRow<
               >
                 {key === "name" ? (
                   <HStack gap={2} minW={0}>
-                    {localizedResource.virtual && (
+                    {localizedResource.is_virtual && (
                       <Badge colorPalette="orange" size="xs" variant="solid">
                         {translate({ en: "Temporary", it: "Temporanea" }, lang)}
                       </Badge>
@@ -241,7 +241,7 @@ export function createResourcesTableRow<
                   variant="ghost"
                 />
 
-                {sourceEditable && localizedResource.virtual && (
+                {sourceEditable && localizedResource.is_virtual && (
                   <IconButton
                     Icon={SaveIcon}
                     label={t("persistent.make")}

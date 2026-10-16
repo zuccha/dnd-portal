@@ -25,10 +25,13 @@ export default function FeatPrintDeckEntryEditor({
         <Field label={t("min_level")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("minLevel", { ...localizedResource.minLevel, value })
+              onLocalizedResourceUpdate("minimum_level", {
+                ...localizedResource.minimum_level,
+                value,
+              })
             }
             placeholder={t("min_level.placeholder")}
-            value={localizedResource.minLevel.value}
+            value={localizedResource.minimum_level.value}
           />
         </Field>
         <Field label={t("prerequisite")}>

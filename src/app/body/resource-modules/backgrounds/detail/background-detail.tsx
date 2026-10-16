@@ -20,7 +20,7 @@ export default function BackgroundDetail({
 }) {
   const background = resource;
   const fields = background
-    ? [background.abilityScores, background.skillProficiencies].filter(({ value }) =>
+    ? [background.ability_scores, background.skill_proficiencies].filter(({ value }) =>
         Boolean(value),
       )
     : [];
@@ -37,18 +37,18 @@ export default function BackgroundDetail({
           {background.feat.id && (
             <ResourceDetailField label={background.feat.label}>
               <RouterLink to={resourceDetailRoute("feat", background.feat.id)}>
-                {background.feat.linkText || background.feat.value}
+                {background.feat.link_text || background.feat.value}
               </RouterLink>
               {background.feat.notes && <Span> ({background.feat.notes})</Span>}
             </ResourceDetailField>
           )}
-          {background.toolProficiency.id && (
-            <ResourceDetailField label={background.toolProficiency.label}>
-              <RouterLink to={resourceDetailRoute("tool", background.toolProficiency.id)}>
-                {background.toolProficiency.linkText || background.toolProficiency.value}
+          {background.tool_proficiency.id && (
+            <ResourceDetailField label={background.tool_proficiency.label}>
+              <RouterLink to={resourceDetailRoute("tool", background.tool_proficiency.id)}>
+                {background.tool_proficiency.link_text || background.tool_proficiency.value}
               </RouterLink>
-              {background.toolProficiency.notes && (
-                <Span> ({background.toolProficiency.notes})</Span>
+              {background.tool_proficiency.notes && (
+                <Span> ({background.tool_proficiency.notes})</Span>
               )}
             </ResourceDetailField>
           )}

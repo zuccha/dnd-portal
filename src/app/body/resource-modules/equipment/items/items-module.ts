@@ -39,7 +39,7 @@ const columns = createEquipmentTableColumns<Item, LocalizedItem>([
   },
   {
     icon: FlaskConicalIcon,
-    key: "isConsumable",
+    key: "is_consumable",
     label: { en: "🧪", it: "🧪" },
     textAlign: "center",
     w: "1%",

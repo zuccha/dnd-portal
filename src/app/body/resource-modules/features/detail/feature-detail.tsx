@@ -28,19 +28,19 @@ export default function FeatureDetail({
   return (
     <ResourceDetail actions={actions} resource={feature}>
       {feature &&
-        ((feature.displayName.value && feature.displayName.value !== feature.name) ||
-          feature.grantedBy.length > 0) && (
+        ((feature.display_name.value && feature.display_name.value !== feature.name) ||
+          feature.granted_by.length > 0) && (
           <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-            {feature.displayName.value && feature.displayName.value !== feature.name && (
-              <ResourceDetailField label={feature.displayName.label}>
-                {feature.displayName.value}
+            {feature.display_name.value && feature.display_name.value !== feature.name && (
+              <ResourceDetailField label={feature.display_name.label}>
+                {feature.display_name.value}
               </ResourceDetailField>
             )}
-            {feature.grantedBy.length > 0 && (
+            {feature.granted_by.length > 0 && (
               <GridItem colSpan={{ base: 1, sm: 2 }}>
-                <ResourceDetailField label={feature.grantedByLabel}>
+                <ResourceDetailField label={feature.granted_by_label}>
                   <VStack align="stretch" gap={2}>
-                    {feature.grantedBy.map(({ label, values }) => (
+                    {feature.granted_by.map(({ label, values }) => (
                       <VStack align="stretch" gap={0} key={label}>
                         <Text fontSize="sm" fontWeight="medium">
                           {label}

@@ -34,20 +34,20 @@ export default function WeaponPrintDeckEntryEditor({
         <Field label={t("damage_type")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("damageType", {
-                ...localizedResource.damageType,
+              onLocalizedResourceUpdate("damage_type", {
+                ...localizedResource.damage_type,
                 label: value,
               })
             }
             placeholder={t("damage_type.placeholder")}
-            value={localizedResource.damageType.label}
+            value={localizedResource.damage_type.label}
           />
         </Field>
         <Field label={t("damage")}>
           <Input
-            onValueChange={(value) => onLocalizedResourceUpdate("damageLine", value)}
+            onValueChange={(value) => onLocalizedResourceUpdate("damage_line", value)}
             placeholder={t("damage.placeholder")}
-            value={localizedResource.damageLine}
+            value={localizedResource.damage_line}
           />
         </Field>
         <Field label={t("range")}>

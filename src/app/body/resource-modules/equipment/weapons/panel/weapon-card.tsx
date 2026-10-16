@@ -33,9 +33,9 @@ export function WeaponCard({
       }
       firstPageInfoRight={
         <PokerCard.Arrow
-          label={localizedResource.damageType.label}
+          label={localizedResource.damage_type.label}
           palette={palette}
-          value={localizedResource.damageLine}
+          value={localizedResource.damage_line}
         />
       }
       localizedResource={localizedResource}

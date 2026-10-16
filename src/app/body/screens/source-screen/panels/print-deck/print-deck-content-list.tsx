@@ -55,7 +55,7 @@ export default function PrintDeckContentList() {
               onRemove={() => printDeck.removeEntry(entry.id)}
               entryLang={entry.lang}
               paletteName={entry.palette_name}
-              source={entry.resource.sourceCode}
+              source={entry.resource.source_code}
             />
           ))}
         </VStack>

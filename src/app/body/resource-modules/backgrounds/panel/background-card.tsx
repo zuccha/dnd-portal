@@ -23,10 +23,10 @@ export function BackgroundCard({
       beforeDetails={
         <PokerCard.LabeledValues
           fields={[
-            localizedResource.abilityScores,
+            localizedResource.ability_scores,
             localizedResource.feat,
-            localizedResource.skillProficiencies,
-            localizedResource.toolProficiency,
+            localizedResource.skill_proficiencies,
+            localizedResource.tool_proficiency,
           ]}
           palette={palette}
         />

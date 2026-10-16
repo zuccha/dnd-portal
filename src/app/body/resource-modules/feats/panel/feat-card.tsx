@@ -21,9 +21,9 @@ export function FeatCard({
   return (
     <ResourcePokerCard
       beforeDetails={
-        (localizedResource.minLevel.value || localizedResource.prerequisite.value) && (
+        (localizedResource.minimum_level.value || localizedResource.prerequisite.value) && (
           <PokerCard.LabeledValues
-            fields={[localizedResource.minLevel, localizedResource.prerequisite]}
+            fields={[localizedResource.minimum_level, localizedResource.prerequisite]}
             palette={palette}
           />
         )

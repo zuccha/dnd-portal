@@ -28,14 +28,14 @@ const useCharacterClassResources = characterClassStore.useResources;
 
 export const localizedSpellSchema = localizedResourceSchema(spellSchema, z.literal("spell")).extend(
   {
-    castingTime: localizedFieldSchema.extend({ valueWithRitual: z.string() }),
-    characterClassAbbreviations: z.string(),
-    characterClasses: z.array(localizedResourceLinkSchema(z.literal("character_class"))),
-    characterClassesLabel: z.string(),
+    casting_time: localizedFieldSchema.extend({ value_with_ritual: z.string() }),
+    character_class_abbreviations: z.string(),
+    character_classes: z.array(localizedResourceLinkSchema(z.literal("character_class"))),
+    character_classes_label: z.string(),
     components: localizedFieldSchema,
     concentration: z.boolean(),
-    emphasizeCastingTime: z.boolean(),
-    duration: localizedFieldSchema.extend({ valueWithConcentration: z.string() }),
+    emphasize_casting_time: z.boolean(),
+    duration: localizedFieldSchema.extend({ value_with_concentration: z.string() }),
     level: z.string(),
     materials: localizedFieldSchema,
     range: localizedFieldSchema,
@@ -159,16 +159,16 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
   return {
     ...localizeResource(spell, context),
     descriptor: context.tpi("subtitle", spell.level, school, `${spell.level}`),
-    castingTime: {
+    casting_time: {
       label: context.t("casting_time"),
       value: castingTime,
-      valueWithRitual: spell.has_ritual
+      value_with_ritual: spell.has_ritual
         ? context.ti("casting_time_with_ritual", castingTime)
         : castingTime,
     },
-    characterClassAbbreviations,
-    characterClasses: context.characterClasses,
-    characterClassesLabel: context.t("classes"),
+    character_class_abbreviations: characterClassAbbreviations,
+    character_classes: context.characterClasses,
+    character_classes_label: context.t("classes"),
     components: {
       label: context.t("components"),
       value:
@@ -177,7 +177,7 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
           .join(", ") || "—",
     },
     concentration: spell.has_concentration,
-    emphasizeCastingTime:
+    emphasize_casting_time:
       spell.casting_time === "bonus_action" || spell.casting_time === "reaction",
     details:
       details && upgrade
@@ -186,7 +186,7 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
     duration: {
       label: context.t("duration"),
       value: spell.has_concentration ? context.ti("duration_up_to", durationValue) : durationValue,
-      valueWithConcentration: spell.has_concentration
+      value_with_concentration: spell.has_concentration
         ? context.ti("duration_with_concentration", durationValue)
         : durationValue,
     },

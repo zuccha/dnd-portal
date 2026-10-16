@@ -24,7 +24,7 @@ export default function CreatureDetail({
   const creature = resource;
   const infoFields: {
     currency?: string;
-    detailParts?: NonNullable<CreatureDetailResource>["languagesInfo"]["detailParts"];
+    detailParts?: NonNullable<CreatureDetailResource>["languages_info"]["detail_parts"];
     entries?: NonNullable<CreatureDetailResource>["gear"]["entries"];
     label: string;
     value: string;
@@ -35,7 +35,7 @@ export default function CreatureDetail({
         { ...creature.resistances, detailParts: undefined },
         { ...creature.vulnerabilities, detailParts: undefined },
         creature.gear,
-        creature.languagesInfo,
+        creature.languages_info,
         { ...creature.senses, detailParts: undefined },
       ].filter(({ value }) => value)
     : [];
@@ -45,30 +45,30 @@ export default function CreatureDetail({
       {creature && (
         <VStack align="stretch" gap={3}>
           <SimpleGrid columns={{ base: 1, md: 3 }} columnGap={6} rowGap={2}>
-            <ResourceDetailField label={creature.challengeRating.label}>
-              {creature.challengeRating.value}
+            <ResourceDetailField label={creature.challenge_rating.label}>
+              {creature.challenge_rating.value}
             </ResourceDetailField>
-            <ResourceDetailField label={creature.proficiencyBonus.label}>
-              {creature.proficiencyBonus.value}
+            <ResourceDetailField label={creature.proficiency_bonus.label}>
+              {creature.proficiency_bonus.value}
             </ResourceDetailField>
             <ResourceDetailField label={creature.experience.label}>
-              {creature.experience.valueWithLair}
+              {creature.experience.value_with_lair}
             </ResourceDetailField>
           </SimpleGrid>
 
           <SimpleGrid columns={{ base: 1, md: 3 }} columnGap={6} rowGap={3}>
-            <ResourceDetailField label={creature.armorClass.label}>
-              {creature.armorClass.value}
+            <ResourceDetailField label={creature.armor_class.label}>
+              {creature.armor_class.value}
             </ResourceDetailField>
-            <ResourceDetailField label={creature.hitPoints.label}>
-              {creature.hitPoints.valueWithFormula}
+            <ResourceDetailField label={creature.hit_points.label}>
+              {creature.hit_points.value_with_formula}
             </ResourceDetailField>
             <ResourceDetailField label={creature.initiative.label}>
               {creature.initiative.value} ({creature.initiative.passive})
             </ResourceDetailField>
 
-            <ResourceDetailField label={creature.passivePerception.label}>
-              {creature.passivePerception.value}
+            <ResourceDetailField label={creature.passive_perception.label}>
+              {creature.passive_perception.value}
             </ResourceDetailField>
             <GridItem gridColumn={{ base: 1, md: 2 }}>
               {creature.family.resource && (

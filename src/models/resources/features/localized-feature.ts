@@ -66,9 +66,9 @@ export const localizedFeatureSchema = localizedResourceSchema(
   featureSchema,
   z.literal("feature"),
 ).extend({
-  displayName: localizedFieldSchema,
-  grantedBy: z.array(localizedFeatureGrantorGroupSchema),
-  grantedByLabel: z.string(),
+  display_name: localizedFieldSchema,
+  granted_by: z.array(localizedFeatureGrantorGroupSchema),
+  granted_by_label: z.string(),
 });
 
 export type LocalizedFeature = z.infer<typeof localizedFeatureSchema>;
@@ -188,12 +188,12 @@ export function localizeFeature(
     descriptor: context.t("descriptor"),
     details: translate(feature.description, context.lang),
 
-    displayName: {
+    display_name: {
       label: context.t("display_name"),
       value: translate(feature.display_name, context.lang),
     },
-    grantedBy: context.grantedBy,
-    grantedByLabel: context.t("granted_by"),
+    granted_by: context.grantedBy,
+    granted_by_label: context.t("granted_by"),
   };
 }
 

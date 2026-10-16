@@ -12,12 +12,12 @@ export default function CreatureDetailAbilityScoreTable({
   creature: LocalizedCreature;
 }) {
   const abilities = [
-    { ...creature.abilityScores.strength, category: "physical", key: "strength" },
-    { ...creature.abilityScores.dexterity, category: "physical", key: "dexterity" },
-    { ...creature.abilityScores.constitution, category: "physical", key: "constitution" },
-    { ...creature.abilityScores.intelligence, category: "mental", key: "intelligence" },
-    { ...creature.abilityScores.wisdom, category: "mental", key: "wisdom" },
-    { ...creature.abilityScores.charisma, category: "mental", key: "charisma" },
+    { ...creature.ability_scores.strength, category: "physical", key: "strength" },
+    { ...creature.ability_scores.dexterity, category: "physical", key: "dexterity" },
+    { ...creature.ability_scores.constitution, category: "physical", key: "constitution" },
+    { ...creature.ability_scores.intelligence, category: "mental", key: "intelligence" },
+    { ...creature.ability_scores.wisdom, category: "mental", key: "wisdom" },
+    { ...creature.ability_scores.charisma, category: "mental", key: "charisma" },
   ] as const;
 
   return (
@@ -35,7 +35,7 @@ export default function CreatureDetailAbilityScoreTable({
             fontWeight="medium"
             textAlign="center"
           >
-            {creature.abilityScoreHeaders.modifier}
+            {creature.ability_score_headers.modifier}
           </Span>
           <Span
             color="fg.muted"
@@ -44,7 +44,7 @@ export default function CreatureDetailAbilityScoreTable({
             fontWeight="medium"
             textAlign="center"
           >
-            {creature.abilityScoreHeaders.save}
+            {creature.ability_score_headers.save}
           </Span>
           {abilities
             .filter((ability) => ability.category === category)

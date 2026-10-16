@@ -26,12 +26,12 @@ export default function WeaponDetail({
           <ResourceDetailField label={weapon.damage.label}>
             {weapon.damage.value}
           </ResourceDetailField>
-          {weapon.damageVersatile.value && (
-            <ResourceDetailField label={weapon.damageVersatile.label}>
-              {weapon.damageVersatile.value}
+          {weapon.damage_versatile.value && (
+            <ResourceDetailField label={weapon.damage_versatile.label}>
+              {weapon.damage_versatile.value}
             </ResourceDetailField>
           )}
-          {weapon.isRanged && weapon.range.value && (
+          {weapon.is_ranged && weapon.range.value && (
             <ResourceDetailField label={weapon.range.label}>
               {weapon.range.value}
             </ResourceDetailField>

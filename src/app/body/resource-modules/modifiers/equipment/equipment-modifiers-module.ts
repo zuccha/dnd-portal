@@ -33,25 +33,25 @@ const columns = createResourcesTableColumns<
     label: { en: "Applies To", it: "Applicabile A" },
   },
   {
-    key: "costDelta",
+    key: "cost_delta",
     label: { en: "Cost", it: "Costo" },
     textAlign: "right",
     w: "1%",
   },
   {
-    key: "weightDelta",
+    key: "weight_delta",
     label: { en: "Weight", it: "Peso" },
     textAlign: "right",
     w: "1%",
   },
   {
     icon: WandIcon,
-    key: "makeMagic",
+    key: "make_magic",
     label: { en: "🪄", it: "🪄" },
     textAlign: "center",
   },
   {
-    key: "rarityMinimum",
+    key: "rarity_minimum",
     label: { en: "Rarity", it: "Rarità" },
   },
 ]);

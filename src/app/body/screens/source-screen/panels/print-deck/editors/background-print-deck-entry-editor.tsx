@@ -25,13 +25,13 @@ export default function BackgroundPrintDeckEntryEditor({
         <Field label={t("ability_scores")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("abilityScores", {
-                ...localizedResource.abilityScores,
+              onLocalizedResourceUpdate("ability_scores", {
+                ...localizedResource.ability_scores,
                 value,
               })
             }
             placeholder={t("ability_scores.placeholder")}
-            value={localizedResource.abilityScores.value}
+            value={localizedResource.ability_scores.value}
           />
         </Field>
         <Field label={t("feat")}>
@@ -46,25 +46,25 @@ export default function BackgroundPrintDeckEntryEditor({
         <Field label={t("skill_proficiencies")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("skillProficiencies", {
-                ...localizedResource.skillProficiencies,
+              onLocalizedResourceUpdate("skill_proficiencies", {
+                ...localizedResource.skill_proficiencies,
                 value,
               })
             }
             placeholder={t("skill_proficiencies.placeholder")}
-            value={localizedResource.skillProficiencies.value}
+            value={localizedResource.skill_proficiencies.value}
           />
         </Field>
         <Field label={t("tool_proficiencies")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("toolProficiency", {
-                ...localizedResource.toolProficiency,
+              onLocalizedResourceUpdate("tool_proficiency", {
+                ...localizedResource.tool_proficiency,
                 value,
               })
             }
             placeholder={t("tool_proficiency.placeholder")}
-            value={localizedResource.toolProficiency.value}
+            value={localizedResource.tool_proficiency.value}
           />
         </Field>
       </VStack>

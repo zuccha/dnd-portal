@@ -28,8 +28,8 @@ export const localizedEquipmentSchema = <E extends Equipment>(
   localizedResourceSchema(equipmentSchema, kindSchema).extend({
     attunement: localizedFieldSchema,
     cost: localizedFieldSchema,
-    isMagic: z.boolean(),
-    magicStatus: localizedFieldSchema,
+    is_magic: z.boolean(),
+    magic_status: localizedFieldSchema,
     rarity: localizedFieldSchema,
     weight: localizedFieldSchema,
   });
@@ -122,8 +122,8 @@ export function localizeEquipment<E extends Equipment>(
       label: context.t("cost"),
       value: cost,
     },
-    isMagic: equipment.is_magic,
-    magicStatus: {
+    is_magic: equipment.is_magic,
+    magic_status: {
       label: context.t("magic"),
       value: context.t(equipment.is_magic ? "yes" : "no"),
     },

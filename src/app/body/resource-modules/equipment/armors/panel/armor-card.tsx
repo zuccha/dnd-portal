@@ -27,9 +27,9 @@ export function ArmorCard({
       }
       firstPageInfoRight={
         <PokerCard.Arrow
-          label={localizedResource.armorClass.label}
+          label={localizedResource.armor_class.label}
           palette={palette}
-          value={localizedResource.armorClass.value}
+          value={localizedResource.armor_class.value}
         />
       }
       localizedResource={localizedResource}

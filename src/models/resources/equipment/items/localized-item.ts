@@ -16,10 +16,10 @@ import { type Item, itemSchema } from "./item";
 
 export const localizedItemSchema = localizedEquipmentSchema(itemSchema, z.literal("item")).extend({
   charges: z.string(),
-  isConsumable: z.boolean(),
-  consumableStatus: localizedFieldSchema,
+  is_consumable: z.boolean(),
+  consumable_status: localizedFieldSchema,
   type: z.string(),
-  usageCount: localizedFieldSchema,
+  usage_count: localizedFieldSchema,
   uses: localizedFieldSchema.extend({ count: z.number() }),
 });
 
@@ -79,13 +79,13 @@ export function localizeItem(item: Item, context: ItemLocalizationContext): Loca
     descriptor,
 
     charges: charges > 0 ? `${charges}` : "-",
-    isConsumable: item.is_consumable,
-    consumableStatus: {
+    is_consumable: item.is_consumable,
+    consumable_status: {
       label: context.t("consumable"),
       value: item.is_consumable ? context.t("yes") : context.t("no"),
     },
     type,
-    usageCount: {
+    usage_count: {
       label: useCountLabel,
       value: charges > 0 ? `${charges}` : "",
     },

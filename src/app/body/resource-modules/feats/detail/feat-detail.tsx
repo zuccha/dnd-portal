@@ -20,11 +20,11 @@ export default function FeatDetail({
 
   return (
     <ResourceDetail actions={actions} resource={feat}>
-      {feat && (feat.minLevel.value || feat.prerequisite.value) && (
+      {feat && (feat.minimum_level.value || feat.prerequisite.value) && (
         <SimpleGrid columns={{ base: 1, sm: 2 }} columnGap={6} rowGap={2}>
-          {feat.minLevel.value && (
-            <ResourceDetailField label={feat.minLevel.label}>
-              {feat.minLevel.value}
+          {feat.minimum_level.value && (
+            <ResourceDetailField label={feat.minimum_level.label}>
+              {feat.minimum_level.value}
             </ResourceDetailField>
           )}
           {feat.prerequisite.value && (

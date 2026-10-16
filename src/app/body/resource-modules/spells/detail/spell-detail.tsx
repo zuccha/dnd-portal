@@ -20,10 +20,10 @@ export default function SpellDetail({
   const spell = resource;
   const fields = spell
     ? [
-        { label: spell.castingTime.label, value: spell.castingTime.valueWithRitual },
+        { label: spell.casting_time.label, value: spell.casting_time.value_with_ritual },
         spell.range,
         spell.components,
-        { label: spell.duration.label, value: spell.duration.valueWithConcentration },
+        { label: spell.duration.label, value: spell.duration.value_with_concentration },
       ]
     : [];
 
@@ -43,10 +43,10 @@ export default function SpellDetail({
               </ResourceDetailField>
             </GridItem>
           )}
-          {spell.characterClasses.length > 0 && (
+          {spell.character_classes.length > 0 && (
             <GridItem colSpan={{ base: 1, sm: 2 }}>
-              <ResourceDetailField label={spell.characterClassesLabel}>
-                <ResourceDetailLinks resources={spell.characterClasses} />
+              <ResourceDetailField label={spell.character_classes_label}>
+                <ResourceDetailLinks resources={spell.character_classes} />
               </ResourceDetailField>
             </GridItem>
           )}

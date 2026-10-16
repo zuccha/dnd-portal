@@ -25,13 +25,13 @@ export default function ArmorPrintDeckEntryEditor({
         <Field label={t("armor_class")}>
           <Input
             onValueChange={(value) =>
-              onLocalizedResourceUpdate("armorClass", {
-                ...localizedResource.armorClass,
+              onLocalizedResourceUpdate("armor_class", {
+                ...localizedResource.armor_class,
                 value,
               })
             }
             placeholder={t("armor_class.placeholder")}
-            value={localizedResource.armorClass.value}
+            value={localizedResource.armor_class.value}
           />
         </Field>
         <Field label={t("requirements")}>

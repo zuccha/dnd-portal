@@ -104,11 +104,11 @@ export const localizedCreatureSchema = localizedResourceSchema(
   creatureSchema,
   z.literal("creature"),
 ).extend({
-  abilityScoreHeaders: z.object({ modifier: z.string(), save: z.string() }),
-  abilityScores: z.record(
+  ability_score_headers: z.object({ modifier: z.string(), save: z.string() }),
+  ability_scores: z.record(
     creatureAbilitySchema,
     z.object({
-      cardLabel: z.string(),
+      card_label: z.string(),
       label: z.string(),
       modifier: z.string(),
       save: z.string(),
@@ -116,15 +116,15 @@ export const localizedCreatureSchema = localizedResourceSchema(
     }),
   ),
   alignment: z.string(),
-  armorClass: localizedFieldSchema.extend({ shortLabel: z.string() }),
-  challengeRating: localizedFieldSchema.extend({ shortLabel: z.string() }),
+  armor_class: localizedFieldSchema.extend({ short_label: z.string() }),
+  challenge_rating: localizedFieldSchema.extend({ short_label: z.string() }),
   experience: localizedFieldSchema.extend({
     lair: z.object({
       label: z.string(),
       value: z.string(),
     }),
-    shortLabel: z.string(),
-    valueWithLair: z.string(),
+    short_label: z.string(),
+    value_with_lair: z.string(),
   }),
   family: localizedFieldSchema.extend({
     resource: localizedCreatureFamilyReferenceSchema.nullable(),
@@ -140,29 +140,29 @@ export const localizedCreatureSchema = localizedResourceSchema(
       }),
     ),
   }),
-  hitPoints: localizedFieldSchema.extend({
-    cardLabel: z.string(),
+  hit_points: localizedFieldSchema.extend({
+    card_label: z.string(),
     formula: z.string(),
-    valueWithFormula: z.string(),
+    value_with_formula: z.string(),
   }),
   immunities: localizedFieldSchema,
   initiative: localizedFieldSchema.extend({ passive: z.string() }),
   languages: localizedFieldSchema.extend({
     resources: z.array(localizedCreatureLanguageReferenceSchema),
   }),
-  languagesInfo: localizedFieldSchema.extend({
-    detailParts: z.array(localizedCreatureLanguageDetailPartSchema),
+  languages_info: localizedFieldSchema.extend({
+    detail_parts: z.array(localizedCreatureLanguageDetailPartSchema),
   }),
-  passivePerception: localizedFieldSchema,
+  passive_perception: localizedFieldSchema,
   perception: localizedFieldSchema.extend({ passive: z.string() }),
-  proficiencyBonus: localizedFieldSchema.extend({ cardLabel: z.string() }),
+  proficiency_bonus: localizedFieldSchema.extend({ card_label: z.string() }),
   resistances: localizedFieldSchema,
   senses: localizedFieldSchema,
   sizes: z.string(),
   skills: localizedFieldSchema,
   speed: localizedFieldSchema,
-  spellLevelLegend: z.string(),
-  summonedFromSpell: z.boolean(),
+  spell_level_legend: z.string(),
+  summoned_from_spell: z.boolean(),
   tags: localizedFieldSchema.extend({
     resources: z.array(localizedCreatureTagReferenceSchema),
   }),
@@ -406,42 +406,42 @@ export function localizeCreature(
 
   const abilityScores = {
     charisma: {
-      cardLabel: translateCreatureAbilityShort("charisma"),
+      card_label: translateCreatureAbilityShort("charisma"),
       label: translateCreatureAbility("charisma"),
       modifier: ability_cha_mod,
       save: ability_cha_save,
       score: ability_cha,
     },
     constitution: {
-      cardLabel: translateCreatureAbilityShort("constitution"),
+      card_label: translateCreatureAbilityShort("constitution"),
       label: translateCreatureAbility("constitution"),
       modifier: ability_con_mod,
       save: ability_con_save,
       score: ability_con,
     },
     dexterity: {
-      cardLabel: translateCreatureAbilityShort("dexterity"),
+      card_label: translateCreatureAbilityShort("dexterity"),
       label: translateCreatureAbility("dexterity"),
       modifier: ability_dex_mod,
       save: ability_dex_save,
       score: ability_dex,
     },
     intelligence: {
-      cardLabel: translateCreatureAbilityShort("intelligence"),
+      card_label: translateCreatureAbilityShort("intelligence"),
       label: translateCreatureAbility("intelligence"),
       modifier: ability_int_mod,
       save: ability_int_save,
       score: ability_int,
     },
     strength: {
-      cardLabel: translateCreatureAbilityShort("strength"),
+      card_label: translateCreatureAbilityShort("strength"),
       label: translateCreatureAbility("strength"),
       modifier: ability_str_mod,
       save: ability_str_save,
       score: ability_str,
     },
     wisdom: {
-      cardLabel: translateCreatureAbilityShort("wisdom"),
+      card_label: translateCreatureAbilityShort("wisdom"),
       label: translateCreatureAbility("wisdom"),
       modifier: ability_wis_mod,
       save: ability_wis_save,
@@ -673,7 +673,7 @@ export function localizeCreature(
     languagesInfoParts.push({ type: "text", value: t("languages.none") });
   }
   const languagesInfoField = {
-    detailParts: languagesInfoParts,
+    detail_parts: languagesInfoParts,
     label: tp("info.languages", creature.language_entries.length),
     value: languagesInfo,
   };
@@ -771,17 +771,17 @@ export function localizeCreature(
       : ti("subtitle.without_tags", sizes, type, alignment),
     details,
 
-    abilityScoreHeaders,
-    abilityScores,
+    ability_score_headers: abilityScoreHeaders,
+    ability_scores: abilityScores,
     alignment,
-    armorClass: {
+    armor_class: {
       label: context.t("armor_class"),
-      shortLabel: context.t("armor_class.short"),
+      short_label: context.t("armor_class.short"),
       value: armorClass,
     },
-    challengeRating: {
+    challenge_rating: {
       label: context.t("challenge_rating"),
-      shortLabel: context.t("challenge_rating.short"),
+      short_label: context.t("challenge_rating.short"),
       value: cr,
     },
     experience: {
@@ -790,9 +790,9 @@ export function localizeCreature(
         label: context.t("experience.lair_short"),
         value: creature.has_lair ? formattedLairExp : "",
       },
-      shortLabel: context.t("experience.short"),
+      short_label: context.t("experience.short"),
       value: formattedExp,
-      valueWithLair,
+      value_with_lair: valueWithLair,
     },
     family: {
       label: context.t("family"),
@@ -800,12 +800,12 @@ export function localizeCreature(
       value: family?.name ?? "",
     },
     gear: gearInfo,
-    hitPoints: {
-      cardLabel: context.t("hit_points.short"),
+    hit_points: {
+      card_label: context.t("hit_points.short"),
       formula: hitPointsFormula,
       label: context.t("hit_points"),
       value: hitPointsValue,
-      valueWithFormula: [hitPointsValue, hitPointsFormula && `(${hitPointsFormula})`]
+      value_with_formula: [hitPointsValue, hitPointsFormula && `(${hitPointsFormula})`]
         .filter(Boolean)
         .join(" "),
     },
@@ -820,8 +820,8 @@ export function localizeCreature(
       resources: languageResources,
       value: languageText,
     },
-    languagesInfo: languagesInfoField,
-    passivePerception: {
+    languages_info: languagesInfoField,
+    passive_perception: {
       label: context.t("passive_perception"),
       value: `${creature.passive_perception}`,
     },
@@ -830,8 +830,8 @@ export function localizeCreature(
       passive: `${creature.passive_perception}`,
       value: formatSigned(perception),
     },
-    proficiencyBonus: {
-      cardLabel: context.t("proficiency_bonus.short"),
+    proficiency_bonus: {
+      card_label: context.t("proficiency_bonus.short"),
       label: context.t("proficiency_bonus"),
       value: creature.is_summoned_from_spell ? t("pb.summoner") : formatSigned(pb),
     },
@@ -840,11 +840,11 @@ export function localizeCreature(
     sizes,
     skills: skillsInfo,
     speed: { label: context.t("speed"), value: speed },
-    spellLevelLegend:
+    spell_level_legend:
       creature.adds_spell_level_to_armor_class || creature.additional_hp_per_level > 0
         ? context.t("spell_level_legend")
         : "",
-    summonedFromSpell: creature.is_summoned_from_spell,
+    summoned_from_spell: creature.is_summoned_from_spell,
     tags: {
       label: context.t("tags"),
       resources: tagResources,

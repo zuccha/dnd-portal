@@ -51,7 +51,7 @@ export default function CharacterClassDetail({
         .filter((spell) => spell.level === level)
         .sort((a, b) => a.name.localeCompare(b.name, lang)),
     }));
-  const subclassIds = useSubclassResourceIds(characterClass?.sourceId ?? nilUuid);
+  const subclassIds = useSubclassResourceIds(characterClass?.source_id ?? nilUuid);
   const subclasses = useSubclassResources(subclassIds);
   const classSubclassIds = subclasses
     .filter(({ character_class_id }) => character_class_id === characterClass?.id)
@@ -65,11 +65,11 @@ export default function CharacterClassDetail({
     .sort((a, b) => a.name.localeCompare(b.name));
   const fields = characterClass
     ? [
-        characterClass.hitDie,
-        characterClass.primaryAbilities,
-        characterClass.savingThrowProficiencies,
-        characterClass.armorProficiencies,
-        characterClass.weaponProficiencies,
+        characterClass.hit_die,
+        characterClass.primary_abilities,
+        characterClass.saving_throw_proficiencies,
+        characterClass.armor_proficiencies,
+        characterClass.weapon_proficiencies,
       ].filter(({ value }) => Boolean(value))
     : [];
 
@@ -101,9 +101,9 @@ export default function CharacterClassDetail({
               {value}
             </ResourceDetailField>
           ))}
-          {characterClass.toolProficiencies.resources.length > 0 && (
-            <ResourceDetailField label={characterClass.toolProficiencies.label}>
-              <ResourceDetailLinks resources={characterClass.toolProficiencies.resources} />
+          {characterClass.tool_proficiencies.resources.length > 0 && (
+            <ResourceDetailField label={characterClass.tool_proficiencies.label}>
+              <ResourceDetailLinks resources={characterClass.tool_proficiencies.resources} />
             </ResourceDetailField>
           )}
           {sortedSubclasses.length > 0 && (

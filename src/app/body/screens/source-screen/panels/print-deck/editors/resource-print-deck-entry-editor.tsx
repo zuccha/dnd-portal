@@ -56,9 +56,9 @@ export default function ResourcePrintDeckEntryEditor({
       <HStack align="flex-start" gap={4}>
         <Field flex={1} label={t("source_code")}>
           <Input
-            onValueChange={(value) => onLocalizedResourceUpdate("sourceCode", value)}
+            onValueChange={(value) => onLocalizedResourceUpdate("source_code", value)}
             placeholder={t("source_code.placeholder")}
-            value={localizedResource.sourceCode}
+            value={localizedResource.source_code}
           />
         </Field>
         <Field flex={1} label={t("page")}>
@@ -70,17 +70,17 @@ export default function ResourcePrintDeckEntryEditor({
         </Field>
         <Field flex={1} label={t("source_version")}>
           <Input
-            onValueChange={(value) => onLocalizedResourceUpdate("sourceVersion", value)}
+            onValueChange={(value) => onLocalizedResourceUpdate("source_version", value)}
             placeholder={t("source_version.placeholder")}
-            value={localizedResource.sourceVersion}
+            value={localizedResource.source_version}
           />
         </Field>
       </HStack>
       <Field label={t("image_url")}>
         <Input
-          onValueChange={(value) => onLocalizedResourceUpdate("imageUrl", value || null)}
+          onValueChange={(value) => onLocalizedResourceUpdate("image_url", value || null)}
           placeholder={t("image_url.placeholder")}
-          value={localizedResource.imageUrl ?? ""}
+          value={localizedResource.image_url ?? ""}
         />
       </Field>
     </VStack>

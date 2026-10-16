@@ -22,8 +22,8 @@ export default function ArmorDetail({
     <EquipmentDetail actions={actions} resource={armor}>
       {armor && (
         <>
-          <ResourceDetailField label={armor.armorClass.label}>
-            {armor.armorClass.value}
+          <ResourceDetailField label={armor.armor_class.label}>
+            {armor.armor_class.value}
           </ResourceDetailField>
           {armor.requirements.value && (
             <ResourceDetailField label={armor.requirements.label}>

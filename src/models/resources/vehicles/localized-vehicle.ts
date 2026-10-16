@@ -15,7 +15,7 @@ import {
 import { type Vehicle, vehicleSchema } from "./vehicle";
 
 const localizedVehicleFieldSchema = localizedFieldSchema.extend({
-  shortLabel: z.string(),
+  short_label: z.string(),
 });
 
 //------------------------------------------------------------------------------
@@ -26,12 +26,12 @@ export const localizedVehicleSchema = localizedResourceSchema(
   vehicleSchema,
   z.literal("vehicle"),
 ).extend({
-  armorClass: localizedVehicleFieldSchema,
+  armor_class: localizedVehicleFieldSchema,
   cargo: localizedFieldSchema,
   cost: localizedFieldSchema,
   crew: localizedVehicleFieldSchema,
-  damageThreshold: localizedVehicleFieldSchema,
-  hitPoints: localizedVehicleFieldSchema,
+  damage_threshold: localizedVehicleFieldSchema,
+  hit_points: localizedVehicleFieldSchema,
   passengers: localizedVehicleFieldSchema,
   speed: localizedFieldSchema,
 });
@@ -77,9 +77,9 @@ export function localizeVehicle(
     descriptor: context.t("descriptor"),
     details: translate(vehicle.description, context.lang),
 
-    armorClass: {
+    armor_class: {
       label: context.t("armor_class"),
-      shortLabel: context.t("armor_class.short"),
+      short_label: context.t("armor_class.short"),
       value: formatNumber(vehicle.armor_class, context.lang),
     },
     cargo: {
@@ -92,22 +92,22 @@ export function localizeVehicle(
     },
     crew: {
       label: context.t("crew"),
-      shortLabel: context.t("crew.short"),
+      short_label: context.t("crew.short"),
       value: formatNumber(vehicle.crew_capacity, context.lang),
     },
-    damageThreshold: {
+    damage_threshold: {
       label: context.t("damage_threshold"),
-      shortLabel: context.t("damage_threshold.short"),
+      short_label: context.t("damage_threshold.short"),
       value: formatNumber(vehicle.damage_threshold, context.lang),
     },
-    hitPoints: {
+    hit_points: {
       label: context.t("hit_points"),
-      shortLabel: context.t("hit_points.short"),
+      short_label: context.t("hit_points.short"),
       value: formatNumber(vehicle.hit_points, context.lang),
     },
     passengers: {
       label: context.t("passengers"),
-      shortLabel: context.t("passengers.short"),
+      short_label: context.t("passengers.short"),
       value: formatNumber(vehicle.passenger_capacity, context.lang),
     },
     speed: {

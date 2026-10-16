@@ -20,7 +20,7 @@ const columns = createResourcesTableColumns<Feat, LocalizedFeat>([
     label: { en: "Category", it: "Categoria" },
   },
   {
-    key: "minLevel",
+    key: "minimum_level",
     label: { en: "Min. Level", it: "Livello Min." },
     textAlign: "right",
     w: "1%",

@@ -29,22 +29,22 @@ export function localizedEquipmentModifierSchema<EM extends EquipmentModifier>(
   kindSchema: ZodType<EM["kind"]>,
 ) {
   return localizedModifierSchema(schema, kindSchema).extend({
-    additionalCost: localizedFieldSchema.optional(),
-    additionalWeight: localizedFieldSchema,
+    additional_cost: localizedFieldSchema.optional(),
+    additional_weight: localizedFieldSchema,
     attunement: localizedFieldSchema.optional(),
-    attunementNotesDelta: z.string(),
-    costDelta: z.string(),
-    descriptionDelta: z.string(),
+    attunement_notes_delta: z.string(),
+    cost_delta: z.string(),
+    description_delta: z.string(),
     magic: z.string(),
-    magicStatus: localizedFieldSchema,
-    makeMagic: z.boolean(),
-    minimumRarity: localizedFieldSchema.optional(),
-    rarityMinimum: z.string(),
-    requiredAttunementSlotsMinimum: z.string(),
-    supportedEquipment: localizedFieldSchema.extend({
+    magic_status: localizedFieldSchema,
+    make_magic: z.boolean(),
+    minimum_rarity: localizedFieldSchema.optional(),
+    rarity_minimum: z.string(),
+    required_attunement_slots_minimum: z.string(),
+    supported_equipment: localizedFieldSchema.extend({
       resources: z.array(localizedResourceLinkSchema(z.enum(["armor", "item", "tool", "weapon"]))),
     }),
-    weightDelta: z.string(),
+    weight_delta: z.string(),
   });
 }
 
@@ -109,14 +109,14 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
     descriptor: appliesTo,
     details: formatDetails(descriptionDelta, attunementNotesDelta),
 
-    additionalCost:
+    additional_cost:
       equipmentModifier.cost_delta !== 0
         ? {
             label: context.t("additional_cost"),
             value: context.formatCost(equipmentModifier.cost_delta),
           }
         : undefined,
-    additionalWeight: {
+    additional_weight: {
       label: context.t("additional_weight"),
       value: context.formatWeight(equipmentModifier.weight_delta),
     },
@@ -134,31 +134,31 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
                   ),
         }
       : undefined,
-    attunementNotesDelta,
-    costDelta: context.formatCost(equipmentModifier.cost_delta),
-    descriptionDelta,
+    attunement_notes_delta: attunementNotesDelta,
+    cost_delta: context.formatCost(equipmentModifier.cost_delta),
+    description_delta: descriptionDelta,
     magic: equipmentModifier.makes_equipment_magic ? context.t("magic") : "",
-    magicStatus: {
+    magic_status: {
       label: context.t("magic"),
       value: context.t(equipmentModifier.makes_equipment_magic ? "yes" : "no"),
     },
-    makeMagic: equipmentModifier.makes_equipment_magic,
-    minimumRarity: equipmentModifier.makes_equipment_magic
+    make_magic: equipmentModifier.makes_equipment_magic,
+    minimum_rarity: equipmentModifier.makes_equipment_magic
       ? {
           label: context.t("minimum_rarity"),
           value: rarityMinimum,
         }
       : undefined,
-    rarityMinimum,
-    requiredAttunementSlotsMinimum: requiredAttunementSlotsMinimum
+    rarity_minimum: rarityMinimum,
+    required_attunement_slots_minimum: requiredAttunementSlotsMinimum
       ? context.ti("attunement_slots_minimum", requiredAttunementSlotsMinimum)
       : "",
-    supportedEquipment: {
+    supported_equipment: {
       label: context.t("supported_equipment"),
       resources: supportedEquipmentResources,
       value: supportedEquipmentResources.map(({ name }) => name).join(", "),
     },
-    weightDelta: context.formatWeight(equipmentModifier.weight_delta),
+    weight_delta: context.formatWeight(equipmentModifier.weight_delta),
   };
 }
 
