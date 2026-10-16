@@ -6,6 +6,7 @@ import CreatureFamilyPrintDeckEntryEditor from "./editors/creature-family-print-
 import CreatureHabitatPrintDeckEntryEditor from "./editors/creature-habitat-print-deck-entry-editor";
 import CreaturePrintDeckEntryEditor from "./editors/creature-print-deck-entry-editor";
 import CreatureTagPrintDeckEntryEditor from "./editors/creature-tag-print-deck-entry-editor";
+import CreatureTreasurePrintDeckEntryEditor from "./editors/creature-treasure-print-deck-entry-editor";
 import EldritchInvocationPrintDeckEntryEditor from "./editors/eldritch-invocation-print-deck-entry-editor";
 import FeatPrintDeckEntryEditor from "./editors/feat-print-deck-entry-editor";
 import FeaturePrintDeckEntryEditor from "./editors/feature-print-deck-entry-editor";
@@ -49,6 +50,7 @@ export const printDeckEntryEditors: PrintDeckEntryEditorRegistry = {
   creature_family: CreatureFamilyPrintDeckEntryEditor,
   creature_habitat: CreatureHabitatPrintDeckEntryEditor,
   creature_tag: CreatureTagPrintDeckEntryEditor,
+  creature_treasure: CreatureTreasurePrintDeckEntryEditor,
   eldritch_invocation: EldritchInvocationPrintDeckEntryEditor,
   feat: FeatPrintDeckEntryEditor,
   feature: FeaturePrintDeckEntryEditor,
