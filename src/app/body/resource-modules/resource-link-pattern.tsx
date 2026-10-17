@@ -74,15 +74,6 @@ export function createResourceLinkPattern(
 }
 
 //------------------------------------------------------------------------------
-// Serialize Resource Link
-//------------------------------------------------------------------------------
-
-export function serializeResourceLink(resource: Resource, fallback = ""): string {
-  const fallbackValue = fallback ? `:${fallback.replaceAll("]]", "]\\]")}` : "";
-  return `[[${resource.kind}:${resource.id}${fallbackValue}]]`;
-}
-
-//------------------------------------------------------------------------------
 // Use Resource Link Patterns
 //------------------------------------------------------------------------------
 

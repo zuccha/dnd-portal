@@ -7,6 +7,7 @@ import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { LanguageEntry } from "~/models/other/language-entries";
 import type { FeatureEntry } from "~/models/resources/features/feature-entry";
 import type { Resource, ResourceOption } from "~/models/resources/resource";
+import { serializeResourceLink } from "~/models/resources/resource-link";
 import {
   type CreatureLanguageMode,
   useCreatureLanguageModeOptions,
@@ -26,7 +27,6 @@ import WeightInput from "~/ui/weight-input";
 import type { FieldBag } from "~/utils/form";
 import EquipmentBundleEditor from "./equipment-bundle-editor";
 import FeatureEntriesEditor from "./feature-entries-editor";
-import { serializeResourceLink } from "./resource-link-pattern";
 import ResourceLinkSearchDialog from "./resource-link-search-dialog";
 import ResourceSearch from "./resource-search";
 

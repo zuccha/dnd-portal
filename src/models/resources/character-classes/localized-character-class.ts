@@ -3,6 +3,7 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
+import { serializeResourceLink } from "~/models/resources/resource-link";
 import { joinWith } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
@@ -25,7 +26,7 @@ import {
 import { type CharacterClass, characterClassSchema } from "./character-class";
 import type { RelatedResourceEntries } from "../../catalogue/resource-relations";
 
-const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const useLocalizedEquipmentEntries = equipmentReferenceStore.useLocalizedEquipmentEntries;
 const useLocalizedToolNames = toolStore.useLocalizedResourceNames;
 const localizedToolReferenceSchema = localizedResourceLinkSchema(z.literal("tool"));
 
@@ -59,7 +60,7 @@ export type LocalizedCharacterClass = z.infer<typeof localizedCharacterClassSche
 type CharacterClassLocalizationContext = ResourceLocalizationContext & {
   formatCp: ReturnType<typeof useFormatCp>;
   featureEntries: string;
-  localizedEquipmentNames: Record<string, string>;
+  localizedEquipmentEntries: ReturnType<typeof useLocalizedEquipmentEntries>;
   localizedToolNames: Record<string, string>;
   translateArmorType: ReturnType<typeof useTranslateArmorType>;
   translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
@@ -79,7 +80,7 @@ export function useCharacterClassLocalizationContext(
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
   const featureEntries = useLocalizedFeatureEntries(related.features);
-  const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
+  const localizedEquipmentEntries = useLocalizedEquipmentEntries(context.lang);
   const toolNames = useLocalizedToolNames(characterClass.tool_proficiency_ids);
   const localizedToolNames = useMemo(
     () =>
@@ -99,7 +100,7 @@ export function useCharacterClassLocalizationContext(
       ...context,
       formatCp,
       featureEntries,
-      localizedEquipmentNames,
+      localizedEquipmentEntries,
       localizedToolNames,
       translateArmorType,
       translateCreatureAbility,
@@ -111,7 +112,7 @@ export function useCharacterClassLocalizationContext(
       context,
       formatCp,
       featureEntries,
-      localizedEquipmentNames,
+      localizedEquipmentEntries,
       localizedToolNames,
       translateArmorType,
       translateCreatureAbility,
@@ -208,8 +209,12 @@ export function localizeCharacterClass(
         group.map((option, index) => {
           const optionText = [
             ...option.equipments.map(({ id, notes, quantity }) => {
-              const name = context.localizedEquipmentNames[id] ?? "";
-              const name2 = formatEquipmentNameWithNotes(name, notes, context.lang);
+              const equipment = context.localizedEquipmentEntries.find((entry) => entry.id === id);
+              const name = equipment?.name ?? "";
+              const notesText = translate(notes, context.lang);
+              const name2 = equipment
+                ? `${serializeResourceLink(equipment, name)}${notesText ? ` (${notesText})` : ""}`
+                : formatEquipmentNameWithNotes(name, notes, context.lang);
               return context.tpi("equipment", quantity, name2, `${quantity}`);
             }),
             option.currency ? context.formatCp(option.currency) : "",
