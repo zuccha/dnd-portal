@@ -1,6 +1,6 @@
 import { HStack, Text, type StackProps } from "@chakra-ui/react";
-import { ArrowLeftRightIcon, BoldIcon, Heading2Icon, ItalicIcon } from "lucide-react";
-import { useCallback } from "react";
+import { ArrowLeftRightIcon, BoldIcon, Heading2Icon, ItalicIcon, Link2Icon } from "lucide-react";
+import { useCallback, useRef } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Field from "~/ui/field";
 import IconButton from "~/ui/icon-button";
@@ -21,6 +21,7 @@ export type RichTextTextareaFieldProps = TextareaProps & {
   error?: string;
   fieldProps?: StackProps;
   label: ReactNode;
+  onLinkRequest?: (insertText: (text: string) => void, fallback: string) => void;
 };
 
 //------------------------------------------------------------------------------
@@ -28,16 +29,34 @@ export type RichTextTextareaFieldProps = TextareaProps & {
 //------------------------------------------------------------------------------
 
 export default function RichTextTextareaField(props: RichTextTextareaFieldProps) {
-  const { error, fieldProps, label, onValueChange, ...textareaProps } = props;
+  const { error, fieldProps, label, onLinkRequest, onValueChange, ...textareaProps } = props;
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { t } = useI18nLangContext(i18nContext);
   const isMac = isMacOS();
   const shortcutModifier = isMac ? "⌘" : "Ctrl";
   const shortcutAlt = isMac ? "⌥" : "Alt";
 
+  const insertTextAtSelection = useCallback(
+    (text: string, start: number, end: number, selectionStart: number, selectionEnd: number) => {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+
+      textarea.focus();
+      textarea.setSelectionRange(start, end);
+      const inserted = document.execCommand("insertText", false, text);
+      if (!inserted) {
+        textarea.setRangeText(text, start, end, "end");
+        onValueChange(textarea.value);
+      }
+      textarea.setSelectionRange(selectionStart, selectionEnd);
+    },
+    [onValueChange],
+  );
+
   const formatSelection = useCallback(
     (format: RichTextFormat) => {
-      const textarea = document.activeElement;
-      if (!(textarea instanceof HTMLTextAreaElement)) return;
+      const textarea = textareaRef.current;
+      if (!textarea) return;
 
       const { selectionEnd, selectionStart, value } = textarea;
       const selectedText = value.slice(selectionStart, selectionEnd);
@@ -70,21 +89,44 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
         }
       }
 
-      textarea.focus();
-      textarea.setSelectionRange(replaceStart, replaceEnd);
-      const inserted = document.execCommand("insertText", false, replacement);
-      if (!inserted) {
-        textarea.setRangeText(replacement, replaceStart, replaceEnd, "end");
-        onValueChange(textarea.value);
-      }
-      textarea.setSelectionRange(nextSelectionStart, nextSelectionEnd);
+      insertTextAtSelection(
+        replacement,
+        replaceStart,
+        replaceEnd,
+        nextSelectionStart,
+        nextSelectionEnd,
+      );
     },
-    [onValueChange],
+    [insertTextAtSelection],
   );
+
+  const requestLink = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (!textarea || !onLinkRequest) return;
+
+    const { selectionEnd, selectionStart, value } = textarea;
+    const fallback = value.slice(selectionStart, selectionEnd);
+    const insertText = (text: string) => {
+      insertTextAtSelection(
+        text,
+        selectionStart,
+        selectionEnd,
+        selectionStart + text.length,
+        selectionStart + text.length,
+      );
+    };
+    onLinkRequest(insertText, fallback);
+  }, [insertTextAtSelection, onLinkRequest]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.nativeEvent.isComposing || !(event.metaKey || event.ctrlKey)) return;
+
+      if (event.altKey && event.code === "KeyL" && onLinkRequest) {
+        event.preventDefault();
+        requestLink();
+        return;
+      }
 
       let format: RichTextFormat | undefined;
 
@@ -104,7 +146,7 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
       event.preventDefault();
       formatSelection(format);
     },
-    [formatSelection],
+    [formatSelection, onLinkRequest, requestLink],
   );
 
   const handleToolbarMouseDown = useCallback((event: MouseEvent) => {
@@ -154,13 +196,29 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
               size="xs"
               variant="ghost"
             />
+            {onLinkRequest && (
+              <IconButton
+                Icon={Link2Icon}
+                label={`${t("link_resource")} (${shortcutModifier}+${shortcutAlt}+L)`}
+                onClick={requestLink}
+                onMouseDown={handleToolbarMouseDown}
+                rounded="sm"
+                size="xs"
+                variant="ghost"
+              />
+            )}
           </HStack>
         </HStack>
       }
       gap={0}
       {...fieldProps}
     >
-      <Textarea {...textareaProps} onKeyDown={handleKeyDown} onValueChange={onValueChange} />
+      <Textarea
+        {...textareaProps}
+        onKeyDown={handleKeyDown}
+        onValueChange={onValueChange}
+        ref={textareaRef}
+      />
     </Field>
   );
 }
@@ -185,6 +243,10 @@ const i18nContext = {
   metric_imperial: {
     en: "Metric/imperial",
     it: "Metrico/imperiale",
+  },
+  link_resource: {
+    en: "Link a resource",
+    it: "Collega una risorsa",
   },
 };
 
