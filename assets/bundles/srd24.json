@@ -20337,7 +20337,7 @@
         "armor_class": 19,
         "blindsight": 0,
         "bonus_actions": {
-          "en": "**Magic of the Spider Queen (Recharge 5–6).** The drider casts [[spell:674fc6a7-dfd9-4d44-af55-ef9dab8e849a:Darkness]], Faerie Fire, or Web, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 14).",
+          "en": "**Magic of the Spider Queen (Recharge 5–6).** The drider casts [[spell:674fc6a7-dfd9-4d44-af55-ef9dab8e849a:Darkness]], [[spell:944580e1-1ad2-4a26-b019-fef6b0320eae:Faerie Fire]], or [[spell:887ccdd5-1c8e-44c5-9503-b49846333f2d:Web]], requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 14).",
           "it": "**Magia della Regina Ragno (ricarica 5–6).** Il drider lancia [[spell:944580e1-1ad2-4a26-b019-fef6b0320eae:Luminescenza]], [[spell:674fc6a7-dfd9-4d44-af55-ef9dab8e849a:Oscurità]] o [[spell:887ccdd5-1c8e-44c5-9503-b49846333f2d:Ragnatela]], senza bisogno di componenti materiali e utilizzando Saggezza come caratteristica da incantatore (CD del tiro salvezza sull'incantesimo 14)."
         },
         "can_hover": false,
@@ -24241,7 +24241,7 @@
         "tag_ids": [],
         "telepathy_range": 0,
         "traits": {
-          "en": "**Amphibious.** The hag can breathe air and water.\n**Coven Magic.** While within {9 meters|30 feet} of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell’s normal casting time, and using Intelligence as the spellcasting ability (spell save DC 11): Augury, Find Familiar, Identify, Locate Object, Scrying, or Unseen Servant. The hag must finish a Long Rest before using this trait to cast that spell again.\n**Mimicry.** The hag can mimic animal sounds and humanoid voices. A creature that hears the sounds can tell they are imitations only with a successful DC 14 Wisdom (Insight) check.",
+          "en": "**Amphibious.** The hag can breathe air and water.\n**Coven Magic.** While within {9 meters|30 feet} of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell’s normal casting time, and using Intelligence as the spellcasting ability (spell save DC 11): [[spell:809f6750-edee-4636-b4ab-116cbc5df8e6:Augury]], [[spell:509c6f61-3c42-4360-af1d-9fe9041c756c:Find Familiar]], [[spell:d4597f37-d8de-4dbf-bb66-7cbf77fb03fc:Identify]], [[spell:53ead66c-dd37-4b5e-9636-dc5157166a11:Locate Object]], [[spell:be6f3a1d-71be-4db7-80da-aac78339cccb:Scrying]], or [[spell:d1f4654c-f00e-416c-8260-f2c838800d89:Unseen Servant]]. The hag must finish a Long Rest before using this trait to cast that spell again.\n**Mimicry.** The hag can mimic animal sounds and humanoid voices. A creature that hears the sounds can tell they are imitations only with a successful DC 14 Wisdom (Insight) check.",
           "it": "**Anfibio.** La megera può respirare in aria e in acqua.\n**Imitare.** La megera può imitare i versi degli animali e le voci degli umanoidi. Una creatura che sente tali suoni riesce a capire che si tratta di imitazioni solo superando una prova di Saggezza (Intuizione) con CD 14.\n**Magia della congrega.** Finché si trova entro {9 metri|30 piedi} da almeno due megere alleate, la megera può lanciare uno dei seguenti incantesimi senza bisogno di componenti materiali, utilizzando il normale tempo di lancio dell'incantesimo e Intelligenza come caratteristica da incantatore (CD del tiro salvezza sull'incantesimo 11): [[spell:d4597f37-d8de-4dbf-bb66-7cbf77fb03fc:Identificare]], [[spell:53ead66c-dd37-4b5e-9636-dc5157166a11:Localizza Oggetto]], [[spell:809f6750-edee-4636-b4ab-116cbc5df8e6:Presagio]], [[spell:be6f3a1d-71be-4db7-80da-aac78339cccb:Scrutare]], [[spell:d1f4654c-f00e-416c-8260-f2c838800d89:Servitore Inosservato]] o [[spell:509c6f61-3c42-4360-af1d-9fe9041c756c:Trova Famiglio]]. La megera deve\nterminare un riposo lungo prima di utilizzare questo tratto per lanciare di nuovo l'incantesimo."
         },
         "tremorsense": 0,
@@ -24645,7 +24645,7 @@
         "tag_ids": [],
         "telepathy_range": 0,
         "traits": {
-          "en": "**Celestial Restoration.** If the naga dies, it returns to life in 1d6 days and regains all its Hit Points unless Dispel Evil and Good is cast on its remains.",
+          "en": "**Celestial Restoration.** If the naga dies, it returns to life in 1d6 days and regains all its Hit Points unless [[spell:c00e3a08-25ad-4474-8f30-9c932c294224:Dispel Evil and Good]] is cast on its remains.",
           "it": "**Ristoro celestiale.** Se la naga muore, torna in vita 1d6 giorni dopo e recupera tutti i suoi punti ferita, a meno che non venga lanciato [[spell:c00e3a08-25ad-4474-8f30-9c932c294224:Dissolvi il Bene e il Male]] sui suoi resti."
         },
         "tremorsense": 0,
@@ -27183,7 +27183,7 @@
         "tag_ids": ["4a2573b4-b030-5437-ad35-751da0888ea1"],
         "telepathy_range": 0,
         "traits": {
-          "en": "**Hellish Restoration.** If the lemure dies in the Nine Hells, it revives with all its Hit Points in 1d10 days unless it is killed by a creature under the effects of a Bless spell or its remains are sprinkled with Holy Water.",
+          "en": "**Hellish Restoration.** If the lemure dies in the Nine Hells, it revives with all its Hit Points in 1d10 days unless it is killed by a creature under the effects of a [[spell:bb71143e-b92e-485b-b7fd-1f0806becf21:Bless]] spell or its remains are sprinkled with Holy Water.",
           "it": "**Ristoro immondo.** Se il lemure muore nei Nove Inferi, torna in vita con tutti i suoi punti ferita dopo 1d10 giorni, a meno che non venga ucciso da una creatura sotto gli effetti di un incantesimo [[spell:bb71143e-b92e-485b-b7fd-1f0806becf21:Benedizione]] o i suoi resti vengano spruzzati di acqua santa."
         },
         "tremorsense": 0,
@@ -27275,7 +27275,7 @@
         "passive_perception": 19,
         "proficiency_bonus": 7,
         "reactions": {
-          "en": "**Protective Magic.** The lich casts [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Counterspell]] or Shield in response to the spell’s trigger, using the same spellcasting ability as Spellcasting.",
+          "en": "**Protective Magic.** The lich casts [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Counterspell]] or [[spell:fa29c493-2e21-49d5-9381-502bf61ad22f:Shield]] in response to the spell’s trigger, using the same spellcasting ability as Spellcasting.",
           "it": "**Magia di protezione.** Il lich lancia [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Controincantesimo]] o [[spell:fa29c493-2e21-49d5-9381-502bf61ad22f:Scudo]] come risposta all'innesco dell'incantesimo, utilizzando la stessa caratteristica da incantatore di Incantesimi."
         },
         "sizes": ["medium"],
@@ -27385,7 +27385,7 @@
         "passive_perception": 14,
         "proficiency_bonus": 3,
         "reactions": {
-          "en": "**Protective Magic (3/Day).** The mage casts [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Counterspell]] or Shield in response to the spell’s trigger, using the same spellcasting ability as Spellcasting.",
+          "en": "**Protective Magic (3/Day).** The mage casts [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Counterspell]] or [[spell:fa29c493-2e21-49d5-9381-502bf61ad22f:Shield]] in response to the spell’s trigger, using the same spellcasting ability as Spellcasting.",
           "it": "**Magia di protezione (3/giorno).** Il mago lancia [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Controincantesimo]] o [[spell:fa29c493-2e21-49d5-9381-502bf61ad22f:Scudo]] come risposta all'innesco dell'incantesimo, utilizzando la stessa caratteristica da incantatore di Incantesimi."
         },
         "sizes": ["medium", "small"],
@@ -27495,7 +27495,7 @@
         "passive_perception": 16,
         "proficiency_bonus": 4,
         "reactions": {
-          "en": "**Protective Magic (3/Day).** The archmage casts [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Counterspell]] or Shield in response to the spell’s trigger, using the same spellcasting ability as Spellcasting.",
+          "en": "**Protective Magic (3/Day).** The archmage casts [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Counterspell]] or [[spell:fa29c493-2e21-49d5-9381-502bf61ad22f:Shield]] in response to the spell’s trigger, using the same spellcasting ability as Spellcasting.",
           "it": "**Magia di protezione (3/giorno).** L'arcimago lancia [[spell:f73f532a-7362-4d3a-b63e-a55e619140fc:Controincantesimo]] o [[spell:fa29c493-2e21-49d5-9381-502bf61ad22f:Scudo]] come risposta all'innesco dell'incantesimo, utilizzando la stessa caratteristica da incantatore di Incantesimi."
         },
         "sizes": ["medium", "small"],
@@ -29177,7 +29177,7 @@
         "tag_ids": [],
         "telepathy_range": 0,
         "traits": {
-          "en": "**Coven Magic.** While within {9 meters|30 feet} of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell’s normal casting time, and using Intelligence as the spellcasting ability (spell save DC 14): Augury, Find Familiar, Identify, Locate Object, Scrying, or Unseen Servant. The hag must finish a Long Rest before using this trait to cast that spell again.\n**Magic Resistance.** The hag has Advantage on saving throws against spells and other magical effects.\n**Soul Bag.** The hag has a soul bag. While holding or carrying the bag, the hag can use its Nightmare Haunting action. The bag has AC 15, HP 20, and Resistance to all damage. The bag turns to dust if reduced to 0 Hit Points. If the bag is destroyed, any souls the bag is holding are released. The hag can create a new bag after 7 days.",
+          "en": "**Coven Magic.** While within {9 meters|30 feet} of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell’s normal casting time, and using Intelligence as the spellcasting ability (spell save DC 14): [[spell:809f6750-edee-4636-b4ab-116cbc5df8e6:Augury]], [[spell:509c6f61-3c42-4360-af1d-9fe9041c756c:Find Familiar]], [[spell:d4597f37-d8de-4dbf-bb66-7cbf77fb03fc:Identify]], [[spell:53ead66c-dd37-4b5e-9636-dc5157166a11:Locate Object]], [[spell:be6f3a1d-71be-4db7-80da-aac78339cccb:Scrying]], or [[spell:d1f4654c-f00e-416c-8260-f2c838800d89:Unseen Servant]]. The hag must finish a Long Rest before using this trait to cast that spell again.\n**Magic Resistance.** The hag has Advantage on saving throws against spells and other magical effects.\n**Soul Bag.** The hag has a soul bag. While holding or carrying the bag, the hag can use its Nightmare Haunting action. The bag has AC 15, HP 20, and Resistance to all damage. The bag turns to dust if reduced to 0 Hit Points. If the bag is destroyed, any souls the bag is holding are released. The hag can create a new bag after 7 days.",
           "it": "**Borsa dell'anima.** La megera ha una borsa dell'anima. Finché impugna o trasporta la borsa, può usarne l'azione Infestare incubi. La borsa ha CA 15, 20 PF e resistenza a tutti i danni, e si trasforma in polvere se ridotta a 0 punti ferita. Se la borsa viene distrutta, qualsiasi anima al suo interno viene liberata. La megera può creare una nuova borsa dopo 7 giorni.\n**Magia della congrega.** Finché si trova entro {9 metri|30 piedi} da almeno due megere alleate, la megera può lanciare uno dei seguenti incantesimi senza bisogno di componenti materiali, utilizzando il normale tempo di lancio dell'incantesimo e Intelligenza come caratteristica da incantatore (CD del tiro salvezza sull'incantesimo 14): [[spell:d4597f37-d8de-4dbf-bb66-7cbf77fb03fc:Identificare]], [[spell:53ead66c-dd37-4b5e-9636-dc5157166a11:Localizza Oggetto]], [[spell:809f6750-edee-4636-b4ab-116cbc5df8e6:Presagio]], [[spell:be6f3a1d-71be-4db7-80da-aac78339cccb:Scrutare]], [[spell:d1f4654c-f00e-416c-8260-f2c838800d89:Servitore Inosservato]] o [[spell:509c6f61-3c42-4360-af1d-9fe9041c756c:Trova Famiglio]]. La megera deve terminare un riposo lungo prima di utilizzare questo tratto per lanciare di nuovo l'incantesimo.\n**Resistenza alla magia.** La megera dispone di vantaggio ai tiri salvezza contro incantesimi e altri effetti magici."
         },
         "tremorsense": 0,
@@ -30398,7 +30398,7 @@
         "ability_str": 26,
         "ability_wis": 18,
         "actions": {
-          "en": "**Multiattack.** The pit fiend makes one Bite attack, two Devilish Claw attacks, and one Fiery Mace attack.\n**Bite.** _Melee Attack Roll:_ +14, reach {3 meters|10 feet}. _Hit:_ 18 (3d6 + 8) Piercing damage. If the target is a creature, it must make the following saving throw. Constitution _Saving Throw:_ DC 21. _Failure:_ The target has the Poisoned condition. While Poisoned, the target can’t regain Hit Points and takes 21 (6d6) Poison damage at the start of each of its turns, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.\n**Devilish Claw.** _Melee Attack Roll:_ +14, reach {3 meters|10 feet}. _Hit:_ 26 (4d8 + 8) Necrotic damage.\n**Fiery Mace.** _Melee Attack Roll:_ +14, reach {3 meters|10 feet}. _Hit:_ 22 (4d6 + 8) Force damage plus 21 (6d6) Fire damage.\n**Hellfire Spellcasting (Recharge 4–6).** The pit fiend casts [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Fireball]] (level 5 version) twice, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21). It can replace one Fireball with Hold Monster (level 7 version) or Wall of Fire.",
+          "en": "**Multiattack.** The pit fiend makes one Bite attack, two Devilish Claw attacks, and one Fiery Mace attack.\n**Bite.** _Melee Attack Roll:_ +14, reach {3 meters|10 feet}. _Hit:_ 18 (3d6 + 8) Piercing damage. If the target is a creature, it must make the following saving throw. Constitution _Saving Throw:_ DC 21. _Failure:_ The target has the Poisoned condition. While Poisoned, the target can’t regain Hit Points and takes 21 (6d6) Poison damage at the start of each of its turns, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.\n**Devilish Claw.** _Melee Attack Roll:_ +14, reach {3 meters|10 feet}. _Hit:_ 26 (4d8 + 8) Necrotic damage.\n**Fiery Mace.** _Melee Attack Roll:_ +14, reach {3 meters|10 feet}. _Hit:_ 22 (4d6 + 8) Force damage plus 21 (6d6) Fire damage.\n**Hellfire Spellcasting (Recharge 4–6).** The pit fiend casts [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Fireball]] (level 5 version) twice, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21). It can replace one [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Fireball]] with [[spell:694a3c47-d816-4361-9885-65a93580ac5e:Hold Monster]] (level 7 version) or [[spell:027998ea-5e01-43f7-b1e1-f6f683897216:Wall of Fire]].",
           "it": "**Multiattacco.** Il diavolo della fossa effettua un attacco Morso, due attacchi Artiglio diabolico e un attacco Mazza faimmeggiante.\n**Artiglio diabolico.** _Tiro per colpire in mischia:_ +14, portata {3 metri|10 piedi}. _Colpito:_ 26 (4d8 + 8) danni necrotici.\n**Mazza fiammeggiante.** _Tiro per colpire in mischia:_ +14, portata {3 metri|10 piedi}. _Colpito:_ 22 (4d6 + 8) danni da forza più 21 (6d6) danni da fuoco.\n**Morso.** _Tiro per colpire in mischia:_ +14, portata {3 metri|10 piedi}. _Colpito:_ 18 (3d6 + 8) danni perforanti. Se il bersaglio è una creatura, deve effettuare il seguente tiro salvezza. _Tiro salvezza su Costituzione:_ CD 21. _Fallimento:_ il bersaglio viene avvelenato. Finché è avvelenato, il bersaglio non può recuperare punti ferita e subisce 21 (6d6) danni da veleno all'inizio di ogni suo turno; il bersaglio ripete il tiro salvezza al termine di ogni suo turno e, se lo supera, l'effetto svanisce. Dopo 1 minuto, la prova viene superata automaticamente.\n**Incantesimi del fuoco infernale (ricarica 4–6).** Il diavolo della fossa lancia [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Palla di Fuoco]] (di 5º livello) due volte, senza bisogno di componenti materiali e utilizzando Carisma come caratteristica da incantatore (CD del tiro salvezza sull'incantesimo 21). Può sostituire un incantesimo [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Palla di Fuoco]] con [[spell:694a3c47-d816-4361-9885-65a93580ac5e:Blocca Mostri]] (di 7º livello) o con [[spell:027998ea-5e01-43f7-b1e1-f6f683897216:Muro di Fuoco]]."
         },
         "additional_hp_per_level": 0,
@@ -30514,7 +30514,7 @@
         "armor_class": 19,
         "blindsight": 0,
         "bonus_actions": {
-          "en": "**Divine Aid (2/Day).** The planetar casts [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cure Wounds]], Invisibility, Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting.",
+          "en": "**Divine Aid (2/Day).** The planetar casts [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cure Wounds]], [[spell:745540c1-d920-48f7-8561-957f89a66fed:Invisibility]], [[spell:4d3e11f0-04b2-4811-893f-92d672b611ef:Lesser Restoration]], or [[spell:6df372fb-eeb8-4fc2-a51f-abc245c5ef18:Remove Curse]], using the same spellcasting ability as Spellcasting.",
           "it": "**Aiuto divino (2/giorno).** Il planetar lancia [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cura Ferite]], [[spell:745540c1-d920-48f7-8561-957f89a66fed:Invisibilità]], [[spell:6df372fb-eeb8-4fc2-a51f-abc245c5ef18:Rimuovi Maledizione]] o [[spell:4d3e11f0-04b2-4811-893f-92d672b611ef:Ristorare Inferiore]], utilizzando la stessa caratteristica da incantatore di Incantesimi."
         },
         "can_hover": true,
@@ -30610,7 +30610,7 @@
         "armor_class": 13,
         "blindsight": 0,
         "bonus_actions": {
-          "en": "**Divine Aid (1/Day).** The priest casts [[spell:bb71143e-b92e-485b-b7fd-1f0806becf21:Bless]], Healing Word, or Sanctuary, using the same spellcasting ability as Spellcasting.",
+          "en": "**Divine Aid (1/Day).** The priest casts [[spell:bb71143e-b92e-485b-b7fd-1f0806becf21:Bless]], [[spell:1779c6c7-66d0-4696-980c-a978746866c9:Healing Word]], or [[spell:0efe2071-c196-4d12-94e9-7d80d2232f0b:Sanctuary]], using the same spellcasting ability as Spellcasting.",
           "it": "**Aiuto divino (1/giorno).** Il sacerdote lancia [[spell:bb71143e-b92e-485b-b7fd-1f0806becf21:Benedizione]], [[spell:1779c6c7-66d0-4696-980c-a978746866c9:Parola Guaritrice]] o [[spell:0efe2071-c196-4d12-94e9-7d80d2232f0b:Santuario]], utilizzando la stessa caratteristica da incantatore di Incantesimi."
         },
         "can_hover": false,
@@ -30736,7 +30736,7 @@
         "armor_class": 13,
         "blindsight": 0,
         "bonus_actions": {
-          "en": "**Divine Aid (3/Day).** The priest casts [[spell:bb71143e-b92e-485b-b7fd-1f0806becf21:Bless]], Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting.",
+          "en": "**Divine Aid (3/Day).** The priest casts [[spell:bb71143e-b92e-485b-b7fd-1f0806becf21:Bless]], [[spell:bcfaf02d-2d4e-49fe-9795-0515d51b95e5:Dispel Magic]], [[spell:1779c6c7-66d0-4696-980c-a978746866c9:Healing Word]], or [[spell:4d3e11f0-04b2-4811-893f-92d672b611ef:Lesser Restoration]], using the same spellcasting ability as Spellcasting.",
           "it": "**Aiuto divino (3/giorno).** Il sacerdote lancia [[spell:bb71143e-b92e-485b-b7fd-1f0806becf21:Benedizione]], [[spell:bcfaf02d-2d4e-49fe-9795-0515d51b95e5:Dissolvi Magie]], [[spell:1779c6c7-66d0-4696-980c-a978746866c9:Parola Guaritrice]] o [[spell:4d3e11f0-04b2-4811-893f-92d672b611ef:Ristorare Inferiore]], utilizzando la stessa caratteristica da incantatore di Incantesimi."
         },
         "can_hover": false,
@@ -32560,7 +32560,7 @@
         "tag_ids": [],
         "telepathy_range": 0,
         "traits": {
-          "en": "**Amphibious.** The hag can breathe air and water.\n**Coven Magic.** While within {9 meters|30 feet} of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell’s normal casting time, and using Intelligence as the spellcasting ability (spell save DC 11): Augury, Find Familiar, Identify, Locate Object, Scrying, or Unseen Servant. The hag must finish a Long Rest before using this trait to cast that spell again.\n**Vile Appearance.** Wisdom _Saving Throw:_ DC 11, any Beast or Humanoid that starts its turn within {9 meters|30 feet} of the hag and can see the hag’s true form. _Failure:_ The target has the Frightened condition until the start of its next turn. _Success:_ The target is immune to this hag’s Vile Appearance for 24 hours.",
+          "en": "**Amphibious.** The hag can breathe air and water.\n**Coven Magic.** While within {9 meters|30 feet} of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell’s normal casting time, and using Intelligence as the spellcasting ability (spell save DC 11): [[spell:809f6750-edee-4636-b4ab-116cbc5df8e6:Augury]], [[spell:509c6f61-3c42-4360-af1d-9fe9041c756c:Find Familiar]], [[spell:d4597f37-d8de-4dbf-bb66-7cbf77fb03fc:Identify]], [[spell:53ead66c-dd37-4b5e-9636-dc5157166a11:Locate Object]], [[spell:be6f3a1d-71be-4db7-80da-aac78339cccb:Scrying]], or [[spell:d1f4654c-f00e-416c-8260-f2c838800d89:Unseen Servant]]. The hag must finish a Long Rest before using this trait to cast that spell again.\n**Vile Appearance.** Wisdom _Saving Throw:_ DC 11, any Beast or Humanoid that starts its turn within {9 meters|30 feet} of the hag and can see the hag’s true form. _Failure:_ The target has the Frightened condition until the start of its next turn. _Success:_ The target is immune to this hag’s Vile Appearance for 24 hours.",
           "it": "**Anfibio.** La megera può respirare in aria e in acqua.\n**Magia della congrega.** Finché si trova entro {9 metri|30 piedi} da almeno due megere alleate, la megera può lanciare uno dei seguenti incantesimi senza bisogno di componenti materiali, utilizzando il normale tempo di lancio dell'incantesimo e Intelligenza come caratteristica da incantatore (CD del tiro salvezza sull'incantesimo 11): [[spell:d4597f37-d8de-4dbf-bb66-7cbf77fb03fc:Identificare]], [[spell:53ead66c-dd37-4b5e-9636-dc5157166a11:Localizza Oggetto]], [[spell:809f6750-edee-4636-b4ab-116cbc5df8e6:Presagio]], [[spell:be6f3a1d-71be-4db7-80da-aac78339cccb:Scrutare]], [[spell:d1f4654c-f00e-416c-8260-f2c838800d89:Servitore Inosservato]] o [[spell:509c6f61-3c42-4360-af1d-9fe9041c756c:Trova Famiglio]]. La megera deve terminare un riposo lungo prima di utilizzare questo tratto per lanciare di nuovo l'incantesimo.\n**Aspetto orripilante.** _Tiro salvezza su Saggezza:_ CD 11, qualsiasi bestia o umanoide inizi il proprio turno nel campo visivo della megera, entro un raggio di {9 metri|30 piedi} da lei e può vederne la vera forma. _Fallimento:_ il bersaglio è spaventato fino all'inizio del proprio turno successivo. _Successo:_ il bersaglio è immune all'Aspetto orripilante di questa megera per 24 ore."
         },
         "tremorsense": 0,
@@ -33641,7 +33641,7 @@
         "armor_class": 21,
         "blindsight": 0,
         "bonus_actions": {
-          "en": "**Divine Aid (3/Day).** The solar casts [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cure Wounds]] (level 2 version), Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting.",
+          "en": "**Divine Aid (3/Day).** The solar casts [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cure Wounds]] (level 2 version), [[spell:4d3e11f0-04b2-4811-893f-92d672b611ef:Lesser Restoration]], or [[spell:6df372fb-eeb8-4fc2-a51f-abc245c5ef18:Remove Curse]], using the same spellcasting ability as Spellcasting.",
           "it": "**Aiuto divino (3/giorno).** Il solar lancia [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cura Ferite]] (di 2º livello), [[spell:6df372fb-eeb8-4fc2-a51f-abc245c5ef18:Rimuovi Maledizione]] o [[spell:4d3e11f0-04b2-4811-893f-92d672b611ef:Ristorare Inferiore]], utilizzando la stessa caratteristica da incantatore di Incantesimi."
         },
         "can_hover": true,
@@ -35739,7 +35739,7 @@
         "armor_class": 12,
         "blindsight": 0,
         "bonus_actions": {
-          "en": "**Unicorn’s Blessing (3/Day).** The unicorn touches another creature with its horn and casts [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cure Wounds]] or Lesser Restoration on that creature, using the same spellcasting ability as Spellcasting.",
+          "en": "**Unicorn’s Blessing (3/Day).** The unicorn touches another creature with its horn and casts [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cure Wounds]] or [[spell:4d3e11f0-04b2-4811-893f-92d672b611ef:Lesser Restoration]] on that creature, using the same spellcasting ability as Spellcasting.",
           "it": "**Benedizione dell'unicorno (3/giorno).** L'unicorno tocca un'altra creatura col suo corno e lancia [[spell:ff4531dd-1754-4057-a79d-b2b0aa5807c1:Cura Ferite]] o [[spell:4d3e11f0-04b2-4811-893f-92d672b611ef:Ristorare Inferiore]] su di essa, utilizzando la stessa caratteristica da incantatore di Incantesimi."
         },
         "can_hover": false,
@@ -67271,7 +67271,7 @@
         },
         "cost": 200000,
         "description": {
-          "en": "This necklace has 1d6 + 3 beads hanging from it. You can take a Magic action to detach a bead and throw it up to {18 meters|60 feet} away. When it reaches the end of its trajectory, the bead detonates as a level 3 [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Fireball]] (save DC 15).\nYou can hurl multiple beads, or even the whole necklace, at one time. When you do so, increase the damage of the Fireball by 1d6 for each bead after the first (maximum 12d6).",
+          "en": "This necklace has 1d6 + 3 beads hanging from it. You can take a Magic action to detach a bead and throw it up to {18 meters|60 feet} away. When it reaches the end of its trajectory, the bead detonates as a level 3 [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Fireball]] (save DC 15).\nYou can hurl multiple beads, or even the whole necklace, at one time. When you do so, increase the damage of the [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Fireball]] by 1d6 for each bead after the first (maximum 12d6).",
           "it": "Da questa collana pendono 1d6 + 3 perle. Il personaggio può effettuare un'azione di Magia per staccare una perla e lanciarla entro {18 metri|60 piedi} di distanza. Una volta raggiunta la fine della sua traiettoria, la perla esplode in una [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Palla di Fuoco]] di 3º livello (CD del tiro salvezza 15).\nCon un'unica azione, è possibile lanciare più perle o perfino l'intera collana. In tal caso, il danno della [[spell:d1d78885-0d41-494b-9f6a-7aff17eb1ca9:Palla di Fuoco]] aumenta di 1d6 per ogni perla dopo la prima (massimo 12d6)."
         },
         "is_magic": true,
@@ -70875,8 +70875,8 @@
         },
         "cost": 400000,
         "description": {
-          "en": "This robe is adorned with eyelike patterns. While you wear the robe, you gain the following benefits:\n• **All-Around Vision.** The robe gives you Advantage on Wisdom (Perception) checks that rely on sight.\n• **Special Senses.** You have Darkvision and Truesight, both with a range of {36meters|120 feet}.\n**Drawbacks.** A [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Light]] spell cast on the robe or a [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Daylight]] spell cast within {1.5 meters|5 feet} of the robe gives you the Blinded condition for 1 minute. At the end of each of your turns, you make a Constitution saving throw (DC 11 for Light or DC 15 for Daylight), ending the condition on yourself on a success.",
-          "it": "Questa tunica è decorata con un motivo raffigurante vari occhi. Mentre il personaggio la indossa ottiene i benefici seguenti:\n• **Sensi speciali.** Il personaggio ha scurovisione e vista pura, entrambe con un raggio di {36 metri|120 piedi}.\n• **Visione a tutto tondo.** La tunica conferisce vantaggio alle prove di Saggezza (Percezione) basate sulla vista.\n**Debolezze.** Un incantesimo [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Luce]] lanciato sulla tunica o un incantesimo [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Luce Diurna]] lanciato entro {1,5 metri|5 piedi} dalla tunica rende il personaggio accecato per 1 minuto. Alla fine di ogni suo turno, il personaggio effettua un tiro salvezza su Costituzione (CD 11 per luce o CD 15 per luce diurna), terminando la cecità in caso di successo."
+          "en": "This robe is adorned with eyelike patterns. While you wear the robe, you gain the following benefits:\n• **All-Around Vision.** The robe gives you Advantage on Wisdom (Perception) checks that rely on sight.\n• **Special Senses.** You have Darkvision and Truesight, both with a range of {36meters|120 feet}.\n**Drawbacks.** A [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Light]] spell cast on the robe or a [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Daylight]] spell cast within {1.5 meters|5 feet} of the robe gives you the Blinded condition for 1 minute. At the end of each of your turns, you make a Constitution saving throw (DC 11 for [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Light]] or DC 15 for [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Daylight]]), ending the condition on yourself on a success.",
+          "it": "Questa tunica è decorata con un motivo raffigurante vari occhi. Mentre il personaggio la indossa ottiene i benefici seguenti:\n• **Sensi speciali.** Il personaggio ha scurovisione e vista pura, entrambe con un raggio di {36 metri|120 piedi}.\n• **Visione a tutto tondo.** La tunica conferisce vantaggio alle prove di Saggezza (Percezione) basate sulla vista.\n**Debolezze.** Un incantesimo [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Luce]] lanciato sulla tunica o un incantesimo [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Luce Diurna]] lanciato entro {1,5 metri|5 piedi} dalla tunica rende il personaggio accecato per 1 minuto. Alla fine di ogni suo turno, il personaggio effettua un tiro salvezza su Costituzione (CD 11 per [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Luce]] o CD 15 per [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Luce Diurna]]), terminando la cecità in caso di successo."
         },
         "is_magic": true,
         "modifier_ids": [],
@@ -75206,7 +75206,7 @@
           "it": 82
         },
         "description": {
-          "en": "When you cast a spell, such as Charm Person, that can be cast with a higher-level spell slot to target an additional creature, you can spend 1 Sorcery Point to increase the spell’s effective level by 1.",
+          "en": "When you cast a spell, such as [[spell:f1b26a17-8e75-4a5e-97f3-597c05c29d3e:Charm Person]], that can be cast with a higher-level spell slot to target an additional creature, you can spend 1 Sorcery Point to increase the spell’s effective level by 1.",
           "it": "Quando lo stregone produce un incantesimo lanciabile consumando uno slot di livello superiore per colpire un bersaglio aggiuntivo, come [[spell:f1b26a17-8e75-4a5e-97f3-597c05c29d3e:Charme su Persone]], può spendere 1 punto stregoneria per aumentarne il livello effettivo di 1."
         },
         "prerequisite": {
