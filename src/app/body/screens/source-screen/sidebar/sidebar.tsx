@@ -54,6 +54,7 @@ export default function Sidebar() {
         display={collapsed ? "none" : "flex"}
         flex={1}
         gap={4}
+        minH={0}
         overflow="auto"
         py={4}
         w="full"
@@ -66,11 +67,15 @@ export default function Sidebar() {
           <SidebarSourceSelector versions={selectedSourceVersions} />
         </HStack>
 
-        <Separator w="full" />
-
-        {sourceId && <SidebarSource />}
-
-        <Separator w="full" />
+        {sourceId ? (
+          <VStack flex={1} gap={0} w="full">
+            <Separator w="full" />
+            <SidebarSource />
+            <Separator mt={1} w="full" />
+          </VStack>
+        ) : (
+          <Separator w="full" />
+        )}
 
         <HStack px={6} w="full" wrap="wrap">
           <LanguageSelect />

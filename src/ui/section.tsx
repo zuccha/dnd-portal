@@ -7,14 +7,21 @@ import type { ReactNode } from "react";
 
 export type SectionProps = StackProps & {
   action?: ReactNode;
+  titleFontSize?: "sm" | "md";
   title: string;
 };
 
-export default function Section({ action, children, title, ...rest }: SectionProps) {
+export default function Section({
+  action,
+  children,
+  title,
+  titleFontSize = "sm",
+  ...rest
+}: SectionProps) {
   return (
     <VStack pb={children ? 2 : 0} px={6} w="full" {...rest}>
       <HStack justify="space-between" minH={8} w="full">
-        <Span fontSize="sm" fontVariant="small-caps" fontWeight="medium">
+        <Span fontSize={titleFontSize} fontVariant="small-caps" fontWeight="medium">
           {title}
         </Span>
 

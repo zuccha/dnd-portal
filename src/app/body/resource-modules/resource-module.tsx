@@ -78,7 +78,7 @@ export function createResourceModule<
   });
   const ResourcesAlbum = createResourcesAlbum(store, context, album);
   const ResourcesTable = createResourcesTable(store, context, table);
-  const ResourcesSidebar = createResourcesSidebar(store, context, filters);
+  const ResourcesSidebar = createResourcesSidebar(store, context, filters, path);
   const ResourceDetailInteractive = createResourceDetailInteractive(store, context, detail, path);
 
   const { useView } = context;
