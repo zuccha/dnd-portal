@@ -1,7 +1,6 @@
 import type { CreatureHabitat } from "~/models/resources/creature-habitats/creature-habitat";
 import type { LocalizedCreatureHabitat } from "~/models/resources/creature-habitats/localized-creature-habitat";
 import PokerCard from "~/ui/poker-card";
-import ResourceCardLinks from "../../resource-card-links";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -20,7 +19,7 @@ export function CreatureHabitatCard(props: CreatureHabitatCardProps) {
       ...localizedResource.families,
       value:
         linkResources && localizedResource.families.resources.length > 0 ? (
-          <ResourceCardLinks resources={localizedResource.families.resources} />
+          <PokerCard.Links palette={palette} resources={localizedResource.families.resources} />
         ) : (
           localizedResource.families.value
         ),

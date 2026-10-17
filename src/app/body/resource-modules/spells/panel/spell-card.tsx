@@ -2,7 +2,6 @@ import { Box, Center, GridItem, SimpleGrid, Span, VStack } from "@chakra-ui/reac
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import type { Spell } from "~/models/resources/spells/spell";
 import PokerCard from "~/ui/poker-card";
-import ResourceCardLinks from "../../resource-card-links";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 import type { ReactNode } from "react";
 
@@ -44,7 +43,7 @@ export function SpellCard({
             textTransform="uppercase"
           >
             {linkResources && characterClassAbbreviations.length > 0 ? (
-              <ResourceCardLinks resources={characterClassAbbreviations} />
+              <PokerCard.Links palette={palette} resources={characterClassAbbreviations} />
             ) : (
               localizedResource.character_class_abbreviations
             )}
@@ -62,7 +61,6 @@ export function SpellCard({
               {localizedResource.ritual && (
                 <Indicator color={palette[700]} position="left">
                   <RitualSvg />
-                  {/* {t("ritual")} */}
                 </Indicator>
               )}
             </Cell>
@@ -73,7 +71,6 @@ export function SpellCard({
               {localizedResource.concentration && (
                 <Indicator color={palette[700]} position="right">
                   <ConcentrationSvg />
-                  {/* {t("concentration")} */}
                 </Indicator>
               )}
             </Cell>

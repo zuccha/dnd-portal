@@ -1,7 +1,6 @@
 import type { CreatureFamily } from "~/models/resources/creature-families/creature-family";
 import type { LocalizedCreatureFamily } from "~/models/resources/creature-families/localized-creature-family";
 import PokerCard from "~/ui/poker-card";
-import ResourceCardLinks from "../../resource-card-links";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -25,7 +24,7 @@ export function CreatureFamilyCard({
     localizedResource.creatures,
   ].map((field) =>
     linkResources && field.resources.length > 0
-      ? { ...field, value: <ResourceCardLinks resources={field.resources} /> }
+      ? { ...field, value: <PokerCard.Links palette={palette} resources={field.resources} /> }
       : field,
   );
 

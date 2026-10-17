@@ -1,7 +1,6 @@
 import type { CreatureTag } from "~/models/resources/creature-tags/creature-tag";
 import type { LocalizedCreatureTag } from "~/models/resources/creature-tags/localized-creature-tag";
 import PokerCard from "~/ui/poker-card";
-import ResourceCardLinks from "../../resource-card-links";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -25,7 +24,7 @@ export function CreatureTagCard({
       ...localizedResource.creatures,
       value:
         linkResources && localizedResource.creatures.resources.length > 0 ? (
-          <ResourceCardLinks resources={localizedResource.creatures.resources} />
+          <PokerCard.Links palette={palette} resources={localizedResource.creatures.resources} />
         ) : (
           localizedResource.creatures.value
         ),

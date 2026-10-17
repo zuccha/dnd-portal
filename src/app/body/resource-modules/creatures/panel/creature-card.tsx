@@ -4,7 +4,6 @@ import { useCallback, useState } from "react";
 import type { Creature } from "~/models/resources/creatures/creature";
 import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import PokerCard from "~/ui/poker-card";
-import ResourceCardLink from "../../resource-card-link";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -45,9 +44,13 @@ export function CreatureCard({
               <Fragment key={`${entry.resource?.kind}:${entry.resource?.id}:${index}`}>
                 {index > 0 && ", "}
                 {entry.resource ? (
-                  <ResourceCardLink id={entry.resource.id} kind={entry.resource.kind}>
+                  <PokerCard.Link
+                    id={entry.resource.id}
+                    kind={entry.resource.kind}
+                    palette={palette}
+                  >
                     {entry.resource.name}
-                  </ResourceCardLink>
+                  </PokerCard.Link>
                 ) : (
                   entry.name
                 )}
@@ -71,13 +74,14 @@ export function CreatureCard({
       value: linkResources
         ? localizedResource.languages_info.detail_parts.map((part, index) =>
             part.type === "resource" ? (
-              <ResourceCardLink
+              <PokerCard.Link
                 id={part.resource.id}
                 key={`${part.resource.kind}:${part.resource.id}`}
                 kind={part.resource.kind}
+                palette={palette}
               >
                 {part.resource.name}
-              </ResourceCardLink>
+              </PokerCard.Link>
             ) : (
               <Fragment key={index}>{part.value}</Fragment>
             ),

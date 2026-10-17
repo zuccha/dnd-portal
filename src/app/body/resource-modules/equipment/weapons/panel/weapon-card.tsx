@@ -1,7 +1,6 @@
 import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import PokerCard from "~/ui/poker-card";
-import ResourceCardLinks from "../../../resource-card-links";
 import { EquipmentCard } from "../../panel/equipment-card";
 import type { ResourcePokerCardProps } from "../../../resource-poker-card";
 
@@ -25,7 +24,9 @@ export function WeaponCard({
     linkResources && localizedResource.ammunition.resources.length > 0
       ? {
           ...localizedResource.ammunition,
-          value: <ResourceCardLinks resources={localizedResource.ammunition.resources} />,
+          value: (
+            <PokerCard.Links palette={palette} resources={localizedResource.ammunition.resources} />
+          ),
         }
       : localizedResource.ammunition;
 

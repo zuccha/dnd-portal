@@ -2,7 +2,6 @@ import { Span } from "@chakra-ui/react";
 import type { Background } from "~/models/resources/backgrounds/background";
 import type { LocalizedBackground } from "~/models/resources/backgrounds/localized-background";
 import PokerCard from "~/ui/poker-card";
-import ResourceCardLink from "../../resource-card-link";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -28,9 +27,9 @@ export function BackgroundCard({
       value:
         linkResources && localizedResource.feat.id ? (
           <>
-            <ResourceCardLink id={localizedResource.feat.id} kind="feat">
+            <PokerCard.Link id={localizedResource.feat.id} kind="feat" palette={palette}>
               {localizedResource.feat.link_text || localizedResource.feat.value}
-            </ResourceCardLink>
+            </PokerCard.Link>
             {localizedResource.feat.notes && <Span> ({localizedResource.feat.notes})</Span>}
           </>
         ) : (
@@ -43,10 +42,14 @@ export function BackgroundCard({
       value:
         linkResources && localizedResource.tool_proficiency.id ? (
           <>
-            <ResourceCardLink id={localizedResource.tool_proficiency.id} kind="tool">
+            <PokerCard.Link
+              id={localizedResource.tool_proficiency.id}
+              kind="tool"
+              palette={palette}
+            >
               {localizedResource.tool_proficiency.link_text ||
                 localizedResource.tool_proficiency.value}
-            </ResourceCardLink>
+            </PokerCard.Link>
             {localizedResource.tool_proficiency.notes && (
               <Span> ({localizedResource.tool_proficiency.notes})</Span>
             )}

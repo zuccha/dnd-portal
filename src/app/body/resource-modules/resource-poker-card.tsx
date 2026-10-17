@@ -7,7 +7,7 @@ import type { Resource } from "~/models/resources/resource";
 import PokerCard from "~/ui/poker-card";
 import { closeRichTextPage, emptyRichTextPageState } from "~/ui/rich-text-page";
 import type { Palette } from "~/utils/palette";
-import { useResourceLinkPatterns } from "./resource-link-pattern";
+import { type ResourceLinkRenderer, useResourceLinkPatterns } from "./resource-link-pattern";
 
 //------------------------------------------------------------------------------
 // Resource Poker Card
@@ -56,7 +56,19 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
   const hasImage = showImage && imageUrl.length > 0;
   const firstPageIndexWithoutImage = hasImage ? 1 : 0;
   const [system] = useI18nSystem();
-  const richTextPatterns = useResourceLinkPatterns(resourceReferences, linkResources);
+  const renderCardResourceLink = useCallback<ResourceLinkRenderer>(
+    (resource, children) => (
+      <PokerCard.Link id={resource.id} kind={resource.kind} palette={palette}>
+        {children}
+      </PokerCard.Link>
+    ),
+    [palette],
+  );
+  const richTextPatterns = useResourceLinkPatterns(
+    resourceReferences,
+    linkResources,
+    renderCardResourceLink,
+  );
 
   const handlePageCountChange = useCallback(
     (count: number | undefined, overflow: boolean) => {

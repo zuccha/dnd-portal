@@ -1,8 +1,12 @@
 import { Box, HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/react";
-import { type ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import RichText, { type RichTextPattern } from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
+import { resourceDetailRoute } from "../navigation/routes";
 import { type BleedCorner, useBleed } from "./bleed-context";
+import RouterLink from "./router-link";
+import type { LocalizedResourceLink } from "../models/resources/localized-resource";
+import type { ResourceKind } from "../models/types/resource-kind";
 
 //------------------------------------------------------------------------------
 // Sizes
@@ -322,6 +326,55 @@ function LabeledValues({ compact, fields, palette }: LabeledValuesProps) {
 }
 
 //------------------------------------------------------------------------------
+// Link
+//------------------------------------------------------------------------------
+
+function Link({
+  children,
+  id,
+  kind,
+  palette,
+}: {
+  children: ReactNode;
+  id: string;
+  kind: ResourceKind;
+  palette: Palette;
+}) {
+  return (
+    <RouterLink
+      color={palette[800]}
+      onClick={(event) => event.stopPropagation()}
+      onPointerDown={(event) => event.stopPropagation()}
+      onPointerUp={(event) => event.stopPropagation()}
+      to={resourceDetailRoute(kind, id)}
+    >
+      {children}
+    </RouterLink>
+  );
+}
+
+//------------------------------------------------------------------------------
+// Links
+//------------------------------------------------------------------------------
+
+function Links({
+  palette,
+  resources,
+}: {
+  palette: Palette;
+  resources: LocalizedResourceLink<ResourceKind>[];
+}) {
+  return resources.map(({ id, kind, name }, index) => (
+    <Fragment key={`${kind}:${id}`}>
+      {index > 0 && ", "}
+      <Link id={id} kind={kind} palette={palette}>
+        {name}
+      </Link>
+    </Fragment>
+  ));
+}
+
+//------------------------------------------------------------------------------
 // Separator
 //------------------------------------------------------------------------------
 
@@ -381,6 +434,8 @@ const PokerCard = {
   Details: Description,
   Frame,
   LabeledValues,
+  Link,
+  Links,
   Separator,
 
   cardH,

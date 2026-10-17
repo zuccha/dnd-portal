@@ -10,7 +10,6 @@ import type { CharacterClass } from "~/models/resources/character-classes/charac
 import type { LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
 import Icon from "~/ui/icon";
 import PokerCard from "~/ui/poker-card";
-import ResourceCardLinks from "../../resource-card-links";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -36,7 +35,12 @@ export function CharacterClassCard({
     localizedResource.tool_proficiencies.resources.length > 0
       ? {
           ...field,
-          value: <ResourceCardLinks resources={localizedResource.tool_proficiencies.resources} />,
+          value: (
+            <PokerCard.Links
+              palette={palette}
+              resources={localizedResource.tool_proficiencies.resources}
+            />
+          ),
         }
       : field,
   );

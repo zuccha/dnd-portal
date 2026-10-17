@@ -7,6 +7,16 @@ import { resourceKindSchema } from "~/models/types/resource-kind";
 import { resourceDetailRoute } from "~/navigation/routes";
 import RichText, { type RichTextPattern } from "~/ui/rich-text";
 import RouterLink from "~/ui/router-link";
+import type { ReactNode } from "react";
+
+//------------------------------------------------------------------------------
+// Resource Link Renderer
+//------------------------------------------------------------------------------
+
+export type ResourceLinkRenderer = (
+  resource: Pick<Resource, "id" | "kind">,
+  children: ReactNode,
+) => ReactNode;
 
 //------------------------------------------------------------------------------
 // Create Resource Link Pattern
@@ -17,6 +27,7 @@ export function createResourceLinkPattern(
   lang: string,
   missingResourceLabel: string,
   linkResources = true,
+  renderLink?: ResourceLinkRenderer,
 ): RichTextPattern {
   return {
     regex: /\[\[([\s\S]+?)\]\]/,
@@ -43,8 +54,10 @@ export function createResourceLinkPattern(
 
       if (!resource) return fallback || missingResourceLabel;
 
-      const name = resource.name[lang] || fallback;
-      if (!linkResources) return <Em>{name}</Em>;
+      const content = <Em>{resource.name[lang] || fallback}</Em>;
+
+      if (!linkResources) return content;
+      if (renderLink) return renderLink(resource, content);
 
       return (
         <RouterLink
@@ -53,7 +66,7 @@ export function createResourceLinkPattern(
           onPointerUp={(event) => event.stopPropagation()}
           to={resourceDetailRoute(resource.kind, resource.id)}
         >
-          <Em>{name}</Em>
+          {content}
         </RouterLink>
       );
     },
@@ -76,15 +89,16 @@ export function serializeResourceLink(resource: Resource, fallback = ""): string
 export function useResourceLinkPatterns(
   resources: Resource[],
   linkResources = true,
+  renderLink?: ResourceLinkRenderer,
 ): RichTextPattern[] {
   const { lang, t } = useI18nLangContext(i18nContext);
 
   return useMemo(
     () => [
       ...RichText.defaultPatterns,
-      createResourceLinkPattern(resources, lang, t("missing_resource"), linkResources),
+      createResourceLinkPattern(resources, lang, t("missing_resource"), linkResources, renderLink),
     ],
-    [lang, linkResources, resources, t],
+    [lang, linkResources, renderLink, resources, t],
   );
 }
 
