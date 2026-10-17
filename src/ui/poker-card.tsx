@@ -1,6 +1,6 @@
 import { Box, HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
-import RichText from "~/ui/rich-text";
+import RichText, { type RichTextPattern } from "~/ui/rich-text";
 import type { Palette } from "~/utils/palette";
 import { type BleedCorner, useBleed } from "./bleed-context";
 
@@ -236,9 +236,10 @@ function Arrow({ label, palette, value }: ArrowProps) {
 type DescriptionProps = {
   children: string;
   palette: Palette;
+  patterns?: RichTextPattern[];
 };
 
-function Description({ children, palette }: DescriptionProps) {
+function Description({ children, palette, patterns }: DescriptionProps) {
   const bleed = useBleed();
 
   return (
@@ -267,7 +268,7 @@ function Description({ children, palette }: DescriptionProps) {
             {paragraph.substring(2, paragraph.length - 2)}
           </Span>
         ) : (
-          <RichText hyphens="auto" key={paragraphIndex} text={paragraph} />
+          <RichText hyphens="auto" key={paragraphIndex} patterns={patterns} text={paragraph} />
         ),
       )}
     </VStack>
