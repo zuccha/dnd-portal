@@ -14583,7 +14583,7 @@
         "tag_ids": [],
         "telepathy_range": 0,
         "traits": {
-          "en": "**Fire Aura.** At the end of each of the azer’s turns, each creature of the azer’s choice in a 5-foot Emanation originating from the azer takes 5 (1d10) Fire damage unless the azer has the Incapacitated condition.\n**Illumination.** The azer sheds Bright Light in a 10-foot radius and Dim Light for an additional {3 meters|10 feet}.",
+          "en": "**Fire Aura.** At the end of each of the azer’s turns, each creature of the azer’s choice in a {1.5-meter|5-foot} Emanation originating from the azer takes 5 (1d10) Fire damage unless the azer has the Incapacitated condition.\n**Illumination.** The azer sheds Bright Light in a {3-meter|10-foot} radius and Dim Light for an additional {3 meters|10 feet}.",
           "it": "**Aura di fuoco.** Al termine di ogni turno dell'azer, tutte le creature a scelta dell'azer che si trovano in un'emanazione di {1,5 metri|5 piedi} di cui l'azer è il punto di origine subiscono 5 (1d10) danni da fuoco, a meno che l'azer non sia incapacitato.\n**Illuminazione.** L'azer emana luce intensa in un raggio di {3 metri|10 piedi} e luce fioca per altri {3 metri|10 piedi}."
         },
         "tremorsense": 0,
@@ -19631,7 +19631,7 @@
         "ability_str": 16,
         "ability_wis": 10,
         "actions": {
-          "en": "**Crush.** _Melee Attack Roll:_ +5, reach {1.5 meters|5 feet}. _Hit:_ 6 (1d6 + 3) Bludgeoning damage, and the darkmantle attaches to the target. If the target is a Medium or smaller creature and the darkmantle had Advantage on the attack roll, it covers the target, which has the Blinded condition and is suffocating while the darkmantle is attached in this way. While attached to a target, the darkmantle can attack only the target but has Advantage on its attack rolls. Its Speed becomes 0, it can’t benefit from any bonus to its Speed, and it moves with the target. A creature can take an action to try to detach the darkmantle from itself, doing so with a successful DC 13 Strength (Athletics) check. On its turn, the darkmantle can detach itself by using {1.5 meters|5 feet} of movement.\n**Darkness Aura (1/Day).** Magical Darkness fills a 15-foot Emanation originating from the darkmantle. This effect lasts while the darkmantle maintains Concentration on it, up to 10 minutes. Darkvision can’t penetrate this area, and no light can illuminate it.",
+          "en": "**Crush.** _Melee Attack Roll:_ +5, reach {1.5 meters|5 feet}. _Hit:_ 6 (1d6 + 3) Bludgeoning damage, and the darkmantle attaches to the target. If the target is a Medium or smaller creature and the darkmantle had Advantage on the attack roll, it covers the target, which has the Blinded condition and is suffocating while the darkmantle is attached in this way. While attached to a target, the darkmantle can attack only the target but has Advantage on its attack rolls. Its Speed becomes 0, it can’t benefit from any bonus to its Speed, and it moves with the target. A creature can take an action to try to detach the darkmantle from itself, doing so with a successful DC 13 Strength (Athletics) check. On its turn, the darkmantle can detach itself by using {1.5 meters|5 feet} of movement.\n**Darkness Aura (1/Day).** Magical Darkness fills a {4.5-meter|15-foot} Emanation originating from the darkmantle. This effect lasts while the darkmantle maintains Concentration on it, up to 10 minutes. Darkvision can’t penetrate this area, and no light can illuminate it.",
           "it": "**Schiacciare.** _Tiro per colpire in mischia:_ +5, portata {1,5 metri|5 piedi} _Colpito:_ 6 (1d6 + 3) danni contundenti, e il mantoscuro si avvinghia al bersaglio. Se il bersaglio è una creatura di taglia Media o inferiore e il mantoscuro dispone di vantaggio al tiro per colpire, copre il bersaglio, il quale è accecato e soffoca mentre il mostro è avvinghiato a lui in questo modo. Finché è avvinghiato a un bersaglio, il mantoscuro può attaccare solamente il bersaglio, ma dispone di vantaggio ai suoi tiri per colpire. Inoltre, il mantoscuro si muove insieme al bersaglio, la sua velocità diventa 0 e non può beneficiare di alcun bonus alla velocità. Una creatura può effettuare un'azione per staccarsi il mantoscuro di dosso, riuscendoci con una prova di Forza (Atletica) con CD 13 superata. Nel suo turno, il mantoscuro può staccarsi spontaneamente dal bersaglio usando {1,5 metri|5 piedi} di movimento.\n**Aura di oscurità (1/giorno).** L'oscurità magica riempie un'emanazione di {4,5 metri|15 piedi} di cui il mantoscuro è il punto di origine. Questo effetto dura finché il mantoscuro mantiene la concentrazione su di esso, fino a 10 minuti. La scurovisione non può penetrare in quest'area e nessuna luce può illuminarla."
         },
         "additional_hp_per_level": 0,
@@ -27564,7 +27564,7 @@
         "armor_class": 14,
         "blindsight": 0,
         "bonus_actions": {
-          "en": "**Ignited Illumination.** The magmin sets itself ablaze or extinguishes its flames. While ablaze, the magmin sheds Bright Light in a 10-foot radius and Dim Light for an additional {3 meters|10 feet}.",
+          "en": "**Ignited Illumination.** The magmin sets itself ablaze or extinguishes its flames. While ablaze, the magmin sheds Bright Light in a {3-meter|10-foot} radius and Dim Light for an additional {3 meters|10 feet}.",
           "it": "**Illuminazione fiammeggiante.** Il magmin si incendia o estingue le sue fiamme. Finché è in fiamme, proietta luce intensa in un raggio di {3 metri|10 piedi} e luce fioca per altri {3 metri|10 piedi}."
         },
         "can_hover": false,
@@ -27620,7 +27620,7 @@
         "tag_ids": [],
         "telepathy_range": 0,
         "traits": {
-          "en": "**Death Burst.** The magmin explodes when it dies. Dexterity _Saving Throw:_ DC 11, each creature in a 10-foot Emanation originating from the magmin. _Failure:_ 7 (2d6) Fire damage. _Success:_ Half damage.",
+          "en": "**Death Burst.** The magmin explodes when it dies. Dexterity _Saving Throw:_ DC 11, each creature in a {3-meter|10-foot} Emanation originating from the magmin. _Failure:_ 7 (2d6) Fire damage. _Success:_ Half damage.",
           "it": "**Esplosione mortale.** Il magmin esplode quando muore. _Tiro salvezza su Destrezza:_ CD 11, tutte le creature in un'emanazione di {3 metri|10 piedi} di cui il magmin è il punto di origine. _Fallimento:_ 7 (2d6) danni da fuoco. _Successo:_ danni dimezzati."
         },
         "tremorsense": 0,
@@ -70875,7 +70875,7 @@
         },
         "cost": 400000,
         "description": {
-          "en": "This robe is adorned with eyelike patterns. While you wear the robe, you gain the following benefits:\n• **All-Around Vision.** The robe gives you Advantage on Wisdom (Perception) checks that rely on sight.\n• **Special Senses.** You have Darkvision and Truesight, both with a range of {36meters|120 feet}.\n**Drawbacks.** A [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Light]] spell cast on the robe or a [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Daylight]] spell cast within 5 feet of the robe gives you the Blinded condition for 1 minute. At the end of each of your turns, you make a Constitution saving throw (DC 11 for Light or DC 15 for Daylight), ending the condition on yourself on a success.",
+          "en": "This robe is adorned with eyelike patterns. While you wear the robe, you gain the following benefits:\n• **All-Around Vision.** The robe gives you Advantage on Wisdom (Perception) checks that rely on sight.\n• **Special Senses.** You have Darkvision and Truesight, both with a range of {36meters|120 feet}.\n**Drawbacks.** A [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Light]] spell cast on the robe or a [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Daylight]] spell cast within {1.5 meters|5 feet} of the robe gives you the Blinded condition for 1 minute. At the end of each of your turns, you make a Constitution saving throw (DC 11 for Light or DC 15 for Daylight), ending the condition on yourself on a success.",
           "it": "Questa tunica è decorata con un motivo raffigurante vari occhi. Mentre il personaggio la indossa ottiene i benefici seguenti:\n• **Sensi speciali.** Il personaggio ha scurovisione e vista pura, entrambe con un raggio di {36 metri|120 piedi}.\n• **Visione a tutto tondo.** La tunica conferisce vantaggio alle prove di Saggezza (Percezione) basate sulla vista.\n**Debolezze.** Un incantesimo [[spell:6522985a-321d-49e7-a64f-1b64509a37eb:Luce]] lanciato sulla tunica o un incantesimo [[spell:4b0cb845-c0ee-4f56-8cd5-ef6d41bc780b:Luce Diurna]] lanciato entro {1,5 metri|5 piedi} dalla tunica rende il personaggio accecato per 1 minuto. Alla fine di ogni suo turno, il personaggio effettua un tiro salvezza su Costituzione (CD 11 per luce o CD 15 per luce diurna), terminando la cecità in caso di successo."
         },
         "is_magic": true,
