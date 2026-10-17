@@ -84,14 +84,14 @@ export default function SidebarSource() {
           </Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="all">
-          <VStack align="stretch" flex={1} gap={0} w="full">
+          <VStack align="stretch" flex={1} gap={0} px={2} w="full">
             {localizedResourcePanels.map(({ id, items }) => (
               <SidebarSection id={id} items={items} key={id} title={t(id)} />
             ))}
           </VStack>
         </Tabs.Content>
         <Tabs.Content value="favorites">
-          <VStack align="stretch" flex={1} gap={0} w="full">
+          <VStack align="stretch" flex={1} gap={0} px={2} w="full">
             {favoriteItems.length ? (
               favoriteItems.map((item) => (
                 <SectionButton
