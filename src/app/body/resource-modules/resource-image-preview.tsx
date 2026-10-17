@@ -1,4 +1,4 @@
-import { Box, type BoxProps, Image, Popover, Portal } from "@chakra-ui/react";
+import { Flex, Image, Popover, Portal } from "@chakra-ui/react";
 import Button from "../../../ui/button";
 
 //------------------------------------------------------------------------------
@@ -7,31 +7,26 @@ import Button from "../../../ui/button";
 
 export default function ResourceImagePreview({
   alt,
-  gridRow,
   imageUrl,
   label,
 }: {
   alt: string;
-  gridRow: BoxProps["gridRow"];
   imageUrl: string;
   label: string;
 }) {
   return (
-    <Box gridColumn={2} gridRow={gridRow} justifySelf="end" w="3rem">
+    <Flex alignSelf="stretch" contain="size" flex={1} justifyContent="flex-end">
       <Popover.Root positioning={{ placement: "left", gutter: 8 }}>
         <Popover.Trigger asChild>
           <Button
             aria-label={label}
-            aspectRatio="1"
-            h="auto"
-            minW={0}
+            h="full"
             outlineColor="gray.focusRing"
             overflow="hidden"
             p={0}
             position="relative"
             transition="outline-color 0.15s"
             variant="plain"
-            w="full"
             _focusVisible={{
               outline: "2px solid",
               outlineColor: "gray.focusRing",
@@ -43,7 +38,7 @@ export default function ResourceImagePreview({
               outlineOffset: "2px",
             }}
           >
-            <Image alt={alt} h="full" loading="lazy" objectFit="cover" src={imageUrl} w="full" />
+            <Image alt={alt} h="full" objectFit="contain" src={imageUrl} />
           </Button>
         </Popover.Trigger>
         <Portal>
@@ -57,6 +52,6 @@ export default function ResourceImagePreview({
           </Popover.Positioner>
         </Portal>
       </Popover.Root>
-    </Box>
+    </Flex>
   );
 }

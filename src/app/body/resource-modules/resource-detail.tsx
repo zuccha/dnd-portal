@@ -1,10 +1,15 @@
-import { Badge, Box, Grid, HStack, Heading, Separator, Span, Text, VStack } from "@chakra-ui/react";
+import { Badge, Box, HStack, Heading, Separator, Span, Text, VStack } from "@chakra-ui/react";
+import { ChevronLeftIcon } from "lucide-react";
 import { type ReactNode } from "react";
+import { useLocation } from "react-router";
 import { useI18nLangContext } from "../../../i18n/i18n-lang-context";
 import { resolveSystemText, useI18nSystem } from "../../../i18n/i18n-system";
 import PageTitle from "../../../navigation/page-title";
+import Icon from "../../../ui/icon";
 import IconButton, { type IconButtonProps } from "../../../ui/icon-button";
 import RichText from "../../../ui/rich-text";
+import RouterLink from "../../../ui/router-link";
+import { resourcePanelTranslations } from "../screens/source-screen/panels/panel-translations";
 import ResourceImagePreview from "./resource-image-preview";
 
 //------------------------------------------------------------------------------
@@ -49,8 +54,9 @@ export default function ResourceDetail({
   children?: ReactNode;
   resource: ResourceDetailHeader | undefined;
 }) {
-  const { t, ti } = useI18nLangContext(i18nContext);
+  const { t, ti } = useI18nLangContext({ ...resourcePanelTranslations, ...i18nContext });
   const [system] = useI18nSystem();
+  const listPath = `/${useLocation().pathname.split("/").filter(Boolean).slice(0, 2).join("/")}`;
 
   if (!resource) return null;
 
@@ -65,21 +71,16 @@ export default function ResourceDetail({
       <PageTitle title={resource.name || t("unnamed")} />
       <Box h="full" overflowY="auto" px={{ base: 5, md: 8 }} py={{ base: 6, md: 10 }}>
         <VStack align="stretch" gap={3} mx="auto" maxW="4xl">
-          <Grid
-            alignItems="start"
-            columnGap={4}
-            gridTemplateColumns="minmax(0, 1fr) auto"
-            rowGap={1}
-          >
-            <HStack align="center" flexWrap="wrap" gap={3} gridColumn={1} gridRow={1} minW={0}>
-              <Heading size="2xl">{resource.name || t("unnamed")}</Heading>
-              {resource.is_virtual && (
-                <Badge colorPalette="orange" size="sm" variant="solid">
-                  {t("temporary")}
-                </Badge>
-              )}
-            </HStack>
-            <HStack flexShrink={0} gap={0} gridColumn={2} gridRow={1}>
+          <HStack align="center" flexWrap="wrap" justify="space-between">
+            {listPath && (
+              <RouterLink to={listPath}>
+                <HStack gap={1}>
+                  <Icon Icon={ChevronLeftIcon} size="sm" />
+                  <Span>{t(listPath)}</Span>
+                </HStack>
+              </RouterLink>
+            )}
+            <HStack flexShrink={0} gap={0}>
               {actions.map(({ colorPalette, disabled, Icon, label, onClick }, index) => (
                 <IconButton
                   Icon={Icon}
@@ -93,38 +94,42 @@ export default function ResourceDetail({
                 />
               ))}
             </HStack>
-            {resource.descriptor && (
-              <Text color="fg.muted" fontSize="lg" gridColumn={1} gridRow={2}>
-                {resource.descriptor}
-              </Text>
-            )}
-            <HStack
-              color="fg.muted"
-              flexWrap="wrap"
-              fontSize="sm"
-              gap={2}
-              gridColumn={1}
-              gridRow={resource.descriptor ? 3 : 2}
-            >
-              <Text>{resource.source_version}</Text>
-              <Text aria-hidden="true">·</Text>
-              <Text>{resource.source_code}</Text>
-              {resource.page && (
-                <>
-                  <Text aria-hidden="true">·</Text>
-                  <Text>{ti("page", resource.page)}</Text>
-                </>
+          </HStack>
+          <HStack gap={4}>
+            <VStack align="stretch" gap={1}>
+              <HStack align="center" flexWrap="wrap" gap={3}>
+                <Heading size="2xl">{resource.name || t("unnamed")}</Heading>
+                {resource.is_virtual && (
+                  <Badge colorPalette="orange" size="sm" variant="solid">
+                    {t("temporary")}
+                  </Badge>
+                )}
+              </HStack>
+              {resource.descriptor && (
+                <Text color="fg.muted" fontSize="lg">
+                  {resource.descriptor}
+                </Text>
               )}
-            </HStack>
+              <HStack color="fg.muted" flexWrap="wrap" fontSize="sm" gap={2}>
+                <Text>{resource.source_version}</Text>
+                <Text aria-hidden="true">·</Text>
+                <Text>{resource.source_code}</Text>
+                {resource.page && (
+                  <>
+                    <Text aria-hidden="true">·</Text>
+                    <Text>{ti("page", resource.page)}</Text>
+                  </>
+                )}
+              </HStack>
+            </VStack>
             {imageUrl && (
               <ResourceImagePreview
                 alt={resource.name}
-                gridRow={resource.descriptor ? "2 / span 2" : 2}
                 imageUrl={imageUrl}
                 label={t("preview_image")}
               />
             )}
-          </Grid>
+          </HStack>
 
           <Separator />
 
