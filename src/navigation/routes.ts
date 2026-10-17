@@ -53,6 +53,40 @@ export type Route = (typeof Route)[keyof typeof Route];
 export const routes = Object.values(Route);
 
 //------------------------------------------------------------------------------
+// Route By Kind
+//------------------------------------------------------------------------------
+
+export const RouteByKind = {
+  armor: Route.ResourcesEquipmentArmors,
+  armor_modifier: Route.ResourcesEquipmentArmorModifiers,
+  background: Route.ResourcesCharacterBackgrounds,
+  character_class: Route.ResourcesCharacterClasses,
+  character_subclass: Route.ResourcesCharacterSubclasses,
+  creature: Route.ResourcesBestiaryMonsters,
+  creature_family: Route.ResourcesBestiaryFamilies,
+  creature_habitat: Route.ResourcesBestiaryHabitats,
+  creature_tag: Route.ResourcesBestiaryTags,
+  creature_treasure: Route.ResourcesBestiaryTreasures,
+  eldritch_invocation: Route.ResourcesAbilitiesEldritchInvocations,
+  feat: Route.ResourcesCharacterFeats,
+  feature: Route.ResourcesBlocksFeatures,
+  item: Route.ResourcesEquipmentItems,
+  item_modifier: Route.ResourcesEquipmentItemModifiers,
+  language: Route.ResourcesWorldLanguages,
+  maneuver: Route.ResourcesAbilitiesManeuvers,
+  metamagic: Route.ResourcesAbilitiesMetamagic,
+  plane: Route.ResourcesWorldPlanes,
+  service: Route.ResourcesMarketServices,
+  species: Route.ResourcesCharacterSpecies,
+  spell: Route.ResourcesAbilitiesSpells,
+  tool: Route.ResourcesEquipmentTools,
+  tool_modifier: Route.ResourcesEquipmentToolModifiers,
+  vehicle: Route.ResourcesMarketVehicles,
+  weapon: Route.ResourcesEquipmentWeapons,
+  weapon_modifier: Route.ResourcesEquipmentWeaponModifiers,
+} satisfies Record<ResourceKind, Route>;
+
+//------------------------------------------------------------------------------
 // Source Settings Route
 //------------------------------------------------------------------------------
 
@@ -61,17 +95,9 @@ export function sourceSettingsRoute(sourceId: string): string {
 }
 
 //------------------------------------------------------------------------------
-// Resource Kind Route Segment
-//------------------------------------------------------------------------------
-
-export function resourceKindRouteSegment(kind: ResourceKind): string {
-  return kind.replaceAll("_", "-");
-}
-
-//------------------------------------------------------------------------------
 // Resource Detail Route
 //------------------------------------------------------------------------------
 
 export function resourceDetailRoute(kind: ResourceKind, resourceId: string): string {
-  return `${Route.Resources}/${encodeURIComponent(resourceKindRouteSegment(kind))}/${encodeURIComponent(resourceId)}`;
+  return `${RouteByKind[kind]}/${encodeURIComponent(resourceId)}`;
 }
