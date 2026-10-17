@@ -53552,8 +53552,8 @@
           "it": 68
         },
         "description": {
-          "en": "While you aren’t wearing armor or wielding a Shield, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the movement.",
-          "it": "Se il personaggio non sta indossando un'armatura o impugnando uno scudo, ottiene la capacità di muoversi lungo le superfici verticali e sulle superfici liquide durante il suo turno senza cadere durante il movimento."
+          "en": "While you aren’t wearing armor or wielding a [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Shield]], you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the movement.",
+          "it": "Se il personaggio non sta indossando un'armatura o impugnando uno [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Scudo]], ottiene la capacità di muoversi lungo le superfici verticali e sulle superfici liquide durante il suo turno senza cadere durante il movimento."
         },
         "display_name": {
           "en": "Acrobatic Movement",
@@ -56852,8 +56852,8 @@
           "it": 66
         },
         "description": {
-          "en": "Your practice of martial arts gives you mastery of combat styles that use your Unarmed Strike and Monk weapons, which are the following:\n• Simple Melee weapons\n• Martial Melee weapons that have the Light property\nYou gain the following benefits while you are unarmed or wielding only Monk weapons and you aren’t wearing armor or wielding a Shield.\n**Bonus Unarmed Strike.** You can make an Unarmed Strike as a Bonus Action.\n**Martial Arts Die.** You can roll 1d6 in place of the normal damage of your Unarmed Strike or Monk weapons. This die changes as you gain Monk levels: 1d6 at level 1, 1d8 at level 5, 1d10 at level 11, and 1d12 at level 17.\n**Dexterous Attacks.** You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons. In addition, when you use the Grapple or Shove option of your Unarmed Strike, you can use your Dexterity modifier instead of your Strength modifier to determine the save DC.",
-          "it": "Grazie alla sua perizia nelle arti marziali, un monaco padroneggia stili di combattimento che fanno uso di colpi senz'armi e delle seguenti armi da monaco:\n• Armi da mischia semplici\n• Armi da mischia da guerra con la proprietà leggera\nUn monaco ottiene i benefici seguenti fintantoché è senz'armi o impugna soltanto armi da monaco, non indossa alcuna armatura e non impugna uno scudo:\n**Colpo senz'armi bonus.** Il monaco può effettuare un colpo senz'armi come azione bonus.\n**Dado di Arti marziali.** Un monaco può tirare 1d6 al posto dei normali danni del suo colpo senz'armi o della sua arma da monaco. Questo dado cambia man mano che il personaggio acquisisce altri livelli da monaco: 1d6 al 1° livello, 1d8 al 5° livello, 1d10 all'11° livello e 1d12 al 17° livello.\n**Attacchi destri.** Un monaco può usare il modificatore di Destrezza invece del modificatore di Forza per i tiri per colpire e i tiri per i danni dei suoi colpi senz'armi e delle sue armi da monaco. Inoltre, quando utilizza le opzioni di afferrare o spingere del suo colpo senz'armi, il monaco può utilizzare il suo modificatore di Destrezza invece del modificatore di Forza per determinare la CD del tiro salvezza."
+          "en": "Your practice of martial arts gives you mastery of combat styles that use your Unarmed Strike and Monk weapons, which are the following:\n• Simple Melee weapons\n• Martial Melee weapons that have the Light property\nYou gain the following benefits while you are unarmed or wielding only Monk weapons and you aren’t wearing armor or wielding a [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Shield]].\n**Bonus Unarmed Strike.** You can make an Unarmed Strike as a Bonus Action.\n**Martial Arts Die.** You can roll 1d6 in place of the normal damage of your Unarmed Strike or Monk weapons. This die changes as you gain Monk levels: 1d6 at level 1, 1d8 at level 5, 1d10 at level 11, and 1d12 at level 17.\n**Dexterous Attacks.** You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons. In addition, when you use the Grapple or Shove option of your Unarmed Strike, you can use your Dexterity modifier instead of your Strength modifier to determine the save DC.",
+          "it": "Grazie alla sua perizia nelle arti marziali, un monaco padroneggia stili di combattimento che fanno uso di colpi senz'armi e delle seguenti armi da monaco:\n• Armi da mischia semplici\n• Armi da mischia da guerra con la proprietà leggera\nUn monaco ottiene i benefici seguenti fintantoché è senz'armi o impugna soltanto armi da monaco, non indossa alcuna armatura e non impugna uno [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Scudo]]:\n**Colpo senz'armi bonus.** Il monaco può effettuare un colpo senz'armi come azione bonus.\n**Dado di Arti marziali.** Un monaco può tirare 1d6 al posto dei normali danni del suo colpo senz'armi o della sua arma da monaco. Questo dado cambia man mano che il personaggio acquisisce altri livelli da monaco: 1d6 al 1° livello, 1d8 al 5° livello, 1d10 all'11° livello e 1d12 al 17° livello.\n**Attacchi destri.** Un monaco può usare il modificatore di Destrezza invece del modificatore di Forza per i tiri per colpire e i tiri per i danni dei suoi colpi senz'armi e delle sue armi da monaco. Inoltre, quando utilizza le opzioni di afferrare o spingere del suo colpo senz'armi, il monaco può utilizzare il suo modificatore di Destrezza invece del modificatore di Forza per determinare la CD del tiro salvezza."
         },
         "display_name": {
           "en": "Martial Arts",
@@ -59477,8 +59477,8 @@
           "it": 33
         },
         "description": {
-          "en": "While you aren’t wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers. You can use a Shield and still gain this benefit.",
-          "it": "Se il barbaro non indossa un'armatura, la Classe Armatura base corrisponde a 10 più i modificatori di Destrezza e Costituzione. Un barbaro può usare uno scudo e ottenere comunque questo beneficio."
+          "en": "While you aren’t wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers. You can use a [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Shield]] and still gain this benefit.",
+          "it": "Se il barbaro non indossa un'armatura, la Classe Armatura base corrisponde a 10 più i modificatori di Destrezza e Costituzione. Un barbaro può usare uno [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Scudo]] e ottenere comunque questo beneficio."
         },
         "display_name": {
           "en": "Unarmored Defense",
@@ -59502,8 +59502,8 @@
           "it": 67
         },
         "description": {
-          "en": "While you aren’t wearing armor or wielding a Shield, your base Armor Class equals 10 plus your Dexterity and Wisdom modifiers.",
-          "it": "Se il personaggio non sta indossando un'armatura o impugnando uno scudo, la Classe Armatura base corrisponde a 10 più i modificatori di Destrezza e Saggezza."
+          "en": "While you aren’t wearing armor or wielding a [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Shield]], your base Armor Class equals 10 plus your Dexterity and Wisdom modifiers.",
+          "it": "Se il personaggio non sta indossando un'armatura o impugnando uno [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Scudo]], la Classe Armatura base corrisponde a 10 più i modificatori di Destrezza e Saggezza."
         },
         "display_name": {
           "en": "Unarmored Defense",
@@ -59527,8 +59527,8 @@
           "it": 67
         },
         "description": {
-          "en": "Your speed increases by {3 meters|10 feet} while you aren’t wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels: +{3 m|10 ft} at level 2, +{4.5 m|15 ft} at level 6, +{6 m|20 ft} at level 10, +{7.5 m|25 ft} at level 14 and +{9 m|30 ft} at level 18.",
-          "it": "La velocità del monaco aumenta di {3 metri|10 feet}, purché non indossi un'armatura o impugni uno scudo. Questo bonus aumenta man mano che il personaggio acquisisce altri livelli da monaco: +{3 m|10 ft} al 2° livello, +{4,5 m|15 ft} al 6° livello, +{6 m|20 ft} al 10° livello, +{7,5 m|25 ft} al 14° livello e +{9 m|30 ft} al 18° livello."
+          "en": "Your speed increases by {3 meters|10 feet} while you aren’t wearing armor or wielding a [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Shield]]. This bonus increases when you reach certain Monk levels: +{3 m|10 ft} at level 2, +{4.5 m|15 ft} at level 6, +{6 m|20 ft} at level 10, +{7.5 m|25 ft} at level 14 and +{9 m|30 ft} at level 18.",
+          "it": "La velocità del monaco aumenta di {3 metri|10 feet}, purché non indossi un'armatura o impugni uno [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Scudo]]. Questo bonus aumenta man mano che il personaggio acquisisce altri livelli da monaco: +{3 m|10 ft} al 2° livello, +{4,5 m|15 ft} al 6° livello, +{6 m|20 ft} al 10° livello, +{7,5 m|25 ft} al 14° livello e +{9 m|30 ft} al 18° livello."
         },
         "display_name": {
           "en": "Unarmored Movement",
@@ -61507,8 +61507,8 @@
         },
         "cost": 400000,
         "description": {
-          "en": "While wearing these bracers, you gain a +2 bonus to Armor Class if you are wearing no armor and using no Shield.",
-          "it": "Il personaggio che indossa questi bracciali ottiene un bonus di +2 alla Classe Armatura se non veste alcuna armatura e non usa uno scudo."
+          "en": "While wearing these bracers, you gain a +2 bonus to Armor Class if you are wearing no armor and using no [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Shield]].",
+          "it": "Il personaggio che indossa questi bracciali ottiene un bonus di +2 alla Classe Armatura se non veste alcuna armatura e non usa uno [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Scudo]]."
         },
         "is_magic": true,
         "modifier_ids": [],
@@ -63776,8 +63776,8 @@
         },
         "cost": 500,
         "description": {
-          "en": "A Holy Symbol is bejeweled or painted to channel divine magic. A Cleric or Paladin can use a Holy Symbol as a Spellcasting Focus.\nMust be borne on fabric or a Shield.",
-          "it": "Un simbolo sacro è adornato o dipinto in modo che incanali l'energia divina. Un chierico o un paladino possono usare un simbolo sacro come focus da incantatore.\nDeve essere portato su un tessuto o uno scudo."
+          "en": "A Holy Symbol is bejeweled or painted to channel divine magic. A Cleric or Paladin can use a Holy Symbol as a Spellcasting Focus.\nMust be borne on fabric or a [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Shield]].",
+          "it": "Un simbolo sacro è adornato o dipinto in modo che incanali l'energia divina. Un chierico o un paladino possono usare un simbolo sacro come focus da incantatore.\nDeve essere portato su un tessuto o uno [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Scudo]]."
         },
         "is_magic": false,
         "modifier_ids": [],
@@ -65258,8 +65258,8 @@
         },
         "cost": null,
         "description": {
-          "en": "A Holy Symbol is bejeweled or painted to channel divine magic. A Cleric or Paladin can use a Holy Symbol as a Spellcasting Focus.\nMust be worn, held, or borne on fabric or a Shield.",
-          "it": ""
+          "en": "A Holy Symbol is bejeweled or painted to channel divine magic. A Cleric or Paladin can use a Holy Symbol as a Spellcasting Focus.\nMust be worn, held, or borne on fabric or a [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Shield]].",
+          "it": "Un simbolo sacro è adornato o dipinto in modo che incanali l'energia divina. Un chierico o un paladino possono usare un simbolo sacro come focus da incantatore.\nDeve essere tenuto in mano, indossato o portato su un tessuto (tabarro o striscione) o su uno [[armor:4f9c298f-8c19-4fea-ab5c-cb86601e02a7:Scudo]]."
         },
         "is_magic": false,
         "modifier_ids": [],
