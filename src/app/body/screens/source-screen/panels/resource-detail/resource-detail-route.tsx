@@ -1,28 +1,23 @@
 import { useParams } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import { resourceKindRouteSegment } from "~/navigation/routes";
 import ResourceDetailNotFound from "../../../../resource-modules/resource-detail-not-found";
-import type { ResourceModule } from "../../../../resource-modules/resource-module";
+import type { ComponentType } from "react";
 
 //------------------------------------------------------------------------------
 // Resource Detail Route
 //------------------------------------------------------------------------------
 
-export default function ResourceDetailRoute({ modules }: { modules: ResourceModule[] }) {
-  const { kind, resourceId } = useParams();
+export default function ResourceDetailRoute({
+  Detail,
+}: {
+  Detail: ComponentType<{ resourceId: string }>;
+}) {
+  const { resourceId } = useParams();
   const { t } = useI18nLangContext(i18nContext);
-  const resourceModule = modules.find((module) => resourceKindRouteSegment(module.kind) === kind);
 
-  if (!resourceModule) {
-    return <ResourceDetailNotFound message={t("not_found")} />;
-  }
+  if (!resourceId) return <ResourceDetailNotFound message={t("not_found")} />;
 
-  if (!resourceId) {
-    return <ResourceDetailNotFound kind={resourceModule.kind} to={resourceModule.path} />;
-  }
-
-  const ResourceDetail = resourceModule.Detail;
-  return <ResourceDetail resourceId={resourceId} />;
+  return <Detail resourceId={resourceId} />;
 }
 
 //------------------------------------------------------------------------------

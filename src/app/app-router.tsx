@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Navigate, Route as RouterRoute, Routes } from "react-router";
 import PageTitle from "../navigation/page-title";
 import { Route } from "../navigation/routes";
@@ -30,16 +31,14 @@ export default function AppRouter() {
           <RouterRoute element={<SourcesPanel />} path="sources" />
           <RouterRoute element={<SourceSettingsRoute />} path="sources/:sourceId" />
           <RouterRoute element={<PrintDeckPanel />} path="print-deck" />
-          <RouterRoute
-            element={<ResourceDetailRoute modules={resourceModules} />}
-            path="resources/:kind/:resourceId"
-          />
-          {resourceModules.map(({ Panel, path }) => (
-            <RouterRoute
-              element={<ResourcesRoute Panel={Panel} />}
-              key={path}
-              path={path.slice(1)}
-            />
+          {resourceModules.map(({ Detail, Panel, path }) => (
+            <Fragment key={path}>
+              <RouterRoute
+                element={<ResourceDetailRoute Detail={Detail} />}
+                path={`${path.slice(1)}/:resourceId`}
+              />
+              <RouterRoute element={<ResourcesRoute Panel={Panel} />} path={path.slice(1)} />
+            </Fragment>
           ))}
           <RouterRoute element={<Navigate replace to={Route._} />} path="*" />
         </RouterRoute>

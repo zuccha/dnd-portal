@@ -56,7 +56,7 @@ export function createResourceModule<
     form,
     table,
   }: {
-    album: ResourcesAlbumExtra<R, L>;
+    album: Omit<ResourcesAlbumExtra<R, L>, "path">;
     detail: {
       Detail: ComponentType<{ actions?: ResourceDetailAction[]; resource: L | undefined }>;
       actions?: ResourceAction<R>[];
@@ -64,7 +64,7 @@ export function createResourceModule<
     Extra?: ComponentType<{ sourceId: string }>;
     filters: ResourcesFiltersExtra;
     form: ResourceCreatorExtra<R, FF> & ResourceDialogUpdaterExtra<R, FF>;
-    table: ResourcesTableExtra<R, L>;
+    table: Omit<ResourcesTableExtra<R, L>, "path">;
   },
 ) {
   const { path, ...resourcesContextOptions } = contextOptions;
@@ -76,8 +76,8 @@ export function createResourceModule<
   const ResourceUpdater = createResourceDialogUpdater(store, context, form, {
     PreviewCard: album.AlbumCard,
   });
-  const ResourcesAlbum = createResourcesAlbum(store, context, album);
-  const ResourcesTable = createResourcesTable(store, context, table);
+  const ResourcesAlbum = createResourcesAlbum(store, context, { ...album, path });
+  const ResourcesTable = createResourcesTable(store, context, { ...table, path });
   const ResourcesSidebar = createResourcesSidebar(store, context, filters, path);
   const ResourceDetailInteractive = createResourceDetailInteractive(store, context, detail, path);
 

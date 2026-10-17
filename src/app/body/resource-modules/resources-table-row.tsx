@@ -20,7 +20,6 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
-import { resourceDetailRoute } from "~/navigation/routes";
 import Checkbox from "~/ui/checkbox";
 import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
@@ -43,6 +42,7 @@ export type ResourcesTableRowExtra<R extends Resource, L extends LocalizedResour
     label: I18nString;
   })[];
   hasDescription?: boolean;
+  path: string;
 };
 
 //------------------------------------------------------------------------------
@@ -117,9 +117,9 @@ export function createResourcesTableRow<
     const openDetails = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
-        navigate(resourceDetailRoute(resource.kind, resource.id));
+        navigate(`${extra.path}/${encodeURIComponent(resource.id)}`);
       },
-      [navigate, resource.id, resource.kind],
+      [navigate, resource.id],
     );
 
     const addToPrintDeck = useCallback(() => {

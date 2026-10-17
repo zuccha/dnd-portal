@@ -14,7 +14,6 @@ import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
 import type { ResourceStore } from "~/models/resources/resource-store";
 import { localizedResourceUnionSchema } from "~/models/resources/resource-union";
-import { resourceDetailRoute } from "~/navigation/routes";
 import IconButton from "~/ui/icon-button";
 import PokerCard from "~/ui/poker-card";
 import { toaster } from "~/ui/toaster";
@@ -41,6 +40,7 @@ export type ResourceCardInteractiveExtra<R extends Resource, L extends Localized
     w: number;
   };
   actions?: ResourceAction<R>[];
+  path: string;
 };
 
 //------------------------------------------------------------------------------
@@ -153,8 +153,8 @@ export function createResourceCardInteractive<
     }, [resource, sourceEditable]);
 
     const openDetails = useCallback(() => {
-      navigate(resourceDetailRoute(resource.kind, resource.id));
-    }, [navigate, resource.id, resource.kind]);
+      navigate(`${extra.path}/${encodeURIComponent(resource.id)}`);
+    }, [navigate, resource.id]);
 
     const addToPrintDeck = useCallback(() => {
       printDeck.addEntry({
