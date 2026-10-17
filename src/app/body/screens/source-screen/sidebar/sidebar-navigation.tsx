@@ -1,4 +1,5 @@
 import { Span, VStack } from "@chakra-ui/react";
+import { CircleHelpIcon, HouseIcon, LibraryBigIcon, PrinterIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -39,16 +40,19 @@ export default function SidebarNavigation() {
     <VStack gap={0} px={2} w="full">
       <SidebarNavigationButton
         active={route === Route._}
+        Icon={HouseIcon}
         label={t("home")}
         onClick={() => navigate(Route._)}
       />
       <SidebarNavigationButton
         active={route === Route.Sources || route.startsWith(`${Route.Sources}/`)}
+        Icon={LibraryBigIcon}
         label={t("sources")}
         onClick={() => navigate(Route.Sources)}
       />
       <SidebarNavigationButton
         active={route === Route.PrintDeck}
+        Icon={PrinterIcon}
         trailing={
           !!printDeckCount && (
             <Span
@@ -72,6 +76,7 @@ export default function SidebarNavigation() {
       />
       <SidebarNavigationButton
         active={route === Route.Guide}
+        Icon={CircleHelpIcon}
         label={t("info")}
         onClick={() => navigate(Route.Guide)}
       />
