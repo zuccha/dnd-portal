@@ -1,3 +1,30 @@
+import {
+  AwardIcon,
+  BookOpenTextIcon,
+  CornerDownRightIcon,
+  DnaIcon,
+  EarthIcon,
+  HandCoinsIcon,
+  HammerIcon,
+  ImageIcon,
+  KeyRoundIcon,
+  LanguagesIcon,
+  PackageIcon,
+  PawPrintIcon,
+  SailboatIcon,
+  ScrollTextIcon,
+  SplitIcon,
+  SwordIcon,
+  TagIcon,
+  TreesIcon,
+  UserGroupIcon,
+  UserIcon,
+  UserStarIcon,
+  WandSparklesIcon,
+  type LucideIcon,
+  ShieldPlusIcon,
+  ChessQueenIcon,
+} from "lucide-react";
 import { Route } from "~/navigation/routes";
 
 //------------------------------------------------------------------------------
@@ -5,11 +32,17 @@ import { Route } from "~/navigation/routes";
 //------------------------------------------------------------------------------
 
 export type PanelItem = {
+  Icon: LucideIcon;
   modifier?: boolean;
   route: Route;
 };
 
-const panelItem = <R extends Route>(route: R, extra: Omit<PanelItem, "route"> = {}) => ({
+const panelItem = <R extends Route>(
+  route: R,
+  Icon: LucideIcon,
+  extra: Omit<PanelItem, "Icon" | "route"> = {},
+) => ({
+  Icon,
   route,
   ...extra,
 });
@@ -19,11 +52,11 @@ const panelItem = <R extends Route>(route: R, extra: Omit<PanelItem, "route"> = 
 //------------------------------------------------------------------------------
 
 export const bestiaryPanelIds = [
-  panelItem(Route.ResourcesBestiaryMonsters),
-  panelItem(Route.ResourcesBestiaryFamilies),
-  panelItem(Route.ResourcesBestiaryTags),
-  panelItem(Route.ResourcesBestiaryHabitats),
-  panelItem(Route.ResourcesBestiaryTreasures),
+  panelItem(Route.ResourcesBestiaryMonsters, PawPrintIcon),
+  panelItem(Route.ResourcesBestiaryFamilies, UserGroupIcon),
+  panelItem(Route.ResourcesBestiaryTags, TagIcon),
+  panelItem(Route.ResourcesBestiaryHabitats, TreesIcon),
+  panelItem(Route.ResourcesBestiaryTreasures, ChessQueenIcon),
 ] as const;
 
 //------------------------------------------------------------------------------
@@ -37,12 +70,12 @@ export type BestiaryPanelId = (typeof bestiaryPanelIds)[number]["route"];
 //------------------------------------------------------------------------------
 
 export const characterPanelIds = [
-  panelItem(Route.ResourcesCharacterClasses),
-  panelItem(Route.ResourcesCharacterSubclasses),
-  panelItem(Route.ResourcesCharacterBackgrounds),
-  panelItem(Route.ResourcesCharacterSpecies),
-  panelItem(Route.ResourcesCharacterFeats),
-  panelItem(Route.ResourcesBlocksFeatures),
+  panelItem(Route.ResourcesCharacterClasses, UserIcon),
+  panelItem(Route.ResourcesCharacterSubclasses, UserStarIcon),
+  panelItem(Route.ResourcesCharacterBackgrounds, ImageIcon),
+  panelItem(Route.ResourcesCharacterSpecies, DnaIcon),
+  panelItem(Route.ResourcesCharacterFeats, AwardIcon),
+  panelItem(Route.ResourcesBlocksFeatures, KeyRoundIcon),
 ] as const;
 
 //------------------------------------------------------------------------------
@@ -56,10 +89,10 @@ export type CharacterPanelId = (typeof characterPanelIds)[number]["route"];
 //------------------------------------------------------------------------------
 
 export const abilitiesPanelIds = [
-  panelItem(Route.ResourcesAbilitiesSpells),
-  panelItem(Route.ResourcesAbilitiesEldritchInvocations),
-  panelItem(Route.ResourcesAbilitiesManeuvers),
-  panelItem(Route.ResourcesAbilitiesMetamagic),
+  panelItem(Route.ResourcesAbilitiesSpells, ScrollTextIcon),
+  panelItem(Route.ResourcesAbilitiesEldritchInvocations, BookOpenTextIcon),
+  panelItem(Route.ResourcesAbilitiesManeuvers, SplitIcon),
+  panelItem(Route.ResourcesAbilitiesMetamagic, WandSparklesIcon),
 ] as const;
 
 //------------------------------------------------------------------------------
@@ -73,14 +106,14 @@ export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number]["route"];
 //------------------------------------------------------------------------------
 
 export const equipmentPanelIds = [
-  panelItem(Route.ResourcesEquipmentItems),
-  panelItem(Route.ResourcesEquipmentItemModifiers, { modifier: true }),
-  panelItem(Route.ResourcesEquipmentArmors),
-  panelItem(Route.ResourcesEquipmentArmorModifiers, { modifier: true }),
-  panelItem(Route.ResourcesEquipmentWeapons),
-  panelItem(Route.ResourcesEquipmentWeaponModifiers, { modifier: true }),
-  panelItem(Route.ResourcesEquipmentTools),
-  panelItem(Route.ResourcesEquipmentToolModifiers, { modifier: true }),
+  panelItem(Route.ResourcesEquipmentItems, PackageIcon),
+  panelItem(Route.ResourcesEquipmentItemModifiers, CornerDownRightIcon, { modifier: true }),
+  panelItem(Route.ResourcesEquipmentArmors, ShieldPlusIcon),
+  panelItem(Route.ResourcesEquipmentArmorModifiers, CornerDownRightIcon, { modifier: true }),
+  panelItem(Route.ResourcesEquipmentWeapons, SwordIcon),
+  panelItem(Route.ResourcesEquipmentWeaponModifiers, CornerDownRightIcon, { modifier: true }),
+  panelItem(Route.ResourcesEquipmentTools, HammerIcon),
+  panelItem(Route.ResourcesEquipmentToolModifiers, CornerDownRightIcon, { modifier: true }),
 ] as const;
 
 //------------------------------------------------------------------------------
@@ -94,8 +127,8 @@ export type EquipmentPanelId = (typeof equipmentPanelIds)[number]["route"];
 //------------------------------------------------------------------------------
 
 export const marketPanelIds = [
-  panelItem(Route.ResourcesMarketVehicles),
-  panelItem(Route.ResourcesMarketServices),
+  panelItem(Route.ResourcesMarketVehicles, SailboatIcon),
+  panelItem(Route.ResourcesMarketServices, HandCoinsIcon),
 ] as const;
 
 //------------------------------------------------------------------------------
@@ -109,8 +142,8 @@ export type MarketPanelId = (typeof marketPanelIds)[number]["route"];
 //------------------------------------------------------------------------------
 
 export const worldPanelIds = [
-  panelItem(Route.ResourcesWorldLanguages),
-  panelItem(Route.ResourcesWorldPlanes),
+  panelItem(Route.ResourcesWorldLanguages, LanguagesIcon),
+  panelItem(Route.ResourcesWorldPlanes, EarthIcon),
 ] as const;
 
 //------------------------------------------------------------------------------

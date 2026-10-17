@@ -10,6 +10,7 @@ type SidebarNavigationButtonProps = {
   active: boolean;
   activeStyle?: "background" | "text";
   label: string;
+  labelFontVariant?: "small-caps";
   onClick: () => void;
   trailing?: ReactNode;
 };
@@ -18,6 +19,7 @@ export default function SidebarNavigationButton({
   active,
   activeStyle = "background",
   label,
+  labelFontVariant,
   onClick,
   trailing,
 }: SidebarNavigationButtonProps) {
@@ -33,7 +35,7 @@ export default function SidebarNavigationButton({
       variant="ghost"
       w="full"
     >
-      <Span>{label}</Span>
+      <Span fontVariant={labelFontVariant}>{label}</Span>
       {trailing && <HStack gap={1}>{trailing}</HStack>}
     </Button>
   );

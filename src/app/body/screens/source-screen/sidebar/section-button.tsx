@@ -38,7 +38,7 @@ export default function SectionButton({
       variant="ghost"
       w="full"
     >
-      <Icon Icon={icon} boxSize={3} mr={1} />
+      <Icon Icon={icon} boxSize={3} mr={2} />
       {label}
     </Button>
   );

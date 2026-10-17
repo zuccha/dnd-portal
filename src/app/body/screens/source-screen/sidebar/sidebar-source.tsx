@@ -2,7 +2,6 @@ import { Tabs, Text, VStack } from "@chakra-ui/react";
 import { useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import DotIcon from "~/icons/dot-icon";
 import { resourcePanelTranslations } from "../panels/panel-translations";
 import { resourcePanels } from "../panels/panels";
 import { smallScreenMediaQuery } from "../responsive-sidebar-default";
@@ -44,7 +43,8 @@ export default function SidebarSource() {
     () =>
       resourcePanels.map(({ id, items }) => ({
         id,
-        items: items.map(({ modifier, route: value }) => ({
+        items: items.map(({ Icon, modifier, route: value }) => ({
+          Icon,
           label: t(value),
           modifier,
           onClick: () => navigateToResourcePanel(value),
@@ -95,7 +95,7 @@ export default function SidebarSource() {
             {favoriteItems.length ? (
               favoriteItems.map((item) => (
                 <SectionButton
-                  Icon={DotIcon}
+                  Icon={item.Icon}
                   active={item.selected}
                   key={item.value}
                   label={item.label}
