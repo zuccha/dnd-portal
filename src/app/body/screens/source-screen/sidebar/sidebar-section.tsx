@@ -26,7 +26,7 @@ export type SidebarSectionProps = {
 };
 
 export default function SidebarSection({ id, items, title }: SidebarSectionProps) {
-  const [visible, setVisible] = useVisible(id, true);
+  const [visible, setVisible] = useVisible(id, false);
 
   return (
     <VStack align="flex-start" gap={0} w="full">
@@ -57,4 +57,4 @@ export default function SidebarSection({ id, items, title }: SidebarSectionProps
   );
 }
 
-const useVisible = createLocalStoreSet("sidebar.resources.visible", true, z.boolean().parse).use;
+const useVisible = createLocalStoreSet("sidebar.resources.visible", false, z.boolean().parse).use;
