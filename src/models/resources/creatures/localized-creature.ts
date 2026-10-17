@@ -567,6 +567,12 @@ export function localizeCreature(
   };
 
   // Languages
+  const adjustInitialLetter = (value: string, uppercase: boolean) =>
+    value.replace(
+      /^(\s*)(\p{L})/u,
+      (_, whitespace: string, letter: string) =>
+        `${whitespace}${uppercase ? letter.toLocaleUpperCase(lang) : letter.toLocaleLowerCase(lang)}`,
+    );
   const spokenLanguageIds = creature.language_entries
     .filter(({ mode }) => mode === "speaks")
     .map(({ language_id }) => language_id);
@@ -639,16 +645,17 @@ export function localizeCreature(
     speaks: t("languages.summoner.speaks"),
     understands: t("languages.summoner.understands"),
   }[creature.summoner_language_mode];
+  const languageInfoSegments = [
+    [baseLanguages, additionalLanguages].filter(Boolean).join(" "),
+    understoodLanguages
+      ? tpi("languages.understands", understoodLanguageIds.length, understoodLanguages)
+      : "",
+    telepathy,
+    summonerLanguages,
+  ].filter(Boolean);
   const languagesInfo =
-    [
-      [baseLanguages, additionalLanguages].filter(Boolean).join(" "),
-      understoodLanguages
-        ? tpi("languages.understands", understoodLanguageIds.length, understoodLanguages)
-        : "",
-      telepathy,
-      summonerLanguages,
-    ]
-      .filter(Boolean)
+    languageInfoSegments
+      .map((segment, index) => adjustInitialLetter(segment, index === 0))
       .join("; ") || t("languages.none");
   const languagesInfoParts = [...spokenLanguagesParts];
   if (understoodLanguages) {
@@ -672,8 +679,24 @@ export function localizeCreature(
   if (!languagesInfoParts.length) {
     languagesInfoParts.push({ type: "text", value: t("languages.none") });
   }
+  let nextSegmentCase: boolean | undefined = true;
+  const formattedLanguagesInfoParts = languagesInfoParts.map((part) => {
+    if (part.type === "resource") {
+      nextSegmentCase = undefined;
+      return part;
+    }
+    if (part.value === "; ") {
+      nextSegmentCase = false;
+      return part;
+    }
+    if (nextSegmentCase === undefined) return part;
+
+    const value = adjustInitialLetter(part.value, nextSegmentCase);
+    if (/\p{L}/u.test(part.value)) nextSegmentCase = undefined;
+    return { ...part, value };
+  });
   const languagesInfoField = {
-    detail_parts: languagesInfoParts,
+    detail_parts: formattedLanguagesInfoParts,
     label: tp("info.languages", creature.language_entries.length),
     value: languagesInfo,
   };
