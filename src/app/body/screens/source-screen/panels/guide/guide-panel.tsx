@@ -492,6 +492,10 @@ const documentation: Record<string, DocumentationContent> = {
             type: "paragraph",
           },
           {
+            text: "The left sidebar has `All` and `Favorites` tabs. Use the star at the top of a resource panel's filters sidebar to add or remove that resource kind from Favorites; this marks the whole kind, not individual resources. Favorites lists the selected kinds alphabetically. The favorite kinds and selected tab are saved in this browser.",
+            type: "paragraph",
+          },
+          {
             text: "`Table view` is optimized for scanning and comparing many entries. `Card view` is optimized for reading the formatted resource and preparing it for printing. The selected view is a presentation choice; both views use the same underlying resources.",
             type: "paragraph",
           },
@@ -823,6 +827,10 @@ const documentation: Record<string, DocumentationContent> = {
         blocks: [
           {
             text: "Un pannello risorse elenca un tipo di risorsa della fonte attiva e dei suoi contenuti inclusi. Le risorse di riferimento delle fonti richieste sono disponibili nei selettori e nei lookup quando necessario.",
+            type: "paragraph",
+          },
+          {
+            text: "La sidebar sinistra contiene le schede `Tutti` e `Preferiti`. Usa la stella in cima alla sidebar dei filtri di un pannello per aggiungere o rimuovere quel tipo di risorsa dai Preferiti: la scelta riguarda l'intero tipo, non le singole risorse. Preferiti mostra i tipi selezionati in ordine alfabetico. I tipi preferiti e la scheda selezionata vengono salvati in questo browser.",
             type: "paragraph",
           },
           {
