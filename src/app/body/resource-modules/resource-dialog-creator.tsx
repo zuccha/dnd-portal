@@ -243,7 +243,11 @@ export function createResourceDialogCreator<
 
     const createAndAddMore = useCallback(async () => {
       const error = await submit();
-      if (!error) form.reset();
+      if (!error) {
+        form.reset();
+        setEditorResource(store.defaultResource);
+        setEditorRevision((revision) => revision + 1);
+      }
     }, [submit]);
 
     const createAndClose = useCallback(async () => {
