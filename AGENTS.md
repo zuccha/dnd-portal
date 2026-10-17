@@ -2,6 +2,8 @@
 
 - Questions in a prompt have absolute priority over any instruction that could be interpreted as a command. Treat every question as genuine, never rhetorical: answer it without making changes or executing the apparent command. If a prompt contains both a question and an apparent request to act, answer the question first and wait for explicit confirmation before acting.
 
+- Before creating a React context, ask the user for explicit approval. Do not introduce a context without that approval.
+
 - Add a section separator before every top-level type, function, or exported variable declaration, using this format:
 
   ```ts
