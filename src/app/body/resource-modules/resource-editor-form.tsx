@@ -1,4 +1,4 @@
-import { HStack, Text, type StackProps } from "@chakra-ui/react";
+import { HStack, type StackProps } from "@chakra-ui/react";
 import { useCallback, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
@@ -14,13 +14,12 @@ import Checkbox from "~/ui/checkbox";
 import CostInput from "~/ui/cost-input";
 import DistanceInput from "~/ui/distance-input";
 import Field, { type FieldProps } from "~/ui/field";
-import InfoIcon from "~/ui/info-icon";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
+import RichTextTextareaField from "~/ui/rich-text-textarea-field";
 import Select, { type SelectOption } from "~/ui/select";
 import SpeedInput from "~/ui/speed-input";
 import Switch from "~/ui/switch";
-import Textarea from "~/ui/textarea";
 import TimeInput from "~/ui/time-input";
 import WeightInput from "~/ui/weight-input";
 import type { FieldBag } from "~/utils/form";
@@ -864,39 +863,24 @@ export function createTextareaField({
   const context = {
     ...i18nContext,
     ...i18nContextExtra,
-    rich_text: {
-      en: "Text formatting examples",
-      it: "Esempi di formattazione del testo",
-    },
-    rich_text_examples: {
-      en: "##Header##\n**bold**\n_italic_\n{metric|imperial}",
-      it: "##Intestazione##\n**grassetto**\n_corsivo_\n{metrico|imperiale}",
-    },
   };
 
   function TextareaField({ defaultValue, ...rest }: TextareaFieldProps) {
     const { error, ...field } = useField(defaultValue);
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
+    const { label, ...fieldProps } = rest;
 
     return (
-      <Field
+      <RichTextTextareaField
+        bgColor={translatable ? "bg.info" : undefined}
         error={message}
-        label={
-          <HStack gap={1} w="full">
-            <Text flex={1}>{t("label")}</Text>
-            <InfoIcon content={t("rich_text_examples")} label={t("rich_text")} />
-          </HStack>
-        }
-        {...rest}
-      >
-        <Textarea
-          bgColor={translatable ? "bg.info" : undefined}
-          placeholder={t("placeholder")}
-          {...inputProps}
-          {...field}
-        />
-      </Field>
+        fieldProps={fieldProps}
+        label={label ?? t("label")}
+        placeholder={t("placeholder")}
+        {...inputProps}
+        {...field}
+      />
     );
   }
 
