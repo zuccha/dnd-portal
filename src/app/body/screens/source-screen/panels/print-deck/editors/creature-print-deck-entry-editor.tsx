@@ -107,7 +107,7 @@ export default function CreaturePrintDeckEntryEditor({
               value={localizedResource.challenge_rating.value}
             />
           </Field>
-          <HStack align="flex-start" gridColumn={{ base: "auto", sm: "span 2", xl: "span 6" }}>
+          <HStack align="flex-start" gridColumn={{ base: "auto", sm: "span 2" }}>
             <HStack align="flex-end" flex={1}>
               <Field label={t("experience")}>
                 <Input
