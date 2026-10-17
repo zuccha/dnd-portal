@@ -22,21 +22,41 @@ export default function CharacterClassPrintDeckEntryEditor({
       field: localizedResource.saving_throw_proficiencies,
       label: t("saving_throw_proficiencies"),
       placeholder: t("saving_throw_proficiencies.placeholder"),
+      update: (value: string) =>
+        onLocalizedResourceUpdate("saving_throw_proficiencies", {
+          ...localizedResource.saving_throw_proficiencies,
+          value,
+        }),
     },
     {
       field: localizedResource.weapon_proficiencies,
       label: t("weapon_proficiencies"),
       placeholder: t("weapon_proficiencies.placeholder"),
+      update: (value: string) =>
+        onLocalizedResourceUpdate("weapon_proficiencies", {
+          ...localizedResource.weapon_proficiencies,
+          value,
+        }),
     },
     {
       field: localizedResource.armor_proficiencies,
       label: t("armor_proficiencies"),
       placeholder: t("armor_proficiencies.placeholder"),
+      update: (value: string) =>
+        onLocalizedResourceUpdate("armor_proficiencies", {
+          ...localizedResource.armor_proficiencies,
+          value,
+        }),
     },
     {
       field: localizedResource.tool_proficiencies,
       label: t("tool_proficiencies"),
       placeholder: t("tool_proficiencies.placeholder"),
+      update: (value: string) =>
+        onLocalizedResourceUpdate("tool_proficiencies", {
+          ...localizedResource.tool_proficiencies,
+          value,
+        }),
     },
   ].filter(({ field }) => field.value);
 
@@ -69,17 +89,18 @@ export default function CharacterClassPrintDeckEntryEditor({
             />
           </Field>
         </HStack>
-        {proficiencyFields.map(({ field, label, placeholder }, index) => (
+        {proficiencyFields.map(({ field, label, placeholder, update }) => (
           <Field key={label} label={label}>
             <Input
-              onValueChange={(value) =>
+              onValueChange={(value) => {
+                update(value);
                 onLocalizedResourceUpdate(
                   "proficiencies",
-                  localizedResource.proficiencies.map((proficiency, fieldIndex) =>
-                    fieldIndex === index ? { ...proficiency, value } : proficiency,
+                  localizedResource.proficiencies.map((proficiency) =>
+                    proficiency.label === field.label ? { ...proficiency, value } : proficiency,
                   ),
-                )
-              }
+                );
+              }}
               placeholder={placeholder}
               value={field.value}
             />
