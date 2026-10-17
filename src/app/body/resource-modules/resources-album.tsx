@@ -1,5 +1,6 @@
 import { Box, Flex, Wrap } from "@chakra-ui/react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -42,6 +43,7 @@ export function createResourcesAlbum<
   function ResourcesAlbum({ sourceId }: ResourcesAlbumProps) {
     const filteredResourceIds = useFilteredResourceIds(sourceId);
     const paletteName = usePaletteName();
+    const resourceReferences = useActiveSourceReferenceResources();
     const zoom = useZoom();
 
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -100,6 +102,7 @@ export function createResourcesAlbum<
                   <ResourceCardInteractive
                     key={id}
                     palette={palettes[paletteName]}
+                    resourceReferences={resourceReferences}
                     resourceId={id}
                     zoom={zoom}
                   />

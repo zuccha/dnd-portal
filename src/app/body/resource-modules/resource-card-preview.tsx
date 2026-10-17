@@ -16,8 +16,10 @@ export type ResourceCardPreviewProps<R extends Resource, L extends LocalizedReso
   Card: ComponentType<
     Omit<ResourcePokerCardProps<R, L>, "afterDetails" | "beforeDetails" | "firstPageInfo">
   > & { h: number; w: number };
+  linkResources?: boolean;
   localizedResource: L;
   palette: Palette;
+  resourceReferences: Resource[];
   showImage: boolean;
 };
 
@@ -27,8 +29,10 @@ export type ResourceCardPreviewProps<R extends Resource, L extends LocalizedReso
 
 export default function ResourceCardPreview<R extends Resource, L extends LocalizedResource<R>>({
   Card,
+  linkResources = true,
   localizedResource,
   palette,
+  resourceReferences,
   showImage,
 }: ResourceCardPreviewProps<R, L>) {
   const { t } = useI18nLangContext(i18nContext);
@@ -53,11 +57,13 @@ export default function ResourceCardPreview<R extends Resource, L extends Locali
       <Box h={`${Card.h}in`} overflow="hidden" position="relative" w={`${Card.w}in`}>
         <Card
           left={0}
+          linkResources={linkResources}
           localizedResource={localizedResource}
           mode="paginated"
           onPageCountChange={setClampedPageCount}
           palette={palette}
           position="absolute"
+          resourceReferences={resourceReferences}
           selectedPageIndex={selectedPageIndex}
           showImage={showImage}
           top={0}

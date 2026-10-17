@@ -1,4 +1,5 @@
 import { Box, Flex, Table } from "@chakra-ui/react";
+import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { ResourceFilters } from "~/models/resources/resource-filters";
@@ -37,6 +38,7 @@ export function createResourcesTable<
 
   return function ResourcesTable({ sourceId }: ResourcesTableProps) {
     const filteredResourceIds = useFilteredResourceIds(sourceId);
+    const resourceReferences = useActiveSourceReferenceResources();
     if (!filteredResourceIds.length) return <ResourcesEmpty />;
 
     return (
@@ -57,7 +59,11 @@ export function createResourcesTable<
 
               <Table.Body>
                 {filteredResourceIds.map((id) => (
-                  <ResourcesTableRow key={id} resourceId={id} />
+                  <ResourcesTableRow
+                    key={id}
+                    resourceId={id}
+                    resourceReferences={resourceReferences}
+                  />
                 ))}
               </Table.Body>
             </Table.Root>

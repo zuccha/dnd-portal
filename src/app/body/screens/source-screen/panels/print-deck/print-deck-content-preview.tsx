@@ -1,5 +1,6 @@
 import { Box, Flex, VStack } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
+import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import { printDeck } from "~/models/print-deck/print-deck-store";
 import { BleedContext } from "~/ui/bleed-context";
 import { range } from "~/utils/array";
@@ -88,6 +89,7 @@ export default function PrintDeckContentPreview() {
   const [backgroundColorVisible] = useBackgroundColorVisible();
   const [includeEmptyBack] = useIncludeEmptyBack();
   const [showImage] = useShowImage();
+  const resourceReferences = useActiveSourceReferenceResources();
 
   const [pagesCounts, setPagesCounts] = useState<Record<string, number>>({});
   const pagesCount = entries.reduce((total, entry) => {
@@ -206,6 +208,7 @@ export default function PrintDeckContentPreview() {
                   borderRadius={0}
                   css={albumCardCss}
                   key={entry.id}
+                  linkResources={false}
                   localizedResource={entry.resource}
                   onPageCountChange={(count) => {
                     setPagesCounts((prev) => {
@@ -216,6 +219,7 @@ export default function PrintDeckContentPreview() {
                     });
                   }}
                   palette={palettes[entry.palette_name]}
+                  resourceReferences={resourceReferences}
                   showImage={showImage}
                 />
               );

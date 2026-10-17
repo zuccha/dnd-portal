@@ -1,11 +1,12 @@
 import { HStack, type StackProps } from "@chakra-ui/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { I18nString } from "~/i18n/i18n-string";
+import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { LanguageEntry } from "~/models/other/language-entries";
 import type { FeatureEntry } from "~/models/resources/features/feature-entry";
-import type { ResourceOption } from "~/models/resources/resource";
+import type { Resource, ResourceOption } from "~/models/resources/resource";
 import {
   type CreatureLanguageMode,
   useCreatureLanguageModeOptions,
@@ -25,6 +26,8 @@ import WeightInput from "~/ui/weight-input";
 import type { FieldBag } from "~/utils/form";
 import EquipmentBundleEditor from "./equipment-bundle-editor";
 import FeatureEntriesEditor from "./feature-entries-editor";
+import { serializeResourceLink } from "./resource-link-pattern";
+import ResourceLinkSearchDialog from "./resource-link-search-dialog";
 import ResourceSearch from "./resource-search";
 
 //------------------------------------------------------------------------------
@@ -870,17 +873,39 @@ export function createTextareaField({
     const { t } = useI18nLangContext(context);
     const message = error ? t(error) : undefined;
     const { label, ...fieldProps } = rest;
+    const resources = useActiveSourceReferenceResources();
+    const [resourceLinkPickerOpen, setResourceLinkPickerOpen] = useState(false);
+    const insertResourceLinkRef = useRef<((text: string) => void) | undefined>(undefined);
+    const resourceLinkFallbackRef = useRef("");
 
     return (
-      <RichTextTextareaField
-        bgColor={translatable ? "bg.info" : undefined}
-        error={message}
-        fieldProps={fieldProps}
-        label={label ?? t("label")}
-        placeholder={t("placeholder")}
-        {...inputProps}
-        {...field}
-      />
+      <>
+        <RichTextTextareaField
+          bgColor={translatable ? "bg.info" : undefined}
+          error={message}
+          fieldProps={fieldProps}
+          label={label ?? t("label")}
+          onLinkRequest={(insertText, fallback) => {
+            insertResourceLinkRef.current = insertText;
+            resourceLinkFallbackRef.current = fallback;
+            setResourceLinkPickerOpen(true);
+          }}
+          placeholder={t("placeholder")}
+          {...inputProps}
+          {...field}
+        />
+        <ResourceLinkSearchDialog
+          onOpenChange={setResourceLinkPickerOpen}
+          onSelect={(resource: Resource) => {
+            insertResourceLinkRef.current?.(
+              serializeResourceLink(resource, resourceLinkFallbackRef.current),
+            );
+            resourceLinkFallbackRef.current = "";
+          }}
+          open={resourceLinkPickerOpen}
+          resources={resources}
+        />
+      </>
     );
   }
 

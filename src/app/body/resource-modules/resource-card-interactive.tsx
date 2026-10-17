@@ -49,6 +49,7 @@ export type ResourceCardInteractiveExtra<R extends Resource, L extends Localized
 
 export type ResourceCardInteractiveProps = {
   palette?: Palette;
+  resourceReferences?: Resource[];
   resourceId: string;
   zoom?: number;
 };
@@ -75,6 +76,7 @@ export function createResourceCardInteractive<
 
   function ResourcesAlbumCardInteractive({
     palette = defaultPalette,
+    resourceReferences,
     resourceId,
     zoom,
   }: ResourceCardInteractiveProps) {
@@ -86,6 +88,7 @@ export function createResourceCardInteractive<
       <ResourcesAlbumCardInteractiveContent
         palette={palette}
         localizedResource={localizedResource}
+        resourceReferences={resourceReferences}
         resource={resource}
         zoom={zoom}
       />
@@ -99,10 +102,12 @@ export function createResourceCardInteractive<
   function ResourcesAlbumCardInteractiveContent({
     palette = defaultPalette,
     localizedResource,
+    resourceReferences,
     resource,
     zoom,
   }: Omit<ResourceCardInteractiveProps, "resourceId"> & {
     localizedResource: L;
+    resourceReferences?: Resource[];
     resource: R;
   }) {
     const { lang, t } = useI18nLangContext(i18nContext);
@@ -221,6 +226,7 @@ export function createResourceCardInteractive<
           onPageCountChange={handlePageCountChange}
           palette={palette}
           position="absolute"
+          resourceReferences={resourceReferences}
           selectedPageIndex={selectedPageIndex}
           showImage={showImage}
           top={0}

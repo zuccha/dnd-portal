@@ -7,6 +7,7 @@ import type { Resource } from "~/models/resources/resource";
 import PokerCard from "~/ui/poker-card";
 import { closeRichTextPage, emptyRichTextPageState } from "~/ui/rich-text-page";
 import type { Palette } from "~/utils/palette";
+import { useResourceLinkPatterns } from "./resource-link-pattern";
 
 //------------------------------------------------------------------------------
 // Resource Poker Card
@@ -22,10 +23,12 @@ export type ResourcePokerCardProps<
   firstPageInfo?: ReactNode;
   footer?: ReactNode;
   localizedResource: L;
+  linkResources?: boolean;
   mode?: "paginated" | "scroll";
   onNameClick?: () => void;
   onPageCountChange?: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
+  resourceReferences?: Resource[];
   selectedPageIndex?: number;
   showImage: boolean;
   startDetailsOnSecondPage?: boolean;
@@ -38,10 +41,12 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
   firstPageInfo,
   footer,
   localizedResource,
+  linkResources = true,
   mode = "paginated",
   onNameClick,
   onPageCountChange = () => {},
   palette,
+  resourceReferences = [],
   selectedPageIndex = -1,
   showImage,
   startDetailsOnSecondPage = false,
@@ -51,6 +56,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
   const hasImage = showImage && imageUrl.length > 0;
   const firstPageIndexWithoutImage = hasImage ? 1 : 0;
   const [system] = useI18nSystem();
+  const richTextPatterns = useResourceLinkPatterns(resourceReferences, linkResources);
 
   const handlePageCountChange = useCallback(
     (count: number | undefined, overflow: boolean) => {
@@ -77,6 +83,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
         onNameClick={onNameClick}
         onPageCountChange={onPageCountChange}
         palette={palette}
+        richTextPatterns={richTextPatterns}
         {...rest}
       />
     );
@@ -96,6 +103,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
       onNameClick={onNameClick}
       onPageCountChange={handlePageCountChange}
       palette={palette}
+      richTextPatterns={richTextPatterns}
       selectedPageIndex={selectedPageIndex}
       startDetailsOnSecondPage={startDetailsOnSecondPage}
       {...rest}
@@ -124,6 +132,7 @@ type PaginatedResourcePokerCardProps<
   onNameClick?: () => void;
   onPageCountChange: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
+  richTextPatterns: ReturnType<typeof useResourceLinkPatterns>;
   selectedPageIndex: number;
   startDetailsOnSecondPage: boolean;
 };
@@ -142,6 +151,7 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
   onNameClick,
   onPageCountChange,
   palette,
+  richTextPatterns,
   selectedPageIndex,
   startDetailsOnSecondPage,
   ...rest
@@ -249,7 +259,11 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
             >
               {pageIndex === 0 && beforeDetails}
 
-              {text.length > 0 && <PokerCard.Details palette={palette}>{text}</PokerCard.Details>}
+              {text.length > 0 && (
+                <PokerCard.Details palette={palette} patterns={richTextPatterns}>
+                  {text}
+                </PokerCard.Details>
+              )}
             </VStack>
 
             {!hasImage && pageIndex === 0 && firstPageInfo && (
@@ -304,6 +318,7 @@ type ScrollableResourcePokerCardProps<
   onNameClick?: () => void;
   onPageCountChange: (count: number | undefined, firstDetailsPageOverflow: boolean) => void;
   palette: Palette;
+  richTextPatterns: ReturnType<typeof useResourceLinkPatterns>;
 };
 
 function ScrollableResourcePokerCard<R extends Resource, L extends LocalizedResource<R>>({
@@ -316,6 +331,7 @@ function ScrollableResourcePokerCard<R extends Resource, L extends LocalizedReso
   onNameClick,
   onPageCountChange,
   palette,
+  richTextPatterns,
   ...rest
 }: ScrollableResourcePokerCardProps<R, L>) {
   useEffect(() => {
@@ -352,7 +368,11 @@ function ScrollableResourcePokerCard<R extends Resource, L extends LocalizedReso
       >
         {beforeDetails}
 
-        {details.length > 0 && <PokerCard.Details palette={palette}>{details}</PokerCard.Details>}
+        {details.length > 0 && (
+          <PokerCard.Details palette={palette} patterns={richTextPatterns}>
+            {details}
+          </PokerCard.Details>
+        )}
       </VStack>
 
       {firstPageInfo && (

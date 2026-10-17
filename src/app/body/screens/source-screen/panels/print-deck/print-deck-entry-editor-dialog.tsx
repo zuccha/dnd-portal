@@ -3,6 +3,7 @@ import { EyeIcon, PencilIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import ResourceCardPreview from "~/app/body/resource-modules/resource-card-preview";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import type { PrintDeckEntryUnion } from "~/models/print-deck/print-deck-entry";
 import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
 import Button from "~/ui/button";
@@ -45,6 +46,7 @@ export default function PrintDeckEntryEditorDialog({
   const [draft, setDraft] = useState(() => structuredClone(entry.resource));
   const [previewVisible, setPreviewVisible] = useState(false);
   const [showImage] = useShowImage();
+  const resourceReferences = useActiveSourceReferenceResources();
 
   useEffect(() => {
     setDraft(structuredClone(entry.resource));
@@ -114,8 +116,10 @@ export default function PrintDeckEntryEditorDialog({
                 >
                   <ResourceCardPreview
                     Card={getPrintDeckCard(draft.kind)}
+                    linkResources={false}
                     localizedResource={draft}
                     palette={palettes[entry.palette_name]}
+                    resourceReferences={resourceReferences}
                     showImage={showImage}
                   />
                 </Box>

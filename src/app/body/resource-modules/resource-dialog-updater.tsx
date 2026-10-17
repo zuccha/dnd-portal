@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
+import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import ResourceRelationsDraftProvider from "~/models/catalogue/resource-relations-draft-provider";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
@@ -96,11 +97,13 @@ export function createResourceDialogUpdater<
     showImage: boolean;
   }) {
     const localizationContext = useLocalizationContext(resource);
+    const resourceReferences = useActiveSourceReferenceResources();
     return (
       <ResourceCardPreview
         Card={PreviewCard}
         localizedResource={localizeResource(resource, localizationContext)}
         palette={palettes[paletteName]}
+        resourceReferences={resourceReferences}
         showImage={showImage}
       />
     );

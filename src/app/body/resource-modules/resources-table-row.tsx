@@ -27,6 +27,7 @@ import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
 import { toaster } from "~/ui/toaster";
 import { useResourceDelete } from "./resource-delete";
+import { useResourceLinkPatterns } from "./resource-link-pattern";
 import type { ResourceAction } from "./resource-action";
 import type { ResourcesContext } from "./resources-context";
 
@@ -51,6 +52,7 @@ export type ResourcesTableRowExtra<R extends Resource, L extends LocalizedResour
 
 type ResourcesTableRowProps = {
   resourceId: string;
+  resourceReferences: Resource[];
 };
 
 export function createResourcesTableRow<
@@ -66,12 +68,18 @@ export function createResourcesTableRow<
 
   const { usePaletteName, useResourceExpansion } = context;
 
-  function ResourcesTableRow({ resourceId }: ResourcesTableRowProps) {
+  function ResourcesTableRow({ resourceId, resourceReferences }: ResourcesTableRowProps) {
     const resource = useResource(resourceId);
     const localizedResource = useLocalizedResource(resourceId);
     if (!resource || !localizedResource) return null;
 
-    return <ResourcesTableRowContent localizedResource={localizedResource} resource={resource} />;
+    return (
+      <ResourcesTableRowContent
+        localizedResource={localizedResource}
+        resource={resource}
+        resourceReferences={resourceReferences}
+      />
+    );
   }
 
   //------------------------------------------------------------------------------
@@ -81,12 +89,14 @@ export function createResourcesTableRow<
   function ResourcesTableRowContent({
     localizedResource,
     resource,
+    resourceReferences,
   }: Omit<ResourcesTableRowProps, "resourceId"> & {
     localizedResource: L;
     resource: R;
   }) {
     const { lang, t } = useI18nLangContext(i18nContext);
     const [system] = useI18nSystem();
+    const richTextPatterns = useResourceLinkPatterns(resourceReferences);
     const navigate = useNavigate();
 
     const sourceEditable = useSourceEditable(resource.source_id);
@@ -305,6 +315,7 @@ export function createResourcesTableRow<
                           display="block"
                           key={i}
                           overflowWrap="anywhere"
+                          patterns={richTextPatterns}
                           text={paragraph}
                           whiteSpace="normal"
                         />
@@ -313,6 +324,7 @@ export function createResourcesTableRow<
                     <RichText
                       display="block"
                       overflowWrap="anywhere"
+                      patterns={richTextPatterns}
                       text={translate({ en: "_No details._", it: "_Nessuna descrizione._" }, lang)}
                       whiteSpace="normal"
                     />

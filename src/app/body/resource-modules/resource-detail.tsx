@@ -2,6 +2,8 @@ import { Badge, Box, HStack, Heading, Separator, Span, Text, VStack } from "@cha
 import { ChevronLeftIcon } from "lucide-react";
 import { type ReactNode } from "react";
 import { useLocation } from "react-router";
+import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
+import type { ResourceKind } from "~/models/types/resource-kind";
 import { useI18nLangContext } from "../../../i18n/i18n-lang-context";
 import { resolveSystemText, useI18nSystem } from "../../../i18n/i18n-system";
 import PageTitle from "../../../navigation/page-title";
@@ -11,6 +13,7 @@ import RichText from "../../../ui/rich-text";
 import RouterLink from "../../../ui/router-link";
 import { resourcePanelTranslations } from "../screens/source-screen/panels/panel-translations";
 import ResourceImagePreview from "./resource-image-preview";
+import { useResourceLinkPatterns } from "./resource-link-pattern";
 
 //------------------------------------------------------------------------------
 // Resource Detail Action
@@ -31,7 +34,9 @@ export type ResourceDetailAction = {
 type ResourceDetailHeader = {
   descriptor: string;
   description: string;
+  id: string;
   image_url?: string | null;
+  kind: ResourceKind;
   name: string;
   page: string;
   source_code: string;
@@ -56,6 +61,8 @@ export default function ResourceDetail({
 }) {
   const { t, ti } = useI18nLangContext({ ...resourcePanelTranslations, ...i18nContext });
   const [system] = useI18nSystem();
+  const resourceReferences = useActiveSourceReferenceResources();
+  const resourceLinkPatterns = useResourceLinkPatterns(resourceReferences);
   const listPath = `/${useLocation().pathname.split("/").filter(Boolean).slice(0, 2).join("/")}`;
 
   if (!resource) return null;
@@ -141,7 +148,7 @@ export default function ResourceDetail({
             <RichText
               display="block"
               lineHeight="tall"
-              patterns={detailRichTextPatterns}
+              patterns={[detailRichTextHeadingPattern, ...resourceLinkPatterns]}
               text={details}
               whiteSpace="pre-wrap"
             />
@@ -160,23 +167,20 @@ export default function ResourceDetail({
 }
 
 //------------------------------------------------------------------------------
-// Detail Rich Text Patterns
+// Detail Rich Text Heading Pattern
 //------------------------------------------------------------------------------
 
-const detailRichTextPatterns = [
-  {
-    regex: /##(.+?)##/,
-    render: (value: ReactNode) => (
-      <>
-        <Span display="block" fontSize="lg" fontWeight="medium" lineHeight="short" mt={2}>
-          {value}
-        </Span>
-        <Separator mb={1} />
-      </>
-    ),
-  },
-  ...RichText.defaultPatterns.slice(1),
-];
+const detailRichTextHeadingPattern = {
+  regex: /##(.+?)##/,
+  render: (value: ReactNode) => (
+    <>
+      <Span display="block" fontSize="lg" fontWeight="medium" lineHeight="short" mt={2}>
+        {value}
+      </Span>
+      <Separator mb={1} />
+    </>
+  ),
+};
 
 //------------------------------------------------------------------------------
 // I18n Context
