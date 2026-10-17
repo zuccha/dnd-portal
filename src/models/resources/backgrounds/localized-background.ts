@@ -3,6 +3,7 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
+import { serializeResourceLink } from "~/models/resources/resource-link";
 import { joinWith } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
 import { nilUuid } from "~/utils/uuid";
@@ -21,7 +22,7 @@ import {
 } from "../localized-resource";
 import { type Background, backgroundSchema } from "./background";
 
-const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const useLocalizedEquipmentEntries = equipmentReferenceStore.useLocalizedEquipmentEntries;
 const useLocalizedFeatName = featStore.useLocalizedResourceName;
 const useLocalizedToolName = toolStore.useLocalizedResourceName;
 
@@ -56,7 +57,7 @@ export type LocalizedBackground = z.infer<typeof localizedBackgroundSchema>;
 
 type BackgroundLocalizationContext = ResourceLocalizationContext & {
   formatCp: ReturnType<typeof useFormatCp>;
-  localizedEquipmentNames: Record<string, string>;
+  localizedEquipmentEntries: ReturnType<typeof useLocalizedEquipmentEntries>;
   localizedFeatName: string;
   localizedToolName: string;
   translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
@@ -72,7 +73,7 @@ export function useBackgroundLocalizationContext(
 ): BackgroundLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
-  const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
+  const localizedEquipmentEntries = useLocalizedEquipmentEntries(context.lang);
   const localizedFeatName = useLocalizedFeatName(background.feat_id ?? nilUuid);
   const localizedToolName = useLocalizedToolName(background.tool_proficiency_id ?? nilUuid);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
@@ -82,7 +83,7 @@ export function useBackgroundLocalizationContext(
     () => ({
       ...context,
       formatCp,
-      localizedEquipmentNames,
+      localizedEquipmentEntries,
       localizedFeatName,
       localizedToolName,
       translateCreatureAbility,
@@ -91,7 +92,7 @@ export function useBackgroundLocalizationContext(
     [
       context,
       formatCp,
-      localizedEquipmentNames,
+      localizedEquipmentEntries,
       localizedFeatName,
       localizedToolName,
       translateCreatureAbility,
@@ -131,9 +132,13 @@ export function localizeBackground(
         group.map((option, index) => {
           const optionText = [
             ...option.equipments.map(({ id, notes, quantity }) => {
-              const name = context.localizedEquipmentNames[id] ?? "";
-              const name2 = formatEquipmentNameWithNotes(name, notes, context.lang);
-              return context.tpi("equipment", quantity, name2, `${quantity}`);
+              const equipment = context.localizedEquipmentEntries.find((entry) => entry.id === id);
+              const name = equipment?.name ?? "";
+              const notesText = translate(notes, context.lang);
+              const nameWithNotes = equipment
+                ? `${serializeResourceLink(equipment, name)}${notesText ? ` (${notesText})` : ""}`
+                : formatEquipmentNameWithNotes(name, notes, context.lang);
+              return context.tpi("equipment", quantity, nameWithNotes, `${quantity}`);
             }),
             option.currency ? context.formatCp(option.currency) : "",
           ]
