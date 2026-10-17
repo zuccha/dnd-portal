@@ -1,8 +1,10 @@
 import { Box, GridItem, HStack, SimpleGrid, Span, VStack } from "@chakra-ui/react";
+import { Fragment } from "react";
 import { useCallback, useState } from "react";
 import type { Creature } from "~/models/resources/creatures/creature";
 import type { LocalizedCreature } from "~/models/resources/creatures/localized-creature";
 import PokerCard from "~/ui/poker-card";
+import ResourceCardLink from "../../resource-card-link";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -16,6 +18,7 @@ export type CreatureCardProps = Omit<
 
 export function CreatureCard({
   localizedResource,
+  linkResources = true,
   onPageCountChange = () => {},
   palette,
   ...rest
@@ -29,6 +32,60 @@ export function CreatureCard({
     },
     [onPageCountChange],
   );
+  const fields = [
+    localizedResource.skills,
+    localizedResource.immunities,
+    localizedResource.resistances,
+    localizedResource.vulnerabilities,
+    {
+      ...localizedResource.gear,
+      value: linkResources
+        ? [
+            ...localizedResource.gear.entries.map((entry, index) => (
+              <Fragment key={`${entry.resource?.kind}:${entry.resource?.id}:${index}`}>
+                {index > 0 && ", "}
+                {entry.resource ? (
+                  <ResourceCardLink id={entry.resource.id} kind={entry.resource.kind}>
+                    {entry.resource.name}
+                  </ResourceCardLink>
+                ) : (
+                  entry.name
+                )}
+                {entry.notes && ` (${entry.notes})`}
+                {entry.quantity && ` (${entry.quantity})`}
+              </Fragment>
+            )),
+            ...(localizedResource.gear.currency
+              ? [
+                  <Fragment key="currency">
+                    {localizedResource.gear.entries.length > 0 && ", "}
+                    {localizedResource.gear.currency}
+                  </Fragment>,
+                ]
+              : []),
+          ]
+        : localizedResource.gear.value,
+    },
+    {
+      ...localizedResource.languages_info,
+      value: linkResources
+        ? localizedResource.languages_info.detail_parts.map((part, index) =>
+            part.type === "resource" ? (
+              <ResourceCardLink
+                id={part.resource.id}
+                key={`${part.resource.kind}:${part.resource.id}`}
+                kind={part.resource.kind}
+              >
+                {part.resource.name}
+              </ResourceCardLink>
+            ) : (
+              <Fragment key={index}>{part.value}</Fragment>
+            ),
+          )
+        : localizedResource.languages_info.value,
+    },
+    localizedResource.senses,
+  ];
 
   return (
     <ResourcePokerCard
@@ -135,19 +192,7 @@ export function CreatureCard({
             </HStack>
           </VStack>
 
-          <PokerCard.LabeledValues
-            compact={infoCompact}
-            fields={[
-              localizedResource.skills,
-              localizedResource.immunities,
-              localizedResource.resistances,
-              localizedResource.vulnerabilities,
-              localizedResource.gear,
-              localizedResource.languages_info,
-              localizedResource.senses,
-            ]}
-            palette={palette}
-          />
+          <PokerCard.LabeledValues compact={infoCompact} fields={fields} palette={palette} />
         </>
       }
       firstPageInfo={
@@ -158,6 +203,7 @@ export function CreatureCard({
         )
       }
       localizedResource={localizedResource}
+      linkResources={linkResources}
       onPageCountChange={handlePageCountChange}
       palette={palette}
       startDetailsOnSecondPage

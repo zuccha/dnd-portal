@@ -2,6 +2,7 @@ import { Box, Center, GridItem, SimpleGrid, Span, VStack } from "@chakra-ui/reac
 import type { LocalizedSpell } from "~/models/resources/spells/localized-spell";
 import type { Spell } from "~/models/resources/spells/spell";
 import PokerCard from "~/ui/poker-card";
+import ResourceCardLinks from "../../resource-card-links";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 import type { ReactNode } from "react";
 
@@ -15,6 +16,7 @@ export type SpellCardProps = Omit<
 >;
 
 export function SpellCard({
+  linkResources = true,
   localizedResource,
   onPageCountChange = () => {},
   palette,
@@ -26,6 +28,10 @@ export function SpellCard({
   const duration = localizedResource.duration.value;
 
   const castingTimeColor = localizedResource.emphasize_casting_time ? palette[800] : undefined;
+  const characterClassAbbreviations = localizedResource.character_classes
+    .filter(({ abbreviation }) => abbreviation)
+    .map((resource) => ({ ...resource, name: resource.abbreviation ?? resource.name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <ResourcePokerCard
@@ -37,7 +43,11 @@ export function SpellCard({
             fontStyle="normal"
             textTransform="uppercase"
           >
-            {localizedResource.character_class_abbreviations}
+            {linkResources && characterClassAbbreviations.length > 0 ? (
+              <ResourceCardLinks resources={characterClassAbbreviations} />
+            ) : (
+              localizedResource.character_class_abbreviations
+            )}
           </Center>
         ) : null
       }
@@ -98,6 +108,7 @@ export function SpellCard({
         </Center>
       }
       localizedResource={localizedResource}
+      linkResources={linkResources}
       onPageCountChange={onPageCountChange}
       palette={palette}
       {...rest}

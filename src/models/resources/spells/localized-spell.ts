@@ -30,7 +30,11 @@ export const localizedSpellSchema = localizedResourceSchema(spellSchema, z.liter
   {
     casting_time: localizedFieldSchema.extend({ value_with_ritual: z.string() }),
     character_class_abbreviations: z.string(),
-    character_classes: z.array(localizedResourceLinkSchema(z.literal("character_class"))),
+    character_classes: z.array(
+      localizedResourceLinkSchema(z.literal("character_class")).extend({
+        abbreviation: z.string().optional(),
+      }),
+    ),
     character_classes_label: z.string(),
     components: localizedFieldSchema,
     concentration: z.boolean(),
@@ -51,7 +55,7 @@ export type LocalizedSpell = z.infer<typeof localizedSpellSchema>;
 //------------------------------------------------------------------------------
 
 type SpellLocalizationContext = ResourceLocalizationContext & {
-  characterClasses: LocalizedResourceLink<"character_class">[];
+  characterClasses: (LocalizedResourceLink<"character_class"> & { abbreviation?: string })[];
   formatRange: ReturnType<typeof useFormatCm>;
   formatTime: ReturnType<typeof useFormatSeconds>;
   localizedCharacterClassAbbreviations: Record<string, string>;
@@ -86,7 +90,14 @@ export function useSpellLocalizationContext(
       related.character_classes.flatMap(({ id }) => {
         const resource = characterClassResources.find((entry) => entry.id === id);
         return resource
-          ? [{ id, kind: "character_class" as const, name: translate(resource.name, context.lang) }]
+          ? [
+              {
+                abbreviation: `${translate(resource.abbreviation, context.lang)}.`,
+                id,
+                kind: "character_class" as const,
+                name: translate(resource.name, context.lang),
+              },
+            ]
           : [];
       }),
     [characterClassResources, context.lang, related.character_classes],

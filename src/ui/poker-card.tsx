@@ -281,13 +281,17 @@ function Description({ children, palette, patterns }: DescriptionProps) {
 
 type LabeledValuesProps = {
   compact?: boolean;
-  fields: { label: string; value: string }[];
+  fields: { label: string; value: ReactNode }[];
   palette: Palette;
 };
 
 function LabeledValues({ compact, fields, palette }: LabeledValuesProps) {
   const bleed = useBleed();
-  const visibleFields = fields.filter(({ value }) => value);
+  const visibleFields = fields.filter(({ value }) => {
+    if (typeof value === "string") return Boolean(value);
+    if (Array.isArray(value)) return value.length > 0;
+    return value !== null && value !== undefined && value !== false;
+  });
 
   if (!visibleFields.length) return null;
 

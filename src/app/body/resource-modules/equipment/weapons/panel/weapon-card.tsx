@@ -1,6 +1,7 @@
 import type { LocalizedWeapon } from "~/models/resources/equipment/weapons/localized-weapon";
 import type { Weapon } from "~/models/resources/equipment/weapons/weapon";
 import PokerCard from "~/ui/poker-card";
+import ResourceCardLinks from "../../../resource-card-links";
 import { EquipmentCard } from "../../panel/equipment-card";
 import type { ResourcePokerCardProps } from "../../../resource-poker-card";
 
@@ -15,19 +16,24 @@ export type WeaponCardProps = Omit<
 
 export function WeaponCard({
   localizedResource,
+  linkResources = true,
   onPageCountChange = () => {},
   palette,
   ...rest
 }: WeaponCardProps) {
+  const ammunitionField =
+    linkResources && localizedResource.ammunition.resources.length > 0
+      ? {
+          ...localizedResource.ammunition,
+          value: <ResourceCardLinks resources={localizedResource.ammunition.resources} />,
+        }
+      : localizedResource.ammunition;
+
   return (
     <EquipmentCard
       beforeDetails={
         <PokerCard.LabeledValues
-          fields={[
-            localizedResource.properties,
-            localizedResource.range,
-            localizedResource.ammunition,
-          ]}
+          fields={[localizedResource.properties, localizedResource.range, ammunitionField]}
           palette={palette}
         />
       }
@@ -39,6 +45,7 @@ export function WeaponCard({
         />
       }
       localizedResource={localizedResource}
+      linkResources={linkResources}
       onPageCountChange={onPageCountChange}
       palette={palette}
       {...rest}

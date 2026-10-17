@@ -10,6 +10,7 @@ import type { CharacterClass } from "~/models/resources/character-classes/charac
 import type { LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
 import Icon from "~/ui/icon";
 import PokerCard from "~/ui/poker-card";
+import ResourceCardLinks from "../../resource-card-links";
 import { ResourcePokerCard, type ResourcePokerCardProps } from "../../resource-poker-card";
 
 //------------------------------------------------------------------------------
@@ -23,17 +24,26 @@ export type CharacterClassCardProps = Omit<
 
 export function CharacterClassCard({
   localizedResource,
+  linkResources = true,
   onPageCountChange = () => {},
   palette,
   ...rest
 }: CharacterClassCardProps) {
   const { t } = useI18nLangContext(i18nContext);
+  const fields = localizedResource.proficiencies.map((field) =>
+    field.label === localizedResource.tool_proficiencies.label &&
+    linkResources &&
+    localizedResource.tool_proficiencies.resources.length > 0
+      ? {
+          ...field,
+          value: <ResourceCardLinks resources={localizedResource.tool_proficiencies.resources} />,
+        }
+      : field,
+  );
 
   return (
     <ResourcePokerCard
-      beforeDetails={
-        <PokerCard.LabeledValues fields={localizedResource.proficiencies} palette={palette} />
-      }
+      beforeDetails={<PokerCard.LabeledValues fields={fields} palette={palette} />}
       firstPageInfo={
         <HStack justify="space-between" px={PokerCard.rem0750} w="full">
           <HStack gap={PokerCard.rem0250}>
@@ -59,6 +69,7 @@ export function CharacterClassCard({
         </HStack>
       }
       localizedResource={localizedResource}
+      linkResources={linkResources}
       onPageCountChange={onPageCountChange}
       palette={palette}
       {...rest}
