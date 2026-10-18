@@ -608,12 +608,16 @@ const documentation: Record<string, DocumentationContent> = {
         paragraphs: [
           "Multiline text fields marked as supporting text formatting accept lightweight annotations. The markers are written directly in the text and are rendered in resource tables, cards, and the `Print Deck`.",
           "These fields include resource descriptions, equipment notes, creature traits, actions, reactions, lair effects, spell upgrades, and other multiline text fields that display formatted content.",
+          "A resource link provides direct access to another resource mentioned in the text, such as a spell referenced in a feature's description. On cards, it opens the linked resource; on the printed sheet, it remains italicized text because a printed card cannot navigate within the app.",
+          "In a resource editor, the `Link a resource` button searches resources accessible from the active source and its included or required sources. You can also use ``⌘⌥L`` on macOS or ``Ctrl+Alt+L`` on Windows and Linux. If you select text before opening the search, that text is inserted as the fallback. This command is not available in the Print Deck editor.",
+          "When the linked resource is available, the link displays its name in the current language unless custom display text is supplied. If the resource is missing or inaccessible, the fallback is displayed; without a fallback, the interface shows `Missing Resource`.",
         ],
         bullets: [
           "Bold: wrap text in double asterisks, for example **Important**.",
           "Italic: wrap text in underscores, for example _Concentration_.",
           "Heading: wrap text in double hashes, for example ##Actions##.",
           "Metric/imperial alternatives: write the metric value first and the imperial value second inside braces, separated by a vertical bar.",
+          "Resource link: use `[[kind:uuid]]` to display the localized resource name, or `[[kind:uuid:fallback]]` to specify the text shown if the resource is missing or inaccessible. To override the displayed text when the resource is available, add a fourth element: `[[kind:uuid:fallback:text]]`. To omit the fallback, leave the third element empty: `[[kind:uuid::text]]`. Colons cannot appear inside the fallback or custom text.",
         ],
         example:
           "##Actions##\n**Rend.** Melee Attack Roll: +7, reach {1.5 m|5 ft}. _Hit:_ 14 (2d8 + 5) Slashing damage.",
@@ -946,12 +950,16 @@ const documentation: Record<string, DocumentationContent> = {
         paragraphs: [
           "I campi di testo multilinea contrassegnati come compatibili con la formattazione supportano annotazioni leggere. I marcatori vengono scritti direttamente nel testo e vengono interpretati nelle tabelle, nelle carte e nel mazzo di stampa.",
           "Questi campi includono descrizioni delle risorse, note dell'equipaggiamento, tratti, azioni, reazioni ed effetti della tana delle creature, miglioramenti degli incantesimi e altri campi multilinea che mostrano contenuti formattati.",
+          "Un collegamento a una risorsa serve a raggiungere direttamente un'altra risorsa citata nel testo, per esempio un incantesimo menzionato nella descrizione di un privilegio. Nelle carte permette di aprire la risorsa collegata; nel foglio di stampa resta solo il nome in corsivo, perché la carta stampata non può navigare nell'app.",
+          "Nell'editor di una risorsa, il pulsante `Collega una risorsa` apre una ricerca tra le risorse accessibili della fonte attiva e delle fonti incluse o richieste. Puoi usare anche la scorciatoia ``⌘⌥L`` su macOS o ``Ctrl+Alt+L`` su Windows e Linux. Se selezioni del testo prima di aprire la ricerca, quel testo viene inserito come fallback. Il comando non è disponibile nell'editor del mazzo di stampa.",
+          "Se la risorsa collegata è disponibile, il collegamento mostra il suo nome nella lingua corrente, a meno che non sia stato specificato un testo alternativo. Se manca o non è accessibile, viene mostrato il fallback; senza fallback, appare l'indicazione `Risorsa Mancante`.",
         ],
         bullets: [
           "Grassetto: racchiudi il testo tra due asterischi, per esempio **Importante**.",
           "Corsivo: racchiudi il testo tra underscore, per esempio _Concentrazione_.",
           "Intestazione: racchiudi il testo tra doppi cancelletto, per esempio ##Azioni##.",
           "Valori metrici/imperiali: scrivi prima il valore metrico e poi quello imperiale tra parentesi graffe, separati da una barra verticale.",
+          "Collegamento a una risorsa: usa `[[kind:uuid]]` per mostrare il nome localizzato, oppure `[[kind:uuid:fallback]]` per specificare il testo mostrato se la risorsa manca o non è accessibile. Per forzare il testo quando la risorsa è disponibile, aggiungi un quarto elemento: `[[kind:uuid:fallback:testo]]`. Se non vuoi un fallback, lascia vuoto il terzo elemento: `[[kind:uuid::testo]]`. I due punti non possono comparire nel fallback o nel testo alternativo.",
         ],
         example:
           "##Azioni##\n**Squarcio.** _Tiro per colpire in mischia:_ +7, portata {1,5 m|5 ft}. _Colpito:_ 14 (2d8 + 5) danni taglienti.",
