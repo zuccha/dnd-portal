@@ -53427,8 +53427,8 @@
           "it": null
         },
         "description": {
-          "en": "You gain the Ability Score Improvement feat (see \"Feats\") or another feat of your choice for which you qualify.",
-          "it": "Il personaggio ottiene l'aumento dei punteggi di caratteristica (vedi capitolo \"Talenti\") o un altro talento a scelta di cui possiede i prerequisiti. "
+          "en": "You gain the [[feat:9d88f878-34fd-4792-a810-bc2dad51b35b:Ability Score Improvement]] feat (see \"Feats\") or another feat of your choice for which you qualify.",
+          "it": "Il personaggio ottiene l'[[feat:9d88f878-34fd-4792-a810-bc2dad51b35b:Aumento dei Punteggi di Caratteristica]] (vedi capitolo \"Talenti\") o un altro talento a scelta di cui possiede i prerequisiti. "
         },
         "display_name": {
           "en": "Ability Score Improvement",
@@ -59627,8 +59627,8 @@
           "it": null
         },
         "description": {
-          "en": "You gain an Origin feat of your choice (see “Feats”). Skilled is recommended.",
-          "it": "Ottiene un talento Origini a sua scelta (vedi capitolo \"Talenti\"). È consigliato il talento Abile."
+          "en": "You gain an Origin feat of your choice (see “Feats”). [[feat:7b306fe5-9daa-435b-8fc6-3338cc28998d:Skilled]] is recommended.",
+          "it": "Ottiene un talento Origini a sua scelta (vedi capitolo \"Talenti\"). È consigliato il talento [[feat:7b306fe5-9daa-435b-8fc6-3338cc28998d:Abile]]."
         },
         "display_name": {
           "en": "Versatile",
