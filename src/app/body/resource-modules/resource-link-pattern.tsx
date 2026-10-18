@@ -34,27 +34,17 @@ export function createResourceLinkPattern(
     render: (value) => {
       if (typeof value !== "string") return value;
 
-      const firstSeparator = value.indexOf(":");
-      const secondSeparator = value.indexOf(":", firstSeparator + 1);
-      const kindValue = firstSeparator < 0 ? "" : value.slice(0, firstSeparator);
-      const id =
-        firstSeparator < 0
-          ? ""
-          : secondSeparator < 0
-            ? value.slice(firstSeparator + 1)
-            : value.slice(firstSeparator + 1, secondSeparator);
-      const fallback =
-        secondSeparator < 0 ? "" : value.slice(secondSeparator + 1).replaceAll("]\\]", "]]");
-      const kind = resourceKindSchema.safeParse(kindValue);
-      const validId = z.uuid().safeParse(id);
+      const [maybeKind, maybeId = "", fallback = "", text = ""] = value.split(":");
+      const kind = resourceKindSchema.safeParse(maybeKind);
+      const id = z.uuid().safeParse(maybeId);
       const resource =
-        kind.success && validId.success
-          ? resources.find((entry) => entry.kind === kind.data && entry.id === id)
+        kind.success && id.success
+          ? resources.find((entry) => entry.kind === kind.data && entry.id === id.data)
           : undefined;
 
       if (!resource) return fallback || missingResourceLabel;
 
-      const content = <Em>{resource.name[lang] || fallback}</Em>;
+      const content = <Em>{text || resource.name[lang] || fallback}</Em>;
 
       if (!linkResources) return content;
       if (renderLink) return renderLink(resource, content);
