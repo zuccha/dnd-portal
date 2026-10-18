@@ -9854,7 +9854,7 @@
       {
         "resource_1_id": "599a2d99-a512-428f-a1d0-a2edd4e1fa59",
         "resource_1_position": 1,
-        "resource_2_id": "d67d8ccb-1af5-493d-bbc0-069de1c5cd86",
+        "resource_2_id": "5962effc-d6f3-4261-ad95-7d7e3fc945e4",
         "resource_2_position": 0,
         "minimum_level": 0,
         "resource_1_kind": "species",
@@ -9873,6 +9873,15 @@
         "resource_1_id": "599a2d99-a512-428f-a1d0-a2edd4e1fa59",
         "resource_1_position": 3,
         "resource_2_id": "819df713-8af8-4972-bc06-e511ddd5efbd",
+        "resource_2_position": 0,
+        "minimum_level": 0,
+        "resource_1_kind": "species",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "599a2d99-a512-428f-a1d0-a2edd4e1fa59",
+        "resource_1_position": 4,
+        "resource_2_id": "d67d8ccb-1af5-493d-bbc0-069de1c5cd86",
         "resource_2_position": 0,
         "minimum_level": 0,
         "resource_1_kind": "species",
