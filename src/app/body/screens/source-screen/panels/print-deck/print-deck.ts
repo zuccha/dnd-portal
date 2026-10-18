@@ -75,7 +75,7 @@ export const useShowPrintInstructions = createLocalStore(
 
 export const useBackgroundColorVisible = createLocalStore(
   "print_deck.settings.background_color_visible",
-  true,
+  false,
   z.boolean().parse,
 ).use;
 
