@@ -129,7 +129,7 @@
 
 @font-face {
   font-family: "Title Wave";
-  src: url("../assets/fonts/Title Wave.ttf") format("truetype");
+  src: url("../assets/fonts/Title Wave.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
 }
