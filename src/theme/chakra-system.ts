@@ -1,7 +1,46 @@
-import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
+import { createSystem, defaultConfig, defineConfig, defineRecipe } from "@chakra-ui/react";
+
+//------------------------------------------------------------------------------
+// Button Recipe
+//------------------------------------------------------------------------------
+
+const buttonRecipe = defineRecipe({
+  variants: {
+    variant: {
+      subtle: {
+        _dark: {
+          bg: "colorPalette.muted/90",
+          _expanded: {
+            bg: "colorPalette.emphasized",
+          },
+          _hover: {
+            bg: "colorPalette.emphasized",
+          },
+        },
+      },
+      ghost: {
+        _dark: {
+          _expanded: {
+            bg: "colorPalette.muted/90",
+          },
+          _hover: {
+            bg: "colorPalette.muted/90",
+          },
+        },
+      },
+    },
+  },
+});
+
+//------------------------------------------------------------------------------
+// Config
+//------------------------------------------------------------------------------
 
 const config = defineConfig({
   theme: {
+    recipes: {
+      button: buttonRecipe,
+    },
     semanticTokens: {
       colors: {
         "bg": {

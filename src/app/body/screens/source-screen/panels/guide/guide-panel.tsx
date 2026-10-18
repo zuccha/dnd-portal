@@ -318,7 +318,7 @@ function renderDocumentationText(text: string): ReactNode {
 function DocumentationExample({ children }: { children: ReactNode }) {
   return (
     <Alert.Root
-      borderLeftColor="colorPalette.solid"
+      borderLeftColor="colorPalette.border"
       borderLeftWidth="4px"
       color="fg.documentation"
       status="info"
@@ -341,7 +341,7 @@ function DocumentationExample({ children }: { children: ReactNode }) {
 function DocumentationWarning({ children }: { children: ReactNode }) {
   return (
     <Alert.Root
-      borderLeftColor="colorPalette.solid"
+      borderLeftColor="colorPalette.border"
       borderLeftWidth="4px"
       color="fg.documentation"
       status="warning"
