@@ -54437,7 +54437,7 @@
         },
         "description": {
           "en": "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within {18 meters|60 feet} of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure.",
-          "it": "Il bardo impara a fare buon uso del suo ingegno per distrarre, confondere e fiaccare la determinazione e la competenza altrui in maniera soprannaturale."
+          "it": "Il bardo impara a fare buon uso del suo ingegno per distrarre, confondere e fiaccare la determinazione e la competenza altrui in maniera soprannaturale. Quando una creatura che il bardo è in grado di vedere situata entro {18 metri|60 piedi} da sé effettua un tiro per i danni, o supera una prova di caratteristica o un tiro per colpire, il bardo può usare una reazione per spendere un utilizzo di Ispirazione bardica; il bardo tira il dado di Ispirazione bardica e sottrae il numero ottenuto dal tiro della creatura, riducendo il danno o trasformando potenzialmente il successo in un fallimento."
         },
         "display_name": {
           "en": "Cutting Words",
