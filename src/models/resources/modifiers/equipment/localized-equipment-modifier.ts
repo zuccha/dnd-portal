@@ -91,7 +91,10 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
   context: EquipmentModifierLocalizationContext,
 ): LocalizedEquipmentModifier<EM> {
   const appliesTo = translate(equipmentModifier.applies_to, context.lang);
-  const attunementNotesDelta = translate(equipmentModifier.attunement_notes_delta, context.lang);
+  const attunementNotes = translate(equipmentModifier.attunement_notes_delta, context.lang);
+  const attunementNotesDelta = attunementNotes
+    ? `_${context.t("requires_attunement")} ${attunementNotes}_`
+    : "";
   const descriptionDelta = translate(equipmentModifier.description_delta, context.lang);
   const rarityMinimum = equipmentModifier.rarity_minimum
     ? context.translateRarity(equipmentModifier.rarity_minimum)
@@ -107,7 +110,7 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
   return {
     ...localizeModifier(equipmentModifier, context),
     descriptor: appliesTo,
-    description: formatDescription(descriptionDelta, attunementNotesDelta),
+    description: formatDescription(attunementNotesDelta, descriptionDelta),
 
     additional_cost:
       equipmentModifier.cost_delta !== 0
@@ -178,6 +181,10 @@ const i18nContext = {
   attunement_label: {
     en: "Attunement",
     it: "Sintonia",
+  },
+  requires_attunement: {
+    en: "Requires attunement",
+    it: "Richiede sintonia",
   },
   attunement_slots: {
     en: "<1> slots",
