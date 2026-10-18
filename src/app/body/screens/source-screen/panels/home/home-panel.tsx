@@ -16,6 +16,7 @@ import { useTranslateSourceVersion } from "~/models/types/source-version";
 import { Route } from "~/navigation/routes";
 import Button from "~/ui/button";
 import Icon from "~/ui/icon";
+import ZorboDnDWordmark from "~/ui/zorbo-dnd-wordmark";
 import breastplate from "./data/breastplate";
 import fireball from "./data/fireball";
 import healingPotion from "./data/healing-potion";
@@ -76,16 +77,8 @@ export default function HomePanel() {
     <VStack align="stretch" flex={1} gap={0} h="full" overflowY="auto">
       <VStack align="stretch" gap={6} maxW="6xl" mx="auto" px={{ base: 5, md: 8 }} py={8} w="full">
         <VStack align="flex-start" gap={1}>
-          <Heading
-            fontFamily="Mitr"
-            fontSize={{ base: "3xl", md: "4xl" }}
-            fontWeight="normal"
-            lineHeight="shorter"
-          >
-            <Span fontWeight="600">Zorbo</Span>
-            <Span fontWeight="500" color="fg.error">
-              DnD
-            </Span>
+          <Heading fontSize={{ base: "3xl", md: "4xl" }} fontWeight="normal" lineHeight="shorter">
+            <ZorboDnDWordmark />
           </Heading>
           <Text color="fg.muted" fontSize={{ base: "md", md: "lg" }}>
             {t("home.subtitle")}

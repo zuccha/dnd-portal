@@ -16,6 +16,7 @@ import IconButton from "~/ui/icon-button";
 import Input from "~/ui/input";
 import RouterLink from "~/ui/router-link";
 import Select from "~/ui/select";
+import ZorboDnDWordmark from "~/ui/zorbo-dnd-wordmark";
 
 //------------------------------------------------------------------------------
 // Sign In Screen
@@ -50,8 +51,11 @@ export default function SignInScreen() {
 
   return (
     <Center bgColor="bg.subtle" minH="100vh" position="relative" w="full">
-      <VStack align="flex-start" gap={4} maxW="20em" w="full">
-        <Heading size="2xl">{t("title")}</Heading>
+      <VStack align="flex-start" gap={4} maxW="22em" w="full">
+        <Heading fontFamily="Mitr" fontSize="3xl" fontWeight="normal" wordSpacing="-0.08em">
+          <Span>{t("title")}</Span>
+          <ZorboDnDWordmark ms={2} />
+        </Heading>
 
         <Alert.Root status="warning" variant="outline" w="full">
           <Alert.Indicator />
@@ -201,8 +205,8 @@ const i18nContext = {
     it: "Compila il modulo per registrarti.",
   },
   "title": {
-    en: "Register for ZorboDnD",
-    it: "Registrati su ZorboDnD",
+    en: "Sign Up for",
+    it: "Registrati su",
   },
   "username": {
     en: "Username",

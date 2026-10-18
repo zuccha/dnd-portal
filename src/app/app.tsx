@@ -1,4 +1,4 @@
-import { Center, Span, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Center, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useLayoutEffect, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue from "~/models/catalogue/catalogue";
@@ -7,6 +7,7 @@ import {
   downloadDefaultSource,
   updateInstalledSources,
 } from "~/models/catalogue/source-bundle-sync";
+import ZorboDnDWordmark from "~/ui/zorbo-dnd-wordmark";
 import AppRouter from "./app-router";
 import { autoUpdateSourcesStore } from "./app-settings";
 
@@ -87,11 +88,8 @@ export default function App() {
     return (
       <Center h="100vh" w="full">
         <VStack gap={4}>
-          <Text fontFamily="Mitr" fontSize="3xl" fontWeight="600">
-            <Span>Zorbo</Span>
-            <Span color="fg.error" fontWeight="500">
-              DnD
-            </Span>
+          <Text fontSize="3xl">
+            <ZorboDnDWordmark />
           </Text>
           <Spinner
             aria-label={t(downloadingDefaultSource ? "downloading_srd" : "loading")}

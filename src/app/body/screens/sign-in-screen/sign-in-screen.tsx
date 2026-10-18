@@ -16,6 +16,7 @@ import IconButton from "~/ui/icon-button";
 import Input from "~/ui/input";
 import RouterLink from "~/ui/router-link";
 import Select from "~/ui/select";
+import ZorboDnDWordmark from "~/ui/zorbo-dnd-wordmark";
 
 //------------------------------------------------------------------------------
 // Sign In Screen
@@ -46,8 +47,11 @@ export default function SignInScreen() {
 
   return (
     <Center bgColor="bg.subtle" minH="100vh" position="relative" w="full">
-      <VStack align="flex-start" gap={4} maxW="20em" w="full">
-        <Heading size="2xl">{t("title")}</Heading>
+      <VStack align="flex-start" gap={4} maxW="22em" w="full">
+        <Heading fontFamily="Mitr" fontSize="3xl" fontWeight="normal" wordSpacing="-0.08em">
+          <Span>{t("title")}</Span>
+          <ZorboDnDWordmark ms={2} />
+        </Heading>
 
         <Field label={t("email")}>
           <Input onValueChange={setEmail} size="sm" type="email" value={email} />
@@ -170,7 +174,7 @@ const i18nContext = {
     it: "Registrati",
   },
   "title": {
-    en: "Sign In for ZorboDnD",
-    it: "Loggati su ZorboDnD",
+    en: "Sign In to",
+    it: "Accedi a",
   },
 };

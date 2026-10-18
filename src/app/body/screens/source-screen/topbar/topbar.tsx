@@ -1,4 +1,4 @@
-import { Grid, HStack, Image, Span, type StackProps } from "@chakra-ui/react";
+import { Grid, HStack, Image, type StackProps } from "@chakra-ui/react";
 import { MenuIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -6,6 +6,7 @@ import { Route } from "~/navigation/routes";
 import ThemeButton from "~/theme/theme-button";
 import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
+import ZorboDnDWordmark from "~/ui/zorbo-dnd-wordmark";
 import logoUrl from "../../../../../../assets/logo/logo.png";
 import { useRightPanelSetCollapsed } from "../right-panel-state";
 import { useSidebarSetCollapsed } from "../sidebar/sidebar-state";
@@ -44,7 +45,7 @@ export default function Topbar() {
       w="full"
       zIndex="docked"
     >
-      <HStack fontFamily="Mitr" fontSize={{ base: "2xl", md: "3xl" }}>
+      <HStack>
         <IconButton
           Icon={MenuIcon}
           display={{ base: "inline-flex", md: "none" }}
@@ -64,14 +65,10 @@ export default function Topbar() {
           unstyled
         >
           <Image alt="" h={8} src={logoUrl} w={8} />
-          <Span>
-            <Span display={{ base: "none", md: "inline" }} fontWeight="600">
-              Zorbo
-            </Span>
-            <Span color="fg.error" display={{ base: "none", md: "inline" }} fontWeight="500">
-              DnD
-            </Span>
-          </Span>
+          <ZorboDnDWordmark
+            display={{ base: "none", md: "inline" }}
+            fontSize={{ base: "2xl", md: "3xl" }}
+          />
         </Button>
       </HStack>
 
