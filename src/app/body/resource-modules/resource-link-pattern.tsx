@@ -1,4 +1,4 @@
-import { Em } from "@chakra-ui/react";
+import { Em, Span } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { z } from "zod";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -34,7 +34,7 @@ export function createResourceLinkPattern(
     render: (value) => {
       if (typeof value !== "string") return value;
 
-      const [maybeKind, maybeId = "", fallback = "", text = ""] = value.split(":");
+      const [maybeKind, maybeId = "", fallback = "", override = ""] = value.split(":");
       const kind = resourceKindSchema.safeParse(maybeKind);
       const id = z.uuid().safeParse(maybeId);
       const resource =
@@ -44,7 +44,15 @@ export function createResourceLinkPattern(
 
       if (!resource) return fallback || missingResourceLabel;
 
-      const content = <Em>{text || resource.name[lang] || fallback}</Em>;
+      const text = override || resource.name[lang] || fallback;
+      const content =
+        resource.kind === "spell" ? (
+          <Em>{text}</Em>
+        ) : resource.kind === "creature" ? (
+          <Span fontWeight="bold">{text}</Span>
+        ) : (
+          text
+        );
 
       if (!linkResources) return content;
       if (renderLink) return renderLink(resource, content);
