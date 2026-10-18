@@ -5,6 +5,7 @@ import { Route } from "../navigation/routes";
 import { resourceModules } from "./body/resource-modules/resource-modules";
 import SignInScreen from "./body/screens/sign-in-screen/sign-in-screen";
 import SignUpScreen from "./body/screens/sign-up-screen/sign-up-screen";
+import AboutPanel from "./body/screens/source-screen/panels/about/about-panel";
 import GuidePanel from "./body/screens/source-screen/panels/guide/guide-panel";
 import HomePanel from "./body/screens/source-screen/panels/home/home-panel";
 import PrintDeckPanel from "./body/screens/source-screen/panels/print-deck/print-deck-panel";
@@ -27,6 +28,7 @@ export default function AppRouter() {
         <RouterRoute element={<SignUpScreen />} path={Route.SignUp} />
         <RouterRoute element={<SourceScreen />} path="/">
           <RouterRoute element={<HomePanel />} index />
+          <RouterRoute element={<AboutPanel />} path="about" />
           <RouterRoute element={<GuidePanel />} path="guide" />
           <RouterRoute element={<SourcesPanel />} path="sources" />
           <RouterRoute element={<SourceSettingsRoute />} path="sources/:sourceId" />

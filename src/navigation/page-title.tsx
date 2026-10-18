@@ -34,6 +34,10 @@ function isDynamicTitlePath(pathname: string): boolean {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  [Route.About]: {
+    en: "About",
+    it: "Informazioni",
+  },
   [Route._]: {
     en: "Home",
     it: "Home",

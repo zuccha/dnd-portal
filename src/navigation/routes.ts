@@ -6,6 +6,7 @@ import type { ResourceKind } from "~/models/types/resource-kind";
 
 export const Route = {
   _: "/",
+  About: "/about",
   Guide: "/guide",
   PrintDeck: "/print-deck",
   Resources: "/resources",

@@ -1,5 +1,5 @@
 import { Span, VStack } from "@chakra-ui/react";
-import { CircleHelpIcon, HouseIcon, LibraryBigIcon, PrinterIcon } from "lucide-react";
+import { CircleHelpIcon, HouseIcon, InfoIcon, LibraryBigIcon, PrinterIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -75,6 +75,12 @@ export default function SidebarNavigation() {
         onClick={() => navigate(Route.PrintDeck)}
       />
       <SidebarNavigationButton
+        active={route === Route.About}
+        Icon={InfoIcon}
+        label={t("about")}
+        onClick={() => navigate(Route.About)}
+      />
+      <SidebarNavigationButton
         active={route === Route.Guide}
         Icon={CircleHelpIcon}
         label={t("info")}
@@ -89,6 +95,10 @@ export default function SidebarNavigation() {
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  about: {
+    en: "About",
+    it: "Informazioni",
+  },
   home: {
     en: "Home",
     it: "Home",
