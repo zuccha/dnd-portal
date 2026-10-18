@@ -52295,8 +52295,8 @@
           "it": 89
         },
         "description": {
-          "en": "The Extra Attack of your Thirsting Blade invocation confers two extra attacks rather than one.",
-          "it": "L'Attacco Extra della supplica Lama Assetata consente di eseguire due attacchi aggiuntivi anziché uno."
+          "en": "The [[feature:2c07d055-a04c-4770-9353-fce5dbb57781:Extra Attack]] of your Thirsting Blade invocation confers two extra attacks rather than one.",
+          "it": "L'[[feature:2c07d055-a04c-4770-9353-fce5dbb57781:Attacco Extra]] della supplica Lama Assetata consente di eseguire due attacchi aggiuntivi anziché uno."
         },
         "minimum_warlock_level": 12,
         "prerequisite": {
@@ -52347,8 +52347,8 @@
           "it": 89
         },
         "description": {
-          "en": "Once per turn when you hit a creature with your pact weapon, you can expend a Pact Magic spell slot to deal an extra 1d8 Force damage to the target, plus another 1d8 per level of the spell slot, and you can give the target the Prone condition if it is Huge or smaller.",
-          "it": "Una volta per turno, quando il warlock colpisce una creatura con l'arma del patto, può spendere uno slot incantesimo della Magia del patto per infliggere 1d8 danni da forza extra al bersaglio, più 1d8 aggiuntivo per ogni livello dello slot. Inoltre, se l'avversario è di taglia Enorme o inferiore, diventa prono."
+          "en": "Once per turn when you hit a creature with your pact weapon, you can expend a [[feature:a8635e04-e56e-462a-9953-09cc701d23bc:Pact Magic]] spell slot to deal an extra 1d8 Force damage to the target, plus another 1d8 per level of the spell slot, and you can give the target the Prone condition if it is Huge or smaller.",
+          "it": "Una volta per turno, quando il warlock colpisce una creatura con l'arma del patto, può spendere uno slot incantesimo della [[feature:a8635e04-e56e-462a-9953-09cc701d23bc:Magia del Patto]] per infliggere 1d8 danni da forza extra al bersaglio, più 1d8 aggiuntivo per ogni livello dello slot. Inoltre, se l'avversario è di taglia Enorme o inferiore, diventa prono."
         },
         "minimum_warlock_level": 5,
         "prerequisite": {
@@ -52815,8 +52815,8 @@
           "it": 88
         },
         "description": {
-          "en": "You gain the Extra Attack feature for your pact weapon only. With that feature, you can attack twice with the weapon instead of once when you take the Attack action on your turn.",
-          "it": "Il warlock ottiene il privilegio Attacco Extra solo per l'arma del patto. Questo consente all'incantatore di attaccare due volte invece di una quando usa quell'arma ed effettua l'azione di Attacco nel proprio turno."
+          "en": "You gain the [[feature:2c07d055-a04c-4770-9353-fce5dbb57781:Extra Attack]] feature for your pact weapon only. With that feature, you can attack twice with the weapon instead of once when you take the Attack action on your turn.",
+          "it": "Il warlock ottiene il privilegio [[feature:2c07d055-a04c-4770-9353-fce5dbb57781:Attacco Extra]] solo per l'arma del patto. Questo consente all'incantatore di attaccare due volte invece di una quando usa quell'arma ed effettua l'azione di Attacco nel proprio turno."
         },
         "minimum_warlock_level": 5,
         "prerequisite": {
@@ -53661,8 +53661,8 @@
           "it": 81
         },
         "description": {
-          "en": "While your Innate Sorcery feature is active, you can use one Metamagic option on each of your turns without spending Sorcery Points on it.",
-          "it": "Quando il privilegio Stregoneria Innata è attivo, lo stregone può usare un'opzione di Metamagia a ogni turno senza dover consumare punti stregoneria."
+          "en": "While your [[feature:5a162f0f-27f4-46eb-90f3-fcf944b6707c:Innate Sorcery]] feature is active, you can use one [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagic]] option on each of your turns without spending Sorcery Points on it.",
+          "it": "Quando il privilegio [[feature:5a162f0f-27f4-46eb-90f3-fcf944b6707c:Stregoneria Innata]] è attivo, lo stregone può usare un'opzione di [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagia]] a ogni turno senza dover consumare punti stregoneria."
         },
         "display_name": {
           "en": "Arcane Apotheosis",
@@ -53711,8 +53711,8 @@
           "it": 49
         },
         "description": {
-          "en": "The vitality of nature constantly blooms within you, granting you the following benefits.\n**Evergreen Wild Shape.** Whenever you roll Initiative and have no uses of Wild Shape left, you regain one expended use of it.\n**Nature Magician.** You can convert uses of Wild Shape into a spell slot (no action required). Choose a number of your unexpended uses of Wild Shape and convert them into a single spell slot, with each use contributing 2 spell levels. For example, if you convert two uses of Wild Shape, you produce a level 4 spell slot. Once you use this benefit, you can't do so again until you finish a Long Rest.\n**Longevity.** The primal magic that you wield causes you to age more slowly. For every ten years that pass, your body ages only one year.",
-          "it": "La vitalità della natura fiorisce costantemente all'interno del druido, concedendogli i seguenti benefici.\n**Forma selvatica sempreverde.** Ogni volta che il druido tira per l'iniziativa e non ha utilizzi disponibili di Forma Selvatica, ne recupera uno.\n**Mago della natura.** Il druido può convertire gli utilizzi di Forma Selvatica in slot incantesimo (nessuna azione richiesta). Sceglie un numero di utilizzi di Forma Selvatica non spesi e li converte in un singolo slot incantesimo; ogni utilizzo contribuisce a 2 livelli di incantesimo. Per esempio, se converte due utilizzi di Forma Selvatica, ottiene uno slot incantesimo di 4º livello. Dopo aver usato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo.\n**Corpo senza tempo.** La magia primordiale che fluisce nel druido rallenta il suo invecchiamento. Per ogni 10 anni trascorsi, il corpo del druido invecchia soltanto di 1 anno."
+          "en": "The vitality of nature constantly blooms within you, granting you the following benefits.\n**Evergreen [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]].** Whenever you roll Initiative and have no uses of [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]] left, you regain one expended use of it.\n**Nature Magician.** You can convert uses of [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]] into a spell slot (no action required). Choose a number of your unexpended uses of [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]] and convert them into a single spell slot, with each use contributing 2 spell levels. For example, if you convert two uses of [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]], you produce a level 4 spell slot. Once you use this benefit, you can't do so again until you finish a Long Rest.\n**Longevity.** The primal magic that you wield causes you to age more slowly. For every ten years that pass, your body ages only one year.",
+          "it": "La vitalità della natura fiorisce costantemente all'interno del druido, concedendogli i seguenti benefici.\n**[[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]] sempreverde.** Ogni volta che il druido tira per l'iniziativa e non ha utilizzi disponibili di [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]], ne recupera uno.\n**Mago della natura.** Il druido può convertire gli utilizzi di [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]] in slot incantesimo (nessuna azione richiesta). Sceglie un numero di utilizzi di [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]] non spesi e li converte in un singolo slot incantesimo; ogni utilizzo contribuisce a 2 livelli di incantesimo. Per esempio, se converte due utilizzi di [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]], ottiene uno slot incantesimo di 4º livello. Dopo aver usato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo.\n**Corpo senza tempo.** La magia primordiale che fluisce nel druido rallenta il suo invecchiamento. Per ogni 10 anni trascorsi, il corpo del druido invecchia soltanto di 1 anno."
         },
         "display_name": {
           "en": "Archdruid",
@@ -53811,8 +53811,8 @@
           "it": 72
         },
         "description": {
-          "en": "Your Aura of Protection is now a {9-meter|30-foot} Emanation.",
-          "it": "L'Aura di Protezione del paladino è ora un'emanazione di {9 metri|30 feet}."
+          "en": "Your [[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura of Protection]] is now a {9-meter|30-foot} Emanation.",
+          "it": "L'[[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura di Protezione]] del paladino è ora un'emanazione di {9 metri|30 feet}."
         },
         "display_name": {
           "en": "Aura Expansion",
@@ -53836,8 +53836,8 @@
           "it": 72
         },
         "description": {
-          "en": "You and your allies have Immunity to the Frightened condition while in your Aura of Protection. If a Frightened ally enters the aura, that condition has no effect on that ally while there.",
-          "it": "Il paladino e i suoi alleati sono immuni alla paura finché si trovano all'interno dell'Aura di Protezione. Se un alleato spaventato entra nel suo raggio d'influenza, non subirà più l'effetto della paura finché sarà al suo interno."
+          "en": "You and your allies have Immunity to the Frightened condition while in your [[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura of Protection]]. If a Frightened ally enters the aura, that condition has no effect on that ally while there.",
+          "it": "Il paladino e i suoi alleati sono immuni alla paura finché si trovano all'interno dell'[[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura di Protezione]]. Se un alleato spaventato entra nel suo raggio d'influenza, non subirà più l'effetto della paura finché sarà al suo interno."
         },
         "display_name": {
           "en": "Aura of Courage",
@@ -53861,8 +53861,8 @@
           "it": 74
         },
         "description": {
-          "en": "You and your allies have Immunity to the Charmed condition while in your Aura of Protection. If a Charmed ally enters the aura, that condition has no effect on that ally while there.",
-          "it": "Il paladino e i suoi alleati non possono essere affascinati finché si trovano all'interno dell'Aura di Protezione. Se un alleato affascinato entra nel suo raggio d'influenza, non subirà più quell'effetto finché sarà al suo interno."
+          "en": "You and your allies have Immunity to the Charmed condition while in your [[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura of Protection]]. If a Charmed ally enters the aura, that condition has no effect on that ally while there.",
+          "it": "Il paladino e i suoi alleati non possono essere affascinati finché si trovano all'interno dell'[[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura di Protezione]]. Se un alleato affascinato entra nel suo raggio d'influenza, non subirà più quell'effetto finché sarà al suo interno."
         },
         "display_name": {
           "en": "Aura of Devotion",
@@ -53986,8 +53986,8 @@
           "it": 49
         },
         "description": {
-          "en": "While using Wild Shape, you can cast spells in Beast form, except for any spell that has a Material component with a cost specified or that consumes its Material component.",
-          "it": "Mentre utilizza {Forma Selvatica}, il druido può lanciare incantesimi in forma bestiale, fatta eccezione per gli incantesimi che abbiano bisogno di componenti materiali con un costo specificato o che consumino la propria componente materiale."
+          "en": "While using [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]], you can cast spells in Beast form, except for any spell that has a Material component with a cost specified or that consumes its Material component.",
+          "it": "Mentre utilizza {[[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]]}, il druido può lanciare incantesimi in forma bestiale, fatta eccezione per gli incantesimi che abbiano bisogno di componenti materiali con un costo specificato o che consumino la propria componente materiale."
         },
         "display_name": {
           "en": "Beast Spells",
@@ -54186,8 +54186,8 @@
           "it": null
         },
         "description": {
-          "en": "When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a {4.5-meter|15-foot Cone} or a {9-meter|30-foot} Line that is {1.5 meters|5 feet} wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus). On a failed save, a creature takes 1d10 damage of the type determined by your Draconic Ancestry trait. On a successful save, a creature takes half as much damage. This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10).\nYou can use this Breath Weapon a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",
-          "it": "Quando il personaggio esegue l'azione di Attacco durante il turno, può sostituire uno dei suoi attacchi con un'esalazione di energia magica in un cono di {4,5 metri|15 piedi} o in una linea lunga {9 metri|30 piedi} e larga {1,5|5} (puoi scegliere la forma a ogni utilizzo). Ogni creatura nell'area deve effettuare un tiro salvezza su Destrezza (CD 8 più il modificatore di Costituzione e il bonus di competenza del personaggio). In caso di fallimento, vengono inflitti 1d10 danni del tipo determinato dal tratto Discendenza draconica. In caso di successo, subisce soltanto la metà di quei danni. I danni aumentano di 1d10 quando il personaggio raggiunge il 5º livello (2d10), l'11º livello (3d10) e il 17º livello (4d10).\nIl personaggio può utilizzare il Soffio un numero di volte pari al valore del suo bonus di competenza e recuperare tutti gli utilizzi spesi quando completa un riposo lungo."
+          "en": "When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a {4.5-meter|15-foot Cone} or a {9-meter|30-foot} Line that is {1.5 meters|5 feet} wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus). On a failed save, a creature takes 1d10 damage of the type determined by your [[feature:56c41957-9923-4407-bea2-66623b85715e:Draconic Ancestry]] trait. On a successful save, a creature takes half as much damage. This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10).\nYou can use this Breath Weapon a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",
+          "it": "Quando il personaggio esegue l'azione di Attacco durante il turno, può sostituire uno dei suoi attacchi con un'esalazione di energia magica in un cono di {4,5 metri|15 piedi} o in una linea lunga {9 metri|30 piedi} e larga {1,5|5} (puoi scegliere la forma a ogni utilizzo). Ogni creatura nell'area deve effettuare un tiro salvezza su Destrezza (CD 8 più il modificatore di Costituzione e il bonus di competenza del personaggio). In caso di fallimento, vengono inflitti 1d10 danni del tipo determinato dal tratto [[feature:56c41957-9923-4407-bea2-66623b85715e:Discendenza Draconica]]. In caso di successo, subisce soltanto la metà di quei danni. I danni aumentano di 1d10 quando il personaggio raggiunge il 5º livello (2d10), l'11º livello (3d10) e il 17º livello (4d10).\nIl personaggio può utilizzare il Soffio un numero di volte pari al valore del suo bonus di competenza e recuperare tutti gli utilizzi spesi quando completa un riposo lungo."
         },
         "display_name": {
           "en": "Breath Weapon",
@@ -54211,8 +54211,8 @@
           "it": 34
         },
         "description": {
-          "en": "If you use Reckless Attack, you can forgo any Advantage on one Strength-based attack roll of your choice on your turn. The chosen attack roll mustn't have Disadvantage. If the chosen attack roll hits, the target takes an extra 1d10 damage of the same type dealt by the weapon or Unarmed Strike, and you can cause one Brutal Strike effect of your choice. You have the following effect options.\n**Forceful Blow.** The target is pushed {4,5 meters|15 feet} straight away from you. You can then move up to half your Speed straight toward the target without provoking Opportunity Attacks.\n**Hamstring Blow.** The target's Speed is reduced by {4,5 meters|15 feet} until the start of your next turn. A target can be affected by only one Hamstring Blow at a time—the most recent one.",
-          "it": "Usando Attacco Irruento, nel proprio turno il personaggio può rinunciare a qualsiasi vantaggio su un tiro per colpire a scelta basato sulla Forza. Il tiro per colpire scelto non deve disporre di svantaggio. Se il tiro per colpire va a segno, il bersaglio subisce 1d10 di danni extra dello stesso tipo di danni inflitti dall'arma o dal colpo senz'armi, e il personaggio può causare uno degli effetti di Colpo brutale tra quelli elencati di seguito.\n**Colpo violento.** Il bersaglio viene spinto a {4,5 metri|15 piedi} di distanza dal personaggio. In seguito, il personaggio può muoversi fino alla metà della sua velocità in linea retta verso il bersaglio senza provocare attacchi di opportunità.\n**Colpo spaccaossa.** La velocità del bersaglio viene ridotta di {4,5 metri|15 piedi} fino all'inizio del turno successivo del barbaro. Un bersaglio può essere influenzato da un solo Colpo spaccaossa alla volta, quello più recente."
+          "en": "If you use [[feature:c92c2145-8e2c-4306-b03f-a2c519b4da74:Reckless Attack]], you can forgo any Advantage on one Strength-based attack roll of your choice on your turn. The chosen attack roll mustn't have Disadvantage. If the chosen attack roll hits, the target takes an extra 1d10 damage of the same type dealt by the weapon or Unarmed Strike, and you can cause one Brutal Strike effect of your choice. You have the following effect options.\n**Forceful Blow.** The target is pushed {4,5 meters|15 feet} straight away from you. You can then move up to half your Speed straight toward the target without provoking Opportunity Attacks.\n**Hamstring Blow.** The target's Speed is reduced by {4,5 meters|15 feet} until the start of your next turn. A target can be affected by only one Hamstring Blow at a time—the most recent one.",
+          "it": "Usando [[feature:c92c2145-8e2c-4306-b03f-a2c519b4da74:Attacco Irruento]], nel proprio turno il personaggio può rinunciare a qualsiasi vantaggio su un tiro per colpire a scelta basato sulla Forza. Il tiro per colpire scelto non deve disporre di svantaggio. Se il tiro per colpire va a segno, il bersaglio subisce 1d10 di danni extra dello stesso tipo di danni inflitti dall'arma o dal colpo senz'armi, e il personaggio può causare uno degli effetti di Colpo brutale tra quelli elencati di seguito.\n**Colpo violento.** Il bersaglio viene spinto a {4,5 metri|15 piedi} di distanza dal personaggio. In seguito, il personaggio può muoversi fino alla metà della sua velocità in linea retta verso il bersaglio senza provocare attacchi di opportunità.\n**Colpo spaccaossa.** La velocità del bersaglio viene ridotta di {4,5 metri|15 piedi} fino all'inizio del turno successivo del barbaro. Un bersaglio può essere influenzato da un solo Colpo spaccaossa alla volta, quello più recente."
         },
         "display_name": {
           "en": "Brutal Strike",
@@ -54411,8 +54411,8 @@
           "it": 57
         },
         "description": {
-          "en": "You've developed cunning ways to use your Sneak Attack. When you deal Sneak Attack damage, you can add one of the following Cunning Strike effects. Each effect has a die cost, which is the number of Sneak Attack damage dice you must forgo to add the effect. You remove the die before rolling, and the effect occurs immediately after the attack's damage is dealt. For example, if you add the Poison effect, remove 1d6 from the Sneak Attack's damage before rolling.\nIf a Cunning Strike effect requires a saving throw, the DC equals 8 plus your Dexterity modifier and Proficiency Bonus.\n**Poison (Cost: 1d6).** You add a toxin to your strike, forcing the target to make a Constitution saving throw. On a failed save, the target has the Poisoned condition for 1 minute. At the end of each of its turns, the Poisoned target repeats the save, ending the effect on itself on a success.\nTo use this effect, you must have a [[tool:41a04176-fac3-4a8f-9a86-d18f66a052fc:Poisoner's Kit]] on your person.\n**Trip (Cost: 1d6).** If the target is Large or smaller, it must succeed on a Dexterity saving throw or have the Prone condition.\n**Withdraw (Cost: 1d6).** Immediately after the attack, you move up to half your Speed without provoking Opportunity Attacks.",
-          "it": "Il ladro ha ideato modi più astuti di utilizzare il proprio Attacco Furtivo. Quando infligge danni da Attacco Furtivo, è possibile aggiungere uno dei seguenti effetti del Colpo Astuto. Ogni effetto prevede un costo in dadi di danno dell'Attacco Furtivo. Il dado da spendere viene rimosso prima del tiro e l'effetto entra in vigore subito dopo aver inflitto i danni dell'attacco. Per esempio, se si aggiunge il veleno, è necessario rimuovere 1d6 dai danni dell'Attacco Furtivo prima di tirare.\nSe uno degli effetti di Colpo Astuto richiede un tiro salvezza, la CD equivale a 8 più il modificatore di Destrezza e il bonus di competenza.\n**Inciampo (costo: 1d6).** Se il bersaglio è una creatura di taglia Grande o di dimensioni inferiori, deve superare un tiro salvezza su Destrezza, altrimenti cade a terra prona.\n**Ritirata (costo: 1d6).** Subito dopo l'attacco, il ladro può muoversi fino a metà della sua velocità senza provocare attacchi di opportunità.\n**Veleno (costo: 1d6).** Il ladro aggiunge una tossina al proprio attacco, costringendo il bersaglio a effettuare un tiro salvezza su Costituzione. Se lo fallisce, è avvelenato per 1 minuto. Alla fine di ogni suo turno, il bersaglio avvelenato ripete il tiro salvezza e, se lo supera, l'effetto svanisce.\nPer utilizzare questo effetto, è necessario avere con sé le [[tool:41a04176-fac3-4a8f-9a86-d18f66a052fc:Sostanze da Avvelenatore]]."
+          "en": "You've developed cunning ways to use your [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Sneak Attack]]. When you deal [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Sneak Attack]] damage, you can add one of the following Cunning Strike effects. Each effect has a die cost, which is the number of [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Sneak Attack]] damage dice you must forgo to add the effect. You remove the die before rolling, and the effect occurs immediately after the attack's damage is dealt. For example, if you add the Poison effect, remove 1d6 from the [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Sneak Attack]]'s damage before rolling.\nIf a Cunning Strike effect requires a saving throw, the DC equals 8 plus your Dexterity modifier and Proficiency Bonus.\n**Poison (Cost: 1d6).** You add a toxin to your strike, forcing the target to make a Constitution saving throw. On a failed save, the target has the Poisoned condition for 1 minute. At the end of each of its turns, the Poisoned target repeats the save, ending the effect on itself on a success.\nTo use this effect, you must have a [[tool:41a04176-fac3-4a8f-9a86-d18f66a052fc:Poisoner's Kit]] on your person.\n**Trip (Cost: 1d6).** If the target is Large or smaller, it must succeed on a Dexterity saving throw or have the Prone condition.\n**Withdraw (Cost: 1d6).** Immediately after the attack, you move up to half your Speed without provoking Opportunity Attacks.",
+          "it": "Il ladro ha ideato modi più astuti di utilizzare il proprio [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Attacco Furtivo]]. Quando infligge danni da [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Attacco Furtivo]], è possibile aggiungere uno dei seguenti effetti del Colpo Astuto. Ogni effetto prevede un costo in dadi di danno dell'[[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Attacco Furtivo]]. Il dado da spendere viene rimosso prima del tiro e l'effetto entra in vigore subito dopo aver inflitto i danni dell'attacco. Per esempio, se si aggiunge il veleno, è necessario rimuovere 1d6 dai danni dell'[[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Attacco Furtivo]] prima di tirare.\nSe uno degli effetti di Colpo Astuto richiede un tiro salvezza, la CD equivale a 8 più il modificatore di Destrezza e il bonus di competenza.\n**Inciampo (costo: 1d6).** Se il bersaglio è una creatura di taglia Grande o di dimensioni inferiori, deve superare un tiro salvezza su Destrezza, altrimenti cade a terra prona.\n**Ritirata (costo: 1d6).** Subito dopo l'attacco, il ladro può muoversi fino a metà della sua velocità senza provocare attacchi di opportunità.\n**Veleno (costo: 1d6).** Il ladro aggiunge una tossina al proprio attacco, costringendo il bersaglio a effettuare un tiro salvezza su Costituzione. Se lo fallisce, è avvelenato per 1 minuto. Alla fine di ogni suo turno, il bersaglio avvelenato ripete il tiro salvezza e, se lo supera, l'effetto svanisce.\nPer utilizzare questo effetto, è necessario avere con sé le [[tool:41a04176-fac3-4a8f-9a86-d18f66a052fc:Sostanze da Avvelenatore]]."
         },
         "display_name": {
           "en": "Cunning Strike",
@@ -54436,8 +54436,8 @@
           "it": 40
         },
         "description": {
-          "en": "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within {18 meters|60 feet} of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure.",
-          "it": "Il bardo impara a fare buon uso del suo ingegno per distrarre, confondere e fiaccare la determinazione e la competenza altrui in maniera soprannaturale. Quando una creatura che il bardo è in grado di vedere situata entro {18 metri|60 piedi} da sé effettua un tiro per i danni, o supera una prova di caratteristica o un tiro per colpire, il bardo può usare una reazione per spendere un utilizzo di Ispirazione bardica; il bardo tira il dado di Ispirazione bardica e sottrae il numero ottenuto dal tiro della creatura, riducendo il danno o trasformando potenzialmente il successo in un fallimento."
+          "en": "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within {18 meters|60 feet} of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your [[feature:ac065bdb-645f-4b45-8c67-737748292536:Bardic Inspiration]]; roll your [[feature:ac065bdb-645f-4b45-8c67-737748292536:Bardic Inspiration]] die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure.",
+          "it": "Il bardo impara a fare buon uso del suo ingegno per distrarre, confondere e fiaccare la determinazione e la competenza altrui in maniera soprannaturale. Quando una creatura che il bardo è in grado di vedere situata entro {18 metri|60 piedi} da sé effettua un tiro per i danni, o supera una prova di caratteristica o un tiro per colpire, il bardo può usare una reazione per spendere un utilizzo di [[feature:ac065bdb-645f-4b45-8c67-737748292536:Ispirazione Bardica]]; il bardo tira il dado di [[feature:ac065bdb-645f-4b45-8c67-737748292536:Ispirazione Bardica]] e sottrae il numero ottenuto dal tiro della creatura, riducendo il danno o trasformando potenzialmente il successo in un fallimento."
         },
         "display_name": {
           "en": "Cutting Words",
@@ -54511,8 +54511,8 @@
           "it": null
         },
         "description": {
-          "en": "You have Resistance to the damage type determined by your Draconic Ancestry trait.",
-          "it": "Il personaggio dispone di resistenza ai danni del tipo determinato dal tratto Discendenza draconica."
+          "en": "You have Resistance to the damage type determined by your [[feature:56c41957-9923-4407-bea2-66623b85715e:Draconic Ancestry]] trait.",
+          "it": "Il personaggio dispone di resistenza ai danni del tipo determinato dal tratto [[feature:56c41957-9923-4407-bea2-66623b85715e:Discendenza Draconica]]."
         },
         "display_name": {
           "en": "Damage Resistance",
@@ -54686,8 +54686,8 @@
           "it": 67
         },
         "description": {
-          "en": "When an attack roll hits you and its damage includes Bludgeoning, Piercing, or Slashing damage, you can take a Reaction to reduce the attack's total damage against you. The reduction equals 1d10 plus your Dexterity modifier and Monk level.\nIf you reduce the damage to 0, you can expend 1 Focus Point to redirect some of the attack's force. If you do so, choose a creature you can see within {1.5 meters|5 feet} of yourself if the attack was a melee attack or a creature you can see within {18 meters|60 feet} of yourself that isn't behind Total Cover if the attack was a ranged attack. That creature must succeed on a Dexterity saving throw or take damage equal to two rolls of your Martial Arts die plus your Dexterity modifier. The damage is the same type dealt by the attack.",
-          "it": "Quando viene colpito da un tiro per colpire che include danni contundenti, perforanti o taglienti, il monaco può usare una reazione per ridurre i danni totali dell'attacco che ha subito. La riduzione è pari a 1d10 più il suo modificatore di Destrezza e il suo livello da monaco.\nSe i danni vengono ridotti a 0, il monaco può spendere 1 punto concentrazione per deviare parte della forza dell'attacco. Se lo fa, deve scegliere una creatura nel suo campo visivo entro {1,5 metri|5 piedi} da sé se l'attacco era in mischia; se l'attacco era a distanza, deve scegliere una creatura nel suo campo visivo entro {18 metri|60 piedi} da sé che non sia dietro copertura totale. Quella creatura deve superare un tiro salvezza su Destrezza o subire danni pari a due tiri del dado di Arti Marziali più il modificatore di Destrezza del monaco. I danni sono dello stesso tipo di danni inflitti dall'attacco."
+          "en": "When an attack roll hits you and its damage includes Bludgeoning, Piercing, or Slashing damage, you can take a Reaction to reduce the attack's total damage against you. The reduction equals 1d10 plus your Dexterity modifier and Monk level.\nIf you reduce the damage to 0, you can expend 1 Focus Point to redirect some of the attack's force. If you do so, choose a creature you can see within {1.5 meters|5 feet} of yourself if the attack was a melee attack or a creature you can see within {18 meters|60 feet} of yourself that isn't behind Total Cover if the attack was a ranged attack. That creature must succeed on a Dexterity saving throw or take damage equal to two rolls of your [[feature:579ffda3-fc42-426e-b870-3bc1204aa3d4:Martial Arts]] die plus your Dexterity modifier. The damage is the same type dealt by the attack.",
+          "it": "Quando viene colpito da un tiro per colpire che include danni contundenti, perforanti o taglienti, il monaco può usare una reazione per ridurre i danni totali dell'attacco che ha subito. La riduzione è pari a 1d10 più il suo modificatore di Destrezza e il suo livello da monaco.\nSe i danni vengono ridotti a 0, il monaco può spendere 1 punto concentrazione per deviare parte della forza dell'attacco. Se lo fa, deve scegliere una creatura nel suo campo visivo entro {1,5 metri|5 piedi} da sé se l'attacco era in mischia; se l'attacco era a distanza, deve scegliere una creatura nel suo campo visivo entro {18 metri|60 piedi} da sé che non sia dietro copertura totale. Quella creatura deve superare un tiro salvezza su Destrezza o subire danni pari a due tiri del dado di [[feature:579ffda3-fc42-426e-b870-3bc1204aa3d4:Arti Marziali]] più il modificatore di Destrezza del monaco. I danni sono dello stesso tipo di danni inflitti dall'attacco."
         },
         "display_name": {
           "en": "Deflect Attacks",
@@ -54711,8 +54711,8 @@
           "it": 68
         },
         "description": {
-          "en": "You can now use your Deflect Attacks feature against attacks that deal any damage type, not just Bludgeoning, Piercing, or Slashing.",
-          "it": "Ora il monaco può utilizzare il suo privilegio Devia attacchi contro gli attacchi che infliggono qualsiasi tipo di danno, non solo quelli contundenti, perforanti o taglienti."
+          "en": "You can now use your [[feature:1ce64bd6-7da4-4217-a2bb-fc521f9d9b71:Deflect Attacks]] feature against attacks that deal any damage type, not just Bludgeoning, Piercing, or Slashing.",
+          "it": "Ora il monaco può utilizzare il suo privilegio [[feature:1ce64bd6-7da4-4217-a2bb-fc521f9d9b71:Devia Attacchi]] contro gli attacchi che infliggono qualsiasi tipo di danno, non solo quelli contundenti, perforanti o taglienti."
         },
         "display_name": {
           "en": "Deflect Energy",
@@ -54761,8 +54761,8 @@
           "it": 57
         },
         "description": {
-          "en": "You've practiced new ways to use your Sneak Attack deviously. The following effects are now among your Cunning Strike options.\n**Daze (Cost: 2d6).** The target must succeed on a Constitution saving throw, or on its next turn, it can do only one of the following: move or take an action or a Bonus Action.\n**Knock Out (Cost: 6d6).** The target must succeed on a Constitution saving throw, or it has the Unconscious condition for 1 minute or until it takes any damage. The Unconscious target repeats the save at the end of each of its turns, ending the effect on itself on a success.\n**Obscure (Cost: 3d6).** The target must succeed on a Dexterity saving throw, or it has the Blinded condition until the end of its next turn.",
-          "it": "Il ladro ha scoperto nuovi modi più infidi di utilizzare il proprio Attacco Furtivo. I seguenti effetti si aggiungono alle opzioni di Colpo Astuto.\n**Atterramento (costo: 6d6).** Il bersaglio deve superare un tiro salvezza su Costituzione, altrimenti diventa privo di sensi per 1 minuto o finché non subisce dei danni. Dopodiché, ripete il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.\n**Confusione (costo: 2d6).** Il bersaglio deve superare un tiro salvezza su Costituzione, altrimenti nel suo turno successivo potrà fare solo una delle seguenti azioni: muoversi o effettuare un'azione o un'azione bonus.\n**Rabbuio (costo: 3d6).** Il bersaglio deve superare un tiro salvezza su Destrezza, altrimenti è accecato fino al termine del proprio turno successivo."
+          "en": "You've practiced new ways to use your [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Sneak Attack]] deviously. The following effects are now among your [[feature:1bb8d277-7946-46b7-8b1f-912974ed7a1f:Cunning Strike]] options.\n**Daze (Cost: 2d6).** The target must succeed on a Constitution saving throw, or on its next turn, it can do only one of the following: move or take an action or a Bonus Action.\n**Knock Out (Cost: 6d6).** The target must succeed on a Constitution saving throw, or it has the Unconscious condition for 1 minute or until it takes any damage. The Unconscious target repeats the save at the end of each of its turns, ending the effect on itself on a success.\n**Obscure (Cost: 3d6).** The target must succeed on a Dexterity saving throw, or it has the Blinded condition until the end of its next turn.",
+          "it": "Il ladro ha scoperto nuovi modi più infidi di utilizzare il proprio [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Attacco Furtivo]]. I seguenti effetti si aggiungono alle opzioni di [[feature:1bb8d277-7946-46b7-8b1f-912974ed7a1f:Colpo Astuto]].\n**Atterramento (costo: 6d6).** Il bersaglio deve superare un tiro salvezza su Costituzione, altrimenti diventa privo di sensi per 1 minuto o finché non subisce dei danni. Dopodiché, ripete il tiro salvezza alla fine di ogni suo turno e, se lo supera, l'effetto svanisce.\n**Confusione (costo: 2d6).** Il bersaglio deve superare un tiro salvezza su Costituzione, altrimenti nel suo turno successivo potrà fare solo una delle seguenti azioni: muoversi o effettuare un'azione o un'azione bonus.\n**Rabbuio (costo: 3d6).** Il bersaglio deve superare un tiro salvezza su Destrezza, altrimenti è accecato fino al termine del proprio turno successivo."
         },
         "display_name": {
           "en": "Devious Strikes",
@@ -54886,8 +54886,8 @@
           "it": null
         },
         "description": {
-          "en": "Your lineage stems from a dragon progenitor. Choose the kind of dragon from the list below. Your choice affects your Breath Weapon and Damage Resistance traits as well as your appearance.\n• **Black.** Acid.\n• **Blue.** Lightning.\n• **Brass.** Fire.\n• **Bronze.** Lightning.\n• **Copper.**\n• **Gold.** Fire.\n• **Green.** Poison.\n• **Red.** Fire.\n• **Silver.** Cold.\n• **White.** Cold.",
-          "it": "Il personaggio discende da un progenitore draconico. Scegli la tipologia dalla lista sottostante. La tua decisione definisce il tipo soffio e il tratto di resistenza ai danni, ma anche l'aspetto del personaggio.\n• **Argento.** Freddo.\n• **Bianco.** Freddo.\n• **Blu.** Fulmine.\n• **Bronzo.** Fulmine.\n• **Nero.** Acido.\n• **Oro.** Fuoco.\n• **Ottone.** Fuoco.\n• **Rame.** Acido.\n• **Rosso.** Fuoco.\n• **Verde.** Veleno."
+          "en": "Your lineage stems from a dragon progenitor. Choose the kind of dragon from the list below. Your choice affects your [[feature:5962effc-d6f3-4261-ad95-7d7e3fc945e4:Breath Weapon]] and [[feature:e740a76b-5989-4c14-a2e6-b6c7b265ffa1:Damage Resistance]] traits as well as your appearance.\n• **Black.** Acid.\n• **Blue.** Lightning.\n• **Brass.** Fire.\n• **Bronze.** Lightning.\n• **Copper.**\n• **Gold.** Fire.\n• **Green.** Poison.\n• **Red.** Fire.\n• **Silver.** Cold.\n• **White.** Cold.",
+          "it": "Il personaggio discende da un progenitore draconico. Scegli la tipologia dalla lista sottostante. La tua decisione definisce il tipo [[feature:5962effc-d6f3-4261-ad95-7d7e3fc945e4:Soffio]] e il tratto di [[feature:e740a76b-5989-4c14-a2e6-b6c7b265ffa1:Resistenza ai Danni]], ma anche l'aspetto del personaggio.\n• **Argento.** Freddo.\n• **Bianco.** Freddo.\n• **Blu.** Fulmine.\n• **Bronzo.** Fulmine.\n• **Nero.** Acido.\n• **Oro.** Fuoco.\n• **Ottone.** Fuoco.\n• **Rame.** Acido.\n• **Rosso.** Fuoco.\n• **Verde.** Veleno."
         },
         "display_name": {
           "en": "Draconic Ancestry",
@@ -54911,8 +54911,8 @@
           "it": null
         },
         "description": {
-          "en": "When you reach character level 5, you can channel draconic magic to give yourself temporary flight. As a Bonus Action, you sprout spectral wings on your back that last for 10 minutes or until you retract the wings (no action required) or have the Incapacitated condition. During that time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest.",
-          "it": "Quando il personaggio raggiunge il 5º livello, può incanalare dell'energia draconica per volare temporaneamente. Come azione bonus, può far spuntare delle ali spettrali dalla sua schiena che durano per 10 minuti, fino al momento in cui decide di farle scomparire (nessuna azione richiesta) o finché non diventa incapacitato. Durante quel periodo, è dotato di una velocità di volo pari alla sua velocità. L'aspetto delle ali varia in base al tipo di energia del Soffio. Dopo aver usato questo tratto, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo."
+          "en": "When you reach character level 5, you can channel draconic magic to give yourself temporary flight. As a Bonus Action, you sprout spectral wings on your back that last for 10 minutes or until you retract the wings (no action required) or have the Incapacitated condition. During that time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your [[feature:5962effc-d6f3-4261-ad95-7d7e3fc945e4:Breath Weapon]]. Once you use this trait, you can't use it again until you finish a Long Rest.",
+          "it": "Quando il personaggio raggiunge il 5º livello, può incanalare dell'energia draconica per volare temporaneamente. Come azione bonus, può far spuntare delle ali spettrali dalla sua schiena che durano per 10 minuti, fino al momento in cui decide di farle scomparire (nessuna azione richiesta) o finché non diventa incapacitato. Durante quel periodo, è dotato di una velocità di volo pari alla sua velocità. L'aspetto delle ali varia in base al tipo di energia del [[feature:5962effc-d6f3-4261-ad95-7d7e3fc945e4:Soffio]]. Dopo aver usato questo tratto, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo."
         },
         "display_name": {
           "en": "Draconic Flight",
@@ -55161,8 +55161,8 @@
           "it": 88
         },
         "description": {
-          "en": "When you use your Magical Cunning feature, you regain all your expended Pact Magic spell slots.",
-          "it": "Quando il warlock usa il suo privilegio Scaltrezza Magica, recupera tutti gli slot incantesimo spesi di Magia del Patto."
+          "en": "When you use your [[feature:6efc140b-58bb-4ab9-bb64-890e54a5c43b:Magical Cunning]] feature, you regain all your expended [[feature:a8635e04-e56e-462a-9953-09cc701d23bc:Pact Magic]] spell slots.",
+          "it": "Quando il warlock usa il suo privilegio [[feature:6efc140b-58bb-4ab9-bb64-890e54a5c43b:Scaltrezza Magica]], recupera tutti gli slot incantesimo spesi di [[feature:a8635e04-e56e-462a-9953-09cc701d23bc:Magia del Patto]]."
         },
         "display_name": {
           "en": "Eldritch Master",
@@ -55211,8 +55211,8 @@
           "it": 49
         },
         "description": {
-          "en": "The might of the elements flows through you. You gain one of the following options of your choice.\n**Potent Spellcasting.** Add your Wisdom modifier to the damage you deal with any Druid cantrip.\n**Primal Strike.** Once on each of your turns when you hit a creature with an attack roll using a weapon or a Beast form's attack in Wild Shape, you can cause the target to take an extra 1d8 Cold, Fire, Lightning, or Thunder damage (choose when you hit).",
-          "it": "La forza degli elementi scorre attraverso il druido, facendogli ottenere una delle seguenti opzioni a scelta.\n**Incantesimi potenti.** Il personaggio aggiunge il suo modificatore di Saggezza al danno che infligge con qualsiasi trucchetto da druido.\n**Colpo primordiale.** Una volta per ogni suo turno, quando il druido colpisce una creatura con un tiro per colpire usando un'arma o un attacco della forma bestiale in Forma Selvatica, può far sì che il bersaglio subisca 1d8 danni da freddo, fuoco, fulmine o tuono extra (a scelta)."
+          "en": "The might of the elements flows through you. You gain one of the following options of your choice.\n**Potent Spellcasting.** Add your Wisdom modifier to the damage you deal with any Druid cantrip.\n**Primal Strike.** Once on each of your turns when you hit a creature with an attack roll using a weapon or a Beast form's attack in [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]], you can cause the target to take an extra 1d8 Cold, Fire, Lightning, or Thunder damage (choose when you hit).",
+          "it": "La forza degli elementi scorre attraverso il druido, facendogli ottenere una delle seguenti opzioni a scelta.\n**Incantesimi potenti.** Il personaggio aggiunge il suo modificatore di Saggezza al danno che infligge con qualsiasi trucchetto da druido.\n**Colpo primordiale.** Una volta per ogni suo turno, quando il druido colpisce una creatura con un tiro per colpire usando un'arma o un attacco della forma bestiale in [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]], può far sì che il bersaglio subisca 1d8 danni da freddo, fuoco, fulmine o tuono extra (a scelta)."
         },
         "display_name": {
           "en": "Elemental Fury",
@@ -55861,8 +55861,8 @@
           "it": 37
         },
         "description": {
-          "en": "You now regain all your expended uses of Bardic Inspiration when you finish a Short or Long Rest.\nIn addition, you can expend a spell slot (no action required) to regain one expended use of Bardic Inspiration.",
-          "it": "Il bardo recupera tutti i suoi utilizzi spesi di Ispirazione Bardica quando completa un riposo breve o lungo.\nInoltre, può spendere uno slot incantesimo (nessuna azione richiesta) per recuperare un utilizzo speso di Ispirazione Bardica."
+          "en": "You now regain all your expended uses of [[feature:ac065bdb-645f-4b45-8c67-737748292536:Bardic Inspiration]] when you finish a Short or Long Rest.\nIn addition, you can expend a spell slot (no action required) to regain one expended use of [[feature:ac065bdb-645f-4b45-8c67-737748292536:Bardic Inspiration]].",
+          "it": "Il bardo recupera tutti i suoi utilizzi spesi di [[feature:ac065bdb-645f-4b45-8c67-737748292536:Ispirazione Bardica]] quando completa un riposo breve o lungo.\nInoltre, può spendere uno slot incantesimo (nessuna azione richiesta) per recuperare un utilizzo speso di [[feature:ac065bdb-645f-4b45-8c67-737748292536:Ispirazione Bardica]]."
         },
         "display_name": {
           "en": "Font of Inspiration",
@@ -55886,8 +55886,8 @@
           "it": 80
         },
         "description": {
-          "en": "You can tap into the wellspring of magic within yourself. This wellspring is represented by Sorcery Points, which allow you to create a variety of magical effects.\nYou have a number of Sorcery Points equal to your Sorcerer level. You can't have more Sorcery Points than this number. You regain all expended Sorcery Points when you finish a Long Rest.\nYou can use your Sorcery Points to fuel the options below, along with other features, such as Metamagic, that use those points.\n**Converting Spell Slots to Sorcery Points.** You can expend a spell slot to gain a number of Sorcery Points equal to the slot's level (no action required).\n**Creating Spell Slots.** As a Bonus Action, you can transform unexpended Sorcery Points into one spell slot. The list below shows the cost of creating a spell slot of a given level, and it lists the minimum Sorcerer level you must be to create a slot. You can create a spell slot no higher than level 5.\nAny spell slot you create with this feature vanishes when you finish a Long Rest.\n• **Level 1:** 2 Sorcery Points (min. Sorcerer level = 2)\n• **Level 2:** 3 Sorcery Points (min. Sorcerer level = 3)\n• **Level 3:** 5 Sorcery Points (min. Sorcerer level = 5)\n• **Level 4:** 6 Sorcery Points (min. Sorcerer level = 7)\n• **Level 15** 7 Sorcery Points (min. Sorcerer level = 9)",
-          "it": "Lo stregone può attingere alla fonte del potere magico dentro di sé. Essa è rappresentata dai punti stregoneria, che gli consentono di creare una vasta gamma di effetti magici.\nUno stregone di un numero di punti stregoneria pari al proprio livello da stregone. Non può avere un numero di punti stregoneria superiore a questo numero. Il personaggio recupera tutti i punti stregoneria spesi quando completa un riposo lungo.\nÈ possibile sfruttare i punti stregoneria per alimentare le opzioni sottostanti, oltre che altri privilegi che ne fanno uso come Metamagia.\n**Convertire gli slot incantesimo in punti stregoneria.** Lo stregone può consumare uno slot incantesimo per ottenere un numero di punti stregoneria pari al livello dello slot (nessuna azione richiesta).\n**Creare slot incantesimo.** Come azione bonus, lo stregone può trasformare i punti stregoneria non spesi in uno slot incantesimo. La lista sottostante indica il costo di creazione di uno slot di un determinato livello, oltre che il livello da stregone minimo necessario per creare uno slot. Non è possibile creare slot incantesimo di livello superiore al 5º.\nOgni slot incantesimo creato tramite questo privilegio svanisce quando lo stregone completa un riposo lungo.\n• **Livello 1:** 2 punti stregoneria (livello da stregone min. = 2)\n• **Livello 2:** 3 punti stregoneria (livello da stregone min. = 3)\n• **Livello 3:** 5 punti stregoneria (livello da stregone min. = 5)\n• **Livello 4:** 6 punti stregoneria (livello da stregone min. = 7)\n• **Livello 5:** 7 punti stregoneria (livello da stregone min. = 9)"
+          "en": "You can tap into the wellspring of magic within yourself. This wellspring is represented by Sorcery Points, which allow you to create a variety of magical effects.\nYou have a number of Sorcery Points equal to your Sorcerer level. You can't have more Sorcery Points than this number. You regain all expended Sorcery Points when you finish a Long Rest.\nYou can use your Sorcery Points to fuel the options below, along with other features, such as [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagic]], that use those points.\n**Converting Spell Slots to Sorcery Points.** You can expend a spell slot to gain a number of Sorcery Points equal to the slot's level (no action required).\n**Creating Spell Slots.** As a Bonus Action, you can transform unexpended Sorcery Points into one spell slot. The list below shows the cost of creating a spell slot of a given level, and it lists the minimum Sorcerer level you must be to create a slot. You can create a spell slot no higher than level 5.\nAny spell slot you create with this feature vanishes when you finish a Long Rest.\n• **Level 1:** 2 Sorcery Points (min. Sorcerer level = 2)\n• **Level 2:** 3 Sorcery Points (min. Sorcerer level = 3)\n• **Level 3:** 5 Sorcery Points (min. Sorcerer level = 5)\n• **Level 4:** 6 Sorcery Points (min. Sorcerer level = 7)\n• **Level 15** 7 Sorcery Points (min. Sorcerer level = 9)",
+          "it": "Lo stregone può attingere alla fonte del potere magico dentro di sé. Essa è rappresentata dai punti stregoneria, che gli consentono di creare una vasta gamma di effetti magici.\nUno stregone di un numero di punti stregoneria pari al proprio livello da stregone. Non può avere un numero di punti stregoneria superiore a questo numero. Il personaggio recupera tutti i punti stregoneria spesi quando completa un riposo lungo.\nÈ possibile sfruttare i punti stregoneria per alimentare le opzioni sottostanti, oltre che altri privilegi che ne fanno uso come [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagia]].\n**Convertire gli slot incantesimo in punti stregoneria.** Lo stregone può consumare uno slot incantesimo per ottenere un numero di punti stregoneria pari al livello dello slot (nessuna azione richiesta).\n**Creare slot incantesimo.** Come azione bonus, lo stregone può trasformare i punti stregoneria non spesi in uno slot incantesimo. La lista sottostante indica il costo di creazione di uno slot di un determinato livello, oltre che il livello da stregone minimo necessario per creare uno slot. Non è possibile creare slot incantesimo di livello superiore al 5º.\nOgni slot incantesimo creato tramite questo privilegio svanisce quando lo stregone completa un riposo lungo.\n• **Livello 1:** 2 punti stregoneria (livello da stregone min. = 2)\n• **Livello 2:** 3 punti stregoneria (livello da stregone min. = 3)\n• **Livello 3:** 5 punti stregoneria (livello da stregone min. = 5)\n• **Livello 4:** 6 punti stregoneria (livello da stregone min. = 7)\n• **Livello 5:** 7 punti stregoneria (livello da stregone min. = 9)"
         },
         "display_name": {
           "en": "Font of Magic",
@@ -55936,8 +55936,8 @@
           "it": 34
         },
         "description": {
-          "en": "If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack.",
-          "it": "Se il personaggio usa Attacco Irruento mentre è in preda all'ira, infligge danni extra al primo bersaglio che colpisce nel suo turno con un attacco basato sulla Forza. Per determinare i danni extra, il personaggio tira un numero di d6 pari al suo bonus Danni dell'ira e li somma. I danni sono dello stesso tipo dell'arma o del colpo senz'armi che il personaggio ha utilizzato per l'attacco."
+          "en": "If you use [[feature:c92c2145-8e2c-4306-b03f-a2c519b4da74:Reckless Attack]] while your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack.",
+          "it": "Se il personaggio usa [[feature:c92c2145-8e2c-4306-b03f-a2c519b4da74:Attacco Irruento]] mentre è in preda all'[[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]], infligge danni extra al primo bersaglio che colpisce nel suo turno con un attacco basato sulla Forza. Per determinare i danni extra, il personaggio tira un numero di d6 pari al suo bonus Danni dell'[[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]] e li somma. I danni sono dello stesso tipo dell'arma o del colpo senz'armi che il personaggio ha utilizzato per l'attacco."
         },
         "display_name": {
           "en": "Frenzy",
@@ -56036,8 +56036,8 @@
           "it": 43
         },
         "description": {
-          "en": "You can call on even more powerful divine intervention. When you use your Divine Intervention feature, you can choose [[spell:1d8b5d5e-9db4-4735-bf33-525447fb52e8:Wish]] when you select a spell. If you do so, you can't use Divine Intervention again until you finish 2d4 Long Rests.",
-          "it": "Il chierico può invocare un intervento divino ancora più potente. Quando usa il privilegio Intervento divino, può scegliere [[spell:1d8b5d5e-9db4-4735-bf33-525447fb52e8:Desiderio]] tra gli incantesimi. Se lo fa, non può usare di nuovo Intervento divino finché non completa 2d4 riposi lunghi."
+          "en": "You can call on even more powerful divine intervention. When you use your [[feature:15e4da85-41ec-4053-9630-3adc7d84be72:Divine Intervention]] feature, you can choose [[spell:1d8b5d5e-9db4-4735-bf33-525447fb52e8:Wish]] when you select a spell. If you do so, you can't use [[feature:15e4da85-41ec-4053-9630-3adc7d84be72:Divine Intervention]] again until you finish 2d4 Long Rests.",
+          "it": "Il chierico può invocare un intervento divino ancora più potente. Quando usa il privilegio [[feature:15e4da85-41ec-4053-9630-3adc7d84be72:Intervento Divino]], può scegliere [[spell:1d8b5d5e-9db4-4735-bf33-525447fb52e8:Desiderio]] tra gli incantesimi. Se lo fa, non può usare di nuovo [[feature:15e4da85-41ec-4053-9630-3adc7d84be72:Intervento Divino]] finché non completa 2d4 riposi lunghi."
         },
         "display_name": {
           "en": "Greater Divine Intervention",
@@ -56086,8 +56086,8 @@
           "it": 68
         },
         "description": {
-          "en": "Your Flurry of Blows, Patient Defense, and Step of the Wind gain the following benefits.\n**Flurry of Blows.** You can expend 1 Focus Point to use Flurry of Blows and make three Unarmed Strikes with it instead of two.\n**Patient Defense.** When you expend a Focus Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your Martial Arts die.\n**Step of the Wind.** When you expend a Focus Point to use Step of the Wind, you can choose a willing creature within {1.5 meters|5 feet} of yourself that is Large or smaller. You move the creature with you until the end of your turn. The creature's movement doesn't provoke Opportunity Attacks.",
-          "it": "Difesa paziente, Passo del vento e Raffica di colpi ottengono i seguenti benefici.\n**Raffica di colpi.** Il monaco può spendere 1 punto concentrazione per usare Raffica di colpi ed infliggere tre colpi senz'armi anziché due.\n**Difesa paziente.** Quando il monaco spende un punto concentrazione per utilizzare Difesa paziente, ottiene un numero di punti ferita temporanei pari a due tiri del dado di Arti Marziali.\n**Passo del vento.** Quando il monaco spende un punto concentrazione per utilizzare Passo del vento, può scegliere una creatura consenziente entro {1,5 metri|5 piedi} da sé di taglia Grande o inferiore. Il monaco muove la creatura con sé fino al termine del suo turno. Questo movimento non provoca attacchi di opportunità."
+          "en": "Your Flurry of Blows, Patient Defense, and Step of the Wind gain the following benefits.\n**Flurry of Blows.** You can expend 1 Focus Point to use Flurry of Blows and make three Unarmed Strikes with it instead of two.\n**Patient Defense.** When you expend a Focus Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your [[feature:579ffda3-fc42-426e-b870-3bc1204aa3d4:Martial Arts]] die.\n**Step of the Wind.** When you expend a Focus Point to use Step of the Wind, you can choose a willing creature within {1.5 meters|5 feet} of yourself that is Large or smaller. You move the creature with you until the end of your turn. The creature's movement doesn't provoke Opportunity Attacks.",
+          "it": "Difesa paziente, Passo del vento e Raffica di colpi ottengono i seguenti benefici.\n**Raffica di colpi.** Il monaco può spendere 1 punto concentrazione per usare Raffica di colpi ed infliggere tre colpi senz'armi anziché due.\n**Difesa paziente.** Quando il monaco spende un punto concentrazione per utilizzare Difesa paziente, ottiene un numero di punti ferita temporanei pari a due tiri del dado di [[feature:579ffda3-fc42-426e-b870-3bc1204aa3d4:Arti Marziali]].\n**Passo del vento.** Quando il monaco spende un punto concentrazione per utilizzare Passo del vento, può scegliere una creatura consenziente entro {1,5 metri|5 piedi} da sé di taglia Grande o inferiore. Il monaco muove la creatura con sé fino al termine del suo turno. Questo movimento non provoca attacchi di opportunità."
         },
         "display_name": {
           "en": "Heightened Focus",
@@ -56136,8 +56136,8 @@
           "it": 74
         },
         "description": {
-          "en": "As a Bonus Action, you can imbue your Aura of Protection with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n**Holy Ward.** You have Advantage on any saving throw you are forced to make by a Fiend or an Undead.\n**Radiant Damage.** Whenever an enemy starts its turn in the aura, that creature takes Radiant damage equal to your Charisma modifier plus your Proficiency Bonus.\n**Sunlight.** The aura is filled with Bright Light that is sunlight.",
-          "it": "Come azione bonus, il paladino può infondere la sua Aura di Protezione con del potere sacro, conferendo i benefici sottostanti per 10 minuti o finché non vengono interrotti (nessuna azione richiesta). Dopo aver utilizzato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo. Tuttavia, è possibile ripristinarne l'uso consumando uno slot incantesimo di 5º livello (nessuna azione richiesta).\n**Danni radiosi.** Se un nemico comincia il suo turno all'interno dell'aura, subisce danni radiosi pari al modificatore di Carisma più il bonus di competenza del paladino.\n**Luce del sole.** L'aura rifulge di luce intensa, ovvero la luce solare.\n**Sentinella sacra.** Se costretto a effettuare dei tiri salvezza da un immondo o un non morto, il paladino dispone di vantaggio."
+          "en": "As a Bonus Action, you can imbue your [[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura of Protection]] with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n**Holy Ward.** You have Advantage on any saving throw you are forced to make by a Fiend or an Undead.\n**Radiant Damage.** Whenever an enemy starts its turn in the aura, that creature takes Radiant damage equal to your Charisma modifier plus your Proficiency Bonus.\n**Sunlight.** The aura is filled with Bright Light that is sunlight.",
+          "it": "Come azione bonus, il paladino può infondere la sua [[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura di Protezione]] con del potere sacro, conferendo i benefici sottostanti per 10 minuti o finché non vengono interrotti (nessuna azione richiesta). Dopo aver utilizzato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo. Tuttavia, è possibile ripristinarne l'uso consumando uno slot incantesimo di 5º livello (nessuna azione richiesta).\n**Danni radiosi.** Se un nemico comincia il suo turno all'interno dell'aura, subisce danni radiosi pari al modificatore di Carisma più il bonus di competenza del paladino.\n**Luce del sole.** L'aura rifulge di luce intensa, ovvero la luce solare.\n**Sentinella sacra.** Se costretto a effettuare dei tiri salvezza da un immondo o un non morto, il paladino dispone di vantaggio."
         },
         "display_name": {
           "en": "Holy Nimbus",
@@ -56211,8 +56211,8 @@
           "it": 92
         },
         "description": {
-          "en": "Once per turn when you hit a creature with an attack roll, you can try to instantly transport the target through the Lower Planes. The target must succeed on a Charisma saving throw against your spell save DC, or the target disappears and hurtles through a nightmare landscape. The target takes 8d10 Psychic damage if it isn't a Fiend, and it has the Incapacitated condition until the end of your next turn, when it returns to the space it previously occupied or the nearest unoccupied space.\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it.",
-          "it": "Una volta per turno, quando il warlock colpisce una creatura con un tiro per colpire, può tentare di trasferire istantaneamente il bersaglio nei Piani Inferiori. Quest'ultimo deve superare un tiro salvezza su Carisma contro la CD del tiro salvezza sull'incantesimo del personaggio, altrimenti scomparirà e piomberà in un luogo raccapricciante.\nSe il bersaglio non è un immondo, subisce 8d10 danni psichici ed è incapacitato fino alla fine del turno successivo del personaggio, quando tornerà nello spazio precedentemente occupato o in quello libero più vicino.\nDopo aver usato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo; può ignorare questo limite spendendo uno slot incantesimo della Magia del Patto (nessuna azione richiesta)."
+          "en": "Once per turn when you hit a creature with an attack roll, you can try to instantly transport the target through the Lower Planes. The target must succeed on a Charisma saving throw against your spell save DC, or the target disappears and hurtles through a nightmare landscape. The target takes 8d10 Psychic damage if it isn't a Fiend, and it has the Incapacitated condition until the end of your next turn, when it returns to the space it previously occupied or the nearest unoccupied space.\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you expend a [[feature:a8635e04-e56e-462a-9953-09cc701d23bc:Pact Magic]] spell slot (no action required) to restore your use of it.",
+          "it": "Una volta per turno, quando il warlock colpisce una creatura con un tiro per colpire, può tentare di trasferire istantaneamente il bersaglio nei Piani Inferiori. Quest'ultimo deve superare un tiro salvezza su Carisma contro la CD del tiro salvezza sull'incantesimo del personaggio, altrimenti scomparirà e piomberà in un luogo raccapricciante.\nSe il bersaglio non è un immondo, subisce 8d10 danni psichici ed è incapacitato fino alla fine del turno successivo del personaggio, quando tornerà nello spazio precedentemente occupato o in quello libero più vicino.\nDopo aver usato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo; può ignorare questo limite spendendo uno slot incantesimo della [[feature:a8635e04-e56e-462a-9953-09cc701d23bc:Magia del Patto]] (nessuna azione richiesta)."
         },
         "display_name": {
           "en": "Hurl Through Hell",
@@ -56261,8 +56261,8 @@
           "it": 43
         },
         "description": {
-          "en": "The option you chose for Blessed Strikes grows more powerful.\n**Divine Strike.** The extra damage of your Divine Strike increases to 2d8.\n**Potent Spellcasting.** When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within {18 meters|60 feet} of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier.",
-          "it": "L'opzione scelta per i Colpi Benedetti diventa più potente.\n**Colpo divino.** I danni extra del Colpo divino aumentano a 2d8.\n**Incantesimi potenti.** Quando lancia un trucchetto da chierico infliggendo danni a una creatura, il chierico può infondere vitalità in se stesso o in un'altra creatura entro {18 metri|60 piedi} da sé, concedendo un numero di punti ferita temporanei pari al doppio del suo modificatore di Saggezza."
+          "en": "The option you chose for [[feature:bbd03ac8-2354-4988-aced-996f3603a1cb:Blessed Strikes]] grows more powerful.\n**Divine Strike.** The extra damage of your Divine Strike increases to 2d8.\n**Potent Spellcasting.** When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within {18 meters|60 feet} of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier.",
+          "it": "L'opzione scelta per i [[feature:bbd03ac8-2354-4988-aced-996f3603a1cb:Colpi Benedetti]] diventa più potente.\n**Colpo divino.** I danni extra del Colpo divino aumentano a 2d8.\n**Incantesimi potenti.** Quando lancia un trucchetto da chierico infliggendo danni a una creatura, il chierico può infondere vitalità in se stesso o in un'altra creatura entro {18 metri|60 piedi} da sé, concedendo un numero di punti ferita temporanei pari al doppio del suo modificatore di Saggezza."
         },
         "display_name": {
           "en": "Improved Blessed Strikes",
@@ -56286,8 +56286,8 @@
           "it": 34
         },
         "description": {
-          "en": "You have honed new ways to attack furiously. The following effects are now among your Brutal Strike options.\n**Staggering Blow.** The target has Disadvantage on the next saving throw it makes, and it can't make Opportunity Attacks until the start of your next turn.\n**Sundering Blow.** Before the start of your next turn, the next attack roll made by another creature against the target gains a +5 bonus to the roll. An attack roll can gain only one Sundering Blow bonus.",
-          "it": "Il barbaro ha affinato nuovi metodi per attaccare furiosamente. I seguenti effetti si aggiungono alle opzioni di Colpo Brutale.\n**Colpo sbalorditivo.** Il bersaglio subisce svantaggio al prossimo tiro salvezza e non può effettuare attacchi di opportunità fino all'inizio del turno successivo del personaggio.\n**Colpo di scissione.** Prima dell'inizio del turno successivo del barbaro, il prossimo tiro per colpire effettuato da un'altra creatura contro il bersaglio ottiene un bonus di +5 al tiro. Un tiro per colpire può ottenere un solo bonus Colpo di scissione."
+          "en": "You have honed new ways to attack furiously. The following effects are now among your [[feature:148e09eb-6174-4d79-89f2-79c23de71e56:Brutal Strike]] options.\n**Staggering Blow.** The target has Disadvantage on the next saving throw it makes, and it can't make Opportunity Attacks until the start of your next turn.\n**Sundering Blow.** Before the start of your next turn, the next attack roll made by another creature against the target gains a +5 bonus to the roll. An attack roll can gain only one Sundering Blow bonus.",
+          "it": "Il barbaro ha affinato nuovi metodi per attaccare furiosamente. I seguenti effetti si aggiungono alle opzioni di [[feature:148e09eb-6174-4d79-89f2-79c23de71e56:Colpo Brutale]].\n**Colpo sbalorditivo.** Il bersaglio subisce svantaggio al prossimo tiro salvezza e non può effettuare attacchi di opportunità fino all'inizio del turno successivo del personaggio.\n**Colpo di scissione.** Prima dell'inizio del turno successivo del barbaro, il prossimo tiro per colpire effettuato da un'altra creatura contro il bersaglio ottiene un bonus di +5 al tiro. Un tiro per colpire può ottenere un solo bonus Colpo di scissione."
         },
         "display_name": {
           "en": "Improved Brutal Strike",
@@ -56311,8 +56311,8 @@
           "it": 34
         },
         "description": {
-          "en": "The extra damage of your Brutal Strike increases to 2d10. In addition, you can use two different Brutal Strike effects whenever you use your Brutal Strike feature.",
-          "it": "I danni extra del Colpo Brutale aumentano a 2d10. Inoltre, il barbaro può utilizzare due diversi effetti del Colpo Brutale quando usa questo privilegio."
+          "en": "The extra damage of your [[feature:148e09eb-6174-4d79-89f2-79c23de71e56:Brutal Strike]] increases to 2d10. In addition, you can use two different [[feature:148e09eb-6174-4d79-89f2-79c23de71e56:Brutal Strike]] effects whenever you use your [[feature:148e09eb-6174-4d79-89f2-79c23de71e56:Brutal Strike]] feature.",
+          "it": "I danni extra del [[feature:148e09eb-6174-4d79-89f2-79c23de71e56:Colpo Brutale]] aumentano a 2d10. Inoltre, il barbaro può utilizzare due diversi effetti del [[feature:148e09eb-6174-4d79-89f2-79c23de71e56:Colpo Brutale]] quando usa questo privilegio."
         },
         "display_name": {
           "en": "Improved Brutal Strike",
@@ -56361,8 +56361,8 @@
           "it": 57
         },
         "description": {
-          "en": "You can use up to two Cunning Strike effects when you deal Sneak Attack damage, paying the die cost for each effect.",
-          "it": "Il ladro può utilizzare fino a due effetti di Colpo Astuto quando infligge danni da Attacco Furtivo, pagando il relativo costo in dadi per ciascuno di essi."
+          "en": "You can use up to two [[feature:1bb8d277-7946-46b7-8b1f-912974ed7a1f:Cunning Strike]] effects when you deal [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Sneak Attack]] damage, paying the die cost for each effect.",
+          "it": "Il ladro può utilizzare fino a due effetti di [[feature:1bb8d277-7946-46b7-8b1f-912974ed7a1f:Colpo Astuto]] quando infligge danni da [[feature:e4e2f2e3-195a-426f-bdc7-37e04e4db1da:Attacco Furtivo]], pagando il relativo costo in dadi per ciascuno di essi."
         },
         "display_name": {
           "en": "Improved Cunning Strike",
@@ -56386,8 +56386,8 @@
           "it": 49
         },
         "description": {
-          "en": "The option you chose for Elemental Fury grows more powerful, as detailed below.\n**Potent Spellcasting.** When you cast a Druid cantrip with a range of {3 meters|10 feet} or greater, the spell's range increases by {90 meters|300 feet}.\n**Primal Strike.** The extra damage of your Primal Strike increases to 2d8.",
-          "it": "L'opzione scelta per la Furia Elementale diventa più potente, come descritto di seguito.\n**Incantesimi potenti.** Quando il personaggio lancia un trucchetto da druido con un raggio pari o superiore a {3 metri|10 piedi}, la gittata dell'incantesimo aumenta di {90 metri|300 piedi}.\n**Colpo primordiale.** I danni extra del Colpo primordiale aumentano a 2d8."
+          "en": "The option you chose for [[feature:d195ee1d-e62b-4390-9cb8-360a8cba7ed1:Elemental Fury]] grows more powerful, as detailed below.\n**Potent Spellcasting.** When you cast a Druid cantrip with a range of {3 meters|10 feet} or greater, the spell's range increases by {90 meters|300 feet}.\n**Primal Strike.** The extra damage of your Primal Strike increases to 2d8.",
+          "it": "L'opzione scelta per la [[feature:d195ee1d-e62b-4390-9cb8-360a8cba7ed1:Furia Elementale]] diventa più potente, come descritto di seguito.\n**Incantesimi potenti.** Quando il personaggio lancia un trucchetto da druido con un raggio pari o superiore a {3 metri|10 piedi}, la gittata dell'incantesimo aumenta di {90 metri|300 piedi}.\n**Colpo primordiale.** I danni extra del Colpo primordiale aumentano a 2d8."
         },
         "display_name": {
           "en": "Improved Elemental Fury",
@@ -56536,8 +56536,8 @@
           "it": 34
         },
         "description": {
-          "en": "As part of the Bonus Action you take to enter your Rage, you can move up to half your Speed.",
-          "it": "Come parte dell'azione bonus che il personaggio esegue per entrare in ira, può muoversi fino alla metà della sua velocità."
+          "en": "As part of the Bonus Action you take to enter your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]], you can move up to half your Speed.",
+          "it": "Come parte dell'azione bonus che il personaggio esegue per entrare in [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]], può muoversi fino alla metà della sua velocità."
         },
         "display_name": {
           "en": "Instinctive Pounce",
@@ -56561,8 +56561,8 @@
           "it": 35
         },
         "description": {
-          "en": "As a Bonus Action, you can strike terror into others with your menacing presence and primal power. When you do so, each creature of your choice in a {9-meter|30-foot} Emanation originating from you must make a Wisdom saving throw (DC 8 plus your Strength modifier and Proficiency Bonus). On a failed save, a creature has the Frightened condition for 1 minute. At the end of each of the Frightened creature's turns, the creature repeats the save, ending the effect on itself on a success.\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you expend a use of your Rage (no action required) to restore your use of it.",
-          "it": "Come azione bonus, il barbaro può incutere terrore con la sua presenza minacciosa e il suo potere primordiale. Quando lo fa, ogni creatura a scelta del personaggio in un'emanazione del raggio di {9 metri|30 piedi} di cui il personaggio è il punto di origine deve effettuare un tiro salvezza su Saggezza (CD pari a 8 + il modificatore di Forza del barbaro + il bonus di competenza). Se lo fallisce, la creatura è spaventata per 1 minuto. Alla fine del turno di ogni creatura spaventata, la creatura ripete il tiro salvezza e, se lo supera, l'effetto svanisce.\nDopo aver usato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo; può ignorare questo limite spendendo un utilizzo dell'ira (nessuna azione richiesta)."
+          "en": "As a Bonus Action, you can strike terror into others with your menacing presence and primal power. When you do so, each creature of your choice in a {9-meter|30-foot} Emanation originating from you must make a Wisdom saving throw (DC 8 plus your Strength modifier and Proficiency Bonus). On a failed save, a creature has the Frightened condition for 1 minute. At the end of each of the Frightened creature's turns, the creature repeats the save, ending the effect on itself on a success.\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you expend a use of your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] (no action required) to restore your use of it.",
+          "it": "Come azione bonus, il barbaro può incutere terrore con la sua presenza minacciosa e il suo potere primordiale. Quando lo fa, ogni creatura a scelta del personaggio in un'emanazione del raggio di {9 metri|30 piedi} di cui il personaggio è il punto di origine deve effettuare un tiro salvezza su Saggezza (CD pari a 8 + il modificatore di Forza del barbaro + il bonus di competenza). Se lo fallisce, la creatura è spaventata per 1 minuto. Alla fine del turno di ogni creatura spaventata, la creatura ripete il tiro salvezza e, se lo supera, l'effetto svanisce.\nDopo aver usato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo; può ignorare questo limite spendendo un utilizzo dell'[[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]] (nessuna azione richiesta)."
         },
         "display_name": {
           "en": "Intimidating Presence",
@@ -56636,8 +56636,8 @@
           "it": 52
         },
         "description": {
-          "en": "As a Magic action, you can expend a use of your Wild Shape and choose a point within {18 meters|60 feet} of yourself. Vitality-giving flowers and life-draining thorns appear for a moment in a {3-meter|10-foot}-radius Sphere centered on that point. Each creature of your choice in the Sphere must make a Constitution saving throw against your spell save DC, taking 2d6 Necrotic damage on a failed save or half as much damage on a successful one. One creature of your choice in that area regains 2d6 Hit Points.\nThe damage and healing increase by 1d6 when you reach Druid levels 10 (3d6) and 14 (4d6).",
-          "it": "Come azione di Magia, può spendere un utilizzo di Forma Selvatica e scegliere un punto entro {18 metri|60 piedi} da sé. Per un istante, in una sfera del raggio di {3 metri|10 piedi} centrata su quel punto appaiono fiori che donano vitalità e spine che risucchiano la vita. Ogni creatura nella sfera a scelta del druido deve effettuare un tiro salvezza su Costituzione contro la CD del tiro salvezza sul suo incantesimo. La creatura subisce 2d6 danni necrotici in caso di fallimento, o la metà in caso di successo. Una creatura a scelta del druido in quell'area recupera 2d6 punti ferita. I danni e la guarigione del personaggio aumentano di 1d6 quando raggiunge il 10º (3d6) e il 14º (4d6) livello da druido."
+          "en": "As a Magic action, you can expend a use of your [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]] and choose a point within {18 meters|60 feet} of yourself. Vitality-giving flowers and life-draining thorns appear for a moment in a {3-meter|10-foot}-radius Sphere centered on that point. Each creature of your choice in the Sphere must make a Constitution saving throw against your spell save DC, taking 2d6 Necrotic damage on a failed save or half as much damage on a successful one. One creature of your choice in that area regains 2d6 Hit Points.\nThe damage and healing increase by 1d6 when you reach Druid levels 10 (3d6) and 14 (4d6).",
+          "it": "Come azione di Magia, può spendere un utilizzo di [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]] e scegliere un punto entro {18 metri|60 piedi} da sé. Per un istante, in una sfera del raggio di {3 metri|10 piedi} centrata su quel punto appaiono fiori che donano vitalità e spine che risucchiano la vita. Ogni creatura nella sfera a scelta del druido deve effettuare un tiro salvezza su Costituzione contro la CD del tiro salvezza sul suo incantesimo. La creatura subisce 2d6 danni necrotici in caso di fallimento, o la metà in caso di successo. Una creatura a scelta del druido in quell'area recupera 2d6 punti ferita. I danni e la guarigione del personaggio aumentano di 1d6 quando raggiunge il 10º (3d6) e il 14º (4d6) livello da druido."
         },
         "display_name": {
           "en": "Land's Aid",
@@ -56786,8 +56786,8 @@
           "it": 87
         },
         "description": {
-          "en": "You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest.",
-          "it": "Il warlock può eseguire un rito esoterico per 1 minuto. Dopo che lo ha portato a termine, recupera gli slot incantesimo spesi di Magia del Patto, ma non più di un numero pari a metà del loro massimo (arrotondando per eccesso). Dopo aver usato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo."
+          "en": "You can perform an esoteric rite for 1 minute. At the end of it, you regain expended [[feature:a8635e04-e56e-462a-9953-09cc701d23bc:Pact Magic]] spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest.",
+          "it": "Il warlock può eseguire un rito esoterico per 1 minuto. Dopo che lo ha portato a termine, recupera gli slot incantesimo spesi di [[feature:a8635e04-e56e-462a-9953-09cc701d23bc:Magia del Patto]], ma non più di un numero pari a metà del loro massimo (arrotondando per eccesso). Dopo aver usato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo."
         },
         "display_name": {
           "en": "Magical Cunning",
@@ -56961,8 +56961,8 @@
           "it": 34
         },
         "description": {
-          "en": "You have Immunity to the Charmed and Frightened conditions while your Rage is active. If you're Charmed or Frightened when you enter your Rage, the condition ends on you.",
-          "it": "Il barbaro non può essere affascinato o spaventato mentre è in ira. Se è affascinato o spaventato quando entra in ira, quella condizione ha fine."
+          "en": "You have Immunity to the Charmed and Frightened conditions while your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] is active. If you're Charmed or Frightened when you enter your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]], the condition ends on you.",
+          "it": "Il barbaro non può essere affascinato o spaventato mentre è in [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]]. Se è affascinato o spaventato quando entra in [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]], quella condizione ha fine."
         },
         "display_name": {
           "en": "Mindless Rage",
@@ -57136,8 +57136,8 @@
           "it": 52
         },
         "description": {
-          "en": "As a Magic action, you can expend a use of your Wild Shape and cause spectral trees and vines to appear in a {4.5-meter|15-foot} Cube on the ground within {36 meters|120 feet} of yourself. They last there for 1 minute or until you have the Incapacitated condition or die. You and your allies have Half Cover while in that area, and your allies gain the current Resistance of your Nature's Ward while there.\nAs a Bonus Action, you can move the Cube up to {18 meters|60 feet} to ground within {36 meters|120 feet} of yourself.",
-          "it": "Come azione di Magia, il druido può spendere un utilizzo della sua Forma Selvatica per far apparire alberi e viticci spettrali in un cubo con spigolo di {4,5 metri|15 piedi} in un punto del terreno entro {36 metri|120 piedi} da sé. La vegetazione permane per 1 minuto, o finché il druido non è incapacitato o morto. Mentre si trovano in quell'area, il druido e i suoi alleati ottengono mezza copertura, e gli alleati ottengono la resistenza conferita da Interdizione della Natura.\nCome azione bonus, il druido può muovere il cubo fino a {18 metri|60 piedi} sul terreno entro {36 metri|120 piedi} da sé."
+          "en": "As a Magic action, you can expend a use of your [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]] and cause spectral trees and vines to appear in a {4.5-meter|15-foot} Cube on the ground within {36 meters|120 feet} of yourself. They last there for 1 minute or until you have the Incapacitated condition or die. You and your allies have Half Cover while in that area, and your allies gain the current Resistance of your [[feature:1054cba9-50fb-4416-8239-890061ca71a1:Nature's Ward]] while there.\nAs a Bonus Action, you can move the Cube up to {18 meters|60 feet} to ground within {36 meters|120 feet} of yourself.",
+          "it": "Come azione di Magia, il druido può spendere un utilizzo della sua [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]] per far apparire alberi e viticci spettrali in un cubo con spigolo di {4,5 metri|15 piedi} in un punto del terreno entro {36 metri|120 piedi} da sé. La vegetazione permane per 1 minuto, o finché il druido non è incapacitato o morto. Mentre si trovano in quell'area, il druido e i suoi alleati ottengono mezza copertura, e gli alleati ottengono la resistenza conferita da [[feature:1054cba9-50fb-4416-8239-890061ca71a1:Interdizione della Natura]].\nCome azione bonus, il druido può muovere il cubo fino a {18 metri|60 piedi} sul terreno entro {36 metri|120 piedi} da sé."
         },
         "display_name": {
           "en": "Nature's Sanctuary",
@@ -57261,8 +57261,8 @@
           "it": null
         },
         "description": {
-          "en": "You know the [[spell:eb9a9a5c-b347-4020-8185-723e35f99e7b:Thaumaturgy]] cantrip. When you cast it with this trait, the spell uses the same spellcasting ability you use for your Fiendish Legacy trait.",
-          "it": "Conosce il trucchetto [[spell:eb9a9a5c-b347-4020-8185-723e35f99e7b:Taumaturgia]]. Quando lo lancia sfruttando questo tratto, l'incantesimo utilizza la stessa caratteristica da incantatore del tratto Retaggio Immondo."
+          "en": "You know the [[spell:eb9a9a5c-b347-4020-8185-723e35f99e7b:Thaumaturgy]] cantrip. When you cast it with this trait, the spell uses the same spellcasting ability you use for your [[feature:ef4ed1e1-1098-4780-84f9-d79013373b39:Fiendish Legacy]] trait.",
+          "it": "Conosce il trucchetto [[spell:eb9a9a5c-b347-4020-8185-723e35f99e7b:Taumaturgia]]. Quando lo lancia sfruttando questo tratto, l'incantesimo utilizza la stessa caratteristica da incantatore del tratto [[feature:ef4ed1e1-1098-4780-84f9-d79013373b39:Retaggio Immondo]]."
         },
         "display_name": {
           "en": "Otherworldly Presence",
@@ -57461,8 +57461,8 @@
           "it": 40
         },
         "description": {
-          "en": "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended.",
-          "it": "Quando un bardo effettua una prova di caratteristica o un tiro per colpire e fallisce, può spendere un utilizzo di Ispirazione Bardica; se lo fa, tira un dado di Ispirazione Bardica e aggiunge il risultato ottenuto al d20, trasformando potenzialmente il fallimento in un successo. In caso di fallimento, l'Ispirazione Bardica non viene consumata."
+          "en": "When you make an ability check or attack roll and fail, you can expend one use of [[feature:ac065bdb-645f-4b45-8c67-737748292536:Bardic Inspiration]]; roll the [[feature:ac065bdb-645f-4b45-8c67-737748292536:Bardic Inspiration]] die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the [[feature:ac065bdb-645f-4b45-8c67-737748292536:Bardic Inspiration]] isn't expended.",
+          "it": "Quando un bardo effettua una prova di caratteristica o un tiro per colpire e fallisce, può spendere un utilizzo di [[feature:ac065bdb-645f-4b45-8c67-737748292536:Ispirazione Bardica]]; se lo fa, tira un dado di [[feature:ac065bdb-645f-4b45-8c67-737748292536:Ispirazione Bardica]] e aggiunge il risultato ottenuto al d20, trasformando potenzialmente il fallimento in un successo. In caso di fallimento, l'[[feature:ac065bdb-645f-4b45-8c67-737748292536:Ispirazione Bardica]] non viene consumata."
         },
         "display_name": {
           "en": "Peerless Skill",
@@ -57486,8 +57486,8 @@
           "it": 68
         },
         "description": {
-          "en": "When you roll Initiative and don't use Uncanny Metabolism, you regain expended Focus Points until you have 4 if you have 3 or fewer.",
-          "it": "Quando il monaco tira per l'iniziativa e non usa Metabolismo straordinario, può recuperare i punti concentrazione spesi fino ad averne 4, se ne ha 3 o meno."
+          "en": "When you roll Initiative and don't use [[feature:c91798ff-ee6f-4c92-b4df-67841899d5db:Uncanny Metabolism]], you regain expended Focus Points until you have 4 if you have 3 or fewer.",
+          "it": "Quando il monaco tira per l'iniziativa e non usa [[feature:c91798ff-ee6f-4c92-b4df-67841899d5db:Metabolismo Straordinario]], può recuperare i punti concentrazione spesi fino ad averne 4, se ne ha 3 o meno."
         },
         "display_name": {
           "en": "Perfect Focus",
@@ -57511,8 +57511,8 @@
           "it": 34
         },
         "description": {
-          "en": "When you roll Initiative, you can regain all expended uses of Rage. After you regain uses of Rage in this way, you can't do so again until you finish a Long Rest.\nIn addition, your Rage is so fierce that it now lasts for 10 minutes without you needing to do anything to extend it from round to round. Your Rage ends early if you have the Unconscious condition (not just the Incapacitated condition) or don Heavy armor.",
-          "it": "Quando effettua un tiro per l'iniziativa, il barbaro può recuperare tutti gli utilizzi di ira spesi. Dopo aver recuperato gli utilizzi di ira in questo modo, non può ripetere l'azione prima di aver completato un riposo lungo.\nInoltre, la sua ira è così feroce che ora dura 10 minuti senza che debba fare nulla per prolungarla a ogni round. L'ira termina anticipatamente se il personaggio è privo di sensi (e non semplicemente incapacitato) o indossa un'armatura pesante."
+          "en": "When you roll Initiative, you can regain all expended uses of [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]]. After you regain uses of [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] in this way, you can't do so again until you finish a Long Rest.\nIn addition, your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] is so fierce that it now lasts for 10 minutes without you needing to do anything to extend it from round to round. Your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] ends early if you have the Unconscious condition (not just the Incapacitated condition) or don Heavy armor.",
+          "it": "Quando effettua un tiro per l'iniziativa, il barbaro può recuperare tutti gli utilizzi di [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]] spesi. Dopo aver recuperato gli utilizzi di [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]] in questo modo, non può ripetere l'azione prima di aver completato un riposo lungo.\nInoltre, la sua [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]] è così feroce che ora dura 10 minuti senza che debba fare nulla per prolungarla a ogni round. L'[[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]] termina anticipatamente se il personaggio è privo di sensi (e non semplicemente incapacitato) o indossa un'armatura pesante."
         },
         "display_name": {
           "en": "Persistent Rage",
@@ -57661,8 +57661,8 @@
           "it": 33
         },
         "description": {
-          "en": "You gain proficiency in another skill of your choice from the skill list available to Barbarians at level 1.\nIn addition, while your Rage is active, you can channel primal power when you attempt certain tasks; whenever you make an ability check using one of the following skills, you can make it as a Strength check even if it normally uses a different ability: Acrobatics, Intimidation, Perception, Stealth, or Survival. When you use this ability, your Strength represents primal power coursing through you, honing your agility, bearing, and senses.",
-          "it": "Il barbaro acquisisce competenza in un'altra abilità a scelta dalla lista delle abilità disponibili per i barbari di 1º livello.\nInoltre, mentre l'ira è in atto, può incanalare il potere primordiale quando compie dei tentativi per la riuscita di determinate attività; ogni volta che effettua una prova di caratteristica utilizzando una delle seguenti abilità, può effettuarla come prova di Forza anche se normalmente usa una caratteristica diversa: Acrobazia, Intimidire, Percezione, Furtività o Sopravvivenza. Quando usa questa caratteristica, la Forza rappresenta il potere primordiale che scorre nel suo corpo, affinandone l'agilità, l'orientamento e i sensi."
+          "en": "You gain proficiency in another skill of your choice from the skill list available to Barbarians at level 1.\nIn addition, while your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] is active, you can channel primal power when you attempt certain tasks; whenever you make an ability check using one of the following skills, you can make it as a Strength check even if it normally uses a different ability: Acrobatics, Intimidation, Perception, Stealth, or Survival. When you use this ability, your Strength represents primal power coursing through you, honing your agility, bearing, and senses.",
+          "it": "Il barbaro acquisisce competenza in un'altra abilità a scelta dalla lista delle abilità disponibili per i barbari di 1º livello.\nInoltre, mentre l'[[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]] è in atto, può incanalare il potere primordiale quando compie dei tentativi per la riuscita di determinate attività; ogni volta che effettua una prova di caratteristica utilizzando una delle seguenti abilità, può effettuarla come prova di Forza anche se normalmente usa una caratteristica diversa: Acrobazia, Intimidire, Percezione, Furtività o Sopravvivenza. Quando usa questa caratteristica, la Forza rappresenta il potere primordiale che scorre nel suo corpo, affinandone l'agilità, l'orientamento e i sensi."
         },
         "display_name": {
           "en": "Primal Knowledge",
@@ -57911,8 +57911,8 @@
           "it": 34
         },
         "description": {
-          "en": "Your Rage can keep you fighting despite grievous wounds. If you drop to 0 Hit Points while your Rage is active and don't die outright, you can make a DC 10 Constitution saving throw. If you succeed, your Hit Points instead change to a number equal to twice your Barbarian level.\nEach time you use this feature after the first, the DC increases by 5. When you finish a Short or Long Rest, the DC resets to 10.",
-          "it": "Grazie alla sua ira, il barbaro può continuare a combattere nonostante le ferite più gravi. Se scende a 0 punti ferita mentre è in preda all'ira e non è ucciso sul colpo, può effettuare un tiro salvezza su Costituzione con CD 10. Se lo supera, i punti ferita cambiano invece in un numero pari al doppio del livello da barbaro.\nOgni volta che utilizza questo privilegio dopo la prima, la CD aumenta di 5. Quando completa un riposo breve o lungo, la CD è ripristinata a 10."
+          "en": "Your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] can keep you fighting despite grievous wounds. If you drop to 0 Hit Points while your [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Rage]] is active and don't die outright, you can make a DC 10 Constitution saving throw. If you succeed, your Hit Points instead change to a number equal to twice your Barbarian level.\nEach time you use this feature after the first, the DC increases by 5. When you finish a Short or Long Rest, the DC resets to 10.",
+          "it": "Grazie alla sua [[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]], il barbaro può continuare a combattere nonostante le ferite più gravi. Se scende a 0 punti ferita mentre è in preda all'[[feature:65948f88-4de0-4327-8fdb-5738b36e961f:Ira]] e non è ucciso sul colpo, può effettuare un tiro salvezza su Costituzione con CD 10. Se lo supera, i punti ferita cambiano invece in un numero pari al doppio del livello da barbaro.\nOgni volta che utilizza questo privilegio dopo la prima, la CD aumenta di 5. Quando completa un riposo breve o lungo, la CD è ripristinata a 10."
         },
         "display_name": {
           "en": "Relentless Rage",
@@ -58061,8 +58061,8 @@
           "it": 72
         },
         "description": {
-          "en": "When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don't also restore Hit Points to the creature.",
-          "it": "Quando il paladino usa Imposizione delle mani su una creatura, può anche liberarla da una delle seguenti condizioni: accecato, affascinato, assordato, paralizzato, spaventato o stordito. Per farlo, è necessario attingere a 5 punti ferita della riserva curativa di Imposizione delle mani per ognuna delle condizioni rimosse. Tuttavia, i punti consumati non ripristinano i punti ferita della creatura."
+          "en": "When you use [[feature:d701b306-fc76-4577-9ced-e5ede8e57a9f:Lay On Hands]] on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of [[feature:d701b306-fc76-4577-9ced-e5ede8e57a9f:Lay On Hands]] for each of these conditions you remove; those points don't also restore Hit Points to the creature.",
+          "it": "Quando il paladino usa [[feature:d701b306-fc76-4577-9ced-e5ede8e57a9f:Imposizione delle Mani]] su una creatura, può anche liberarla da una delle seguenti condizioni: accecato, affascinato, assordato, paralizzato, spaventato o stordito. Per farlo, è necessario attingere a 5 punti ferita della riserva curativa di [[feature:d701b306-fc76-4577-9ced-e5ede8e57a9f:Imposizione delle Mani]] per ognuna delle condizioni rimosse. Tuttavia, i punti consumati non ripristinano i punti ferita della creatura."
         },
         "display_name": {
           "en": "Restoring Touch",
@@ -58486,8 +58486,8 @@
           "it": 74
         },
         "description": {
-          "en": "Your magical smite now radiates protective energy. Whenever you cast [[spell:a860a5e9-788e-43a6-b96d-9a11d25a3281:Divine Smite]], you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn.",
-          "it": "La punizione magica del paladino ora emana energia protettiva. Ogni volta che utilizza [[spell:a860a5e9-788e-43a6-b96d-9a11d25a3281:Punizione Divina]], il paladino e i suoi alleati ottengono mezza copertura finché sono nell'Aura di Protezione. Questo beneficio rimane attivo fino all'inizio del suo turno successivo."
+          "en": "Your magical smite now radiates protective energy. Whenever you cast [[spell:a860a5e9-788e-43a6-b96d-9a11d25a3281:Divine Smite]], you and your allies have Half Cover while in your [[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura of Protection]]. The aura has this benefit until the start of your next turn.",
+          "it": "La punizione magica del paladino ora emana energia protettiva. Ogni volta che utilizza [[spell:a860a5e9-788e-43a6-b96d-9a11d25a3281:Punizione Divina]], il paladino e i suoi alleati ottengono mezza copertura finché sono nell'[[feature:28f16c8e-1333-48d9-bf33-5a102139e5d6:Aura di Protezione]]. Questo beneficio rimane attivo fino all'inizio del suo turno successivo."
         },
         "display_name": {
           "en": "Smite of Protection",
@@ -58586,8 +58586,8 @@
           "it": 81
         },
         "description": {
-          "en": "If you have no uses of Innate Sorcery left, you can use it if you spend 2 Sorcery Points when you take the Bonus Action to activate it.\nIn addition, while your Innate Sorcery feature is active, you can use up to two of your Metamagic options on each spell you cast.",
-          "it": "Se ha consumato tutti i suoi utilizzi di Stregoneria Innata, come azione bonus può spendere 2 punti stregoneria per attivarla.\nInoltre, mentre il privilegio Stregoneria innata è attivo, lo stregone può usare fino a due delle sue opzioni di Metamagia su ogni incantesimo lanciato."
+          "en": "If you have no uses of [[feature:5a162f0f-27f4-46eb-90f3-fcf944b6707c:Innate Sorcery]] left, you can use it if you spend 2 Sorcery Points when you take the Bonus Action to activate it.\nIn addition, while your [[feature:5a162f0f-27f4-46eb-90f3-fcf944b6707c:Innate Sorcery]] feature is active, you can use up to two of your [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagic]] options on each spell you cast.",
+          "it": "Se ha consumato tutti i suoi utilizzi di [[feature:5a162f0f-27f4-46eb-90f3-fcf944b6707c:Stregoneria Innata]], come azione bonus può spendere 2 punti stregoneria per attivarla.\nInoltre, mentre il privilegio [[feature:5a162f0f-27f4-46eb-90f3-fcf944b6707c:Stregoneria Innata]] è attivo, lo stregone può usare fino a due delle sue opzioni di [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagia]] su ogni incantesimo lanciato."
         },
         "display_name": {
           "en": "Sorcery Incarnate",
@@ -59061,8 +59061,8 @@
           "it": 38
         },
         "description": {
-          "en": "When you roll Initiative, you regain expended uses of Bardic Inspiration until you have two if you have fewer than that.",
-          "it": "Quando il bardo tira per l'iniziativa, se ha meno di due utilizzi di Ispirazione Bardica, li recupera finché non ne ha due."
+          "en": "When you roll Initiative, you regain expended uses of [[feature:ac065bdb-645f-4b45-8c67-737748292536:Bardic Inspiration]] until you have two if you have fewer than that.",
+          "it": "Quando il bardo tira per l'iniziativa, se ha meno di due utilizzi di [[feature:ac065bdb-645f-4b45-8c67-737748292536:Ispirazione Bardica]], li recupera finché non ne ha due."
         },
         "display_name": {
           "en": "Superior Inspiration",
@@ -59111,8 +59111,8 @@
           "it": 58
         },
         "description": {
-          "en": "You gain the following Cunning Strike option.\n**Stealth Attack (Cost: 1d6).** If you have the Hide action's Invisible condition, this attack doesn't end that condition on you if you end the turn behind Three-Quarters Cover or Total Cover.",
-          "it": "Il ladro ottiene la seguente opzione per il Colpo Astuto.\n**Attacco nascosto (costo: 1d6).** Se il ladro è invisibile per via dell'azione Nascondersi, l'attacco non interrompe tale condizione se termina il turno dietro a tre quarti di copertura o a una copertura totale."
+          "en": "You gain the following [[feature:1bb8d277-7946-46b7-8b1f-912974ed7a1f:Cunning Strike]] option.\n**Stealth Attack (Cost: 1d6).** If you have the Hide action's Invisible condition, this attack doesn't end that condition on you if you end the turn behind Three-Quarters Cover or Total Cover.",
+          "it": "Il ladro ottiene la seguente opzione per il [[feature:1bb8d277-7946-46b7-8b1f-912974ed7a1f:Colpo Astuto]].\n**Attacco nascosto (costo: 1d6).** Se il ladro è invisibile per via dell'azione Nascondersi, l'attacco non interrompe tale condizione se termina il turno dietro a tre quarti di copertura o a una copertura totale."
         },
         "display_name": {
           "en": "Supreme Sneak",
@@ -59186,8 +59186,8 @@
           "it": 54
         },
         "description": {
-          "en": "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your Second Wind to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of Second Wind isn't expended.",
-          "it": "Il guerriero possiede una mente tattica sia sul campo di battaglia che fuori. Quando fallisce una prova di caratteristica, può spendere un utilizzo di Recuperare Energie per spingersi verso il successo. Invece di recuperare punti ferita, il guerriero tira 1d10 e aggiunge il risultato alla prova di caratteristica, trasformandola potenzialmente in un successo. Se la prova fallisce di nuovo, questo utilizzo di Recuperare Energie non viene speso."
+          "en": "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your [[feature:3c51ce71-7043-45af-81a6-b4d7e8289f5e:Second Wind]] to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of [[feature:3c51ce71-7043-45af-81a6-b4d7e8289f5e:Second Wind]] isn't expended.",
+          "it": "Il guerriero possiede una mente tattica sia sul campo di battaglia che fuori. Quando fallisce una prova di caratteristica, può spendere un utilizzo di [[feature:3c51ce71-7043-45af-81a6-b4d7e8289f5e:Recuperare Energie]] per spingersi verso il successo. Invece di recuperare punti ferita, il guerriero tira 1d10 e aggiunge il risultato alla prova di caratteristica, trasformandola potenzialmente in un successo. Se la prova fallisce di nuovo, questo utilizzo di [[feature:3c51ce71-7043-45af-81a6-b4d7e8289f5e:Recuperare Energie]] non viene speso."
         },
         "display_name": {
           "en": "Tactical Mind",
@@ -59211,8 +59211,8 @@
           "it": 54
         },
         "description": {
-          "en": "Whenever you activate your Second Wind with a Bonus Action, you can move up to half your Speed without provoking Opportunity Attacks.",
-          "it": "Ogni volta che il guerriero attiva Recuperare Energie con un'azione bonus, può muoversi fino a metà della sua velocità senza provocare attacchi di opportunità."
+          "en": "Whenever you activate your [[feature:3c51ce71-7043-45af-81a6-b4d7e8289f5e:Second Wind]] with a Bonus Action, you can move up to half your Speed without provoking Opportunity Attacks.",
+          "it": "Ogni volta che il guerriero attiva [[feature:3c51ce71-7043-45af-81a6-b4d7e8289f5e:Recuperare Energie]] con un'azione bonus, può muoversi fino a metà della sua velocità senza provocare attacchi di opportunità."
         },
         "display_name": {
           "en": "Tactical Shift",
@@ -59586,8 +59586,8 @@
           "it": 67
         },
         "description": {
-          "en": "When you roll Initiative, you can regain all expended Focus Points. When you do so, roll your Martial Arts die, and regain a number of Hit Points equal to your Monk level plus the number rolled.\nOnce you use this feature, you can't use it again until you finish a Long Rest.",
-          "it": "Quando effettua un tiro per l'iniziativa, il monaco può recuperare tutti i punti concentrazione spesi. Quando lo fa, tira un dado di Arti Marziali e recupera un numero di punti ferita pari al suo livello da monaco più il risultato ottenuto.\nDopo aver utilizzato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo."
+          "en": "When you roll Initiative, you can regain all expended Focus Points. When you do so, roll your [[feature:579ffda3-fc42-426e-b870-3bc1204aa3d4:Martial Arts]] die, and regain a number of Hit Points equal to your Monk level plus the number rolled.\nOnce you use this feature, you can't use it again until you finish a Long Rest.",
+          "it": "Quando effettua un tiro per l'iniziativa, il monaco può recuperare tutti i punti concentrazione spesi. Quando lo fa, tira un dado di [[feature:579ffda3-fc42-426e-b870-3bc1204aa3d4:Arti Marziali]] e recupera un numero di punti ferita pari al suo livello da monaco più il risultato ottenuto.\nDopo aver utilizzato questo privilegio, il personaggio non può riutilizzarlo prima di aver completato un riposo lungo."
         },
         "display_name": {
           "en": "Uncanny Metabolism",
@@ -59811,8 +59811,8 @@
           "it": 69
         },
         "description": {
-          "en": "You gain the ability to heal yourself. As a Bonus Action, you can roll your Martial Arts die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\nYou can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",
-          "it": "Il monaco ottiene la capacità di curarsi. Come azione bonus, può tirare il dado di Arti Marziali. In questo modo, recupera un numero di punti ferita pari al risultato ottenuto più il suo modificatore di Saggezza (minimo di 1 punto ferita recuperato).\nIl personaggio può utilizzare questo privilegio un numero di volte pari al valore del suo modificatore di Saggezza (minimo una volta) e recupera tutti gli utilizzi consumati quando completa un riposo lungo."
+          "en": "You gain the ability to heal yourself. As a Bonus Action, you can roll your [[feature:579ffda3-fc42-426e-b870-3bc1204aa3d4:Martial Arts]] die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\nYou can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",
+          "it": "Il monaco ottiene la capacità di curarsi. Come azione bonus, può tirare il dado di [[feature:579ffda3-fc42-426e-b870-3bc1204aa3d4:Arti Marziali]]. In questo modo, recupera un numero di punti ferita pari al risultato ottenuto più il suo modificatore di Saggezza (minimo di 1 punto ferita recuperato).\nIl personaggio può utilizzare questo privilegio un numero di volte pari al valore del suo modificatore di Saggezza (minimo una volta) e recupera tutti gli utilizzi consumati quando completa un riposo lungo."
         },
         "display_name": {
           "en": "Wholeness of Body",
@@ -59836,8 +59836,8 @@
           "it": 49
         },
         "description": {
-          "en": "You can summon a nature spirit that assumes an animal form to aid you. As a Magic action, you can expend a spell slot or a use of Wild Shape to cast the [[spell:509c6f61-3c42-4360-af1d-9fe9041c756c:Find Familiar]] spell without Material components. When you cast the spell in this way, the familiar is Fey and disappears when you finish a Long Rest.",
-          "it": "Il druido può evocare in suo soccorso uno spirito della natura che assume una forma animale. Come azione di Magia, il druido può spendere uno slot incantesimo o un utilizzo di Forma Selvatica per lanciare l'incantesimo trova famiglio senza l'ausilio di componenti materiali.\nUna volta lanciato l'incantesimo in questo modo, il famiglio evocato sarà un folletto e svanirà quando il druido avrà completato un riposo lungo."
+          "en": "You can summon a nature spirit that assumes an animal form to aid you. As a Magic action, you can expend a spell slot or a use of [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]] to cast the [[spell:509c6f61-3c42-4360-af1d-9fe9041c756c:Find Familiar]] spell without Material components. When you cast the spell in this way, the familiar is Fey and disappears when you finish a Long Rest.",
+          "it": "Il druido può evocare in suo soccorso uno spirito della natura che assume una forma animale. Come azione di Magia, il druido può spendere uno slot incantesimo o un utilizzo di [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]] per lanciare l'incantesimo trova famiglio senza l'ausilio di componenti materiali.\nUna volta lanciato l'incantesimo in questo modo, il famiglio evocato sarà un folletto e svanirà quando il druido avrà completato un riposo lungo."
         },
         "display_name": {
           "en": "Wild Companion",
@@ -59861,8 +59861,8 @@
           "it": 49
         },
         "description": {
-          "en": "Once on each of your turns, if you have no uses of Wild Shape left, you can give yourself one use by expending a spell slot (no action required).\nIn addition, you can expend one use of Wild Shape (no action required) to give yourself a level 1 spell slot, but you can't do so again until you finish a Long Rest.",
-          "it": "Una volta per ogni suo turno, se il druido ha consumato tutti i suoi utilizzi di Forma Selvatica, può ripristinare un utilizzo spendendo uno slot incantesimo (nessuna azione richiesta).\nInoltre, può spendere un utilizzo di Forma Selvatica (nessuna azione richiesta) per ottenere uno slot incantesimo di 1º livello, ma non potrà farlo di nuovo finché non completa un riposo lungo."
+          "en": "Once on each of your turns, if you have no uses of [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]] left, you can give yourself one use by expending a spell slot (no action required).\nIn addition, you can expend one use of [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Wild Shape]] (no action required) to give yourself a level 1 spell slot, but you can't do so again until you finish a Long Rest.",
+          "it": "Una volta per ogni suo turno, se il druido ha consumato tutti i suoi utilizzi di [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]], può ripristinare un utilizzo spendendo uno slot incantesimo (nessuna azione richiesta).\nInoltre, può spendere un utilizzo di [[feature:1c21ea52-582f-400b-a37d-1081655f0b75:Forma Selvatica]] (nessuna azione richiesta) per ottenere uno slot incantesimo di 1º livello, ma non potrà farlo di nuovo finché non completa un riposo lungo."
         },
         "display_name": {
           "en": "Wild Resurgence",
@@ -75468,8 +75468,8 @@
           "it": 82
         },
         "description": {
-          "en": "When you roll damage for a spell, you can spend 1 Sorcery Point to reroll a number of the damage dice up to your Charisma modifier (minimum of one), and you must use the new rolls.\nYou can use Empowered Spell even if you've already used a different Metamagic option during the casting of the spell.",
-          "it": "Quando lo stregone tira per i danni di un incantesimo, può spendere 1 punto stregoneria per ripetere il tiro di un numero massimo di dadi pari al suo modificatore di Carisma (minimo di uno), e deve usare i nuovi risultati.\nLo stregone può utilizzare Incantesimo potenziato anche se ha già utilizzato un'opzione diversa di Metamagia durante il lancio dell'incantesimo."
+          "en": "When you roll damage for a spell, you can spend 1 Sorcery Point to reroll a number of the damage dice up to your Charisma modifier (minimum of one), and you must use the new rolls.\nYou can use Empowered Spell even if you've already used a different [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagic]] option during the casting of the spell.",
+          "it": "Quando lo stregone tira per i danni di un incantesimo, può spendere 1 punto stregoneria per ripetere il tiro di un numero massimo di dadi pari al suo modificatore di Carisma (minimo di uno), e deve usare i nuovi risultati.\nLo stregone può utilizzare Incantesimo potenziato anche se ha già utilizzato un'opzione diversa di [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagia]] durante il lancio dell'incantesimo."
         },
         "prerequisite": {
           "en": "",
@@ -75572,8 +75572,8 @@
           "it": 82
         },
         "description": {
-          "en": "If you make an attack roll for a spell and miss, you can spend 1 Sorcery Point to reroll the d20, and you must use the new roll.\nYou can use Seeking Spell even if you've already used a different Metamagic option during the casting of the spell.",
-          "it": "Se lo stregone effettua un tiro per colpire per un incantesimo e fallisce, può spendere 1 punto stregoneria per tirare nuovamente il d20 e deve usare il nuovo risultato.\nLo stregone può utilizzare Incantesimo mirato anche se ha già utilizzato un'opzione diversa di Metamagia durante il lancio dell'incantesimo."
+          "en": "If you make an attack roll for a spell and miss, you can spend 1 Sorcery Point to reroll the d20, and you must use the new roll.\nYou can use Seeking Spell even if you've already used a different [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagic]] option during the casting of the spell.",
+          "it": "Se lo stregone effettua un tiro per colpire per un incantesimo e fallisce, può spendere 1 punto stregoneria per tirare nuovamente il d20 e deve usare il nuovo risultato.\nLo stregone può utilizzare Incantesimo mirato anche se ha già utilizzato un'opzione diversa di [[feature:3c1cefd3-3ab1-4339-ab57-71ee83e749c2:Metamagia]] durante il lancio dell'incantesimo."
         },
         "prerequisite": {
           "en": "",
