@@ -173,8 +173,8 @@ const i18nContext = {
     it: "Configurazione del dialogo di stampa",
   },
   "warning": {
-    en: "The available options vary by browser, operating system, and printer. For the most reliable result, print from a desktop computer. Print has been tested with Chrome, other Chromium-based browsers, Safari, and Firefox.",
-    it: "Le opzioni disponibili cambiano in base al browser, al sistema operativo e alla stampante. Per un risultato più affidabile, stampa da un computer desktop. La stampa è stata testata con Chrome, altri browser basati su Chromium, Safari e Firefox.",
+    en: "The available options vary by browser, operating system, and printer. Printing from a desktop computer using Google Chrome or another Chromium-based browser is recommended.",
+    it: "Le opzioni disponibili cambiano in base al browser, al sistema operativo e alla stampante. Si consiglia di stampare da un computer desktop usando Google Chrome o un altro browser basato su Chromium.",
   },
 };
 

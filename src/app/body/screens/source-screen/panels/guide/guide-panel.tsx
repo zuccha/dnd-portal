@@ -698,7 +698,7 @@ const documentation: Record<string, DocumentationContent> = {
           "Use 100% scale for Standard printing. Use 50% scale for High Fidelity printing, because High Fidelity renders the sheet at twice its normal size before opening the browser print dialog.",
         ],
         warning:
-          "Depending on the options provided by the browser or operating system print dialog, it may not be possible to print the sheet in High Fidelity or use certain paper formats and options. Printing from a desktop computer is recommended. The application has been tested with Chrome, other Chromium-based browsers, Safari, and Firefox.",
+          "Depending on the options provided by the browser or operating system print dialog, it may not be possible to print the sheet in High Fidelity or use certain paper formats and options. Printing from a desktop computer using Google Chrome or another Chromium-based browser is recommended.",
       },
     ],
   },
@@ -1040,7 +1040,7 @@ const documentation: Record<string, DocumentationContent> = {
           "Usa scala 100% per la stampa Standard. Usa scala 50% per la stampa ad Alta Fedeltà, perché l'Alta Fedeltà renderizza il foglio al doppio della dimensione normale prima di aprire il dialogo di stampa del browser.",
         ],
         warning:
-          "A seconda delle opzioni offerte dal dialogo di stampa del browser o del sistema operativo, potrebbe non essere possibile stampare il foglio ad Alta Fedeltà o usare determinati formati e opzioni. Si consiglia di stampare da un computer desktop. L'applicazione è stata testata con Chrome, altri browser basati su Chromium, Safari e Firefox.",
+          "A seconda delle opzioni offerte dal dialogo di stampa del browser o del sistema operativo, potrebbe non essere possibile stampare il foglio ad Alta Fedeltà o usare determinati formati e opzioni. Si consiglia di stampare da un computer desktop usando Google Chrome o un altro browser basato su Chromium.",
       },
     ],
   },
