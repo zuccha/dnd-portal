@@ -62,7 +62,7 @@ export default function PrintDeckHelpDialog({
                     alt={t("image_alt")}
                     borderRadius="sm"
                     objectFit="contain"
-                    src={`https://gvgzmzuwbecnjeeuxtbw.supabase.co/storage/v1/object/public/docs/print-dialog-arrow-${lang}.png`}
+                    src={`https://gvgzmzuwbecnjeeuxtbw.supabase.co/storage/v1/object/public/docs/${lang}/print-dialog-${printQuality}.png`}
                     w="full"
                   />
                   <Text color="fg.muted" fontSize="xs" textAlign="center" w="full">
