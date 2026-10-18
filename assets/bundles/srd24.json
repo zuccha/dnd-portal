@@ -62724,7 +62724,7 @@
         "image_url": null,
         "visibility": "public",
         "name": {
-          "en": "Clother (Fine)",
+          "en": "Clothes (Fine)",
           "it": "Abiti Eleganti"
         },
         "page": {
@@ -64049,12 +64049,13 @@
           "it": 273
         },
         "attunement_notes": {
-          "en": null
+          "en": "",
+          "it": ""
         },
         "cost": null,
         "description": {
-          "en": "This object looks like a feather. Different types of feather tokens exist, each with a different single-use effect. The GM chooses the kind of token or determines it randomly by rolling 1d100 on the list below. The type of token determines its rarity.\n• (01–20) Anchor (uncommon)\n• (21–35) Bird (rare)\n• (36–50) Fan (uncommon)\n• (51–65) Swan boat (rare)\n• (66–90) Tree (uncommon)\n• (91–00) Whip (rare)",
-          "it": "Quest'oggetto ha l'aspetto di una piuma. Esistono vari tipi di piume, ognuna con un effetto monouso diverso. Il GM può scegliere il tipo di piuma o determinarlo casualmente tirando sulla lista sottostante.\n• (01–25) Albero (Non comune)\n• (26–45) Ancora (Non comune)\n• (46–60) Barca cigno (Rara)\n• (61–70) Frusta (Rara)\n• (71–85) Uccello (Rara)\n• (86–00) Ventaglio (Non comune)"
+          "en": "This object looks like a feather. Different types of feather tokens exist, each with a different single-use effect. The GM chooses the kind of token or determines it randomly by rolling 1d100 on the list below. The type of token determines its rarity.\n• (01–20) [[item:e9881378-ad19-4716-b183-26b14edbebdd::Anchor]]: Uncommon\n• (21–35) [[item:b4e9dfaf-97a6-4a6b-80d6-01605a9968c1::Bird]]: Rare\n• (36–50) [[item:c7ff855e-c0aa-4087-bc5a-80796c64d345::Fan]]: Uncommon\n• (51–65) [[item:a42f3047-5681-4215-afab-5bc5c8bf61ea::Swan Boat]]: Rare\n• (66–90) [[item:3e69d603-5e4a-488a-8423-da8dd31a1214::Tree]]: Uncommon\n• (91–00) [[item:233a6a7d-3c6c-42b0-a167-12b9a3676865::Whip]]: Rare",
+          "it": "Quest'oggetto ha l'aspetto di una piuma. Esistono vari tipi di piume, ognuna con un effetto monouso diverso. Il GM può scegliere il tipo di piuma o determinarlo casualmente tirando sulla lista sottostante.\n• (01–25) [[item:3e69d603-5e4a-488a-8423-da8dd31a1214::Albero]]: Non Comune\n• (26–45) [[item:e9881378-ad19-4716-b183-26b14edbebdd::Ancora]]: Non Comune\n• (46–60) [[item:a42f3047-5681-4215-afab-5bc5c8bf61ea::Barca Cigno]]: Rara\n• (61–70) [[item:233a6a7d-3c6c-42b0-a167-12b9a3676865::Frusta]]: Rara\n• (71–85) [[item:b4e9dfaf-97a6-4a6b-80d6-01605a9968c1::Uccello]]: Rara\n• (86–00) [[item:c7ff855e-c0aa-4087-bc5a-80796c64d345::Ventaglio]]: Non Comune"
         },
         "is_magic": true,
         "modifier_ids": [],
@@ -65358,12 +65359,13 @@
           "it": 259
         },
         "attunement_notes": {
-          "en": null
+          "en": "",
+          "it": ""
         },
         "cost": null,
         "description": {
-          "en": "You can take a Magic action to blow this horn. In response, warrior spirits from the plane of Ysgard appear in unoccupied spaces within {18 meters|60 feet} of you.\nEach spirit uses the **Berserker** stat block and returns to Ysgard after 1 hour or when it drops to 0 Hit Points. The spirits look like living, breathing warriors, and they have Immunity to the Charmed and Frightened conditions. Once you use the horn, it can't be used again until 7 days have passed.\nFour types of _Horn of Valhalla_ are known to exist, each made of a different metal. The horn's type determines how many spirits it summons, as well as the requirement for its use. The GM chooses the horn's type or determines it randomly by rolling 1d100 on the following list.\nIf you blow the horn without meeting its requirement, the summoned spirits attack you. If you meet the requirement, they are Friendly to you and your allies and follow your commands.\n• (01–40) Silver: 2 spirits, no requirement.\n• (41–75) Brass: 3 spirits, requires proficiency with all Simple weapons\n• (76–90) Bronze: 4 spirits, requires training with all Medium armor.\n• (91–00) Iron: 5 spirits, requires proficiency with all Martial weapons.",
-          "it": "Il personaggio può effettuare un'azione di Magia per suonare questo corno. Come risposta, spiriti guerrieri del piano di Ysgard compaiono in spazi liberi entro {18 metri|60 piedi} dal personaggio. Ogni spirito utilizza la scheda delle statistiche di un **berserker** e fa ritorno a Ysgard dopo 1 ora o quando scende a 0 punti ferita. Gli spiriti hanno l'aspetto di guerrieri vivi e vegeti e sono immuni alle condizioni affascinato e spaventato. Una volta usato, il corno non può essere riutilizzato finché non sono trascorsi 7 giorni.\nSono noti quattro tipi di _corno del Valhalla_, ognuno fatto di un metallo diverso. Il tipo di corno determina il numero di spiriti richiamati e i requisiti per il suo uso. Il GM sceglie il tipo o lo determina in modo casuale tirando 1d100 sulla seguente lista.\nSe il personaggio suona il corno senza soddisfare i requisiti, gli spiriti richiamati lo attaccano. In caso contrario, sono amichevoli nei suoi confronti e in quelli dei suoi alleati e obbediscono ai suoi ordini.\n• (01–40) Argento: 2 spiriti, nessun requisito\n• (41–75) Ottone: 3 spiriti, richiede competenza in tutte le armi semplici\n• (76–90) Bronzo: 4 spiriti, richiede competenza in tutte le armature medie\n• (91–00) Ferro: 5 spiriti, richiede competenza in tutte le armi da guerra"
+          "en": "You can take a Magic action to blow this horn. In response, warrior spirits from the plane of Ysgard appear in unoccupied spaces within {18 meters|60 feet} of you.\nEach spirit uses the **Berserker** stat block and returns to Ysgard after 1 hour or when it drops to 0 Hit Points. The spirits look like living, breathing warriors, and they have Immunity to the Charmed and Frightened conditions. Once you use the horn, it can't be used again until 7 days have passed.\nFour types of _Horn of Valhalla_ are known to exist, each made of a different metal. The horn's type determines how many spirits it summons, as well as the requirement for its use. The GM chooses the horn's type or determines it randomly by rolling 1d100 on the following list.\nIf you blow the horn without meeting its requirement, the summoned spirits attack you. If you meet the requirement, they are Friendly to you and your allies and follow your commands.\n• (01–40) [[item:e50b786f-0e3a-4235-880b-631bc6d06d1e::Silver]]: 2 spirits, no requirement.\n• (41–75) [[item:0e22edb7-3e8d-4dd6-9350-9eb99b3a0803::Brass]]: 3 spirits, requires proficiency with all Simple weapons\n• (76–90) [[item:6302ed9e-a581-4e6e-b8f3-3e3f01bc0b82::Bronze]]: 4 spirits, requires training with all Medium armor.\n• (91–00) [[item:959f5802-ac54-4eb5-b2ff-93ab9c5818ae::Iron]]: 5 spirits, requires proficiency with all Martial weapons.",
+          "it": "Il personaggio può effettuare un'azione di Magia per suonare questo corno. Come risposta, spiriti guerrieri del piano di Ysgard compaiono in spazi liberi entro {18 metri|60 piedi} dal personaggio. Ogni spirito utilizza la scheda delle statistiche di un **berserker** e fa ritorno a Ysgard dopo 1 ora o quando scende a 0 punti ferita. Gli spiriti hanno l'aspetto di guerrieri vivi e vegeti e sono immuni alle condizioni affascinato e spaventato. Una volta usato, il corno non può essere riutilizzato finché non sono trascorsi 7 giorni.\nSono noti quattro tipi di _corno del Valhalla_, ognuno fatto di un metallo diverso. Il tipo di corno determina il numero di spiriti richiamati e i requisiti per il suo uso. Il GM sceglie il tipo o lo determina in modo casuale tirando 1d100 sulla seguente lista.\nSe il personaggio suona il corno senza soddisfare i requisiti, gli spiriti richiamati lo attaccano. In caso contrario, sono amichevoli nei suoi confronti e in quelli dei suoi alleati e obbediscono ai suoi ordini.\n• (01–40) [[item:e50b786f-0e3a-4235-880b-631bc6d06d1e::Argento]]: 2 spiriti, nessun requisito\n• (41–75) [[item:0e22edb7-3e8d-4dd6-9350-9eb99b3a0803::Ottone]]: 3 spiriti, richiede competenza in tutte le armi semplici\n• (76–90) [[item:6302ed9e-a581-4e6e-b8f3-3e3f01bc0b82::Bronzo]]: 4 spiriti, richiede competenza in tutte le armature medie\n• (91–00) [[item:959f5802-ac54-4eb5-b2ff-93ab9c5818ae::Ferro]]: 5 spiriti, richiede competenza in tutte le armi da guerra"
         },
         "is_magic": true,
         "modifier_ids": [],
@@ -66777,7 +66779,7 @@
         "image_url": null,
         "visibility": "public",
         "name": {
-          "en": "Manual of Golem",
+          "en": "Manual of Golems",
           "it": "Manuale dei Golem"
         },
         "page": {
@@ -66785,12 +66787,13 @@
           "it": 265
         },
         "attunement_notes": {
-          "en": null
+          "en": "",
+          "it": ""
         },
         "cost": 2000000,
         "description": {
-          "en": "This tome contains information and incantations necessary to make a particular type of golem. The GM chooses the type or determines it randomly by rolling 1d20 on the accompanying list. To decipher and use the manual, you must be a spellcaster with at least two level 5 spell slots. A creature that can't use a _Manual of Golems_ and attempts to read it takes 6d6 Psychic damage.\nTo create a golem, you must spend the time shown in the list, working without interruption with the manual at hand and resting no more than 8 hours per day. You must also pay the specified cost to purchase supplies.\nOnce you finish creating the golem, the book is consumed in eldritch flames. The golem becomes animate when the ashes of the manual are sprinkled on it. The golem is under your control, and it understands and obeys your commands.\n• (1–5) **Clay Golem:** 30 days, 65,000 GP.\n• (6–17) **Flesh Golem:** 60 days, 50,000 GP.\n• (18) **Iron Golem:** 120 days, 100,000 GP.\n• (19–20) **Stone Golem:** 90 days, 80,000 GP.",
-          "it": "Questo tomo contiene le informazioni e i rituali necessari alla creazione di un particolare tipo di golem. Il GM sceglie il tipo o lo determina in modo casuale tirando 1d20 sulla lista sottostante.\nPer decifrare e usare il manuale, il personaggio deve essere un incantatore e possedere almeno due slot incantesimo di 5º livello. Una creatura che non è in grado di usare il _manuale dei golem_ e tenta di leggerlo comunque subisce 6d6 danni psichici.\nPer creare un golem, il personaggio deve trascorrere il tempo indicato dalla tabella a lavorare ininterrottamente con il manuale a portata di mano e riposando al massimo per 8 ore al giorno. Deve inoltre pagare la somma specificata per procurarsi i materiali necessari.\nUna volta terminato il processo di creazione del golem, il libro viene consumato da una fiammata soprannaturale. Il golem si anima quando su di esso vengono sparse le ceneri del manuale. Il golem è sotto il controllo del personaggio e comprende ed esegue i suoi comandi.\n• (1–5) **Golem di argilla:** 30 giorni, 65,000 mo.\n• (6–17) **Golem di carne:** 60 giorni, 50,000 mo.\n• (18) **Golem di ferro:** 120 giorni, 100,000 mo.\n• (19–20) **Golem di pietra:** 90 giorni, 80,000 mo."
+          "en": "This tome contains information and incantations necessary to make a particular type of golem. The GM chooses the type or determines it randomly by rolling 1d20 on the accompanying list. To decipher and use the manual, you must be a spellcaster with at least two level 5 spell slots. A creature that can't use a _Manual of Golems_ and attempts to read it takes 6d6 Psychic damage.\nTo create a golem, you must spend the time shown in the list, working without interruption with the manual at hand and resting no more than 8 hours per day. You must also pay the specified cost to purchase supplies.\nOnce you finish creating the golem, the book is consumed in eldritch flames. The golem becomes animate when the ashes of the manual are sprinkled on it. The golem is under your control, and it understands and obeys your commands.\n• (1–5) [[item:c2aea5e0-4286-4166-949c-8c69f87eff50::Clay]]: **clay golem**, 30 days, 65,000 GP.\n• (6–17) [[item:f2b86a27-06fd-4774-82d3-a9980bde3ea6::Flesh]]: **flesh golem**, 60 days, 50,000 GP.\n• (18) [[item:618bad93-1d4e-4bc5-8d65-1ed61d7f496f::Iron]]: **iron golem**, 120 days, 100,000 GP.\n• (19–20) [[item:40cc058d-a051-46b0-9f70-233e806228cd::Stone]]: **stone golem**, 90 days, 80,000 GP.",
+          "it": "Questo tomo contiene le informazioni e i rituali necessari alla creazione di un particolare tipo di golem. Il GM sceglie il tipo o lo determina in modo casuale tirando 1d20 sulla lista sottostante.\nPer decifrare e usare il manuale, il personaggio deve essere un incantatore e possedere almeno due slot incantesimo di 5º livello. Una creatura che non è in grado di usare il _manuale dei golem_ e tenta di leggerlo comunque subisce 6d6 danni psichici.\nPer creare un golem, il personaggio deve trascorrere il tempo indicato dalla tabella a lavorare ininterrottamente con il manuale a portata di mano e riposando al massimo per 8 ore al giorno. Deve inoltre pagare la somma specificata per procurarsi i materiali necessari.\nUna volta terminato il processo di creazione del golem, il libro viene consumato da una fiammata soprannaturale. Il golem si anima quando su di esso vengono sparse le ceneri del manuale. Il golem è sotto il controllo del personaggio e comprende ed esegue i suoi comandi.\n• (1–5) [[item:c2aea5e0-4286-4166-949c-8c69f87eff50::Argilla]]: **golem di argilla**, 30 giorni, 65,000 mo.\n• (6–17) [[item:f2b86a27-06fd-4774-82d3-a9980bde3ea6::Carne]]: **golem di carne**, 60 giorni, 50,000 mo.\n• (18) [[item:618bad93-1d4e-4bc5-8d65-1ed61d7f496f::Ferro]]: **golem di ferro**, 120 giorni, 100,000 mo.\n• (19–20) [[item:40cc058d-a051-46b0-9f70-233e806228cd::Pietra]]: **golem di pietra**, 90 giorni, 80,000 mo."
         },
         "is_magic": true,
         "modifier_ids": [],
@@ -66811,7 +66814,7 @@
         "image_url": null,
         "visibility": "public",
         "name": {
-          "en": "Manual of Golem (Clay)",
+          "en": "Manual of Golems (Clay)",
           "it": "Manuale dei Golem (Argilla)"
         },
         "page": {
@@ -66819,7 +66822,7 @@
           "it": 265
         },
         "attunement_notes": {
-          "en": null
+          "en": ""
         },
         "cost": 2000000,
         "description": {
@@ -66845,7 +66848,7 @@
         "image_url": null,
         "visibility": "public",
         "name": {
-          "en": "Manual of Golem (Flesh)",
+          "en": "Manual of Golems (Flesh)",
           "it": "Manuale dei Golem (Carne)"
         },
         "page": {
@@ -66853,7 +66856,7 @@
           "it": 265
         },
         "attunement_notes": {
-          "en": null
+          "en": ""
         },
         "cost": 2000000,
         "description": {
@@ -66879,7 +66882,7 @@
         "image_url": null,
         "visibility": "public",
         "name": {
-          "en": "Manual of Golem (Iron)",
+          "en": "Manual of Golems (Iron)",
           "it": "Manuale dei Golem (Ferro)"
         },
         "page": {
@@ -66887,7 +66890,7 @@
           "it": 265
         },
         "attunement_notes": {
-          "en": null
+          "en": ""
         },
         "cost": 2000000,
         "description": {
@@ -66913,7 +66916,7 @@
         "image_url": null,
         "visibility": "public",
         "name": {
-          "en": "Manual of Golem (Stone)",
+          "en": "Manual of Golems (Stone)",
           "it": "Manuale dei Golem (Pietra)"
         },
         "page": {
@@ -66921,7 +66924,7 @@
           "it": 265
         },
         "attunement_notes": {
-          "en": null
+          "en": ""
         },
         "cost": 2000000,
         "description": {
@@ -74261,6 +74264,402 @@
         "charges": 0,
         "is_consumable": false,
         "type": "wand"
+      },
+      {
+        "id": "b41a5c54-f644-43bd-a6a4-326ccb4c09ea",
+        "kind": "item",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "image_url": null,
+        "visibility": "public",
+        "name": {
+          "en": "Spell Scroll",
+          "it": "Pergamena Magica"
+        },
+        "page": {
+          "en": 244,
+          "it": 270
+        },
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": null,
+        "description": {
+          "en": "A _Spell Scroll_ bears the words of a single spell, written in a mystical cipher. If the spell is on your spell list, you can read the scroll and cast its spell without Material components. Otherwise, the scroll is unintelligible. Casting the spell by reading the scroll requires the spell's normal casting time. Once the spell is cast, the scroll crumbles to dust. If the casting is interrupted, the scroll isn't lost.\nIf the spell is on your spell list but of a higher level than you can normally cast, you make an ability check using your spellcasting ability to determine whether you cast the spell. The DC equals 10 plus the spell's level. On a failed check, the spell disappears from the scroll with no other effect.\nThe level of the spell on the scroll determines the spell's saving throw DC and attack bonus, as well as the scroll’s rarity, as shown in the following list.\n• [[item:9769d59d-cdd9-4252-b0a9-3e61b5eb3261::Cantrip]]: Common, DC 13, +5 Attack Bonus\n• [[item:719945e5-2882-42b9-9d68-385ad51f8b44::Level 1]]: Common, DC 13, +5 Attack Bonus\n• [[item:a2539cea-b36d-447b-b927-237e8a52a818::Level 2]]: Uncommon, DC 13, +5 Attack Bonus\n• [[item:a652955f-4c15-4b7e-926e-f4a470a3c248::Level 3]]: Uncommon, DC 15, +7 Attack Bonus\n• [[item:cbe9789e-cd98-4714-a0da-60f921d0b149::Level 4]]: Rare, DC 15, +7 Attack Bonus\n• [[item:12778499-e9f6-4d6f-8514-1e0ae52533dd::Level 5]]: Rare, DC 17, +9 Attack Bonus\n• [[item:6cc10b61-ef71-415d-8b48-4a4f42b4b26d::Level 6]]: Very Rare, DC 17, +9 Attack Bonus\n• [[item:a7a664f0-8cae-435e-8de3-66628d48b4b1::Level 7]]: Very Rare, DC 18, +10 Attack Bonus\n• [[item:48f62aec-e7af-457e-a853-a407adf01440::Level 8]]: Very Rare, DC 18, +10 Attack Bonus\n• [[item:766ecf76-cbfe-4c6e-b25f-f311d7f10078::Level 9]]: Legendary, DC 19, +11 Attack Bonus",
+          "it": "Una _pergamena magica_ riporta le parole di un unico incantesimo, scritte in un codice mistico. Se l'incantesimo è nella lista degli incantesimi del personaggio, quest'ultimo può leggerla e lanciare l'incantesimo senza componenti materiali. In caso contrario, la pergamena risulta incomprensibile. Lanciare l'incantesimo leggendo la pergamena richiede il normale tempo di lancio dell'incantesimo. Una volta lanciato l'incantesimo, la pergamena si sgretola. In caso di interruzione del lancio, la pergamena non viene persa.\nSe l'incantesimo si trova sulla lista degli incantesimi del personaggio, ma è di un livello più alto rispetto a quelli che può lanciare normalmente, deve effettuare una prova di caratteristica usando la sua caratteristica da incantatore per determinare se riesce a lanciarlo o meno. La CD è pari a 10 più il livello dell'incantesimo. In caso di fallimento, l'incantesimo scompare dalla pergamena senza alcun altro effetto.\nIl livello dell'incantesimo sulla pergamena determina la CD del tiro salvezza dell'incantesimo e il bonus di attacco, così come la rarità della pergamena, come illustrato nella lista seguente.\n• [[item:9769d59d-cdd9-4252-b0a9-3e61b5eb3261::Trucchetto]]: Comune, CD 13, Bonus di Attacco +5\n• [[item:719945e5-2882-42b9-9d68-385ad51f8b44::Livello 1]]: Comune, CD 13, Bonus di Attacco +5\n• [[item:a2539cea-b36d-447b-b927-237e8a52a818::Livello 2]]: Non Comune, CD 13, Bonus di Attacco +5\n• [[item:a652955f-4c15-4b7e-926e-f4a470a3c248::Livello 3]]: Non Comune, CD 15, Bonus di Attacco +7\n• [[item:cbe9789e-cd98-4714-a0da-60f921d0b149::Livello 4]]: Rara, CD 15, Bonus di Attacco +7\n• [[item:12778499-e9f6-4d6f-8514-1e0ae52533dd::Livello 5]]: Rara, CD 17, Bonus di Attacco +9\n• [[item:6cc10b61-ef71-415d-8b48-4a4f42b4b26d::Livello 6]]: Molto Rara, CD 17, Bonus di Attacco +9\n• [[item:a7a664f0-8cae-435e-8de3-66628d48b4b1::Livello 7]]: Molto Rara, CD 18, Bonus di Attacco +10\n• [[item:48f62aec-e7af-457e-a853-a407adf01440::Livello 8]]: Molto Rara, CD 18, Bonus di Attacco +10\n• [[item:766ecf76-cbfe-4c6e-b25f-f311d7f10078::Livello 9]]: Leggendaria, CD 19, Bonus di Attacco +11"
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "various",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 1,
+        "is_consumable": true,
+        "type": "scroll"
+      },
+      {
+        "id": "a6839d78-07ff-487d-be10-56a19ab79961",
+        "kind": "item",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "image_url": null,
+        "visibility": "public",
+        "name": {
+          "en": "Bag of Tricks",
+          "it": "Borsa dei Trucchi"
+        },
+        "page": {
+          "en": 212,
+          "it": 253
+        },
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": null,
+        "description": {
+          "en": "This bag made from gray, rust, or tan cloth appears empty. Reaching inside the bag, however, reveals the presence of a small, fuzzy object.\nYou can take a Magic action to pull the fuzzy object from the bag and throw it up to {6 meters|20 feet}. When the object lands, it transforms into a creature you determine by rolling 1d8 on the list that corresponds to the bag's color. See “Monsters” for the creature’s stat block. The creature vanishes at the next dawn or when it is reduced to 0 Hit Points.\nThe creature is Friendly to you and your allies, and it acts immediately after you on your Initiative count. You can take a Bonus Action to command how the creature moves and what action it takes on its next turn, such as attacking an enemy. In the absence of such orders, the creature acts in a fashion appropriate to its nature.\nOnce three fuzzy objects have been pulled from the bag, the bag can't be used again until the next dawn.\n• **[[item:baafdfc8-a8a1-4158-a438-d1659fb454a3::Gray]]:** (1) **weasel**; (2) **giant rat**; (3) **badger**; (4) **boar**; (5) **panther**; (6) **giant badger**; (7) **giant elk**; (8) **giant elk**.\n• **[[item:38e5bbbd-daf8-4b52-9877-86384ac64524::Rust]]:** (1) **rat**; (2) **owl**; (3) **mastiff**; (4) **goat**; (5) **giant goat**; (6) **giant boar**; (7) **lion**; (8) **brown bear**.\n• **[[item:88520e59-71a3-4a2a-a36b-cb4f032a6cac::Tan]]:** (1) **jackal**; (2) **ape**; (3) **baboon**; (4) **axe beak**; (5) **black bear**; (6) **giant weasel**; (7) **giant hyena**; (8) **tiger**.\n",
+          "it": "Questa borsa fatta di stoffa di colore grigio, ruggine o marrone, sembra vuota. Frugando al suo interno, si trova invece un piccolo oggetto lanuginoso.\nUn personaggio può compiere un'azione di Magia per estrarre l'oggetto lanuginoso dalla borsa e lanciarlo fino a {6 metri|20 piedi} di distanza. Quando atterra, l'oggetto si trasforma in una creatura determinata tirando 1d8 sulla lista corrispondente al colore della borsa posseduta. Vedi \"Mostri\" per la scheda delle statistiche della creatura. La creatura scompare all'alba successiva o quando viene ridotta a 0 punti ferita.\nÈ amichevole con il personaggio e i suoi alleati e svolge il proprio turno immediatamente dopo il personaggio secondo il suo punteggio di iniziativa. Il personaggio può effettuare un'azione bonus per comandare il modo in cui la creatura si muove e l'azione che effettua nel suo turno successivo, come ad esempio attaccare un nemico. In assenza di tali ordini, la creatura agisce in modo appropriato alla sua natura.\nDopo che dalla borsa sono stati estratti tre oggetti lanuginosi, non può essere riutilizzata fino all'alba successiva.\n• **[[item:baafdfc8-a8a1-4158-a438-d1659fb454a3::Grigia]]:** (1) **alce gigante**; (2) **cinghiale**; (3) **faina**; (4) **lupo feroce**; (5) **pantera**; (6) **tasso**; (7) **tasso gigante**; (8) **topo gigante**.\n• **[[item:88520e59-71a3-4a2a-a36b-cb4f032a6cac::Marrone]]:** (1) **capra**; (2) **capra gigante**; (3) **cinghiale gigante**; (4) **gufo**; (5) **leone**; (6) **mastino**; (7) **orso bruno**; (8) **topo**.\n• **[[item:38e5bbbd-daf8-4b52-9877-86384ac64524::Ruggine]]:** (1) **babbuino**; (2) **beccoaguzzo**; (3) **faina gigante**; (4) **gorilla**; (5) **iena gigante**; (6) **orso nero**; (7) **sciacallo**; (8) **tigre**."
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "uncommon",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 0,
+        "is_consumable": false,
+        "type": "other"
+      },
+      {
+        "id": "1e3c4f88-c23c-40e7-9b4b-834a69ab56a7",
+        "kind": "item",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "image_url": null,
+        "visibility": "public",
+        "name": {
+          "en": "Belt of Giant Strength",
+          "it": "Cintura della Forza dei Giganti"
+        },
+        "page": {
+          "en": 213,
+          "it": 257
+        },
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": null,
+        "description": {
+          "en": "While wearing this belt, your Strength changes to a score granted by the belt. The type of giant determines the score (see the list below). The item has no effect on you if your Strength without the belt is equal to or greater than the belt's score.\n• [[item:d2db3374-dcb8-4e7b-be9c-f2eb76be57a3::Hill]]: 21 Strength, Rare\n• [[item:527a8ffa-7136-4547-9045-7e3958a18a93::Frost]]: 23 Strength, Very Rare\n• [[item:315fc23b-4004-4cec-a684-75b627e80dde::Stone]]: 23 Strength, Very Rare\n• [[item:962a81d9-8657-4d9a-bfd0-1a3c8f0845f4::Fire]]: 25 Strength, Very Rare\n• [[item:097191d7-b90e-4c2e-a8c4-90a5746e51ff::Cloud]]: 27 Strength, Legendary\n• [[item:f8e25c04-6602-4405-82c2-da69be752ae8::Storm]]: 27 Strength, Legendary",
+          "it": "Finché il personaggio indossa questa cintura, la sua Forza cambia in un determinato punteggio conferito dalla cintura, come determinato dal tipo di gigante (vedi la lista sottostante). Se il punteggio di Forza del personaggio senza cintura è pari o superiore a quello conferito dall'oggetto, non ha alcun effetto.\n• [[item:d2db3374-dcb8-4e7b-be9c-f2eb76be57a3::Colline]]: 21 Forza, Rara\n• [[item:527a8ffa-7136-4547-9045-7e3958a18a93::Gelo]]: 23 Forza, Molto Rara\n• [[item:315fc23b-4004-4cec-a684-75b627e80dde::Pietre]]: 23 Forza, Molto Rara\n• [[item:962a81d9-8657-4d9a-bfd0-1a3c8f0845f4::Fuoco]]: 25 Forza, Molto Rara\n• [[item:097191d7-b90e-4c2e-a8c4-90a5746e51ff::Nuvole]]: 27 Forza, Leggendaria\n• [[item:f8e25c04-6602-4405-82c2-da69be752ae8::Tempeste]]: 29 Forza, Leggendaria"
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "various",
+        "required_attunement_slots": 1,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 0,
+        "is_consumable": false,
+        "type": "other"
+      },
+      {
+        "id": "840bac6e-6fa5-4fb2-a03a-6cd5425a3615",
+        "kind": "item",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "image_url": null,
+        "visibility": "public",
+        "name": {
+          "en": "Bullets",
+          "it": "Proiettili"
+        },
+        "page": {
+          "en": 96,
+          "it": 111
+        },
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": null,
+        "description": {
+          "en": "Variations:\n• [[item:3d2e0103-dd52-45a1-9cc5-41b23a62ddb5:Bullets (Firearm)]]\n• [[item:7803341c-8b7e-4eed-9194-26c71d142d4e:Bullets (Sling)]]",
+          "it": "Varianti:\n• [[item:3d2e0103-dd52-45a1-9cc5-41b23a62ddb5:Proiettili (Arma da Fuoco)]]\n• [[item:7803341c-8b7e-4eed-9194-26c71d142d4e:Proiettili (Fionda)]]"
+        },
+        "is_magic": false,
+        "modifier_ids": [],
+        "rarity": "common",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 0,
+        "is_consumable": false,
+        "type": "other"
+      },
+      {
+        "id": "e30c5392-d555-401b-bd8d-9cc28f8d5e75",
+        "image_url": null,
+        "name": {
+          "en": "Elemental Gem",
+          "it": "Gemma Elementale"
+        },
+        "page": {
+          "en": 220,
+          "it": 262
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": 20000,
+        "description": {
+          "en": "This gem contains a mote of elemental energy. When you take a Utilize action to break the gem, an elemental is summoned, and the gem ceases to be magical. The elemental appears in an unoccupied space as close to the broken gem as possible, understands your languages, obeys your commands, and takes its turn immediately after you on your Initiative count. The elemental disappears after 1 hour, when it dies, or when you dismiss it as a Bonus Action. The type of gem determines the elemental, as shown in the following list.\n• [[item:ae3e7665-747f-4bea-97fa-432a884db21d::Blue sapphire]]: **air elemental**\n• [[item:3b1d8f18-5506-4e05-95df-20322f177b83::Emerald]]: **water elemental**\n• [[item:b8e57d2e-a51a-436b-bfb5-a921be83116f::Red corundum]]: **fire elemental**\n• [[item:e292fae9-31d9-4031-a0d0-37dfe7f3aedc::Yellow diamond]]: **earth elemental**",
+          "it": "Questa gemma contiene un frammento di energia elementale. Quando si effettua un'azione di Utilizzo per rompere la gemma, viene richiamato un elementale e la gemma cessa di essere magica. La creatura compare in uno spazio libero il più vicino possibile alla gemma rotta, capisce la lingua del personaggio, obbedisce ai suoi ordini e svolge il suo turno subito dopo quello del personaggio con il suo punteggio di iniziativa. L'elementale scompare dopo 1 ora, quando muore o quando viene congedato come azione bonus. Il tipo di gemma determina il tipo di elementale, come indicato nella lista seguente.\n• [[item:b8e57d2e-a51a-436b-bfb5-a921be83116f::Coridone rosso]]: **elementale del fuoco**\n• [[item:e292fae9-31d9-4031-a0d0-37dfe7f3aedc::Diamante giallo]]: **elementale della terra**\n• [[item:3b1d8f18-5506-4e05-95df-20322f177b83::Smeraldo]]: **elementale dell'acqua**\n• [[item:ae3e7665-747f-4bea-97fa-432a884db21d::Zaffiro blu]]: **elementale dell'aria**"
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "uncommon",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 1,
+        "is_consumable": true,
+        "kind": "item",
+        "type": "other"
+      },
+      {
+        "id": "5dd54600-757e-455c-a542-62dd3dfff7bc",
+        "image_url": null,
+        "name": {
+          "en": "Figurine of Wondrous Power",
+          "it": ""
+        },
+        "page": {
+          "en": 221,
+          "it": null
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": null,
+        "description": {
+          "en": "A _Figurine of Wondrous Power_ is a statuette small enough to fit in a pocket. If you take a Magic action to throw the figurine to a point on the ground within {18 meters|60 feet} of yourself, the figurine becomes a living creature specified in the figurine's description. If the space where the creature would appear is occupied by other creatures or objects, or if there isn't enough space for the creature, the figurine doesn't become a creature.\nThe creature is Friendly to you and your allies. It understands your languages, obeys your commands, and takes its turn immediately after you on your Initiative count. If you issue no commands, the creature defends itself but takes no other actions.\nThe creature exists for a duration specific to each figurine. At the end of the duration, the creature reverts to its figurine form. It reverts to a figurine early if its creature form drops to 0 Hit Points or if you take a Magic action while touching the creature to make it revert to figurine form. When the creature becomes a figurine again, its property can't be used again until a certain amount of time has passed, as specified in the figurine's description.\n• [[item:7b007876-d8aa-450d-9ff9-6e08b710eeef::Bronze Griffon]]: Rare\n• [[item:38baf8bb-731c-4dec-8dba-ada704ca3ba0::Ebony Fly]]: Rare\n• [[item:d8855ddc-7012-41c2-a9ad-445bf3d6ef86::Golden Lions]]: Rare\n• [[item:aa213870-956c-4113-814b-9c2c964be104::Ivory Goats]]: Rare\n• [[item:760533d2-a6af-4f9f-84ba-3fef168f1c59::Marble Elephant]]: Rare\n• [[item:00316ea4-6773-4395-aa23-ced9bf045f1c::Obsidian Steed]]: Very Rare\n• [[item:7bcae695-0f70-4eab-9f93-bbdc803b3e2a::Onyx Dog]]: Rare\n• [[item:40e573d6-a8fa-47a5-b574-a2a25766c9e5::Serpentine Owl]]: Rare\n• [[item:62abc0ef-287f-4e1c-882a-8082118afd9c::Silver Raven]]: Uncommon",
+          "it": "Una _statuina del potere meraviglioso_ è una scultura abbastanza piccola da stare in tasca. Se il personaggio effettua un'azione di Magia per lanciare la miniatura in un punto del suolo entro {18 metri|60 piedi} da sé, la statuina diventa una creatura vivente specificata nella descrizione dell'oggetto qui di seguito. Se lo spazio dove dovrebbe comparire la creatura è già occupato da altre creature o oggetti, o se non c'è spazio a sufficienza, la statuina non si trasforma.\nLa creatura è amichevole nei confronti del personaggio e dei suoi compagni, comprende le lingue parlate dal personaggio, obbedisce ai suoi ordini e svolge il suo turno subito dopo il personaggio con il suo punteggio di iniziativa. Se non riceve ordini, la creatura si difende ma non compie altre azioni.\nLa creatura permane per una durata specifica per ogni statuina. Esaurita la durata, la creatura riprende la forma di statuina. Può ritrasformarsi in anticipo se scende a 0 punti ferita o se il personaggio compie un'azione di Magia mentre tocca la creatura per farla tornare alla forma di statuina. Quando torna a essere una statuina, la sua proprietà non può essere riutilizzata prima che sia trascorso un certo periodo di tempo, come specificato nella descrizione della specifica statuina.\n• [[item:7bcae695-0f70-4eab-9f93-bbdc803b3e2a::Cane di Onice]]: Rara\n• [[item:aa213870-956c-4113-814b-9c2c964be104::Capre d'Avorio]]: Rara\n• [[item:62abc0ef-287f-4e1c-882a-8082118afd9c::Corvo d'Argento]]: Non Comune\n• [[item:760533d2-a6af-4f9f-84ba-3fef168f1c59::Elefante di Marmo]]: Rara\n• [[item:40e573d6-a8fa-47a5-b574-a2a25766c9e5::Gufo di Serpentino]]: Rara\n• [[item:7b007876-d8aa-450d-9ff9-6e08b710eeef::Grifone di Bronzo]]: Rara\n• [[item:d8855ddc-7012-41c2-a9ad-445bf3d6ef86::Leoni d'Oro]]: Rara\n• [[item:38baf8bb-731c-4dec-8dba-ada704ca3ba0::Mosca d'Ebano]]: Rara\n• [[item:00316ea4-6773-4395-aa23-ced9bf045f1c::Stallone di Ossidiana]]: Molto Rara"
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "various",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 0,
+        "is_consumable": false,
+        "kind": "item",
+        "type": "other"
+      },
+      {
+        "id": "bba36ffc-afcb-4b74-bb21-7210997d855a",
+        "image_url": null,
+        "name": {
+          "en": "Ioun Stone",
+          "it": ""
+        },
+        "page": {
+          "en": 227,
+          "it": null
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": null,
+        "description": {
+          "en": "Roughly marble sized, _Ioun Stones_ are named after Ioun, a god of knowledge and prophecy revered on some worlds. Many types of _Ioun Stones_ exist, each type a distinct combination of shape and color.\nWhen you take a Magic action to toss an _Ioun Stone_ into the air, the stone orbits your head at a distance of {1d3 × 30 centimeters|1d3 feet}, conferring its benefit to you while doing so. You can have up to three _Ioun Stones_ orbiting your head at the same time.\nEach _Ioun Stone_ orbiting your head is considered to be an object you are wearing. The orbiting stone avoids contact with other creatures and objects, adjusting its orbit to avoid collisions and thwarting all attempts by other creatures to attack or snatch it.\nAs a Utilize action, you can seize and stow any number of _Ioun Stones_ orbiting your head. If your Attunement to an _Ioun Stone_ ends while it’s orbiting your head, the stone falls as though you had dropped it.\nThe type of stone determines its rarity and effects.\n• [[item:56c239f6-6216-441c-9e42-269421b8964c::Absorption]]: Very Rare\n• [[item:125b12db-088e-44d1-8ba6-8e8e87693d29::Agility]]: Very Rare\n• [[item:7d3726d7-a638-498c-a9d8-3f81e19454d3::Awareness]]: Rare\n• [[item:b94a1031-f7cc-41d9-ada0-a39b72ccd648::Fortitude]]: Very Rare\n• [[item:1368a7c7-3a73-4f5b-bc0a-b9679a5abb99::Greater Absorption]]: Legendary\n• [[item:7f557bad-60c2-43a7-b8d1-3cf726d0d953::Insight]]: Very Rare\n• [[item:0ee57f5b-2b94-4498-a55a-0e122a0c9ac6::Intellect]]: Very Rare\n• [[item:58ee93fe-b59e-49b8-ad33-736afe1af932::Leadership]]: Very Rare\n• [[item:7e32e759-ad03-48e9-9843-08721198adef::Mastery]]: Legendary\n• [[item:9618fb23-4002-4515-989d-50a4c5a05deb::Protection]]: Rare\n• [[item:4f1f34b9-867d-47ac-b109-80b93da2ef77::Regeneration]]: Legendary\n• [[item:5a6d4fbe-122e-40c2-b44a-f3624f30d72d::Reserve]]: Rare",
+          "it": "Le _pietre di Ioun_ sono delle dimensioni approssimative di una biglia e devono il loro nome a Ioun, dea della conoscenza e della profezia venerata su alcuni mondi. Esistono molti tipi di _pietre di Ioun_, ognuno dei quali ha una diversa combinazione di forma e colore.\nQuando il personaggio effettua un'azione di Magia per lanciare una _pietra di Ioun_ in aria, l'oggetto orbita intorno alla sua testa a una distanza di {1d3 × 30 centimetri|1d3 piedi}, conferendogli il suo beneficio nel frattempo. Una creatura può avere fino a tre _pietre di Ioun_ che orbitano intorno alla sua testa contemporaneamente.\nOgni pietra che orbita intorno alla testa è considerata un oggetto indossato. La pietra orbitante evita il contatto con altre creature e oggetti, regolando la sua orbita per evitare collisioni e vanificando tutti i tentativi di altre creature di attaccarla o agguantarla.\nIl personaggio può effettuare un'azione di Utilizzo per afferrare e riporre un numero qualsiasi di _pietre di Ioun_ che orbitano intorno alla sua testa. Se la sintonia con una _pietra di Ioun_ termina mentre orbita intorno alla testa, l'oggetto cade come se fosse stato lasciato cadere a terra.\nIl tipo di pietra ne determina la rarità e gli effetti.\n• [[item:125b12db-088e-44d1-8ba6-8e8e87693d29::Agilità]]: Molto Rara\n• [[item:56c239f6-6216-441c-9e42-269421b8964c::Assorbimento]]: Molto Rara\n• [[item:1368a7c7-3a73-4f5b-bc0a-b9679a5abb99::Assorbimento Superiore]]: Leggendaria\n• [[item:58ee93fe-b59e-49b8-ad33-736afe1af932::Autorità]]: Molto Rara\n• [[item:7d3726d7-a638-498c-a9d8-3f81e19454d3::Consapevolezza]]: Rara\n• [[item:b94a1031-f7cc-41d9-ada0-a39b72ccd648::Forza]]: Molto Rara\n• [[item:0ee57f5b-2b94-4498-a55a-0e122a0c9ac6::Intelletto]]: Molto Rara\n• [[item:7f557bad-60c2-43a7-b8d1-3cf726d0d953::Intuizione]]: Molto Rara\n• [[item:7e32e759-ad03-48e9-9843-08721198adef::Maestria]]: Leggendaria\n• [[item:9618fb23-4002-4515-989d-50a4c5a05deb::Protezione]]: Rara\n• [[item:4f1f34b9-867d-47ac-b109-80b93da2ef77::Rigenerazione]]: Leggendaria\n• [[item:5a6d4fbe-122e-40c2-b44a-f3624f30d72d::Riserva]]: Rara"
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "various",
+        "required_attunement_slots": 1,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 0,
+        "is_consumable": false,
+        "kind": "item",
+        "type": "other"
+      },
+      {
+        "id": "8bbd0368-c68d-4a69-ad75-03d724f96d16",
+        "image_url": null,
+        "name": {
+          "en": "Potion of Giant Strength",
+          "it": "Pozione della Forza dei Giganti"
+        },
+        "page": {
+          "en": 235,
+          "it": 274
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": null,
+        "description": {
+          "en": "When you drink this potion, your Strength score changes for 1 hour. The type of giant determines the score (see the list below). The potion has no effect on you if your Strength is equal to or greater than that score.\nThis potion's transparent liquid has floating in it a sliver of light resembling a giant's fingernail.\n• [[item:3b69d476-62af-42f1-9129-67bbc4115220::Hill]]: 21 Strength, Uncommon\n• [[item:527a8ffa-7136-4547-9045-7e3958a18a93::Frost]]: 23 Strength, Rare\n• [[item:eed0a436-fefd-414d-9fa1-1949aac0fd60::Stone]]: 23 Strength, Rare\n• [[item:a6ab1741-7abf-44a7-a26d-ed03db93682a::Fire]]: 25 Strength, Rare\n• [[item:65fb7985-4ad6-49b9-b8b7-081ffb7c2a30::Cloud]]: 27 Strength, Very Rare\n• [[item:da342b10-a9ac-4577-9213-c268ce1a95a6::Storm]]: 29 Strength, Legendary",
+          "it": "Quando il personaggio beve questa pozione, il suo punteggio di Forza cambia per 1 ora, come determinato dal tipo di gigante (vedi la tabella sottostante). Se il punteggio di Forza del personaggio è pari o superiore a quello conferito dalla pozione, non ha alcun effetto.\nNel liquido trasparente di questa pozione galleggia un frammento argenteo che ricorda l'unghia di un gigante.\n• [[item:3b69d476-62af-42f1-9129-67bbc4115220::Colline]]: 21 Forza, Non Comune\n• [[item:527a8ffa-7136-4547-9045-7e3958a18a93::Gelo]]: 23 Forza, Rara\n• [[item:eed0a436-fefd-414d-9fa1-1949aac0fd60::Pietre]]: 23 Forza, Rara\n• [[item:a6ab1741-7abf-44a7-a26d-ed03db93682a::Fuoco]]: 25 Forza, Rara\n• [[item:65fb7985-4ad6-49b9-b8b7-081ffb7c2a30::Nuvole]]: 27 Forza, Molto Rara\n• [[item:da342b10-a9ac-4577-9213-c268ce1a95a6::Tempeste]]: 29 Forza, Leggendaria"
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "various",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 1,
+        "is_consumable": true,
+        "kind": "item",
+        "type": "potion"
+      },
+      {
+        "id": "97ac0c84-ce9f-442e-bb38-ac49b1eeb6b5",
+        "image_url": null,
+        "name": {
+          "en": "Potion of Resistance",
+          "it": "Pozione di Resistenza"
+        },
+        "page": {
+          "en": 236,
+          "it": 275
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": 20000,
+        "description": {
+          "en": "When you drink this potion, you have Resistance to one type of damage for 1 hour. The GM chooses the type or determines it randomly by rolling 1d10 on the following list.\n• (1) [[item:9d56df1c-5831-4e3e-8616-4b4cde9c3512::Acid]]; (2) [[item:c0c760da-48fc-4c9c-a144-03e3d052f66d::Cold]]; (3) [[item:25ad48c6-c429-4169-8d86-100db4ad4ce3::Fire]]; (4) [[item:8b23df98-1bb1-42c3-b712-ffdb5ac76583::Force]]; (5) [[item:3fa566da-babf-44e8-89cb-926ec23eff60::Lightning]]; (6) [[item:dd5038c6-13b8-4bdb-bc2e-3eb562f82d30::Necrotic]]; (7) [[item:43f2b10e-9402-4c2c-90f5-225feb1df152::Poison]]; (8) [[item:9cae308d-3da1-424a-ba3a-f4a7db2d60b3::Psychic]]; (9) [[item:e75332f3-bbe5-48d0-acbc-92e4ac1ff639::Radiant]]; (10) [[item:551abd84-5156-4374-8822-fa597a4559ce::Thunder]].",
+          "it": "Quando beve questa pozione, il personaggio ottiene resistenza per 1 ora a un tipo di danno a scelta del GM o determinato in modo casuale tirando 1d10 sulla seguente lista.\n• (1) [[item:9d56df1c-5831-4e3e-8616-4b4cde9c3512::Acido]]; (2) [[item:8b23df98-1bb1-42c3-b712-ffdb5ac76583::Forza]]; (3) [[item:c0c760da-48fc-4c9c-a144-03e3d052f66d::Freddo]]; (4) [[item:3fa566da-babf-44e8-89cb-926ec23eff60::Fulmine]]; (5) [[item:25ad48c6-c429-4169-8d86-100db4ad4ce3::Fuoco]]; (6) [[item:dd5038c6-13b8-4bdb-bc2e-3eb562f82d30::Necrotico]]; (7) [[item:9cae308d-3da1-424a-ba3a-f4a7db2d60b3::Psichico]]; (8) [[item:e75332f3-bbe5-48d0-acbc-92e4ac1ff639::Radioso]]; (9) [[item:551abd84-5156-4374-8822-fa597a4559ce::Tuono]]; (10) [[item:43f2b10e-9402-4c2c-90f5-225feb1df152::Veleno]]."
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "uncommon",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 1,
+        "is_consumable": true,
+        "kind": "item",
+        "type": "potion"
+      },
+      {
+        "id": "213101e8-96f2-4adb-89d7-36d6d8b9fce6",
+        "image_url": null,
+        "name": {
+          "en": "Ring of Resistance",
+          "it": "Anello di Resistenza"
+        },
+        "page": {
+          "en": 238,
+          "it": 240
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": 400000,
+        "description": {
+          "en": "You have Resistance to one damage type while wearing this ring. The gemstone in the ring indicates the type, which the GM chooses or determines randomly by rolling 1d10 on the following list.\n• (1) [[item:9d56df1c-5831-4e3e-8616-4b4cde9c3512::Acid]] (pearl); (2) [[item:c0c760da-48fc-4c9c-a144-03e3d052f66d::Cold]] (tourmaline); (3) [[item:25ad48c6-c429-4169-8d86-100db4ad4ce3::Fire]] (garnet); (4) [[item:8b23df98-1bb1-42c3-b712-ffdb5ac76583::Force]] (sapphire); (5) [[item:3fa566da-babf-44e8-89cb-926ec23eff60::Lightning]] (citrine); (6) [[item:dd5038c6-13b8-4bdb-bc2e-3eb562f82d30::Necrotic]] (jet); (7) [[item:43f2b10e-9402-4c2c-90f5-225feb1df152::Poison]] (amethyst); (8) [[item:9cae308d-3da1-424a-ba3a-f4a7db2d60b3::Psychic]] (jade); (9) [[item:e75332f3-bbe5-48d0-acbc-92e4ac1ff639::Radiant]] (topaz); (10) [[item:551abd84-5156-4374-8822-fa597a4559ce::Thunder]] (spinel).",
+          "it": "Finché il personaggio indossa questo anello, ottiene resistenza a un tipo di danno rappresentato dalla gemma incastonata in esso. Questa è a scelta del GM o determinata casualmente tirando 1d10 sulla lista seguente.\n• (1) [[item:9d56df1c-5831-4e3e-8616-4b4cde9c3512::Acido]] (perla); (2) [[item:8b23df98-1bb1-42c3-b712-ffdb5ac76583::Forza]] (zaffiro); (3) [[item:c0c760da-48fc-4c9c-a144-03e3d052f66d::Freddo]] (tormalina); (4) [[item:3fa566da-babf-44e8-89cb-926ec23eff60::Fulmine]] (citrino); (5) [[item:25ad48c6-c429-4169-8d86-100db4ad4ce3::Fuoco]] (granato); (6) [[item:dd5038c6-13b8-4bdb-bc2e-3eb562f82d30::Necrotico]] (giaietto); (7) [[item:9cae308d-3da1-424a-ba3a-f4a7db2d60b3::Psichico]] (giada); (8) [[item:e75332f3-bbe5-48d0-acbc-92e4ac1ff639::Radioso]] (topazio); (9) [[item:551abd84-5156-4374-8822-fa597a4559ce::Tuono]] (spinello); (10) [[item:43f2b10e-9402-4c2c-90f5-225feb1df152::Veleno]] (ametista)."
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "rare",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 0,
+        "is_consumable": false,
+        "kind": "item",
+        "type": "ring"
+      },
+      {
+        "id": "ca338f71-2721-4c2a-aa73-9a86d4e7e29e",
+        "image_url": null,
+        "name": {
+          "en": "Ring of Elemental Command",
+          "it": "Anello del Comando degli Elementali"
+        },
+        "page": {
+          "en": 237,
+          "it": 239
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "attunement_notes": {
+          "en": "",
+          "it": ""
+        },
+        "cost": 20000000,
+        "description": {
+          "en": "Each _Ring of Elemental Command_ is linked to one of the four Elemental Planes. The GM chooses or randomly determines the linked plane.\nEvery _Ring of Elemental Command_ has the following two properties:\n* **Elemental Bane.** While wearing the ring, you have Advantage on attack rolls against Elementals and they have Disadvantage on attack rolls against you.\n• **Elemental Compulsion.** While wearing the ring, you can take a Magic action to try to compel an Elemental you see within {18 meters|60 feet} of yourself. The Elemental makes a DC 18 Wisdom saving throw. On a failed save, the Elemental has the Charmed condition until the start your next turn, and you determine what it does with its move and action on its next turn.\n**Elemental Focus.** While wearing the ring, you benefit from additional properties corresponding to the ring's linked Elemental Plane.\n**Spellcasting.** The ring has 5 charges and regains 1d4 + 1 expended charges daily at dawn. While wearing the ring, you can cast a spell from it. Choose the spell from the list of available spells based on the Elemental Plane the ring is linked to.\nElements: [[item:37f2558b-c817-4f1a-9982-fdd73f7475ee::Air]], [[item:71b86b2e-7c55-4abc-b837-6db114aa3e0a::Earth]], [[item:a9e88dce-6aca-44b5-90ec-6a9bdaf1e20e::Fire]], [[item:c381514e-f930-4b71-8699-c26860d08204::Water]].",
+          "it": "Ciascun _anello del comando degli elementali_ è collegato a uno dei quattro Piani Elementali scelto dal GM o determinato in maniera casuale.\nOgni _anello del comando degli elementali_ ha le seguenti proprietà:\n• **Anatema elementale.** Finché il personaggio indossa l'anello, dispone di vantaggio ai tiri per colpire contro gli elementali, mentre questi ultimi subiscono svantaggio ai tiri per colpire contro di lui.\n• **Compulsione elementale.** Finché il personaggio indossa l'anello, può effettuare un'azione di Magia  per tentare di stregare un elementale che è in grado di vedere entro {18 metri|60 piedi} da sé. L'elementale dovrà quindi effettuare un tiro salvezza su Saggezza con CD 18. In caso di fallimento, sarà affascinato fino all'inizio del turno successivo del personaggio, che potrà stabilirne movimenti e azioni al suo prossimo turno.\n**Focus elementale.** Finché indossa l'anello, il personaggio trae beneficio dalle proprietà aggiuntive conferite dal Piano Elementale a cui è collegato.\n**Incantesimi.** L'anello ha 5 cariche e recupera 1d4 + 1 cariche consumate all'alba di ogni giorno. Finché il personaggio indossa l'anello, può usarlo per lanciare un incantesimo. È possibile sceglierlo dalla lista di incantesimi disponibili in base al Piano Elementale con cui l'anello è collegato.\nElementi: [[item:c381514e-f930-4b71-8699-c26860d08204::Acqua]], [[item:37f2558b-c817-4f1a-9982-fdd73f7475ee::Aria]], [[item:a9e88dce-6aca-44b5-90ec-6a9bdaf1e20e::Fuoco]], [[item:71b86b2e-7c55-4abc-b837-6db114aa3e0a::Terra]]."
+        },
+        "is_magic": true,
+        "modifier_ids": [],
+        "rarity": "legendary",
+        "required_attunement_slots": 1,
+        "variant_modifier_ids": [],
+        "weight": null,
+        "charges": 5,
+        "is_consumable": false,
+        "kind": "item",
+        "type": "ring"
       }
     ],
     "item_modifiers": [
@@ -92589,7 +92988,13 @@
       },
       {
         "id": "706363d2-f2e0-4aaa-822a-4c7d65e7e00f",
+        "kind": "vehicle",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "it": "Cammello",
           "en": "Camel"
@@ -92598,11 +93003,6 @@
           "it": 113,
           "en": 100
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "armor_class": 10,
         "cargo": 225000,
         "cost": 5000,
@@ -92613,13 +93013,18 @@
           "en": ""
         },
         "hit_points": 17,
-        "kind": "vehicle",
         "passenger_capacity": 1,
         "speed": 900000
       },
       {
         "id": "fe3b0f37-b3a7-451e-8196-ab51dfcd57d2",
+        "kind": "vehicle",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "en": "Horse (Riding)",
           "it": "Cavallo da Galoppo"
@@ -92628,11 +93033,6 @@
           "en": 100,
           "it": 113
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "armor_class": 11,
         "cargo": 240000,
         "cost": 7500,
@@ -92643,13 +93043,18 @@
           "it": ""
         },
         "hit_points": 13,
-        "kind": "vehicle",
         "passenger_capacity": 1,
         "speed": 1080000
       },
       {
         "id": "eb56a06e-16e4-47e3-ba4b-8968086244ef",
+        "kind": "vehicle",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "it": "Cavallo da Guerra",
           "en": "Warhorse"
@@ -92658,11 +93063,6 @@
           "it": 113,
           "en": 100
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "armor_class": 11,
         "cargo": 270000,
         "cost": 40000,
@@ -92673,13 +93073,18 @@
           "en": ""
         },
         "hit_points": 19,
-        "kind": "vehicle",
         "passenger_capacity": 1,
         "speed": 1080000
       },
       {
         "id": "515026a4-0cd5-42db-afcd-b41cd9052d42",
+        "kind": "vehicle",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "en": "Horse (Draft)",
           "it": "Cavallo da Tiro"
@@ -92688,11 +93093,6 @@
           "en": 100,
           "it": 113
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "armor_class": 10,
         "cargo": 270000,
         "cost": 5000,
@@ -92703,13 +93103,18 @@
           "it": ""
         },
         "hit_points": 15,
-        "kind": "vehicle",
         "passenger_capacity": 1,
         "speed": 720000
       },
       {
         "id": "6ace3856-3019-44e2-a81b-d0ca9a9fe701",
+        "kind": "vehicle",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "it": "Elefante",
           "en": "Elephant"
@@ -92718,11 +93123,6 @@
           "it": 113,
           "en": 100
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "armor_class": 12,
         "cargo": 660000,
         "cost": 20000,
@@ -92733,13 +93133,18 @@
           "en": ""
         },
         "hit_points": 76,
-        "kind": "vehicle",
         "passenger_capacity": 1,
         "speed": 720000
       },
       {
         "id": "8b8e7054-44cd-4db0-965b-ab7334123484",
+        "kind": "vehicle",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "it": "Mastino",
           "en": "Mastiff"
@@ -92748,11 +93153,6 @@
           "it": 113,
           "en": 100
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "armor_class": 12,
         "cargo": 97500,
         "cost": 20000,
@@ -92763,13 +93163,18 @@
           "en": ""
         },
         "hit_points": 5,
-        "kind": "vehicle",
         "passenger_capacity": 0,
         "speed": 720000
       },
       {
         "id": "f689a081-84c4-4841-8abc-c75dfbde0a9a",
+        "kind": "vehicle",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "en": "Mule",
           "it": "Mulo"
@@ -92778,11 +93183,6 @@
           "en": 100,
           "it": 113
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "armor_class": 10,
         "cargo": 210000,
         "cost": 800,
@@ -92793,13 +93193,18 @@
           "it": ""
         },
         "hit_points": 11,
-        "kind": "vehicle",
         "passenger_capacity": 1,
         "speed": 0
       },
       {
         "id": "86bd460f-1047-46ae-971e-096ec97df796",
+        "kind": "vehicle",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "it": "Pony",
           "en": "Pony"
@@ -92808,11 +93213,6 @@
           "it": 113,
           "en": 100
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "armor_class": 10,
         "cargo": 112500,
         "cost": 3000,
@@ -92823,7 +93223,6 @@
           "en": ""
         },
         "hit_points": 11,
-        "kind": "vehicle",
         "passenger_capacity": 1,
         "speed": 720000
       }
@@ -96725,10 +97124,10 @@
     },
     "registry": {
       "access": "creator",
-      "bundle_hash": "4399ab7b4eb469855afb99827ecfe9448e5d492af86f9c22b4fe1d8aedf784cb",
-      "revision_created_at": "2026-10-17T09:40:36.477864+00:00",
-      "revision_id": "db4a052f-2101-4e9e-9516-e615fe8435c0",
-      "revision_number": 14,
+      "bundle_hash": "762da97a498d923e26574a8dcd84110397a9769de03ac002cf48005522eabf02",
+      "revision_created_at": "2026-09-18T19:49:57.631091+00:00",
+      "revision_id": "ed0801ce-7bb9-4558-9147-efe2a0d709b7",
+      "revision_number": 19,
       "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
       "visibility": "public"
     },
