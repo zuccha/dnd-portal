@@ -9246,6 +9246,15 @@
       {
         "resource_1_id": "305d2275-b649-4b38-b61e-6d461ad02874",
         "resource_1_position": 3,
+        "resource_2_id": "c128c81c-ad6b-45f6-a493-58f43fca7c3e",
+        "resource_2_position": 0,
+        "minimum_level": 10,
+        "resource_1_kind": "character_subclass",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "305d2275-b649-4b38-b61e-6d461ad02874",
+        "resource_1_position": 4,
         "resource_2_id": "4f0512d9-9efb-4b7a-9774-d630f3ef7525",
         "resource_2_position": 0,
         "minimum_level": 14,
