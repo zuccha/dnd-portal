@@ -94,7 +94,7 @@ export function createResourcesGenericFilters<
     }, [nameFilterId]);
 
     return (
-      <VStack gap={3} w="full">
+      <VStack gap={2} w="full">
         <CaptionInput caption={t("name_placeholder")} w="full">
           <Input
             groupProps={{ endElement: <Kbd size="sm">/</Kbd>, w: "full" }}
@@ -106,35 +106,33 @@ export function createResourcesGenericFilters<
           />
         </CaptionInput>
 
-        <VStack gap={2} w="full">
-          <CaptionInput caption={t("modules")} w="full">
-            <InclusionSelect
-              buttonProps={{ disabled: !options.length }}
-              includes={sources}
-              onValueChange={(partial) => setSources((prev) => ({ ...prev, ...partial }))}
-              options={options}
-              placeholder={t("modules")}
-              size="sm"
-              w="full"
-            />
-          </CaptionInput>
+        <CaptionInput caption={t("modules")} w="full">
+          <InclusionSelect
+            buttonProps={{ disabled: !options.length }}
+            includes={sources}
+            onValueChange={(partial) => setSources((prev) => ({ ...prev, ...partial }))}
+            options={options}
+            placeholder={t("modules")}
+            size="sm"
+            w="full"
+          />
+        </CaptionInput>
 
-          <CaptionInput caption={t("sort_by")} w="full">
-            <Select.Enum
-              onValueChange={(value) => {
-                const order = value.split(".");
-                const order_by = order[0] ?? "name";
-                const maybe_order_dir = z.enum(["asc", "desc"]).safeParse(order[1]);
-                const order_dir = maybe_order_dir.data ?? "asc";
-                setFilters({ order_by, order_dir } as Partial<F>);
-              }}
-              options={orderOptions}
-              size="sm"
-              value={`${filters.order_by}.${filters.order_dir}`}
-              w="full"
-            />
-          </CaptionInput>
-        </VStack>
+        <CaptionInput caption={t("sort_by")} w="full">
+          <Select.Enum
+            onValueChange={(value) => {
+              const order = value.split(".");
+              const order_by = order[0] ?? "name";
+              const maybe_order_dir = z.enum(["asc", "desc"]).safeParse(order[1]);
+              const order_dir = maybe_order_dir.data ?? "asc";
+              setFilters({ order_by, order_dir } as Partial<F>);
+            }}
+            options={orderOptions}
+            size="sm"
+            value={`${filters.order_by}.${filters.order_dir}`}
+            w="full"
+          />
+        </CaptionInput>
       </VStack>
     );
   };
