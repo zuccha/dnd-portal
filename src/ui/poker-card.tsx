@@ -31,6 +31,7 @@ const rem0700 = `${remToIn(0.7)}in`;
 const rem0750 = `${remToIn(0.75)}in`;
 const rem0875 = `${remToIn(0.875)}in`;
 const rem1000 = `${remToIn(1)}in`;
+const rem1100 = `${remToIn(1.1)}in`;
 const rem1125 = `${remToIn(1.125)}in`;
 const rem1250 = `${remToIn(1.25)}in`;
 const rem1375 = `${remToIn(1.375)}in`;
@@ -255,26 +256,31 @@ function Description({ children, palette, patterns }: DescriptionProps) {
       px={`${remToIn(1) + bleed.x}in`}
       w="full"
     >
-      {children.split(/[\n\r]/).map((paragraph, paragraphIndex) =>
-        paragraph.startsWith("##") ? (
-          <Span
-            borderBottomColor={palette[800]}
-            borderBottomWidth={px2}
-            color={palette[800]}
-            fontFamily="Mr Eaves Alt"
-            fontSize={rem1125}
-            fontWeight="bold"
-            key={paragraphIndex}
-            lineHeight={0.9}
-            mb={rem0125}
-            w="full"
-          >
-            {paragraph.substring(2, paragraph.length - 2)}
-          </Span>
-        ) : (
+      {children.split(/[\n\r]/).map((paragraph, paragraphIndex) => {
+        if (paragraph.trim() === "") return <Box h={rem1100} key={paragraphIndex} />;
+
+        if (paragraph.startsWith("##"))
+          return (
+            <Span
+              borderBottomColor={palette[800]}
+              borderBottomWidth={px2}
+              color={palette[800]}
+              fontFamily="Mr Eaves Alt"
+              fontSize={rem1125}
+              fontWeight="bold"
+              key={paragraphIndex}
+              lineHeight={0.9}
+              mb={rem0125}
+              w="full"
+            >
+              {paragraph.substring(2, paragraph.length - 2)}
+            </Span>
+          );
+
+        return (
           <RichText hyphens="auto" key={paragraphIndex} patterns={patterns} text={paragraph} />
-        ),
-      )}
+        );
+      })}
     </VStack>
   );
 }
@@ -452,6 +458,7 @@ const PokerCard = {
   rem0750,
   rem0875,
   rem1000,
+  rem1100,
   rem1125,
   rem1250,
   rem1375,

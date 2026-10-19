@@ -125,7 +125,7 @@ export function localizeResource<R extends Resource>(
 //------------------------------------------------------------------------------
 
 export function formatDescription(...details: string[]): string {
-  return details.filter(Boolean).join("\n\n");
+  return details.filter(Boolean).join("\n");
 }
 
 //------------------------------------------------------------------------------
