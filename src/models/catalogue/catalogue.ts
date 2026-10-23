@@ -88,6 +88,16 @@ export function createCatalogue(id: string) {
     return createMemoryStoreSet<string, string[]>(`${id}/resources-ids-by-source-id/${kind}`);
   }
 
+  //------------------------------------------------------------------------------
+  // Create Resources By Source Id
+  //------------------------------------------------------------------------------
+
+  function createResourcesBySourceId(kind: Resource["kind"]) {
+    return createOptionalMemoryStoreSet<string, Map<string, Resource>>(
+      `${id}/resources-by-source-id/${kind}`,
+    );
+  }
+
   //----------------------------------------------------------------------------
   // Stores
   //----------------------------------------------------------------------------
@@ -228,6 +238,40 @@ export function createCatalogue(id: string) {
     weapon_modifier: createResourcesIdsBySourceId("weapon_modifier"),
   };
 
+  //------------------------------------------------------------------------------
+  // Resources By Source Id By Kind
+  //------------------------------------------------------------------------------
+
+  const resourcesBySourceIdByKind = {
+    armor: createResourcesBySourceId("armor"),
+    armor_modifier: createResourcesBySourceId("armor_modifier"),
+    background: createResourcesBySourceId("background"),
+    character_class: createResourcesBySourceId("character_class"),
+    character_subclass: createResourcesBySourceId("character_subclass"),
+    creature: createResourcesBySourceId("creature"),
+    creature_family: createResourcesBySourceId("creature_family"),
+    creature_habitat: createResourcesBySourceId("creature_habitat"),
+    creature_tag: createResourcesBySourceId("creature_tag"),
+    creature_treasure: createResourcesBySourceId("creature_treasure"),
+    eldritch_invocation: createResourcesBySourceId("eldritch_invocation"),
+    feat: createResourcesBySourceId("feat"),
+    feature: createResourcesBySourceId("feature"),
+    item: createResourcesBySourceId("item"),
+    item_modifier: createResourcesBySourceId("item_modifier"),
+    language: createResourcesBySourceId("language"),
+    maneuver: createResourcesBySourceId("maneuver"),
+    metamagic: createResourcesBySourceId("metamagic"),
+    plane: createResourcesBySourceId("plane"),
+    service: createResourcesBySourceId("service"),
+    species: createResourcesBySourceId("species"),
+    spell: createResourcesBySourceId("spell"),
+    tool: createResourcesBySourceId("tool"),
+    tool_modifier: createResourcesBySourceId("tool_modifier"),
+    vehicle: createResourcesBySourceId("vehicle"),
+    weapon: createResourcesBySourceId("weapon"),
+    weapon_modifier: createResourcesBySourceId("weapon_modifier"),
+  };
+
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Active Source Resource Ids By Kind
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -248,6 +292,14 @@ export function createCatalogue(id: string) {
 
   const useActiveSourceReferenceResourceIdsByKind = activeSourceReferenceResourceIdsByKind.useValue;
 
+  //------------------------------------------------------------------------------
+  // Resolved Resource Ids By Kind
+  //------------------------------------------------------------------------------
+
+  const resolvedResourceIdsByKind = new Map<ResourceKind, string[]>(
+    objectKeys(resourcesByIdByKind).map((kind) => [kind, emptyIds]),
+  );
+
   //----------------------------------------------------------------------------
   // Active Source Resource Ids
   //----------------------------------------------------------------------------
@@ -260,31 +312,191 @@ export function createCatalogue(id: string) {
     ];
   }
 
+  //------------------------------------------------------------------------------
+  // Get Source Resource Order
+  //------------------------------------------------------------------------------
+
+  function getSourceResourceOrder(sourceId: string): { source_id: string; tier: number }[] {
+    type SourcePriority = {
+      depth: number;
+      order: number;
+      source_id: string;
+      tier: number;
+    };
+
+    const queue: SourcePriority[] = [{ depth: 0, order: 0, source_id: sourceId, tier: 2 }];
+    const bestPriorityBySourceId = new Map<string, SourcePriority>();
+    let nextOrder = 1;
+
+    for (let index = 0; index < queue.length; index += 1) {
+      const current = queue[index]!;
+      const previous = bestPriorityBySourceId.get(current.source_id);
+      if (
+        previous &&
+        (previous.tier > current.tier ||
+          (previous.tier === current.tier && previous.depth <= current.depth))
+      )
+        continue;
+
+      bestPriorityBySourceId.set(current.source_id, current);
+
+      const source = sourceById.get(current.source_id);
+      if (!source) continue;
+
+      const isReference = current.tier === 0;
+      const dependencies = [
+        ...source.requires.map(({ source_id }) => ({ source_id, tier: 0 })),
+        ...source.includes.map(({ source_id }) => ({
+          source_id,
+          tier: isReference ? 0 : 1,
+        })),
+      ];
+
+      for (const dependency of dependencies)
+        queue.push({
+          depth: current.depth + 1,
+          order: nextOrder++,
+          source_id: dependency.source_id,
+          tier: dependency.tier,
+        });
+    }
+
+    return [...bestPriorityBySourceId.values()]
+      .sort((a, b) => a.tier - b.tier || b.depth - a.depth || a.order - b.order)
+      .map(({ source_id, tier }) => ({ source_id, tier }));
+  }
+
+  //------------------------------------------------------------------------------
+  // Rebuild Active Source Resources
+  //------------------------------------------------------------------------------
+
+  function rebuildActiveSourceResources(sourceId: string | undefined): void {
+    for (const kind of objectKeys(resourcesByIdByKind)) {
+      const resourceStore = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<
+        string,
+        Resource
+      >;
+      const resolvedResources = new Map<string, Resource>();
+
+      if (sourceId)
+        for (const { source_id: candidateSourceId } of getSourceResourceOrder(sourceId)) {
+          const resources = resourcesBySourceIdByKind[kind].get(candidateSourceId);
+          if (!resources) continue;
+          for (const resource of resources.values()) resolvedResources.set(resource.id, resource);
+        }
+
+      const resolvedResourceIds = [...resolvedResources.keys()];
+      const nextResourceIdSet = new Set(resolvedResourceIds);
+
+      for (const resourceId of resolvedResourceIdsByKind.get(kind) ?? emptyIds)
+        if (!nextResourceIdSet.has(resourceId)) resourceStore.clear(resourceId);
+
+      for (const [resourceId, resource] of resolvedResources)
+        if (resourceStore.get(resourceId) !== resource) resourceStore.set(resourceId, resource);
+
+      resolvedResourceIdsByKind.set(kind, resolvedResourceIds);
+    }
+  }
+
+  //------------------------------------------------------------------------------
+  // Update Active Resource
+  //------------------------------------------------------------------------------
+
+  function updateActiveResource(
+    kind: ResourceKind,
+    resourceId: string,
+    sourceOrder: { source_id: string; tier: number }[],
+  ): void {
+    const resourceStore = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<
+      string,
+      Resource
+    >;
+    let resolvedResource: Resource | undefined;
+
+    for (const { source_id } of sourceOrder) {
+      const resource = resourcesBySourceIdByKind[kind].get(source_id)?.get(resourceId);
+      if (resource) resolvedResource = resource;
+    }
+
+    const currentResource = resourceStore.get(resourceId);
+    if (currentResource === resolvedResource) return;
+
+    if (resolvedResource) resourceStore.set(resourceId, resolvedResource);
+    else resourceStore.clear(resourceId);
+  }
+
+  //------------------------------------------------------------------------------
+  // Update Active Resource Ids
+  //------------------------------------------------------------------------------
+
+  function updateActiveResourceIds(
+    kind: ResourceKind,
+    resourceId: string,
+    sourceOrder: { source_id: string; tier: number }[],
+  ): void {
+    const resourceSourceIds = sourceOrder
+      .filter(({ tier }) => tier > 0)
+      .map(({ source_id }) => source_id);
+    const referenceSourceIds = sourceOrder.map(({ source_id }) => source_id);
+    const isResource = resourceSourceIds.some((sourceId) =>
+      resourcesBySourceIdByKind[kind].get(sourceId)?.has(resourceId),
+    );
+    const isReference = referenceSourceIds.some((sourceId) =>
+      resourcesBySourceIdByKind[kind].get(sourceId)?.has(resourceId),
+    );
+    const resourceIds = activeSourceResourceIdsByKind.get(kind, emptyIds);
+    const referenceResourceIds = activeSourceReferenceResourceIdsByKind.get(kind, emptyIds);
+    const nextResourceIds = updateResourceIdList(resourceIds, resourceId, isResource);
+    const nextReferenceResourceIds = updateResourceIdList(
+      referenceResourceIds,
+      resourceId,
+      isReference,
+    );
+
+    if (nextResourceIds !== resourceIds)
+      activeSourceResourceIdsByKind.set(kind, emptyIds, nextResourceIds);
+    if (nextReferenceResourceIds !== referenceResourceIds)
+      activeSourceReferenceResourceIdsByKind.set(kind, emptyIds, nextReferenceResourceIds);
+  }
+
+  //------------------------------------------------------------------------------
+  // Update Resource Id List
+  //------------------------------------------------------------------------------
+
+  function updateResourceIdList(resourceIds: string[], resourceId: string, shouldInclude: boolean) {
+    const includesResource = resourceIds.includes(resourceId);
+    if (includesResource === shouldInclude) return resourceIds;
+    return shouldInclude
+      ? [...resourceIds, resourceId]
+      : resourceIds.filter((id) => id !== resourceId);
+  }
+
   //----------------------------------------------------------------------------
   // Set Active Source Resource Ids
   //----------------------------------------------------------------------------
 
   function setActiveSourceResourceIds(sourceId: string | undefined): void {
-    const source = sourceId ? sourceById.get(sourceId) : undefined;
+    const sourceOrder = sourceId ? getSourceResourceOrder(sourceId) : [];
+    const resourceSourceIds = sourceOrder
+      .filter(({ tier }) => tier > 0)
+      .map(({ source_id }) => source_id);
+    const referenceSourceIds = sourceOrder.map(({ source_id }) => source_id);
 
-    const includeIds = source?.includes.map(({ source_id }) => source_id) ?? emptyIds;
-    const requireIds = source?.requires.map(({ source_id }) => source_id) ?? emptyIds;
-
-    const resourceSourceIds = sourceId ? [sourceId, ...includeIds] : emptyIds;
-    const referenceSourceIds = [...resourceSourceIds, ...requireIds];
+    rebuildActiveSourceResources(sourceId);
 
     for (const kind of objectKeys(resourceIdsBySourceIdByKind)) {
-      activeSourceResourceIdsByKind.set(
-        kind,
-        emptyIds,
-        getResourceIdsByKind(kind, resourceSourceIds),
-      );
+      const resourceIds = getResourceIdsByKind(kind, resourceSourceIds);
+      if (!areSameArray(activeSourceResourceIdsByKind.get(kind, emptyIds), resourceIds))
+        activeSourceResourceIdsByKind.set(kind, emptyIds, resourceIds);
 
-      activeSourceReferenceResourceIdsByKind.set(
-        kind,
-        emptyIds,
-        getResourceIdsByKind(kind, referenceSourceIds),
-      );
+      const referenceResourceIds = getResourceIdsByKind(kind, referenceSourceIds);
+      if (
+        !areSameArray(
+          activeSourceReferenceResourceIdsByKind.get(kind, emptyIds),
+          referenceResourceIds,
+        )
+      )
+        activeSourceReferenceResourceIdsByKind.set(kind, emptyIds, referenceResourceIds);
     }
   }
 
@@ -296,11 +508,7 @@ export function createCatalogue(id: string) {
     const source = getActiveSource();
     if (!source) return [];
 
-    const sourceIds = [
-      source.id,
-      ...source.includes.map(({ source_id }) => source_id),
-      ...source.requires.map(({ source_id }) => source_id),
-    ];
+    const sourceIds = getSourceResourceOrder(source.id).map(({ source_id }) => source_id);
 
     return objectKeys(resourcesByIdByKind).flatMap((kind) => {
       const resourceIds = getResourceIdsByKind(kind, sourceIds);
@@ -435,11 +643,7 @@ export function createCatalogue(id: string) {
     const source = getActiveSource();
     if (!source) return [];
     return getRelations(
-      [
-        source.id,
-        ...source.includes.map(({ source_id }) => source_id),
-        ...source.requires.map(({ source_id }) => source_id),
-      ],
+      getSourceResourceOrder(source.id).map(({ source_id }) => source_id),
       group,
     );
   }
@@ -468,13 +672,7 @@ export function createCatalogue(id: string) {
     const source = useActiveSource();
     const sourceIds = useMemo(
       () =>
-        source
-          ? [
-              source.id,
-              ...source.includes.map(({ source_id }) => source_id),
-              ...source.requires.map(({ source_id }) => source_id),
-            ]
-          : emptyIds,
+        source ? getSourceResourceOrder(source.id).map(({ source_id }) => source_id) : emptyIds,
       [source],
     );
     return useRelations(sourceIds, group);
@@ -488,13 +686,7 @@ export function createCatalogue(id: string) {
     const source = useActiveSource();
     const sourceIds = useMemo(
       () =>
-        source
-          ? [
-              source.id,
-              ...source.includes.map(({ source_id }) => source_id),
-              ...source.requires.map(({ source_id }) => source_id),
-            ]
-          : emptyIds,
+        source ? getSourceResourceOrder(source.id).map(({ source_id }) => source_id) : emptyIds,
       [source],
     );
     const [relations, setRelations] = useState(() => getActiveSourceRelationGroups(groups));
@@ -653,11 +845,12 @@ export function createCatalogue(id: string) {
     const resources = Object.fromEntries(
       objectKeys(sourceBundleResourceKeyByKind).map((kind) => {
         const resourceIds = resourceIdsBySourceIdByKind[kind].get(sourceId, emptyIds);
+        const resourcesById = resourcesBySourceIdByKind[kind].get(sourceId);
 
         return [
           sourceBundleResourceKeyByKind[kind],
           resourceIds.flatMap((resourceId) => {
-            const resource = resourcesByIdByKind[kind].get(resourceId);
+            const resource = resourcesById?.get(resourceId);
             return resource ? [resource] : [];
           }),
         ];
@@ -695,7 +888,7 @@ export function createCatalogue(id: string) {
     await refreshSourceState(sourceId);
 
     sourceById.set(bundle.source.id, bundle.source);
-    if (activeSourceId.get() === bundle.source.id) setActiveSourceResourceIds(bundle.source.id);
+    setActiveSourceResourceIds(activeSourceId.get());
 
     return bundle.source;
   }
@@ -731,7 +924,7 @@ export function createCatalogue(id: string) {
     await refreshSourceState(sourceId);
 
     sourceById.set(bundle.source.id, bundle.source);
-    if (activeSourceId.get() === bundle.source.id) setActiveSourceResourceIds(bundle.source.id);
+    setActiveSourceResourceIds(activeSourceId.get());
 
     return bundle.source;
   }
@@ -767,14 +960,27 @@ export function createCatalogue(id: string) {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     function upsertResource(resource: R): void {
-      const resourcesById = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, R>;
       const resourceIdsBySourceId = resourceIdsBySourceIdByKind[kind] as StoreSet<string, string[]>;
+      const sourceResourcesById = resourcesBySourceIdByKind[kind];
 
-      resourcesById.set(resource.id, resource);
-      resourceIdsBySourceId.set(resource.source_id, emptyIds, (prev) =>
-        prev.includes(resource.id) ? prev : [...prev, resource.id],
-      );
-      setActiveSourceResourceIds(activeSourceId.get());
+      sourceResourcesById.set(resource.source_id, (previous) => {
+        const resources = new Map(previous ?? []);
+        resources.set(resource.id, resource);
+        return resources;
+      });
+      const sourceResourceIds = resourceIdsBySourceId.get(resource.source_id, emptyIds);
+      if (!sourceResourceIds.includes(resource.id))
+        resourceIdsBySourceId.set(resource.source_id, emptyIds, [
+          ...sourceResourceIds,
+          resource.id,
+        ]);
+
+      const activeId = activeSourceId.get();
+      const sourceOrder = activeId ? getSourceResourceOrder(activeId) : [];
+      if (sourceOrder.some(({ source_id }) => source_id === resource.source_id)) {
+        updateActiveResource(kind, resource.id, sourceOrder);
+        updateActiveResourceIds(kind, resource.id, sourceOrder);
+      }
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -785,14 +991,24 @@ export function createCatalogue(id: string) {
       const resource = getResource(resourceId);
       if (!resource) return;
 
-      const resourcesById = resourcesByIdByKind[kind] as unknown as OptionalStoreSet<string, R>;
       const resourceIdsBySourceId = resourceIdsBySourceIdByKind[kind] as StoreSet<string, string[]>;
+      const sourceResourcesById = resourcesBySourceIdByKind[kind];
 
-      resourcesById.clear(resourceId);
+      sourceResourcesById.set(resource.source_id, (previous) => {
+        const resources = new Map(previous ?? []);
+        resources.delete(resourceId);
+        return resources;
+      });
       resourceIdsBySourceId.set(resource.source_id, emptyIds, (prev) =>
         prev.filter((id) => id !== resourceId),
       );
-      setActiveSourceResourceIds(activeSourceId.get());
+
+      const activeId = activeSourceId.get();
+      const sourceOrder = activeId ? getSourceResourceOrder(activeId) : [];
+      if (sourceOrder.some(({ source_id }) => source_id === resource.source_id)) {
+        updateActiveResource(kind, resourceId, sourceOrder);
+        updateActiveResourceIds(kind, resourceId, sourceOrder);
+      }
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -893,19 +1109,21 @@ export function createCatalogue(id: string) {
     setSourceRelations(source.id, importedBundle.relations);
 
     for (const [kind, resources] of resourceImports) {
-      type ResourceStoreSet = OptionalStoreSet<string, Resource>;
-      const resourcesById = resourcesByIdByKind[kind] as ResourceStoreSet;
-      const previousResourceIds = resourceIdsBySourceIdByKind[kind].get(source.id, emptyIds);
-
-      for (const resourceId of previousResourceIds) resourcesById.clear(resourceId);
-      for (const resource of resources) resourcesById.set(resource.id, resource);
-
+      const resourcesById = new Map(resources.map((resource) => [resource.id, resource]));
+      resourcesBySourceIdByKind[kind].set(source.id, resourcesById);
       const resourceIds = resources.map(({ id }) => id);
       resourceIdsBySourceIdByKind[kind].set(source.id, [], resourceIds);
     }
 
     if (activate) setActiveSourceId(source.id);
-    else if (activeSourceId.get() === source.id) setActiveSourceResourceIds(source.id);
+    else {
+      const activeId = activeSourceId.get();
+      if (
+        activeId &&
+        getSourceResourceOrder(activeId).some(({ source_id }) => source_id === source.id)
+      )
+        setActiveSourceResourceIds(activeId);
+    }
 
     return importedBundle;
   }
@@ -916,11 +1134,8 @@ export function createCatalogue(id: string) {
 
   function removeSourceBundle(sourceId: string): void {
     for (const kind of objectKeys(resourceIdsBySourceIdByKind)) {
-      const resourceIds = resourceIdsBySourceIdByKind[kind].get(sourceId, emptyIds);
-
-      for (const resourceId of resourceIds) resourcesByIdByKind[kind].clear(resourceId);
-
       resourceIdsBySourceIdByKind[kind].set(sourceId, emptyIds, emptyIds);
+      resourcesBySourceIdByKind[kind].clear(sourceId);
     }
 
     sourceById.clear(sourceId);
