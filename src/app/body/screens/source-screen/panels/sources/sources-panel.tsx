@@ -37,6 +37,7 @@ import Button from "~/ui/button";
 import Checkbox from "~/ui/checkbox";
 import ConfirmationDialog from "~/ui/confirmation-dialog";
 import SectionHeading from "~/ui/section-heading";
+import { toaster } from "~/ui/toaster";
 import { downloadFile } from "~/utils/download";
 import SourceCreateDialog from "./source-create-dialog";
 import SourceDependenciesDialog from "./source-dependencies-dialog";
@@ -409,7 +410,7 @@ export default function SourcesPanel() {
       );
     } catch (e) {
       console.error(e);
-      setError(t("error.publish"));
+      toaster.error({ description: t("error.publish") });
     } finally {
       setBusySourceId(undefined);
     }

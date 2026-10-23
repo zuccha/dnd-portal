@@ -15,6 +15,7 @@ import { Route } from "~/navigation/routes";
 import CaptionInput from "~/ui/caption-input";
 import IconButton from "~/ui/icon-button";
 import Select, { type SelectOption } from "~/ui/select";
+import { toaster } from "~/ui/toaster";
 import { compareObjects } from "~/utils/object";
 import { nilUuid } from "~/utils/uuid";
 
@@ -50,10 +51,11 @@ export default function SidebarSourceSelector({ versions }: SidebarSourceSelecto
       await publishSourceBundle(selectedSource.id);
     } catch (error) {
       console.error("Unable to publish source", error);
+      toaster.error({ description: t("error.publish") });
     } finally {
       setPublishing(false);
     }
-  }, [selectedSource]);
+  }, [selectedSource, t]);
 
   const [sourceOptions, sourceCategories] = useMemo(() => {
     const cores = sources.filter(({ type }) => type === "core");
@@ -201,6 +203,10 @@ function sourceToOption(
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  "error.publish": {
+    en: "The source could not be published.",
+    it: "Non è stato possibile pubblicare la fonte.",
+  },
   "publish": {
     en: "Publish",
     it: "Pubblica",
