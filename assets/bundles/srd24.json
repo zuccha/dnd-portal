@@ -3788,14 +3788,6 @@
       },
       {
         "resource_1_id": "231522fd-5e02-47cb-9512-8114259e0007",
-        "resource_1_position": 25,
-        "resource_2_id": "264c6abc-1904-4a87-bfcd-81b7781e6208",
-        "resource_2_position": 0,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "spell"
-      },
-      {
-        "resource_1_id": "231522fd-5e02-47cb-9512-8114259e0007",
         "resource_1_position": 26,
         "resource_2_id": "29e095e2-8b5a-4954-8394-6b0501e4dea6",
         "resource_2_position": 0,
@@ -4820,14 +4812,6 @@
       },
       {
         "resource_1_id": "73b28b72-5a3a-4993-9815-a4bb27246b27",
-        "resource_1_position": 13,
-        "resource_2_id": "264c6abc-1904-4a87-bfcd-81b7781e6208",
-        "resource_2_position": 2,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "spell"
-      },
-      {
-        "resource_1_id": "73b28b72-5a3a-4993-9815-a4bb27246b27",
         "resource_1_position": 14,
         "resource_2_id": "2d4fc73f-d6a5-4e91-abfa-b617c0eaef40",
         "resource_2_position": 2,
@@ -5566,14 +5550,6 @@
         "resource_1_id": "ad1653fb-2fed-4158-9a70-856ffad9224f",
         "resource_1_position": 35,
         "resource_2_id": "25decafa-53c7-468e-8a40-18b6cfa6c168",
-        "resource_2_position": 1,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "spell"
-      },
-      {
-        "resource_1_id": "ad1653fb-2fed-4158-9a70-856ffad9224f",
-        "resource_1_position": 36,
-        "resource_2_id": "264c6abc-1904-4a87-bfcd-81b7781e6208",
         "resource_2_position": 1,
         "resource_1_kind": "character_class",
         "resource_2_kind": "spell"
@@ -7047,6 +7023,30 @@
         "resource_1_position": 0,
         "resource_2_id": "00af98ac-9ea6-488d-820e-cce67dc672a4",
         "resource_2_position": 1,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "spell"
+      },
+      {
+        "resource_1_id": "231522fd-5e02-47cb-9512-8114259e0007",
+        "resource_1_position": 25,
+        "resource_2_id": "264c6abc-1904-4a87-bfcd-81b7781e6208",
+        "resource_2_position": 0,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "spell"
+      },
+      {
+        "resource_1_id": "ad1653fb-2fed-4158-9a70-856ffad9224f",
+        "resource_1_position": 36,
+        "resource_2_id": "264c6abc-1904-4a87-bfcd-81b7781e6208",
+        "resource_2_position": 1,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "spell"
+      },
+      {
+        "resource_1_id": "73b28b72-5a3a-4993-9815-a4bb27246b27",
+        "resource_1_position": 13,
+        "resource_2_id": "264c6abc-1904-4a87-bfcd-81b7781e6208",
+        "resource_2_position": 2,
         "resource_1_kind": "character_class",
         "resource_2_kind": "spell"
       }
@@ -74474,11 +74474,11 @@
         "visibility": "public",
         "name": {
           "en": "Figurine of Wondrous Power",
-          "it": ""
+          "it": "Statuina del Potere Meraviglioso"
         },
         "page": {
           "en": 221,
-          "it": null
+          "it": 281
         },
         "attunement_notes": {
           "en": "",
@@ -74510,11 +74510,11 @@
         "visibility": "public",
         "name": {
           "en": "Ioun Stone",
-          "it": ""
+          "it": "Pietra di Ioun"
         },
         "page": {
           "en": 227,
-          "it": null
+          "it": 271
         },
         "attunement_notes": {
           "en": "",
@@ -85806,7 +85806,7 @@
           "it": 121
         },
         "casting_time": "action",
-        "casting_time_value": null,
+        "casting_time_value": 0,
         "description": {
           "en": "You drive a spike of psionic energy into the mind of one creature you can see within range. The target makes a Wisdom saving throw, taking 3d8 Psychic damage on a failed save or half as much damage on a successful one. On a failed save, you also always know the target's location until the spell ends, but only while the two of you are on the same plane of existence. While you have this knowledge, the target can't become hidden from you, and if it has the Invisible condition, it gains no benefit from that condition against you.",
           "it": "L'incantatore guida un flusso di energia psionica nella mente di una creatura entro gittata che egli è in grado di vedere. Il bersaglio effettua un tiro salvezza su Saggezza, subendo 3d8 danni psichici in caso di fallimento, o la metà dei danni in caso di successo. Se fallisce il tiro, l'incantatore sa sempre dove si trova il bersaglio fino al termine dell'incantesimo, ma solo se entrambi si trovano sullo stesso piano di esistenza. Finché l'incantatore è in possesso di queste conoscenze, il bersaglio non può nascondersi da lui e, se è invisibile, non ottiene alcun beneficio da questa condizione contro di lui."
@@ -85821,7 +85821,7 @@
         "level": 2,
         "materials": {
           "en": null,
-          "it": null
+          "it": ""
         },
         "range": "value",
         "range_value": 3600,
@@ -97178,10 +97178,10 @@
     },
     "registry": {
       "access": "creator",
-      "bundle_hash": "762da97a498d923e26574a8dcd84110397a9769de03ac002cf48005522eabf02",
-      "revision_created_at": "2026-09-18T19:49:57.631091+00:00",
-      "revision_id": "ed0801ce-7bb9-4558-9147-efe2a0d709b7",
-      "revision_number": 19,
+      "bundle_hash": "5d9c700110ed50296c55aac235a1da22a78d618f372b876feb7aec22babf20b1",
+      "revision_created_at": "2026-10-19T07:37:38.673678+00:00",
+      "revision_id": "6be9e0e4-8282-4173-8fd9-24cc2b9f4889",
+      "revision_number": 16,
       "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
       "visibility": "public"
     },
