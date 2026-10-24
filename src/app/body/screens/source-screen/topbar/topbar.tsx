@@ -1,4 +1,4 @@
-import { Grid, HStack, Image, type StackProps } from "@chakra-ui/react";
+import { Box, Grid, HStack, Image, type StackProps } from "@chakra-ui/react";
 import { MenuIcon, SlidersHorizontalIcon } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -11,6 +11,7 @@ import logoUrl from "../../../../../../assets/logo/logo.png";
 import { useRightPanelSetCollapsed } from "../right-panel-state";
 import { useSidebarSetCollapsed } from "../sidebar/sidebar-state";
 import ResourceSearch from "./resource-search";
+import TopbarActionsMenu from "./topbar-actions-menu";
 import UserButton from "./user-button";
 
 //------------------------------------------------------------------------------
@@ -86,8 +87,15 @@ export default function Topbar() {
           />
         )}
 
-        <ThemeButton />
-        <UserButton />
+        <Box display={{ base: "none", md: "block" }}>
+          <ThemeButton />
+        </Box>
+        <Box display={{ base: "none", md: "block" }}>
+          <UserButton />
+        </Box>
+        <Box display={{ base: "block", md: "none" }}>
+          <TopbarActionsMenu />
+        </Box>
       </HStack>
     </Grid>
   );
