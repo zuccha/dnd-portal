@@ -135,6 +135,10 @@ const i18nContext = {
     en: "Importing will replace its local resources and cannot be undone.",
     it: "L'importazione sostituirà le risorse locali e non può essere annullata.",
   },
+  "import.success": {
+    en: "Source imported successfully.",
+    it: "Fonte importata correttamente.",
+  },
   "make_local": {
     en: "Make local",
     it: "Rendi locale",

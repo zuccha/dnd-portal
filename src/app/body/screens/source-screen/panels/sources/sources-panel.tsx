@@ -115,6 +115,7 @@ export default function SourcesPanel() {
   const [canRegisterSources, setCanRegisterSources] = useState(false);
   const [busySourceId, setBusySourceId] = useState<string>();
   const [dependencyPrompt, setDependencyPrompt] = useState<SourceDependencyPrompt>();
+  const [importing, setImporting] = useState(false);
   const [importPrompt, setImportPrompt] = useState<SourceImportPrompt>();
   const [removalPrompt, setRemovalPrompt] = useState<SourceRemovalPrompt>();
   const [confirmationPrompt, setConfirmationPrompt] = useState<SourceConfirmationPrompt>();
@@ -300,7 +301,8 @@ export default function SourcesPanel() {
         return;
       }
 
-      await startSourceImport(bundle);
+      const imported = await startSourceImport(bundle);
+      if (imported) toaster.success({ description: t("import.success") });
     } catch (e) {
       console.error(e);
       setError(t("error.import"));
@@ -315,15 +317,19 @@ export default function SourcesPanel() {
 
   const completeSourceImport = async () => {
     const prompt = importPrompt;
-    if (!prompt) return;
+    if (!prompt || importing) return;
 
-    setImportPrompt(undefined);
-
+    setImporting(true);
     try {
-      await startSourceImport(prompt.bundle);
+      const imported = await startSourceImport(prompt.bundle);
+      setImportPrompt(undefined);
+      if (imported) toaster.success({ description: t("import.success") });
     } catch (e) {
       console.error(e);
       setError(t("error.import"));
+      setImportPrompt(undefined);
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -475,6 +481,8 @@ export default function SourcesPanel() {
       }
 
       await persistSourceBundles(bundles, prompt.navigateAfter);
+      if (prompt.bundle && !prompt.navigateAfter)
+        toaster.success({ description: t("import.success") });
       if (prompt.navigateAfter) setCreateOpen(false);
     } catch (e) {
       console.error(e);
@@ -793,17 +801,13 @@ export default function SourcesPanel() {
         open={createOpen}
       />
 
-      {importPrompt && (
-        <SourceImportDialog
-          onCancel={() => setImportPrompt(undefined)}
-          onConfirm={completeSourceImport}
-          onOpenChange={(open) => {
-            if (!open) setImportPrompt(undefined);
-          }}
-          open
-          source={importPrompt.source}
-        />
-      )}
+      <SourceImportDialog
+        busy={importing}
+        onCancel={() => setImportPrompt(undefined)}
+        onConfirm={completeSourceImport}
+        open={!!importPrompt}
+        source={importPrompt?.source}
+      />
 
       {dependencyPrompt && (
         <SourceDependenciesDialog

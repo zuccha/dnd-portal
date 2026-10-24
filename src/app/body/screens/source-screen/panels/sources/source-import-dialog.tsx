@@ -9,11 +9,11 @@ import i18nContext from "./sources-i18n";
 //------------------------------------------------------------------------------
 
 type SourceImportDialogProps = {
+  busy: boolean;
   onCancel: () => void;
   onConfirm: () => void;
-  onOpenChange: (open: boolean) => void;
   open: boolean;
-  source: Source;
+  source?: Source;
 };
 
 //------------------------------------------------------------------------------
@@ -21,20 +21,19 @@ type SourceImportDialogProps = {
 //------------------------------------------------------------------------------
 
 export default function SourceImportDialog({
+  busy,
   onCancel,
   onConfirm,
-  onOpenChange,
   open,
   source,
 }: SourceImportDialogProps) {
   const { lang, t } = useI18nLangContext(i18nContext);
-  const sourceName = source.name[lang] || source.code;
+  const sourceName = source ? source.name[lang] || source.code : "";
 
   return (
     <Dialog.Root
       onOpenChange={({ open: nextOpen }) => {
-        onOpenChange(nextOpen);
-        if (!nextOpen) onCancel();
+        if (!nextOpen && !busy) onCancel();
       }}
       open={open}
       size="sm"
@@ -60,10 +59,10 @@ export default function SourceImportDialog({
             </Dialog.Body>
 
             <Dialog.Footer>
-              <Button onClick={onCancel} variant="outline">
+              <Button disabled={busy} onClick={onCancel} variant="outline">
                 {t("cancel")}
               </Button>
-              <Button colorPalette="red" onClick={onConfirm}>
+              <Button colorPalette="red" disabled={busy} onClick={onConfirm}>
                 {t("import.overwrite.confirm")}
               </Button>
             </Dialog.Footer>
