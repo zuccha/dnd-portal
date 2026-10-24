@@ -76235,8 +76235,8 @@
         "cost": 1000,
         "cost_period": "day",
         "description": {
-          "en": "",
-          "it": ""
+          "en": "You pay for the best and might have a staff that supports your lifestyle. Others notice your wealth and might encourage you to share it, either legally or otherwise.",
+          "it": "Il personaggio vuole solo il meglio del meglio e potrebbe persino avere delle persone alle sue dipendenze che lo aiutano a condurre questo stile di vita. Questa ricchezza non passa inosservata, e altri potrebbero incitarlo a condividerla in vari modi, sia legali che non."
         }
       },
       {
@@ -76263,8 +76263,8 @@
         "cost": 200,
         "cost_period": "day",
         "description": {
-          "en": "",
-          "it": ""
+          "en": "Il personaggio spende una modesta quantità di denaro per le proprie necessità, concedendosi qualche lusso.",
+          "it": "You spend modestly for your necessities and enjoy a few luxuries."
         }
       },
       {
@@ -76291,8 +76291,8 @@
         "cost": 100,
         "cost_period": "day",
         "description": {
-          "en": "",
-          "it": ""
+          "en": "You support yourself at an average level.",
+          "it": "Il personaggio spende una quantità media di denaro per sostentarsi."
         }
       },
       {
@@ -76319,8 +76319,8 @@
         "cost": 20,
         "cost_period": "day",
         "description": {
-          "en": "",
-          "it": ""
+          "en": "You spend frugally for your necessities.",
+          "it": "Il personaggio spende una cifra parsimoniosa per le proprie necessità."
         }
       },
       {
@@ -76347,8 +76347,8 @@
         "cost": 10,
         "cost_period": "day",
         "description": {
-          "en": "",
-          "it": ""
+          "en": "You spend the bare minimum for your necessities. You might be exposed to unhealthy conditions and opportunistic criminals.",
+          "it": "Il personaggio spende il minimo indispensabile per le sue necessità. Per questo, potrebbe cadere vittima di malattie o criminali opportunistici."
         }
       },
       {
@@ -76375,8 +76375,8 @@
         "cost": 400,
         "cost_period": "day",
         "description": {
-          "en": "",
-          "it": ""
+          "en": "You're accustomed to the finer things in life and might have servants.",
+          "it": "Il personaggio è abituato a vivere nel lusso e potrebbe persino avere dei servitori."
         }
       },
       {
@@ -76403,8 +76403,8 @@
         "cost": 0,
         "cost_period": "day",
         "description": {
-          "en": "",
-          "it": ""
+          "en": "You survive via chance and charity. You're often exposed to natural dangers as a result of sleeping outside.",
+          "it": "Il personaggio sopravvive affidandosi al caso e alla carità del prossimo. Poiché dorme fuori, spesso è esposto ai pericoli naturali."
         }
       },
       {
@@ -97243,10 +97243,10 @@
     },
     "registry": {
       "access": "creator",
-      "bundle_hash": "7c9ef39cb61bdf06bc6e45833c45a7420cd9ca0aba962842bd9a43070aeea56d",
-      "revision_created_at": "2026-10-24T08:26:48.67248+00:00",
-      "revision_id": "9545a0ad-e3f7-4a3f-9bfd-4287a5da21d5",
-      "revision_number": 22,
+      "bundle_hash": "30fd1174b965f930c2f9704c862728cbbc79b384ec15608d90d0e885490c5f8d",
+      "revision_created_at": "2026-10-24T08:39:27.141378+00:00",
+      "revision_id": "31df4d2c-fc92-400a-9174-b606047f6739",
+      "revision_number": 24,
       "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
       "visibility": "public"
     },
