@@ -76140,7 +76140,7 @@
           "it": "Incantesimo di 4-5° Livello"
         },
         "page": {
-          "en": 2000,
+          "en": 102,
           "it": 115
         },
         "availability": {
@@ -76263,8 +76263,8 @@
         "cost": 200,
         "cost_period": "day",
         "description": {
-          "en": "Il personaggio spende una modesta quantità di denaro per le proprie necessità, concedendosi qualche lusso.",
-          "it": "You spend modestly for your necessities and enjoy a few luxuries."
+          "en": "You spend modestly for your necessities and enjoy a few luxuries.",
+          "it": "Il personaggio spende una modesta quantità di denaro per le proprie necessità, concedendosi qualche lusso."
         }
       },
       {
