@@ -764,7 +764,7 @@ export function localizeCreature(
     details_parts.push(t("description.lair_effects") + "\r" + lair_effects);
   }
 
-  const details = details_parts.join("\n\n");
+  const details = details_parts.join("\n");
 
   const formattedExp = formatNumber(exp, lang);
   const formattedLairExp = formatNumber(lair_exp, lang);

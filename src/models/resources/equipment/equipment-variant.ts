@@ -58,7 +58,7 @@ export function createEquipmentVariant<E extends Equipment>(
       base.name,
     ),
     description: modifiers.reduce(
-      (notes, modifier) => appendI18nString(notes, modifier.description_delta, "\n\n"),
+      (notes, modifier) => appendI18nString(notes, modifier.description_delta, "\n"),
       base.description,
     ),
     is_magic: base.is_magic || modifiers.some(({ makes_equipment_magic }) => makes_equipment_magic),

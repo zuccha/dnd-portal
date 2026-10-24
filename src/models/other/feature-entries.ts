@@ -34,7 +34,7 @@ function formatFeatureEntries(
         .join("\r");
     })
     .filter(Boolean)
-    .join("\n\n");
+    .join("\n");
 }
 
 //------------------------------------------------------------------------------

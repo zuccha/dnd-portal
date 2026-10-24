@@ -3,7 +3,7 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
 import { useTranslateToolType } from "../../../types/tool-type";
-import { localizedFieldSchema } from "../../localized-resource";
+import { formatDescription, localizedFieldSchema } from "../../localized-resource";
 import { equipmentReferenceStore } from "../equipment-reference-store";
 import {
   type EquipmentLocalizationContext,
@@ -78,13 +78,11 @@ export function localizeTool(tool: Tool, context: ToolLocalizationContext): Loca
   return {
     ...equipment,
     descriptor: tool.is_magic ? context.ti("subtitle.magic", type, equipment.rarity.value) : type,
-    description: [
+    description: formatDescription(
       context.tpi("utilize", utilizeCount, utilize),
       context.tpi("craft", tool.craft_ids.length, craft),
-      equipment.description,
-    ]
-      .filter((text) => text)
-      .join("\n\n"),
+      equipment.description && context.ti("description", equipment.description),
+    ),
 
     ability: {
       label: context.t("ability"),
@@ -114,6 +112,10 @@ const i18nContext = {
   "craft/1": {
     en: "##Craft##\r<1>",
     it: "##Creazione##\r<1>",
+  },
+  "description": {
+    en: "##Description##\r<1>",
+    it: "##Descrizione##\r<1>",
   },
   "subtitle.magic": {
     en: "<1>, Magic, <2>", // 1 = type, 2 = rarity

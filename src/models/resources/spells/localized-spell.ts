@@ -11,6 +11,7 @@ import { characterClassStore } from "../character-classes/character-class-store"
 import {
   type LocalizedResourceLink,
   type ResourceLocalizationContext,
+  formatDescription,
   localizeResource,
   localizedFieldSchema,
   localizedResourceLinkSchema,
@@ -190,10 +191,10 @@ export function localizeSpell(spell: Spell, context: SpellLocalizationContext): 
     concentration: spell.has_concentration,
     emphasize_casting_time:
       spell.casting_time === "bonus_action" || spell.casting_time === "reaction",
-    description:
-      details && upgrade
-        ? `${details}\n\n${context.tp("upgrade", spell.level)}\r${upgrade}`
-        : details,
+    description: formatDescription(
+      details,
+      upgrade ? `${context.tp("upgrade", spell.level)}\r${upgrade}` : "",
+    ),
     duration: {
       label: context.t("duration"),
       value: spell.has_concentration ? context.ti("duration_up_to", durationValue) : durationValue,

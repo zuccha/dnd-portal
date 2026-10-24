@@ -271,6 +271,7 @@ function Description({ children, palette, patterns }: DescriptionProps) {
               key={paragraphIndex}
               lineHeight={0.9}
               mb={rem0125}
+              mt={rem0250}
               w="full"
             >
               {paragraph.substring(2, paragraph.length - 2)}
