@@ -74714,6 +74714,42 @@
         "charges": 0,
         "is_consumable": false,
         "type": "other"
+      },
+      {
+        "id": "3050aa66-5bdf-4ac3-99ff-75c945f33f53",
+        "image_url": null,
+        "name": {
+          "it": "Nutrimento (al giorno)",
+          "en": "Feed per Day"
+        },
+        "page": {
+          "it": 114,
+          "en": 100
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "attunement_notes": {
+          "it": "",
+          "en": ""
+        },
+        "cost": 5,
+        "description": {
+          "it": "",
+          "en": ""
+        },
+        "is_magic": false,
+        "modifier_ids": [],
+        "rarity": "common",
+        "required_attunement_slots": 0,
+        "variant_modifier_ids": [],
+        "weight": 5000,
+        "charges": 1,
+        "is_consumable": true,
+        "kind": "item",
+        "type": "other"
       }
     ],
     "item_modifiers": [
@@ -76622,6 +76658,35 @@
           "en": "",
           "it": ""
         }
+      },
+      {
+        "id": "142c5219-079a-49c9-aa04-5288327e6f44",
+        "image_url": null,
+        "name": {
+          "en": "Stabling",
+          "it": "Stallaggio"
+        },
+        "page": {
+          "en": 100,
+          "it": 114
+        },
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
+        "visibility": "public",
+        "availability": {
+          "en": "",
+          "it": ""
+        },
+        "category": "food_drink",
+        "cost": 50,
+        "cost_period": "day",
+        "description": {
+          "en": "",
+          "it": ""
+        },
+        "kind": "service"
       }
     ],
     "species": [
@@ -97178,10 +97243,10 @@
     },
     "registry": {
       "access": "creator",
-      "bundle_hash": "5d9c700110ed50296c55aac235a1da22a78d618f372b876feb7aec22babf20b1",
-      "revision_created_at": "2026-10-19T07:37:38.673678+00:00",
-      "revision_id": "6be9e0e4-8282-4173-8fd9-24cc2b9f4889",
-      "revision_number": 16,
+      "bundle_hash": "7c9ef39cb61bdf06bc6e45833c45a7420cd9ca0aba962842bd9a43070aeea56d",
+      "revision_created_at": "2026-10-24T08:26:48.67248+00:00",
+      "revision_id": "9545a0ad-e3f7-4a3f-9bfd-4287a5da21d5",
+      "revision_number": 22,
       "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
       "visibility": "public"
     },
