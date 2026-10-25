@@ -36,7 +36,7 @@ export const {
   nick: { en: "Nick", it: "Graffio" },
   none: { en: "None", it: "Nessuna" },
   push: { en: "Push", it: "Spinta" },
-  sap: { en: "Sap", it: "Prosciugamento" },
+  sap: { en: "Sap", it: "Fiaccare" },
   slow: { en: "Slow", it: "Lentezza" },
   topple: { en: "Topple", it: "Rovesciamento" },
   vex: { en: "Vex", it: "Vessazione" },
@@ -87,7 +87,7 @@ const weaponMasteryRulings: Record<WeaponMastery, I18nString> = {
   },
   topple: {
     en: "If you hit a creature with this weapon, you can force the creature to make a Constitution saving throw (DC 8 plus the ability modifier used to make the attack roll and your Proficiency Bonus). On a failed save, the creature has the P, one condition.",
-    it: "Se il personaggio colpisce una creatura con quest'arma, può costringerla a effettuare un tiro salvezza su Costituzione (CD 8 più il modificatore di caratteristica utilizzato per il tiro salvezza su Costituzione e il bonus di competenza del personaggio). Se lo fallisce, cade a terra prona.",
+    it: "Se il personaggio colpisce una creatura con quest'arma, può costringerla a effettuare un tiro salvezza su Costituzione (CD 8 più il modificatore di caratteristica utilizzato per il tiro per colpire e il bonus di competenza del personaggio). Se lo fallisce, cade a terra prona.",
   },
   vex: {
     en: "If you hit a creature with this weapon and deal damage to the creature, you have add Advantage on your next attack roll against that creature before the end of your next turn.",
