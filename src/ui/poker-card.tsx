@@ -367,13 +367,15 @@ function Link({
 function Links({
   palette,
   resources,
+  separator = ", ",
 }: {
   palette: Palette;
   resources: LocalizedResourceLink<ResourceKind>[];
+  separator?: string;
 }) {
   return resources.map(({ id, kind, name }, index) => (
     <Fragment key={`${kind}:${id}`}>
-      {index > 0 && ", "}
+      {index > 0 && separator}
       <Link id={id} kind={kind} palette={palette}>
         {name}
       </Link>

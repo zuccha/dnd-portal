@@ -43,7 +43,11 @@ export function SpellCard({
             textTransform="uppercase"
           >
             {linkResources && characterClassAbbreviations.length > 0 ? (
-              <PokerCard.Links palette={palette} resources={characterClassAbbreviations} />
+              <PokerCard.Links
+                palette={palette}
+                resources={characterClassAbbreviations}
+                separator=" "
+              />
             ) : (
               localizedResource.character_class_abbreviations
             )}
