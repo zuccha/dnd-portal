@@ -875,6 +875,7 @@ export function createTextareaField({
     const { label, ...fieldProps } = rest;
     const resources = useActiveSourceReferenceResources();
     const [resourceLinkPickerOpen, setResourceLinkPickerOpen] = useState(false);
+    const [resourceLinkInitialQuery, setResourceLinkInitialQuery] = useState("");
     const insertResourceLinkRef = useRef<((text: string) => void) | undefined>(undefined);
     const resourceLinkFallbackRef = useRef("");
 
@@ -888,6 +889,7 @@ export function createTextareaField({
           onLinkRequest={(insertText, fallback) => {
             insertResourceLinkRef.current = insertText;
             resourceLinkFallbackRef.current = fallback;
+            setResourceLinkInitialQuery(fallback);
             setResourceLinkPickerOpen(true);
           }}
           placeholder={t("placeholder")}
@@ -895,6 +897,7 @@ export function createTextareaField({
           {...field}
         />
         <ResourceLinkSearchDialog
+          initialQuery={resourceLinkInitialQuery}
           onOpenChange={setResourceLinkPickerOpen}
           onSelect={(resource: Resource) => {
             insertResourceLinkRef.current?.(

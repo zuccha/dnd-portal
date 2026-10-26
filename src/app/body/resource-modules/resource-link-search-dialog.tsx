@@ -14,6 +14,7 @@ import { normalizeString } from "~/utils/string";
 //------------------------------------------------------------------------------
 
 type ResourceLinkSearchDialogProps = {
+  initialQuery: string;
   onOpenChange: (open: boolean) => void;
   onSelect: (resource: Resource) => void;
   open: boolean;
@@ -25,6 +26,7 @@ type ResourceLinkSearchDialogProps = {
 //------------------------------------------------------------------------------
 
 export default function ResourceLinkSearchDialog({
+  initialQuery,
   onOpenChange,
   onSelect,
   open,
@@ -50,9 +52,9 @@ export default function ResourceLinkSearchDialog({
 
   useEffect(() => {
     if (!open) return;
-    setQuery("");
+    setQuery(initialQuery);
     setSelectedIndex(0);
-  }, [open]);
+  }, [initialQuery, open]);
 
   useEffect(() => {
     if (!open || !results.length) return;
