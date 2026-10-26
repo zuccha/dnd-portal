@@ -45,8 +45,19 @@ export default function ResourceLinkSearchDialog({
     () =>
       resources
         .filter((resource) => matchesName(resource, normalizedQuery))
-        .sort((a, b) => getLocalizedName(a, lang).localeCompare(getLocalizedName(b, lang), lang))
-        .slice(0, 10),
+        .map((resource) => ({
+          isExactMatch: Object.values(resource.name).some(
+            (name) => name && normalizeString(name) === normalizedQuery,
+          ),
+          localizedName: resource.name[lang] || "",
+          resource,
+        }))
+        .sort((a, b) => {
+          if (a.isExactMatch !== b.isExactMatch) return a.isExactMatch ? -1 : 1;
+          return a.localizedName.localeCompare(b.localizedName, lang);
+        })
+        .slice(0, 10)
+        .map(({ resource }) => resource),
     [lang, normalizedQuery, resources],
   );
 
@@ -145,7 +156,7 @@ export default function ResourceLinkSearchDialog({
                             textOverflow="ellipsis"
                             whiteSpace={{ base: "normal", sm: "nowrap" }}
                           >
-                            {getLocalizedName(resource, lang)}
+                            {resource.name[lang] || ""}
                           </Text>
                           <Text color="fg.muted" fontSize="xs" lineHeight="shorter">
                             {resource.source_code}
@@ -165,14 +176,6 @@ export default function ResourceLinkSearchDialog({
       </Portal>
     </Dialog.Root>
   );
-}
-
-//------------------------------------------------------------------------------
-// Get Localized Name
-//------------------------------------------------------------------------------
-
-function getLocalizedName(resource: Resource, lang: string): string {
-  return resource.name[lang] || resource.name["en"] || resource.name["it"] || "";
 }
 
 //------------------------------------------------------------------------------

@@ -9,8 +9,6 @@ import catalogue, {
   useActiveSourceReferenceResources,
   useSources,
 } from "~/models/catalogue/catalogue";
-import type { Source } from "~/models/catalogue/source";
-import type { Resource } from "~/models/resources/resource";
 import { matchesName } from "~/models/resources/resource-filtering";
 import { useTranslateResourceKind } from "~/models/types/resource-kind";
 import { useTranslateSourceType } from "~/models/types/source-type";
@@ -48,8 +46,19 @@ export default function ResourceSearch() {
 
     return resources
       .filter((resource) => matchesName(resource, normalizedQuery))
-      .sort((a, b) => getLocalizedName(a, lang).localeCompare(getLocalizedName(b, lang), lang))
-      .slice(0, 10);
+      .map((resource) => ({
+        isExactMatch: Object.values(resource.name).some(
+          (name) => name && normalizeString(name) === normalizedQuery,
+        ),
+        localizedName: resource.name[lang] || "",
+        resource,
+      }))
+      .sort((a, b) => {
+        if (a.isExactMatch !== b.isExactMatch) return a.isExactMatch ? -1 : 1;
+        return a.localizedName.localeCompare(b.localizedName, lang);
+      })
+      .slice(0, 10)
+      .map(({ resource }) => resource);
   }, [lang, normalizedQuery, resources]);
 
   const sourceResults = useMemo(() => {
@@ -57,12 +66,23 @@ export default function ResourceSearch() {
 
     return sources
       .filter((source) =>
-        [source.code, source.name["en"], source.name["it"]].some((value) =>
+        [source.code, ...Object.values(source.name)].some((value) =>
           normalizeString(value ?? "").includes(normalizedQuery),
         ),
       )
-      .sort((a, b) => getLocalizedName(a, lang).localeCompare(getLocalizedName(b, lang), lang))
-      .slice(0, 10);
+      .map((source) => ({
+        isExactMatch: [source.code, ...Object.values(source.name)].some(
+          (value) => normalizeString(value ?? "") === normalizedQuery,
+        ),
+        localizedName: source.name[lang] || "",
+        source,
+      }))
+      .sort((a, b) => {
+        if (a.isExactMatch !== b.isExactMatch) return a.isExactMatch ? -1 : 1;
+        return a.localizedName.localeCompare(b.localizedName, lang);
+      })
+      .slice(0, 10)
+      .map(({ source }) => source);
   }, [lang, normalizedQuery, sources]);
 
   const kindResults = useMemo(() => {
@@ -70,12 +90,19 @@ export default function ResourceSearch() {
 
     return resourceKindSearchOptions
       .filter(({ searchNames }) =>
-        [searchNames.en, searchNames.it].some((name) =>
-          normalizeString(name).includes(normalizedQuery),
-        ),
+        Object.values(searchNames).some((name) => normalizeString(name).includes(normalizedQuery)),
       )
-      .slice(0, 10);
-  }, [normalizedQuery]);
+      .map((option) => ({
+        isExactMatch: normalizeString(t(option.route)) === normalizedQuery,
+        option,
+      }))
+      .sort((a, b) => {
+        if (a.isExactMatch !== b.isExactMatch) return a.isExactMatch ? -1 : 1;
+        return t(a.option.route).localeCompare(t(b.option.route), lang);
+      })
+      .slice(0, 10)
+      .map(({ option }) => option);
+  }, [lang, normalizedQuery, t]);
 
   const resultCount =
     mode === "resources"
@@ -282,7 +309,7 @@ export default function ResourceSearch() {
                           index={index}
                           key={`${resource.kind}:${resource.id}`}
                           kind={translateKind(resource.kind)}
-                          name={getLocalizedName(resource, lang)}
+                          name={resource.name[lang] || ""}
                           onClick={() => openResult(index)}
                           onMouseMove={() => setSelectedIndex(index)}
                           selected={selectedIndex === index}
@@ -295,7 +322,7 @@ export default function ResourceSearch() {
                           index={index}
                           key={source.id}
                           kind={translateSourceType(source.type)}
-                          name={getLocalizedName(source, lang)}
+                          name={source.name[lang] || ""}
                           onClick={() => openResult(index)}
                           onMouseMove={() => setSelectedIndex(index)}
                           selected={selectedIndex === index}
@@ -323,14 +350,6 @@ export default function ResourceSearch() {
       </Dialog.Root>
     </>
   );
-}
-
-//------------------------------------------------------------------------------
-// Get Localized Name
-//------------------------------------------------------------------------------
-
-function getLocalizedName(resource: Resource | Source, lang: string): string {
-  return resource.name[lang] || resource.name["en"] || resource.name["it"] || "";
 }
 
 //------------------------------------------------------------------------------

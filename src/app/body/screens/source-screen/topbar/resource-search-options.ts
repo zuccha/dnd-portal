@@ -9,10 +9,7 @@ import { resourcePanels } from "../panels/panels";
 export type ResourceKindSearchOption = {
   kind: ResourceKind;
   route: string;
-  searchNames: {
-    en: string;
-    it: string;
-  };
+  searchNames: Record<string, string>;
 };
 
 //------------------------------------------------------------------------------
