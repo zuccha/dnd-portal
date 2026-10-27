@@ -56,7 +56,7 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
       label: { en: "Description", it: "Descrizione" },
       placeholder: { en: "None", it: "Nessuna" },
     },
-    inputProps: { rows: 5 },
+    inputProps: { rows: 20 },
     translatable: true,
     useField: form.createUseField("description"),
   });
