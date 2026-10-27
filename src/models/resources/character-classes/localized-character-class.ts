@@ -79,7 +79,7 @@ export function useCharacterClassLocalizationContext(
 ): CharacterClassLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const formatCp = useFormatCp();
-  const featureEntries = useLocalizedFeatureEntries(related.features);
+  const featureEntries = useLocalizedFeatureEntries(related.features, true);
   const localizedEquipmentEntries = useLocalizedEquipmentEntries(context.lang);
   const toolNames = useLocalizedToolNames(characterClass.tool_proficiency_ids);
   const localizedToolNames = useMemo(

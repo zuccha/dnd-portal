@@ -62,7 +62,7 @@ export function useEquipmentLocalizationContext(
   const resourceContext = useResourceLocalizationContext(mergedContext);
   const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
-  const featureEntries = useLocalizedFeatureEntries(related.features);
+  const featureEntries = useLocalizedFeatureEntries(related.features, true);
   const translateRarity = useTranslateEquipmentRarity(resourceContext.lang);
 
   return useMemo(

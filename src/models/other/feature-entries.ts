@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
+import { serializeResourceLink } from "~/models/resources/resource-link";
 import { defaultFeature, type Feature } from "../resources/features/feature";
 import { featureStore } from "../resources/features/feature-store";
 import type { FeatureEntry } from "../resources/features/feature-entry";
@@ -14,20 +15,23 @@ function formatFeatureEntries(
   features: Feature[],
   lang: string,
   ti: (key: string, ...args: string[]) => string,
+  linkNames: boolean,
 ): string {
   const featuresById = new Map(features.map((feature) => [feature.id, feature]));
 
   return featureEntries
     .map((entry) => {
       const feature = featuresById.get(entry.id) ?? defaultFeature;
-      const name = (
-        translate(feature.display_name, lang) ||
-        translate(feature.name, lang) ||
-        " "
-      ).replace(" ", " ");
+      const featureName = translate(feature.display_name, lang) || translate(feature.name, lang);
+      const name = (featureName || " ").replace(" ", " ");
+      const linkedName = linkNames
+        ? serializeResourceLink({ id: entry.id, kind: "feature" }, name, name)
+        : name;
       const description = translate(feature.description, lang);
       return [
-        entry.minimum_level ? ti("name.min_level", name, `${entry.minimum_level}`) : `##${name}##`,
+        entry.minimum_level
+          ? ti("name.min_level", linkedName, `${entry.minimum_level}`)
+          : `##${linkedName}##`,
         description,
       ]
         .filter(Boolean)
@@ -43,7 +47,10 @@ function formatFeatureEntries(
 
 const useFeatureResources = featureStore.useResources;
 
-export function useLocalizedFeatureEntries(featureEntries: FeatureEntry[]): string {
+export function useLocalizedFeatureEntries(
+  featureEntries: FeatureEntry[],
+  linkNames = false,
+): string {
   const { lang, ti } = useI18nLangContext(i18nContext);
   const featureIds = useMemo(
     () => featureEntries.map((featureEntry) => featureEntry.id),
@@ -51,8 +58,8 @@ export function useLocalizedFeatureEntries(featureEntries: FeatureEntry[]): stri
   );
   const features = useFeatureResources(featureIds);
   return useMemo(
-    () => formatFeatureEntries(featureEntries, features, lang, ti),
-    [featureEntries, features, lang, ti],
+    () => formatFeatureEntries(featureEntries, features, lang, ti, linkNames),
+    [featureEntries, features, lang, linkNames, ti],
   );
 }
 

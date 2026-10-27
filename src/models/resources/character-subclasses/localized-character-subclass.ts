@@ -46,7 +46,7 @@ export function useCharacterSubclassLocalizationContext(
 ): CharacterSubclassLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
   const characterClassName = useLocalizedCharacterClassName(characterSubclass.character_class_id);
-  const featureEntries = useLocalizedFeatureEntries(related.features);
+  const featureEntries = useLocalizedFeatureEntries(related.features, true);
 
   return useMemo(
     () => ({ ...context, characterClassName, featureEntries }),
