@@ -7055,168 +7055,6 @@
     "creature_families_and_creature_treasures": [],
     "character_classes_and_features": [
       {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 0,
-        "resource_2_id": "65948f88-4de0-4327-8fdb-5738b36e961f",
-        "resource_2_position": 0,
-        "minimum_level": 1,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 1,
-        "resource_2_id": "f2bba7e1-f06a-420f-a0ac-e8cd78f1508d",
-        "resource_2_position": 0,
-        "minimum_level": 1,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 2,
-        "resource_2_id": "73fd7262-2c8c-438e-8261-dc46fc27668a",
-        "resource_2_position": 0,
-        "minimum_level": 1,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 3,
-        "resource_2_id": "6b1d7f9d-94e6-4939-8413-031c177ad662",
-        "resource_2_position": 0,
-        "minimum_level": 2,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 4,
-        "resource_2_id": "c92c2145-8e2c-4306-b03f-a2c519b4da74",
-        "resource_2_position": 0,
-        "minimum_level": 2,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 5,
-        "resource_2_id": "6e395577-ed9d-45c8-a7fd-4760a6a6c6c4",
-        "resource_2_position": 0,
-        "minimum_level": 3,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 6,
-        "resource_2_id": "fd6c5c9f-852e-4df8-a9ef-bca33511a469",
-        "resource_2_position": 0,
-        "minimum_level": 3,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 8,
-        "resource_2_id": "2c07d055-a04c-4770-9353-fce5dbb57781",
-        "resource_2_position": 0,
-        "minimum_level": 5,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 9,
-        "resource_2_id": "1eab638e-b6ff-40db-8ed3-7502fabca808",
-        "resource_2_position": 0,
-        "minimum_level": 5,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 10,
-        "resource_2_id": "092ac76a-5c41-41a5-8fab-f7dfec231bf0",
-        "resource_2_position": 0,
-        "minimum_level": 7,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 11,
-        "resource_2_id": "279e0cd4-157e-41c8-ac50-6bf8381fc459",
-        "resource_2_position": 0,
-        "minimum_level": 7,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 13,
-        "resource_2_id": "148e09eb-6174-4d79-89f2-79c23de71e56",
-        "resource_2_position": 0,
-        "minimum_level": 9,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 14,
-        "resource_2_id": "e0d87092-f8b9-47da-a523-7fa26c0ca442",
-        "resource_2_position": 0,
-        "minimum_level": 11,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 16,
-        "resource_2_id": "8813f0b5-03e7-41d0-84db-73fc0f781280",
-        "resource_2_position": 0,
-        "minimum_level": 13,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 17,
-        "resource_2_id": "9ff74ba8-7b87-4bdd-94c8-cf3e8d15eb52",
-        "resource_2_position": 0,
-        "minimum_level": 15,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 19,
-        "resource_2_id": "05131b7d-603d-487a-b879-3948e5a1e655",
-        "resource_2_position": 0,
-        "minimum_level": 17,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 20,
-        "resource_2_id": "540cf16c-8096-42be-9562-a59bc816aea1",
-        "resource_2_position": 0,
-        "minimum_level": 18,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 22,
-        "resource_2_id": "786116e1-cab3-4ccd-a0fc-bb293148ce32",
-        "resource_2_position": 0,
-        "minimum_level": 20,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
         "resource_1_id": "40c61ff8-69a7-4519-b52c-f401ba9412a1",
         "resource_1_position": 0,
         "resource_2_id": "ac065bdb-645f-4b45-8c67-737748292536",
@@ -7641,15 +7479,6 @@
       },
       {
         "resource_1_id": "e0176467-a846-41c1-898b-cffb1b74110b",
-        "resource_1_position": 12,
-        "resource_2_id": "51e1cf85-9282-46e2-9a02-1743256d616a",
-        "resource_2_position": 0,
-        "minimum_level": 7,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "e0176467-a846-41c1-898b-cffb1b74110b",
         "resource_1_position": 14,
         "resource_2_id": "003d469d-00af-4676-9980-31fe4a978f50",
         "resource_2_position": 0,
@@ -8019,15 +7848,6 @@
       },
       {
         "resource_1_id": "9e6324a8-e184-4e37-8c55-d7fc30ddb428",
-        "resource_1_position": 11,
-        "resource_2_id": "51e1cf85-9282-46e2-9a02-1743256d616a",
-        "resource_2_position": 0,
-        "minimum_level": 7,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "9e6324a8-e184-4e37-8c55-d7fc30ddb428",
         "resource_1_position": 12,
         "resource_2_id": "a8cc9351-aba7-41f1-aba4-ae84cd5343e8",
         "resource_2_position": 0,
@@ -8239,42 +8059,6 @@
         "resource_2_id": "0a465112-c291-4e5a-941e-c5d43fa90391",
         "resource_2_position": 0,
         "minimum_level": 20,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 7,
-        "resource_2_id": "3ae48e41-07bf-43ea-bd02-35c9f1576c72",
-        "resource_2_position": 0,
-        "minimum_level": 4,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 12,
-        "resource_2_id": "3ae48e41-07bf-43ea-bd02-35c9f1576c72",
-        "resource_2_position": 1,
-        "minimum_level": 8,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 15,
-        "resource_2_id": "3ae48e41-07bf-43ea-bd02-35c9f1576c72",
-        "resource_2_position": 2,
-        "minimum_level": 12,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 18,
-        "resource_2_id": "3ae48e41-07bf-43ea-bd02-35c9f1576c72",
-        "resource_2_position": 3,
-        "minimum_level": 16,
         "resource_1_kind": "character_class",
         "resource_2_kind": "feature"
       },
@@ -8702,15 +8486,6 @@
         "resource_2_kind": "feature"
       },
       {
-        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
-        "resource_1_position": 21,
-        "resource_2_id": "d9b1c0dd-dbb9-4481-9b86-bb8bb61f93ff",
-        "resource_2_position": 0,
-        "minimum_level": 19,
-        "resource_1_kind": "character_class",
-        "resource_2_kind": "feature"
-      },
-      {
         "resource_1_id": "40c61ff8-69a7-4519-b52c-f401ba9412a1",
         "resource_1_position": 14,
         "resource_2_id": "d9b1c0dd-dbb9-4481-9b86-bb8bb61f93ff",
@@ -8986,6 +8761,231 @@
         "resource_2_id": "752e0ef4-bab3-4dc7-9ab3-49f31bc7b003",
         "resource_2_position": 0,
         "minimum_level": 1,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 0,
+        "resource_2_id": "65948f88-4de0-4327-8fdb-5738b36e961f",
+        "resource_2_position": 0,
+        "minimum_level": 1,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 1,
+        "resource_2_id": "f2bba7e1-f06a-420f-a0ac-e8cd78f1508d",
+        "resource_2_position": 0,
+        "minimum_level": 1,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 2,
+        "resource_2_id": "73fd7262-2c8c-438e-8261-dc46fc27668a",
+        "resource_2_position": 0,
+        "minimum_level": 1,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 3,
+        "resource_2_id": "6b1d7f9d-94e6-4939-8413-031c177ad662",
+        "resource_2_position": 0,
+        "minimum_level": 2,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 4,
+        "resource_2_id": "c92c2145-8e2c-4306-b03f-a2c519b4da74",
+        "resource_2_position": 0,
+        "minimum_level": 2,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 5,
+        "resource_2_id": "6e395577-ed9d-45c8-a7fd-4760a6a6c6c4",
+        "resource_2_position": 0,
+        "minimum_level": 3,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 6,
+        "resource_2_id": "fd6c5c9f-852e-4df8-a9ef-bca33511a469",
+        "resource_2_position": 0,
+        "minimum_level": 3,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 7,
+        "resource_2_id": "3ae48e41-07bf-43ea-bd02-35c9f1576c72",
+        "resource_2_position": 0,
+        "minimum_level": 4,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 8,
+        "resource_2_id": "2c07d055-a04c-4770-9353-fce5dbb57781",
+        "resource_2_position": 0,
+        "minimum_level": 5,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 9,
+        "resource_2_id": "1eab638e-b6ff-40db-8ed3-7502fabca808",
+        "resource_2_position": 0,
+        "minimum_level": 5,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 10,
+        "resource_2_id": "092ac76a-5c41-41a5-8fab-f7dfec231bf0",
+        "resource_2_position": 0,
+        "minimum_level": 7,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 11,
+        "resource_2_id": "279e0cd4-157e-41c8-ac50-6bf8381fc459",
+        "resource_2_position": 0,
+        "minimum_level": 7,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 12,
+        "resource_2_id": "3ae48e41-07bf-43ea-bd02-35c9f1576c72",
+        "resource_2_position": 1,
+        "minimum_level": 8,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 13,
+        "resource_2_id": "148e09eb-6174-4d79-89f2-79c23de71e56",
+        "resource_2_position": 0,
+        "minimum_level": 9,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 14,
+        "resource_2_id": "e0d87092-f8b9-47da-a523-7fa26c0ca442",
+        "resource_2_position": 0,
+        "minimum_level": 11,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 15,
+        "resource_2_id": "3ae48e41-07bf-43ea-bd02-35c9f1576c72",
+        "resource_2_position": 2,
+        "minimum_level": 12,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 16,
+        "resource_2_id": "8813f0b5-03e7-41d0-84db-73fc0f781280",
+        "resource_2_position": 0,
+        "minimum_level": 13,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 17,
+        "resource_2_id": "9ff74ba8-7b87-4bdd-94c8-cf3e8d15eb52",
+        "resource_2_position": 0,
+        "minimum_level": 15,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 18,
+        "resource_2_id": "3ae48e41-07bf-43ea-bd02-35c9f1576c72",
+        "resource_2_position": 3,
+        "minimum_level": 16,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 19,
+        "resource_2_id": "05131b7d-603d-487a-b879-3948e5a1e655",
+        "resource_2_position": 0,
+        "minimum_level": 17,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 20,
+        "resource_2_id": "540cf16c-8096-42be-9562-a59bc816aea1",
+        "resource_2_position": 0,
+        "minimum_level": 18,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 21,
+        "resource_2_id": "d9b1c0dd-dbb9-4481-9b86-bb8bb61f93ff",
+        "resource_2_position": 0,
+        "minimum_level": 19,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "15e27c30-d21e-4e8a-b9f7-3695d568fc51",
+        "resource_1_position": 22,
+        "resource_2_id": "786116e1-cab3-4ccd-a0fc-bb293148ce32",
+        "resource_2_position": 0,
+        "minimum_level": 20,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "e0176467-a846-41c1-898b-cffb1b74110b",
+        "resource_1_position": 12,
+        "resource_2_id": "51e1cf85-9282-46e2-9a02-1743256d616a",
+        "resource_2_position": 0,
+        "minimum_level": 7,
+        "resource_1_kind": "character_class",
+        "resource_2_kind": "feature"
+      },
+      {
+        "resource_1_id": "9e6324a8-e184-4e37-8c55-d7fc30ddb428",
+        "resource_1_position": 11,
+        "resource_2_id": "51e1cf85-9282-46e2-9a02-1743256d616a",
+        "resource_2_position": 1,
+        "minimum_level": 7,
         "resource_1_kind": "character_class",
         "resource_2_kind": "feature"
       }
@@ -55367,7 +55367,7 @@
         },
         "page": {
           "en": null,
-          "it": 68
+          "it": null
         },
         "description": {
           "en": "When you're subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail.\nYou don't benefit from this feature if you have the Incapacitated condition.",
@@ -74717,7 +74717,13 @@
       },
       {
         "id": "3050aa66-5bdf-4ac3-99ff-75c945f33f53",
+        "kind": "item",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "it": "Nutrimento (al giorno)",
           "en": "Feed per Day"
@@ -74726,11 +74732,6 @@
           "it": 114,
           "en": 100
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "attunement_notes": {
           "it": "",
           "en": ""
@@ -74748,7 +74749,6 @@
         "weight": 5000,
         "charges": 1,
         "is_consumable": true,
-        "kind": "item",
         "type": "other"
       }
     ],
@@ -76661,7 +76661,13 @@
       },
       {
         "id": "142c5219-079a-49c9-aa04-5288327e6f44",
+        "kind": "service",
+        "source_code": "SRD24",
+        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
+        "source_version": "dnd5_5",
+        "is_virtual": false,
         "image_url": null,
+        "visibility": "public",
         "name": {
           "en": "Stabling",
           "it": "Stallaggio"
@@ -76670,11 +76676,6 @@
           "en": 100,
           "it": 114
         },
-        "source_code": "SRD24",
-        "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
-        "source_version": "dnd5_5",
-        "is_virtual": false,
-        "visibility": "public",
         "availability": {
           "en": "",
           "it": ""
@@ -76685,8 +76686,7 @@
         "description": {
           "en": "",
           "it": ""
-        },
-        "kind": "service"
+        }
       }
     ],
     "species": [
@@ -97243,10 +97243,10 @@
     },
     "registry": {
       "access": "creator",
-      "bundle_hash": "30fd1174b965f930c2f9704c862728cbbc79b384ec15608d90d0e885490c5f8d",
-      "revision_created_at": "2026-10-24T08:39:27.141378+00:00",
-      "revision_id": "31df4d2c-fc92-400a-9174-b606047f6739",
-      "revision_number": 24,
+      "bundle_hash": "4f3f5c7ec48364deb400011511e12d2836cdca7763a67bcc559173adc0e13ac8",
+      "revision_created_at": "2026-10-28T14:39:00.349357+00:00",
+      "revision_id": "573c44b8-29db-46a7-9c16-f686bf1ba7e1",
+      "revision_number": 18,
       "source_id": "3bfdf6f7-780e-4d78-8db5-b0d5d05ab6f6",
       "visibility": "public"
     },
