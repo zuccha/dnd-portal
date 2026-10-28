@@ -1,6 +1,8 @@
 import { Box, HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/react";
 import { Fragment, type ReactNode } from "react";
 import RichText, { type RichTextPattern } from "~/ui/rich-text";
+import { renderRichTextBlocks } from "~/ui/rich-text-block-pattern";
+import { createRichTextTableBlockPattern } from "~/ui/rich-text-table-block-pattern";
 import type { Palette } from "~/utils/palette";
 import { resourceDetailRoute } from "../navigation/routes";
 import { type BleedCorner, useBleed } from "./bleed-context";
@@ -246,6 +248,13 @@ type DescriptionProps = {
 
 function Description({ children, palette, patterns }: DescriptionProps) {
   const bleed = useBleed();
+  const blocks = renderRichTextBlocks(children, [
+    createRichTextTableBlockPattern({
+      mode: "card",
+      palette,
+      renderCell: (value) => <RichText display="inline" patterns={patterns} text={value} />,
+    }),
+  ]);
 
   return (
     <VStack
@@ -256,32 +265,49 @@ function Description({ children, palette, patterns }: DescriptionProps) {
       px={`${remToIn(1) + bleed.x}in`}
       w="full"
     >
-      {children.split(/[\n\r]/).map((paragraph, paragraphIndex) => {
-        if (paragraph.trim() === "") return <Box h={rem1100} key={paragraphIndex} />;
+      {blocks.map((block, blockIndex) =>
+        block.type === "rendered" ? (
+          <Fragment key={blockIndex}>{block.value}</Fragment>
+        ) : (
+          block.value.split(/[\n\r]/).map((paragraph, paragraphIndex) => {
+            if (paragraph.trim() === "") {
+              return <Box h={rem1100} key={`${blockIndex}:${paragraphIndex}`} />;
+            }
 
-        if (paragraph.startsWith("##"))
-          return (
-            <Span
-              borderBottomColor={palette[800]}
-              borderBottomWidth={px2}
-              color={palette[800]}
-              fontFamily="Mr Eaves Alt"
-              fontSize={rem1125}
-              fontWeight="bold"
-              key={paragraphIndex}
-              lineHeight={0.9}
-              mb={rem0125}
-              mt={rem0250}
-              w="full"
-            >
-              {paragraph.substring(2, paragraph.length - 2)}
-            </Span>
-          );
+            if (paragraph.startsWith("##"))
+              return (
+                <Span
+                  borderBottomColor={palette[800]}
+                  borderBottomWidth={px2}
+                  color={palette[800]}
+                  fontFamily="Mr Eaves Alt"
+                  fontSize={rem1125}
+                  fontWeight="bold"
+                  key={`${blockIndex}:${paragraphIndex}`}
+                  lineHeight={0.9}
+                  mb={rem0125}
+                  mt={rem0250}
+                  w="full"
+                >
+                  <RichText
+                    display="inline"
+                    patterns={patterns}
+                    text={paragraph.substring(2, paragraph.length - 2)}
+                  />
+                </Span>
+              );
 
-        return (
-          <RichText hyphens="auto" key={paragraphIndex} patterns={patterns} text={paragraph} />
-        );
-      })}
+            return (
+              <RichText
+                hyphens="auto"
+                key={`${blockIndex}:${paragraphIndex}`}
+                patterns={patterns}
+                text={paragraph}
+              />
+            );
+          })
+        ),
+      )}
     </VStack>
   );
 }

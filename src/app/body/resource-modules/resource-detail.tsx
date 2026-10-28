@@ -1,6 +1,6 @@
 import { Badge, Box, HStack, Heading, Separator, Span, Text, VStack } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "lucide-react";
-import { type ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { useLocation } from "react-router";
 import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import type { ResourceKind } from "~/models/types/resource-kind";
@@ -10,6 +10,8 @@ import PageTitle from "../../../navigation/page-title";
 import Icon from "../../../ui/icon";
 import IconButton, { type IconButtonProps } from "../../../ui/icon-button";
 import RichText from "../../../ui/rich-text";
+import { renderRichTextBlocks } from "../../../ui/rich-text-block-pattern";
+import { createRichTextTableBlockPattern } from "../../../ui/rich-text-table-block-pattern";
 import RouterLink from "../../../ui/router-link";
 import { resourcePanelTranslations } from "../screens/source-screen/panels/panel-translations";
 import ResourceImagePreview from "./resource-image-preview";
@@ -71,6 +73,13 @@ export default function ResourceDetail({
     /[\r\n]*##(.+?)##[\r\n]*/g,
     "##$1##",
   );
+  const patterns = [detailRichTextHeadingPattern, ...resourceLinkPatterns];
+  const detailBlocks = renderRichTextBlocks(details, [
+    createRichTextTableBlockPattern({
+      mode: "grid",
+      renderCell: (value) => <RichText display="inline" patterns={patterns} text={value} />,
+    }),
+  ]);
   const imageUrl = resource.image_url?.trim();
 
   return (
@@ -144,15 +153,21 @@ export default function ResourceDetail({
 
           {children && details && <Separator />}
 
-          {details && (
-            <RichText
-              display="block"
-              lineHeight="tall"
-              patterns={[detailRichTextHeadingPattern, ...resourceLinkPatterns]}
-              text={details}
-              whiteSpace="pre-wrap"
-            />
-          )}
+          {details &&
+            detailBlocks.map((block, index) =>
+              block.type === "rendered" ? (
+                <Fragment key={index}>{block.value}</Fragment>
+              ) : (
+                <RichText
+                  display="block"
+                  key={index}
+                  lineHeight="tall"
+                  patterns={patterns}
+                  text={block.value}
+                  whiteSpace="pre-wrap"
+                />
+              ),
+            )}
 
           {afterDescription && (
             <>

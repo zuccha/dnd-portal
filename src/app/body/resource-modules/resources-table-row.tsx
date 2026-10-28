@@ -8,7 +8,7 @@ import {
   PrinterIcon,
   SaveIcon,
 } from "lucide-react";
-import { useCallback } from "react";
+import { Fragment, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type I18nString, translate } from "~/i18n/i18n-string";
@@ -25,6 +25,8 @@ import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
+import { renderRichTextBlocks } from "~/ui/rich-text-block-pattern";
+import { createRichTextTableBlockPattern } from "~/ui/rich-text-table-block-pattern";
 import { toaster } from "~/ui/toaster";
 import { useResourceDelete } from "./resource-delete";
 import { useResourceLinkPatterns } from "./resource-link-pattern";
@@ -113,6 +115,20 @@ export function createResourcesTableRow<
       extra.hasDescription && localizedResource.description
         ? resolveSystemText(String(localizedResource.description), system)
         : "";
+    const descriptionBlocks = renderRichTextBlocks(description, [
+      createRichTextTableBlockPattern({
+        mode: "grid",
+        renderCell: (value) => (
+          <RichText
+            display="inline"
+            overflowWrap="normal"
+            patterns={richTextPatterns}
+            text={value}
+            whiteSpace="normal"
+          />
+        ),
+      }),
+    ]);
     const visibleActions = extra.actions?.filter((action) => action.isVisible(resource)) ?? [];
 
     const edit = useCallback(
@@ -308,18 +324,24 @@ export function createResourcesTableRow<
               <Box contain="inline-size" w="full">
                 <VStack align="flex-start" gap={1} minW={0} w="full">
                   {description ? (
-                    description
-                      .split(/[\n\r]/)
-                      .map((paragraph, i) => (
-                        <RichText
-                          display="block"
-                          key={i}
-                          overflowWrap="anywhere"
-                          patterns={richTextPatterns}
-                          text={paragraph}
-                          whiteSpace="normal"
-                        />
-                      ))
+                    descriptionBlocks.flatMap((block, blockIndex) =>
+                      block.type === "rendered" ? (
+                        <Fragment key={blockIndex}>{block.value}</Fragment>
+                      ) : (
+                        block.value
+                          .split(/[\n\r]/)
+                          .map((paragraph, paragraphIndex) => (
+                            <RichText
+                              display="block"
+                              key={`${blockIndex}:${paragraphIndex}`}
+                              overflowWrap="anywhere"
+                              patterns={richTextPatterns}
+                              text={paragraph}
+                              whiteSpace="normal"
+                            />
+                          ))
+                      ),
+                    )
                   ) : (
                     <RichText
                       display="block"
