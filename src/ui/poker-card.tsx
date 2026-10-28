@@ -248,11 +248,35 @@ type DescriptionProps = {
 
 function Description({ children, palette, patterns }: DescriptionProps) {
   const bleed = useBleed();
+  const richTextPatterns = patterns ?? RichText.defaultPatterns;
+  const headingPattern: RichTextPattern = {
+    regex: /##(.+?)##/,
+    render: (value) => (
+      <Span
+        borderBottomColor={palette[800]}
+        borderBottomWidth={px2}
+        color={palette[800]}
+        fontFamily="Mr Eaves Alt"
+        fontSize={rem1125}
+        fontWeight="bold"
+        lineHeight={0.9}
+        mb={rem0125}
+        mt={rem0250}
+        w="full"
+      >
+        {value}
+      </Span>
+    ),
+  };
+  const headingPatterns = [
+    headingPattern,
+    ...richTextPatterns.filter(({ regex }) => regex.source !== headingPattern.regex.source),
+  ];
   const blocks = renderRichTextBlocks(children, [
     createRichTextTableBlockPattern({
       mode: "card",
       palette,
-      renderCell: (value) => <RichText display="inline" patterns={patterns} text={value} />,
+      renderCell: (value) => <RichText display="inline" patterns={richTextPatterns} text={value} />,
     }),
   ]);
 
@@ -274,34 +298,11 @@ function Description({ children, palette, patterns }: DescriptionProps) {
               return <Box h={rem1100} key={`${blockIndex}:${paragraphIndex}`} />;
             }
 
-            if (paragraph.startsWith("##"))
-              return (
-                <Span
-                  borderBottomColor={palette[800]}
-                  borderBottomWidth={px2}
-                  color={palette[800]}
-                  fontFamily="Mr Eaves Alt"
-                  fontSize={rem1125}
-                  fontWeight="bold"
-                  key={`${blockIndex}:${paragraphIndex}`}
-                  lineHeight={0.9}
-                  mb={rem0125}
-                  mt={rem0250}
-                  w="full"
-                >
-                  <RichText
-                    display="inline"
-                    patterns={patterns}
-                    text={paragraph.substring(2, paragraph.length - 2)}
-                  />
-                </Span>
-              );
-
             return (
               <RichText
                 hyphens="auto"
                 key={`${blockIndex}:${paragraphIndex}`}
-                patterns={patterns}
+                patterns={paragraph.startsWith("##") ? headingPatterns : richTextPatterns}
                 text={paragraph}
               />
             );
