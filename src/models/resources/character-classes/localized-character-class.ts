@@ -4,6 +4,7 @@ import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { serializeResourceLink } from "~/models/resources/resource-link";
+import { heading, italic } from "~/ui/rich-text-page";
 import { joinWith } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
@@ -318,16 +319,16 @@ const i18nContext = {
     it: "Tiro Salvezza",
   },
   "skill_proficiencies_pool": {
-    en: "##Skill Proficiencies##\r__Choose <1>:__ <2>.",
-    it: "##Competenze nelle Abilità##\r__Scegli <1>:__ <2>.",
+    en: `${heading("Skill Proficiencies")}\r${italic("Choose <1>:")} <2>.`,
+    it: `${heading("Competenze nelle Abilità")}\r${italic("Scegli <1>:")} <2>.`,
   },
   "starting_equipment": {
-    en: "##Starting Equipment##\r<1>",
-    it: "##Equipaggiamento Iniziale##\r<1>",
+    en: `${heading("Starting Equipment")}\r<1>`,
+    it: `${heading("Equipaggiamento Iniziale")}\r<1>`,
   },
   "starting_equipment.group/*": {
-    en: "__Choose:__ <1>.",
-    it: "__Scegli:__ <1>.",
+    en: `${italic("Choose:")} <1>.`,
+    it: `${italic("Scegli:")} <1>.`,
   },
   "starting_equipment.group/0": {
     en: "",

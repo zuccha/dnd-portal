@@ -1,5 +1,6 @@
 import { Em, Span, type SpanProps } from "@chakra-ui/react";
 import { Fragment, type ReactNode } from "react";
+import { richTextBoldRegExp, richTextHeadingRegExp, richTextItalicRegExp } from "./rich-text-page";
 
 //------------------------------------------------------------------------------
 // Rich Text Pattern
@@ -66,15 +67,15 @@ function isListWithAtLeastOneItem<T>(items: T[]): items is [T, ...T[]] {
 
 RichText.defaultPatterns = [
   {
-    regex: /##(.+?)##/,
+    regex: richTextHeadingRegExp,
     render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
   },
   {
-    regex: /\*\*(.+?)\*\*/,
+    regex: richTextBoldRegExp,
     render: (val: ReactNode) => <b>{val}</b>,
   },
   {
-    regex: /__(.+?)__/,
+    regex: richTextItalicRegExp,
     render: (val: ReactNode) => <Em>{val}</Em>,
   },
 ];

@@ -5,6 +5,7 @@ import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
 import { equipmentReferenceStore } from "~/models/resources/equipment/equipment-reference-store";
 import { useTranslateEquipmentRarity } from "~/models/types/equipment-rarity";
+import { italic } from "~/ui/rich-text-page";
 import {
   formatDescription,
   localizedFieldSchema,
@@ -93,7 +94,7 @@ export function localizeEquipmentModifier<EM extends EquipmentModifier>(
   const appliesTo = translate(equipmentModifier.applies_to, context.lang);
   const attunementNotes = translate(equipmentModifier.attunement_notes_delta, context.lang);
   const attunementNotesDelta = attunementNotes
-    ? `_${context.t("requires_attunement")} ${attunementNotes}_`
+    ? italic(`${context.t("requires_attunement")} ${attunementNotes}`)
     : "";
   const descriptionDelta = translate(equipmentModifier.description_delta, context.lang);
   const rarityMinimum = equipmentModifier.rarity_minimum

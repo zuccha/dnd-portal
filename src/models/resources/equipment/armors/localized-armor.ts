@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import z from "zod";
+import { italic } from "~/ui/rich-text-page";
 import { formatSigned } from "~/utils/number";
 import { useTranslateArmorType } from "../../../types/armor-type";
 import { localizedFieldSchema } from "../../localized-resource";
@@ -174,8 +175,8 @@ const i18nContext = {
     it: "mod. Sag.",
   },
   "description.empty": {
-    en: "__No notes.__",
-    it: "__Nessuna nota.__",
+    en: italic("No notes."),
+    it: italic("Nessuna nota."),
   },
   "required[cha]": {
     en: "<1> Cha.",

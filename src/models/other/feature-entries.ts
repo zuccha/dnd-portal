@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { serializeResourceLink } from "~/models/resources/resource-link";
+import { heading } from "~/ui/rich-text-page";
 import { defaultFeature, type Feature } from "../resources/features/feature";
 import { featureStore } from "../resources/features/feature-store";
 import type { FeatureEntry } from "../resources/features/feature-entry";
@@ -31,7 +32,7 @@ function formatFeatureEntries(
       return [
         entry.minimum_level
           ? ti("name.min_level", linkedName, `${entry.minimum_level}`)
-          : `##${linkedName}##`,
+          : heading(linkedName),
         description,
       ]
         .filter(Boolean)
@@ -69,7 +70,7 @@ export function useLocalizedFeatureEntries(
 
 const i18nContext = {
   "name.min_level": {
-    en: "##Level <2>: <1>##", // 1 = Name, 2 = Min Level
-    it: "##Livello <2>: <1>##", // 1 = Name, 2 = Min Level
+    en: heading("Level <2>: <1>"), // 1 = Name, 2 = Min Level
+    it: heading("Livello <2>: <1>"), // 1 = Name, 2 = Min Level
   },
 };

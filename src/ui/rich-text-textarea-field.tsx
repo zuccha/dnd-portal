@@ -5,6 +5,11 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Field from "~/ui/field";
 import IconButton from "~/ui/icon-button";
 import Textarea, { type TextareaProps } from "~/ui/textarea";
+import {
+  richTextBoldDelimiter,
+  richTextHeadingDelimiter,
+  richTextItalicDelimiter,
+} from "./rich-text-page";
 import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
 
 //------------------------------------------------------------------------------
@@ -71,7 +76,12 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
         nextSelectionStart = selectionStart + (selectedText ? selectedText.length + 2 : 1);
         nextSelectionEnd = nextSelectionStart + selectedText.length;
       } else {
-        const delimiter = format === "bold" ? "**" : format === "italic" ? "__" : "##";
+        const delimiter =
+          format === "bold"
+            ? richTextBoldDelimiter
+            : format === "italic"
+              ? richTextItalicDelimiter
+              : richTextHeadingDelimiter;
         const alreadyFormatted =
           value.slice(0, selectionStart).endsWith(delimiter) &&
           value.slice(selectionEnd).startsWith(delimiter);

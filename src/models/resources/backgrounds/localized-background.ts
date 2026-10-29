@@ -4,6 +4,7 @@ import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
 import { serializeResourceLink } from "~/models/resources/resource-link";
+import { heading } from "~/ui/rich-text-page";
 import { joinWith } from "~/utils/array";
 import { numberToLetter } from "~/utils/number";
 import { nilUuid } from "~/utils/uuid";
@@ -239,8 +240,8 @@ const i18nContext = {
     it: "Abilità",
   },
   "starting_equipment": {
-    en: "##Equipment##\r<1>",
-    it: "##Equipaggiamento##\r<1>",
+    en: `${heading("Equipment")}\r<1>`,
+    it: `${heading("Equipaggiamento")}\r<1>`,
   },
   "starting_equipment.group/*": {
     en: "<1>",

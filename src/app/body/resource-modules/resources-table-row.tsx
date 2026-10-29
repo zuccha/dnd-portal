@@ -26,6 +26,7 @@ import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
 import { renderRichTextBlocks } from "~/ui/rich-text-block-pattern";
+import { italic } from "~/ui/rich-text-page";
 import { createRichTextTableBlockPattern } from "~/ui/rich-text-table-block-pattern";
 import { toaster } from "~/ui/toaster";
 import { useResourceDelete } from "./resource-delete";
@@ -374,8 +375,8 @@ const i18nContext = {
     it: "Azioni",
   },
   "description.missing": {
-    en: "__No details.__",
-    it: "__Nessuna descrizione.__",
+    en: italic("No details."),
+    it: italic("Nessuna descrizione."),
   },
   "edit": {
     en: "Edit",

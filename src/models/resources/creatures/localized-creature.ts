@@ -6,6 +6,7 @@ import { useFormatCp } from "~/measures/cost";
 import { useFormatCm } from "~/measures/distance";
 import catalogue from "~/models/catalogue/catalogue";
 import { formatEquipmentNameWithNotes } from "~/models/other/equipment-bundle";
+import { heading } from "~/ui/rich-text-page";
 import { formatNumber, formatNumberAsWord, formatSigned } from "~/utils/number";
 import {
   creatureAbilitySchema,
@@ -908,32 +909,32 @@ const i18nContext = {
     it: "GS",
   },
   "description.actions": {
-    en: "##Actions##",
-    it: "##Azioni##",
+    en: heading("Actions"),
+    it: heading("Azioni"),
   },
   "description.bonus_actions": {
-    en: "##Bonus Actions##",
-    it: "##Azioni Bonus##",
+    en: heading("Bonus Actions"),
+    it: heading("Azioni Bonus"),
   },
   "description.lair_effects": {
-    en: "##Lair Effects##",
-    it: "##Effetti della Tana##",
+    en: heading("Lair Effects"),
+    it: heading("Effetti della Tana"),
   },
   "description.legendary_actions": {
-    en: "##Legendary Actions (<1>)##", // <1> = count
-    it: "##Azioni Leggendarie (<1>)##", // <1> = count
+    en: heading("Legendary Actions (<1>)"), // <1> = count
+    it: heading("Azioni Leggendarie (<1>)"), // <1> = count
   },
   "description.legendary_actions_with_lair": {
-    en: "##Legendary Actions (<1>, lair: <2>)##", // <1> = count, <2> = count in lair
-    it: "##Azioni Leggendarie (<1>, tana: <2>)##", // <1> = count, <2> = count in lair
+    en: heading("Legendary Actions (<1>, lair: <2>)"), // <1> = count, <2> = count in lair
+    it: heading("Azioni Leggendarie (<1>, tana: <2>)"), // <1> = count, <2> = count in lair
   },
   "description.reactions": {
-    en: "##Reactions##",
-    it: "##Reazioni##",
+    en: heading("Reactions"),
+    it: heading("Reazioni"),
   },
   "description.traits": {
-    en: "##Traits##",
-    it: "##Tratti##",
+    en: heading("Traits"),
+    it: heading("Tratti"),
   },
   "equipment/*": {
     en: "<1> (<2>)", // 1 = name, 2 = quantity

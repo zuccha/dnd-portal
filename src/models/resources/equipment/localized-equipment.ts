@@ -4,6 +4,7 @@ import type { I18nLangContext } from "~/i18n/i18n-lang";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
+import { italic } from "~/ui/rich-text-page";
 import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import {
@@ -146,20 +147,20 @@ const i18nContext = {
   "attunement.label": { en: "Attunement", it: "Sintonia" },
   "attunement.slots": { en: "<1> slots", it: "<1> slot" },
   "attunement.with_notes/*": {
-    en: "__Requires attunement <2> (<1> slots).__",
-    it: "__Richiede sintonia <2> (<1> slot).__",
+    en: italic("Requires attunement <2> (<1> slots)."),
+    it: italic("Richiede sintonia <2> (<1> slot)."),
   },
   "attunement.with_notes/1": {
-    en: "__Requires attunement <2>.__",
-    it: "__Richiede sintonia <2>.__",
+    en: italic("Requires attunement <2>."),
+    it: italic("Richiede sintonia <2>."),
   },
   "attunement/*": {
-    en: "__Requires attunement (<1> slots).__",
-    it: "__Richiede sintonia (<1> slot).__",
+    en: italic("Requires attunement (<1> slots)."),
+    it: italic("Richiede sintonia (<1> slot)."),
   },
   "attunement/1": {
-    en: "__Requires attunement.__",
-    it: "__Richiede sintonia.__",
+    en: italic("Requires attunement."),
+    it: italic("Richiede sintonia."),
   },
   "cost": { en: "Cost", it: "Costo" },
   "magic": { en: "Magical", it: "Magico" },

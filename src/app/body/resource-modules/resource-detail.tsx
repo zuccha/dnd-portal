@@ -11,6 +11,7 @@ import Icon from "../../../ui/icon";
 import IconButton, { type IconButtonProps } from "../../../ui/icon-button";
 import RichText from "../../../ui/rich-text";
 import { renderRichTextBlocks } from "../../../ui/rich-text-block-pattern";
+import { richTextHeadingDelimiter } from "../../../ui/rich-text-page";
 import { createRichTextTableBlockPattern } from "../../../ui/rich-text-table-block-pattern";
 import RouterLink from "../../../ui/router-link";
 import { resourcePanelTranslations } from "../screens/source-screen/panels/panel-translations";
@@ -70,8 +71,11 @@ export default function ResourceDetail({
   if (!resource) return null;
 
   const details = resolveSystemText(resource.description, system).replace(
-    /[\r\n]*##(.+?)##[\r\n]*/g,
-    "##$1##",
+    new RegExp(
+      `[\\r\\n]*${richTextHeadingDelimiter}(.+?)${richTextHeadingDelimiter}[\\r\\n]*`,
+      "g",
+    ),
+    `${richTextHeadingDelimiter}$1${richTextHeadingDelimiter}`,
   );
   const patterns = [detailRichTextHeadingPattern, ...resourceLinkPatterns];
   const detailBlocks = renderRichTextBlocks(details, [
@@ -186,7 +190,7 @@ export default function ResourceDetail({
 //------------------------------------------------------------------------------
 
 const detailRichTextHeadingPattern = {
-  regex: /##(.+?)##/,
+  regex: new RegExp(`${richTextHeadingDelimiter}(.+?)${richTextHeadingDelimiter}`),
   render: (value: ReactNode) => (
     <>
       <Span display="block" fontSize="lg" fontWeight="medium" lineHeight="short" mt={2}>

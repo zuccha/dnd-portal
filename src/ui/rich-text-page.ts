@@ -7,6 +7,34 @@ type RichTextMarker = "bold" | "heading" | "italic";
 export type RichTextPageState = RichTextMarker[];
 
 //------------------------------------------------------------------------------
+// Rich Text Delimiters
+//------------------------------------------------------------------------------
+
+export const richTextBoldDelimiter = "**";
+export const richTextHeadingDelimiter = "##";
+export const richTextItalicDelimiter = "__";
+
+//------------------------------------------------------------------------------
+// Rich Text Utils
+//------------------------------------------------------------------------------
+
+export const bold = (text: string) => `${richTextBoldDelimiter}${text}${richTextBoldDelimiter}`;
+
+export const heading = (text: string) =>
+  `${richTextHeadingDelimiter}${text}${richTextHeadingDelimiter}`;
+
+export const italic = (text: string) =>
+  `${richTextItalicDelimiter}${text}${richTextItalicDelimiter}`;
+
+//------------------------------------------------------------------------------
+// Rich Text RegExps
+//------------------------------------------------------------------------------
+
+export const richTextBoldRegExp = /\*\*(.+?)\*\*/;
+export const richTextHeadingRegExp = /##(.+?)##/;
+export const richTextItalicRegExp = /__(.+?)__/;
+
+//------------------------------------------------------------------------------
 // Empty Rich Text Page State
 //------------------------------------------------------------------------------
 
@@ -35,13 +63,13 @@ function readRichTextPageState(text: string, initialState: RichTextPageState): R
   const state = [...initialState];
 
   for (let i = 0; i < text.length; ++i) {
-    if (text.startsWith("##", i)) {
+    if (text.startsWith(richTextHeadingDelimiter, i)) {
       toggleMarker(state, "heading");
       i++;
-    } else if (text.startsWith("**", i)) {
+    } else if (text.startsWith(richTextBoldDelimiter, i)) {
       toggleMarker(state, "bold");
       i++;
-    } else if (text[i] === "__") {
+    } else if (text[i] === richTextItalicDelimiter) {
       toggleMarker(state, "italic");
     }
   }
@@ -79,7 +107,7 @@ function formatClosingMarkers(state: RichTextPageState): string {
 //------------------------------------------------------------------------------
 
 function formatMarker(marker: RichTextMarker): string {
-  if (marker === "bold") return "**";
-  if (marker === "heading") return "##";
-  return "__";
+  if (marker === "bold") return richTextBoldDelimiter;
+  if (marker === "heading") return richTextHeadingDelimiter;
+  return richTextItalicDelimiter;
 }

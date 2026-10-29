@@ -1,6 +1,7 @@
 import { Alert, Box, Code, Heading, Link, List, Separator, Text, VStack } from "@chakra-ui/react";
 import { Fragment } from "react";
 import { useI18nLang } from "~/i18n/i18n-lang";
+import { bold, heading, italic } from "~/ui/rich-text-page";
 import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
@@ -613,14 +614,13 @@ const documentation: Record<string, DocumentationContent> = {
           "When the linked resource is available, the link displays its name in the current language unless custom display text is supplied. If the resource is missing or inaccessible, the fallback is displayed; without a fallback, the interface shows `Missing Resource`.",
         ],
         bullets: [
-          "Bold: wrap text in double asterisks, for example **Important**.",
-          "Italic: wrap text in underscores, for example __Concentration__.",
-          "Heading: wrap text in double hashes, for example ##Actions##.",
-          "Metric/imperial alternatives: write the metric value first and the imperial value second inside braces, separated by a vertical bar, for example {{1.5 meters|5 feet}}.",
-          "Resource link: use `[[kind:uuid]]` to display the localized resource name, or `[[kind:uuid:fallback]]` to specify the text shown if the resource is missing or inaccessible. To override the displayed text when the resource is available, add a fourth element: `[[kind:uuid:fallback:text]]`. To omit the fallback, leave the third element empty: `[[kind:uuid::text]]`. Colons cannot appear inside the fallback or custom text.",
+          `Bold: wrap text in double asterisks, for example ${bold("Important")}.`,
+          `Italic: wrap text in underscores, for example ${italic("Concentration")}.`,
+          `Heading: wrap text in double hashes, for example ${heading("Actions")}.`,
+          `Metric/imperial alternatives: write the metric value first and the imperial value second inside braces, separated by a vertical bar, for example {{1.5 meters|5 feet}}.`,
+          `Resource link: use \`[[kind:uuid]]\` to display the localized resource name, or \`[[kind:uuid:fallback]]\` to specify the text shown if the resource is missing or inaccessible. To override the displayed text when the resource is available, add a fourth element: \`[[kind:uuid:fallback:text]]\`. To omit the fallback, leave the third element empty: \`[[kind:uuid::text]]\`. Colons cannot appear inside the fallback or custom text.`,
         ],
-        example:
-          "##Actions##\n**Rend.** __Melee Attack Roll:__ +7, reach {{1.5 m|5 ft}}. __Hit:__ 14 (2d8 + 5) Slashing damage.",
+        example: `${heading("Actions")}\n${bold("Rend.")} ${italic("Melee Attack Roll:")} +7, reach {{1.5 m|5 ft}}. ${italic("Hit:")} 14 (2d8 + 5) Slashing damage.`,
         examplePrefix: "Example:",
       },
       {
@@ -955,14 +955,13 @@ const documentation: Record<string, DocumentationContent> = {
           "Se la risorsa collegata è disponibile, il collegamento mostra il suo nome nella lingua corrente, a meno che non sia stato specificato un testo alternativo. Se manca o non è accessibile, viene mostrato il fallback; senza fallback, appare l'indicazione `Risorsa Mancante`.",
         ],
         bullets: [
-          "Grassetto: racchiudi il testo tra due asterischi, per esempio **Importante**.",
-          "Corsivo: racchiudi il testo tra underscore, per esempio __Concentrazione__.",
-          "Intestazione: racchiudi il testo tra doppi cancelletto, per esempio ##Azioni##.",
-          "Valori metrici/imperiali: scrivi prima il valore metrico e poi quello imperiale tra parentesi graffe, separati da una barra verticale, per esempio {{1,5 metri|5 piedi}}.",
-          "Collegamento a una risorsa: usa `[[kind:uuid]]` per mostrare il nome localizzato, oppure `[[kind:uuid:fallback]]` per specificare il testo mostrato se la risorsa manca o non è accessibile. Per forzare il testo quando la risorsa è disponibile, aggiungi un quarto elemento: `[[kind:uuid:fallback:testo]]`. Se non vuoi un fallback, lascia vuoto il terzo elemento: `[[kind:uuid::testo]]`. I due punti non possono comparire nel fallback o nel testo alternativo.",
+          `Grassetto: racchiudi il testo tra due asterischi, per esempio ${bold("Importante")}."`,
+          `Corsivo: racchiudi il testo tra underscore, per esempio ${italic("Concentrazione")}."`,
+          `Intestazione: racchiudi il testo tra doppi cancelletto, per esempio ${heading("Azioni")}."`,
+          `Valori metrici/imperiali: scrivi prima il valore metrico e poi quello imperiale tra parentesi graffe, separati da una barra verticale, per esempio {{1,5 metri|5 piedi}}."`,
+          `Collegamento a una risorsa: usa \`[[kind:uuid]]\` per mostrare il nome localizzato, oppure \`[[kind:uuid:fallback]]\` per specificare il testo mostrato se la risorsa manca o non è accessibile. Per forzare il testo quando la risorsa è disponibile, aggiungi un quarto elemento: \`[[kind:uuid:fallback:testo]]\`. Se non vuoi un fallback, lascia vuoto il terzo elemento: \`[[kind:uuid::testo]]\`. I due punti non possono comparire nel fallback o nel testo alternativo."`,
         ],
-        example:
-          "##Azioni##\n**Squarcio.** __Tiro per colpire in mischia:__ +7, portata {{1,5 m|5 ft}}. __Colpito:__ 14 (2d8 + 5) danni taglienti.",
+        example: `${heading("Azioni")}\n${bold("Squarcio.")} ${italic("Tiro per colpire in mischia:")} +7, portata {{1,5 m|5 ft}}. ${italic("Colpito:")} 14 (2d8 + 5) danni taglienti.`,
         examplePrefix: "Esempio:",
       },
       {

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
+import { heading } from "~/ui/rich-text-page";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
 import { useTranslateToolType } from "../../../types/tool-type";
 import { formatDescription, localizedFieldSchema } from "../../localized-resource";
@@ -102,35 +103,35 @@ const i18nContext = {
     it: "Abilità",
   },
   "craft/*": {
-    en: "##Craft##\r<1>",
-    it: "##Creazioni##\r<1>",
+    en: heading("Craft\r<1>"),
+    it: heading("Creazioni\r<1>"),
   },
   "craft/0": {
     en: "",
     it: "",
   },
   "craft/1": {
-    en: "##Craft##\r<1>",
-    it: "##Creazione##\r<1>",
+    en: heading("Craft\r<1>"),
+    it: heading("Creazione\r<1>"),
   },
   "description": {
-    en: "##Description##\r<1>",
-    it: "##Descrizione##\r<1>",
+    en: heading("Description\r<1>"),
+    it: heading("Descrizione\r<1>"),
   },
   "subtitle.magic": {
     en: "<1>, Magic, <2>", // 1 = type, 2 = rarity
     it: "<1> Magico, <2>", // 1 = type, 2 = rarity
   },
   "utilize/*": {
-    en: "##Utilize##\r<1>",
-    it: "##Utilizzi##\r<1>",
+    en: heading("Utilize\r<1>"),
+    it: heading("Utilizzi\r<1>"),
   },
   "utilize/0": {
     en: "",
     it: "",
   },
   "utilize/1": {
-    en: "##Utilize##\r<1>",
-    it: "##Utilizzo##\r<1>",
+    en: heading("Utilize\r<1>"),
+    it: heading("Utilizzo\r<1>"),
   },
 };

@@ -6,6 +6,7 @@ import { createRichTextTableBlockPattern } from "~/ui/rich-text-table-block-patt
 import type { Palette } from "~/utils/palette";
 import { resourceDetailRoute } from "../navigation/routes";
 import { type BleedCorner, useBleed } from "./bleed-context";
+import { richTextHeadingDelimiter } from "./rich-text-page";
 import RouterLink from "./router-link";
 import type { LocalizedResourceLink } from "../models/resources/localized-resource";
 import type { ResourceKind } from "../models/types/resource-kind";
@@ -288,7 +289,9 @@ function Description({ children, palette, patterns = RichText.defaultPatterns }:
               return <Box h={rem1100} key={`${blockIndex}:${paragraphIndex}`} />;
             }
 
-            const richTextProps = paragraph.startsWith("##") ? headingProps : undefined;
+            const richTextProps = paragraph.startsWith(richTextHeadingDelimiter)
+              ? headingProps
+              : undefined;
 
             return (
               <RichText

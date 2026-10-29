@@ -3,6 +3,7 @@ import { z } from "zod";
 import { translate } from "~/i18n/i18n-string";
 import { useFormatCm } from "~/measures/distance";
 import { useFormatSeconds } from "~/measures/time";
+import { heading } from "../../../ui/rich-text-page";
 import { useTranslateSpellCastingTime } from "../../types/spell-casting-time";
 import { useTranslateSpellDuration } from "../../types/spell-duration";
 import { useTranslateSpellRange } from "../../types/spell-range";
@@ -266,11 +267,11 @@ const i18nContext = {
     it: "Trucchetto di <1>", // 1 = school
   },
   "upgrade/*": {
-    en: "##At Higher Levels##",
-    it: "##A Livelli Superiori##",
+    en: heading("At Higher Levels"),
+    it: heading("A Livelli Superiori"),
   },
   "upgrade/0": {
-    en: "##Cantrip Upgrade##",
-    it: "##Potenziamento del Trucchetto##",
+    en: heading("Cantrip Upgrade"),
+    it: heading("Potenziamento del Trucchetto"),
   },
 };

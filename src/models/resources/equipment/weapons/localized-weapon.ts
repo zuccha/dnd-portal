@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import z from "zod";
 import { useI18nSystem } from "~/i18n/i18n-system";
 import { cmToDistanceValue } from "~/measures/distance";
+import { heading } from "~/ui/rich-text-page";
 import { formatNumber } from "~/utils/number";
 import { useTranslateDamageType } from "../../../types/damage-type";
 import {
@@ -242,8 +243,8 @@ const i18nContext = {
     it: "Padronanza",
   },
   "mastery.details": {
-    en: "##Weapon Mastery: <1>##\r<2>", // 1 = mastery, 2 = ruling
-    it: "##Padronanza: <1>##\r<2>", // 1 = mastery, 2 = ruling
+    en: heading("Weapon Mastery: <1>\r<2>"), // 1 = mastery, 2 = ruling
+    it: heading("Padronanza: <1>\r<2>"), // 1 = mastery, 2 = ruling
   },
   "properties.ammunition": {
     en: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
