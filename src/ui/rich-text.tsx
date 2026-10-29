@@ -67,11 +67,7 @@ function isListWithAtLeastOneItem<T>(items: T[]): items is [T, ...T[]] {
 RichText.defaultPatterns = [
   {
     regex: /##(.+?)##/,
-    render: (val: ReactNode) => (
-      <Span fontSize="md" fontWeight="bold">
-        {val}
-      </Span>
-    ),
+    render: (val: ReactNode) => <Span fontWeight="bold">{val}</Span>,
   },
   {
     regex: /\*\*(.+?)\*\*/,

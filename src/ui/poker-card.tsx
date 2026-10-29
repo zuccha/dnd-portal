@@ -248,29 +248,20 @@ type DescriptionProps = {
 
 function Description({ children, palette, patterns = RichText.defaultPatterns }: DescriptionProps) {
   const bleed = useBleed();
-  const headingPattern: RichTextPattern = {
-    regex: /##(.+?)##/,
-    render: (value) => (
-      <Span
-        borderBottomColor={palette[800]}
-        borderBottomWidth={px2}
-        color={palette[800]}
-        fontFamily="Mr Eaves Alt"
-        fontSize={rem1125}
-        fontWeight="bold"
-        lineHeight={0.9}
-        mb={rem0125}
-        mt={rem0250}
-        w="full"
-      >
-        {value}
-      </Span>
-    ),
+
+  const headingProps = {
+    borderBottomColor: palette[800],
+    borderBottomWidth: px2,
+    color: palette[800],
+    fontFamily: "Mr Eaves Alt",
+    fontSize: rem1125,
+    fontWeight: "bold",
+    lineHeight: 0.9,
+    mb: rem0125,
+    mt: rem0250,
+    w: "full",
   };
-  const headingPatterns = [
-    headingPattern,
-    ...patterns.filter(({ regex }) => regex.source !== headingPattern.regex.source),
-  ];
+
   const blocks = renderRichTextBlocks(children, [
     createRichTextTableBlockPattern({
       mode: "card",
@@ -297,12 +288,16 @@ function Description({ children, palette, patterns = RichText.defaultPatterns }:
               return <Box h={rem1100} key={`${blockIndex}:${paragraphIndex}`} />;
             }
 
+            const richTextProps = paragraph.startsWith("##") ? headingProps : undefined;
+
             return (
               <RichText
                 hyphens="auto"
                 key={`${blockIndex}:${paragraphIndex}`}
-                patterns={paragraph.startsWith("##") ? headingPatterns : patterns}
+                patterns={patterns}
                 text={paragraph}
+                w="full"
+                {...richTextProps}
               />
             );
           })
