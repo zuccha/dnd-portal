@@ -8,7 +8,7 @@ const owlbear: Record<string, LocalizedCreature> = {
   en: {
     descriptor: "Large Monstrosity, Unaligned",
     description:
-      "##Actions##\r**Multiattack.** The owlbear makes two Rend attacks.\n**Rend.** Melee Attack Roll: +7, reach 5 ft. _Hit:_ 14 (2d8 + 5) Slashing damage.",
+      "##Actions##\r**Multiattack.** The owlbear makes two Rend attacks.\n**Rend.** __Melee Attack Roll__: +7, reach {{1.5 m|5 ft}}. __Hit:__ 14 (2d8 + 5) Slashing damage.",
     id: "b52fd018-b42b-4022-8c1d-e12b7dcf175a",
     image_url: null,
     kind: "creature",
@@ -89,7 +89,7 @@ const owlbear: Record<string, LocalizedCreature> = {
   it: {
     descriptor: "Mostruosità Grande, Senza Allineamento",
     description:
-      "##Azioni##\r**Multiattacco.** L'orsogufo effettua due attacchi Squarcio.\n**Squarcio.** _Tiro per colpire in mischia:_ +7, portata 1,5 m. _Colpito:_ 14 (2d8 + 5) danni taglienti.",
+      "##Azioni##\r**Multiattacco.** L'orsogufo effettua due attacchi Squarcio.\n**Squarcio.** __Tiro per colpire in mischia:__ +7, portata {{1,5 m|5 ft}}. __Colpito:__ 14 (2d8 + 5) danni taglienti.",
     id: "b52fd018-b42b-4022-8c1d-e12b7dcf175a",
     image_url: null,
     kind: "creature",

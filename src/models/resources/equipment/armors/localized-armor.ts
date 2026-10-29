@@ -174,8 +174,8 @@ const i18nContext = {
     it: "mod. Sag.",
   },
   "description.empty": {
-    en: "_No notes._",
-    it: "_Nessuna nota._",
+    en: "__No notes.__",
+    it: "__Nessuna nota.__",
   },
   "required[cha]": {
     en: "<1> Cha.",

@@ -78,7 +78,7 @@ RichText.defaultPatterns = [
     render: (val: ReactNode) => <b>{val}</b>,
   },
   {
-    regex: /_(.+?)_/,
+    regex: /__(.+?)__/,
     render: (val: ReactNode) => <Em>{val}</Em>,
   },
 ];

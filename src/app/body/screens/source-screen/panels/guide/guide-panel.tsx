@@ -614,13 +614,13 @@ const documentation: Record<string, DocumentationContent> = {
         ],
         bullets: [
           "Bold: wrap text in double asterisks, for example **Important**.",
-          "Italic: wrap text in underscores, for example _Concentration_.",
+          "Italic: wrap text in underscores, for example __Concentration__.",
           "Heading: wrap text in double hashes, for example ##Actions##.",
-          "Metric/imperial alternatives: write the metric value first and the imperial value second inside braces, separated by a vertical bar.",
+          "Metric/imperial alternatives: write the metric value first and the imperial value second inside braces, separated by a vertical bar, for example {{1.5 meters|5 feet}}.",
           "Resource link: use `[[kind:uuid]]` to display the localized resource name, or `[[kind:uuid:fallback]]` to specify the text shown if the resource is missing or inaccessible. To override the displayed text when the resource is available, add a fourth element: `[[kind:uuid:fallback:text]]`. To omit the fallback, leave the third element empty: `[[kind:uuid::text]]`. Colons cannot appear inside the fallback or custom text.",
         ],
         example:
-          "##Actions##\n**Rend.** Melee Attack Roll: +7, reach {1.5 m|5 ft}. _Hit:_ 14 (2d8 + 5) Slashing damage.",
+          "##Actions##\n**Rend.** __Melee Attack Roll:__ +7, reach {{1.5 m|5 ft}}. __Hit:__ 14 (2d8 + 5) Slashing damage.",
         examplePrefix: "Example:",
       },
       {
@@ -956,13 +956,13 @@ const documentation: Record<string, DocumentationContent> = {
         ],
         bullets: [
           "Grassetto: racchiudi il testo tra due asterischi, per esempio **Importante**.",
-          "Corsivo: racchiudi il testo tra underscore, per esempio _Concentrazione_.",
+          "Corsivo: racchiudi il testo tra underscore, per esempio __Concentrazione__.",
           "Intestazione: racchiudi il testo tra doppi cancelletto, per esempio ##Azioni##.",
-          "Valori metrici/imperiali: scrivi prima il valore metrico e poi quello imperiale tra parentesi graffe, separati da una barra verticale.",
+          "Valori metrici/imperiali: scrivi prima il valore metrico e poi quello imperiale tra parentesi graffe, separati da una barra verticale, per esempio {{1,5 metri|5 piedi}}.",
           "Collegamento a una risorsa: usa `[[kind:uuid]]` per mostrare il nome localizzato, oppure `[[kind:uuid:fallback]]` per specificare il testo mostrato se la risorsa manca o non è accessibile. Per forzare il testo quando la risorsa è disponibile, aggiungi un quarto elemento: `[[kind:uuid:fallback:testo]]`. Se non vuoi un fallback, lascia vuoto il terzo elemento: `[[kind:uuid::testo]]`. I due punti non possono comparire nel fallback o nel testo alternativo.",
         ],
         example:
-          "##Azioni##\n**Squarcio.** _Tiro per colpire in mischia:_ +7, portata {1,5 m|5 ft}. _Colpito:_ 14 (2d8 + 5) danni taglienti.",
+          "##Azioni##\n**Squarcio.** __Tiro per colpire in mischia:__ +7, portata {{1,5 m|5 ft}}. __Colpito:__ 14 (2d8 + 5) danni taglienti.",
         examplePrefix: "Esempio:",
       },
       {

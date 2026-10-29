@@ -146,20 +146,20 @@ const i18nContext = {
   "attunement.label": { en: "Attunement", it: "Sintonia" },
   "attunement.slots": { en: "<1> slots", it: "<1> slot" },
   "attunement.with_notes/*": {
-    en: "_Requires attunement <2> (<1> slots)._",
-    it: "_Richiede sintonia <2> (<1> slot)._",
+    en: "__Requires attunement <2> (<1> slots).__",
+    it: "__Richiede sintonia <2> (<1> slot).__",
   },
   "attunement.with_notes/1": {
-    en: "_Requires attunement <2>._",
-    it: "_Richiede sintonia <2>._",
+    en: "__Requires attunement <2>.__",
+    it: "__Richiede sintonia <2>.__",
   },
   "attunement/*": {
-    en: "_Requires attunement (<1> slots)._",
-    it: "_Richiede sintonia (<1> slot)._",
+    en: "__Requires attunement (<1> slots).__",
+    it: "__Richiede sintonia (<1> slot).__",
   },
   "attunement/1": {
-    en: "_Requires attunement._",
-    it: "_Richiede sintonia._",
+    en: "__Requires attunement.__",
+    it: "__Richiede sintonia.__",
   },
   "cost": { en: "Cost", it: "Costo" },
   "magic": { en: "Magical", it: "Magico" },

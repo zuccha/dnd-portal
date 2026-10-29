@@ -67,11 +67,11 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
       let replaceEnd = selectionEnd;
 
       if (format === "metric_imperial") {
-        replacement = `{${selectedText}|${selectedText}}`;
+        replacement = `{{${selectedText}|${selectedText}}}`;
         nextSelectionStart = selectionStart + (selectedText ? selectedText.length + 2 : 1);
         nextSelectionEnd = nextSelectionStart + selectedText.length;
       } else {
-        const delimiter = format === "bold" ? "**" : format === "italic" ? "_" : "##";
+        const delimiter = format === "bold" ? "**" : format === "italic" ? "__" : "##";
         const alreadyFormatted =
           value.slice(0, selectionStart).endsWith(delimiter) &&
           value.slice(selectionEnd).startsWith(delimiter);

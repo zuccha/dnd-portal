@@ -34,7 +34,7 @@ export const useI18nSystem = i18nSystemStore.use;
 //------------------------------------------------------------------------------
 
 export function resolveSystemText(text: string, system: I18nSystem): string {
-  return text.replace(/\{(.+?)\}/g, (_match, value: string) => {
+  return text.replace(/\{\{(.+?)\}\}/g, (_match, value: string) => {
     const [metric, imperial] = value.split("|");
     return system === "metric" ? (metric ?? "") : (imperial ?? "");
   });

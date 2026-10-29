@@ -41,7 +41,7 @@ function readRichTextPageState(text: string, initialState: RichTextPageState): R
     } else if (text.startsWith("**", i)) {
       toggleMarker(state, "bold");
       i++;
-    } else if (text[i] === "_") {
+    } else if (text[i] === "__") {
       toggleMarker(state, "italic");
     }
   }
@@ -81,5 +81,5 @@ function formatClosingMarkers(state: RichTextPageState): string {
 function formatMarker(marker: RichTextMarker): string {
   if (marker === "bold") return "**";
   if (marker === "heading") return "##";
-  return "_";
+  return "__";
 }

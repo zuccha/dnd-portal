@@ -229,7 +229,7 @@ export function createResourcesTableRow<
                   <HStack gap={2} minW={0}>
                     {localizedResource.is_virtual && (
                       <Badge colorPalette="orange" size="xs" variant="solid">
-                        {translate({ en: "Temporary", it: "Temporanea" }, lang)}
+                        {t("temporary")}
                       </Badge>
                     )}
                     <Link onClick={openDetails}>{String(value)}</Link>
@@ -347,7 +347,7 @@ export function createResourcesTableRow<
                       display="block"
                       overflowWrap="anywhere"
                       patterns={richTextPatterns}
-                      text={translate({ en: "_No details._", it: "_Nessuna descrizione._" }, lang)}
+                      text={t("description.missing")}
                       whiteSpace="normal"
                     />
                   )}
@@ -372,6 +372,10 @@ const i18nContext = {
   "actions": {
     en: "Actions",
     it: "Azioni",
+  },
+  "description.missing": {
+    en: "__No details.__",
+    it: "__Nessuna descrizione.__",
   },
   "edit": {
     en: "Edit",
@@ -404,5 +408,9 @@ const i18nContext = {
   "remove": {
     en: "Delete",
     it: "Elimina",
+  },
+  "temporary": {
+    en: "Temporary",
+    it: "Temporanea",
   },
 };
