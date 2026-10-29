@@ -246,9 +246,8 @@ type DescriptionProps = {
   patterns?: RichTextPattern[];
 };
 
-function Description({ children, palette, patterns }: DescriptionProps) {
+function Description({ children, palette, patterns = RichText.defaultPatterns }: DescriptionProps) {
   const bleed = useBleed();
-  const richTextPatterns = patterns ?? RichText.defaultPatterns;
   const headingPattern: RichTextPattern = {
     regex: /##(.+?)##/,
     render: (value) => (
@@ -270,13 +269,13 @@ function Description({ children, palette, patterns }: DescriptionProps) {
   };
   const headingPatterns = [
     headingPattern,
-    ...richTextPatterns.filter(({ regex }) => regex.source !== headingPattern.regex.source),
+    ...patterns.filter(({ regex }) => regex.source !== headingPattern.regex.source),
   ];
   const blocks = renderRichTextBlocks(children, [
     createRichTextTableBlockPattern({
       mode: "card",
       palette,
-      renderCell: (value) => <RichText display="inline" patterns={richTextPatterns} text={value} />,
+      renderCell: (value) => <RichText display="inline" patterns={patterns} text={value} />,
     }),
   ]);
 
@@ -302,7 +301,7 @@ function Description({ children, palette, patterns }: DescriptionProps) {
               <RichText
                 hyphens="auto"
                 key={`${blockIndex}:${paragraphIndex}`}
-                patterns={paragraph.startsWith("##") ? headingPatterns : richTextPatterns}
+                patterns={paragraph.startsWith("##") ? headingPatterns : patterns}
                 text={paragraph}
               />
             );
