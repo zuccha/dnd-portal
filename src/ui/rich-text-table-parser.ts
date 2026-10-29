@@ -28,14 +28,14 @@ export type RichTextTableBlock = {
 // Rich Text Table Pattern
 //------------------------------------------------------------------------------
 
-export const richTextTableBlockRegex = /^:::table[ \t]*\r?\n[\s\S]*?\r?\n:::[ \t]*$/m;
+export const richTextTableBlockRegex = /[\n\r]?:::table[ \t]*\r?\n[\s\S]*?\r?\n:::[ \t]*[\n\r]?/m;
 
 //------------------------------------------------------------------------------
 // Parse Rich Text Table
 //------------------------------------------------------------------------------
 
 export function parseRichTextTable(source: string): RichTextTableBlock | undefined {
-  const content = /^:::table[ \t]*\r?\n([\s\S]*?)\r?\n:::[ \t]*$/.exec(source)?.[1];
+  const content = /[\n\r]?:::table[ \t]*\r?\n([\s\S]*?)\r?\n:::[ \t]*[\n\r]?$/.exec(source)?.[1];
   if (content === undefined) return undefined;
 
   const parsedRows = content

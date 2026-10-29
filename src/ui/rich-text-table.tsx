@@ -34,6 +34,7 @@ export function RichTextTable({
   return (
     <Table.Root
       fontSize={mode === "card" ? "0.72em" : undefined}
+      my={mode === "card" ? "0.2em" : 0}
       tableLayout="auto"
       unstyled
       w="full"
