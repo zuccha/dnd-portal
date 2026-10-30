@@ -81,15 +81,16 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
       let replaceEnd = selectionEnd;
 
       if (format === "table") {
+        const tableName = t("table_name");
         const prefix =
           selectionStart > 0 && !/[\r\n]$/.test(value.slice(0, selectionStart)) ? "\n\n" : "";
         const suffix =
           selectionEnd < value.length && !/^[\r\n]/.test(value.slice(selectionEnd)) ? "\n\n" : "";
-        const table = ":::table\nHeader 1 || Header 2\n--- || ---\nCell 1 || Cell 2\n:::";
+        const table = `:::table ${tableName}\nHeader 1 || Header 2\n--- || ---\nCell 1 || Cell 2\n:::`;
         replacement = `${prefix}${table}${suffix}`;
-        const headerStart = selectionStart + prefix.length + ":::table\n".length;
-        nextSelectionStart = headerStart;
-        nextSelectionEnd = headerStart + "Header 1".length;
+        const nameStart = selectionStart + prefix.length + ":::table ".length;
+        nextSelectionStart = nameStart;
+        nextSelectionEnd = nameStart + tableName.length;
       } else if (format === "page_break") {
         replacement = `${richTextPageBreakDelimiter}`;
         nextSelectionStart = selectionStart + replacement.length;
@@ -130,7 +131,7 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
         nextSelectionEnd,
       );
     },
-    [insertTextAtSelection],
+    [insertTextAtSelection, t],
   );
 
   const requestLink = useCallback(() => {
@@ -306,6 +307,10 @@ const i18nContext = {
   table: {
     en: "Insert table",
     it: "Inserisci tabella",
+  },
+  table_name: {
+    en: "Table name",
+    it: "Nome tabella",
   },
 };
 

@@ -34,6 +34,7 @@ export function createRichTextTableBlockPattern({
           alignments={table.alignments}
           flex_columns={table.flex_columns}
           mode={mode}
+          name={table.name}
           palette={palette}
           renderCell={renderCell}
           rows={table.rows}

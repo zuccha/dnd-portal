@@ -20,6 +20,7 @@ type TableColumnMarker = {
 export type RichTextTableBlock = {
   alignments: RichTextTableAlignment[];
   flex_columns: boolean[];
+  name?: string;
   rows: string[][];
   type: "table";
 };
@@ -28,14 +29,18 @@ export type RichTextTableBlock = {
 // Rich Text Table Pattern
 //------------------------------------------------------------------------------
 
-export const richTextTableBlockRegex = /[\n\r]?:::table[ \t]*\r?\n[\s\S]*?\r?\n:::[ \t]*[\n\r]?/m;
+export const richTextTableBlockRegex =
+  /[\n\r]?:::table(?:[ \t]+[^\r\n]+)?[ \t]*\r?\n[\s\S]*?\r?\n:::[ \t]*[\n\r]?/m;
 
 //------------------------------------------------------------------------------
 // Parse Rich Text Table
 //------------------------------------------------------------------------------
 
 export function parseRichTextTable(source: string): RichTextTableBlock | undefined {
-  const content = /[\n\r]?:::table[ \t]*\r?\n([\s\S]*?)\r?\n:::[ \t]*[\n\r]?$/.exec(source)?.[1];
+  const match =
+    /^[\n\r]?:::table(?:[ \t]+([^\r\n]+))?[ \t]*\r?\n([\s\S]*?)\r?\n:::[ \t]*[\n\r]?$/.exec(source);
+  const name = match?.[1]?.trim();
+  const content = match?.[2];
   if (content === undefined) return undefined;
 
   const parsedRows = content
@@ -53,6 +58,7 @@ export function parseRichTextTable(source: string): RichTextTableBlock | undefin
   return {
     alignments: columnLayout?.alignments ?? rows[0]!.map(() => "left"),
     flex_columns: columnLayout?.flex_columns ?? rows[0]!.map(() => false),
+    name: name || undefined,
     rows,
     type: "table",
   };

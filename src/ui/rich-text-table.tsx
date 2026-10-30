@@ -11,6 +11,7 @@ type RichTextTableProps = {
   alignments: RichTextTableBlock["alignments"];
   flex_columns: RichTextTableBlock["flex_columns"];
   mode: "card" | "grid";
+  name?: string;
   palette?: Palette;
   renderCell: (value: string) => ReactNode;
   rows: RichTextTableBlock["rows"];
@@ -24,6 +25,7 @@ export function RichTextTable({
   alignments,
   flex_columns,
   mode,
+  name,
   palette,
   renderCell,
   rows,
@@ -39,6 +41,32 @@ export function RichTextTable({
       unstyled
       w="full"
     >
+      {name && mode === "card" ? (
+        <Table.Caption
+          captionSide="top"
+          fontFamily={"Mr Eaves Alt"}
+          fontSize={"1.5em"}
+          fontVariant={"small-caps"}
+          fontWeight={"bold"}
+          letterSpacing={0.3}
+          pb={1}
+          textAlign="left"
+          unstyled
+        >
+          {name}
+        </Table.Caption>
+      ) : (
+        <Table.Caption
+          captionSide="top"
+          fontSize="1.05em"
+          fontWeight="medium"
+          pb={2}
+          textAlign="left"
+          unstyled
+        >
+          {name}
+        </Table.Caption>
+      )}
       {flex_columns.some(Boolean) && (
         <Table.ColumnGroup unstyled>
           {flex_columns.map((flex, index) => (
