@@ -1,5 +1,12 @@
 import { HStack, Text, type StackProps } from "@chakra-ui/react";
-import { ArrowLeftRightIcon, BoldIcon, Heading2Icon, ItalicIcon, Link2Icon } from "lucide-react";
+import {
+  ArrowLeftRightIcon,
+  BetweenHorizontalEndIcon,
+  BoldIcon,
+  Heading2Icon,
+  ItalicIcon,
+  Link2Icon,
+} from "lucide-react";
 import { useCallback, useRef } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import Field from "~/ui/field";
@@ -10,13 +17,14 @@ import {
   richTextHeadingDelimiter,
   richTextItalicDelimiter,
 } from "./rich-text-page";
+import { richTextPageBreakDelimiter } from "./rich-text-page-break";
 import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
 
 //------------------------------------------------------------------------------
 // Rich Text Format
 //------------------------------------------------------------------------------
 
-type RichTextFormat = "bold" | "header" | "italic" | "metric_imperial";
+type RichTextFormat = "bold" | "header" | "italic" | "metric_imperial" | "page_break";
 
 //------------------------------------------------------------------------------
 // Rich Text Textarea Props
@@ -71,7 +79,11 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
       let replaceStart = selectionStart;
       let replaceEnd = selectionEnd;
 
-      if (format === "metric_imperial") {
+      if (format === "page_break") {
+        replacement = `${richTextPageBreakDelimiter}`;
+        nextSelectionStart = selectionStart + replacement.length;
+        nextSelectionEnd = nextSelectionStart;
+      } else if (format === "metric_imperial") {
         replacement = `{{${selectedText}|${selectedText}}}`;
         nextSelectionStart = selectionStart + (selectedText ? selectedText.length + 2 : 1);
         nextSelectionEnd = nextSelectionStart + selectedText.length;
@@ -217,6 +229,15 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
                 variant="ghost"
               />
             )}
+            <IconButton
+              Icon={BetweenHorizontalEndIcon}
+              label={t("page_break")}
+              onClick={() => formatSelection("page_break")}
+              onMouseDown={handleToolbarMouseDown}
+              rounded="sm"
+              size="xs"
+              variant="ghost"
+            />
           </HStack>
         </HStack>
       }
@@ -250,13 +271,17 @@ const i18nContext = {
     en: "Italic",
     it: "Corsivo",
   },
+  link_resource: {
+    en: "Link a resource",
+    it: "Collega una risorsa",
+  },
   metric_imperial: {
     en: "Metric/imperial",
     it: "Metrico/imperiale",
   },
-  link_resource: {
-    en: "Link a resource",
-    it: "Collega una risorsa",
+  page_break: {
+    en: "Insert page break",
+    it: "Inserisci interruzione di pagina",
   },
 };
 

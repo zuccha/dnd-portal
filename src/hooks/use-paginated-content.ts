@@ -1,4 +1,5 @@
 import { createRef, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { preserveRichTextPageBreaks, richTextPageBreakDelimiter } from "../ui/rich-text-page-break";
 import { dropLast } from "../utils/array";
 
 //------------------------------------------------------------------------------
@@ -34,7 +35,7 @@ export default function usePaginatedContent(
 
   useLayoutEffect(() => {
     changePageCountRef.current(undefined, false);
-    contentRef.current = content;
+    contentRef.current = preserveRichTextPageBreaks(content);
     setPages(
       options.firstPageReserved
         ? [
@@ -81,28 +82,56 @@ export default function usePaginatedContent(
           right + contentRef.current,
         );
       } else {
-        const textTemp = lastPage.textTemp + contentRef.current;
+        const pendingText = lastPage.textTemp + contentRef.current;
+        const pageBreakIndex = pendingText.indexOf(richTextPageBreakDelimiter);
+        const textTemp = pageBreakIndex < 0 ? pendingText : pendingText.slice(0, pageBreakIndex);
+        const nextContent = pageBreakIndex < 0 ? "" : pendingText.slice(pageBreakIndex);
+
         setPagesOnNextFrame(
           [
             ...dropLast(pages),
             { ...lastPage, textTemp: "" },
             { ref: createRef(), text: "", textTemp },
           ],
-          "",
+          nextContent,
         );
       }
     } else if (contentRef.current.length) {
-      setPagesOnNextFrame(
-        [
-          ...dropLast(pages),
-          {
-            ...lastPage,
-            text: lastPage.text + lastPage.textTemp,
-            textTemp: contentRef.current,
-          },
-        ],
-        "",
-      );
+      const pageBreakIndex = contentRef.current.indexOf(richTextPageBreakDelimiter);
+
+      if (pageBreakIndex === 0) {
+        const nextContent = contentRef.current.slice(richTextPageBreakDelimiter.length);
+        const finishedPage = {
+          ...lastPage,
+          text: lastPage.text + lastPage.textTemp,
+          textTemp: "",
+        };
+
+        if (nextContent) {
+          setPagesOnNextFrame(
+            [...dropLast(pages), finishedPage, { ref: createRef(), text: "", textTemp: "" }],
+            nextContent,
+          );
+        } else {
+          setPagesOnNextFrame([...dropLast(pages), finishedPage], "");
+        }
+      } else {
+        const nextTextTemp =
+          pageBreakIndex < 0 ? contentRef.current : contentRef.current.slice(0, pageBreakIndex);
+        const nextContent = pageBreakIndex < 0 ? "" : contentRef.current.slice(pageBreakIndex);
+
+        setPagesOnNextFrame(
+          [
+            ...dropLast(pages),
+            {
+              ...lastPage,
+              text: lastPage.text + lastPage.textTemp,
+              textTemp: nextTextTemp,
+            },
+          ],
+          nextContent,
+        );
+      }
     } else {
       changePageCountRef.current(pages.length, getFirstPageOverflow(pages));
     }

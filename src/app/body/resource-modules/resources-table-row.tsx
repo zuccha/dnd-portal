@@ -27,6 +27,7 @@ import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
 import { renderRichTextBlocks } from "~/ui/rich-text-block-pattern";
 import { italic } from "~/ui/rich-text-page";
+import { richTextPageBreakBlockPattern } from "~/ui/rich-text-page-break";
 import { createRichTextTableBlockPattern } from "~/ui/rich-text-table-block-pattern";
 import { toaster } from "~/ui/toaster";
 import { useResourceDelete } from "./resource-delete";
@@ -117,6 +118,7 @@ export function createResourcesTableRow<
         ? resolveSystemText(String(localizedResource.description), system)
         : "";
     const descriptionBlocks = renderRichTextBlocks(description, [
+      richTextPageBreakBlockPattern,
       createRichTextTableBlockPattern({
         mode: "grid",
         renderCell: (value) => (

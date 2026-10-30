@@ -12,6 +12,7 @@ import IconButton, { type IconButtonProps } from "../../../ui/icon-button";
 import RichText from "../../../ui/rich-text";
 import { renderRichTextBlocks } from "../../../ui/rich-text-block-pattern";
 import { richTextHeadingDelimiter } from "../../../ui/rich-text-page";
+import { replaceRichTextPageBreaksWithNewlines } from "../../../ui/rich-text-page-break";
 import { createRichTextTableBlockPattern } from "../../../ui/rich-text-table-block-pattern";
 import RouterLink from "../../../ui/router-link";
 import { resourcePanelTranslations } from "../screens/source-screen/panels/panel-translations";
@@ -70,7 +71,9 @@ export default function ResourceDetail({
 
   if (!resource) return null;
 
-  const details = resolveSystemText(resource.description, system).replace(
+  const details = replaceRichTextPageBreaksWithNewlines(
+    resolveSystemText(resource.description, system),
+  ).replace(
     new RegExp(
       `[\\r\\n]*${richTextHeadingDelimiter}(.+?)${richTextHeadingDelimiter}[\\r\\n]*`,
       "g",
