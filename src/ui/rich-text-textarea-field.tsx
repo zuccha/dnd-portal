@@ -96,9 +96,10 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
         nextSelectionStart = selectionStart + replacement.length;
         nextSelectionEnd = nextSelectionStart;
       } else if (format === "metric_imperial") {
-        replacement = `{{${selectedText}|${selectedText}}}`;
-        nextSelectionStart = selectionStart + (selectedText ? selectedText.length + 2 : 1);
-        nextSelectionEnd = nextSelectionStart + selectedText.length;
+        const replacementText = metImpMappings[selectedText] ?? `${selectedText}|${selectedText}`;
+        replacement = `{{${replacementText}}}`;
+        nextSelectionStart = selectionStart + 2;
+        nextSelectionEnd = nextSelectionStart + replacementText.indexOf("|");
       } else {
         const delimiter =
           format === "bold"
@@ -321,3 +322,54 @@ const i18nContext = {
 function isMacOS(): boolean {
   return typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
 }
+
+//------------------------------------------------------------------------------
+// Met Imp Mappings
+//------------------------------------------------------------------------------
+
+const metImpMappings: Record<string, string> = {
+  "5 feet": "1.5 meters|5 feet",
+  "10 feet": "3 meters|10 feet",
+  "15 feet": "4.5 meters|15 feet",
+  "20 feet": "6 meters|20 feet",
+  "25 feet": "7.5 meters|25 feet",
+  "30 feet": "9 meters|30 feet",
+  "60 feet": "18 meters|60 feet",
+  "120 feet": "36 meters|120 feet",
+
+  "5 piedi": "1.5 metri|5 piedi",
+  "10 piedi": "3 metri|10 piedi",
+  "15 piedi": "4.5 metri|15 piedi",
+  "20 piedi": "6 metri|20 piedi",
+  "25 piedi": "7.5 metri|25 piedi",
+  "30 piedi": "9 metri|30 piedi",
+  "60 piedi": "18 metri|60 piedi",
+  "120 piedi": "36 metri|120 piedi",
+
+  "1.5 meters": "1.5 meters|5 feet",
+  "3 meters": "3 meters|10 feet",
+  "4.5 meters": "4.5 meters|15 feet",
+  "6 meters": "6 meters|20 feet",
+  "7.5 meters": "7.5 meters|25 feet",
+  "9 meters": "9 meters|30 feet",
+  "18 meters": "18 meters|60 feet",
+  "36 meters": "36 meters|120 feet",
+
+  "1,5 metri": "1.5 metri|5 piedi",
+  "3 metri": "3 metri|10 piedi",
+  "4,5 metri": "4.5 metri|15 piedi",
+  "6 metri": "6 metri|20 piedi",
+  "7,5 metri": "7.5 metri|25 piedi",
+  "9 metri": "9 metri|30 piedi",
+  "18 metri": "18 metri|60 piedi",
+  "36 metri": "36 metri|120 piedi",
+
+  "5-foot": "1.5-meter|5-foot",
+  "10-foot": "3-meter|10 foot",
+  "15-foot": "4.5-meter|15-foot",
+  "20-foot": "6-meter|20-foot",
+  "25-foot": "7.5-meter|25-foot",
+  "30-foot": "9-meter|30-foot",
+  "60-foot": "18-meter|60-foot",
+  "120-foot": "36-meter|120-foot",
+};
