@@ -6,6 +6,7 @@ import {
   Heading2Icon,
   ItalicIcon,
   Link2Icon,
+  Table2Icon,
 } from "lucide-react";
 import { useCallback, useRef } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
@@ -24,7 +25,7 @@ import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
 // Rich Text Format
 //------------------------------------------------------------------------------
 
-type RichTextFormat = "bold" | "header" | "italic" | "metric_imperial" | "page_break";
+type RichTextFormat = "bold" | "header" | "italic" | "metric_imperial" | "page_break" | "table";
 
 //------------------------------------------------------------------------------
 // Rich Text Textarea Props
@@ -79,7 +80,17 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
       let replaceStart = selectionStart;
       let replaceEnd = selectionEnd;
 
-      if (format === "page_break") {
+      if (format === "table") {
+        const prefix =
+          selectionStart > 0 && !/[\r\n]$/.test(value.slice(0, selectionStart)) ? "\n\n" : "";
+        const suffix =
+          selectionEnd < value.length && !/^[\r\n]/.test(value.slice(selectionEnd)) ? "\n\n" : "";
+        const table = ":::table\nHeader 1 || Header 2\n--- || ---\nCell 1 || Cell 2\n:::";
+        replacement = `${prefix}${table}${suffix}`;
+        const headerStart = selectionStart + prefix.length + ":::table\n".length;
+        nextSelectionStart = headerStart;
+        nextSelectionEnd = headerStart + "Header 1".length;
+      } else if (format === "page_break") {
         replacement = `${richTextPageBreakDelimiter}`;
         nextSelectionStart = selectionStart + replacement.length;
         nextSelectionEnd = nextSelectionStart;
@@ -238,6 +249,15 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
               size="xs"
               variant="ghost"
             />
+            <IconButton
+              Icon={Table2Icon}
+              label={t("table")}
+              onClick={() => formatSelection("table")}
+              onMouseDown={handleToolbarMouseDown}
+              rounded="sm"
+              size="xs"
+              variant="ghost"
+            />
           </HStack>
         </HStack>
       }
@@ -282,6 +302,10 @@ const i18nContext = {
   page_break: {
     en: "Insert page break",
     it: "Inserisci interruzione di pagina",
+  },
+  table: {
+    en: "Insert table",
+    it: "Inserisci tabella",
   },
 };
 
