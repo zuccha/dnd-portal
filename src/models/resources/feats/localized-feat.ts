@@ -44,7 +44,10 @@ export function useFeatLocalizationContext(
   related: RelatedResourceEntries<"feat">,
 ): FeatLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
-  const featureEntries = useLocalizedFeatureEntries(related.features, true);
+  const featureEntries = useLocalizedFeatureEntries(related.features, {
+    featureNameInDescription: true,
+    linkNames: true,
+  });
   const translateFeatCategory = useTranslateFeatCategory(context.lang);
 
   return useMemo(
