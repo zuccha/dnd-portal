@@ -1,11 +1,9 @@
 import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
-import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateFeatCategory } from "../../types/feat-category";
 import {
   type ResourceLocalizationContext,
-  formatDescription,
   localizeResource,
   localizedFieldSchema,
   localizedResourceSchema,
@@ -31,7 +29,6 @@ export type LocalizedFeat = z.infer<typeof localizedFeatSchema>;
 //------------------------------------------------------------------------------
 
 type FeatLocalizationContext = ResourceLocalizationContext & {
-  featureEntries: string;
   translateFeatCategory: ReturnType<typeof useTranslateFeatCategory>;
 };
 
@@ -41,19 +38,12 @@ type FeatLocalizationContext = ResourceLocalizationContext & {
 
 export function useFeatLocalizationContext(
   _feat: Feat,
-  related: RelatedResourceEntries<"feat">,
+  _related: RelatedResourceEntries<"feat">,
 ): FeatLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
-  const featureEntries = useLocalizedFeatureEntries(related.features, {
-    featureNameInDescription: true,
-    linkNames: true,
-  });
   const translateFeatCategory = useTranslateFeatCategory(context.lang);
 
-  return useMemo(
-    () => ({ ...context, featureEntries, translateFeatCategory }),
-    [context, featureEntries, translateFeatCategory],
-  );
+  return useMemo(() => ({ ...context, translateFeatCategory }), [context, translateFeatCategory]);
 }
 
 //------------------------------------------------------------------------------
@@ -63,7 +53,6 @@ export function useFeatLocalizationContext(
 export function localizeFeat(feat: Feat, context: FeatLocalizationContext): LocalizedFeat {
   const category = context.translateFeatCategory(feat.category);
   const description = translate(feat.description, context.lang);
-  const features = context.featureEntries;
   const prerequisite = translate(feat.prerequisite, context.lang);
   const minLevel = feat.minimum_level ? `${feat.minimum_level}` : "";
 
@@ -71,7 +60,7 @@ export function localizeFeat(feat: Feat, context: FeatLocalizationContext): Loca
     ...localizeResource(feat, context),
     descriptor: context.ti("descriptor", category),
     category,
-    description: formatDescription(description, features),
+    description,
 
     minimum_level: { label: context.t("min_level"), value: minLevel },
     prerequisite: { label: context.t("prerequisite"), value: prerequisite },

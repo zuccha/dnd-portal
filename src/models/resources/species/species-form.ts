@@ -2,11 +2,9 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import { creatureSizeSchema } from "../../types/creature-size";
 import { creatureTypeSchema } from "../../types/creature-type";
-import { featureEntrySchema } from "../features/feature-entry";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
-  createRelationEndpointUpdates,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
@@ -19,7 +17,6 @@ import type { Species } from "./species";
 
 export const speciesFormDataSchema = resourceFormDataSchema.extend({
   description: z.string().default(""),
-  feature_entries: z.array(featureEntrySchema).default([]),
   sizes: z.array(creatureSizeSchema).min(1).default(["medium"]),
   speed: z.number().default(30),
   type: creatureTypeSchema.default("humanoid"),
@@ -35,16 +32,14 @@ export function speciesFormDataToResource(
   data: Partial<SpeciesFormData>,
   lang: string,
 ): ResourceFormOutput<Species> {
-  const { feature_entries, ...resourceData } = data;
   const resource = createResourceFormDataPatch({
-    ...resourceFormDataToResource(resourceData, lang),
+    ...resourceFormDataToResource(data, lang),
     description: createResourceFormDataI18nValue(data.description, lang),
     sizes: data.sizes,
     speed: data.speed,
     type: data.type,
   });
-  const relations = createRelationEndpointUpdates("species_and_features", feature_entries);
-  return { resource, relations };
+  return { resource, relations: [] };
 }
 
 //------------------------------------------------------------------------------

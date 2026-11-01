@@ -1,11 +1,9 @@
 import z from "zod";
 import { createForm } from "~/utils/form";
 import { equipmentRaritySchema } from "../../types/equipment-rarity";
-import { featureEntrySchema } from "../features/feature-entry";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
-  createRelationEndpointUpdates,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
@@ -29,7 +27,6 @@ export const equipmentFormDataSchema = resourceFormDataSchema.extend({
   attunement_notes: z.string().default(""),
   cost: z.number().nullable().default(0),
   description: z.string().default(""),
-  feature_entries: z.array(featureEntrySchema).default([]),
   is_magic: z.boolean().default(false),
   modifier_ids: z.array(z.uuid()).default([]),
   rarity: equipmentRaritySchema.default("common"),
@@ -47,9 +44,8 @@ export function equipmentFormDataToResource(
   data: Partial<EquipmentFormData>,
   lang: string,
 ): EquipmentFormDataPatch {
-  const { feature_entries, ...resourceData } = data;
   const resource = createResourceFormDataPatch({
-    ...resourceFormDataToResource(resourceData, lang),
+    ...resourceFormDataToResource(data, lang),
     attunement_notes: createResourceFormDataI18nValue(data.attunement_notes, lang),
     cost: data.cost,
     description: createResourceFormDataI18nValue(data.description, lang),
@@ -59,8 +55,7 @@ export function equipmentFormDataToResource(
     required_attunement_slots: data.required_attunement_slots,
     weight: data.weight,
   });
-  const relations = createRelationEndpointUpdates("equipments_and_features", feature_entries);
-  return { resource, relations };
+  return { resource, relations: [] };
 }
 
 //------------------------------------------------------------------------------

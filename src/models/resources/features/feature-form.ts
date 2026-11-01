@@ -13,14 +13,8 @@ import type { ResourceFormOutput } from "../resource-form";
 import type { Feature } from "./feature";
 
 const featureRelationGroupByGrantorKind = {
-  armor: "equipments_and_features",
   character_class: "character_classes_and_features",
   character_subclass: "character_subclasses_and_features",
-  feat: "feats_and_features",
-  item: "equipments_and_features",
-  species: "species_and_features",
-  tool: "equipments_and_features",
-  weapon: "equipments_and_features",
 } as const;
 
 //------------------------------------------------------------------------------

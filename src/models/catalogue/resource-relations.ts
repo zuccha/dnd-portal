@@ -27,17 +27,14 @@ export type FeatureRelation<K extends ResourceKind> = ResourceRelation<K, "featu
 //------------------------------------------------------------------------------
 
 export type RelationGroupRows = {
+  character_classes_and_features: FeatureRelation<"character_class">;
   character_classes_and_spells: ResourceRelation<"character_class", "spell">;
   creature_families_and_creature_habitats: ResourceRelation<"creature_family", "creature_habitat">;
   creature_families_and_creature_treasures: ResourceRelation<
     "creature_family",
     "creature_treasure"
   >;
-  character_classes_and_features: FeatureRelation<"character_class">;
   character_subclasses_and_features: FeatureRelation<"character_subclass">;
-  equipments_and_features: FeatureRelation<"armor" | "item" | "tool" | "weapon">;
-  feats_and_features: FeatureRelation<"feat">;
-  species_and_features: FeatureRelation<"species">;
 };
 
 //------------------------------------------------------------------------------
@@ -63,9 +60,7 @@ type FeatureRelatedEntry<K extends ResourceKind> = RelatedEntry<K> & { minimum_l
 //------------------------------------------------------------------------------
 
 export type RelatedResourceEntriesByKind = {
-  armor: {
-    features: FeatureRelatedEntry<"feature">;
-  };
+  armor: {};
   armor_modifier: {};
   background: {};
   character_class: {
@@ -88,39 +83,26 @@ export type RelatedResourceEntriesByKind = {
     families: RelatedEntry<"creature_family">;
   };
   eldritch_invocation: {};
-  feat: {
-    features: FeatureRelatedEntry<"feature">;
-  };
+  feat: {};
   feature: {
     character_classes: FeatureRelatedEntry<"character_class">;
     character_subclasses: FeatureRelatedEntry<"character_subclass">;
-    equipments: FeatureRelatedEntry<"armor" | "item" | "tool" | "weapon">;
-    feats: FeatureRelatedEntry<"feat">;
-    species: FeatureRelatedEntry<"species">;
   };
-  item: {
-    features: FeatureRelatedEntry<"feature">;
-  };
+  item: {};
   item_modifier: {};
   language: {};
   maneuver: {};
   metamagic: {};
   plane: {};
   service: {};
-  species: {
-    features: FeatureRelatedEntry<"feature">;
-  };
+  species: {};
   spell: {
     character_classes: RelatedEntry<"character_class">;
   };
-  tool: {
-    features: FeatureRelatedEntry<"feature">;
-  };
+  tool: {};
   tool_modifier: {};
   vehicle: {};
-  weapon: {
-    features: FeatureRelatedEntry<"feature">;
-  };
+  weapon: {};
   weapon_modifier: {};
 };
 
@@ -159,9 +141,7 @@ export type RelatedResourceEntries<K extends ResourceKind> = {
 //------------------------------------------------------------------------------
 
 export const relationGroupByResourceKind = {
-  armor: {
-    features: "equipments_and_features",
-  },
+  armor: {},
   armor_modifier: {},
   background: {},
   character_class: {
@@ -184,37 +164,26 @@ export const relationGroupByResourceKind = {
     families: "creature_families_and_creature_treasures",
   },
   eldritch_invocation: {},
-  feat: {
-    features: "feats_and_features",
-  },
+  feat: {},
   feature: {
     character_classes: "character_classes_and_features",
     character_subclasses: "character_subclasses_and_features",
-    equipments: "equipments_and_features",
-    feats: "feats_and_features",
-    species: "species_and_features",
   },
-  item: { features: "equipments_and_features" },
+  item: {},
   item_modifier: {},
   language: {},
   maneuver: {},
   metamagic: {},
   plane: {},
   service: {},
-  species: {
-    features: "species_and_features",
-  },
+  species: {},
   spell: {
     character_classes: "character_classes_and_spells",
   },
-  tool: {
-    features: "equipments_and_features",
-  },
+  tool: {},
   tool_modifier: {},
   vehicle: {},
-  weapon: {
-    features: "equipments_and_features",
-  },
+  weapon: {},
   weapon_modifier: {},
 } as const satisfies {
   [K in ResourceKind]: Record<RelatedResourceName<K>, RelationGroup>;
@@ -284,14 +253,11 @@ export type RelationResourceEndpoint = {
 //------------------------------------------------------------------------------
 
 const relationEndpointKinds: Record<RelationGroup, [ResourceKind[], ResourceKind[]]> = {
+  character_classes_and_features: [["character_class"], ["feature"]],
   character_classes_and_spells: [["character_class"], ["spell"]],
   creature_families_and_creature_habitats: [["creature_family"], ["creature_habitat"]],
   creature_families_and_creature_treasures: [["creature_family"], ["creature_treasure"]],
-  character_classes_and_features: [["character_class"], ["feature"]],
   character_subclasses_and_features: [["character_subclass"], ["feature"]],
-  equipments_and_features: [["armor", "item", "tool", "weapon"], ["feature"]],
-  feats_and_features: [["feat"], ["feature"]],
-  species_and_features: [["species"], ["feature"]],
 };
 
 //------------------------------------------------------------------------------
@@ -460,6 +426,7 @@ function featureRelationSchema<K extends ResourceKind>(kind: K) {
 //------------------------------------------------------------------------------
 
 export const resourceRelationsSchema = z.object({
+  character_classes_and_features: featureRelationSchema("character_class").array().default([]),
   character_classes_and_spells: z
     .object({
       ...relationFields,
@@ -484,21 +451,9 @@ export const resourceRelationsSchema = z.object({
     })
     .array()
     .default([]),
-  character_classes_and_features: featureRelationSchema("character_class").array().default([]),
   character_subclasses_and_features: featureRelationSchema("character_subclass")
     .array()
     .default([]),
-  equipments_and_features: z
-    .discriminatedUnion("resource_1_kind", [
-      featureRelationSchema("armor"),
-      featureRelationSchema("item"),
-      featureRelationSchema("tool"),
-      featureRelationSchema("weapon"),
-    ])
-    .array()
-    .default([]),
-  feats_and_features: featureRelationSchema("feat").array().default([]),
-  species_and_features: featureRelationSchema("species").array().default([]),
 });
 
 //------------------------------------------------------------------------------
@@ -506,12 +461,9 @@ export const resourceRelationsSchema = z.object({
 //------------------------------------------------------------------------------
 
 export const emptyResourceRelations: ResourceRelations = {
+  character_classes_and_features: [],
   character_classes_and_spells: [],
   creature_families_and_creature_habitats: [],
   creature_families_and_creature_treasures: [],
-  character_classes_and_features: [],
   character_subclasses_and_features: [],
-  equipments_and_features: [],
-  feats_and_features: [],
-  species_and_features: [],
 };

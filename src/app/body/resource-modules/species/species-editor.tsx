@@ -1,21 +1,17 @@
 import { HStack } from "@chakra-ui/react";
 import type { Species } from "~/models/resources/species/species";
 import type { SpeciesFormData } from "~/models/resources/species/species-form";
-import { speciesStore } from "~/models/resources/species/species-store";
 import { useCreatureSizeOptions } from "~/models/types/creature-size";
 import { useCreatureTypeOptions } from "~/models/types/creature-type";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
   createDistanceInputField,
-  createFeatureEntriesField,
   createMultipleSelectEnumField,
   createSelectEnumField,
   createTextareaField,
 } from "../resource-editor-form";
 import { useResourceEditorLang } from "../resource-editor-language-context";
-
-const { useRelatedEntries: useSpeciesRelatedEntries } = speciesStore;
 
 //------------------------------------------------------------------------------
 // Create Species Editor
@@ -32,15 +28,6 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
-
-  //----------------------------------------------------------------------------
-  // Feature Entries
-  //----------------------------------------------------------------------------
-
-  const FeatureEntriesField = createFeatureEntriesField({
-    i18nContext: { label: { en: "Traits", it: "Tratti" } },
-    useField: form.createUseField("feature_entries"),
-  });
 
   //----------------------------------------------------------------------------
   // Description
@@ -95,9 +82,8 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
   // Species Editor
   //----------------------------------------------------------------------------
 
-  return function SpeciesEditor({ resource, sourceId }: SpeciesEditorProps) {
+  return function SpeciesEditor({ resource }: SpeciesEditorProps) {
     const { lang } = useResourceEditorLang();
-    const featureEntries = useSpeciesRelatedEntries(resource.id, "features");
 
     return (
       <ResourceEditor resource={resource}>
@@ -108,8 +94,6 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
         </HStack>
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
-
-        <FeatureEntriesField defaultValue={featureEntries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

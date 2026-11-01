@@ -3,14 +3,8 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { characterClassStore } from "~/models/resources/character-classes/character-class-store";
 import { characterSubclassStore } from "~/models/resources/character-subclasses/character-subclass-store";
-import { armorStore } from "~/models/resources/equipment/armors/armor-store";
-import { itemStore } from "~/models/resources/equipment/items/item-store";
-import { toolStore } from "~/models/resources/equipment/tools/tool-store";
-import { weaponStore } from "~/models/resources/equipment/weapons/weapon-store";
-import { featStore } from "~/models/resources/feats/feat-store";
 import type { FeatureGrant } from "~/models/resources/features/feature-entry";
 import type { ResourceOption } from "~/models/resources/resource";
-import { speciesStore } from "~/models/resources/species/species-store";
 import {
   type ResourceFeatureKind,
   useResourceFeatureKindOptions,
@@ -29,7 +23,6 @@ import { normalizeString } from "~/utils/string";
 
 export type FeatureGrantedByEditorProps = StackProps & {
   onValueChange: (grantedBy: FeatureGrant[]) => void;
-  sourceId: string;
   value: FeatureGrant[];
   withinDialog?: boolean;
 };
@@ -151,45 +144,18 @@ type FeatureGrantOption = ResourceOption & { kind: ResourceFeatureKind };
 
 const useCharacterClassResourceOptions = characterClassStore.useResourceOptions;
 const useCharacterSubclassResourceOptions = characterSubclassStore.useResourceOptions;
-const useSpeciesResourceOptions = speciesStore.useResourceOptions;
-const useFeatResourceOptions = featStore.useResourceOptions;
-const useArmorResourceOptions = armorStore.useResourceOptions;
-const useItemResourceOptions = itemStore.useResourceOptions;
-const useToolResourceOptions = toolStore.useResourceOptions;
-const useWeaponResourceOptions = weaponStore.useResourceOptions;
 
 function useFeatureGrantOptions(): FeatureGrantOption[] {
   const characterClassOptions = useCharacterClassResourceOptions();
   const characterSubclassOptions = useCharacterSubclassResourceOptions();
-  const speciesOptions = useSpeciesResourceOptions();
-  const featOptions = useFeatResourceOptions();
-  const armorOptions = useArmorResourceOptions();
-  const itemOptions = useItemResourceOptions();
-  const toolOptions = useToolResourceOptions();
-  const weaponOptions = useWeaponResourceOptions();
 
   return useMemo(
     () =>
       [
         ...withKind(characterClassOptions, "character_class"),
         ...withKind(characterSubclassOptions, "character_subclass"),
-        ...withKind(speciesOptions, "species"),
-        ...withKind(featOptions, "feat"),
-        ...withKind(armorOptions, "armor"),
-        ...withKind(itemOptions, "item"),
-        ...withKind(toolOptions, "tool"),
-        ...withKind(weaponOptions, "weapon"),
       ].sort(compareObjects("label")),
-    [
-      armorOptions,
-      characterClassOptions,
-      featOptions,
-      itemOptions,
-      speciesOptions,
-      characterSubclassOptions,
-      toolOptions,
-      weaponOptions,
-    ],
+    [characterClassOptions, characterSubclassOptions],
   );
 }
 

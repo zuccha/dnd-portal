@@ -11,19 +11,15 @@ const featureGrantorCollectionByKind = {
   weapon: "weapons",
 } as const;
 
-const featureRelationGroupByKind = {
-  armor: "equipments_and_features",
+const supportedFeatureRelationGroupByKind = {
   character_class: "character_classes_and_features",
   character_subclass: "character_subclasses_and_features",
-  feat: "feats_and_features",
-  item: "equipments_and_features",
-  species: "species_and_features",
-  tool: "equipments_and_features",
-  weapon: "equipments_and_features",
 } as const;
 
 type FeatureGrantorKind = keyof typeof featureGrantorCollectionByKind;
-type FeatureRelationGroup = (typeof featureRelationGroupByKind)[FeatureGrantorKind];
+type SupportedFeatureGrantorKind = keyof typeof supportedFeatureRelationGroupByKind;
+type FeatureRelationGroup =
+  (typeof supportedFeatureRelationGroupByKind)[SupportedFeatureGrantorKind];
 
 //------------------------------------------------------------------------------
 // Is Record
@@ -80,6 +76,16 @@ function getRequiredString(value: unknown, label: string): string {
 
 function isFeatureGrantorKind(value: string): value is FeatureGrantorKind {
   return Object.hasOwn(featureGrantorCollectionByKind, value);
+}
+
+//------------------------------------------------------------------------------
+// Is Supported Feature Grantor Kind
+//------------------------------------------------------------------------------
+
+function isSupportedFeatureGrantorKind(
+  value: FeatureGrantorKind,
+): value is SupportedFeatureGrantorKind {
+  return Object.hasOwn(supportedFeatureRelationGroupByKind, value);
 }
 
 //------------------------------------------------------------------------------
@@ -148,14 +154,14 @@ export function migrateSourceBundleVersion6(bundle: RawRecord): RawRecord {
   // Add Feature Relation
   //------------------------------------------------------------------------------
   function addFeatureRelation(
-    kind: FeatureGrantorKind,
+    kind: SupportedFeatureGrantorKind,
     grantorId: string,
     grantorPosition: number,
     featureId: string,
     featurePosition: number,
     minLevel: unknown,
   ): void {
-    const group = featureRelationGroupByKind[kind];
+    const group = supportedFeatureRelationGroupByKind[kind];
     let rows = featureRelations.get(group);
     if (!rows) {
       rows = new Map();
@@ -182,16 +188,18 @@ export function migrateSourceBundleVersion6(bundle: RawRecord): RawRecord {
     string,
   ][]) {
     for (const grantor of getCollection(resources, collection)) {
-      const grantorId = getRequiredString(grantor["id"], `${kind} id`);
-      for (const [index, entry] of getEntries(grantor, "feature_entries").entries()) {
-        addFeatureRelation(
-          kind,
-          grantorId,
-          index,
-          getRequiredString(entry["id"], "feature id"),
-          0,
-          entry["min_level"],
-        );
+      if (isSupportedFeatureGrantorKind(kind)) {
+        const grantorId = getRequiredString(grantor["id"], `${kind} id`);
+        for (const [index, entry] of getEntries(grantor, "feature_entries").entries()) {
+          addFeatureRelation(
+            kind,
+            grantorId,
+            index,
+            getRequiredString(entry["id"], "feature id"),
+            0,
+            entry["min_level"],
+          );
+        }
       }
       delete grantor["feature_entries"];
     }
@@ -211,6 +219,7 @@ export function migrateSourceBundleVersion6(bundle: RawRecord): RawRecord {
           `Cannot migrate feature grant ${grantorId}:${featureId}: grantor kind is unavailable in this bundle`,
         );
       }
+      if (!isSupportedFeatureGrantorKind(kind)) continue;
       addFeatureRelation(kind, grantorId, 0, featureId, index, grant["min_level"]);
     }
     delete feature["granted_by"];
@@ -220,18 +229,13 @@ export function migrateSourceBundleVersion6(bundle: RawRecord): RawRecord {
     ...bundle,
     bundle_version: 7,
     relations: {
-      character_classes_and_spells: [...characterClassSpellRelations.values()],
       character_classes_and_features: [
         ...(featureRelations.get("character_classes_and_features")?.values() ?? []),
       ],
+      character_classes_and_spells: [...characterClassSpellRelations.values()],
       character_subclasses_and_features: [
         ...(featureRelations.get("character_subclasses_and_features")?.values() ?? []),
       ],
-      equipments_and_features: [
-        ...(featureRelations.get("equipments_and_features")?.values() ?? []),
-      ],
-      feats_and_features: [...(featureRelations.get("feats_and_features")?.values() ?? [])],
-      species_and_features: [...(featureRelations.get("species_and_features")?.values() ?? [])],
     },
   };
 }

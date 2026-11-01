@@ -17,7 +17,6 @@ const healingPotion = itemSchema.parse({
   page: { en: 228, it: 227 },
   attunement_notes: { en: null, it: null },
   cost: 5000,
-  feature_entries: [],
   is_magic: true,
   modifier_ids: [],
   description: {

@@ -17,7 +17,6 @@ const lightCrossbow = weaponSchema.parse({
   page: { en: 215, it: 215 },
   attunement_notes: { en: null, it: null },
   cost: 2500,
-  feature_entries: [],
   is_magic: false,
   modifier_ids: [],
   description: { en: "", it: "" },

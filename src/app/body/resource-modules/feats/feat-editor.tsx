@@ -1,7 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import type { Feat } from "~/models/resources/feats/feat";
 import type { FeatFormData } from "~/models/resources/feats/feat-form";
-import { featStore } from "~/models/resources/feats/feat-store";
 import {
   parseCharacterLevel,
   stringifyCharacterLevel,
@@ -11,15 +10,12 @@ import { useFeatCategoryOptions } from "~/models/types/feat-category";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
-  createFeatureEntriesField,
   createInputField,
   createSelectEnumField,
   createSelectField,
   createTextareaField,
 } from "../resource-editor-form";
 import { useResourceEditorLang } from "../resource-editor-language-context";
-
-const { useRelatedEntries: useFeatRelatedEntries } = featStore;
 
 //------------------------------------------------------------------------------
 // Create Feat Editor
@@ -36,15 +32,6 @@ export function createFeatEditor(form: Form<FeatFormData>) {
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
-
-  //----------------------------------------------------------------------------
-  // Feature Entries
-  //----------------------------------------------------------------------------
-
-  const FeatureEntriesField = createFeatureEntriesField({
-    i18nContext: { label: { en: "Benefits", it: "Benefici" } },
-    useField: form.createUseField("feature_entries"),
-  });
 
   //----------------------------------------------------------------------------
   // Category
@@ -105,9 +92,8 @@ export function createFeatEditor(form: Form<FeatFormData>) {
   // Feat Editor
   //----------------------------------------------------------------------------
 
-  return function FeatEditor({ resource, sourceId }: FeatEditorProps) {
+  return function FeatEditor({ resource }: FeatEditorProps) {
     const { lang } = useResourceEditorLang();
-    const featureEntries = useFeatRelatedEntries(resource.id, "features");
 
     return (
       <ResourceEditor resource={resource}>
@@ -119,8 +105,6 @@ export function createFeatEditor(form: Form<FeatFormData>) {
         </HStack>
 
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
-
-        <FeatureEntriesField defaultValue={featureEntries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

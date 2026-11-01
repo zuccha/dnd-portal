@@ -5,7 +5,6 @@ import { translate } from "~/i18n/i18n-string";
 import { useFormatCp } from "~/measures/cost";
 import { useFormatGrams } from "~/measures/weight";
 import { italic } from "~/ui/rich-text-page";
-import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateEquipmentRarity } from "../../types/equipment-rarity";
 import {
   type ResourceLocalizationContext,
@@ -45,7 +44,6 @@ export type LocalizedEquipment<E extends Equipment> = z.infer<
 
 export type EquipmentLocalizationContext = ResourceLocalizationContext & {
   formatCost: ReturnType<typeof useFormatCp>;
-  featureEntries: string;
   formatWeight: ReturnType<typeof useFormatGrams>;
   translateRarity: (value: Equipment["rarity"]) => string;
 };
@@ -56,25 +54,23 @@ export type EquipmentLocalizationContext = ResourceLocalizationContext & {
 
 export function useEquipmentLocalizationContext(
   _equipment: Equipment,
-  related: RelatedResourceEntries<Equipment["kind"]>,
+  _related: RelatedResourceEntries<Equipment["kind"]>,
   context: I18nLangContext = i18nContext,
 ): EquipmentLocalizationContext {
   const mergedContext = useMemo(() => ({ ...i18nContext, ...context }), [context]);
   const resourceContext = useResourceLocalizationContext(mergedContext);
   const formatWeight = useFormatGrams();
   const formatCost = useFormatCp();
-  const featureEntries = useLocalizedFeatureEntries(related.features, { linkNames: true });
   const translateRarity = useTranslateEquipmentRarity(resourceContext.lang);
 
   return useMemo(
     () => ({
       ...resourceContext,
-      featureEntries,
       formatCost,
       formatWeight,
       translateRarity,
     }),
-    [featureEntries, formatCost, formatWeight, resourceContext, translateRarity],
+    [formatCost, formatWeight, resourceContext, translateRarity],
   );
 }
 
@@ -101,7 +97,6 @@ export function localizeEquipment<E extends Equipment>(
         : context.tpi("attunement", attunementSlots, `${attunementSlots}`)
       : "";
   const notes = translate(equipment.description, context.lang);
-  const features = context.featureEntries;
   const cost = equipment.cost === null ? "" : context.formatCost(equipment.cost);
   const attunementValue =
     attunementSlots <= 0
@@ -113,7 +108,7 @@ export function localizeEquipment<E extends Equipment>(
 
   return {
     ...localizeResource(equipment, context),
-    description: formatDescription(attunement, notes, features),
+    description: formatDescription(attunement, notes),
 
     attunement: {
       label: context.t("attunement.label"),

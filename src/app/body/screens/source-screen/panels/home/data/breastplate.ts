@@ -17,7 +17,6 @@ const breastplate = armorSchema.parse({
   page: { en: 219, it: 219 },
   attunement_notes: { en: null, it: null },
   cost: 20000,
-  feature_entries: [],
   is_magic: false,
   modifier_ids: [],
   description: { en: "", it: "" },

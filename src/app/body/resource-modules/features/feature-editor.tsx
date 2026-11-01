@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Feature } from "~/models/resources/features/feature";
 import type { FeatureFormData } from "~/models/resources/features/feature-form";
@@ -65,18 +64,12 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
   // Feature Editor
   //----------------------------------------------------------------------------
 
-  return function FeatureEditor({ resource, sourceId }: FeatureEditorProps) {
+  return function FeatureEditor({ resource }: FeatureEditorProps) {
     const { lang } = useResourceEditorLang();
     const { t } = useI18nLangContext(i18nContext);
     const classes = useFeatureRelatedEntries(resource.id, "character_classes");
     const subclasses = useFeatureRelatedEntries(resource.id, "character_subclasses");
-    const equipments = useFeatureRelatedEntries(resource.id, "equipments");
-    const feats = useFeatureRelatedEntries(resource.id, "feats");
-    const species = useFeatureRelatedEntries(resource.id, "species");
-    const grantedBy = useMemo(
-      () => [...classes, ...subclasses, ...equipments, ...feats, ...species],
-      [classes, equipments, feats, species, subclasses],
-    );
+    const grantedBy = [...classes, ...subclasses];
     const { error, onValueChange, value } = useGrantedByField(grantedBy);
 
     return (
@@ -88,7 +81,6 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
         <Field error={error ? t(error) : undefined} label={t("granted_by")}>
           <FeatureGrantedByEditor
             onValueChange={onValueChange}
-            sourceId={sourceId}
             value={value}
             w="full"
             withinDialog

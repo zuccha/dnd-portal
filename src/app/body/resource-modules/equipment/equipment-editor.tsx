@@ -1,7 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 import useBooleanOptions from "~/hooks/use-boolean-options";
-import type { RelatedResourceEntryByName } from "~/models/catalogue/resource-relations";
 import type { Equipment } from "~/models/resources/equipment/equipment";
 import type { EquipmentFormData } from "~/models/resources/equipment/equipment-form";
 import type { ResourceOption } from "~/models/resources/resource";
@@ -9,7 +8,6 @@ import { useEquipmentRarityOptions } from "~/models/types/equipment-rarity";
 import type { Form } from "~/utils/form";
 import { createResourceEditor } from "../resource-editor";
 import {
-  createFeatureEntriesField,
   createInputField,
   createNullableCostInputField,
   createNullableWeightInputField,
@@ -33,29 +31,13 @@ export type EquipmentEditorProps = {
 
 export function createEquipmentEditor<E extends EquipmentFormData>(
   form: Form<E>,
-  resourceStore: {
-    useRelatedEntries: (
-      resourceId: string,
-      name: "features",
-    ) => RelatedResourceEntryByName<"armor", "features">[];
-  },
   modifierStore: { useResourceOptions: (sourceId: string) => ResourceOption[] },
 ) {
-  const { useRelatedEntries: useEquipmentRelatedEntries } = resourceStore;
   //----------------------------------------------------------------------------
   // Resource Editor
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
-
-  //----------------------------------------------------------------------------
-  // Feature Entries
-  //----------------------------------------------------------------------------
-
-  const FeatureEntriesField = createFeatureEntriesField({
-    i18nContext: { label: { en: "Qualities", it: "Qualità" } },
-    useField: form.createUseField("feature_entries"),
-  });
 
   //----------------------------------------------------------------------------
   // Modifiers
@@ -162,7 +144,6 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
 
   return function EquipmentEditor({ children, resource, sourceId }: EquipmentEditorProps) {
     const { lang } = useResourceEditorLang();
-    const featureEntries = useEquipmentRelatedEntries(resource.id, "features");
     const { value: magic } = useMagicField(resource.is_magic);
     const { value: requiredAttunementSlots } = useRequiredAttunementSlotsField(
       resource.required_attunement_slots,
@@ -192,8 +173,6 @@ export function createEquipmentEditor<E extends EquipmentFormData>(
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
 
         <ModifiersField defaultValue={resource.modifier_ids} sourceId={sourceId} w="full" />
-
-        <FeatureEntriesField defaultValue={featureEntries} sourceId={sourceId} w="full" />
       </ResourceEditor>
     );
   };

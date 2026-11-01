@@ -7,14 +7,8 @@ import { resourceKindSchema } from "./resource-kind";
 //------------------------------------------------------------------------------
 
 export const resourceFeatureKindSchema = resourceKindSchema.extract([
-  "species",
   "character_class",
   "character_subclass",
-  "feat",
-  "weapon",
-  "armor",
-  "tool",
-  "item",
 ]);
 
 export const resourceFeatureKinds = resourceFeatureKindSchema.options;
@@ -29,12 +23,6 @@ export const {
   useOptions: useResourceFeatureKindOptions,
   useTranslate: useTranslateResourceFeatureKind,
 } = createTypeTranslationHooks(resourceFeatureKinds, {
-  armor: { en: "Armor", it: "Armatura" },
   character_class: { en: "Class", it: "Classe" },
   character_subclass: { en: "Subclass", it: "Sottoclasse" },
-  feat: { en: "Feat", it: "Talento" },
-  item: { en: "Item", it: "Oggetto" },
-  species: { en: "Species", it: "Specie" },
-  tool: { en: "Tool", it: "Strumento" },
-  weapon: { en: "Weapon", it: "Arma" },
 });

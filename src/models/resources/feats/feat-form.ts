@@ -2,11 +2,9 @@ import z from "zod";
 import { createForm } from "~/utils/form";
 import { characterLevelSchema } from "../../types/character-level";
 import { featCategorySchema } from "../../types/feat-category";
-import { featureEntrySchema } from "../features/feature-entry";
 import {
   createResourceFormDataI18nValue,
   createResourceFormDataPatch,
-  createRelationEndpointUpdates,
   resourceFormDataSchema,
   resourceFormDataToResource,
 } from "../resource-form";
@@ -20,7 +18,6 @@ import type { Feat } from "./feat";
 export const featFormDataSchema = resourceFormDataSchema.extend({
   category: featCategorySchema.default("general"),
   description: z.string().default(""),
-  feature_entries: z.array(featureEntrySchema).default([]),
   minimum_level: characterLevelSchema.default(0),
   prerequisite: z.string().default(""),
 });
@@ -35,16 +32,14 @@ export function featFormDataToResource(
   data: Partial<FeatFormData>,
   lang: string,
 ): ResourceFormOutput<Feat> {
-  const { feature_entries, ...resourceData } = data;
   const resource = createResourceFormDataPatch({
-    ...resourceFormDataToResource(resourceData, lang),
+    ...resourceFormDataToResource(data, lang),
     category: data.category,
     description: createResourceFormDataI18nValue(data.description, lang),
     minimum_level: data.minimum_level,
     prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
   });
-  const relations = createRelationEndpointUpdates("feats_and_features", feature_entries);
-  return { resource, relations };
+  return { resource, relations: [] };
 }
 
 //------------------------------------------------------------------------------
