@@ -67,6 +67,7 @@ export function createFeatEditor(form: Form<FeatFormData>) {
       label: { en: "Description", it: "Descrizione" },
       placeholder: { en: "None", it: "Nessuna" },
     },
+    inputProps: { rows: 20 },
     translatable: true,
     useField: form.createUseField("description"),
   });
