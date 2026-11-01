@@ -59,6 +59,7 @@ export function createResourceLinkPattern(
 
       return (
         <RouterLink
+          display="inline"
           onClick={(event) => event.stopPropagation()}
           onPointerDown={(event) => event.stopPropagation()}
           onPointerUp={(event) => event.stopPropagation()}

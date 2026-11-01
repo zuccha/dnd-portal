@@ -376,6 +376,7 @@ function Link({
   return (
     <RouterLink
       color={palette[800]}
+      display="inline"
       onClick={(event) => event.stopPropagation()}
       onPointerDown={(event) => event.stopPropagation()}
       onPointerUp={(event) => event.stopPropagation()}
