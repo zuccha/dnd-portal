@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { translate } from "~/i18n/i18n-string";
 import { serializeResourceLink } from "~/models/resources/resource-link";
-import { bold, heading } from "~/ui/rich-text-page";
+import { heading } from "~/ui/rich-text-page";
 import { defaultFeature, type Feature } from "../resources/features/feature";
 import { featureStore } from "../resources/features/feature-store";
 import type { FeatureEntry } from "../resources/features/feature-entry";
@@ -12,7 +12,6 @@ import type { FeatureEntry } from "../resources/features/feature-entry";
 //------------------------------------------------------------------------------
 
 type FeatureEntryFormatOptions = {
-  featureNameInDescription?: boolean;
   linkNames?: boolean;
 };
 
@@ -39,16 +38,6 @@ function formatFeatureEntries(
         : name;
       const description = translate(feature.description, lang);
 
-      if (options.featureNameInDescription) {
-        const levelHeading = entry.minimum_level
-          ? ti("name.min_level", linkedName, `${entry.minimum_level}`)
-          : "";
-        const namedDescription = description
-          ? `${bold(linkedName)}. ${description}`
-          : bold(linkedName);
-        return [levelHeading, namedDescription].filter(Boolean).join("\r");
-      }
-
       return [
         entry.minimum_level
           ? ti("name.min_level", linkedName, `${entry.minimum_level}`)
@@ -73,7 +62,7 @@ export function useLocalizedFeatureEntries(
   options: FeatureEntryFormatOptions = {},
 ): string {
   const { lang, ti } = useI18nLangContext(i18nContext);
-  const { featureNameInDescription = false, linkNames = false } = options;
+  const { linkNames = false } = options;
   const featureIds = useMemo(
     () => featureEntries.map((featureEntry) => featureEntry.id),
     [featureEntries],
@@ -82,10 +71,9 @@ export function useLocalizedFeatureEntries(
   return useMemo(
     () =>
       formatFeatureEntries(featureEntries, features, lang, ti, {
-        featureNameInDescription,
         linkNames,
       }),
-    [featureEntries, features, featureNameInDescription, lang, linkNames, ti],
+    [featureEntries, features, lang, linkNames, ti],
   );
 }
 
