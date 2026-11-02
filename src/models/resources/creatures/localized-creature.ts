@@ -821,7 +821,7 @@ export function localizeCreature(
     family: {
       label: context.t("family"),
       resource: family,
-      value: family?.name ?? "",
+      value: family?.name ?? context.t("none"),
     },
     gear: gearInfo,
     hit_points: {
@@ -872,7 +872,7 @@ export function localizeCreature(
     tags: {
       label: context.t("tags"),
       resources: tagResources,
-      value: tagText,
+      value: tagText || context.t("none"),
     },
     type,
     vulnerabilities: vulnerabilitiesInfo,
@@ -963,6 +963,10 @@ const i18nContext = {
   "family": {
     en: "Family",
     it: "Famiglia",
+  },
+  "none": {
+    en: "None",
+    it: "Nessuna",
   },
   "hit_points": {
     en: "Hit Points",

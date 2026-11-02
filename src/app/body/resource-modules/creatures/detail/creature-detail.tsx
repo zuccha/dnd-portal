@@ -71,8 +71,8 @@ export default function CreatureDetail({
               {creature.passive_perception.value}
             </ResourceDetailField>
             <GridItem gridColumn={{ base: 1, md: 2 }}>
-              {creature.family.resource && (
-                <ResourceDetailField label={creature.family.label}>
+              <ResourceDetailField label={creature.family.label}>
+                {creature.family.resource ? (
                   <RouterLink
                     to={resourceDetailRoute(
                       creature.family.resource.kind,
@@ -81,15 +81,19 @@ export default function CreatureDetail({
                   >
                     {creature.family.resource.name}
                   </RouterLink>
-                </ResourceDetailField>
-              )}
+                ) : (
+                  creature.family.value
+                )}
+              </ResourceDetailField>
             </GridItem>
             <GridItem gridColumn={{ base: 1, md: 3 }}>
-              {creature.tags.resources.length > 0 && (
-                <ResourceDetailField label={creature.tags.label}>
+              <ResourceDetailField label={creature.tags.label}>
+                {creature.tags.resources.length > 0 ? (
                   <ResourceDetailLinks resources={creature.tags.resources} />
-                </ResourceDetailField>
-              )}
+                ) : (
+                  creature.tags.value
+                )}
+              </ResourceDetailField>
             </GridItem>
           </SimpleGrid>
 
