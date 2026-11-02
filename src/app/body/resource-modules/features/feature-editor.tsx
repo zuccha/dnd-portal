@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { Feature } from "~/models/resources/features/feature";
 import type { FeatureFormData } from "~/models/resources/features/feature-form";
@@ -69,7 +70,7 @@ export function createFeatureEditor(form: Form<FeatureFormData>) {
     const { t } = useI18nLangContext(i18nContext);
     const classes = useFeatureRelatedEntries(resource.id, "character_classes");
     const subclasses = useFeatureRelatedEntries(resource.id, "character_subclasses");
-    const grantedBy = [...classes, ...subclasses];
+    const grantedBy = useMemo(() => [...classes, ...subclasses], [classes, subclasses]);
     const { error, onValueChange, value } = useGrantedByField(grantedBy);
 
     return (
