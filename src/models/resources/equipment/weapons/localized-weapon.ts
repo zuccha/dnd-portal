@@ -11,7 +11,11 @@ import {
 } from "../../../types/weapon-mastery";
 import { useTranslateWeaponProperty } from "../../../types/weapon-property";
 import { useTranslateWeaponType } from "../../../types/weapon-type";
-import { localizedFieldSchema, localizedResourceLinkSchema } from "../../localized-resource";
+import {
+  formatDescription,
+  localizedFieldSchema,
+  localizedResourceLinkSchema,
+} from "../../localized-resource";
 import { equipmentReferenceStore } from "../equipment-reference-store";
 import {
   type EquipmentLocalizationContext,
@@ -156,7 +160,7 @@ export function localizeWeapon(
   return {
     ...equipment,
     descriptor: weapon.is_magic ? context.ti("subtitle.magic", type, equipment.rarity.value) : type,
-    description: [
+    description: formatDescription(
       equipment.description,
       weapon.mastery !== "none"
         ? context.ti(
@@ -164,10 +168,8 @@ export function localizeWeapon(
             masteryValue,
             context.translateWeaponMasteryRuling(weapon.mastery),
           )
-        : undefined,
-    ]
-      .filter((text) => text)
-      .join("\n\n"),
+        : "",
+    ),
 
     ammunition: {
       label: context.t("ammunition"),
@@ -243,8 +245,8 @@ const i18nContext = {
     it: "Padronanza",
   },
   "mastery.details": {
-    en: heading("Weapon Mastery: <1>\r<2>"), // 1 = mastery, 2 = ruling
-    it: heading("Padronanza: <1>\r<2>"), // 1 = mastery, 2 = ruling
+    en: `${heading("Weapon Mastery: <1>")}\r<2>`, // 1 = mastery, 2 = ruling
+    it: `${heading("Padronanza: <1>")}\r<2>`, // 1 = mastery, 2 = ruling
   },
   "properties.ammunition": {
     en: "<1> (<2>, <3>)", // 1 = property label, 2 = value, 3 = ammunition
