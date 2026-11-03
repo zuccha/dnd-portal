@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 //------------------------------------------------------------------------------
 
 type RichTextTableBlockPatternProps = {
+  firstRowBackground?: "base" | "muted";
   mode: "card" | "grid";
   palette?: Palette;
   renderCell: (value: string) => ReactNode;
@@ -19,6 +20,7 @@ type RichTextTableBlockPatternProps = {
 //------------------------------------------------------------------------------
 
 export function createRichTextTableBlockPattern({
+  firstRowBackground,
   mode,
   palette,
   renderCell,
@@ -32,6 +34,7 @@ export function createRichTextTableBlockPattern({
       return (
         <RichTextTable
           alignments={table.alignments}
+          firstRowBackground={firstRowBackground}
           flex_columns={table.flex_columns}
           mode={mode}
           name={table.name}

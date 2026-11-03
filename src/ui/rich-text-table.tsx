@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 
 type RichTextTableProps = {
   alignments: RichTextTableBlock["alignments"];
+  firstRowBackground?: "base" | "muted";
   flex_columns: RichTextTableBlock["flex_columns"];
   mode: "card" | "grid";
   name?: string;
@@ -23,6 +24,7 @@ type RichTextTableProps = {
 
 export function RichTextTable({
   alignments,
+  firstRowBackground = "muted",
   flex_columns,
   mode,
   name,
@@ -96,35 +98,39 @@ export function RichTextTable({
         </Table.Row>
       </Table.Header>
       <Table.Body unstyled>
-        {dataRows.map((row, rowIndex) => (
-          <Table.Row
-            bgColor={
-              mode === "card"
-                ? rowIndex % 2 === 0
-                  ? palette?.["50"]
-                  : "gray.50"
-                : rowIndex % 2 === 0
-                  ? "bg.muted"
-                  : undefined
-            }
-            key={rowIndex}
-            unstyled
-          >
-            {row.map((value, cellIndex) => (
-              <Table.Cell
-                key={cellIndex}
-                overflowWrap={mode === "card" ? "anywhere" : "normal"}
-                px={mode === "card" ? 1 : 2}
-                py={mode === "card" ? 0.5 : 1}
-                textAlign={alignments[cellIndex] ?? "left"}
-                unstyled
-                verticalAlign="top"
-              >
-                {renderCell(value)}
-              </Table.Cell>
-            ))}
-          </Table.Row>
-        ))}
+        {dataRows.map((row, rowIndex) => {
+          const isEvenRow = rowIndex % 2 === 0;
+          const gridBackground = (firstRowBackground === "base") === isEvenRow ? "bg" : "bg.muted";
+
+          return (
+            <Table.Row
+              bgColor={
+                mode === "card"
+                  ? rowIndex % 2 === 0
+                    ? palette?.["50"]
+                    : "gray.50"
+                  : gridBackground
+              }
+              key={rowIndex}
+              unstyled
+            >
+              {row.map((value, cellIndex) => (
+                <Table.Cell
+                  key={cellIndex}
+                  overflowWrap={mode === "card" ? "anywhere" : "normal"}
+                  px={mode === "card" ? 1 : 2}
+                  py={mode === "card" ? 0.5 : 1}
+                  textAlign={alignments[cellIndex] ?? "left"}
+                  unstyled
+                  verticalAlign="top"
+                  whiteSpace="normal"
+                >
+                  {renderCell(value)}
+                </Table.Cell>
+              ))}
+            </Table.Row>
+          );
+        })}
       </Table.Body>
     </Table.Root>
   );

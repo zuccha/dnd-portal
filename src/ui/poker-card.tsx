@@ -282,32 +282,37 @@ function Description({ children, palette, patterns = RichText.defaultPatterns }:
       px={`${remToIn(1) + bleed.x}in`}
       w="full"
     >
-      {blocks.map((block, blockIndex) =>
-        block.type === "rendered" ? (
-          <Fragment key={blockIndex}>{block.value}</Fragment>
-        ) : (
-          block.value.split(/[\n\r]/).map((paragraph, paragraphIndex) => {
-            if (paragraph.trim() === "") {
-              return <Box h={rem1100} key={`${blockIndex}:${paragraphIndex}`} />;
-            }
+      {blocks.flatMap((block, blockIndex) => {
+        if (block.type === "rendered") {
+          return <Fragment key={blockIndex}>{block.value}</Fragment>;
+        }
 
-            const richTextProps = paragraph.startsWith(richTextHeadingDelimiter)
-              ? headingProps
-              : undefined;
+        const paragraphs = block.value.split(/\r\n|[\n\r]/);
+        if (blocks[blockIndex - 1]?.type === "rendered" && paragraphs[0] === "") {
+          paragraphs.shift();
+        }
 
-            return (
-              <RichText
-                hyphens="auto"
-                key={`${blockIndex}:${paragraphIndex}`}
-                patterns={patterns}
-                text={paragraph}
-                w="full"
-                {...richTextProps}
-              />
-            );
-          })
-        ),
-      )}
+        return paragraphs.map((paragraph, paragraphIndex) => {
+          if (paragraph.trim() === "") {
+            return <Box h={rem1100} key={`${blockIndex}:${paragraphIndex}`} />;
+          }
+
+          const richTextProps = paragraph.startsWith(richTextHeadingDelimiter)
+            ? headingProps
+            : undefined;
+
+          return (
+            <RichText
+              hyphens="auto"
+              key={`${blockIndex}:${paragraphIndex}`}
+              patterns={patterns}
+              text={paragraph}
+              w="full"
+              {...richTextProps}
+            />
+          );
+        });
+      })}
     </VStack>
   );
 }

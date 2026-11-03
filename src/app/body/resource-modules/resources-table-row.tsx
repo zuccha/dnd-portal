@@ -120,6 +120,7 @@ export function createResourcesTableRow<
     const descriptionBlocks = renderRichTextBlocks(description, [
       richTextPageBreakBlockPattern,
       createRichTextTableBlockPattern({
+        firstRowBackground: "base",
         mode: "grid",
         renderCell: (value) => (
           <RichText

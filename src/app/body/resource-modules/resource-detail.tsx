@@ -83,6 +83,7 @@ export default function ResourceDetail({
   const patterns = [detailRichTextHeadingPattern, ...resourceLinkPatterns];
   const detailBlocks = renderRichTextBlocks(details, [
     createRichTextTableBlockPattern({
+      firstRowBackground: "muted",
       mode: "grid",
       renderCell: (value) => <RichText display="inline" patterns={patterns} text={value} />,
     }),
