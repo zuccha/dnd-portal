@@ -288,6 +288,9 @@ function Description({ children, palette, patterns = RichText.defaultPatterns }:
         }
 
         const paragraphs = block.value.split(/\r\n|[\n\r]/);
+        if (blocks[blockIndex + 1]?.type === "rendered" && paragraphs.at(-1) === "") {
+          paragraphs.pop();
+        }
         if (blocks[blockIndex - 1]?.type === "rendered" && paragraphs[0] === "") {
           paragraphs.shift();
         }
