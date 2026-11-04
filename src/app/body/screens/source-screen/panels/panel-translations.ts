@@ -5,14 +5,14 @@ import { Route } from "~/navigation/routes";
 //------------------------------------------------------------------------------
 
 export const resourcePanelTranslations = {
-  [Route.ResourcesAbilities]: { en: "Abilities", it: "Abilità" },
-  [Route.ResourcesAbilitiesEldritchInvocations]: {
+  [Route.ResourcesOptions]: { en: "Options", it: "Opzioni" },
+  [Route.ResourcesOptionsEldritchInvocations]: {
     en: "Eldritch Invocations",
     it: "Suppliche Occulte",
   },
-  [Route.ResourcesAbilitiesManeuvers]: { en: "Maneuvers", it: "Manovre" },
-  [Route.ResourcesAbilitiesMetamagic]: { en: "Metamagic", it: "Metamagia" },
-  [Route.ResourcesAbilitiesSpells]: { en: "Spells", it: "Incantesimi" },
+  [Route.ResourcesOptionsManeuvers]: { en: "Maneuvers", it: "Manovre" },
+  [Route.ResourcesOptionsMetamagic]: { en: "Metamagic", it: "Metamagia" },
+  [Route.ResourcesOptionsSpells]: { en: "Spells", it: "Incantesimi" },
   [Route.ResourcesBestiary]: { en: "Bestiary", it: "Bestiario" },
   [Route.ResourcesBestiaryMonsters]: { en: "Creatures", it: "Creature" },
   [Route.ResourcesBestiaryFamilies]: { en: "Families", it: "Famiglie" },

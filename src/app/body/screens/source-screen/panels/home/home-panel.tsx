@@ -124,7 +124,7 @@ export default function HomePanel() {
             <VStack align="stretch" gap={0}>
               <HomeDestination
                 label={t("home.spells")}
-                onClick={() => navigate(Route.ResourcesAbilitiesSpells)}
+                onClick={() => navigate(Route.ResourcesOptionsSpells)}
               />
               <Separator />
               <HomeDestination

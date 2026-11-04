@@ -66,7 +66,7 @@ const columns = createResourcesTableColumns<Spell, LocalizedSpell>([
 
 export const resourceModule = createResourceModule(
   spellStore,
-  { initialPaletteName: "rose", initialView: "cards", path: Route.ResourcesAbilitiesSpells },
+  { initialPaletteName: "rose", initialView: "cards", path: Route.ResourcesOptionsSpells },
   {
     album: { AlbumCard: SpellCard },
     detail: { Detail: SpellDetail },

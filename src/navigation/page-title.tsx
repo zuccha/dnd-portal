@@ -62,19 +62,19 @@ const i18nContext = {
     en: "Sign up",
     it: "Registrati",
   },
-  [Route.ResourcesAbilitiesEldritchInvocations]: {
+  [Route.ResourcesOptionsEldritchInvocations]: {
     en: "Eldritch Invocations",
     it: "Suppliche Occulte",
   },
-  [Route.ResourcesAbilitiesManeuvers]: {
+  [Route.ResourcesOptionsManeuvers]: {
     en: "Maneuvers",
     it: "Manovre",
   },
-  [Route.ResourcesAbilitiesMetamagic]: {
+  [Route.ResourcesOptionsMetamagic]: {
     en: "Metamagic",
     it: "Metamagia",
   },
-  [Route.ResourcesAbilitiesSpells]: {
+  [Route.ResourcesOptionsSpells]: {
     en: "Spells",
     it: "Incantesimi",
   },

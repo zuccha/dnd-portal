@@ -50,7 +50,7 @@ export const resourceFavoriteRoutesStore = createLocalStore(
   "sidebar.resource_favorites",
   [
     Route.ResourcesBestiaryMonsters,
-    Route.ResourcesAbilitiesSpells,
+    Route.ResourcesOptionsSpells,
     Route.ResourcesEquipmentItems,
     Route.ResourcesEquipmentWeapons,
     Route.ResourcesEquipmentArmors,

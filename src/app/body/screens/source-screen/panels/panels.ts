@@ -89,10 +89,10 @@ export type CharacterPanelId = (typeof characterPanelIds)[number]["route"];
 //------------------------------------------------------------------------------
 
 export const abilitiesPanelIds = [
-  panelItem(Route.ResourcesAbilitiesSpells, ScrollTextIcon),
-  panelItem(Route.ResourcesAbilitiesEldritchInvocations, BookOpenTextIcon),
-  panelItem(Route.ResourcesAbilitiesManeuvers, SplitIcon),
-  panelItem(Route.ResourcesAbilitiesMetamagic, WandSparklesIcon),
+  panelItem(Route.ResourcesOptionsSpells, ScrollTextIcon),
+  panelItem(Route.ResourcesOptionsEldritchInvocations, BookOpenTextIcon),
+  panelItem(Route.ResourcesOptionsManeuvers, SplitIcon),
+  panelItem(Route.ResourcesOptionsMetamagic, WandSparklesIcon),
 ] as const;
 
 //------------------------------------------------------------------------------
@@ -158,7 +158,7 @@ export type WorldPanelId = (typeof worldPanelIds)[number]["route"];
 
 export const resourcePanels = [
   { id: Route.ResourcesCharacter, items: characterPanelIds },
-  { id: Route.ResourcesAbilities, items: abilitiesPanelIds },
+  { id: Route.ResourcesOptions, items: abilitiesPanelIds },
   { id: Route.ResourcesBestiary, items: bestiaryPanelIds },
   { id: Route.ResourcesEquipment, items: equipmentPanelIds },
   { id: Route.ResourcesMarket, items: marketPanelIds },

@@ -30,7 +30,7 @@ const columns = createResourcesTableColumns<Maneuver, LocalizedManeuver>([
 
 export const resourceModule = createResourceModule(
   maneuverStore,
-  { initialPaletteName: "brick", path: Route.ResourcesAbilitiesManeuvers },
+  { initialPaletteName: "brick", path: Route.ResourcesOptionsManeuvers },
   {
     album: { AlbumCard: ManeuverCard },
     detail: { Detail: ManeuverDetail },

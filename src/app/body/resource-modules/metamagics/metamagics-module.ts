@@ -36,7 +36,7 @@ const columns = createResourcesTableColumns<Metamagic, LocalizedMetamagic>([
 
 export const resourceModule = createResourceModule(
   metamagicStore,
-  { initialPaletteName: "azure", path: Route.ResourcesAbilitiesMetamagic },
+  { initialPaletteName: "azure", path: Route.ResourcesOptionsMetamagic },
   {
     album: { AlbumCard: MetamagicCard },
     detail: { Detail: MetamagicDetail },

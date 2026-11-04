@@ -99,7 +99,7 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
   },
   {
     kind: "eldritch_invocation",
-    route: Route.ResourcesAbilitiesEldritchInvocations,
+    route: Route.ResourcesOptionsEldritchInvocations,
     searchNames: {
       en: "eldritch invocation invocations",
       it: "supplica suppliche occulta occulte",
@@ -147,7 +147,7 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
   },
   {
     kind: "maneuver",
-    route: Route.ResourcesAbilitiesManeuvers,
+    route: Route.ResourcesOptionsManeuvers,
     searchNames: {
       en: "maneuver maneuvers",
       it: "manovra manovre",
@@ -155,7 +155,7 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
   },
   {
     kind: "metamagic",
-    route: Route.ResourcesAbilitiesMetamagic,
+    route: Route.ResourcesOptionsMetamagic,
     searchNames: {
       en: "metamagic",
       it: "metamagia",
@@ -187,7 +187,7 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
   },
   {
     kind: "spell",
-    route: Route.ResourcesAbilitiesSpells,
+    route: Route.ResourcesOptionsSpells,
     searchNames: {
       en: "spell spells",
       it: "incantesimo incantesimi",

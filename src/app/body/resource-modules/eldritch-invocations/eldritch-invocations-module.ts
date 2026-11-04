@@ -36,7 +36,7 @@ const columns = createResourcesTableColumns<EldritchInvocation, LocalizedEldritc
 
 export const resourceModule = createResourceModule(
   eldritchInvocationStore,
-  { initialPaletteName: "mauve", path: Route.ResourcesAbilitiesEldritchInvocations },
+  { initialPaletteName: "mauve", path: Route.ResourcesOptionsEldritchInvocations },
   {
     album: { AlbumCard: EldritchInvocationCard },
     detail: { Detail: EldritchInvocationDetail },
