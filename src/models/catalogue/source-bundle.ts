@@ -74,7 +74,7 @@ export const sourceBundleResourcesSchema = z.object({
 // Source Bundle Version
 //------------------------------------------------------------------------------
 
-export const sourceBundleVersion = 10;
+export const sourceBundleVersion = 11;
 
 //------------------------------------------------------------------------------
 // Source Bundle Schema
