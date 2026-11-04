@@ -38,7 +38,7 @@ export function createSpeciesEditor(form: Form<SpeciesFormData>) {
       label: { en: "Description", it: "Descrizione" },
       placeholder: { en: "None", it: "Nessuna" },
     },
-    inputProps: { rows: 5 },
+    inputProps: { rows: 25 },
     translatable: true,
     useField: form.createUseField("description"),
   });
