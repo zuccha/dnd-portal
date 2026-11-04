@@ -16,6 +16,7 @@ import {
 export const featSchema = resourceSchema.extend({
   category: featCategorySchema,
   description: i18nStringSchema,
+  is_repeatable: z.boolean().default(false),
   kind: z.literal("feat"),
   minimum_level: characterLevelSchema,
   prerequisite: i18nStringSchema,
@@ -31,6 +32,7 @@ export const defaultFeat: Feat = {
   ...defaultResource,
   category: "general",
   description: {},
+  is_repeatable: false,
   kind: "feat",
   minimum_level: 0,
   prerequisite: {},

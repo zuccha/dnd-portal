@@ -59,6 +59,7 @@ export function localizeFeat(feat: Feat, context: FeatLocalizationContext): Loca
   return {
     ...localizeResource(feat, context),
     descriptor: context.ti("descriptor", category),
+
     category,
     description,
 

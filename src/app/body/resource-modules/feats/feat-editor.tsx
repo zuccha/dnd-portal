@@ -1,4 +1,5 @@
 import { HStack } from "@chakra-ui/react";
+import useBooleanOptions from "~/hooks/use-boolean-options";
 import type { Feat } from "~/models/resources/feats/feat";
 import type { FeatFormData } from "~/models/resources/feats/feat-form";
 import {
@@ -32,6 +33,25 @@ export function createFeatEditor(form: Form<FeatFormData>) {
   //----------------------------------------------------------------------------
 
   const ResourceEditor = createResourceEditor(form);
+
+  //----------------------------------------------------------------------------
+  // Repeatable
+  //----------------------------------------------------------------------------
+
+  const repeatableOptionsI18nContext = {
+    false: { en: "Not Repeatable", it: "Non Ripetibile" },
+    true: { en: "Repeatable", it: "Ripetibile" },
+  };
+
+  const IsRepeatableField = createSelectField({
+    i18nContext: { label: { en: "Repeatable", it: "Ripetibile" } },
+    inputProps: {
+      parse: (value) => value === "true",
+      stringify: (value) => `${value}`,
+    },
+    useField: form.createUseField("is_repeatable"),
+    useOptions: () => useBooleanOptions(repeatableOptionsI18nContext),
+  });
 
   //----------------------------------------------------------------------------
   // Category
@@ -97,7 +117,10 @@ export function createFeatEditor(form: Form<FeatFormData>) {
 
     return (
       <ResourceEditor resource={resource}>
-        <CategoryField defaultValue={resource.category} />
+        <HStack align="flex-start" gap={4} w="full">
+          <CategoryField defaultValue={resource.category} flex={1} />
+          <IsRepeatableField defaultValue={resource.is_repeatable} flex={1} />
+        </HStack>
 
         <HStack align="flex-start" gap={4}>
           <MinLevelField defaultValue={resource.minimum_level} w="5em" />

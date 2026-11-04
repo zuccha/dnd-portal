@@ -18,6 +18,7 @@ import type { Feat } from "./feat";
 export const featFormDataSchema = resourceFormDataSchema.extend({
   category: featCategorySchema.default("general"),
   description: z.string().default(""),
+  is_repeatable: z.boolean().default(false),
   minimum_level: characterLevelSchema.default(0),
   prerequisite: z.string().default(""),
 });
@@ -36,6 +37,7 @@ export function featFormDataToResource(
     ...resourceFormDataToResource(data, lang),
     category: data.category,
     description: createResourceFormDataI18nValue(data.description, lang),
+    is_repeatable: data.is_repeatable,
     minimum_level: data.minimum_level,
     prerequisite: createResourceFormDataI18nValue(data.prerequisite, lang),
   });

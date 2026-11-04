@@ -422,18 +422,6 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   });
 
   //----------------------------------------------------------------------------
-  // Passive Perception
-  //----------------------------------------------------------------------------
-
-  const PassivePerceptionField = createNumberInputField({
-    i18nContext: {
-      label: { en: "Passive Perception", it: "Percezione Passiva" },
-    },
-    inputProps: { min: 0 },
-    useField: form.createUseField("passive_perception"),
-  });
-
-  //----------------------------------------------------------------------------
   // Proficiencies
   //----------------------------------------------------------------------------
 
