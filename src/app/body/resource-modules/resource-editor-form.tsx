@@ -1,7 +1,7 @@
 import { HStack, type StackProps } from "@chakra-ui/react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import type { I18nString } from "~/i18n/i18n-string";
+import { translate, type I18nString } from "~/i18n/i18n-string";
 import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import type { EquipmentBundle } from "~/models/other/equipment-bundle";
 import type { LanguageEntry } from "~/models/other/language-entries";
@@ -27,6 +27,7 @@ import WeightInput from "~/ui/weight-input";
 import type { FieldBag } from "~/utils/form";
 import EquipmentBundleEditor from "./equipment-bundle-editor";
 import FeatureEntriesEditor from "./feature-entries-editor";
+import { useResourceEditorLang } from "./resource-editor-language-context";
 import ResourceLinkSearchDialog from "./resource-link-search-dialog";
 import ResourceSearch from "./resource-search";
 
@@ -58,15 +59,25 @@ export function createSingleResourceField({
 }) {
   function SingleResourceField({ sourceId, defaultValue, ...rest }: SingleResourceFieldProps) {
     const options = useOptions(sourceId);
+    const { lang } = useResourceEditorLang();
     const { error, onValueChange, value } = useField(defaultValue);
     const { t } = useI18nLangContext(i18nContext);
     const message = error ? t(error) : undefined;
+    const localizedOptions = useMemo(
+      () =>
+        options.map((option) => {
+          const label = translate(option.name, lang);
+          return { ...option, label, name: { [lang]: label } };
+        }),
+      [lang, options],
+    );
 
     return (
       <Field error={message} label={t("label")} {...rest}>
         <ResourceSearch
-          onValueChange={(ids) => onValueChange(ids.at(-1) ?? null)}
-          options={options}
+          onValueChange={(ids) => onValueChange(ids[0] ?? null)}
+          options={localizedOptions}
+          single
           value={value ? [value] : []}
           withinDialog
         />

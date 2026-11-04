@@ -19,6 +19,7 @@ export type ResourceSearchProps = StackProps & {
   hideFilter?: boolean;
   onValueChange: (value: string[]) => void;
   options: ResourceOption[];
+  single?: boolean;
   value: string[];
   withinDialog?: boolean;
 };
@@ -27,6 +28,7 @@ export default function ResourceSearch({
   hideFilter,
   onValueChange,
   options,
+  single,
   value,
   withinDialog,
   ...rest
@@ -56,25 +58,37 @@ export default function ResourceSearch({
   return (
     <VStack gap={1} w="full" {...rest}>
       <HStack gap={1} w="full">
-        <Search
-          emptyLabel={t("no_result")}
-          multiple
-          onFilter={filterResourceOptions}
-          onValueChange={onValueChange}
-          options={options}
-          placeholder={t("search")}
-          value={value}
-          withinDialog={withinDialog}
-        />
+        {single ? (
+          <Search
+            emptyLabel={t("no_result")}
+            onFilter={filterResourceOptions}
+            onValueChange={(id) => onValueChange(id ? [id] : [])}
+            options={options}
+            placeholder={t("search")}
+            value={value[0] ?? ""}
+            withinDialog={withinDialog}
+          />
+        ) : (
+          <Search
+            emptyLabel={t("no_result")}
+            multiple
+            onFilter={filterResourceOptions}
+            onValueChange={onValueChange}
+            options={options}
+            placeholder={t("search")}
+            value={value}
+            withinDialog={withinDialog}
+          />
+        )}
 
-        {!hideFilter && (
+        {!single && !hideFilter && (
           <InclusionButton include={showSelected} onValueChange={setShowSelected}>
             <Icon Icon={icons[`${showSelected}`]} />
           </InclusionButton>
         )}
       </HStack>
 
-      {value.length > 0 && (
+      {!single && value.length > 0 && (
         <HStack gap={1} w="full" wrap="wrap">
           {value.map((id) => (
             <Tag

@@ -1,5 +1,5 @@
 import { HStack, Span, type StackProps, VStack } from "@chakra-ui/react";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, XIcon } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import {
@@ -11,6 +11,7 @@ import type { ResourceOption } from "~/models/resources/resource";
 import Button from "~/ui/button";
 import CostInput from "~/ui/cost-input";
 import Icon from "~/ui/icon";
+import IconButton from "~/ui/icon-button";
 import Input from "~/ui/input";
 import NumberInput from "~/ui/number-input";
 import Search, { type SearchRefObject } from "~/ui/search";
@@ -198,14 +199,19 @@ export default function EquipmentBundleEditor({
 
           {selectedEquipment && (
             <VStack align="flex-end" gap={1} w="full">
-              <HStack borderRadius="sm" borderWidth={1} px={2} py={1} w="full">
-                <Span flex={1}>{localizedNames[selectedEquipment.id] || t("name.missing")}</Span>
+              <HStack borderRadius="sm" borderWidth={1} gap={2} px={2} py={1} w="full">
+                <Span flex="1 1 auto" minW="8em">
+                  {localizedNames[selectedEquipment.id] || t("name.missing")}
+                </Span>
 
                 <Input
                   bgColor="bg.info"
+                  groupProps={{ w: "auto" }}
+                  maxW="12em"
+                  minW="8em"
                   onValueChange={(notes) => updateEquipmentNotes(selectedEquipment.id, notes)}
                   placeholder={t("notes")}
-                  size="sm"
+                  size="xs"
                   value={selectedEquipment.notes[lang] ?? ""}
                 />
 
@@ -214,15 +220,19 @@ export default function EquipmentBundleEditor({
                   onValueChange={(quantity) =>
                     updateEquipmentQuantity(selectedEquipment.id, quantity)
                   }
-                  size="sm"
+                  size="xs"
                   value={selectedEquipment.quantity}
-                  w="5em"
+                  w="6em"
+                />
+
+                <IconButton
+                  Icon={XIcon}
+                  label={t("close")}
+                  onClick={() => setSelectedEquipmentId(null)}
+                  size="xs"
+                  variant="ghost"
                 />
               </HStack>
-
-              <Button onClick={() => setSelectedEquipmentId(null)} size="xs" variant="outline">
-                {t("done")}
-              </Button>
             </VStack>
           )}
         </VStack>
@@ -240,7 +250,7 @@ const i18nContext = {
     en: "Add",
     it: "Aggiungi",
   },
-  "done": {
+  "close": {
     en: "Close",
     it: "Chiudi",
   },
