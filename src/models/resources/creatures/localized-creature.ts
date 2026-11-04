@@ -472,6 +472,7 @@ export function localizeCreature(
       : creature.skill_proficiencies.includes("perception")
         ? pb
         : 0);
+  const passivePerception = 10 + perception;
 
   // Skill proficiencies
   const pbsBySkill: Partial<Record<CreatureSkill, number>> = {};
@@ -847,11 +848,11 @@ export function localizeCreature(
     languages_info: languagesInfoField,
     passive_perception: {
       label: context.t("passive_perception"),
-      value: `${creature.passive_perception}`,
+      value: `${passivePerception}`,
     },
     perception: {
       label: context.t("perception"),
-      passive: `${creature.passive_perception}`,
+      passive: `${passivePerception}`,
       value: formatSigned(perception),
     },
     proficiency_bonus: {

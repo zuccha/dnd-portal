@@ -776,7 +776,6 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
         {/* Perception and Language */}
         <HStack w="full">
-          <PassivePerceptionField defaultValue={resource.passive_perception} />
           <TelepathyRangeField defaultValue={resource.telepathy_range} />
           <LanguageScopeField defaultValue={resource.language_scope} />
         </HStack>
