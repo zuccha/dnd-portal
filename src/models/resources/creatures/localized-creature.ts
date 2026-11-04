@@ -117,7 +117,10 @@ export const localizedCreatureSchema = localizedResourceSchema(
     }),
   ),
   alignment: z.string(),
-  armor_class: localizedFieldSchema.extend({ short_label: z.string() }),
+  armor_class: localizedFieldSchema.extend({
+    short_label: z.string(),
+    value_with_natural_armor: z.string().optional(),
+  }),
   challenge_rating: localizedFieldSchema.extend({ short_label: z.string() }),
   experience: localizedFieldSchema.extend({
     lair: z.object({
@@ -784,6 +787,7 @@ export function localizeCreature(
       : `${creature.hit_points}`;
   const hitPointsFormula = creature.is_summoned_from_spell ? "" : creature.hit_points_formula;
   const armorClass = `${creature.armor_class}${creature.adds_spell_level_to_armor_class ? "＋X" : ""}`;
+  const naturalArmorLabel = context.t("natural_armor");
   const valueWithLair =
     creature.has_lair && exp !== lair_exp
       ? ti("experience.with_lair", formattedExp, formattedLairExp)
@@ -803,6 +807,9 @@ export function localizeCreature(
       label: context.t("armor_class"),
       short_label: context.t("armor_class.short"),
       value: armorClass,
+      value_with_natural_armor: creature.has_natural_armor
+        ? `${armorClass} (${naturalArmorLabel})`
+        : armorClass,
     },
     challenge_rating: {
       label: context.t("challenge_rating"),
@@ -1088,6 +1095,10 @@ const i18nContext = {
   "languages.understands/1": {
     en: "Understands <1> but can't speak",
     it: "Comprende <1> ma non lo parla",
+  },
+  "natural_armor": {
+    en: "Natural Armor",
+    it: "Armatura Naturale",
   },
   "passive_perception": {
     en: "Passive Perception",

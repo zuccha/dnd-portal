@@ -58,7 +58,7 @@ export default function CreatureDetail({
 
           <SimpleGrid columns={{ base: 1, md: 3 }} columnGap={6} rowGap={3}>
             <ResourceDetailField label={creature.armor_class.label}>
-              {creature.armor_class.value}
+              {creature.armor_class.value_with_natural_armor ?? creature.armor_class.value}
             </ResourceDetailField>
             <ResourceDetailField label={creature.hit_points.label}>
               {creature.hit_points.value_with_formula}

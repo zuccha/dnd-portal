@@ -33,6 +33,7 @@ import {
   createDistanceInputField,
   createEquipmentBundleField,
   createInputField,
+  createLargeSwitchField,
   createLanguageEntriesField,
   createMultipleSelectEnumField,
   createNumberInputField,
@@ -101,6 +102,11 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
   const ACField = createNumberInputField({
     i18nContext: { label: { en: "Armor Class", it: "Classe Armatura" } },
     useField: form.createUseField("armor_class"),
+  });
+
+  const HasNaturalArmorField = createLargeSwitchField({
+    i18nContext: { label: { en: "Natural Armor", it: "Armatura Naturale" } },
+    useField: form.createUseField("has_natural_armor"),
   });
 
   const useSummonedFromSpellField = form.createUseField("is_summoned_from_spell");
@@ -678,7 +684,10 @@ export function createCreatureEditor(form: Form<CreatureFormData>) {
 
         {/* AC */}
         <VStack align="stretch" gap={2} w="full">
-          <ACField defaultValue={resource.armor_class} />
+          <HStack align="stretch" gap={4} w="full">
+            <ACField defaultValue={resource.armor_class} flex={1} />
+            <HasNaturalArmorField defaultValue={resource.has_natural_armor} w="12em" />
+          </HStack>
           <ArmorClassAddsSpellLevelField
             defaultValue={resource.adds_spell_level_to_armor_class}
             hidden={!summonedFromSpell}
