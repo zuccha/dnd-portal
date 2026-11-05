@@ -89,19 +89,21 @@ export function useSpellLocalizationContext(
   const characterClassResources = useCharacterClassResources(characterClassIds);
   const characterClasses = useMemo(
     () =>
-      related.character_classes.flatMap(({ id }) => {
-        const resource = characterClassResources.find((entry) => entry.id === id);
-        return resource
-          ? [
-              {
-                abbreviation: `${translate(resource.abbreviation, context.lang)}.`,
-                id,
-                kind: "character_class" as const,
-                name: translate(resource.name, context.lang),
-              },
-            ]
-          : [];
-      }),
+      related.character_classes
+        .flatMap(({ id }) => {
+          const resource = characterClassResources.find((entry) => entry.id === id);
+          return resource
+            ? [
+                {
+                  abbreviation: `${translate(resource.abbreviation, context.lang)}.`,
+                  id,
+                  kind: "character_class" as const,
+                  name: translate(resource.name, context.lang),
+                },
+              ]
+            : [];
+        })
+        .sort((a, b) => a.name.localeCompare(b.name, context.lang)),
     [characterClassResources, context.lang, related.character_classes],
   );
   const localizedCharacterClassAbbreviations = useMemo(
