@@ -9,7 +9,7 @@ import { spellStore } from "~/models/resources/spells/spell-store";
 import { useArmorTypeOptions } from "~/models/types/armor-type";
 import { useCreatureAbilityOptions } from "~/models/types/creature-ability";
 import { useCreatureSkillOptions } from "~/models/types/creature-skill";
-import { useDieTypeOptions } from "~/models/types/die_type";
+import { useDieTypeOptions } from "~/models/types/die-type";
 import { useWeaponTypeOptions } from "~/models/types/weapon-type";
 import Field from "~/ui/field";
 import type { Form } from "~/utils/form";

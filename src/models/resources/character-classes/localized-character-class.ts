@@ -11,7 +11,7 @@ import { useLocalizedFeatureEntries } from "../../other/feature-entries";
 import { useTranslateArmorType } from "../../types/armor-type";
 import { useTranslateCreatureAbility } from "../../types/creature-ability";
 import { useTranslateCreatureSkill } from "../../types/creature-skill";
-import { dieTypeSchema, useTranslateDieType } from "../../types/die_type";
+import { dieTypeSchema, useTranslateDieType } from "../../types/die-type";
 import { useTranslateWeaponType } from "../../types/weapon-type";
 import { equipmentReferenceStore } from "../equipment/equipment-reference-store";
 import { toolStore } from "../equipment/tools/tool-store";

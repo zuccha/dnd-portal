@@ -1,7 +1,7 @@
 import { HStack, VStack } from "@chakra-ui/react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { LocalizedCharacterClass } from "~/models/resources/character-classes/localized-character-class";
-import { dieTypes } from "~/models/types/die_type";
+import { dieTypes } from "~/models/types/die-type";
 import Field from "~/ui/field";
 import Input from "~/ui/input";
 import Select from "~/ui/select";

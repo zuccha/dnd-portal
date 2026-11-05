@@ -4,7 +4,7 @@ import { equipmentBundleSchema } from "../../other/equipment-bundle";
 import { armorTypeSchema } from "../../types/armor-type";
 import { creatureAbilitySchema } from "../../types/creature-ability";
 import { creatureSkillSchema } from "../../types/creature-skill";
-import { dieTypeSchema } from "../../types/die_type";
+import { dieTypeSchema } from "../../types/die-type";
 import { weaponTypeSchema } from "../../types/weapon-type";
 import { featureEntrySchema } from "../features/feature-entry";
 import {
