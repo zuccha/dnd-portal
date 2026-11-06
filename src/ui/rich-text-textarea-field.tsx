@@ -6,6 +6,7 @@ import {
   Heading2Icon,
   ItalicIcon,
   Link2Icon,
+  SwordsIcon,
   Table2Icon,
 } from "lucide-react";
 import { useCallback, useRef } from "react";
@@ -25,7 +26,14 @@ import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
 // Rich Text Format
 //------------------------------------------------------------------------------
 
-type RichTextFormat = "bold" | "header" | "italic" | "metric_imperial" | "page_break" | "table";
+type RichTextFormat =
+  | "action"
+  | "bold"
+  | "header"
+  | "italic"
+  | "metric_imperial"
+  | "page_break"
+  | "table";
 
 //------------------------------------------------------------------------------
 // Rich Text Textarea Props
@@ -80,7 +88,17 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
       let replaceStart = selectionStart;
       let replaceEnd = selectionEnd;
 
-      if (format === "table") {
+      if (format === "action") {
+        const name = t("action_name");
+        const prefix =
+          selectionStart > 0 && !/[\r\n]$/.test(value.slice(0, selectionStart)) ? "\n\n" : "";
+        const suffix =
+          selectionEnd < value.length && !/^[\r\n]/.test(value.slice(selectionEnd)) ? "\n\n" : "";
+        replacement = `${prefix}:::action ${name}\n@melee <modifier> || <reach>\n@hit <result>\n:::${suffix}`;
+        const nameStart = selectionStart + prefix.length + ":::action ".length;
+        nextSelectionStart = nameStart;
+        nextSelectionEnd = nameStart + name.length;
+      } else if (format === "table") {
         const tableName = t("table_name");
         const prefix =
           selectionStart > 0 && !/[\r\n]$/.test(value.slice(0, selectionStart)) ? "\n\n" : "";
@@ -252,6 +270,15 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
               variant="ghost"
             />
             <IconButton
+              Icon={SwordsIcon}
+              label={t("action")}
+              onClick={() => formatSelection("action")}
+              onMouseDown={handleToolbarMouseDown}
+              rounded="sm"
+              size="xs"
+              variant="ghost"
+            />
+            <IconButton
               Icon={Table2Icon}
               label={t("table")}
               onClick={() => formatSelection("table")}
@@ -281,6 +308,14 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
 //------------------------------------------------------------------------------
 
 const i18nContext = {
+  action: {
+    en: "Insert creature action",
+    it: "Inserisci azione creatura",
+  },
+  action_name: {
+    en: "Action name",
+    it: "Nome dell'azione",
+  },
   bold: {
     en: "Bold",
     it: "Grassetto",

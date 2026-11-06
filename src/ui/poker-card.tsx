@@ -1,6 +1,7 @@
 import { Box, HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/react";
 import { Fragment, type ReactNode } from "react";
 import RichText, { type RichTextPattern } from "~/ui/rich-text";
+import { createRichTextActionBlockPattern } from "~/ui/rich-text-action-block";
 import { renderRichTextBlocks } from "~/ui/rich-text-block-pattern";
 import { richTextPageBreakBlockPattern } from "~/ui/rich-text-page-break";
 import { createRichTextTableBlockPattern } from "~/ui/rich-text-table-block-pattern";
@@ -266,6 +267,7 @@ function Description({ children, palette, patterns = RichText.defaultPatterns }:
 
   const blocks = renderRichTextBlocks(children, [
     richTextPageBreakBlockPattern,
+    createRichTextActionBlockPattern(patterns),
     createRichTextTableBlockPattern({
       mode: "card",
       palette,

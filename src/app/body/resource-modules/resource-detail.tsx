@@ -10,6 +10,7 @@ import PageTitle from "../../../navigation/page-title";
 import Icon from "../../../ui/icon";
 import IconButton, { type IconButtonProps } from "../../../ui/icon-button";
 import RichText from "../../../ui/rich-text";
+import { createRichTextActionBlockPattern } from "../../../ui/rich-text-action-block";
 import { renderRichTextBlocks } from "../../../ui/rich-text-block-pattern";
 import { richTextHeadingDelimiter } from "../../../ui/rich-text-page";
 import { replaceRichTextPageBreaksWithNewlines } from "../../../ui/rich-text-page-break";
@@ -82,6 +83,7 @@ export default function ResourceDetail({
   );
   const patterns = [detailRichTextHeadingPattern, ...resourceLinkPatterns];
   const detailBlocks = renderRichTextBlocks(details, [
+    createRichTextActionBlockPattern(patterns),
     createRichTextTableBlockPattern({
       firstRowBackground: "muted",
       mode: "grid",

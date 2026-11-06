@@ -25,6 +25,7 @@ import Icon from "~/ui/icon";
 import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
+import { createRichTextActionBlockPattern } from "~/ui/rich-text-action-block";
 import { renderRichTextBlocks } from "~/ui/rich-text-block-pattern";
 import { italic } from "~/ui/rich-text-page";
 import { richTextPageBreakBlockPattern } from "~/ui/rich-text-page-break";
@@ -119,6 +120,7 @@ export function createResourcesTableRow<
         : "";
     const descriptionBlocks = renderRichTextBlocks(description, [
       richTextPageBreakBlockPattern,
+      createRichTextActionBlockPattern(richTextPatterns),
       createRichTextTableBlockPattern({
         firstRowBackground: "base",
         mode: "grid",
