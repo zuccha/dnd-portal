@@ -1,4 +1,4 @@
-import { Badge, Box, HStack, Table, VStack, createIcon } from "@chakra-ui/react";
+import { Badge, Box, HStack, Separator, Span, Table, VStack, createIcon } from "@chakra-ui/react";
 import {
   EditIcon,
   EyeClosedIcon,
@@ -8,7 +8,7 @@ import {
   PrinterIcon,
   SaveIcon,
 } from "lucide-react";
-import { Fragment, useCallback } from "react";
+import { useCallback, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { type I18nString, translate } from "~/i18n/i18n-string";
@@ -26,8 +26,11 @@ import IconButton from "~/ui/icon-button";
 import Link from "~/ui/link";
 import RichText from "~/ui/rich-text";
 import { createRichTextActionBlockPattern } from "~/ui/rich-text-action-block";
-import { renderRichTextBlocks } from "~/ui/rich-text-block-pattern";
-import { italic } from "~/ui/rich-text-page";
+import {
+  renderRichTextBlocks,
+  splitRichTextBlocksIntoParagraphs,
+} from "~/ui/rich-text-block-pattern";
+import { italic, richTextHeadingRegExp } from "~/ui/rich-text-page";
 import { richTextPageBreakBlockPattern } from "~/ui/rich-text-page-break";
 import { createRichTextTableBlockPattern } from "~/ui/rich-text-table-block-pattern";
 import { toaster } from "~/ui/toaster";
@@ -108,6 +111,21 @@ export function createResourcesTableRow<
     const paletteName = usePaletteName();
     const selected = useResourceSelection(resource.id);
     const expanded = useResourceExpansion(resource.id, false);
+    const descriptionPatterns = richTextPatterns.map((pattern) =>
+      pattern.regex === richTextHeadingRegExp
+        ? {
+            ...pattern,
+            render: (value: ReactNode) => (
+              <>
+                <Span display="block" fontSize="lg" fontWeight="medium" lineHeight="short" mt={2}>
+                  {value}
+                </Span>
+                <Separator mb={1} />
+              </>
+            ),
+          }
+        : pattern,
+    );
     const deleteResource = useResourceDelete(
       store,
       resource,
@@ -120,7 +138,7 @@ export function createResourcesTableRow<
         : "";
     const descriptionBlocks = renderRichTextBlocks(description, [
       richTextPageBreakBlockPattern,
-      createRichTextActionBlockPattern(richTextPatterns),
+      createRichTextActionBlockPattern(descriptionPatterns),
       createRichTextTableBlockPattern({
         firstRowBackground: "base",
         mode: "grid",
@@ -128,13 +146,14 @@ export function createResourcesTableRow<
           <RichText
             display="inline"
             overflowWrap="normal"
-            patterns={richTextPatterns}
+            patterns={descriptionPatterns}
             text={value}
             whiteSpace="normal"
           />
         ),
       }),
     ]);
+    const descriptionParagraphs = splitRichTextBlocksIntoParagraphs(descriptionBlocks);
     const visibleActions = extra.actions?.filter((action) => action.isVisible(resource)) ?? [];
 
     const edit = useCallback(
@@ -330,29 +349,33 @@ export function createResourcesTableRow<
               <Box contain="inline-size" w="full">
                 <VStack align="flex-start" gap={1} minW={0} w="full">
                   {description ? (
-                    descriptionBlocks.flatMap((block, blockIndex) =>
-                      block.type === "rendered" ? (
-                        <Fragment key={blockIndex}>{block.value}</Fragment>
-                      ) : (
-                        block.value
-                          .split(/[\n\r]/)
-                          .map((paragraph, paragraphIndex) => (
+                    descriptionParagraphs.map((block, blockIndex) => {
+                      if (block.type === "rendered" && block.value == null) return null;
+                      if (block.type === "text" && !block.value.trim()) {
+                        return <Box h="1lh" key={blockIndex} w="full" />;
+                      }
+
+                      return (
+                        <Box key={blockIndex} w="full">
+                          {block.type === "rendered" ? (
+                            block.value
+                          ) : (
                             <RichText
                               display="block"
-                              key={`${blockIndex}:${paragraphIndex}`}
                               overflowWrap="anywhere"
-                              patterns={richTextPatterns}
-                              text={paragraph}
+                              patterns={descriptionPatterns}
+                              text={block.value}
                               whiteSpace="normal"
                             />
-                          ))
-                      ),
-                    )
+                          )}
+                        </Box>
+                      );
+                    })
                   ) : (
                     <RichText
                       display="block"
                       overflowWrap="anywhere"
-                      patterns={richTextPatterns}
+                      patterns={descriptionPatterns}
                       text={t("description.missing")}
                       whiteSpace="normal"
                     />

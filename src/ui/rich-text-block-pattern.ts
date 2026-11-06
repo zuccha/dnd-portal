@@ -66,6 +66,24 @@ export function renderRichTextBlocks(
 }
 
 //------------------------------------------------------------------------------
+// Split Rich Text Blocks Into Paragraphs
+//------------------------------------------------------------------------------
+
+export function splitRichTextBlocksIntoParagraphs(
+  blocks: RichTextBlockSegment[],
+): RichTextBlockSegment[] {
+  return blocks.flatMap<RichTextBlockSegment>((block, index) => {
+    if (block.type === "rendered") return [block];
+
+    const paragraphs = block.value.replace(/\r\n?/g, "\n").split("\n");
+    if (blocks[index - 1]?.type === "rendered" && paragraphs[0] === "") paragraphs.shift();
+    if (blocks[index + 1]?.type === "rendered" && paragraphs.at(-1) === "") paragraphs.pop();
+
+    return paragraphs.map((paragraph) => ({ type: "text" as const, value: paragraph }));
+  });
+}
+
+//------------------------------------------------------------------------------
 // Create Global Regex
 //------------------------------------------------------------------------------
 

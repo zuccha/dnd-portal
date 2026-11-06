@@ -30,15 +30,14 @@ export type RichTextTableBlock = {
 //------------------------------------------------------------------------------
 
 export const richTextTableBlockRegex =
-  /:::table(?:[ \t]+[^\r\n]+)?[ \t]*\r?\n[\s\S]*?\r?\n:::[ \t]*/m;
+  /^:::table(?:[ \t]+[^\r\n]+)?[ \t]*\r?\n[\s\S]*?\r?\n:::[ \t]*(?=\r?\n|$)/m;
 
 //------------------------------------------------------------------------------
 // Parse Rich Text Table
 //------------------------------------------------------------------------------
 
 export function parseRichTextTable(source: string): RichTextTableBlock | undefined {
-  const match =
-    /^[\n\r]?:::table(?:[ \t]+([^\r\n]+))?[ \t]*\r?\n([\s\S]*?)\r?\n:::[ \t]*[\n\r]?$/.exec(source);
+  const match = /^:::table(?:[ \t]+([^\r\n]+))?[ \t]*\r?\n([\s\S]*?)\r?\n:::[ \t]*$/.exec(source);
   const name = match?.[1]?.trim();
   const content = match?.[2];
   if (content === undefined) return undefined;

@@ -9,7 +9,11 @@ import type { RichTextBlockPattern } from "./rich-text-block-pattern";
 
 type RichTextActionSegment =
   | { kind: "attack"; mode: "melee" | "range" | "mixed"; modifier: string; values: string[] }
-  | { kind: "label"; label: "hit" | "success" | "failure" | "any_outcome"; value: string }
+  | {
+      kind: "label";
+      label: "any_outcome" | "failure" | "hit" | "response" | "success" | "trigger";
+      value: string;
+    }
   | { ability: string; condition?: string; dc: string; kind: "save" }
   | { kind: "text"; value: string };
 
@@ -33,7 +37,12 @@ function RichTextActionBlock({ name, patterns, segments }: RichTextActionBlockPr
       {segments.map((segment, index) => (
         <Span key={index}>
           {index > 0 && " "}
-          <RichText display="inline" patterns={patterns} text={renderSegment(segment, ti)} />
+          <RichText
+            display="inline"
+            patterns={patterns}
+            text={renderSegment(segment, ti)}
+            whiteSpace="pre-line"
+          />
         </Span>
       ))}
     </Span>
@@ -58,15 +67,7 @@ function renderSegment(
       : ti("save", segment.ability, segment.dc);
   }
   if (segment.kind === "label") return ti(segment.label, segment.value);
-  return hasTerminalPunctuation(segment.value) ? segment.value : `${segment.value}.`;
-}
-
-//------------------------------------------------------------------------------
-// Has Terminal Punctuation
-//------------------------------------------------------------------------------
-
-function hasTerminalPunctuation(text: string): boolean {
-  return /[.!?…][*_\])}]*$/.test(text.trim());
+  return segment.value;
 }
 
 //------------------------------------------------------------------------------
@@ -77,7 +78,7 @@ export function createRichTextActionBlockPattern(
   patterns: RichTextPattern[],
 ): RichTextBlockPattern {
   return {
-    regex: /:::action [^\r\n]+\r?\n[\s\S]*?\r?\n:::[ \t]*/m,
+    regex: /^:::action [^\r\n]+\r?\n[\s\S]*?\r?\n:::[ \t]*(?=\r?\n|$)/m,
     render: (source) => {
       const parsed = parseActionBlock(source);
       return parsed ? <RichTextActionBlock {...parsed} patterns={patterns} /> : undefined;
@@ -94,9 +95,21 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
   if (!match) return undefined;
 
   const segments: RichTextActionSegment[] = [];
+  const lines: string[] = [];
   for (const line of match[2]!.split(/\r?\n/)) {
-    const [label, ...parts] = line.trim().split(/\s+/);
-    const value = parts.join(" ");
+    if (/^\s*@/.test(line)) {
+      lines.push(line.trim());
+    } else if (lines.length > 0) {
+      lines[lines.length - 1] += `\n${line}`;
+    } else if (line.trim()) {
+      return undefined;
+    }
+  }
+
+  for (const line of lines) {
+    const lineMatch = /^(\S+)\s+([\s\S]+)$/.exec(line.trim());
+    const label = lineMatch?.[1];
+    const value = lineMatch?.[2]?.trim();
     if (!label || !value) return undefined;
 
     if (label === "@melee" || label === "@range" || label === "@mixed") {
@@ -119,10 +132,16 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
       continue;
     }
 
-    if (["@hit", "@success", "@failure", "@any_outcome"].includes(label)) {
+    if (["@hit", "@success", "@failure", "@any_outcome", "@trigger", "@response"].includes(label)) {
       segments.push({
         kind: "label",
-        label: label.slice(1) as "hit" | "success" | "failure" | "any_outcome",
+        label: label.slice(1) as
+          | "any_outcome"
+          | "failure"
+          | "hit"
+          | "response"
+          | "success"
+          | "trigger",
         value,
       });
       continue;
@@ -145,12 +164,12 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
 
 const actionLabels: Record<string, Record<string, string>> = {
   any_outcome: {
-    en: "__Failure or Success:__ <1>.",
-    it: "__Fallimento o Successo:__ <1>.",
+    en: "__Failure or Success:__ <1>",
+    it: "__Fallimento o Successo:__ <1>",
   },
   failure: {
-    en: "__Failure:__ <1>.",
-    it: "__Fallimento:__ <1>.",
+    en: "__Failure:__ <1>",
+    it: "__Fallimento:__ <1>",
   },
   hit: {
     en: "__Hit:__ <1>.",
@@ -168,16 +187,24 @@ const actionLabels: Record<string, Record<string, string>> = {
     en: "__Ranged Attack Roll:__ <1>, range <2>.",
     it: "__Tiro per colpire a distanza:__ <1>, gittata <2>.",
   },
+  response: {
+    en: "__Response:__ <1>",
+    it: "__Esito:__ <1>",
+  },
   save: {
-    en: "<1> __Saving Throw:__ DC <2>.",
-    it: "__Tiro salvezza su <1>:__ CD <2>.",
+    en: "<1> __Saving Throw:__ DC <2>",
+    it: "__Tiro salvezza su <1>:__ CD <2>",
   },
   save_with_condition: {
-    en: "<1> __Saving Throw:__ DC <2>, <3>.",
-    it: "__Tiro salvezza su <1>:__ CD <2>, <3>.",
+    en: "<1> __Saving Throw:__ DC <2>, <3>",
+    it: "__Tiro salvezza su <1>:__ CD <2>, <3>",
   },
   success: {
-    en: "__Success:__ <1>.",
-    it: "__Successo:__ <1>.",
+    en: "__Success:__ <1>",
+    it: "__Successo:__ <1>",
+  },
+  trigger: {
+    en: "__Trigger:__ <1>",
+    it: "__Attivazione:__ <1>",
   },
 };

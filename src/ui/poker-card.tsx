@@ -2,7 +2,10 @@ import { Box, HStack, Span, type StackProps, Text, VStack } from "@chakra-ui/rea
 import { Fragment, type ReactNode } from "react";
 import RichText, { type RichTextPattern } from "~/ui/rich-text";
 import { createRichTextActionBlockPattern } from "~/ui/rich-text-action-block";
-import { renderRichTextBlocks } from "~/ui/rich-text-block-pattern";
+import {
+  renderRichTextBlocks,
+  splitRichTextBlocksIntoParagraphs,
+} from "~/ui/rich-text-block-pattern";
 import { richTextPageBreakBlockPattern } from "~/ui/rich-text-page-break";
 import { createRichTextTableBlockPattern } from "~/ui/rich-text-table-block-pattern";
 import type { Palette } from "~/utils/palette";
@@ -260,9 +263,18 @@ function Description({ children, palette, patterns = RichText.defaultPatterns }:
     fontSize: rem1125,
     fontWeight: "bold",
     lineHeight: 0.9,
-    mb: rem0125,
-    mt: rem0250,
     w: "full",
+  };
+  const headingBlockPattern = {
+    regex: /^##[^\r\n]+?##(?=\r?\n|$)/m,
+    render: (value: string) => (
+      <RichText
+        display="block"
+        patterns={patterns}
+        text={value.slice(richTextHeadingDelimiter.length, -richTextHeadingDelimiter.length)}
+        {...headingProps}
+      />
+    ),
   };
 
   const blocks = renderRichTextBlocks(children, [
@@ -273,7 +285,9 @@ function Description({ children, palette, patterns = RichText.defaultPatterns }:
       palette,
       renderCell: (value) => <RichText display="inline" patterns={patterns} text={value} />,
     }),
+    headingBlockPattern,
   ]);
+  const paragraphs = splitRichTextBlocksIntoParagraphs(blocks);
 
   return (
     <VStack
@@ -284,39 +298,28 @@ function Description({ children, palette, patterns = RichText.defaultPatterns }:
       px={`${remToIn(1) + bleed.x}in`}
       w="full"
     >
-      {blocks.flatMap((block, blockIndex) => {
-        if (block.type === "rendered") {
-          return <Fragment key={blockIndex}>{block.value}</Fragment>;
+      {paragraphs.map((block, blockIndex) => {
+        if (block.type === "rendered" && block.value == null) return null;
+        if (block.type === "text" && !block.value.trim()) {
+          return <Box h={rem1100} key={blockIndex} w="full" />;
         }
 
-        const paragraphs = block.value.split(/\r\n|[\n\r]/);
-        if (blocks[blockIndex + 1]?.type === "rendered" && paragraphs.at(-1) === "") {
-          paragraphs.pop();
-        }
-        if (blocks[blockIndex - 1]?.type === "rendered" && paragraphs[0] === "") {
-          paragraphs.shift();
-        }
-
-        return paragraphs.map((paragraph, paragraphIndex) => {
-          if (paragraph.trim() === "") {
-            return <Box h={rem1100} key={`${blockIndex}:${paragraphIndex}`} />;
-          }
-
-          const richTextProps = paragraph.startsWith(richTextHeadingDelimiter)
-            ? headingProps
-            : undefined;
-
-          return (
-            <RichText
-              hyphens="auto"
-              key={`${blockIndex}:${paragraphIndex}`}
-              patterns={patterns}
-              text={paragraph}
-              w="full"
-              {...richTextProps}
-            />
-          );
-        });
+        return (
+          <Box key={blockIndex} w="full">
+            {block.type === "rendered" ? (
+              block.value
+            ) : (
+              <RichText
+                display="block"
+                hyphens="auto"
+                patterns={patterns}
+                text={block.value}
+                whiteSpace="pre-line"
+                w="full"
+              />
+            )}
+          </Box>
+        );
       })}
     </VStack>
   );

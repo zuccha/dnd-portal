@@ -1,6 +1,5 @@
 import { Badge, Box, HStack, Heading, Separator, Span, Text, VStack } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "lucide-react";
-import { Fragment, type ReactNode } from "react";
 import { useLocation } from "react-router";
 import { useActiveSourceReferenceResources } from "~/models/catalogue/catalogue";
 import type { ResourceKind } from "~/models/types/resource-kind";
@@ -11,7 +10,10 @@ import Icon from "../../../ui/icon";
 import IconButton, { type IconButtonProps } from "../../../ui/icon-button";
 import RichText from "../../../ui/rich-text";
 import { createRichTextActionBlockPattern } from "../../../ui/rich-text-action-block";
-import { renderRichTextBlocks } from "../../../ui/rich-text-block-pattern";
+import {
+  renderRichTextBlocks,
+  splitRichTextBlocksIntoParagraphs,
+} from "../../../ui/rich-text-block-pattern";
 import { richTextHeadingDelimiter } from "../../../ui/rich-text-page";
 import { replaceRichTextPageBreaksWithNewlines } from "../../../ui/rich-text-page-break";
 import { createRichTextTableBlockPattern } from "../../../ui/rich-text-table-block-pattern";
@@ -19,6 +21,7 @@ import RouterLink from "../../../ui/router-link";
 import { resourcePanelTranslations } from "../screens/source-screen/panels/panel-translations";
 import ResourceImagePreview from "./resource-image-preview";
 import { useResourceLinkPatterns } from "./resource-link-pattern";
+import type { ReactNode } from "react";
 
 //------------------------------------------------------------------------------
 // Resource Detail Action
@@ -74,12 +77,6 @@ export default function ResourceDetail({
 
   const details = replaceRichTextPageBreaksWithNewlines(
     resolveSystemText(resource.description, system),
-  ).replace(
-    new RegExp(
-      `[\\r\\n]*${richTextHeadingDelimiter}(.+?)${richTextHeadingDelimiter}[\\r\\n]*`,
-      "g",
-    ),
-    `${richTextHeadingDelimiter}$1${richTextHeadingDelimiter}`,
   );
   const patterns = [detailRichTextHeadingPattern, ...resourceLinkPatterns];
   const detailBlocks = renderRichTextBlocks(details, [
@@ -91,6 +88,7 @@ export default function ResourceDetail({
     }),
   ]);
   const imageUrl = resource.image_url?.trim();
+  const descriptionBlocks = splitRichTextBlocksIntoParagraphs(detailBlocks);
 
   return (
     <>
@@ -163,21 +161,32 @@ export default function ResourceDetail({
 
           {children && details && <Separator />}
 
-          {details &&
-            detailBlocks.map((block, index) =>
-              block.type === "rendered" ? (
-                <Fragment key={index}>{block.value}</Fragment>
-              ) : (
-                <RichText
-                  display="block"
-                  key={index}
-                  lineHeight="tall"
-                  patterns={patterns}
-                  text={block.value}
-                  whiteSpace="pre-wrap"
-                />
-              ),
-            )}
+          {details && (
+            <VStack align="stretch" gap={1}>
+              {descriptionBlocks.map((block, index) => {
+                if (block.type === "rendered" && block.value == null) return null;
+                if (block.type === "text" && !block.value.trim()) {
+                  return <Box h="1lh" key={index} w="full" />;
+                }
+
+                return (
+                  <Box key={index} w="full">
+                    {block.type === "rendered" ? (
+                      block.value
+                    ) : (
+                      <RichText
+                        display="block"
+                        lineHeight="tall"
+                        patterns={patterns}
+                        text={block.value}
+                        whiteSpace="pre-wrap"
+                      />
+                    )}
+                  </Box>
+                );
+              })}
+            </VStack>
+          )}
 
           {afterDescription && (
             <>
