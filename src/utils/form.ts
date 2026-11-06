@@ -28,6 +28,7 @@ export type Form<Fields extends Record<string, unknown>> = {
     name: Name,
     validate?: (value: Fields[Name]) => string | undefined,
   ) => (defaultValue: Fields[Name]) => FieldBag<Name, Fields[Name]>;
+  getData: () => Partial<Fields>;
   pasteDataFromClipboard: () => Promise<void>;
   reset: () => void;
   useData: () => Partial<Fields>;
@@ -275,6 +276,7 @@ export function createForm<Fields extends Record<string, unknown>>(
   return {
     copyDataToClipboard,
     createUseField,
+    getData: buildData,
     pasteDataFromClipboard,
     reset,
     useData,

@@ -79,7 +79,7 @@ export function createResourceDialogUpdater<
     );
   }
 
-  const { useData, useSubmit, useSubmitError, useValid } = form;
+  const { getData, useData, useSubmit, useSubmitError, useValid } = form;
   const { localizeResource, useLocalizationContext } = store;
   const { useEditedResource, usePaletteName, useShowImage } = context;
 
@@ -125,7 +125,6 @@ export function createResourceDialogUpdater<
     showImage: boolean;
   }) {
     const formData = useData();
-
     const previewResource = useMemo(() => {
       const errorOrData = parseFormData(formData, lang);
       if (typeof errorOrData === "string") return resource;
@@ -162,7 +161,6 @@ export function createResourceDialogUpdater<
     const editedResource = useEditedResource();
     const editedResourceId = editedResource?.id;
     const resource = editedResource ?? store.defaultResource;
-    const formData = useData();
     const [editorLang, setEditorLang] = useState(lang);
     const [editorResource, setEditorResource] = useState(resource);
     const [editorRevision, setEditorRevision] = useState(0);
@@ -176,7 +174,7 @@ export function createResourceDialogUpdater<
 
     const changeEditorLang = useCallback(
       (nextLang: string) => {
-        const errorOrData = parseFormData(formData, editorLang);
+        const errorOrData = parseFormData(getData(), editorLang);
         if (typeof errorOrData !== "string") {
           const { resource: resourcePatch } = splitResourceFormOutput(errorOrData);
           setEditorResource((current) =>
@@ -189,11 +187,11 @@ export function createResourceDialogUpdater<
         }
         setEditorLang(nextLang);
       },
-      [editorLang, formData],
+      [editorLang],
     );
 
     const copyResourceToClipboard = useCallback(async () => {
-      const errorOrData = parseFormData(formData, editorLang);
+      const errorOrData = parseFormData(getData(), editorLang);
       const draftResource =
         typeof errorOrData === "string"
           ? editorResource
@@ -203,7 +201,7 @@ export function createResourceDialogUpdater<
               store.translationFields,
             );
       await navigator.clipboard.writeText(JSON.stringify(draftResource, null, 2));
-    }, [editorLang, editorResource, formData]);
+    }, [editorLang, editorResource]);
 
     const pasteResourceFromClipboard = useCallback(async () => {
       try {
@@ -218,7 +216,7 @@ export function createResourceDialogUpdater<
           return;
         }
         setEditorResource(
-          applyResourceEditorPaste(editorResource, pastedResource, Object.keys(formData)),
+          applyResourceEditorPaste(editorResource, pastedResource, Object.keys(getData())),
         );
         setEditorRevision((revision) => revision + 1);
       } catch {
@@ -227,7 +225,7 @@ export function createResourceDialogUpdater<
           title: t("paste_error"),
         });
       }
-    }, [editorResource, formData, t]);
+    }, [editorResource, t]);
 
     const [submit, saving] = useSubmit(
       useCallback(
