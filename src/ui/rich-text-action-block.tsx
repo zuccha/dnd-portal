@@ -11,7 +11,15 @@ type RichTextActionSegment =
   | { kind: "attack"; mode: "melee" | "range" | "mixed"; modifier: string; values: string[] }
   | {
       kind: "label";
-      label: "any_outcome" | "failure" | "hit" | "response" | "success" | "trigger";
+      label:
+        | "any_outcome"
+        | "failure"
+        | "failure_1"
+        | "failure_2"
+        | "hit"
+        | "response"
+        | "success"
+        | "trigger";
       value: string;
     }
   | { ability: string; condition?: string; dc: string; kind: "save" }
@@ -132,12 +140,25 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
       continue;
     }
 
-    if (["@hit", "@success", "@failure", "@any_outcome", "@trigger", "@response"].includes(label)) {
+    if (
+      [
+        "@any_outcome",
+        "@failure",
+        "@failure_1",
+        "@failure_2",
+        "@hit",
+        "@response",
+        "@success",
+        "@trigger",
+      ].includes(label)
+    ) {
       segments.push({
         kind: "label",
         label: label.slice(1) as
           | "any_outcome"
           | "failure"
+          | "failure_1"
+          | "failure_2"
           | "hit"
           | "response"
           | "success"
@@ -171,6 +192,14 @@ const actionLabels: Record<string, Record<string, string>> = {
     en: "__Failure:__ <1>",
     it: "__Fallimento:__ <1>",
   },
+  failure_1: {
+    en: "__First Failure:__ <1>",
+    it: "__Primo Fallimento:__ <1>",
+  },
+  failure_2: {
+    en: "__Second Failure:__ <1>",
+    it: "__Secondo Fallimento:__ <1>",
+  },
   hit: {
     en: "__Hit:__ <1>.",
     it: "__Colpito:__ <1>.",
@@ -192,11 +221,11 @@ const actionLabels: Record<string, Record<string, string>> = {
     it: "__Esito:__ <1>",
   },
   save: {
-    en: "<1> __Saving Throw:__ DC <2>",
-    it: "__Tiro salvezza su <1>:__ CD <2>",
+    en: "__<1> Saving Throw:__ DC <2>.",
+    it: "__Tiro salvezza su <1>:__ CD <2>.",
   },
   save_with_condition: {
-    en: "<1> __Saving Throw:__ DC <2>, <3>",
+    en: "__<1> Saving Throw:__ DC <2>, <3>",
     it: "__Tiro salvezza su <1>:__ CD <2>, <3>",
   },
   success: {
