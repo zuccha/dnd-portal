@@ -14,7 +14,7 @@ import { useNavigate } from "react-router";
 import { setAutoUpdateSources, useAutoUpdateSources } from "~/app/app-settings";
 import useAuth from "~/auth/use-auth";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
-import catalogue, { useSources } from "~/models/catalogue/catalogue";
+import catalogue, { useActiveSourceId, useSources } from "~/models/catalogue/catalogue";
 import type { Source, SourceDependency } from "~/models/catalogue/source";
 import {
   type SourceBundle,
@@ -99,6 +99,7 @@ export default function SourcesPanel() {
   const { lang, t, ti } = useI18nLangContext(i18nContext);
   const navigate = useNavigate();
   const auth = useAuth();
+  const activeSourceId = useActiveSourceId();
   const sources = useSources();
   const autoUpdateSources = useAutoUpdateSources();
   const translateSourceVersion = useTranslateSourceVersion(lang);
@@ -734,6 +735,7 @@ export default function SourcesPanel() {
                 </Text>
               )}
               <SourceGroups
+                activeSourceId={activeSourceId}
                 busySourceId={busySourceId}
                 groups={allSourceGroups}
                 lang={lang}
@@ -743,6 +745,7 @@ export default function SourcesPanel() {
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
+                onSelectSource={(sourceId) => catalogue.setActiveSourceId(sourceId)}
                 onSettings={openSourceSettings}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -756,6 +759,7 @@ export default function SourcesPanel() {
               value="my-sources"
             >
               <SourceGroups
+                activeSourceId={activeSourceId}
                 busySourceId={busySourceId}
                 groups={localSourceGroups}
                 lang={lang}
@@ -764,6 +768,7 @@ export default function SourcesPanel() {
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
+                onSelectSource={(sourceId) => catalogue.setActiveSourceId(sourceId)}
                 onSettings={openSourceSettings}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -777,6 +782,7 @@ export default function SourcesPanel() {
               value="official"
             >
               <SourceGroups
+                activeSourceId={activeSourceId}
                 busySourceId={busySourceId}
                 groups={officialSourceGroups}
                 lang={lang}
@@ -786,6 +792,7 @@ export default function SourcesPanel() {
                 onPublish={publishSource}
                 onRegister={canRegisterSources ? registerSource : undefined}
                 onRemove={removeSource}
+                onSelectSource={(sourceId) => catalogue.setActiveSourceId(sourceId)}
                 onSettings={openSourceSettings}
                 translateSourceVersion={translateSourceVersion}
               />

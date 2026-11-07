@@ -9,9 +9,11 @@ import {
   UnlinkIcon,
   UploadIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import { useSourceHasUnpublishedChanges } from "~/models/catalogue/catalogue";
 import type { Source } from "~/models/catalogue/source";
+import Button from "~/ui/button";
 import IconButton from "~/ui/icon-button";
 import { type SourceGroup, type SourceListEntry, colorBySourceStatus } from "./source-list-utils";
 import i18nContext from "./sources-i18n";
@@ -21,6 +23,7 @@ import i18nContext from "./sources-i18n";
 //------------------------------------------------------------------------------
 
 type SourceGroupsProps = {
+  activeSourceId: string | undefined;
   busySourceId: string | undefined;
   groups: SourceGroup[];
   lang: string;
@@ -30,6 +33,7 @@ type SourceGroupsProps = {
   onRegister?: (source: Source) => void;
   onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
+  onSelectSource: (sourceId: string) => void;
   onSettings?: (source: Source) => void;
   translateSourceVersion: (version: Source["version"]) => string;
 };
@@ -39,6 +43,7 @@ type SourceGroupsProps = {
 //------------------------------------------------------------------------------
 
 export default function SourceGroups({
+  activeSourceId,
   busySourceId,
   groups,
   lang,
@@ -48,6 +53,7 @@ export default function SourceGroups({
   onRegister,
   onPublish,
   onRemove,
+  onSelectSource,
   onSettings,
   translateSourceVersion,
 }: SourceGroupsProps) {
@@ -71,6 +77,7 @@ export default function SourceGroups({
           <VStack gap={2} w="full">
             {sources.map((entry) => (
               <SourceRow
+                active={activeSourceId === entry.source.id}
                 busy={busySourceId === entry.source.id}
                 entry={entry}
                 key={entry.source.id}
@@ -81,6 +88,7 @@ export default function SourceGroups({
                 onPublish={onPublish}
                 onRegister={onRegister}
                 onRemove={onRemove}
+                onSelectSource={onSelectSource}
                 onSettings={onSettings}
                 translateSourceVersion={translateSourceVersion}
               />
@@ -97,6 +105,7 @@ export default function SourceGroups({
 //------------------------------------------------------------------------------
 
 type SourceRowProps = {
+  active: boolean;
   busy: boolean;
   entry: SourceListEntry;
   lang: string;
@@ -106,6 +115,7 @@ type SourceRowProps = {
   onRegister?: (source: Source) => void;
   onPublish?: (source: Source) => void;
   onRemove: (sourceId: string) => void;
+  onSelectSource: (sourceId: string) => void;
   onSettings?: (source: Source) => void;
   translateSourceVersion: (version: Source["version"]) => string;
 };
@@ -115,6 +125,7 @@ type SourceRowProps = {
 //------------------------------------------------------------------------------
 
 function SourceRow({
+  active,
   busy,
   entry,
   lang,
@@ -124,53 +135,92 @@ function SourceRow({
   onRegister,
   onPublish,
   onRemove,
+  onSelectSource,
   onSettings,
   translateSourceVersion,
 }: SourceRowProps) {
   const { t } = useI18nLangContext(i18nContext);
+  const [actionsHovered, setActionsHovered] = useState(false);
   const { source, status } = entry;
   const hasUnpublishedChanges = useSourceHasUnpublishedChanges(source.id);
+  const selectable = status !== "available";
   const name = source.name[lang] || source.code;
+  const sourceInfo = (
+    <Span alignItems="flex-start" display="flex" flexDirection="column" gap={0} minW={0} w="full">
+      <Span alignItems="baseline" display="flex" flexWrap="wrap" gap={2} w="full">
+        <Span
+          flex={{ base: 1, sm: "0 1 auto" }}
+          fontWeight="semibold"
+          lineHeight={1.1}
+          minW={0}
+          overflowWrap="anywhere"
+        >
+          {name}
+        </Span>
+        {status && (
+          <Badge colorPalette={colorBySourceStatus[status]} size="xs" variant="subtle">
+            {t(`status.${status}`)}
+          </Badge>
+        )}
+        {(status === "installed" || status === "update") && source.registry?.access === "read" && (
+          <Badge colorPalette="gray" size="xs" variant="outline">
+            {t("readonly")}
+          </Badge>
+        )}
+      </Span>
+      <Span color="fg.muted" fontSize="sm" overflowWrap="anywhere">
+        {source.code} · {translateSourceVersion(source.version)}
+      </Span>
+    </Span>
+  );
 
   return (
     <HStack
-      bgColor="bg"
+      aria-label={name}
+      bg={active ? "blue.subtle" : "bg"}
       borderRadius="sm"
+      borderColor={active ? "border.info" : "border"}
       borderWidth={1}
+      cursor={selectable ? "pointer" : undefined}
       flexWrap="wrap"
       gap={{ base: 0, sm: 3 }}
       minH={14}
+      onClick={selectable ? () => onSelectSource(source.id) : undefined}
       px={3}
       py={2}
+      role="group"
       w="full"
+      _hover={
+        selectable && !actionsHovered ? { bg: active ? "blue.subtle" : "bg.subtle" } : undefined
+      }
     >
-      <VStack align="flex-start" flex={{ base: "1 1 100%", sm: 1 }} gap={0} minW={0}>
-        <HStack align="baseline" flexWrap="wrap" gap={2} w="full">
-          <Text
-            flex={{ base: 1, sm: "0 1 auto" }}
-            fontWeight="semibold"
-            lineHeight={1.1}
-            minW={0}
-            overflowWrap="anywhere"
-          >
-            {name}
-          </Text>
-          {status && (
-            <Badge colorPalette={colorBySourceStatus[status]} size="xs" variant="subtle">
-              {t(`status.${status}`)}
-            </Badge>
-          )}
-          {(status === "installed" || status === "update") &&
-            source.registry?.access === "read" && (
-              <Badge colorPalette="gray" size="xs" variant="outline">
-                {t("readonly")}
-              </Badge>
-            )}
-        </HStack>
-        <Text color="fg.muted" fontSize="sm" overflowWrap="anywhere">
-          {source.code} · {translateSourceVersion(source.version)}
-        </Text>
-      </VStack>
+      {selectable ? (
+        <Button
+          alignItems="stretch"
+          bg="transparent"
+          flex={{ base: "1 1 100%", sm: 1 }}
+          h="auto"
+          justifyContent="flex-start"
+          minH={0}
+          minW={0}
+          onClick={(event) => {
+            event.stopPropagation();
+            onSelectSource(source.id);
+          }}
+          p={0}
+          textAlign="left"
+          type="button"
+          variant="ghost"
+          whiteSpace="normal"
+          _hover={{ bg: active ? "blue.subtle" : "bg.subtle" }}
+        >
+          {sourceInfo}
+        </Button>
+      ) : (
+        <Box flex={{ base: "1 1 100%", sm: 1 }} minW={0}>
+          {sourceInfo}
+        </Box>
+      )}
 
       <HStack
         alignSelf={{ base: "flex-end", sm: "auto" }}
@@ -179,6 +229,9 @@ function SourceRow({
         gap={1}
         justify="flex-end"
         maxW={{ base: "full", sm: "auto" }}
+        onClick={(event) => event.stopPropagation()}
+        onPointerEnter={() => setActionsHovered(true)}
+        onPointerLeave={() => setActionsHovered(false)}
         w={{ base: "full", sm: "auto" }}
       >
         {status === "available" && onDownload && (
