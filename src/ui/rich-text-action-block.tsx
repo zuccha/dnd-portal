@@ -1,4 +1,5 @@
 import { Span } from "@chakra-ui/react";
+import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import RichText, { type RichTextPattern } from "./rich-text";
 import type { RichTextBlockPattern } from "./rich-text-block-pattern";
@@ -237,3 +238,22 @@ const actionLabels: Record<string, Record<string, string>> = {
     it: "__Attivazione:__ <1>",
   },
 };
+
+//------------------------------------------------------------------------------
+// Use Rich Text Action Block Preprocessor
+//------------------------------------------------------------------------------
+
+export function useRichTextActionBlockPreprocessor() {
+  const { ti } = useI18nLangContext(actionLabels);
+
+  return useCallback(
+    (text: string) =>
+      text.replace(/^:::action [^\r\n]+\r?\n[\s\S]*?\r?\n:::[ \t]*(?=\r?\n|$)/gm, (source) => {
+        const parsed = parseActionBlock(source);
+        if (!parsed) return source;
+
+        return `**${parsed.name}.** ${parsed.segments.map((segment) => renderSegment(segment, ti)).join(" ")}`;
+      }),
+    [ti],
+  );
+}

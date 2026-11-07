@@ -5,6 +5,7 @@ import { resolveSystemText, useI18nSystem } from "~/i18n/i18n-system";
 import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import PokerCard from "~/ui/poker-card";
+import { useRichTextActionBlockPreprocessor } from "~/ui/rich-text-action-block";
 import { closeRichTextPage, emptyRichTextPageState } from "~/ui/rich-text-page";
 import type { Palette } from "~/utils/palette";
 import { type ResourceLinkRenderer, useResourceLinkPatterns } from "./resource-link-pattern";
@@ -169,6 +170,7 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
   ...rest
 }: PaginatedResourcePokerCardProps<R, L>) {
   const [rendering, setRendering] = useState(true);
+  const preprocessActionBlocks = useRichTextActionBlockPreprocessor();
 
   const handlePageCountChange = useCallback(
     (count: number | undefined, firstPageOverflow: boolean) => {
@@ -178,7 +180,11 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
     [onPageCountChange],
   );
 
-  const pages = usePaginatedContent(details, handlePageCountChange, {
+  const paginatedDetails = useMemo(
+    () => preprocessActionBlocks(details),
+    [details, preprocessActionBlocks],
+  );
+  const pages = usePaginatedContent(paginatedDetails, handlePageCountChange, {
     firstPageReserved: startDetailsOnSecondPage,
   });
 
