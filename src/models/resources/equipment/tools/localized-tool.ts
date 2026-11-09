@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
+import { serializeResourceLink } from "~/models/resources/resource-link";
 import { heading } from "~/ui/rich-text-page";
+import { compareObjects } from "~/utils/object";
 import { useTranslateCreatureAbility } from "../../../types/creature-ability";
 import { useTranslateToolType } from "../../../types/tool-type";
 import { formatDescription, localizedFieldSchema } from "../../localized-resource";
@@ -14,7 +16,7 @@ import {
 } from "../localized-equipment";
 import { type Tool, toolSchema } from "./tool";
 
-const useLocalizedEquipmentNames = equipmentReferenceStore.useLocalizedEquipmentNames;
+const useLocalizedEquipmentEntries = equipmentReferenceStore.useLocalizedEquipmentEntries;
 
 //------------------------------------------------------------------------------
 // Localized Tool
@@ -32,7 +34,9 @@ export type LocalizedTool = z.infer<typeof localizedToolSchema>;
 //------------------------------------------------------------------------------
 
 type ToolLocalizationContext = EquipmentLocalizationContext & {
-  localizedEquipmentNames: Record<string, string>;
+  localizedEquipmentEntries: ReturnType<
+    typeof equipmentReferenceStore.useLocalizedEquipmentEntries
+  >;
   translateCreatureAbility: ReturnType<typeof useTranslateCreatureAbility>;
   translateToolType: ReturnType<typeof useTranslateToolType>;
 };
@@ -48,16 +52,16 @@ export function useToolLocalizationContext(
   const context = useEquipmentLocalizationContext(tool, related, i18nContext);
   const translateCreatureAbility = useTranslateCreatureAbility(context.lang);
   const translateToolType = useTranslateToolType(context.lang);
-  const localizedEquipmentNames = useLocalizedEquipmentNames(context.lang);
+  const localizedEquipmentEntries = useLocalizedEquipmentEntries(context.lang);
 
   return useMemo(
     () => ({
       ...context,
-      localizedEquipmentNames,
+      localizedEquipmentEntries,
       translateCreatureAbility,
       translateToolType,
     }),
-    [context, localizedEquipmentNames, translateCreatureAbility, translateToolType],
+    [context, localizedEquipmentEntries, translateCreatureAbility, translateToolType],
   );
 }
 
@@ -68,10 +72,17 @@ export function useToolLocalizationContext(
 export function localizeTool(tool: Tool, context: ToolLocalizationContext): LocalizedTool {
   const equipment = localizeEquipment(tool, context);
   const type = context.translateToolType(tool.type);
+  const equipmentById = new Map(
+    context.localizedEquipmentEntries.map((entry) => [entry.id, entry]),
+  );
   const craft =
     tool.craft_ids
-      .map((id) => context.localizedEquipmentNames[id] ?? "")
-      .sort()
+      .flatMap((id) => {
+        const entry = equipmentById.get(id);
+        return entry ? [entry] : [];
+      })
+      .sort(compareObjects("name"))
+      .map((entry) => serializeResourceLink(entry, entry.name))
       .join(", ") + ".";
   const utilize = translate(tool.utilize, context.lang);
   const utilizeCount = utilize ? (utilize.includes(",") ? 2 : 1) : 0;
