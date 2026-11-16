@@ -1,4 +1,4 @@
-import { Span } from "@chakra-ui/react";
+import { Box, Span } from "@chakra-ui/react";
 import { useCallback } from "react";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import RichText, { type RichTextPattern } from "./rich-text";
@@ -24,7 +24,7 @@ type RichTextActionSegment =
       value: string;
     }
   | { ability: string; condition?: string; dc: string; kind: "save" }
-  | { kind: "text"; value: string };
+  | { kind: "paragraph" | "text"; value: string };
 
 //------------------------------------------------------------------------------
 // Rich Text Action Block
@@ -39,23 +39,50 @@ type RichTextActionBlockProps = {
 // eslint-disable-next-line react-refresh/only-export-components
 function RichTextActionBlock({ name, patterns, segments }: RichTextActionBlockProps) {
   const { ti } = useI18nLangContext(actionLabels);
+  const paragraphs = groupActionSegments(segments);
 
   return (
-    <Span>
-      <b>{name}.</b>{" "}
-      {segments.map((segment, index) => (
-        <Span key={index}>
-          {index > 0 && " "}
-          <RichText
-            display="inline"
-            patterns={patterns}
-            text={renderSegment(segment, ti)}
-            whiteSpace="pre-line"
-          />
+    <Box w="full">
+      {paragraphs.map((paragraph, paragraphIndex) => (
+        <Span display={paragraphIndex === 0 ? "inline" : "block"} key={paragraphIndex}>
+          {paragraphIndex === 0 && (
+            <>
+              <b>{name}.</b>{" "}
+            </>
+          )}
+          {paragraph.map((segment, segmentIndex) => (
+            <Span key={segmentIndex}>
+              {segmentIndex > 0 && " "}
+              <RichText
+                display="inline"
+                patterns={patterns}
+                text={renderSegment(segment, ti)}
+                whiteSpace="pre-line"
+              />
+            </Span>
+          ))}
         </Span>
       ))}
-    </Span>
+    </Box>
   );
+}
+
+//------------------------------------------------------------------------------
+// Group Action Segments
+//------------------------------------------------------------------------------
+
+function groupActionSegments(segments: RichTextActionSegment[]) {
+  const paragraphs: RichTextActionSegment[][] = [[]];
+
+  for (const segment of segments) {
+    if (segment.kind === "paragraph") {
+      paragraphs.push([{ kind: "text", value: segment.value }]);
+    } else {
+      paragraphs.at(-1)!.push(segment);
+    }
+  }
+
+  return paragraphs;
 }
 
 //------------------------------------------------------------------------------
@@ -138,6 +165,11 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
       const [ability, dc, ...condition] = value.split("||").map((part) => part.trim());
       if (!ability || !dc || condition.length > 1) return undefined;
       segments.push({ kind: "save", ability, condition: condition[0], dc });
+      continue;
+    }
+
+    if (label === "@paragraph") {
+      segments.push({ kind: "paragraph", value });
       continue;
     }
 
@@ -252,7 +284,12 @@ export function useRichTextActionBlockPreprocessor() {
         const parsed = parseActionBlock(source);
         if (!parsed) return source;
 
-        return `**${parsed.name}.** ${parsed.segments.map((segment) => renderSegment(segment, ti)).join(" ")}`;
+        return groupActionSegments(parsed.segments)
+          .map((paragraph, index) => {
+            const prefix = index === 0 ? `**${parsed.name}.** ` : "";
+            return `${prefix}${paragraph.map((segment) => renderSegment(segment, ti)).join(" ")}`;
+          })
+          .join("\n");
       }),
     [ti],
   );
