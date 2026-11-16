@@ -9,8 +9,7 @@ const registryBundleBucket = "registry-bundles";
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(status === 204 ? null : JSON.stringify(body), {
     headers: {
-      "Access-Control-Allow-Headers":
-        "authorization, x-client-info, apikey, content-type",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
@@ -42,14 +41,9 @@ function canonicalJson(value: unknown): string {
 //------------------------------------------------------------------------------
 
 async function sha256(value: string): Promise<string> {
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(value),
-  );
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
 
-  return Array.from(new Uint8Array(digest), (byte) =>
-    byte.toString(16).padStart(2, "0"),
-  ).join("");
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 //------------------------------------------------------------------------------
@@ -58,12 +52,10 @@ async function sha256(value: string): Promise<string> {
 
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return jsonResponse({}, 204);
-  if (request.method !== "POST")
-    return jsonResponse({ error: "Method not allowed" }, 405);
+  if (request.method !== "POST") return jsonResponse({ error: "Method not allowed" }, 405);
 
   const authorization = request.headers.get("Authorization");
-  if (!authorization)
-    return jsonResponse({ error: "Authentication required" }, 401);
+  if (!authorization) return jsonResponse({ error: "Authentication required" }, 401);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
@@ -77,8 +69,7 @@ Deno.serve(async (request) => {
   const serviceClient = createClient(supabaseUrl, serviceRoleKey);
 
   const { data: userData, error: userError } = await userClient.auth.getUser();
-  if (userError || !userData.user)
-    return jsonResponse({ error: "Authentication required" }, 401);
+  if (userError || !userData.user) return jsonResponse({ error: "Authentication required" }, 401);
 
   let body: {
     base_revision_id?: unknown;
@@ -100,6 +91,31 @@ Deno.serve(async (request) => {
     return jsonResponse({ error: "Invalid publish request" }, 400);
 
   const sourceId = body.source_id;
+  const bundle = body.bundle as {
+    source?: {
+      id?: unknown;
+      includes?: unknown;
+      requires?: unknown;
+    };
+  };
+  const source = bundle.source;
+  if (
+    !source ||
+    source.id !== sourceId ||
+    !Array.isArray(source.includes) ||
+    !Array.isArray(source.requires)
+  )
+    return jsonResponse({ error: "Invalid source bundle" }, 400);
+
+  const includeIds = source.includes.map(
+    (dependency) => (dependency as { source_id?: unknown }).source_id,
+  );
+  const requireIds = source.requires.map(
+    (dependency) => (dependency as { source_id?: unknown }).source_id,
+  );
+  if ([...includeIds, ...requireIds].some((dependencyId) => typeof dependencyId !== "string"))
+    return jsonResponse({ error: "Invalid source dependency" }, 400);
+
   const permanentPath = `sources/${sourceId}/bundle.json`;
   const bundleHash = await sha256(canonicalJson(body.bundle));
 
@@ -108,6 +124,8 @@ Deno.serve(async (request) => {
     {
       p_base_revision_id: body.base_revision_id,
       p_bundle_hash: bundleHash,
+      p_include_ids: includeIds,
+      p_require_ids: requireIds,
       p_source_id: sourceId,
       p_storage_path: permanentPath,
       p_user_id: userData.user.id,
@@ -115,8 +133,7 @@ Deno.serve(async (request) => {
   );
 
   if (revisionError) {
-    const status =
-      ["40001", "55P03"].includes(revisionError.code ?? "") ? 409 : 400;
+    const status = ["40001", "55P03"].includes(revisionError.code ?? "") ? 409 : 400;
     return jsonResponse({ error: revisionError.message }, status);
   }
 

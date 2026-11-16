@@ -15,7 +15,11 @@ import { setAutoUpdateSources, useAutoUpdateSources } from "~/app/app-settings";
 import useAuth from "~/auth/use-auth";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import catalogue, { useActiveSourceId, useSources } from "~/models/catalogue/catalogue";
-import type { Source, SourceDependency } from "~/models/catalogue/source";
+import {
+  sourceRegistryMetadataFromSource,
+  type Source,
+  type SourceDependency,
+} from "~/models/catalogue/source";
 import {
   type SourceBundle,
   canAccessPrivateResources,
@@ -151,7 +155,10 @@ export default function SourcesPanel() {
           sourcesRef.current.map((source) => {
             const registrySource = registrySourceById.get(source.id);
             if (source.registry && registrySource?.registry)
-              return catalogue.updateSourceRegistryMetadata(source.id, registrySource.registry);
+              return catalogue.updateSourceRegistryMetadata(
+                source.id,
+                sourceRegistryMetadataFromSource(registrySource),
+              );
             if (source.registry && !registrySource)
               return catalogue.updateSourceRegistryMetadata(source.id, {
                 ...source.registry,
@@ -442,7 +449,7 @@ export default function SourcesPanel() {
       if (registeredSource?.registry)
         await catalogue.updateSource(source.id, (current) => ({
           ...current,
-          registry: registeredSource.registry,
+          registry: sourceRegistryMetadataFromSource(registeredSource),
         }));
       await catalogue.markSourcePublished(source.id);
       setRegistrySources((previousSources) => [

@@ -4,6 +4,7 @@ import {
   publishRegistrySourceBundle,
 } from "../registry/registry";
 import catalogue from "./catalogue";
+import { sourceRegistryMetadataFromSource, type Source } from "./source";
 import {
   type SourceBundle,
   canAccessPrivateResources,
@@ -14,7 +15,6 @@ import {
   loadSourceState,
   saveSourceBundle,
 } from "./source-bundle-indexed-db";
-import type { Source } from "./source";
 
 //------------------------------------------------------------------------------
 // Download Default Source
@@ -33,7 +33,7 @@ export async function downloadDefaultSource(sourceId: string | undefined): Promi
     ...bundle,
     source: {
       ...bundle.source,
-      registry: source.registry,
+      registry: sourceRegistryMetadataFromSource(source),
     },
   };
   const savedBundle = await saveSourceBundle(
@@ -58,7 +58,10 @@ export async function publishSourceBundle(sourceId: string): Promise<Source | un
   await publishRegistrySourceBundle(bundle);
   const publishedSource = (await fetchRegistrySources()).find(({ id }) => id === sourceId);
   if (publishedSource?.registry)
-    await catalogue.updateSourceRegistryMetadata(sourceId, publishedSource.registry);
+    await catalogue.updateSourceRegistryMetadata(
+      sourceId,
+      sourceRegistryMetadataFromSource(publishedSource),
+    );
   await catalogue.markSourcePublished(sourceId);
 
   return publishedSource;
@@ -99,7 +102,7 @@ export async function updateInstalledSources(
         ...nextBundle,
         source: {
           ...nextBundle.source,
-          registry: registrySource.registry,
+          registry: sourceRegistryMetadataFromSource(registrySource),
         },
       };
       const savedBundle = await saveSourceBundle(

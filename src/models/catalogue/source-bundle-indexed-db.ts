@@ -177,7 +177,9 @@ export async function updateSourceBundle(
   const record = await db.source_bundles.get(sourceId);
   if (!record) throw new Error(`Source bundle not found: ${sourceId}`);
 
-  const bundle = parseSourceBundle(update(record.bundle));
+  const currentBundle = parseSourceBundle(record.bundle);
+  const bundle = parseSourceBundle(update(currentBundle));
+  const currentBundleHash = await getBundleHash(currentBundle);
   const bundleHash = await getBundleHash(bundle);
   const importedAt = new Date().toISOString();
 
@@ -196,7 +198,9 @@ export async function updateSourceBundle(
     await db.source_states.put({
       current_bundle_hash: bundleHash,
       published_bundle_hash:
-        previousState?.published_bundle_hash ?? (bundle.source.registry ? bundleHash : undefined),
+        bundle.source.registry?.bundle_hash ??
+        previousState?.published_bundle_hash ??
+        (currentBundle.source.registry ? currentBundleHash : undefined),
       source_id: bundle.source.id,
     });
 

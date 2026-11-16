@@ -101,7 +101,7 @@ BEGIN
     relationship
   )
   SELECT p_source_id, dependency_id, 'include'
-  FROM unnest(coalesce(p_include_ids, ARRAY[]::uuid[])) dependency_id
+  FROM unnest(coalesce(p_include_ids, ARRAY[]::uuid[])) AS dependencies(dependency_id)
   WHERE EXISTS (
     SELECT 1
     FROM public.registry_sources source
@@ -114,7 +114,7 @@ BEGIN
     relationship
   )
   SELECT p_source_id, dependency_id, 'require'
-  FROM unnest(coalesce(p_require_ids, ARRAY[]::uuid[])) dependency_id
+  FROM unnest(coalesce(p_require_ids, ARRAY[]::uuid[])) AS dependencies(dependency_id)
   WHERE EXISTS (
     SELECT 1
     FROM public.registry_sources source
@@ -423,7 +423,9 @@ CREATE OR REPLACE FUNCTION public.publish_registry_source_revision(
   p_base_revision_id uuid,
   p_storage_path text,
   p_user_id uuid,
-  p_bundle_hash text
+  p_bundle_hash text,
+  p_include_ids uuid[],
+  p_require_ids uuid[]
 )
 RETURNS TABLE(
   revision_id uuid,
@@ -493,6 +495,52 @@ BEGIN
       USING ERRCODE = '40001';
   END IF;
 
+  DELETE FROM public.registry_source_dependencies
+  WHERE source_id = v_source.source_id;
+
+  INSERT INTO public.registry_source_dependencies (
+    source_id,
+    dependency_source_id,
+    relationship
+  )
+  SELECT v_source.source_id, dependency_id, 'include'
+  FROM unnest(coalesce(p_include_ids, ARRAY[]::uuid[])) dependency_id
+  WHERE EXISTS (
+    SELECT 1
+    FROM public.registry_sources source
+    WHERE source.source_id = dependency_id
+  )
+  ON CONFLICT DO NOTHING;
+
+  INSERT INTO public.registry_source_dependencies (
+    source_id,
+    dependency_source_id,
+    relationship
+  )
+  SELECT v_source.source_id, dependency_id, 'require'
+  FROM unnest(coalesce(p_require_ids, ARRAY[]::uuid[])) dependency_id
+  WHERE EXISTS (
+    SELECT 1
+    FROM public.registry_sources source
+    WHERE source.source_id = dependency_id
+  )
+  ON CONFLICT DO NOTHING;
+
+  IF v_source.current_revision_id IS NOT NULL THEN
+    SELECT *
+    INTO v_revision
+    FROM public.registry_revisions
+    WHERE id = v_source.current_revision_id;
+
+    IF FOUND AND v_revision.bundle_hash = p_bundle_hash THEN
+      RETURN QUERY
+      SELECT v_revision.id,
+             v_revision.revision_number,
+             v_revision.revision_created_at;
+      RETURN;
+    END IF;
+  END IF;
+
   INSERT INTO public.registry_revisions (
     source_id,
     revision_number,
@@ -521,9 +569,25 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION public.publish_registry_source_revision(uuid, uuid, text, uuid, text)
+ALTER FUNCTION public.publish_registry_source_revision(
+  uuid,
+  uuid,
+  text,
+  uuid,
+  text,
+  uuid[],
+  uuid[]
+)
   OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION public.publish_registry_source_revision(uuid, uuid, text, uuid, text)
+GRANT EXECUTE ON FUNCTION public.publish_registry_source_revision(
+  uuid,
+  uuid,
+  text,
+  uuid,
+  text,
+  uuid[],
+  uuid[]
+)
   TO service_role;
 
 

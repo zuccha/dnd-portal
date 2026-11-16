@@ -26,6 +26,7 @@ export const sourceRegistryMetadataSchema = z.object({
     .string()
     .regex(/^[0-9a-f]{64}$/)
     .optional(),
+  dependencies_key: z.string().optional(),
   revision_created_at: z.string(),
   revision_id: z.uuid(),
   revision_number: z.number(),
@@ -51,6 +52,32 @@ export const sourceSchema = z.object({
 });
 
 export type Source = z.infer<typeof sourceSchema>;
+
+//------------------------------------------------------------------------------
+// Source Dependencies Key
+//------------------------------------------------------------------------------
+
+export function sourceDependenciesKey(source: Pick<Source, "includes" | "requires">): string {
+  return JSON.stringify({
+    includes: [...new Set(source.includes.map(({ source_id }) => source_id))].sort(),
+    requires: [...new Set(source.requires.map(({ source_id }) => source_id))].sort(),
+  });
+}
+
+//------------------------------------------------------------------------------
+// Source Registry Metadata From Source
+//------------------------------------------------------------------------------
+
+export function sourceRegistryMetadataFromSource(
+  source: Source,
+): SourceRegistryMetadata | undefined {
+  if (!source.registry) return undefined;
+
+  return {
+    ...source.registry,
+    dependencies_key: sourceDependenciesKey(source),
+  };
+}
 
 //------------------------------------------------------------------------------
 // Can Edit Source

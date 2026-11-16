@@ -13,7 +13,7 @@ import {
   type RelationGroupRows,
   type ResourceRelations,
 } from "./resource-relations";
-import { type Source, canEditSource } from "./source";
+import { type Source, canEditSource, sourceDependenciesKey } from "./source";
 import {
   type SourceBundle,
   type SourceBundleExportOptions,
@@ -749,10 +749,15 @@ export function createCatalogue(id: string) {
   //------------------------------------------------------------------------------
 
   function useSourceHasUnpublishedChanges(sourceId: string): boolean {
+    const source = useSourceById(sourceId);
     const state = useSourceStateById(sourceId);
-    return (
-      !!state?.published_bundle_hash && state.current_bundle_hash !== state.published_bundle_hash
-    );
+    const publishedBundleHash = source?.registry?.bundle_hash ?? state?.published_bundle_hash;
+    const bundleChanged =
+      !!publishedBundleHash && (!state || state.current_bundle_hash !== publishedBundleHash);
+    const dependenciesChanged =
+      !!source?.registry && source.registry.dependencies_key !== sourceDependenciesKey(source);
+
+    return bundleChanged || dependenciesChanged;
   }
 
   //----------------------------------------------------------------------------
