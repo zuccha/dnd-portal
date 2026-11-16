@@ -146,10 +146,16 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
   }
 
   for (const line of lines) {
-    const lineMatch = /^(\S+)(?:\s+([\s\S]+))?$/.exec(line.trim());
+    const trimmedLine = line.trim();
+    if (trimmedLine === "@response") {
+      segments.push({ kind: "label", label: "response", value: "" });
+      continue;
+    }
+
+    const lineMatch = /^(\S+)\s+([\s\S]+)$/.exec(trimmedLine);
     const label = lineMatch?.[1];
     const value = lineMatch?.[2]?.trim() ?? "";
-    if (!label || (!value && label !== "@response")) return undefined;
+    if (!label || !value) return undefined;
 
     if (label === "@melee" || label === "@range" || label === "@mixed") {
       const values = value.split("||").map((part) => part.trim());
