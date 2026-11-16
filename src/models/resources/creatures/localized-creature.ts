@@ -774,19 +774,28 @@ export function localizeCreature(
   const formattedExp = formatNumber(exp, lang);
   const formattedLairExp = formatNumber(lair_exp, lang);
   const hitPointsValue =
-    creature.additional_hp_per_level > 0
-      ? additionalHpBase >= 0
-        ? additionalHpBase > 0
-          ? ti("hp.additional.direct", `${additionalHpBase}`, `${creature.additional_hp_per_level}`)
-          : `${creature.additional_hp_per_level} × 𝑋`
-        : `${creature.hit_points} ${ti(
-            "hp.additional.short",
-            `${creature.additional_hp_per_level}`,
-            `${additionalHpThreshold}`,
-          )}`
-      : `${creature.hit_points}`;
+    creature.hit_points < 0
+      ? "*"
+      : creature.additional_hp_per_level > 0
+        ? additionalHpBase >= 0
+          ? additionalHpBase > 0
+            ? ti(
+                "hp.additional.direct",
+                `${additionalHpBase}`,
+                `${creature.additional_hp_per_level}`,
+              )
+            : `${creature.additional_hp_per_level} × 𝑋`
+          : `${creature.hit_points} ${ti(
+              "hp.additional.short",
+              `${creature.additional_hp_per_level}`,
+              `${additionalHpThreshold}`,
+            )}`
+        : `${creature.hit_points}`;
   const hitPointsFormula = creature.is_summoned_from_spell ? "" : creature.hit_points_formula;
-  const armorClass = `${creature.armor_class}${creature.adds_spell_level_to_armor_class ? "＋X" : ""}`;
+  const armorClass =
+    creature.armor_class < 0
+      ? "*"
+      : `${creature.armor_class}${creature.adds_spell_level_to_armor_class ? "＋X" : ""}`;
   const naturalArmorLabel = context.t("natural_armor");
   const valueWithLair =
     creature.has_lair && exp !== lair_exp
