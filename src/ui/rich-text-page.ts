@@ -65,12 +65,13 @@ function readRichTextPageState(text: string, initialState: RichTextPageState): R
   for (let i = 0; i < text.length; ++i) {
     if (text.startsWith(richTextHeadingDelimiter, i)) {
       toggleMarker(state, "heading");
-      i++;
+      i += richTextHeadingDelimiter.length - 1;
     } else if (text.startsWith(richTextBoldDelimiter, i)) {
       toggleMarker(state, "bold");
-      i++;
-    } else if (text[i] === richTextItalicDelimiter) {
+      i += richTextBoldDelimiter.length - 1;
+    } else if (text.startsWith(richTextItalicDelimiter, i)) {
       toggleMarker(state, "italic");
+      i += richTextItalicDelimiter.length - 1;
     }
   }
 
