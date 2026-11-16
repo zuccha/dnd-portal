@@ -102,7 +102,10 @@ function renderSegment(
       ? ti("save_with_condition", segment.ability, segment.dc, segment.condition)
       : ti("save", segment.ability, segment.dc);
   }
-  if (segment.kind === "label") return ti(segment.label, segment.value);
+  if (segment.kind === "label") {
+    if (!segment.value && segment.label === "response") return ti("response_empty");
+    return ti(segment.label, segment.value);
+  }
   return segment.value;
 }
 
@@ -143,10 +146,10 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
   }
 
   for (const line of lines) {
-    const lineMatch = /^(\S+)\s+([\s\S]+)$/.exec(line.trim());
+    const lineMatch = /^(\S+)(?:\s+([\s\S]+))?$/.exec(line.trim());
     const label = lineMatch?.[1];
-    const value = lineMatch?.[2]?.trim();
-    if (!label || !value) return undefined;
+    const value = lineMatch?.[2]?.trim() ?? "";
+    if (!label || (!value && label !== "@response")) return undefined;
 
     if (label === "@melee" || label === "@range" || label === "@mixed") {
       const values = value.split("||").map((part) => part.trim());
@@ -252,6 +255,10 @@ const actionLabels: Record<string, Record<string, string>> = {
   response: {
     en: "__Response:__ <1>",
     it: "__Esito:__ <1>",
+  },
+  response_empty: {
+    en: "__Response:__",
+    it: "__Esito:__",
   },
   save: {
     en: "__<1> Saving Throw:__ DC <2>.",
