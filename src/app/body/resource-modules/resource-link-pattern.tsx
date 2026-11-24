@@ -35,26 +35,32 @@ export function createResourceLinkPattern(
       if (typeof value !== "string") return value;
 
       const [maybeKind, maybeId = "", fallback = "", override = ""] = value.split(":");
-      const kind = resourceKindSchema.safeParse(maybeKind);
-      const id = z.uuid().safeParse(maybeId);
+
+      const kindResult = resourceKindSchema.safeParse(maybeKind);
+      const kind = kindResult.success ? kindResult.data : undefined;
+
+      const idResult = z.uuid().safeParse(maybeId);
+      const id = idResult.success ? idResult.data : undefined;
+
       const resource =
-        kind.success && id.success
-          ? resources.find((entry) => entry.kind === kind.data && entry.id === id.data)
-          : undefined;
+        kind && id ? resources.find((entry) => entry.kind === kind && entry.id === id) : undefined;
 
-      if (!resource) return fallback || missingResourceLabel;
+      function getContent() {
+        const text = override || resource?.name[lang] || fallback || missingResourceLabel;
 
-      const text = override || resource.name[lang] || fallback;
-      const content =
-        resource.kind === "spell" ? (
-          <Em>{text}</Em>
-        ) : resource.kind === "creature" ? (
-          <Span fontWeight="bold">{text}</Span>
-        ) : (
-          text
-        );
+        switch (resource?.kind ?? kind) {
+          case "creature":
+            return <Span fontWeight="bold">{text}</Span>;
+          case "spell":
+            return <Em>{text}</Em>;
+          default:
+            return text;
+        }
+      }
 
-      if (!linkResources) return content;
+      const content = getContent();
+
+      if (!linkResources || !resource) return content;
       if (renderLink) return renderLink(resource, content);
 
       return (
