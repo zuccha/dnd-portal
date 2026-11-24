@@ -7,13 +7,13 @@ import { range } from "~/utils/array";
 import { palettes } from "~/utils/palette";
 import {
   paperSizes,
-  useBackgroundColorVisible,
   useBleedSize,
   useBleedVisible,
+  useCardBackImageUrl,
+  useCardBackMode,
   useCardCropMarksColor,
   useCardCropMarksLength,
   useCardCropMarksVisible,
-  useIncludeEmptyBack,
   usePageCropMarksColor,
   usePageCropMarksLength,
   usePageCropMarksVisible,
@@ -86,15 +86,15 @@ export default function PrintDeckContentPreview() {
     py: (paperHeight - rows * cardH) / 2,
   };
 
-  const [backgroundColorVisible] = useBackgroundColorVisible();
-  const [includeEmptyBack] = useIncludeEmptyBack();
+  const [cardBackMode] = useCardBackMode();
+  const [cardBackImageUrl] = useCardBackImageUrl();
   const [showImage] = useShowImage();
   const resourceReferences = useActiveSourceReferenceResources();
 
   const [pagesCounts, setPagesCounts] = useState<Record<string, number>>({});
   const pagesCount = entries.reduce((total, entry) => {
     const count = pagesCounts[entry.id] ?? 0;
-    return total + count + (includeEmptyBack && count % 2 !== 0 ? 1 : 0);
+    return total + count + (cardBackMode !== "none" && count % 2 !== 0 ? 1 : 0);
   }, 0);
   const papersCount = Math.max(1, Math.ceil(pagesCount / cardsPerPaper));
 
@@ -203,8 +203,9 @@ export default function PrintDeckContentPreview() {
               const Card = getPrintDeckCard(entry.resource.kind);
               return (
                 <Card
-                  alwaysEvenPages={includeEmptyBack}
-                  bgColor={backgroundColorVisible ? undefined : "white"}
+                  alwaysEvenPages={cardBackMode !== "none"}
+                  backImageUrl={cardBackMode === "custom" ? cardBackImageUrl.trim() : undefined}
+                  bgColor="white"
                   borderRadius={0}
                   css={albumCardCss}
                   key={entry.id}

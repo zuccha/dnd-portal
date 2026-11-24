@@ -3,6 +3,20 @@ import { createLocalStore } from "~/store/local-store";
 import { createMemoryStore } from "~/store/memory-store";
 
 //------------------------------------------------------------------------------
+// Card Back Mode
+//------------------------------------------------------------------------------
+
+const cardBackModeSchema = z.enum(["none", "empty", "custom"]);
+
+export type CardBackMode = z.infer<typeof cardBackModeSchema>;
+
+function parseCardBackMode(value: unknown): CardBackMode {
+  return cardBackModeSchema.parse(value === "white" ? "empty" : value);
+}
+
+export const cardBackModes = cardBackModeSchema.options;
+
+//------------------------------------------------------------------------------
 // Print Deck Mode
 //------------------------------------------------------------------------------
 
@@ -73,12 +87,6 @@ export const useShowPrintInstructions = createLocalStore(
 // Print Settings
 //------------------------------------------------------------------------------
 
-export const useBackgroundColorVisible = createLocalStore(
-  "print_deck.settings.background_color_visible",
-  false,
-  z.boolean().parse,
-).use;
-
 export const useBleedSize = createLocalStore(
   "print_deck.settings.bleed_size",
   { x: 0.05, y: 0.05 },
@@ -89,6 +97,18 @@ export const useBleedVisible = createLocalStore(
   "print_deck.settings.bleed_visible",
   true,
   z.boolean().parse,
+).use;
+
+export const useCardBackImageUrl = createLocalStore(
+  "print_deck.settings.card_back_image_url",
+  "",
+  z.string().parse,
+).use;
+
+export const useCardBackMode = createLocalStore(
+  "print_deck.settings.card_back_mode",
+  "none",
+  parseCardBackMode,
 ).use;
 
 export const useCardCropMarksColor = createLocalStore(
@@ -106,12 +126,6 @@ export const useCardCropMarksLength = createLocalStore(
 export const useCardCropMarksVisible = createLocalStore(
   "print_deck.settings.card_crop_marks_visible",
   true,
-  z.boolean().parse,
-).use;
-
-export const useIncludeEmptyBack = createLocalStore(
-  "print_deck.settings.include_empty_back",
-  false,
   z.boolean().parse,
 ).use;
 

@@ -4,24 +4,27 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import CaptionInput from "~/ui/caption-input";
 import Checkbox from "~/ui/checkbox";
 import ColorPicker from "~/ui/color-picker";
+import Input from "~/ui/input";
 import Link from "~/ui/link";
 import NumberInput from "~/ui/number-input";
 import Section from "~/ui/section";
 import Select, { type SelectOption } from "~/ui/select";
 import {
+  type CardBackMode,
   type PaperLayout,
   type PaperType,
   type PrintQuality,
+  cardBackModes,
   paperLayouts,
   paperTypes,
   printQualities,
-  useBackgroundColorVisible,
   useBleedSize,
   useBleedVisible,
+  useCardBackImageUrl,
+  useCardBackMode,
   useCardCropMarksColor,
   useCardCropMarksLength,
   useCardCropMarksVisible,
-  useIncludeEmptyBack,
   usePageCropMarksColor,
   usePageCropMarksLength,
   usePageCropMarksVisible,
@@ -48,8 +51,8 @@ export default function PrintDeckSidebarSettings({
   const [paperLayout, setPaperLayout] = usePaperLayout();
   const [printQuality, setPrintQuality] = usePrintQuality();
 
-  const [backgroundColorVisible, setBackgroundColorVisible] = useBackgroundColorVisible();
-  const [includeEmptyBack, setIncludeEmptyBack] = useIncludeEmptyBack();
+  const [cardBackMode, setCardBackMode] = useCardBackMode();
+  const [cardBackImageUrl, setCardBackImageUrl] = useCardBackImageUrl();
   const [showImage, setShowImage] = useShowImage();
 
   const [bleedSize, setBleedSize] = useBleedSize();
@@ -82,6 +85,26 @@ export default function PrintDeckSidebarSettings({
       label: t(`print_quality[${quality}]`),
       value: quality,
     }));
+  }, [t]);
+
+  const cardBackModeOptions = useMemo<SelectOption<CardBackMode>[]>(() => {
+    return cardBackModes.map((mode) => ({
+      label: t(`card_back[${mode}]`),
+      value: mode,
+    }));
+  }, [t]);
+
+  const cardFrontOptions = useMemo<SelectOption<"exclude_image" | "include_image">[]>(() => {
+    return [
+      {
+        label: t("card_front[include_image]"),
+        value: "include_image",
+      },
+      {
+        label: t("card_front[exclude_image]"),
+        value: "exclude_image",
+      },
+    ];
   }, [t]);
 
   return (
@@ -172,29 +195,34 @@ export default function PrintDeckSidebarSettings({
           <ColorPicker onValueChange={setCardCropMarksColor} value={cardCropMarksColor} />
         </HStack>
 
-        <VStack gap={1} w="full">
-          <Checkbox
-            label={t("setting.show_images.label")}
-            onValueChange={setShowImage}
+        <CaptionInput caption={t("setting.card_front.label")} w="full">
+          <Select.Enum
+            onValueChange={(value) => setShowImage(value === "include_image")}
+            options={cardFrontOptions}
             size="sm"
-            value={showImage}
-            w="full"
+            value={showImage ? "include_image" : "exclude_image"}
           />
-          <Checkbox
-            label={t("setting.background_color_visible.label")}
-            onValueChange={setBackgroundColorVisible}
+        </CaptionInput>
+
+        <CaptionInput caption={t("setting.card_back.label")} w="full">
+          <Select.Enum
+            onValueChange={setCardBackMode}
+            options={cardBackModeOptions}
             size="sm"
-            value={backgroundColorVisible}
-            w="full"
+            value={cardBackMode}
           />
-          <Checkbox
-            label={t("setting.include_empty_back.label")}
-            onValueChange={setIncludeEmptyBack}
-            size="sm"
-            value={includeEmptyBack}
-            w="full"
-          />
-        </VStack>
+        </CaptionInput>
+        {cardBackMode === "custom" && (
+          <CaptionInput caption={t("setting.card_back_image_url.label")} w="full">
+            <Input
+              onValueChange={setCardBackImageUrl}
+              placeholder={t("setting.card_back_image_url.placeholder")}
+              size="sm"
+              type="url"
+              value={cardBackImageUrl}
+            />
+          </CaptionInput>
+        )}
 
         <Link
           fontSize="sm"
@@ -269,9 +297,25 @@ const i18nContext = {
     en: "Standard",
     it: "Standard",
   },
-  "setting.background_color_visible.label": {
-    en: "Include background",
-    it: "Includi sfondo",
+  "card_back[custom]": {
+    en: "Custom image",
+    it: "Immagine personalizzata",
+  },
+  "card_back[empty]": {
+    en: "Empty",
+    it: "Vuoto",
+  },
+  "card_back[none]": {
+    en: "No back",
+    it: "Nessun retro",
+  },
+  "card_front[exclude_image]": {
+    en: "Without image",
+    it: "Senza immagine",
+  },
+  "card_front[include_image]": {
+    en: "With image",
+    it: "Con immagine",
   },
   "setting.bleed_x.label": {
     en: "Bleed X",
@@ -285,9 +329,21 @@ const i18nContext = {
     en: "Crop Marks (Card)",
     it: "Marchi (Carta)",
   },
-  "setting.include_empty_back.label": {
-    en: "Add empty back",
-    it: "Aggiungi retro vuoto",
+  "setting.card_back.label": {
+    en: "Card back",
+    it: "Retro della carta",
+  },
+  "setting.card_back_image_url.label": {
+    en: "Back image URL",
+    it: "URL immagine del retro",
+  },
+  "setting.card_back_image_url.placeholder": {
+    en: "Paste an image URL",
+    it: "Incolla l'URL di un'immagine",
+  },
+  "setting.card_front.label": {
+    en: "Card front",
+    it: "Fronte della carta",
   },
   "setting.page_crop_marks.label": {
     en: "Crop Marks (Page)",
@@ -304,9 +360,5 @@ const i18nContext = {
   "setting.print_quality.label": {
     en: "Print Quality",
     it: "Qualità di Stampa",
-  },
-  "setting.show_images.label": {
-    en: "Include image",
-    it: "Includi immagine",
   },
 };

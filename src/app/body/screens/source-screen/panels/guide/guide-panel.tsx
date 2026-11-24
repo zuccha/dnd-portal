@@ -681,8 +681,8 @@ const documentation: Record<string, DocumentationContent> = {
           "`Crop Marks (Page)` shows marks around the page/card layout. Its length and color control how those marks appear on the sheet.",
           "`Crop Marks (Card)` shows corner marks for individual cards. Its length and color control how those marks appear around each card.",
           "`Include Image` shows or hides resource images on cards when an image is available.",
-          "`Include Background` keeps or removes card background colors and other background graphics from the printed result.",
-          "`Add Empty Back` adds a blank back when a card occupies an odd number of pages, keeping front and back pages aligned for double-sided printing.",
+          "`Card Front` controls whether the resource image is included on the card front.",
+          "`Card Back` selects what to print on the reverse when a card has an odd number of pages: no back, an empty back, or a custom image. The custom image URL is saved locally.",
         ],
       },
       {
@@ -1025,8 +1025,8 @@ const documentation: Record<string, DocumentationContent> = {
           "`Marchi (Pagina)` mostra i segni attorno alla disposizione di pagine e carte. La lunghezza e il colore controllano l'aspetto dei segni sul foglio.",
           "`Marchi (Carta)` mostra i segni agli angoli delle singole carte. La lunghezza e il colore controllano l'aspetto dei segni attorno a ogni carta.",
           "`Includi immagine` mostra o nasconde le immagini delle risorse sulle carte quando un'immagine è disponibile.",
-          "`Includi sfondo` mantiene o rimuove i colori di sfondo e gli altri elementi grafici di sfondo dal risultato stampato.",
-          "`Aggiungi retro vuoto` aggiunge un retro vuoto quando una carta occupa un numero dispari di pagine, mantenendo allineati i fronti e i retro nella stampa fronte-retro.",
+          "`Fronte della carta` controlla se l'immagine della risorsa viene inclusa sul fronte.",
+          "`Retro della carta` sceglie cosa stampare sul retro quando una carta occupa un numero dispari di pagine: nessun retro, un retro vuoto o un'immagine personalizzata. L'URL dell'immagine personalizzata viene salvato in locale.",
         ],
       },
       {

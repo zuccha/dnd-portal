@@ -21,6 +21,7 @@ export type ResourcePokerCardProps<
   alwaysEvenPages?: boolean;
   afterDescriptor?: ReactNode;
   beforeDetails?: ReactNode;
+  backImageUrl?: string;
   firstPageInfo?: ReactNode;
   footer?: ReactNode;
   localizedResource: L;
@@ -39,6 +40,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
   alwaysEvenPages,
   afterDescriptor,
   beforeDetails,
+  backImageUrl,
   firstPageInfo,
   footer,
   localizedResource,
@@ -105,6 +107,7 @@ export function ResourcePokerCard<R extends Resource, L extends LocalizedResourc
     <PaginatedResourcePokerCard
       afterDescriptor={afterDescriptor}
       alwaysEvenPages={alwaysEvenPages}
+      backImageUrl={backImageUrl}
       beforeDetails={beforeDetails}
       details={details}
       firstPageIndexWithoutImage={firstPageIndexWithoutImage}
@@ -134,6 +137,7 @@ type PaginatedResourcePokerCardProps<
 > = StackProps & {
   afterDescriptor?: ReactNode;
   alwaysEvenPages?: boolean;
+  backImageUrl?: string;
   beforeDetails?: ReactNode;
   details: string;
   firstPageInfo?: ReactNode;
@@ -154,6 +158,7 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
   afterDescriptor,
   alwaysEvenPages,
   beforeDetails,
+  backImageUrl,
   details,
   firstPageInfo,
   firstPageIndexWithoutImage,
@@ -305,6 +310,11 @@ function PaginatedResourcePokerCard<R extends Resource, L extends LocalizedResou
           compact
           descriptor=""
           footer=""
+          bgColor="white"
+          bgImage={backImageUrl ? `url(${JSON.stringify(backImageUrl)})` : undefined}
+          bgPos="center"
+          bgRepeat="no-repeat"
+          bgSize="cover"
           name=""
           pageIndicator=""
           palette={palette}
