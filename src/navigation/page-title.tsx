@@ -154,6 +154,10 @@ const i18nContext = {
     en: "Vehicles",
     it: "Veicoli",
   },
+  [Route.ResourcesWorldFactions]: {
+    en: "Factions",
+    it: "Fazioni",
+  },
   [Route.ResourcesWorldLanguages]: {
     en: "Languages",
     it: "Lingue",

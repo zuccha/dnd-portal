@@ -106,6 +106,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "faction",
+    route: Route.ResourcesWorldFactions,
+    searchNames: {
+      en: "faction factions",
+      it: "fazione fazioni",
+    },
+  },
+  {
     kind: "feat",
     route: Route.ResourcesCharacterFeats,
     searchNames: {

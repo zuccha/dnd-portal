@@ -44,6 +44,7 @@ import type { Armor } from "../resources/equipment/armors/armor";
 import type { Item } from "../resources/equipment/items/item";
 import type { Tool } from "../resources/equipment/tools/tool";
 import type { Weapon } from "../resources/equipment/weapons/weapon";
+import type { Faction } from "../resources/factions/faction";
 import type { Feat } from "../resources/feats/feat";
 import type { Feature } from "../resources/features/feature";
 import type { Language } from "../resources/languages/language";
@@ -187,6 +188,7 @@ export function createCatalogue(id: string) {
     creature_tag: createResourcesById<CreatureTag>("creature_tag"),
     creature_treasure: createResourcesById<CreatureTreasure>("creature_treasure"),
     eldritch_invocation: createResourcesById<EldritchInvocation>("eldritch_invocation"),
+    faction: createResourcesById<Faction>("faction"),
     feat: createResourcesById<Feat>("feat"),
     feature: createResourcesById<Feature>("feature"),
     item: createResourcesById<Item>("item"),
@@ -222,6 +224,7 @@ export function createCatalogue(id: string) {
     creature_tag: createResourcesIdsBySourceId("creature_tag"),
     creature_treasure: createResourcesIdsBySourceId("creature_treasure"),
     eldritch_invocation: createResourcesIdsBySourceId("eldritch_invocation"),
+    faction: createResourcesIdsBySourceId("faction"),
     feat: createResourcesIdsBySourceId("feat"),
     feature: createResourcesIdsBySourceId("feature"),
     item: createResourcesIdsBySourceId("item"),
@@ -257,6 +260,7 @@ export function createCatalogue(id: string) {
     creature_tag: createResourcesBySourceId("creature_tag"),
     creature_treasure: createResourcesBySourceId("creature_treasure"),
     eldritch_invocation: createResourcesBySourceId("eldritch_invocation"),
+    faction: createResourcesBySourceId("faction"),
     feat: createResourcesBySourceId("feat"),
     feature: createResourcesBySourceId("feature"),
     item: createResourcesBySourceId("item"),
@@ -1095,6 +1099,7 @@ export function createCatalogue(id: string) {
       ["creature_tag", importedBundle.resources.creature_tags],
       ["creature_treasure", importedBundle.resources.creature_treasures],
       ["eldritch_invocation", importedBundle.resources.eldritch_invocations],
+      ["faction", importedBundle.resources.factions],
       ["feat", importedBundle.resources.feats],
       ["feature", importedBundle.resources.features],
       ["item", importedBundle.resources.items],

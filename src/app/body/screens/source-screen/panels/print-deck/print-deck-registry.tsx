@@ -14,6 +14,7 @@ import { ArmorCard } from "../../../../resource-modules/equipment/armors/panel/a
 import { ItemCard } from "../../../../resource-modules/equipment/items/panel/item-card.tsx";
 import { ToolCard } from "../../../../resource-modules/equipment/tools/panel/tool-card.tsx";
 import { WeaponCard } from "../../../../resource-modules/equipment/weapons/panel/weapon-card.tsx";
+import { FactionCard } from "../../../../resource-modules/factions/panel/faction-card.tsx";
 import { FeatCard } from "../../../../resource-modules/feats/panel/feat-card.tsx";
 import { FeatureCard } from "../../../../resource-modules/features/panel/feature-card.tsx";
 import { LanguageCard } from "../../../../resource-modules/languages/panel/language-card.tsx";
@@ -93,6 +94,7 @@ export const printDeckRegistry = {
   creature_tag: CreatureTagCard,
   creature_treasure: CreatureTreasureCard,
   eldritch_invocation: EldritchInvocationCard,
+  faction: FactionCard,
   feat: FeatCard,
   feature: FeatureCard,
   item: ItemCard,

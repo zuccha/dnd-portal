@@ -165,6 +165,7 @@ export const relationGroupByResourceKind = {
     families: "creature_families_and_creature_treasures",
   },
   eldritch_invocation: {},
+  faction: {},
   feat: {},
   feature: {
     character_classes: "character_classes_and_features",

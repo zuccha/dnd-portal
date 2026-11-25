@@ -11,6 +11,7 @@ import { resourceModule as armors } from "./equipment/armors/armors-module";
 import { resourceModule as items } from "./equipment/items/items-module";
 import { resourceModule as tools } from "./equipment/tools/tools-module";
 import { resourceModule as weapons } from "./equipment/weapons/weapons-module";
+import { resourceModule as factions } from "./factions/factions-module";
 import { resourceModule as feats } from "./feats/feats-module";
 import { resourceModule as features } from "./features/features-module";
 import { resourceModule as languages } from "./languages/languages-module";
@@ -44,6 +45,7 @@ export const resourceModules: ResourceModule[] = [
   creatureTreasures,
   creatures,
   eldritchInvocations,
+  factions,
   feats,
   features,
   itemModifiers,

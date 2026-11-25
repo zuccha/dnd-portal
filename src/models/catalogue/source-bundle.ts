@@ -12,6 +12,7 @@ import { armorSchema } from "../resources/equipment/armors/armor";
 import { itemSchema } from "../resources/equipment/items/item";
 import { toolSchema } from "../resources/equipment/tools/tool";
 import { weaponSchema } from "../resources/equipment/weapons/weapon";
+import { factionSchema } from "../resources/factions/faction";
 import { featSchema } from "../resources/feats/feat";
 import { featureSchema } from "../resources/features/feature";
 import { languageSchema } from "../resources/languages/language";
@@ -53,6 +54,7 @@ export const sourceBundleResourcesSchema = z.object({
   creature_families: creatureFamilySchema.array().default([]),
   creature_habitats: creatureHabitatSchema.array().default([]),
   eldritch_invocations: eldritchInvocationSchema.array().default([]),
+  factions: factionSchema.array().default([]),
   feats: featSchema.array().default([]),
   features: featureSchema.array().default([]),
   item_modifiers: itemModifierSchema.array().default([]),
@@ -136,6 +138,7 @@ export const sourceBundleResourceKeyByKind = {
   creature_tag: "creature_tags",
   creature_treasure: "creature_treasures",
   eldritch_invocation: "eldritch_invocations",
+  faction: "factions",
   feat: "feats",
   feature: "features",
   item: "items",

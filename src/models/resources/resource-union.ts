@@ -18,6 +18,8 @@ import { localizedCreatureSchema } from "./creatures/localized-creature";
 import { eldritchInvocationSchema } from "./eldritch-invocations/eldritch-invocation";
 import { localizedEldritchInvocationSchema } from "./eldritch-invocations/localized-eldritch-invocation";
 import { equipmentUnionSchema, localizedEquipmentUnionSchema } from "./equipment/equipment-union";
+import { factionSchema } from "./factions/faction";
+import { localizedFactionSchema } from "./factions/localized-faction";
 import { featSchema } from "./feats/feat";
 import { localizedFeatSchema } from "./feats/localized-feat";
 import { featureSchema } from "./features/feature";
@@ -57,6 +59,7 @@ export const resourceUnionSchema = z.discriminatedUnion("kind", [
   creatureHabitatSchema,
   eldritchInvocationSchema,
   equipmentUnionSchema,
+  factionSchema,
   featSchema,
   featureSchema,
   languageSchema,
@@ -92,6 +95,7 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedCreatureHabitatSchema,
   localizedEldritchInvocationSchema,
   localizedEquipmentUnionSchema,
+  localizedFactionSchema,
   localizedFeatSchema,
   localizedFeatureSchema,
   localizedLanguageSchema,
