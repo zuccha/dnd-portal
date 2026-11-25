@@ -16,6 +16,7 @@ import { normalizeString } from "~/utils/string";
 //------------------------------------------------------------------------------
 
 export type ResourceSearchProps = StackProps & {
+  disabled?: boolean;
   hideFilter?: boolean;
   onValueChange: (value: string[]) => void;
   options: ResourceOption[];
@@ -25,6 +26,7 @@ export type ResourceSearchProps = StackProps & {
 };
 
 export default function ResourceSearch({
+  disabled,
   hideFilter,
   onValueChange,
   options,
@@ -60,6 +62,7 @@ export default function ResourceSearch({
       <HStack gap={1} w="full">
         {single ? (
           <Search
+            disabled={disabled}
             emptyLabel={t("no_result")}
             onFilter={filterResourceOptions}
             onValueChange={(id) => onValueChange(id ? [id] : [])}
@@ -70,6 +73,7 @@ export default function ResourceSearch({
           />
         ) : (
           <Search
+            disabled={disabled}
             emptyLabel={t("no_result")}
             multiple
             onFilter={filterResourceOptions}
