@@ -32,7 +32,7 @@ export function createPlaceEditor(form: Form<PlaceFormData>) {
   const DescriptionField = createTextareaField({
     i18nContext: {
       label: { en: "Description", it: "Descrizione" },
-      placeholder: { en: "Describe this place", it: "Descrivi questo luogo" },
+      placeholder: { en: "None", it: "Nessuna" },
     },
     inputProps: { rows: 10 },
     translatable: true,
