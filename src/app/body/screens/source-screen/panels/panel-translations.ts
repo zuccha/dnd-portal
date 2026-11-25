@@ -40,5 +40,6 @@ export const resourcePanelTranslations = {
   [Route.ResourcesMarketVehicles]: { en: "Vehicles", it: "Veicoli" },
   [Route.ResourcesWorld]: { en: "Setting", it: "Ambientazione" },
   [Route.ResourcesWorldLanguages]: { en: "Languages", it: "Lingue" },
+  [Route.ResourcesWorldPlaces]: { en: "Places", it: "Luoghi" },
   [Route.ResourcesWorldPlanes]: { en: "Planes", it: "Piani" },
 };

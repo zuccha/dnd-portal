@@ -23,6 +23,7 @@ import { ArmorModifierCard } from "../../../../resource-modules/modifiers/equipm
 import { ItemModifierCard } from "../../../../resource-modules/modifiers/equipment/items/panel/item-modifier-card.tsx";
 import { ToolModifierCard } from "../../../../resource-modules/modifiers/equipment/tools/panel/tool-modifier-card.tsx";
 import { WeaponModifierCard } from "../../../../resource-modules/modifiers/equipment/weapons/panel/weapon-modifier-card.tsx";
+import { PlaceCard } from "../../../../resource-modules/places/panel/place-card.tsx";
 import { PlaneCard } from "../../../../resource-modules/planes/panel/plane-card.tsx";
 import { ServiceCard } from "../../../../resource-modules/services/panel/service-card.tsx";
 import { SpeciesCard } from "../../../../resource-modules/species/panel/species-card.tsx";
@@ -99,6 +100,7 @@ export const printDeckRegistry = {
   language: LanguageCard,
   maneuver: ManeuverCard,
   metamagic: MetamagicCard,
+  place: PlaceCard,
   plane: PlaneCard,
   service: ServiceCard,
   species: SpeciesCard,

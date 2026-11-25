@@ -162,6 +162,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "place",
+    route: Route.ResourcesWorldPlaces,
+    searchNames: {
+      en: "place places location locations",
+      it: "luogo luoghi località posto posti",
+    },
+  },
+  {
     kind: "plane",
     route: Route.ResourcesWorldPlanes,
     searchNames: {

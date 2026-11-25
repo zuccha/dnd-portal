@@ -158,6 +158,10 @@ const i18nContext = {
     en: "Languages",
     it: "Lingue",
   },
+  [Route.ResourcesWorldPlaces]: {
+    en: "Places",
+    it: "Luoghi",
+  },
   [Route.ResourcesWorldPlanes]: {
     en: "Planes",
     it: "Piani",

@@ -9,6 +9,7 @@ import {
   ImageIcon,
   KeyRoundIcon,
   LanguagesIcon,
+  MapPinIcon,
   PackageIcon,
   PawPrintIcon,
   SailboatIcon,
@@ -144,6 +145,7 @@ export type MarketPanelId = (typeof marketPanelIds)[number]["route"];
 export const worldPanelIds = [
   panelItem(Route.ResourcesWorldLanguages, LanguagesIcon),
   panelItem(Route.ResourcesWorldPlanes, EarthIcon),
+  panelItem(Route.ResourcesWorldPlaces, MapPinIcon),
 ] as const;
 
 //------------------------------------------------------------------------------

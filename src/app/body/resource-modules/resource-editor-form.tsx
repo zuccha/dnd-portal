@@ -45,6 +45,7 @@ type I18nFieldContext<T extends string> = Record<T, I18nString>;
 
 type SingleResourceFieldProps = Omit<StackProps, "defaultValue"> & {
   defaultValue: string | null;
+  disabled?: boolean;
   sourceId: string;
 };
 
@@ -60,7 +61,7 @@ export function createSingleResourceField({
   function SingleResourceField({ sourceId, defaultValue, ...rest }: SingleResourceFieldProps) {
     const options = useOptions(sourceId);
     const { lang } = useResourceEditorLang();
-    const { error, onValueChange, value } = useField(defaultValue);
+    const { error, disabled, onValueChange, value } = useField(defaultValue);
     const { t } = useI18nLangContext(i18nContext);
     const message = error ? t(error) : undefined;
     const localizedOptions = useMemo(
@@ -75,6 +76,7 @@ export function createSingleResourceField({
     return (
       <Field error={message} label={t("label")} {...rest}>
         <ResourceSearch
+          disabled={disabled || rest.disabled}
           onValueChange={(ids) => onValueChange(ids[0] ?? null)}
           options={localizedOptions}
           single

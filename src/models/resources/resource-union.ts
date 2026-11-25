@@ -29,6 +29,8 @@ import { maneuverSchema } from "./maneuvers/maneuver";
 import { localizedMetamagicSchema } from "./metamagics/localized-metamagic";
 import { metamagicSchema } from "./metamagics/metamagic";
 import { localizedModifierUnionSchema, modifierUnionSchema } from "./modifiers/modifier-union";
+import { localizedPlaceSchema } from "./places/localized-place";
+import { placeSchema } from "./places/place";
 import { localizedPlaneSchema } from "./planes/localized-plane";
 import { planeSchema } from "./planes/plane";
 import { localizedServiceSchema } from "./services/localized-service";
@@ -61,6 +63,7 @@ export const resourceUnionSchema = z.discriminatedUnion("kind", [
   maneuverSchema,
   metamagicSchema,
   modifierUnionSchema,
+  placeSchema,
   planeSchema,
   serviceSchema,
   speciesSchema,
@@ -95,6 +98,7 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedManeuverSchema,
   localizedMetamagicSchema,
   localizedModifierUnionSchema,
+  localizedPlaceSchema,
   localizedPlaneSchema,
   localizedServiceSchema,
   localizedSpeciesSchema,
