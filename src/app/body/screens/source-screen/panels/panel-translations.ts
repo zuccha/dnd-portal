@@ -38,7 +38,7 @@ export const resourcePanelTranslations = {
   [Route.ResourcesMarket]: { en: "Market", it: "Mercato" },
   [Route.ResourcesMarketServices]: { en: "Services", it: "Servizi" },
   [Route.ResourcesMarketVehicles]: { en: "Vehicles", it: "Veicoli" },
-  [Route.ResourcesWorld]: { en: "World", it: "Mondo" },
+  [Route.ResourcesWorld]: { en: "Setting", it: "Ambientazione" },
   [Route.ResourcesWorldLanguages]: { en: "Languages", it: "Lingue" },
   [Route.ResourcesWorldPlanes]: { en: "Planes", it: "Piani" },
 };
