@@ -270,18 +270,18 @@ export default function RichTextTextareaField(props: RichTextTextareaFieldProps)
               variant="ghost"
             />
             <IconButton
-              Icon={SwordsIcon}
-              label={t("action")}
-              onClick={() => formatSelection("action")}
+              Icon={Table2Icon}
+              label={t("table")}
+              onClick={() => formatSelection("table")}
               onMouseDown={handleToolbarMouseDown}
               rounded="sm"
               size="xs"
               variant="ghost"
             />
             <IconButton
-              Icon={Table2Icon}
-              label={t("table")}
-              onClick={() => formatSelection("table")}
+              Icon={SwordsIcon}
+              label={t("action")}
+              onClick={() => formatSelection("action")}
               onMouseDown={handleToolbarMouseDown}
               rounded="sm"
               size="xs"
