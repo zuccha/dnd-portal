@@ -54,6 +54,7 @@ import type { ArmorModifier } from "../resources/modifiers/equipment/armors/armo
 import type { ItemModifier } from "../resources/modifiers/equipment/items/item-modifier";
 import type { ToolModifier } from "../resources/modifiers/equipment/tools/tool-modifier";
 import type { WeaponModifier } from "../resources/modifiers/equipment/weapons/weapon-modifier";
+import type { Npc } from "../resources/npcs/npc";
 import type { Place } from "../resources/places/place";
 import type { Plane } from "../resources/planes/plane";
 import type { Resource } from "../resources/resource";
@@ -196,6 +197,7 @@ export function createCatalogue(id: string) {
     language: createResourcesById<Language>("language"),
     maneuver: createResourcesById<Maneuver>("maneuver"),
     metamagic: createResourcesById<Metamagic>("metamagic"),
+    npc: createResourcesById<Npc>("npc"),
     place: createResourcesById<Place>("place"),
     plane: createResourcesById<Plane>("plane"),
     service: createResourcesById<Service>("service"),
@@ -232,6 +234,7 @@ export function createCatalogue(id: string) {
     language: createResourcesIdsBySourceId("language"),
     maneuver: createResourcesIdsBySourceId("maneuver"),
     metamagic: createResourcesIdsBySourceId("metamagic"),
+    npc: createResourcesIdsBySourceId("npc"),
     place: createResourcesIdsBySourceId("place"),
     plane: createResourcesIdsBySourceId("plane"),
     service: createResourcesIdsBySourceId("service"),
@@ -268,6 +271,7 @@ export function createCatalogue(id: string) {
     language: createResourcesBySourceId("language"),
     maneuver: createResourcesBySourceId("maneuver"),
     metamagic: createResourcesBySourceId("metamagic"),
+    npc: createResourcesBySourceId("npc"),
     place: createResourcesBySourceId("place"),
     plane: createResourcesBySourceId("plane"),
     service: createResourcesBySourceId("service"),
@@ -1107,6 +1111,7 @@ export function createCatalogue(id: string) {
       ["language", importedBundle.resources.languages],
       ["maneuver", importedBundle.resources.maneuvers],
       ["metamagic", importedBundle.resources.metamagics],
+      ["npc", importedBundle.resources.npcs],
       ["place", importedBundle.resources.places],
       ["plane", importedBundle.resources.planes],
       ["service", importedBundle.resources.services],

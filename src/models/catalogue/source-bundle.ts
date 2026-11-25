@@ -22,6 +22,7 @@ import { armorModifierSchema } from "../resources/modifiers/equipment/armors/arm
 import { itemModifierSchema } from "../resources/modifiers/equipment/items/item-modifier";
 import { toolModifierSchema } from "../resources/modifiers/equipment/tools/tool-modifier";
 import { weaponModifierSchema } from "../resources/modifiers/equipment/weapons/weapon-modifier";
+import { npcSchema } from "../resources/npcs/npc";
 import { placeSchema } from "../resources/places/place";
 import { planeSchema } from "../resources/planes/plane";
 import { serviceSchema } from "../resources/services/service";
@@ -62,6 +63,7 @@ export const sourceBundleResourcesSchema = z.object({
   languages: languageSchema.array().default([]),
   maneuvers: maneuverSchema.array().default([]),
   metamagics: metamagicSchema.array().default([]),
+  npcs: npcSchema.array().default([]),
   places: placeSchema.array().default([]),
   planes: planeSchema.array().default([]),
   services: serviceSchema.array().default([]),
@@ -146,6 +148,7 @@ export const sourceBundleResourceKeyByKind = {
   language: "languages",
   maneuver: "maneuvers",
   metamagic: "metamagics",
+  npc: "npcs",
   place: "places",
   plane: "planes",
   service: "services",

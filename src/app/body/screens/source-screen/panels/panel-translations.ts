@@ -41,6 +41,7 @@ export const resourcePanelTranslations = {
   [Route.ResourcesWorld]: { en: "Setting", it: "Ambientazione" },
   [Route.ResourcesWorldFactions]: { en: "Factions", it: "Fazioni" },
   [Route.ResourcesWorldLanguages]: { en: "Languages", it: "Lingue" },
+  [Route.ResourcesWorldNpcs]: { en: "NPCs", it: "PNG" },
   [Route.ResourcesWorldPlaces]: { en: "Places", it: "Luoghi" },
   [Route.ResourcesWorldPlanes]: { en: "Planes", it: "Piani" },
 };

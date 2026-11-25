@@ -21,6 +21,7 @@ import {
   TreesIcon,
   UserGroupIcon,
   UserIcon,
+  UserRoundKeyIcon,
   UserStarIcon,
   WandSparklesIcon,
   type LucideIcon,
@@ -147,6 +148,7 @@ export const worldPanelIds = [
   panelItem(Route.ResourcesWorldPlanes, EarthIcon),
   panelItem(Route.ResourcesWorldPlaces, MapPinIcon),
   panelItem(Route.ResourcesWorldFactions, FlagIcon),
+  panelItem(Route.ResourcesWorldNpcs, UserRoundKeyIcon),
   panelItem(Route.ResourcesWorldLanguages, LanguagesIcon),
 ] as const;
 

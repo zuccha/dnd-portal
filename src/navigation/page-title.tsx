@@ -162,6 +162,10 @@ const i18nContext = {
     en: "Languages",
     it: "Lingue",
   },
+  [Route.ResourcesWorldNpcs]: {
+    en: "NPCs",
+    it: "PNG",
+  },
   [Route.ResourcesWorldPlaces]: {
     en: "Places",
     it: "Luoghi",

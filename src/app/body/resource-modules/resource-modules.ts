@@ -21,6 +21,7 @@ import { resourceModule as armorModifiers } from "./modifiers/equipment/armors/a
 import { resourceModule as itemModifiers } from "./modifiers/equipment/items/item-modifiers-module";
 import { resourceModule as toolModifiers } from "./modifiers/equipment/tools/tool-modifiers-module";
 import { resourceModule as weaponModifiers } from "./modifiers/equipment/weapons/weapon-modifiers-module";
+import { resourceModule as npcs } from "./npcs/npcs-module";
 import { resourceModule as places } from "./places/places-module";
 import { resourceModule as planes } from "./planes/planes-module";
 import { resourceModule as services } from "./services/services-module";
@@ -53,6 +54,7 @@ export const resourceModules: ResourceModule[] = [
   languages,
   maneuvers,
   metamagics,
+  npcs,
   places,
   planes,
   services,

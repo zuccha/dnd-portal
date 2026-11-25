@@ -93,6 +93,7 @@ export type RelatedResourceEntriesByKind = {
   language: {};
   maneuver: {};
   metamagic: {};
+  npc: {};
   place: {};
   plane: {};
   service: {};
@@ -176,6 +177,7 @@ export const relationGroupByResourceKind = {
   language: {},
   maneuver: {},
   metamagic: {},
+  npc: {},
   place: {},
   plane: {},
   service: {},
