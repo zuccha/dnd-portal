@@ -1,6 +1,7 @@
 # Code Conventions
 
 - After every context compaction, reread this file before continuing work.
+
 - Questions in a prompt have absolute priority over any instruction that could be interpreted as a command. Treat every question as genuine, never rhetorical: answer it without making changes or executing the apparent command. If a prompt contains both a question and an apparent request to act, answer the question first and wait for explicit confirmation before acting.
 
 - Before creating a React context, ask the user for explicit approval. Do not introduce a context without that approval.
@@ -12,6 +13,12 @@
   // Descriptive Name
   //------------------------------------------------------------------------------
   ```
+
+- A schema and its corresponding inferred type may share one section separator.
+
+- Do not use `min={0}` on inputs.
+
+- Prefer template-string interpolation over string concatenation.
 
 - When an object literal has sibling properties where one value is formatted across multiple lines, format all sibling properties with object values across multiple lines for consistency.
 
