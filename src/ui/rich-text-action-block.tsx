@@ -18,6 +18,7 @@ type RichTextActionSegment =
         | "failure_1"
         | "failure_2"
         | "hit"
+        | "hit_or_miss"
         | "response"
         | "success"
         | "trigger";
@@ -189,6 +190,7 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
         "@failure_1",
         "@failure_2",
         "@hit",
+        "@hit_or_miss",
         "@response",
         "@success",
         "@trigger",
@@ -202,6 +204,7 @@ function parseActionBlock(source: string): Omit<RichTextActionBlockProps, "patte
           | "failure_1"
           | "failure_2"
           | "hit"
+          | "hit_or_miss"
           | "response"
           | "success"
           | "trigger",
@@ -245,6 +248,10 @@ const actionLabels: Record<string, Record<string, string>> = {
   hit: {
     en: "__Hit:__ <1>.",
     it: "__Colpito:__ <1>.",
+  },
+  hit_or_miss: {
+    en: "__Hit or Miss:__ <1>",
+    it: "__Colpito o mancato:__ <1>",
   },
   melee: {
     en: "__Melee Attack Roll:__ <1>, reach <2>.",
