@@ -2,6 +2,7 @@ import type { LocalizedResource } from "~/models/resources/localized-resource";
 import type { Resource } from "~/models/resources/resource";
 import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
 import { BackgroundCard } from "../../../../resource-modules/backgrounds/panel/background-card.tsx";
+import { CalendarCard } from "../../../../resource-modules/calendars/panel/calendar-card.tsx";
 import { CharacterClassCard } from "../../../../resource-modules/character-classes/panel/character-class-card.tsx";
 import { CharacterSubclassCard } from "../../../../resource-modules/character-subclasses/panel/character-subclass-card.tsx";
 import { CreatureFamilyCard } from "../../../../resource-modules/creature-families/panel/creature-family-card.tsx";
@@ -87,6 +88,7 @@ export const printDeckRegistry = {
   armor: ArmorCard,
   armor_modifier: ArmorModifierCard,
   background: BackgroundCard,
+  calendar: CalendarCard,
   character_class: CharacterClassCard,
   character_subclass: CharacterSubclassCard,
   creature: CreatureCard,

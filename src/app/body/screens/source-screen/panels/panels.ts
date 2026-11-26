@@ -1,6 +1,7 @@
 import {
   AwardIcon,
   BookOpenTextIcon,
+  CalendarDaysIcon,
   CornerDownRightIcon,
   DnaIcon,
   EarthIcon,
@@ -150,6 +151,7 @@ export const worldPanelIds = [
   panelItem(Route.ResourcesWorldFactions, FlagIcon),
   panelItem(Route.ResourcesWorldNpcs, UserRoundKeyIcon),
   panelItem(Route.ResourcesWorldLanguages, LanguagesIcon),
+  panelItem(Route.ResourcesWorldCalendars, CalendarDaysIcon),
 ] as const;
 
 //------------------------------------------------------------------------------

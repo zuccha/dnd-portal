@@ -1,4 +1,5 @@
 import { resourceModule as backgrounds } from "./backgrounds/backgrounds-module";
+import { resourceModule as calendars } from "./calendars/calendars-module";
 import { resourceModule as characterClasses } from "./character-classes/character-classes-module";
 import { resourceModule as characterSubclasses } from "./character-subclasses/character-subclasses-module";
 import { resourceModule as creatureFamilies } from "./creature-families/creature-families-module";
@@ -38,6 +39,7 @@ export const resourceModules: ResourceModule[] = [
   armorModifiers,
   armors,
   backgrounds,
+  calendars,
   characterClasses,
   characterSubclasses,
   creatureFamilies,

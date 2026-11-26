@@ -32,6 +32,7 @@ import {
 import type { OptionalStoreSet } from "../../store/optional-set/optional-store-set";
 import type { StoreSet } from "../../store/set/store-set";
 import type { Background } from "../resources/backgrounds/background";
+import type { Calendar } from "../resources/calendars/calendar";
 import type { CharacterClass } from "../resources/character-classes/character-class";
 import type { CharacterSubclass } from "../resources/character-subclasses/character-subclass";
 import type { CreatureFamily } from "../resources/creature-families/creature-family";
@@ -181,6 +182,7 @@ export function createCatalogue(id: string) {
     armor: createResourcesById<Armor>("armor"),
     armor_modifier: createResourcesById<ArmorModifier>("armor_modifier"),
     background: createResourcesById<Background>("background"),
+    calendar: createResourcesById<Calendar>("calendar"),
     character_class: createResourcesById<CharacterClass>("character_class"),
     character_subclass: createResourcesById<CharacterSubclass>("character_subclass"),
     creature: createResourcesById<Creature>("creature"),
@@ -218,6 +220,7 @@ export function createCatalogue(id: string) {
     armor: createResourcesIdsBySourceId("armor"),
     armor_modifier: createResourcesIdsBySourceId("armor_modifier"),
     background: createResourcesIdsBySourceId("background"),
+    calendar: createResourcesIdsBySourceId("calendar"),
     character_class: createResourcesIdsBySourceId("character_class"),
     character_subclass: createResourcesIdsBySourceId("character_subclass"),
     creature: createResourcesIdsBySourceId("creature"),
@@ -255,6 +258,7 @@ export function createCatalogue(id: string) {
     armor: createResourcesBySourceId("armor"),
     armor_modifier: createResourcesBySourceId("armor_modifier"),
     background: createResourcesBySourceId("background"),
+    calendar: createResourcesBySourceId("calendar"),
     character_class: createResourcesBySourceId("character_class"),
     character_subclass: createResourcesBySourceId("character_subclass"),
     creature: createResourcesBySourceId("creature"),
@@ -1095,6 +1099,7 @@ export function createCatalogue(id: string) {
       ["armor", importedBundle.resources.armors],
       ["armor_modifier", importedBundle.resources.armor_modifiers],
       ["background", importedBundle.resources.backgrounds],
+      ["calendar", importedBundle.resources.calendars],
       ["character_class", importedBundle.resources.character_classes],
       ["character_subclass", importedBundle.resources.character_subclasses],
       ["creature", importedBundle.resources.creatures],

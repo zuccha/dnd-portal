@@ -1,6 +1,8 @@
 import z from "zod";
 import { backgroundSchema } from "./backgrounds/background";
 import { localizedBackgroundSchema } from "./backgrounds/localized-background";
+import { calendarSchema } from "./calendars/calendar";
+import { localizedCalendarSchema } from "./calendars/localized-calendar";
 import { characterClassSchema } from "./character-classes/character-class";
 import { localizedCharacterClassSchema } from "./character-classes/localized-character-class";
 import { characterSubclassSchema } from "./character-subclasses/character-subclass";
@@ -52,6 +54,7 @@ import { vehicleSchema } from "./vehicles/vehicle";
 
 export const resourceUnionSchema = z.discriminatedUnion("kind", [
   backgroundSchema,
+  calendarSchema,
   characterClassSchema,
   characterSubclassSchema,
   creatureTagSchema,
@@ -89,6 +92,7 @@ export type ResourceUnion = z.infer<typeof resourceUnionSchema>;
 
 export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedBackgroundSchema,
+  localizedCalendarSchema,
   localizedCharacterClassSchema,
   localizedCharacterSubclassSchema,
   localizedCreatureTagSchema,

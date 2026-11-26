@@ -63,6 +63,7 @@ export type RelatedResourceEntriesByKind = {
   armor: {};
   armor_modifier: {};
   background: {};
+  calendar: {};
   character_class: {
     features: FeatureRelatedEntry<"feature">;
     spells: RelatedEntry<"spell">;
@@ -146,6 +147,7 @@ export const relationGroupByResourceKind = {
   armor: {},
   armor_modifier: {},
   background: {},
+  calendar: {},
   character_class: {
     features: "character_classes_and_features",
     spells: "character_classes_and_spells",

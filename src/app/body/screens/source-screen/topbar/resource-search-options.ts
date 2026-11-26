@@ -42,6 +42,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "calendar",
+    route: Route.ResourcesWorldCalendars,
+    searchNames: {
+      en: "calendar calendars",
+      it: "calendario calendari",
+    },
+  },
+  {
     kind: "character_class",
     route: Route.ResourcesCharacterClasses,
     searchNames: {
