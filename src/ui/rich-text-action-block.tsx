@@ -250,8 +250,8 @@ const actionLabels: Record<string, Record<string, string>> = {
     it: "__Colpito:__ <1>.",
   },
   hit_or_miss: {
-    en: "__Hit or Miss:__ <1>",
-    it: "__Colpito o mancato:__ <1>",
+    en: "__Hit or Miss:__ <1>.",
+    it: "__Colpito o mancato:__ <1>.",
   },
   melee: {
     en: "__Melee Attack Roll:__ <1>, reach <2>.",
