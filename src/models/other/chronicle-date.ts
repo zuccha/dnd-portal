@@ -96,7 +96,7 @@ export function formatChronicleDate(date: ChronicleDate): string {
   if (hour) formattedDate += ` ${hour}`;
   else return formattedDate;
 
-  const minute = date.day === null ? "" : String(date.day).padStart(2, "0");
+  const minute = date.minute === null ? "" : String(date.minute).padStart(2, "0");
   if (minute) formattedDate += `:${minute}`;
   else return formattedDate;
 
