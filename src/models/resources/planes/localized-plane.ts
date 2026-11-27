@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import z from "zod";
+import catalogue from "~/models/catalogue/catalogue";
+import type { RelatedResourceEntries } from "~/models/catalogue/resource-relations";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import { useTranslatePlaneCategory } from "../../types/plane-category";
+import { appendChronicleEntriesToDescription } from "../chronicle-entries/chronicle-entry-description";
 import {
   type ResourceLocalizationContext,
   localizeResource,
@@ -10,6 +13,7 @@ import {
   useResourceLocalizationContext,
 } from "../localized-resource";
 import { type Plane, planeSchema } from "./plane";
+import type { ChronicleEntry } from "../chronicle-entries/chronicle-entry";
 
 //------------------------------------------------------------------------------
 // Localized Plane
@@ -29,22 +33,32 @@ export type LocalizedPlane = z.infer<typeof localizedPlaneSchema>;
 //------------------------------------------------------------------------------
 
 type PlaneLocalizationContext = ResourceLocalizationContext & {
+  chronicleEntries: ChronicleEntry[];
   translateCreatureAlignment: (value: Plane["alignments"][number]) => string;
   translatePlaneCategory: (value: Plane["category"]) => string;
 };
+
+const chronicleEntryResources = catalogue.createResourceStore("chronicle_entry");
+const useChronicleEntries = chronicleEntryResources.useResources as (
+  resourceIds: string[],
+) => ChronicleEntry[];
 
 //------------------------------------------------------------------------------
 // Use Plane Localization Context
 //------------------------------------------------------------------------------
 
-export function usePlaneLocalizationContext(_plane: Plane): PlaneLocalizationContext {
+export function usePlaneLocalizationContext(
+  _plane: Plane,
+  related: RelatedResourceEntries<"plane">,
+): PlaneLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
+  const chronicleEntries = useChronicleEntries(related.chronicle_entries.map(({ id }) => id));
   const translateCreatureAlignment = useTranslateCreatureAlignment(context.lang);
   const translatePlaneCategory = useTranslatePlaneCategory(context.lang);
 
   return useMemo(
-    () => ({ ...context, translateCreatureAlignment, translatePlaneCategory }),
-    [context, translateCreatureAlignment, translatePlaneCategory],
+    () => ({ ...context, chronicleEntries, translateCreatureAlignment, translatePlaneCategory }),
+    [chronicleEntries, context, translateCreatureAlignment, translatePlaneCategory],
   );
 }
 
@@ -59,6 +73,8 @@ export function localizePlane(plane: Plane, context: PlaneLocalizationContext): 
   return {
     ...localizeResource(plane, context),
     descriptor: category,
+    description: appendChronicleEntriesToDescription("", context.chronicleEntries, context.lang),
+
     alignments: {
       label: context.tp("alignments", plane.alignments.length),
       value: alignments,

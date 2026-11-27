@@ -8,6 +8,7 @@ import {
   FlagIcon,
   HandCoinsIcon,
   HammerIcon,
+  HistoryIcon,
   ImageIcon,
   KeyRoundIcon,
   LanguagesIcon,
@@ -152,6 +153,7 @@ export const worldPanelIds = [
   panelItem(Route.ResourcesWorldNpcs, UserRoundKeyIcon),
   panelItem(Route.ResourcesWorldLanguages, LanguagesIcon),
   panelItem(Route.ResourcesWorldCalendars, CalendarDaysIcon),
+  panelItem(Route.ResourcesWorldChronicleEntries, HistoryIcon),
 ] as const;
 
 //------------------------------------------------------------------------------

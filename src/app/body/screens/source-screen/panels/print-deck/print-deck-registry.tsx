@@ -5,6 +5,7 @@ import { BackgroundCard } from "../../../../resource-modules/backgrounds/panel/b
 import { CalendarCard } from "../../../../resource-modules/calendars/panel/calendar-card.tsx";
 import { CharacterClassCard } from "../../../../resource-modules/character-classes/panel/character-class-card.tsx";
 import { CharacterSubclassCard } from "../../../../resource-modules/character-subclasses/panel/character-subclass-card.tsx";
+import { ChronicleEntryCard } from "../../../../resource-modules/chronicle-entries/panel/chronicle-entry-card.tsx";
 import { CreatureFamilyCard } from "../../../../resource-modules/creature-families/panel/creature-family-card.tsx";
 import { CreatureHabitatCard } from "../../../../resource-modules/creature-habitats/panel/creature-habitat-card.tsx";
 import { CreatureTagCard } from "../../../../resource-modules/creature-tags/panel/creature-tag-card.tsx";
@@ -91,6 +92,7 @@ export const printDeckRegistry = {
   calendar: CalendarCard,
   character_class: CharacterClassCard,
   character_subclass: CharacterSubclassCard,
+  chronicle_entry: ChronicleEntryCard,
   creature: CreatureCard,
   creature_family: CreatureFamilyCard,
   creature_habitat: CreatureHabitatCard,

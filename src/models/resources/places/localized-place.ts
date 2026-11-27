@@ -2,8 +2,10 @@ import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
+import type { RelatedResourceEntries } from "~/models/catalogue/resource-relations";
 import { useTranslatePlaceType } from "~/models/types/place-type";
 import { nilUuid } from "~/utils/uuid";
+import { appendChronicleEntriesToDescription } from "../chronicle-entries/chronicle-entry-description";
 import {
   type ResourceLocalizationContext,
   localizeResource,
@@ -12,6 +14,7 @@ import {
   useResourceLocalizationContext,
 } from "../localized-resource";
 import { type Place, placeSchema } from "./place";
+import type { ChronicleEntry } from "../chronicle-entries/chronicle-entry";
 import type { Plane } from "../planes/plane";
 
 //------------------------------------------------------------------------------
@@ -46,6 +49,7 @@ export type LocalizedPlace = z.infer<typeof localizedPlaceSchema>;
 //------------------------------------------------------------------------------
 
 type PlaceLocalizationContext = ResourceLocalizationContext & {
+  chronicleEntries: ChronicleEntry[];
   position: LocalizedPlace["position"];
   translatePlaceType: (type: Place["type"]) => string;
 };
@@ -54,13 +58,21 @@ const placeResources = catalogue.createResourceStore("place");
 const planeResources = catalogue.createResourceStore("plane");
 const usePlaceResources = placeResources.useResources as (resourceIds: string[]) => Place[];
 const usePlaneResource = planeResources.useResource as (resourceId: string) => Plane | undefined;
+const chronicleEntryResources = catalogue.createResourceStore("chronicle_entry");
+const useChronicleEntries = chronicleEntryResources.useResources as (
+  resourceIds: string[],
+) => ChronicleEntry[];
 
 //------------------------------------------------------------------------------
 // Use Place Localization Context
 //------------------------------------------------------------------------------
 
-export function usePlaceLocalizationContext(place: Place): PlaceLocalizationContext {
+export function usePlaceLocalizationContext(
+  place: Place,
+  related: RelatedResourceEntries<"place">,
+): PlaceLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
+  const chronicleEntries = useChronicleEntries(related.chronicle_entries.map(({ id }) => id));
   const translatePlaceType = useTranslatePlaceType(context.lang);
   const placeIds = placeResources.useActiveSourceReferenceResourceIds();
   const places = usePlaceResources(placeIds);
@@ -103,10 +115,11 @@ export function usePlaceLocalizationContext(place: Place): PlaceLocalizationCont
 
     return {
       ...context,
+      chronicleEntries,
       position,
       translatePlaceType,
     };
-  }, [ancestors, context, plane, translatePlaceType]);
+  }, [ancestors, chronicleEntries, context, plane, translatePlaceType]);
 }
 
 //------------------------------------------------------------------------------
@@ -123,9 +136,13 @@ export function localizePlace(place: Place, context: PlaceLocalizationContext): 
 
   return {
     ...localizeResource(place, context),
-    descriptor: context.translatePlaceType(place.type),
-    description: translate(place.description, context.lang),
+    description: appendChronicleEntriesToDescription(
+      translate(place.description, context.lang),
+      context.chronicleEntries,
+      context.lang,
+    ),
 
+    descriptor: context.translatePlaceType(place.type),
     part_of: partOf,
     position: context.position,
     position_label: context.t("part_of"),

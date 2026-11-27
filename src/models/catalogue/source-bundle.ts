@@ -3,6 +3,7 @@ import { backgroundSchema } from "../resources/backgrounds/background";
 import { calendarSchema } from "../resources/calendars/calendar";
 import { characterClassSchema } from "../resources/character-classes/character-class";
 import { characterSubclassSchema } from "../resources/character-subclasses/character-subclass";
+import { chronicleEntrySchema } from "../resources/chronicle-entries/chronicle-entry";
 import { creatureFamilySchema } from "../resources/creature-families/creature-family";
 import { creatureHabitatSchema } from "../resources/creature-habitats/creature-habitat";
 import { creatureTagSchema } from "../resources/creature-tags/creature-tag";
@@ -51,6 +52,7 @@ export const sourceBundleResourcesSchema = z.object({
   calendars: calendarSchema.array().default([]),
   character_classes: characterClassSchema.array().default([]),
   character_subclasses: characterSubclassSchema.array().default([]),
+  chronicle_entries: chronicleEntrySchema.array().default([]),
   creature_tags: creatureTagSchema.array().default([]),
   creature_treasures: creatureTreasureSchema.array().default([]),
   creatures: creatureSchema.array().default([]),
@@ -137,6 +139,7 @@ export const sourceBundleResourceKeyByKind = {
   calendar: "calendars",
   character_class: "character_classes",
   character_subclass: "character_subclasses",
+  chronicle_entry: "chronicle_entries",
   creature: "creatures",
   creature_family: "creature_families",
   creature_habitat: "creature_habitats",

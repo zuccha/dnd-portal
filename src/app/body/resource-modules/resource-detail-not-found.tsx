@@ -50,6 +50,7 @@ const resourcePluralLabels: Record<ResourceKind, I18nString> = {
   armor_modifier: { en: "Armor Variants", it: "Varianti armature" },
   background: { en: "Backgrounds", it: "Background" },
   calendar: { en: "Calendars", it: "Calendari" },
+  chronicle_entry: { en: "Chronicle Entries", it: "Voci della cronologia" },
   character_class: { en: "Classes", it: "Classi" },
   character_subclass: { en: "Subclasses", it: "Sottoclassi" },
   creature: { en: "Creatures", it: "Creature" },

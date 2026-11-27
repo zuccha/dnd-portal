@@ -2,6 +2,7 @@ import { resourceModule as backgrounds } from "./backgrounds/backgrounds-module"
 import { resourceModule as calendars } from "./calendars/calendars-module";
 import { resourceModule as characterClasses } from "./character-classes/character-classes-module";
 import { resourceModule as characterSubclasses } from "./character-subclasses/character-subclasses-module";
+import { resourceModule as chronicleEntries } from "./chronicle-entries/chronicle-entries-module";
 import { resourceModule as creatureFamilies } from "./creature-families/creature-families-module";
 import { resourceModule as creatureHabitats } from "./creature-habitats/creature-habitats-module";
 import { resourceModule as creatureTags } from "./creature-tags/creature-tags-module";
@@ -40,6 +41,7 @@ export const resourceModules: ResourceModule[] = [
   armors,
   backgrounds,
   calendars,
+  chronicleEntries,
   characterClasses,
   characterSubclasses,
   creatureFamilies,

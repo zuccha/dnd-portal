@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
+import catalogue from "~/models/catalogue/catalogue";
+import type { RelatedResourceEntries } from "~/models/catalogue/resource-relations";
 import { nilUuid } from "~/utils/uuid";
+import { appendChronicleEntriesToDescription } from "../chronicle-entries/chronicle-entry-description";
 import { creatureStore } from "../creatures/creature-store";
 import {
   type ResourceLocalizationContext,
@@ -12,6 +15,7 @@ import {
   useResourceLocalizationContext,
 } from "../localized-resource";
 import { type Npc, npcSchema } from "./npc";
+import type { ChronicleEntry } from "../chronicle-entries/chronicle-entry";
 
 //------------------------------------------------------------------------------
 // Localized NPC Schema
@@ -34,8 +38,14 @@ export type LocalizedNpc = z.infer<typeof localizedNpcSchema>;
 //------------------------------------------------------------------------------
 
 type NpcLocalizationContext = ResourceLocalizationContext & {
+  chronicleEntries: ChronicleEntry[];
   creatureName: string;
 };
+
+const chronicleEntryResources = catalogue.createResourceStore("chronicle_entry");
+const useChronicleEntries = chronicleEntryResources.useResources as (
+  resourceIds: string[],
+) => ChronicleEntry[];
 
 //------------------------------------------------------------------------------
 // Use NPC Localization Context
@@ -43,11 +53,18 @@ type NpcLocalizationContext = ResourceLocalizationContext & {
 
 const useLocalizedCreatureName = creatureStore.useLocalizedResourceName;
 
-export function useNpcLocalizationContext(npc: Npc): NpcLocalizationContext {
+export function useNpcLocalizationContext(
+  npc: Npc,
+  related: RelatedResourceEntries<"npc">,
+): NpcLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
+  const chronicleEntries = useChronicleEntries(related.chronicle_entries.map(({ id }) => id));
   const creatureName = useLocalizedCreatureName(npc.creature_id ?? nilUuid);
 
-  return useMemo(() => ({ ...context, creatureName }), [context, creatureName]);
+  return useMemo(
+    () => ({ ...context, chronicleEntries, creatureName }),
+    [chronicleEntries, context, creatureName],
+  );
 }
 
 //------------------------------------------------------------------------------
@@ -66,7 +83,11 @@ export function localizeNpc(npc: Npc, context: NpcLocalizationContext): Localize
 
   return {
     ...localizeResource(npc, context),
-    description: translate(npc.description, context.lang),
+    description: appendChronicleEntriesToDescription(
+      translate(npc.description, context.lang),
+      context.chronicleEntries,
+      context.lang,
+    ),
 
     creature: {
       label: context.t("creature"),

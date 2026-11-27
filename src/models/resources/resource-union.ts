@@ -7,6 +7,8 @@ import { characterClassSchema } from "./character-classes/character-class";
 import { localizedCharacterClassSchema } from "./character-classes/localized-character-class";
 import { characterSubclassSchema } from "./character-subclasses/character-subclass";
 import { localizedCharacterSubclassSchema } from "./character-subclasses/localized-character-subclass";
+import { chronicleEntrySchema } from "./chronicle-entries/chronicle-entry";
+import { localizedChronicleEntrySchema } from "./chronicle-entries/localized-chronicle-entry";
 import { creatureFamilySchema } from "./creature-families/creature-family";
 import { localizedCreatureFamilySchema } from "./creature-families/localized-creature-family";
 import { creatureHabitatSchema } from "./creature-habitats/creature-habitat";
@@ -55,6 +57,7 @@ import { vehicleSchema } from "./vehicles/vehicle";
 export const resourceUnionSchema = z.discriminatedUnion("kind", [
   backgroundSchema,
   calendarSchema,
+  chronicleEntrySchema,
   characterClassSchema,
   characterSubclassSchema,
   creatureTagSchema,
@@ -95,6 +98,7 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedCalendarSchema,
   localizedCharacterClassSchema,
   localizedCharacterSubclassSchema,
+  localizedChronicleEntrySchema,
   localizedCreatureTagSchema,
   localizedCreatureTreasureSchema,
   localizedCreatureSchema,

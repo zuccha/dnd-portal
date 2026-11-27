@@ -35,6 +35,7 @@ import type { Background } from "../resources/backgrounds/background";
 import type { Calendar } from "../resources/calendars/calendar";
 import type { CharacterClass } from "../resources/character-classes/character-class";
 import type { CharacterSubclass } from "../resources/character-subclasses/character-subclass";
+import type { ChronicleEntry } from "../resources/chronicle-entries/chronicle-entry";
 import type { CreatureFamily } from "../resources/creature-families/creature-family";
 import type { CreatureHabitat } from "../resources/creature-habitats/creature-habitat";
 import type { CreatureTag } from "../resources/creature-tags/creature-tag";
@@ -185,6 +186,7 @@ export function createCatalogue(id: string) {
     calendar: createResourcesById<Calendar>("calendar"),
     character_class: createResourcesById<CharacterClass>("character_class"),
     character_subclass: createResourcesById<CharacterSubclass>("character_subclass"),
+    chronicle_entry: createResourcesById<ChronicleEntry>("chronicle_entry"),
     creature: createResourcesById<Creature>("creature"),
     creature_family: createResourcesById<CreatureFamily>("creature_family"),
     creature_habitat: createResourcesById<CreatureHabitat>("creature_habitat"),
@@ -223,6 +225,7 @@ export function createCatalogue(id: string) {
     calendar: createResourcesIdsBySourceId("calendar"),
     character_class: createResourcesIdsBySourceId("character_class"),
     character_subclass: createResourcesIdsBySourceId("character_subclass"),
+    chronicle_entry: createResourcesIdsBySourceId("chronicle_entry"),
     creature: createResourcesIdsBySourceId("creature"),
     creature_family: createResourcesIdsBySourceId("creature_family"),
     creature_habitat: createResourcesIdsBySourceId("creature_habitat"),
@@ -261,6 +264,7 @@ export function createCatalogue(id: string) {
     calendar: createResourcesBySourceId("calendar"),
     character_class: createResourcesBySourceId("character_class"),
     character_subclass: createResourcesBySourceId("character_subclass"),
+    chronicle_entry: createResourcesBySourceId("chronicle_entry"),
     creature: createResourcesBySourceId("creature"),
     creature_family: createResourcesBySourceId("creature_family"),
     creature_habitat: createResourcesBySourceId("creature_habitat"),
@@ -1102,6 +1106,7 @@ export function createCatalogue(id: string) {
       ["calendar", importedBundle.resources.calendars],
       ["character_class", importedBundle.resources.character_classes],
       ["character_subclass", importedBundle.resources.character_subclasses],
+      ["chronicle_entry", importedBundle.resources.chronicle_entries],
       ["creature", importedBundle.resources.creatures],
       ["creature_family", importedBundle.resources.creature_families],
       ["creature_habitat", importedBundle.resources.creature_habitats],

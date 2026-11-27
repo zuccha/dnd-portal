@@ -29,6 +29,10 @@ export type FeatureRelation<K extends ResourceKind> = ResourceRelation<K, "featu
 export type RelationGroupRows = {
   character_classes_and_features: FeatureRelation<"character_class">;
   character_classes_and_spells: ResourceRelation<"character_class", "spell">;
+  chronicle_entries_and_world_resources: ResourceRelation<
+    "chronicle_entry",
+    "plane" | "place" | "faction" | "npc"
+  >;
   creature_families_and_creature_habitats: ResourceRelation<"creature_family", "creature_habitat">;
   creature_families_and_creature_treasures: ResourceRelation<
     "creature_family",
@@ -71,6 +75,9 @@ export type RelatedResourceEntriesByKind = {
   character_subclass: {
     features: FeatureRelatedEntry<"feature">;
   };
+  chronicle_entry: {
+    subjects: RelatedEntry<"plane" | "place" | "faction" | "npc">;
+  };
   creature: {};
   creature_family: {
     habitats: RelatedEntry<"creature_habitat">;
@@ -84,6 +91,7 @@ export type RelatedResourceEntriesByKind = {
     families: RelatedEntry<"creature_family">;
   };
   eldritch_invocation: {};
+  faction: { chronicle_entries: RelatedEntry<"chronicle_entry"> };
   feat: {};
   feature: {
     character_classes: FeatureRelatedEntry<"character_class">;
@@ -94,9 +102,9 @@ export type RelatedResourceEntriesByKind = {
   language: {};
   maneuver: {};
   metamagic: {};
-  npc: {};
-  place: {};
-  plane: {};
+  npc: { chronicle_entries: RelatedEntry<"chronicle_entry"> };
+  place: { chronicle_entries: RelatedEntry<"chronicle_entry"> };
+  plane: { chronicle_entries: RelatedEntry<"chronicle_entry"> };
   service: {};
   species: {};
   spell: {
@@ -148,6 +156,7 @@ export const relationGroupByResourceKind = {
   armor_modifier: {},
   background: {},
   calendar: {},
+  chronicle_entry: { subjects: "chronicle_entries_and_world_resources" },
   character_class: {
     features: "character_classes_and_features",
     spells: "character_classes_and_spells",
@@ -168,7 +177,7 @@ export const relationGroupByResourceKind = {
     families: "creature_families_and_creature_treasures",
   },
   eldritch_invocation: {},
-  faction: {},
+  faction: { chronicle_entries: "chronicle_entries_and_world_resources" },
   feat: {},
   feature: {
     character_classes: "character_classes_and_features",
@@ -179,9 +188,9 @@ export const relationGroupByResourceKind = {
   language: {},
   maneuver: {},
   metamagic: {},
-  npc: {},
-  place: {},
-  plane: {},
+  npc: { chronicle_entries: "chronicle_entries_and_world_resources" },
+  place: { chronicle_entries: "chronicle_entries_and_world_resources" },
+  plane: { chronicle_entries: "chronicle_entries_and_world_resources" },
   service: {},
   species: {},
   spell: {
@@ -262,6 +271,10 @@ export type RelationResourceEndpoint = {
 const relationEndpointKinds: Record<RelationGroup, [ResourceKind[], ResourceKind[]]> = {
   character_classes_and_features: [["character_class"], ["feature"]],
   character_classes_and_spells: [["character_class"], ["spell"]],
+  chronicle_entries_and_world_resources: [
+    ["chronicle_entry"],
+    ["plane", "place", "faction", "npc"],
+  ],
   creature_families_and_creature_habitats: [["creature_family"], ["creature_habitat"]],
   creature_families_and_creature_treasures: [["creature_family"], ["creature_treasure"]],
   character_subclasses_and_features: [["character_subclass"], ["feature"]],
@@ -442,6 +455,14 @@ export const resourceRelationsSchema = z.object({
     })
     .array()
     .default([]),
+  chronicle_entries_and_world_resources: z
+    .object({
+      ...relationFields,
+      resource_1_kind: z.literal("chronicle_entry"),
+      resource_2_kind: z.enum(["plane", "place", "faction", "npc"]),
+    })
+    .array()
+    .default([]),
   creature_families_and_creature_habitats: z
     .object({
       ...relationFields,
@@ -470,6 +491,7 @@ export const resourceRelationsSchema = z.object({
 export const emptyResourceRelations: ResourceRelations = {
   character_classes_and_features: [],
   character_classes_and_spells: [],
+  chronicle_entries_and_world_resources: [],
   creature_families_and_creature_habitats: [],
   creature_families_and_creature_treasures: [],
   character_subclasses_and_features: [],

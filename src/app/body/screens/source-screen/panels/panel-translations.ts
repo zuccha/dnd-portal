@@ -40,6 +40,7 @@ export const resourcePanelTranslations = {
   [Route.ResourcesMarketVehicles]: { en: "Vehicles", it: "Veicoli" },
   [Route.ResourcesWorld]: { en: "Setting", it: "Ambientazione" },
   [Route.ResourcesWorldCalendars]: { en: "Calendars", it: "Calendari" },
+  [Route.ResourcesWorldChronicleEntries]: { en: "Chronicle", it: "Cronologia" },
   [Route.ResourcesWorldFactions]: { en: "Factions", it: "Fazioni" },
   [Route.ResourcesWorldLanguages]: { en: "Languages", it: "Lingue" },
   [Route.ResourcesWorldNpcs]: { en: "NPCs", it: "PNG" },

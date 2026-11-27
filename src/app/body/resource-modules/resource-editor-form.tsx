@@ -627,12 +627,14 @@ export function createNumberInputField({
 export type ResourceSearchFieldProps = Props<string[]> & { sourceId: string };
 
 export function createResourceSearchField({
+  hideFilter,
   i18nContext,
   i18nContextExtra,
   translatable,
   useOptions,
   useField,
 }: {
+  hideFilter?: boolean;
   i18nContext: I18nFieldContext<"label" | "placeholder">;
   i18nContextExtra?: Record<string, I18nString>;
   translatable?: boolean;
@@ -652,6 +654,7 @@ export function createResourceSearchField({
       <Field error={message} label={t("label")} {...rest}>
         <ResourceSearch
           bgColor={translatable ? "bg.info" : undefined}
+          hideFilter={hideFilter}
           options={options}
           withinDialog
           {...field}

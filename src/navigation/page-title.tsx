@@ -158,6 +158,10 @@ const i18nContext = {
     en: "Calendars",
     it: "Calendari",
   },
+  [Route.ResourcesWorldChronicleEntries]: {
+    en: "Chronicle",
+    it: "Cronologia",
+  },
   [Route.ResourcesWorldFactions]: {
     en: "Factions",
     it: "Fazioni",
