@@ -120,7 +120,13 @@ export default function ChronicleDateInput({
 
     if (event.key === "Tab") {
       const nextIndex = currentIndex + (event.shiftKey ? -1 : 1);
-      if (nextIndex < 0 || nextIndex >= dateParts.length) return;
+      if (
+        nextIndex < 0 ||
+        nextIndex >= dateParts.length ||
+        (!event.shiftKey && !selectableParts.includes(dateParts[nextIndex]!))
+      ) {
+        return;
+      }
       event.preventDefault();
       selectPart(dateParts[nextIndex]!, false, draft, !selectableParts.includes(activePart));
       return;
@@ -194,7 +200,7 @@ export default function ChronicleDateInput({
       return;
     }
 
-    if (event.key === "," || event.key === "-" || event.key === ":") {
+    if (event.key === " " || event.key === "." || event.key === "-" || event.key === ":") {
       event.preventDefault();
       const nextPart = getNextPartForSeparator(event.key, activePart, selectableParts);
       if (nextPart) selectPart(nextPart, false);
@@ -215,12 +221,11 @@ export default function ChronicleDateInput({
         pointerEvents="none"
         position="absolute"
         fontFamily="inherit"
-        fontSize="inherit"
+        fontSize={inputProps.size === "sm" ? "sm" : "inherit"}
         fontWeight="inherit"
         lineHeight="inherit"
         px="3"
         whiteSpace="pre"
-        zIndex={0}
       >
         {mask.tokens.map((token, index) => {
           return (
@@ -252,7 +257,6 @@ export default function ChronicleDateInput({
         position="relative"
         value={mask.text}
         w={inputWidth}
-        zIndex={1}
         _selection={{ bg: "transparent" }}
         caretColor="fg"
       />
@@ -277,7 +281,6 @@ type DateMaskToken = {
 //------------------------------------------------------------------------------
 
 const chronicleDateInputI18nContext = {
-  era_prefix: { en: "Era ", it: "Era " },
   era_placeholder: { en: "e", it: "e" },
   input_label: { en: "Chronicle date", it: "Data cronologica" },
 };
@@ -341,12 +344,11 @@ function createDateMask(draft: Record<DatePart, string>, t: (key: string) => str
     hour: draft.hour || "hh",
     minute: draft.minute || "mm",
     month: draft.month || "mm",
-    year: draft.year || "yyyy",
+    year: draft.year || "y",
   };
-  const prefix = t("era_prefix");
   const segments = {} as Record<DatePart, { end: number; start: number }>;
-  const tokens: DateMaskToken[] = [{ afterPart: -1, text: prefix }];
-  let text = prefix;
+  const tokens: DateMaskToken[] = [];
+  let text = "";
 
   for (const [index, part] of dateParts.entries()) {
     const start = text.length;
@@ -369,8 +371,9 @@ function createDateMask(draft: Record<DatePart, string>, t: (key: string) => str
 //------------------------------------------------------------------------------
 
 function getSeparatorAfterPart(index: number) {
-  if (index === 0 || index === 3) return ", ";
+  if (index === 0) return ".";
   if (index === 1 || index === 2) return "-";
+  if (index === 3) return " ";
   if (index === 4) return ":";
   return "";
 }
@@ -411,8 +414,8 @@ function getNextPartForSeparator(
   selectableParts: DatePart[],
 ) {
   const expectedNextPart: Partial<Record<DatePart, string>> = {
-    day: ",",
-    era: ",",
+    day: " ",
+    era: ".",
     hour: ":",
     month: "-",
     year: "-",
