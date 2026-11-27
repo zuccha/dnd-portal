@@ -6,6 +6,8 @@
 
 - Before creating a React context, ask the user for explicit approval. Do not introduce a context without that approval.
 
+- In a component file, declare the component props type first, then the component, then its utility functions and variables.
+
 - Add a section separator before every top-level type, function, or exported variable declaration, using this format:
 
   ```ts
