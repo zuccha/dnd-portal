@@ -19,18 +19,47 @@ export function NpcCard({
   ...props
 }: NpcCardProps) {
   const creature = localizedResource.creature;
+  const species = localizedResource.species;
+
   const fields = [
-    {
-      ...creature,
-      value:
-        linkResources && creature.resource ? (
-          <PokerCard.Link id={creature.resource.id} kind={creature.resource.kind} palette={palette}>
-            {creature.resource.name}
-          </PokerCard.Link>
-        ) : (
-          creature.value
-        ),
-    },
+    ...(creature.resource
+      ? [
+          {
+            ...creature,
+            value: linkResources ? (
+              <PokerCard.Link
+                id={creature.resource.id}
+                kind={creature.resource.kind}
+                palette={palette}
+              >
+                {creature.resource.name}
+              </PokerCard.Link>
+            ) : (
+              creature.value
+            ),
+          },
+        ]
+      : []),
+    ...(species.resource
+      ? [
+          {
+            ...species,
+            value: linkResources ? (
+              <PokerCard.Link
+                id={species.resource.id}
+                kind={species.resource.kind}
+                palette={palette}
+              >
+                {species.resource.name}
+              </PokerCard.Link>
+            ) : (
+              species.value
+            ),
+          },
+        ]
+      : []),
+    ...(localizedResource.date_of_birth.value ? [localizedResource.date_of_birth] : []),
+    ...(localizedResource.date_of_death.value ? [localizedResource.date_of_death] : []),
   ];
 
   return (

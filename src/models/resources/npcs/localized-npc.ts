@@ -3,6 +3,7 @@ import z from "zod";
 import { translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
 import type { RelatedResourceEntries } from "~/models/catalogue/resource-relations";
+import { formatChronicleDate } from "~/models/other/chronicle-date";
 import { nilUuid } from "~/utils/uuid";
 import { appendChronicleEntriesToDescription } from "../chronicle-entries/chronicle-entry-description";
 import { creatureStore } from "../creatures/creature-store";
@@ -14,6 +15,7 @@ import {
   localizedResourceSchema,
   useResourceLocalizationContext,
 } from "../localized-resource";
+import { speciesStore } from "../species/species-store";
 import { type Npc, npcSchema } from "./npc";
 import type { ChronicleEntry } from "../chronicle-entries/chronicle-entry";
 
@@ -24,6 +26,11 @@ import type { ChronicleEntry } from "../chronicle-entries/chronicle-entry";
 export const localizedNpcSchema = localizedResourceSchema(npcSchema, z.literal("npc")).extend({
   creature: localizedFieldSchema.extend({
     resource: localizedResourceLinkSchema(z.literal("creature")).nullable(),
+  }),
+  date_of_birth: localizedFieldSchema,
+  date_of_death: localizedFieldSchema,
+  species: localizedFieldSchema.extend({
+    resource: localizedResourceLinkSchema(z.literal("species")).nullable(),
   }),
 });
 
@@ -40,12 +47,15 @@ export type LocalizedNpc = z.infer<typeof localizedNpcSchema>;
 type NpcLocalizationContext = ResourceLocalizationContext & {
   chronicleEntries: ChronicleEntry[];
   creatureName: string;
+  speciesId: string | undefined;
+  speciesName: string;
 };
 
 const chronicleEntryResources = catalogue.createResourceStore("chronicle_entry");
 const useChronicleEntries = chronicleEntryResources.useResources as (
   resourceIds: string[],
 ) => ChronicleEntry[];
+const useLocalizedSpeciesName = speciesStore.useLocalizedResourceName;
 
 //------------------------------------------------------------------------------
 // Use NPC Localization Context
@@ -60,10 +70,12 @@ export function useNpcLocalizationContext(
   const context = useResourceLocalizationContext(i18nContext);
   const chronicleEntries = useChronicleEntries(related.chronicle_entries.map(({ id }) => id));
   const creatureName = useLocalizedCreatureName(npc.creature_id ?? nilUuid);
+  const speciesId = npc.species_id ?? undefined;
+  const speciesName = useLocalizedSpeciesName(speciesId ?? nilUuid);
 
   return useMemo(
-    () => ({ ...context, chronicleEntries, creatureName }),
-    [chronicleEntries, context, creatureName],
+    () => ({ ...context, chronicleEntries, creatureName, speciesId, speciesName }),
+    [chronicleEntries, context, creatureName, speciesId, speciesName],
   );
 }
 
@@ -80,6 +92,14 @@ export function localizeNpc(npc: Npc, context: NpcLocalizationContext): Localize
         name: creatureName,
       }
     : null;
+  const speciesName = npc.species_id ? context.speciesName : "";
+  const species = context.speciesId
+    ? {
+        id: context.speciesId,
+        kind: "species" as const,
+        name: speciesName,
+      }
+    : null;
 
   return {
     ...localizeResource(npc, context),
@@ -94,6 +114,19 @@ export function localizeNpc(npc: Npc, context: NpcLocalizationContext): Localize
       resource: creature,
       value: creatureName,
     },
+    date_of_birth: {
+      label: context.t("date_of_birth"),
+      value: npc.date_of_birth ? formatChronicleDate(npc.date_of_birth) : "",
+    },
+    date_of_death: {
+      label: context.t("date_of_death"),
+      value: npc.date_of_death ? formatChronicleDate(npc.date_of_death) : "",
+    },
+    species: {
+      label: context.t("species"),
+      resource: species,
+      value: speciesName,
+    },
   };
 }
 
@@ -103,4 +136,7 @@ export function localizeNpc(npc: Npc, context: NpcLocalizationContext): Localize
 
 const i18nContext = {
   creature: { en: "Based on", it: "Basato su" },
+  date_of_birth: { en: "Birth", it: "Nascita" },
+  date_of_death: { en: "Death", it: "Morte" },
+  species: { en: "Species", it: "Specie" },
 };

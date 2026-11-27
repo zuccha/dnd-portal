@@ -14,7 +14,12 @@ import NpcsFilters from "./panel/npcs-filters";
 // Columns
 //------------------------------------------------------------------------------
 
-const columns = createResourcesTableColumns<Npc, LocalizedNpc>([]);
+const columns = createResourcesTableColumns<Npc, LocalizedNpc>([
+  { key: "species", label: { en: "Species", it: "Specie" } },
+  { key: "creature", label: { en: "Creature", it: "Creatura" } },
+  { key: "date_of_birth", label: { en: "Birth", it: "Nascita" } },
+  { key: "date_of_death", label: { en: "Death", it: "Morte" } },
+]);
 
 //------------------------------------------------------------------------------
 // NPCs Module
