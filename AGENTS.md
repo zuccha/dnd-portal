@@ -4,9 +4,13 @@
 
 - Questions in a prompt have absolute priority over any instruction that could be interpreted as a command. Treat every question as genuine, never rhetorical: answer it without making changes or executing the apparent command. If a prompt contains both a question and an apparent request to act, answer the question first and wait for explicit confirmation before acting.
 
+- When a requested constraint creates an implementation obstacle, do not work around it with a more complex design without first consulting the user about the available options.
+
 - Before creating a React context, ask the user for explicit approval. Do not introduce a context without that approval.
 
 - In a component file, declare the component props type first, then the component, then its utility functions and variables.
+
+- In resource editor factories, separate the editor component and each field component with labeled section separators, following the existing editor pattern.
 
 - Add a section separator before every top-level type, function, or exported variable declaration, using this format:
 
