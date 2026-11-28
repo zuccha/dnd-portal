@@ -140,7 +140,7 @@ export default function FeatureGrantedByEditor({
 // Options
 //------------------------------------------------------------------------------
 
-type FeatureGrantOption = ResourceOption & { kind: ResourceFeatureKind };
+type FeatureGrantOption = ResourceOption<ResourceFeatureKind>;
 
 const useCharacterClassResourceOptions = characterClassStore.useResourceOptions;
 const useCharacterSubclassResourceOptions = characterSubclassStore.useResourceOptions;
@@ -150,17 +150,9 @@ function useFeatureGrantOptions(): FeatureGrantOption[] {
   const characterSubclassOptions = useCharacterSubclassResourceOptions();
 
   return useMemo(
-    () =>
-      [
-        ...withKind(characterClassOptions, "character_class"),
-        ...withKind(characterSubclassOptions, "character_subclass"),
-      ].sort(compareObjects("label")),
+    () => [...characterClassOptions, ...characterSubclassOptions].sort(compareObjects("label")),
     [characterClassOptions, characterSubclassOptions],
   );
-}
-
-function withKind(options: ResourceOption[], kind: ResourceFeatureKind): FeatureGrantOption[] {
-  return options.map((option) => ({ ...option, kind }));
 }
 
 function filterKind(

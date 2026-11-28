@@ -644,7 +644,7 @@ export function createResourceStore<
   // Use Resource Options
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  function useResourceOptions(): ResourceOption[] {
+  function useResourceOptions(): ResourceOption<R["kind"]>[] {
     const [lang] = useI18nLang();
     const resourceIds = useCatalogueActiveSourceReferenceResourceIds();
 
@@ -652,6 +652,7 @@ export function createResourceStore<
       .map(getResource)
       .filter((resource): resource is R => resource !== undefined)
       .map((resource) => ({
+        kind: resource.kind,
         label: translate(resource.name, lang),
         name: resource.name,
         value: resource.id,

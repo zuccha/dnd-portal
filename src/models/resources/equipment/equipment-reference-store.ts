@@ -79,21 +79,14 @@ function useLocalizedEquipmentEntries(lang: I18nLang) {
 // Use Resource Options
 //------------------------------------------------------------------------------
 
-function useResourceOptions(): ResourceOption[] {
+function useResourceOptions(): ResourceOption<Equipment["kind"]>[] {
   const [lang] = useI18nLang();
   const equipments = useEquipmentReferenceResources();
 
   return useMemo(
     () =>
       equipments
-        .map((equipment) => {
-          const label = translate(equipment.name, lang);
-          return {
-            label,
-            name: equipment.name,
-            value: equipment.id,
-          };
-        })
+        .map(({ id, kind, name }) => ({ kind, label: translate(name, lang), name, value: id }))
         .sort(compareObjects("label")),
     [equipments, lang],
   );

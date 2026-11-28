@@ -1,79 +1,73 @@
-import { HStack } from "@chakra-ui/react";
+import ResourceSearch from "~/app/body/resource-modules/resource-search";
 import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { ChronicleEntry } from "~/models/resources/chronicle-entries/chronicle-entry";
 import type { ChronicleEntryFormData } from "~/models/resources/chronicle-entries/chronicle-entry-form";
 import { chronicleEntryStore } from "~/models/resources/chronicle-entries/chronicle-entry-store";
-import { deityStore } from "~/models/resources/deities/deity-store";
-import { factionStore } from "~/models/resources/factions/faction-store";
-import { npcStore } from "~/models/resources/npcs/npc-store";
-import { placeStore } from "~/models/resources/places/place-store";
-import { planeStore } from "~/models/resources/planes/plane-store";
+import { chronicleEntrySubjectReferenceStore } from "~/models/resources/chronicle-entries/chronicle-entry-subject-reference-store";
 import Field from "~/ui/field";
 import type { Form } from "~/utils/form";
 import ChronicleDateInput from "../chronicle-date-input";
 import { createResourceEditor } from "../resource-editor";
-import { createResourceSearchField, createTextareaField } from "../resource-editor-form";
+import { createTextareaField } from "../resource-editor-form";
 import { useResourceEditorLang } from "../resource-editor-language-context";
+
+//------------------------------------------------------------------------------
+// Chronicle Entry Subject Reference Data Hook
+//------------------------------------------------------------------------------
+
+const useChronicleEntrySubjectOptions = chronicleEntrySubjectReferenceStore.useResourceOptions;
 
 //------------------------------------------------------------------------------
 // Create Chronicle Entry Editor
 //------------------------------------------------------------------------------
 
 export function createChronicleEntryEditor(form: Form<ChronicleEntryFormData>) {
+  //----------------------------------------------------------------------------
+  // Resource Editor
+  //----------------------------------------------------------------------------
+
   const ResourceEditor = createResourceEditor(form);
 
   const useSubjects = chronicleEntryStore.useRelatedEntries;
+  const useSubjectsField = form.createUseField("subjects");
   const useDateField = form.createUseField("date");
 
-  const PlaneIdsField = createResourceSearchField({
-    hideFilter: true,
-    i18nContext: {
-      label: { en: "Planes", it: "Piani" },
-      placeholder: { en: "Search planes", it: "Cerca piani" },
-    },
-    useField: form.createUseField("plane_ids"),
-    useOptions: planeStore.useResourceOptions,
-  });
+  //----------------------------------------------------------------------------
+  // Subjects Field
+  //----------------------------------------------------------------------------
 
-  const PlaceIdsField = createResourceSearchField({
-    hideFilter: true,
-    i18nContext: {
-      label: { en: "Places", it: "Luoghi" },
-      placeholder: { en: "Search places", it: "Cerca luoghi" },
-    },
-    useField: form.createUseField("place_ids"),
-    useOptions: placeStore.useResourceOptions,
-  });
+  function SubjectsField({ defaultValue }: { defaultValue: ChronicleEntryFormData["subjects"] }) {
+    const options = useChronicleEntrySubjectOptions();
+    const { disabled, error, onValueChange, value } = useSubjectsField(defaultValue);
+    const { t } = useI18nLangContext(i18nContext);
+    const message = error ? t(error) : undefined;
 
-  const FactionIdsField = createResourceSearchField({
-    hideFilter: true,
-    i18nContext: {
-      label: { en: "Factions", it: "Fazioni" },
-      placeholder: { en: "Search factions", it: "Cerca fazioni" },
-    },
-    useField: form.createUseField("faction_ids"),
-    useOptions: factionStore.useResourceOptions,
-  });
+    return (
+      <Field error={message} label={t("subjects")}>
+        <ResourceSearch
+          disabled={disabled}
+          hideFilter
+          onValueChange={(ids) =>
+            onValueChange(
+              ids
+                .map((id) => {
+                  const option = options.find((entry) => entry.value === id);
+                  return option ? { id, kind: option.kind } : undefined;
+                })
+                .filter((subject) => subject !== undefined),
+            )
+          }
+          options={options}
+          value={value.map(({ id }) => id)}
+          withinDialog
+        />
+      </Field>
+    );
+  }
 
-  const DeityIdsField = createResourceSearchField({
-    hideFilter: true,
-    i18nContext: {
-      label: { en: "Deities", it: "Divinità" },
-      placeholder: { en: "Search deities", it: "Cerca divinità" },
-    },
-    useField: form.createUseField("deity_ids"),
-    useOptions: deityStore.useResourceOptions,
-  });
-
-  const NpcIdsField = createResourceSearchField({
-    hideFilter: true,
-    i18nContext: {
-      label: { en: "NPCs", it: "PNG" },
-      placeholder: { en: "Search NPCs", it: "Cerca PNG" },
-    },
-    useField: form.createUseField("npc_ids"),
-    useOptions: npcStore.useResourceOptions,
-  });
+  //----------------------------------------------------------------------------
+  // Description Field
+  //----------------------------------------------------------------------------
 
   const DescriptionField = createTextareaField({
     i18nContext: {
@@ -87,7 +81,7 @@ export function createChronicleEntryEditor(form: Form<ChronicleEntryFormData>) {
 
   return function ChronicleEntryEditor({
     resource,
-    sourceId,
+    sourceId: _sourceId,
   }: {
     resource: ChronicleEntry;
     sourceId: string;
@@ -106,32 +100,7 @@ export function createChronicleEntryEditor(form: Form<ChronicleEntryFormData>) {
             w="full"
           />
         </Field>
-        <HStack align="flex-start" gap={4}>
-          <PlaneIdsField
-            defaultValue={related.filter(({ kind }) => kind === "plane").map(({ id }) => id)}
-            sourceId={sourceId}
-          />
-          <PlaceIdsField
-            defaultValue={related.filter(({ kind }) => kind === "place").map(({ id }) => id)}
-            sourceId={sourceId}
-          />
-        </HStack>
-        <HStack align="flex-start" gap={4}>
-          <FactionIdsField
-            defaultValue={related.filter(({ kind }) => kind === "faction").map(({ id }) => id)}
-            sourceId={sourceId}
-          />
-          <DeityIdsField
-            defaultValue={related.filter(({ kind }) => kind === "deity").map(({ id }) => id)}
-            sourceId={sourceId}
-          />
-        </HStack>
-        <HStack align="flex-start" gap={4}>
-          <NpcIdsField
-            defaultValue={related.filter(({ kind }) => kind === "npc").map(({ id }) => id)}
-            sourceId={sourceId}
-          />
-        </HStack>
+        <SubjectsField defaultValue={related} />
         <DescriptionField defaultValue={resource.description[lang] ?? ""} />
       </ResourceEditor>
     );
@@ -157,4 +126,5 @@ const emptyChronicleDate = {
 
 const i18nContext = {
   date: { en: "Date", it: "Data" },
+  subjects: { en: "Related resources", it: "Risorse correlate" },
 };

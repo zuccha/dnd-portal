@@ -60,15 +60,19 @@ export const resourceTranslationFields: TranslationFields<Resource>[] = ["name",
 // Resource Option
 //------------------------------------------------------------------------------
 
-export const localizedResourceOptionSchema = z.object({
+export const resourceOptionSchema = z.object({
+  kind: resourceKindSchema,
   label: z.string(),
   name: i18nStringSchema,
   value: z.uuid(),
 });
 
-export type ResourceOption = z.infer<typeof localizedResourceOptionSchema>;
+export type ResourceOption<K extends Resource["kind"] = Resource["kind"]> = Omit<
+  z.infer<typeof resourceOptionSchema>,
+  "kind"
+> & { kind: K };
 
-export const defaultResourceOption: ResourceOption = {
+export const defaultResourceOption: Partial<ResourceOption> = {
   label: "",
   name: {},
   value: nilUuid,
