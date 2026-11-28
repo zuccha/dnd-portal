@@ -1,5 +1,6 @@
 import { resourceModule as backgrounds } from "./backgrounds/backgrounds-module";
 import { resourceModule as calendars } from "./calendars/calendars-module";
+import { resourceModule as campaignSessions } from "./campaign-sessions/campaign-sessions-module";
 import { resourceModule as characterClasses } from "./character-classes/character-classes-module";
 import { resourceModule as characterSubclasses } from "./character-subclasses/character-subclasses-module";
 import { resourceModule as chronicleEntries } from "./chronicle-entries/chronicle-entries-module";
@@ -44,6 +45,7 @@ export const resourceModules: ResourceModule[] = [
   armors,
   backgrounds,
   calendars,
+  campaignSessions,
   chronicleEntries,
   characterClasses,
   characterSubclasses,

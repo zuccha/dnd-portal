@@ -159,6 +159,7 @@ export const relationGroupByResourceKind = {
   armor_modifier: {},
   background: {},
   calendar: {},
+  campaign_session: {},
   chronicle_entry: { subjects: "chronicle_entries_and_world_resources" },
   character_class: {
     features: "character_classes_and_features",

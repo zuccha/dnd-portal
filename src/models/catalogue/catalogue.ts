@@ -33,6 +33,7 @@ import type { OptionalStoreSet } from "../../store/optional-set/optional-store-s
 import type { StoreSet } from "../../store/set/store-set";
 import type { Background } from "../resources/backgrounds/background";
 import type { Calendar } from "../resources/calendars/calendar";
+import type { CampaignSession } from "../resources/campaign-sessions/campaign-session";
 import type { CharacterClass } from "../resources/character-classes/character-class";
 import type { CharacterSubclass } from "../resources/character-subclasses/character-subclass";
 import type { ChronicleEntry } from "../resources/chronicle-entries/chronicle-entry";
@@ -187,6 +188,7 @@ export function createCatalogue(id: string) {
     armor_modifier: createResourcesById<ArmorModifier>("armor_modifier"),
     background: createResourcesById<Background>("background"),
     calendar: createResourcesById<Calendar>("calendar"),
+    campaign_session: createResourcesById<CampaignSession>("campaign_session"),
     character_class: createResourcesById<CharacterClass>("character_class"),
     character_subclass: createResourcesById<CharacterSubclass>("character_subclass"),
     chronicle_entry: createResourcesById<ChronicleEntry>("chronicle_entry"),
@@ -229,6 +231,7 @@ export function createCatalogue(id: string) {
     armor_modifier: createResourcesIdsBySourceId("armor_modifier"),
     background: createResourcesIdsBySourceId("background"),
     calendar: createResourcesIdsBySourceId("calendar"),
+    campaign_session: createResourcesIdsBySourceId("campaign_session"),
     character_class: createResourcesIdsBySourceId("character_class"),
     character_subclass: createResourcesIdsBySourceId("character_subclass"),
     chronicle_entry: createResourcesIdsBySourceId("chronicle_entry"),
@@ -271,6 +274,7 @@ export function createCatalogue(id: string) {
     armor_modifier: createResourcesBySourceId("armor_modifier"),
     background: createResourcesBySourceId("background"),
     calendar: createResourcesBySourceId("calendar"),
+    campaign_session: createResourcesBySourceId("campaign_session"),
     character_class: createResourcesBySourceId("character_class"),
     character_subclass: createResourcesBySourceId("character_subclass"),
     chronicle_entry: createResourcesBySourceId("chronicle_entry"),
@@ -1116,6 +1120,7 @@ export function createCatalogue(id: string) {
       ["armor_modifier", importedBundle.resources.armor_modifiers],
       ["background", importedBundle.resources.backgrounds],
       ["calendar", importedBundle.resources.calendars],
+      ["campaign_session", importedBundle.resources.campaign_sessions],
       ["character_class", importedBundle.resources.character_classes],
       ["character_subclass", importedBundle.resources.character_subclasses],
       ["chronicle_entry", importedBundle.resources.chronicle_entries],

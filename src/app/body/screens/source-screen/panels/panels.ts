@@ -2,6 +2,7 @@ import {
   AwardIcon,
   BookOpenTextIcon,
   CalendarDaysIcon,
+  CalendarRangeIcon,
   CornerDownRightIcon,
   DnaIcon,
   EarthIcon,
@@ -77,7 +78,10 @@ export type BestiaryPanelId = (typeof bestiaryPanelIds)[number]["route"];
 // Campaign Panel Ids
 //------------------------------------------------------------------------------
 
-export const campaignPanelIds = [panelItem(Route.ResourcesCampaignPcs, UserRoundIcon)] as const;
+export const campaignPanelIds = [
+  panelItem(Route.ResourcesCampaignPcs, UserRoundIcon),
+  panelItem(Route.ResourcesCampaignSessions, CalendarRangeIcon),
+] as const;
 
 //------------------------------------------------------------------------------
 // Campaign Panel Id

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { backgroundSchema } from "../resources/backgrounds/background";
 import { calendarSchema } from "../resources/calendars/calendar";
+import { campaignSessionSchema } from "../resources/campaign-sessions/campaign-session";
 import { characterClassSchema } from "../resources/character-classes/character-class";
 import { characterSubclassSchema } from "../resources/character-subclasses/character-subclass";
 import { chronicleEntrySchema } from "../resources/chronicle-entries/chronicle-entry";
@@ -53,6 +54,7 @@ export const sourceBundleResourcesSchema = z.object({
   armors: armorSchema.array().default([]),
   backgrounds: backgroundSchema.array().default([]),
   calendars: calendarSchema.array().default([]),
+  campaign_sessions: campaignSessionSchema.array().default([]),
   character_classes: characterClassSchema.array().default([]),
   character_subclasses: characterSubclassSchema.array().default([]),
   chronicle_entries: chronicleEntrySchema.array().default([]),
@@ -143,6 +145,7 @@ export const sourceBundleResourceKeyByKind = {
   armor_modifier: "armor_modifiers",
   background: "backgrounds",
   calendar: "calendars",
+  campaign_session: "campaign_sessions",
   character_class: "character_classes",
   character_subclass: "character_subclasses",
   chronicle_entry: "chronicle_entries",

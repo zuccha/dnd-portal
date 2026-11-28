@@ -98,6 +98,10 @@ const i18nContext = {
     en: "Player Characters",
     it: "PG",
   },
+  [Route.ResourcesCampaignSessions]: {
+    en: "Sessions",
+    it: "Sessioni",
+  },
   [Route.ResourcesCharacterBackgrounds]: {
     en: "Backgrounds",
     it: "Background",

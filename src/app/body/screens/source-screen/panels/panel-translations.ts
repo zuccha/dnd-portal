@@ -15,6 +15,7 @@ export const resourcePanelTranslations = {
   [Route.ResourcesBlocksFeatures]: { en: "Features", it: "Privilegi" },
   [Route.ResourcesCampaign]: { en: "Campaign", it: "Campagna" },
   [Route.ResourcesCampaignPcs]: { en: "Player Characters", it: "PG" },
+  [Route.ResourcesCampaignSessions]: { en: "Sessions", it: "Sessioni" },
   [Route.ResourcesChronology]: { en: "Chronology", it: "Cronologia" },
   [Route.ResourcesChronologyCalendars]: { en: "Calendars", it: "Calendari" },
   [Route.ResourcesChronologyEntries]: { en: "Events", it: "Eventi" },

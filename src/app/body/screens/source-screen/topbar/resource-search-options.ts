@@ -50,6 +50,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "campaign_session",
+    route: Route.ResourcesCampaignSessions,
+    searchNames: {
+      en: "campaign session campaign sessions session sessions",
+      it: "sessione sessioni sessione di campagna sessioni di campagna",
+    },
+  },
+  {
     kind: "character_class",
     route: Route.ResourcesCharacterClasses,
     searchNames: {

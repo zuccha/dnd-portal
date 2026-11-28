@@ -3,6 +3,7 @@ import type { Resource } from "~/models/resources/resource";
 import type { LocalizedResourceUnion } from "~/models/resources/resource-union";
 import { BackgroundCard } from "../../../../resource-modules/backgrounds/panel/background-card.tsx";
 import { CalendarCard } from "../../../../resource-modules/calendars/panel/calendar-card.tsx";
+import { CampaignSessionCard } from "../../../../resource-modules/campaign-sessions/panel/campaign-session-card.tsx";
 import { CharacterClassCard } from "../../../../resource-modules/character-classes/panel/character-class-card.tsx";
 import { CharacterSubclassCard } from "../../../../resource-modules/character-subclasses/panel/character-subclass-card.tsx";
 import { ChronicleEntryCard } from "../../../../resource-modules/chronicle-entries/panel/chronicle-entry-card.tsx";
@@ -93,6 +94,7 @@ export const printDeckRegistry = {
   armor_modifier: ArmorModifierCard,
   background: BackgroundCard,
   calendar: CalendarCard,
+  campaign_session: CampaignSessionCard,
   character_class: CharacterClassCard,
   character_subclass: CharacterSubclassCard,
   chronicle_entry: ChronicleEntryCard,
