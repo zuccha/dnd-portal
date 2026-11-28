@@ -47,4 +47,5 @@ export const resourcePanelTranslations = {
   [Route.ResourcesWorldNpcs]: { en: "NPCs", it: "PNG" },
   [Route.ResourcesWorldPlaces]: { en: "Places", it: "Luoghi" },
   [Route.ResourcesWorldPlanes]: { en: "Planes", it: "Piani" },
+  [Route.ResourcesWorldRelics]: { en: "Relics", it: "Reliquie" },
 };

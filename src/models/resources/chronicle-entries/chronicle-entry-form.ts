@@ -22,7 +22,7 @@ export const chronicleEntryFormDataSchema = resourceFormDataSchema.extend({
     .array(
       z.object({
         id: z.uuid(),
-        kind: z.enum(["deity", "faction", "npc", "place", "plane"]),
+        kind: z.enum(["deity", "faction", "npc", "place", "plane", "relic"]),
       }),
     )
     .default([]),

@@ -60,6 +60,7 @@ import type { WeaponModifier } from "../resources/modifiers/equipment/weapons/we
 import type { Npc } from "../resources/npcs/npc";
 import type { Place } from "../resources/places/place";
 import type { Plane } from "../resources/planes/plane";
+import type { Relic } from "../resources/relics/relic";
 import type { Resource } from "../resources/resource";
 import type { Service } from "../resources/services/service";
 import type { Species } from "../resources/species/species";
@@ -206,6 +207,7 @@ export function createCatalogue(id: string) {
     npc: createResourcesById<Npc>("npc"),
     place: createResourcesById<Place>("place"),
     plane: createResourcesById<Plane>("plane"),
+    relic: createResourcesById<Relic>("relic"),
     service: createResourcesById<Service>("service"),
     species: createResourcesById<Species>("species"),
     spell: createResourcesById<Spell>("spell"),
@@ -246,6 +248,7 @@ export function createCatalogue(id: string) {
     npc: createResourcesIdsBySourceId("npc"),
     place: createResourcesIdsBySourceId("place"),
     plane: createResourcesIdsBySourceId("plane"),
+    relic: createResourcesIdsBySourceId("relic"),
     service: createResourcesIdsBySourceId("service"),
     species: createResourcesIdsBySourceId("species"),
     spell: createResourcesIdsBySourceId("spell"),
@@ -286,6 +289,7 @@ export function createCatalogue(id: string) {
     npc: createResourcesBySourceId("npc"),
     place: createResourcesBySourceId("place"),
     plane: createResourcesBySourceId("plane"),
+    relic: createResourcesBySourceId("relic"),
     service: createResourcesBySourceId("service"),
     species: createResourcesBySourceId("species"),
     spell: createResourcesBySourceId("spell"),
@@ -1129,6 +1133,7 @@ export function createCatalogue(id: string) {
       ["npc", importedBundle.resources.npcs],
       ["place", importedBundle.resources.places],
       ["plane", importedBundle.resources.planes],
+      ["relic", importedBundle.resources.relics],
       ["service", importedBundle.resources.services],
       ["species", importedBundle.resources.species],
       ["spell", importedBundle.resources.spells],

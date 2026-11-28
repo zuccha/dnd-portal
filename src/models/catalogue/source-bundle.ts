@@ -28,6 +28,7 @@ import { weaponModifierSchema } from "../resources/modifiers/equipment/weapons/w
 import { npcSchema } from "../resources/npcs/npc";
 import { placeSchema } from "../resources/places/place";
 import { planeSchema } from "../resources/planes/plane";
+import { relicSchema } from "../resources/relics/relic";
 import { serviceSchema } from "../resources/services/service";
 import { speciesSchema } from "../resources/species/species";
 import { spellSchema } from "../resources/spells/spell";
@@ -72,6 +73,7 @@ export const sourceBundleResourcesSchema = z.object({
   npcs: npcSchema.array().default([]),
   places: placeSchema.array().default([]),
   planes: planeSchema.array().default([]),
+  relics: relicSchema.array().default([]),
   services: serviceSchema.array().default([]),
   species: speciesSchema.array().default([]),
   spells: spellSchema.array().default([]),
@@ -160,6 +162,7 @@ export const sourceBundleResourceKeyByKind = {
   npc: "npcs",
   place: "places",
   plane: "planes",
+  relic: "relics",
   service: "services",
   species: "species",
   spell: "spells",

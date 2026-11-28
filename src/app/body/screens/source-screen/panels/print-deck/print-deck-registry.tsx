@@ -30,6 +30,7 @@ import { WeaponModifierCard } from "../../../../resource-modules/modifiers/equip
 import { NpcCard } from "../../../../resource-modules/npcs/panel/npc-card.tsx";
 import { PlaceCard } from "../../../../resource-modules/places/panel/place-card.tsx";
 import { PlaneCard } from "../../../../resource-modules/planes/panel/plane-card.tsx";
+import { RelicCard } from "../../../../resource-modules/relics/panel/relic-card.tsx";
 import { ServiceCard } from "../../../../resource-modules/services/panel/service-card.tsx";
 import { SpeciesCard } from "../../../../resource-modules/species/panel/species-card.tsx";
 import { SpellCard } from "../../../../resource-modules/spells/panel/spell-card.tsx";
@@ -112,6 +113,7 @@ export const printDeckRegistry = {
   npc: NpcCard,
   place: PlaceCard,
   plane: PlaneCard,
+  relic: RelicCard,
   service: ServiceCard,
   species: SpeciesCard,
   spell: SpellCard,

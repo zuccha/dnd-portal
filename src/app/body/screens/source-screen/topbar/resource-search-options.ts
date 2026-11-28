@@ -202,6 +202,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "relic",
+    route: Route.ResourcesWorldRelics,
+    searchNames: {
+      en: "relic relics",
+      it: "reliquia reliquie",
+    },
+  },
+  {
     kind: "service",
     route: Route.ResourcesMarketServices,
     searchNames: {

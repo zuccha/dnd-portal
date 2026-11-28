@@ -43,6 +43,8 @@ import { localizedPlaceSchema } from "./places/localized-place";
 import { placeSchema } from "./places/place";
 import { localizedPlaneSchema } from "./planes/localized-plane";
 import { planeSchema } from "./planes/plane";
+import { localizedRelicSchema } from "./relics/localized-relic";
+import { relicSchema } from "./relics/relic";
 import { localizedServiceSchema } from "./services/localized-service";
 import { serviceSchema } from "./services/service";
 import { localizedSpeciesSchema } from "./species/localized-species";
@@ -80,6 +82,7 @@ export const resourceUnionSchema = z.discriminatedUnion("kind", [
   modifierUnionSchema,
   placeSchema,
   planeSchema,
+  relicSchema,
   serviceSchema,
   speciesSchema,
   spellSchema,
@@ -120,6 +123,7 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedModifierUnionSchema,
   localizedPlaceSchema,
   localizedPlaneSchema,
+  localizedRelicSchema,
   localizedServiceSchema,
   localizedSpeciesSchema,
   localizedSpellSchema,

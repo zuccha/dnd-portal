@@ -186,4 +186,8 @@ const i18nContext = {
     en: "Planes",
     it: "Piani",
   },
+  [Route.ResourcesWorldRelics]: {
+    en: "Relics",
+    it: "Reliquie",
+  },
 };

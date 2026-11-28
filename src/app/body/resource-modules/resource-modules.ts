@@ -27,6 +27,7 @@ import { resourceModule as weaponModifiers } from "./modifiers/equipment/weapons
 import { resourceModule as npcs } from "./npcs/npcs-module";
 import { resourceModule as places } from "./places/places-module";
 import { resourceModule as planes } from "./planes/planes-module";
+import { resourceModule as relics } from "./relics/relics-module";
 import { resourceModule as services } from "./services/services-module";
 import { resourceModule as species } from "./species/species-module";
 import { resourceModule as spells } from "./spells/spells-module";
@@ -63,6 +64,7 @@ export const resourceModules: ResourceModule[] = [
   npcs,
   places,
   planes,
+  relics,
   services,
   species,
   spells,

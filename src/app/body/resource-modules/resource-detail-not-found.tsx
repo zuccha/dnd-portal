@@ -71,6 +71,7 @@ const resourcePluralLabels: Record<ResourceKind, I18nString> = {
   metamagic: { en: "Metamagic", it: "Metamagia" },
   plane: { en: "Planes", it: "Piani" },
   place: { en: "Places", it: "Luoghi" },
+  relic: { en: "Relics", it: "Reliquie" },
   service: { en: "Services", it: "Servizi" },
   species: { en: "Species", it: "Specie" },
   spell: { en: "Spells", it: "Incantesimi" },

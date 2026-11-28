@@ -24,6 +24,7 @@ const factionResources = catalogue.createResourceStore("faction");
 const npcResources = catalogue.createResourceStore("npc");
 const placeResources = catalogue.createResourceStore("place");
 const planeResources = catalogue.createResourceStore("plane");
+const relicResources = catalogue.createResourceStore("relic");
 
 //------------------------------------------------------------------------------
 // Subject Resource Hooks
@@ -34,11 +35,13 @@ const useActiveSourceReferenceFactionIds = factionResources.useActiveSourceRefer
 const useActiveSourceReferenceNpcIds = npcResources.useActiveSourceReferenceResourceIds;
 const useActiveSourceReferencePlaceIds = placeResources.useActiveSourceReferenceResourceIds;
 const useActiveSourceReferencePlaneIds = planeResources.useActiveSourceReferenceResourceIds;
+const useActiveSourceReferenceRelicIds = relicResources.useActiveSourceReferenceResourceIds;
 const useDeities = deityResources.useResources;
 const useFactions = factionResources.useResources;
 const useNpcs = npcResources.useResources;
 const usePlaces = placeResources.useResources;
 const usePlanes = planeResources.useResources;
+const useRelics = relicResources.useResources;
 
 //------------------------------------------------------------------------------
 // Use Chronicle Entry Subject Resources
@@ -50,16 +53,18 @@ function useChronicleEntrySubjectResources(): ChronicleEntrySubject[] {
   const npcIds = useActiveSourceReferenceNpcIds();
   const placeIds = useActiveSourceReferencePlaceIds();
   const planeIds = useActiveSourceReferencePlaneIds();
+  const relicIds = useActiveSourceReferenceRelicIds();
 
   const deities = useDeities(deityIds);
   const factions = useFactions(factionIds);
   const npcs = useNpcs(npcIds);
   const places = usePlaces(placeIds);
   const planes = usePlanes(planeIds);
+  const relics = useRelics(relicIds);
 
   return useMemo(
-    () => [...deities, ...factions, ...npcs, ...places, ...planes],
-    [deities, factions, npcs, places, planes],
+    () => [...deities, ...factions, ...npcs, ...places, ...planes, ...relics],
+    [deities, factions, npcs, places, planes, relics],
   );
 }
 
