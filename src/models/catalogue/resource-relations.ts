@@ -31,7 +31,7 @@ export type RelationGroupRows = {
   character_classes_and_spells: ResourceRelation<"character_class", "spell">;
   chronicle_entries_and_world_resources: ResourceRelation<
     "chronicle_entry",
-    "plane" | "place" | "faction" | "npc"
+    "plane" | "place" | "faction" | "npc" | "deity"
   >;
   creature_families_and_creature_habitats: ResourceRelation<"creature_family", "creature_habitat">;
   creature_families_and_creature_treasures: ResourceRelation<
@@ -76,7 +76,7 @@ export type RelatedResourceEntriesByKind = {
     features: FeatureRelatedEntry<"feature">;
   };
   chronicle_entry: {
-    subjects: RelatedEntry<"plane" | "place" | "faction" | "npc">;
+    subjects: RelatedEntry<"plane" | "place" | "faction" | "npc" | "deity">;
   };
   creature: {};
   creature_family: {
@@ -90,7 +90,7 @@ export type RelatedResourceEntriesByKind = {
   creature_treasure: {
     families: RelatedEntry<"creature_family">;
   };
-  deity: {};
+  deity: { chronicle_entries: RelatedEntry<"chronicle_entry"> };
   eldritch_invocation: {};
   faction: { chronicle_entries: RelatedEntry<"chronicle_entry"> };
   feat: {};
@@ -177,7 +177,7 @@ export const relationGroupByResourceKind = {
   creature_treasure: {
     families: "creature_families_and_creature_treasures",
   },
-  deity: {},
+  deity: { chronicle_entries: "chronicle_entries_and_world_resources" },
   eldritch_invocation: {},
   faction: { chronicle_entries: "chronicle_entries_and_world_resources" },
   feat: {},
@@ -275,7 +275,7 @@ const relationEndpointKinds: Record<RelationGroup, [ResourceKind[], ResourceKind
   character_classes_and_spells: [["character_class"], ["spell"]],
   chronicle_entries_and_world_resources: [
     ["chronicle_entry"],
-    ["plane", "place", "faction", "npc"],
+    ["plane", "place", "faction", "npc", "deity"],
   ],
   creature_families_and_creature_habitats: [["creature_family"], ["creature_habitat"]],
   creature_families_and_creature_treasures: [["creature_family"], ["creature_treasure"]],
@@ -461,7 +461,7 @@ export const resourceRelationsSchema = z.object({
     .object({
       ...relationFields,
       resource_1_kind: z.literal("chronicle_entry"),
-      resource_2_kind: z.enum(["plane", "place", "faction", "npc"]),
+      resource_2_kind: z.enum(["plane", "place", "faction", "npc", "deity"]),
     })
     .array()
     .default([]),

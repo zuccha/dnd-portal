@@ -1,7 +1,12 @@
+import { useMemo } from "react";
 import z from "zod";
 import { translate } from "~/i18n/i18n-string";
+import catalogue from "~/models/catalogue/catalogue";
+import type { RelatedResourceEntries } from "~/models/catalogue/resource-relations";
 import { useTranslateCreatureAlignment } from "../../types/creature-alignment";
 import { useTranslateDeityDomain } from "../../types/deity-domain";
+import { type ChronicleEntry } from "../chronicle-entries/chronicle-entry";
+import { appendChronicleEntriesToDescription } from "../chronicle-entries/chronicle-entry-description";
 import {
   type ResourceLocalizationContext,
   localizeResource,
@@ -30,20 +35,37 @@ export type LocalizedDeity = z.infer<typeof localizedDeitySchema>;
 //------------------------------------------------------------------------------
 
 type DeityLocalizationContext = ResourceLocalizationContext & {
+  chronicleEntries: ChronicleEntry[];
   translateCreatureAlignment: (value: Deity["alignment"]) => string;
   translateDeityDomain: (value: Deity["domain"]) => string;
 };
 
 //------------------------------------------------------------------------------
+// Chronicle Entry Resources
+//------------------------------------------------------------------------------
+
+const chronicleEntryResources = catalogue.createResourceStore("chronicle_entry");
+const useChronicleEntries = chronicleEntryResources.useResources as (
+  resourceIds: string[],
+) => ChronicleEntry[];
+
+//------------------------------------------------------------------------------
 // Use Deity Localization Context
 //------------------------------------------------------------------------------
 
-export function useDeityLocalizationContext(): DeityLocalizationContext {
+export function useDeityLocalizationContext(
+  _deity: Deity,
+  related: RelatedResourceEntries<"deity">,
+): DeityLocalizationContext {
   const context = useResourceLocalizationContext(i18nContext);
+  const chronicleEntries = useChronicleEntries(related.chronicle_entries.map(({ id }) => id));
   const translateCreatureAlignment = useTranslateCreatureAlignment(context.lang);
   const translateDeityDomain = useTranslateDeityDomain(context.lang);
 
-  return { ...context, translateCreatureAlignment, translateDeityDomain };
+  return useMemo(
+    () => ({ ...context, chronicleEntries, translateCreatureAlignment, translateDeityDomain }),
+    [chronicleEntries, context, translateCreatureAlignment, translateDeityDomain],
+  );
 }
 
 //------------------------------------------------------------------------------
@@ -57,7 +79,11 @@ export function localizeDeity(deity: Deity, context: DeityLocalizationContext): 
 
   return {
     ...localizeResource(deity, context),
-    description: translate(deity.description, context.lang),
+    description: appendChronicleEntriesToDescription(
+      translate(deity.description, context.lang),
+      context.chronicleEntries,
+      context.lang,
+    ),
 
     alignment: {
       label: context.t("alignment"),

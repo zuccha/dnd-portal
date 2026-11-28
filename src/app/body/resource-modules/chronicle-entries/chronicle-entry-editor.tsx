@@ -3,6 +3,7 @@ import { useI18nLangContext } from "~/i18n/i18n-lang-context";
 import type { ChronicleEntry } from "~/models/resources/chronicle-entries/chronicle-entry";
 import type { ChronicleEntryFormData } from "~/models/resources/chronicle-entries/chronicle-entry-form";
 import { chronicleEntryStore } from "~/models/resources/chronicle-entries/chronicle-entry-store";
+import { deityStore } from "~/models/resources/deities/deity-store";
 import { factionStore } from "~/models/resources/factions/faction-store";
 import { npcStore } from "~/models/resources/npcs/npc-store";
 import { placeStore } from "~/models/resources/places/place-store";
@@ -52,6 +53,16 @@ export function createChronicleEntryEditor(form: Form<ChronicleEntryFormData>) {
     },
     useField: form.createUseField("faction_ids"),
     useOptions: factionStore.useResourceOptions,
+  });
+
+  const DeityIdsField = createResourceSearchField({
+    hideFilter: true,
+    i18nContext: {
+      label: { en: "Deities", it: "Divinità" },
+      placeholder: { en: "Search deities", it: "Cerca divinità" },
+    },
+    useField: form.createUseField("deity_ids"),
+    useOptions: deityStore.useResourceOptions,
   });
 
   const NpcIdsField = createResourceSearchField({
@@ -110,6 +121,12 @@ export function createChronicleEntryEditor(form: Form<ChronicleEntryFormData>) {
             defaultValue={related.filter(({ kind }) => kind === "faction").map(({ id }) => id)}
             sourceId={sourceId}
           />
+          <DeityIdsField
+            defaultValue={related.filter(({ kind }) => kind === "deity").map(({ id }) => id)}
+            sourceId={sourceId}
+          />
+        </HStack>
+        <HStack align="flex-start" gap={4}>
           <NpcIdsField
             defaultValue={related.filter(({ kind }) => kind === "npc").map(({ id }) => id)}
             sourceId={sourceId}

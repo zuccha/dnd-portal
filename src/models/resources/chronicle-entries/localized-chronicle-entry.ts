@@ -4,6 +4,7 @@ import { translate } from "~/i18n/i18n-string";
 import catalogue from "~/models/catalogue/catalogue";
 import type { RelatedResourceEntries } from "~/models/catalogue/resource-relations";
 import { formatChronicleDate } from "~/models/other/chronicle-date";
+import type { Deity } from "~/models/resources/deities/deity";
 import type { Faction } from "~/models/resources/factions/faction";
 import type { Npc } from "~/models/resources/npcs/npc";
 import type { Place } from "~/models/resources/places/place";
@@ -24,7 +25,7 @@ import type { Resource } from "../resource";
 //------------------------------------------------------------------------------
 
 const localizedChronicleEntrySubjectSchema = localizedResourceLinkSchema(
-  z.enum(["plane", "place", "faction", "npc"]),
+  z.enum(["plane", "place", "faction", "npc", "deity"]),
 );
 
 //------------------------------------------------------------------------------
@@ -54,10 +55,12 @@ type ChronicleEntryLocalizationContext = ResourceLocalizationContext & {
 const planeResources = catalogue.createResourceStore("plane");
 const placeResources = catalogue.createResourceStore("place");
 const factionResources = catalogue.createResourceStore("faction");
+const deityResources = catalogue.createResourceStore("deity");
 const npcResources = catalogue.createResourceStore("npc");
 const usePlanes = planeResources.useResources as (resourceIds: string[]) => Plane[];
 const usePlaces = placeResources.useResources as (resourceIds: string[]) => Place[];
 const useFactions = factionResources.useResources as (resourceIds: string[]) => Faction[];
+const useDeities = deityResources.useResources as (resourceIds: string[]) => Deity[];
 const useNpcs = npcResources.useResources as (resourceIds: string[]) => Npc[];
 
 //------------------------------------------------------------------------------
@@ -72,20 +75,22 @@ export function useChronicleEntryLocalizationContext(
   const planeIds = related.subjects.filter(({ kind }) => kind === "plane").map(({ id }) => id);
   const placeIds = related.subjects.filter(({ kind }) => kind === "place").map(({ id }) => id);
   const factionIds = related.subjects.filter(({ kind }) => kind === "faction").map(({ id }) => id);
+  const deityIds = related.subjects.filter(({ kind }) => kind === "deity").map(({ id }) => id);
   const npcIds = related.subjects.filter(({ kind }) => kind === "npc").map(({ id }) => id);
   const planes = usePlanes(planeIds);
   const places = usePlaces(placeIds);
   const factions = useFactions(factionIds);
+  const deities = useDeities(deityIds);
   const npcs = useNpcs(npcIds);
   const resourceByKey = useMemo<Record<string, Resource>>(
     () =>
       Object.fromEntries(
-        [...planes, ...places, ...factions, ...npcs].map((resource) => [
+        [...planes, ...places, ...factions, ...npcs, ...deities].map((resource) => [
           `${resource.kind}:${resource.id}`,
           resource,
         ]),
       ),
-    [factions, npcs, places, planes],
+    [deities, factions, npcs, places, planes],
   );
   const subjects = useMemo(
     () =>

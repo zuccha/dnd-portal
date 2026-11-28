@@ -18,6 +18,7 @@ import type { ChronicleEntry } from "./chronicle-entry";
 export const chronicleEntryFormDataSchema = resourceFormDataSchema.extend({
   date: chronicleDateSchema,
   description: z.string().default(""),
+  deity_ids: z.array(z.uuid()).default([]),
   faction_ids: z.array(z.uuid()).default([]),
   npc_ids: z.array(z.uuid()).default([]),
   place_ids: z.array(z.uuid()).default([]),
@@ -34,10 +35,20 @@ export function chronicleEntryFormDataToResource(
   data: Partial<ChronicleEntryFormData>,
   lang: string,
 ): ResourceFormOutput<ChronicleEntry> {
-  const { date, description, faction_ids, npc_ids, place_ids, plane_ids, ...resourceData } = data;
+  const {
+    date,
+    description,
+    deity_ids,
+    faction_ids,
+    npc_ids,
+    place_ids,
+    plane_ids,
+    ...resourceData
+  } = data;
   const related = [
     ...(plane_ids ?? []).map((id) => ({ id, kind: "plane" as const })),
     ...(place_ids ?? []).map((id) => ({ id, kind: "place" as const })),
+    ...(deity_ids ?? []).map((id) => ({ id, kind: "deity" as const })),
     ...(faction_ids ?? []).map((id) => ({ id, kind: "faction" as const })),
     ...(npc_ids ?? []).map((id) => ({ id, kind: "npc" as const })),
   ];
