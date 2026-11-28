@@ -11,6 +11,7 @@ import { CreatureHabitatCard } from "../../../../resource-modules/creature-habit
 import { CreatureTagCard } from "../../../../resource-modules/creature-tags/panel/creature-tag-card.tsx";
 import { CreatureTreasureCard } from "../../../../resource-modules/creature-treasures/panel/creature-treasure-card.tsx";
 import { CreatureCard } from "../../../../resource-modules/creatures/panel/creature-card.tsx";
+import { DeityCard } from "../../../../resource-modules/deities/panel/deity-card.tsx";
 import { EldritchInvocationCard } from "../../../../resource-modules/eldritch-invocations/panel/eldritch-invocation-card.tsx";
 import { ArmorCard } from "../../../../resource-modules/equipment/armors/panel/armor-card.tsx";
 import { ItemCard } from "../../../../resource-modules/equipment/items/panel/item-card.tsx";
@@ -98,6 +99,7 @@ export const printDeckRegistry = {
   creature_habitat: CreatureHabitatCard,
   creature_tag: CreatureTagCard,
   creature_treasure: CreatureTreasureCard,
+  deity: DeityCard,
   eldritch_invocation: EldritchInvocationCard,
   faction: FactionCard,
   feat: FeatCard,

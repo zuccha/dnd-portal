@@ -90,6 +90,7 @@ export type RelatedResourceEntriesByKind = {
   creature_treasure: {
     families: RelatedEntry<"creature_family">;
   };
+  deity: {};
   eldritch_invocation: {};
   faction: { chronicle_entries: RelatedEntry<"chronicle_entry"> };
   feat: {};
@@ -176,6 +177,7 @@ export const relationGroupByResourceKind = {
   creature_treasure: {
     families: "creature_families_and_creature_treasures",
   },
+  deity: {},
   eldritch_invocation: {},
   faction: { chronicle_entries: "chronicle_entries_and_world_resources" },
   feat: {},

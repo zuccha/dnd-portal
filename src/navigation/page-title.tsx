@@ -162,6 +162,10 @@ const i18nContext = {
     en: "Chronicle",
     it: "Cronologia",
   },
+  [Route.ResourcesWorldDeities]: {
+    en: "Deities",
+    it: "Divinità",
+  },
   [Route.ResourcesWorldFactions]: {
     en: "Factions",
     it: "Fazioni",

@@ -106,6 +106,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "deity",
+    route: Route.ResourcesWorldDeities,
+    searchNames: {
+      en: "deity deities god gods goddess goddesses",
+      it: "divinità dio dei dea dee",
+    },
+  },
+  {
     kind: "eldritch_invocation",
     route: Route.ResourcesOptionsEldritchInvocations,
     searchNames: {

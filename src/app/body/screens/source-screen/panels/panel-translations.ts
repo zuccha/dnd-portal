@@ -41,6 +41,7 @@ export const resourcePanelTranslations = {
   [Route.ResourcesWorld]: { en: "Setting", it: "Ambientazione" },
   [Route.ResourcesWorldCalendars]: { en: "Calendars", it: "Calendari" },
   [Route.ResourcesWorldChronicleEntries]: { en: "Chronicle", it: "Cronologia" },
+  [Route.ResourcesWorldDeities]: { en: "Deities", it: "Divinità" },
   [Route.ResourcesWorldFactions]: { en: "Factions", it: "Fazioni" },
   [Route.ResourcesWorldLanguages]: { en: "Languages", it: "Lingue" },
   [Route.ResourcesWorldNpcs]: { en: "NPCs", it: "PNG" },

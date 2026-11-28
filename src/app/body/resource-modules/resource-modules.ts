@@ -8,6 +8,7 @@ import { resourceModule as creatureHabitats } from "./creature-habitats/creature
 import { resourceModule as creatureTags } from "./creature-tags/creature-tags-module";
 import { resourceModule as creatureTreasures } from "./creature-treasures/creature-treasures-module";
 import { resourceModule as creatures } from "./creatures/creatures-module";
+import { resourceModule as deities } from "./deities/deities-module";
 import { resourceModule as eldritchInvocations } from "./eldritch-invocations/eldritch-invocations-module";
 import { resourceModule as armors } from "./equipment/armors/armors-module";
 import { resourceModule as items } from "./equipment/items/items-module";
@@ -49,6 +50,7 @@ export const resourceModules: ResourceModule[] = [
   creatureTags,
   creatureTreasures,
   creatures,
+  deities,
   eldritchInvocations,
   factions,
   feats,

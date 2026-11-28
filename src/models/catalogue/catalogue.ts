@@ -41,6 +41,7 @@ import type { CreatureHabitat } from "../resources/creature-habitats/creature-ha
 import type { CreatureTag } from "../resources/creature-tags/creature-tag";
 import type { CreatureTreasure } from "../resources/creature-treasures/creature-treasure";
 import type { Creature } from "../resources/creatures/creature";
+import type { Deity } from "../resources/deities/deity";
 import type { EldritchInvocation } from "../resources/eldritch-invocations/eldritch-invocation";
 import type { Armor } from "../resources/equipment/armors/armor";
 import type { Item } from "../resources/equipment/items/item";
@@ -192,6 +193,7 @@ export function createCatalogue(id: string) {
     creature_habitat: createResourcesById<CreatureHabitat>("creature_habitat"),
     creature_tag: createResourcesById<CreatureTag>("creature_tag"),
     creature_treasure: createResourcesById<CreatureTreasure>("creature_treasure"),
+    deity: createResourcesById<Deity>("deity"),
     eldritch_invocation: createResourcesById<EldritchInvocation>("eldritch_invocation"),
     faction: createResourcesById<Faction>("faction"),
     feat: createResourcesById<Feat>("feat"),
@@ -231,6 +233,7 @@ export function createCatalogue(id: string) {
     creature_habitat: createResourcesIdsBySourceId("creature_habitat"),
     creature_tag: createResourcesIdsBySourceId("creature_tag"),
     creature_treasure: createResourcesIdsBySourceId("creature_treasure"),
+    deity: createResourcesIdsBySourceId("deity"),
     eldritch_invocation: createResourcesIdsBySourceId("eldritch_invocation"),
     faction: createResourcesIdsBySourceId("faction"),
     feat: createResourcesIdsBySourceId("feat"),
@@ -270,6 +273,7 @@ export function createCatalogue(id: string) {
     creature_habitat: createResourcesBySourceId("creature_habitat"),
     creature_tag: createResourcesBySourceId("creature_tag"),
     creature_treasure: createResourcesBySourceId("creature_treasure"),
+    deity: createResourcesBySourceId("deity"),
     eldritch_invocation: createResourcesBySourceId("eldritch_invocation"),
     faction: createResourcesBySourceId("faction"),
     feat: createResourcesBySourceId("feat"),
@@ -1112,6 +1116,7 @@ export function createCatalogue(id: string) {
       ["creature_habitat", importedBundle.resources.creature_habitats],
       ["creature_tag", importedBundle.resources.creature_tags],
       ["creature_treasure", importedBundle.resources.creature_treasures],
+      ["deity", importedBundle.resources.deities],
       ["eldritch_invocation", importedBundle.resources.eldritch_invocations],
       ["faction", importedBundle.resources.factions],
       ["feat", importedBundle.resources.feats],

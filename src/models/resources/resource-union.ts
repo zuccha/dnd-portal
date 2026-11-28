@@ -19,6 +19,8 @@ import { creatureTreasureSchema } from "./creature-treasures/creature-treasure";
 import { localizedCreatureTreasureSchema } from "./creature-treasures/localized-creature-treasure";
 import { creatureSchema } from "./creatures/creature";
 import { localizedCreatureSchema } from "./creatures/localized-creature";
+import { deitySchema } from "./deities/deity";
+import { localizedDeitySchema } from "./deities/localized-deity";
 import { eldritchInvocationSchema } from "./eldritch-invocations/eldritch-invocation";
 import { localizedEldritchInvocationSchema } from "./eldritch-invocations/localized-eldritch-invocation";
 import { equipmentUnionSchema, localizedEquipmentUnionSchema } from "./equipment/equipment-union";
@@ -65,6 +67,7 @@ export const resourceUnionSchema = z.discriminatedUnion("kind", [
   creatureSchema,
   creatureFamilySchema,
   creatureHabitatSchema,
+  deitySchema,
   eldritchInvocationSchema,
   equipmentUnionSchema,
   factionSchema,
@@ -104,6 +107,7 @@ export const localizedResourceUnionSchema = z.discriminatedUnion("kind", [
   localizedCreatureSchema,
   localizedCreatureFamilySchema,
   localizedCreatureHabitatSchema,
+  localizedDeitySchema,
   localizedEldritchInvocationSchema,
   localizedEquipmentUnionSchema,
   localizedFactionSchema,

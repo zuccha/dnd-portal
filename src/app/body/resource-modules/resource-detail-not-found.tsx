@@ -58,6 +58,7 @@ const resourcePluralLabels: Record<ResourceKind, I18nString> = {
   creature_habitat: { en: "Creature Habitats", it: "Habitat" },
   creature_tag: { en: "Groups", it: "Gruppi" },
   creature_treasure: { en: "Treasures", it: "Tesori" },
+  deity: { en: "Deities", it: "Divinità" },
   eldritch_invocation: { en: "Eldritch Invocations", it: "Suppliche Occulte" },
   faction: { en: "Factions", it: "Fazioni" },
   npc: { en: "NPCs", it: "PNG" },
