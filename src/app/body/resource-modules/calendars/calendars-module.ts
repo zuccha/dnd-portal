@@ -25,7 +25,7 @@ const columns = createResourcesTableColumns<Calendar, LocalizedCalendar>([]);
 
 export const resourceModule = createResourceModule(
   calendarStore,
-  { initialPaletteName: "moss", path: Route.ResourcesWorldCalendars },
+  { initialPaletteName: "moss", path: Route.ResourcesChronologyCalendars },
   {
     album: { AlbumCard: CalendarCard },
     detail: { Detail: CalendarDetail },

@@ -94,6 +94,10 @@ const i18nContext = {
     en: "Features",
     it: "Privilegi",
   },
+  [Route.ResourcesCampaignPcs]: {
+    en: "Player Characters",
+    it: "PG",
+  },
   [Route.ResourcesCharacterBackgrounds]: {
     en: "Backgrounds",
     it: "Background",
@@ -113,6 +117,14 @@ const i18nContext = {
   [Route.ResourcesCharacterSubclasses]: {
     en: "Subclasses",
     it: "Sottoclassi",
+  },
+  [Route.ResourcesChronologyCalendars]: {
+    en: "Calendars",
+    it: "Calendari",
+  },
+  [Route.ResourcesChronologyEntries]: {
+    en: "Events",
+    it: "Eventi",
   },
   [Route.ResourcesEquipmentArmorModifiers]: {
     en: "Armor Variants",
@@ -153,14 +165,6 @@ const i18nContext = {
   [Route.ResourcesMarketVehicles]: {
     en: "Vehicles",
     it: "Veicoli",
-  },
-  [Route.ResourcesWorldCalendars]: {
-    en: "Calendars",
-    it: "Calendari",
-  },
-  [Route.ResourcesWorldChronicleEntries]: {
-    en: "Chronicle",
-    it: "Cronologia",
   },
   [Route.ResourcesWorldDeities]: {
     en: "Deities",

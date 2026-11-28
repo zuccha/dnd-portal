@@ -5,13 +5,6 @@ import { Route } from "~/navigation/routes";
 //------------------------------------------------------------------------------
 
 export const resourcePanelTranslations = {
-  [Route.ResourcesOptions]: { en: "Options", it: "Opzioni" },
-  [Route.ResourcesOptionsEldritchInvocations]: {
-    en: "Eldritch Invocations",
-    it: "Suppliche Occulte",
-  },
-  [Route.ResourcesOptionsManeuvers]: { en: "Maneuvers", it: "Manovre" },
-  [Route.ResourcesOptionsMetamagic]: { en: "Metamagic", it: "Metamagia" },
   [Route.ResourcesOptionsSpells]: { en: "Spells", it: "Incantesimi" },
   [Route.ResourcesBestiary]: { en: "Bestiary", it: "Bestiario" },
   [Route.ResourcesBestiaryMonsters]: { en: "Creatures", it: "Creature" },
@@ -20,6 +13,11 @@ export const resourcePanelTranslations = {
   [Route.ResourcesBestiaryTags]: { en: "Groups", it: "Gruppi" },
   [Route.ResourcesBestiaryTreasures]: { en: "Treasures", it: "Tesori" },
   [Route.ResourcesBlocksFeatures]: { en: "Features", it: "Privilegi" },
+  [Route.ResourcesCampaign]: { en: "Campaign", it: "Campagna" },
+  [Route.ResourcesCampaignPcs]: { en: "Player Characters", it: "PG" },
+  [Route.ResourcesChronology]: { en: "Chronology", it: "Cronologia" },
+  [Route.ResourcesChronologyCalendars]: { en: "Calendars", it: "Calendari" },
+  [Route.ResourcesChronologyEntries]: { en: "Events", it: "Eventi" },
   [Route.ResourcesCharacter]: { en: "Character", it: "Personaggio" },
   [Route.ResourcesCharacterBackgrounds]: { en: "Backgrounds", it: "Background" },
   [Route.ResourcesCharacterClasses]: { en: "Classes", it: "Classi" },
@@ -38,9 +36,14 @@ export const resourcePanelTranslations = {
   [Route.ResourcesMarket]: { en: "Market", it: "Mercato" },
   [Route.ResourcesMarketServices]: { en: "Services", it: "Servizi" },
   [Route.ResourcesMarketVehicles]: { en: "Vehicles", it: "Veicoli" },
+  [Route.ResourcesOptions]: { en: "Options", it: "Opzioni" },
+  [Route.ResourcesOptionsEldritchInvocations]: {
+    en: "Eldritch Invocations",
+    it: "Suppliche Occulte",
+  },
+  [Route.ResourcesOptionsManeuvers]: { en: "Maneuvers", it: "Manovre" },
+  [Route.ResourcesOptionsMetamagic]: { en: "Metamagic", it: "Metamagia" },
   [Route.ResourcesWorld]: { en: "Setting", it: "Ambientazione" },
-  [Route.ResourcesWorldCalendars]: { en: "Calendars", it: "Calendari" },
-  [Route.ResourcesWorldChronicleEntries]: { en: "Chronicle", it: "Cronologia" },
   [Route.ResourcesWorldDeities]: { en: "Deities", it: "Divinità" },
   [Route.ResourcesWorldFactions]: { en: "Factions", it: "Fazioni" },
   [Route.ResourcesWorldLanguages]: { en: "Languages", it: "Lingue" },

@@ -28,6 +28,7 @@ import { ItemModifierCard } from "../../../../resource-modules/modifiers/equipme
 import { ToolModifierCard } from "../../../../resource-modules/modifiers/equipment/tools/panel/tool-modifier-card.tsx";
 import { WeaponModifierCard } from "../../../../resource-modules/modifiers/equipment/weapons/panel/weapon-modifier-card.tsx";
 import { NpcCard } from "../../../../resource-modules/npcs/panel/npc-card.tsx";
+import { PcCard } from "../../../../resource-modules/pcs/panel/pc-card.tsx";
 import { PlaceCard } from "../../../../resource-modules/places/panel/place-card.tsx";
 import { PlaneCard } from "../../../../resource-modules/planes/panel/plane-card.tsx";
 import { RelicCard } from "../../../../resource-modules/relics/panel/relic-card.tsx";
@@ -111,6 +112,7 @@ export const printDeckRegistry = {
   maneuver: ManeuverCard,
   metamagic: MetamagicCard,
   npc: NpcCard,
+  pc: PcCard,
   place: PlaceCard,
   plane: PlaneCard,
   relic: RelicCard,

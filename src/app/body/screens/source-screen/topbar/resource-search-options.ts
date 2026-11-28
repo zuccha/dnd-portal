@@ -43,7 +43,7 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
   },
   {
     kind: "calendar",
-    route: Route.ResourcesWorldCalendars,
+    route: Route.ResourcesChronologyCalendars,
     searchNames: {
       en: "calendar calendars",
       it: "calendario calendari",
@@ -63,6 +63,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     searchNames: {
       en: "subclass subclasses",
       it: "sottoclasse sottoclassi",
+    },
+  },
+  {
+    kind: "chronicle_entry",
+    route: Route.ResourcesChronologyEntries,
+    searchNames: {
+      en: "chronicle entry chronicle entries entry entries",
+      it: "voce della cronologia voci della cronologia cronologia",
     },
   },
   {
@@ -186,6 +194,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     },
   },
   {
+    kind: "npc",
+    route: Route.ResourcesWorldNpcs,
+    searchNames: {
+      en: "npc npcs non-player character non-player characters",
+      it: "png personaggio non giocante personaggi non giocanti",
+    },
+  },
+  {
     kind: "place",
     route: Route.ResourcesWorldPlaces,
     searchNames: {
@@ -199,6 +215,14 @@ export const resourceKindSearchOptions: ResourceKindSearchOption[] = [
     searchNames: {
       en: "plane planes",
       it: "piano piani",
+    },
+  },
+  {
+    kind: "pc",
+    route: Route.ResourcesCampaignPcs,
+    searchNames: {
+      en: "player character player characters pc pcs",
+      it: "personaggio giocante personaggi giocanti pg",
     },
   },
   {

@@ -27,7 +27,7 @@ const columns = createResourcesTableColumns<ChronicleEntry, LocalizedChronicleEn
 
 export const resourceModule = createResourceModule(
   chronicleEntryStore,
-  { initialPaletteName: "moss", path: Route.ResourcesWorldChronicleEntries },
+  { initialPaletteName: "moss", path: Route.ResourcesChronologyEntries },
   {
     album: { AlbumCard: ChronicleEntryCard },
     detail: { Detail: ChronicleEntryDetail },

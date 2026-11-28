@@ -26,6 +26,7 @@ import {
   UserGroupIcon,
   UserIcon,
   UserRoundKeyIcon,
+  UserRoundIcon,
   UserStarIcon,
   WandSparklesIcon,
   type LucideIcon,
@@ -73,6 +74,18 @@ export const bestiaryPanelIds = [
 export type BestiaryPanelId = (typeof bestiaryPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
+// Campaign Panel Ids
+//------------------------------------------------------------------------------
+
+export const campaignPanelIds = [panelItem(Route.ResourcesCampaignPcs, UserRoundIcon)] as const;
+
+//------------------------------------------------------------------------------
+// Campaign Panel Id
+//------------------------------------------------------------------------------
+
+export type CampaignPanelId = (typeof campaignPanelIds)[number]["route"];
+
+//------------------------------------------------------------------------------
 // Character Panel Ids
 //------------------------------------------------------------------------------
 
@@ -92,21 +105,19 @@ export const characterPanelIds = [
 export type CharacterPanelId = (typeof characterPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
-// Abilities Panel Ids
+// Chronology Panel Ids
 //------------------------------------------------------------------------------
 
-export const abilitiesPanelIds = [
-  panelItem(Route.ResourcesOptionsSpells, ScrollTextIcon),
-  panelItem(Route.ResourcesOptionsEldritchInvocations, BookOpenTextIcon),
-  panelItem(Route.ResourcesOptionsManeuvers, SplitIcon),
-  panelItem(Route.ResourcesOptionsMetamagic, WandSparklesIcon),
+export const chronologyPanelIds = [
+  panelItem(Route.ResourcesChronologyCalendars, CalendarDaysIcon),
+  panelItem(Route.ResourcesChronologyEntries, HistoryIcon),
 ] as const;
 
 //------------------------------------------------------------------------------
-// Abilities Panel Id
+// Chronology Panel Id
 //------------------------------------------------------------------------------
 
-export type AbilitiesPanelId = (typeof abilitiesPanelIds)[number]["route"];
+export type ChronologyPanelId = (typeof chronologyPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
 // Equipment Panel Ids
@@ -145,6 +156,23 @@ export const marketPanelIds = [
 export type MarketPanelId = (typeof marketPanelIds)[number]["route"];
 
 //------------------------------------------------------------------------------
+// Option Panel Ids
+//------------------------------------------------------------------------------
+
+export const optionsPanelIds = [
+  panelItem(Route.ResourcesOptionsSpells, ScrollTextIcon),
+  panelItem(Route.ResourcesOptionsEldritchInvocations, BookOpenTextIcon),
+  panelItem(Route.ResourcesOptionsManeuvers, SplitIcon),
+  panelItem(Route.ResourcesOptionsMetamagic, WandSparklesIcon),
+] as const;
+
+//------------------------------------------------------------------------------
+// Option Panel Id
+//------------------------------------------------------------------------------
+
+export type OptionsPanelId = (typeof optionsPanelIds)[number]["route"];
+
+//------------------------------------------------------------------------------
 // World Panel Ids
 //------------------------------------------------------------------------------
 
@@ -156,8 +184,6 @@ export const worldPanelIds = [
   panelItem(Route.ResourcesWorldNpcs, UserRoundKeyIcon),
   panelItem(Route.ResourcesWorldRelics, GemIcon),
   panelItem(Route.ResourcesWorldLanguages, LanguagesIcon),
-  panelItem(Route.ResourcesWorldCalendars, CalendarDaysIcon),
-  panelItem(Route.ResourcesWorldChronicleEntries, HistoryIcon),
 ] as const;
 
 //------------------------------------------------------------------------------
@@ -172,9 +198,11 @@ export type WorldPanelId = (typeof worldPanelIds)[number]["route"];
 
 export const resourcePanels = [
   { id: Route.ResourcesCharacter, items: characterPanelIds },
-  { id: Route.ResourcesOptions, items: abilitiesPanelIds },
+  { id: Route.ResourcesOptions, items: optionsPanelIds },
   { id: Route.ResourcesBestiary, items: bestiaryPanelIds },
   { id: Route.ResourcesEquipment, items: equipmentPanelIds },
   { id: Route.ResourcesMarket, items: marketPanelIds },
   { id: Route.ResourcesWorld, items: worldPanelIds },
+  { id: Route.ResourcesCampaign, items: campaignPanelIds },
+  { id: Route.ResourcesChronology, items: chronologyPanelIds },
 ] as const;

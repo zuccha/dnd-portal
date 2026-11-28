@@ -58,6 +58,7 @@ import type { ItemModifier } from "../resources/modifiers/equipment/items/item-m
 import type { ToolModifier } from "../resources/modifiers/equipment/tools/tool-modifier";
 import type { WeaponModifier } from "../resources/modifiers/equipment/weapons/weapon-modifier";
 import type { Npc } from "../resources/npcs/npc";
+import type { Pc } from "../resources/pcs/pc";
 import type { Place } from "../resources/places/place";
 import type { Plane } from "../resources/planes/plane";
 import type { Relic } from "../resources/relics/relic";
@@ -205,6 +206,7 @@ export function createCatalogue(id: string) {
     maneuver: createResourcesById<Maneuver>("maneuver"),
     metamagic: createResourcesById<Metamagic>("metamagic"),
     npc: createResourcesById<Npc>("npc"),
+    pc: createResourcesById<Pc>("pc"),
     place: createResourcesById<Place>("place"),
     plane: createResourcesById<Plane>("plane"),
     relic: createResourcesById<Relic>("relic"),
@@ -246,6 +248,7 @@ export function createCatalogue(id: string) {
     maneuver: createResourcesIdsBySourceId("maneuver"),
     metamagic: createResourcesIdsBySourceId("metamagic"),
     npc: createResourcesIdsBySourceId("npc"),
+    pc: createResourcesIdsBySourceId("pc"),
     place: createResourcesIdsBySourceId("place"),
     plane: createResourcesIdsBySourceId("plane"),
     relic: createResourcesIdsBySourceId("relic"),
@@ -287,6 +290,7 @@ export function createCatalogue(id: string) {
     maneuver: createResourcesBySourceId("maneuver"),
     metamagic: createResourcesBySourceId("metamagic"),
     npc: createResourcesBySourceId("npc"),
+    pc: createResourcesBySourceId("pc"),
     place: createResourcesBySourceId("place"),
     plane: createResourcesBySourceId("plane"),
     relic: createResourcesBySourceId("relic"),
@@ -1131,6 +1135,7 @@ export function createCatalogue(id: string) {
       ["maneuver", importedBundle.resources.maneuvers],
       ["metamagic", importedBundle.resources.metamagics],
       ["npc", importedBundle.resources.npcs],
+      ["pc", importedBundle.resources.pcs],
       ["place", importedBundle.resources.places],
       ["plane", importedBundle.resources.planes],
       ["relic", importedBundle.resources.relics],

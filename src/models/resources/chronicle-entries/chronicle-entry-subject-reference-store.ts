@@ -12,7 +12,7 @@ import type { ResourceUnion } from "../resource-union";
 
 export type ChronicleEntrySubject = Extract<
   ResourceUnion,
-  { kind: "deity" | "faction" | "npc" | "place" | "plane" }
+  { kind: "deity" | "faction" | "npc" | "pc" | "place" | "plane" }
 >;
 
 //------------------------------------------------------------------------------
@@ -24,6 +24,7 @@ const factionResources = catalogue.createResourceStore("faction");
 const npcResources = catalogue.createResourceStore("npc");
 const placeResources = catalogue.createResourceStore("place");
 const planeResources = catalogue.createResourceStore("plane");
+const pcResources = catalogue.createResourceStore("pc");
 const relicResources = catalogue.createResourceStore("relic");
 
 //------------------------------------------------------------------------------
@@ -35,12 +36,14 @@ const useActiveSourceReferenceFactionIds = factionResources.useActiveSourceRefer
 const useActiveSourceReferenceNpcIds = npcResources.useActiveSourceReferenceResourceIds;
 const useActiveSourceReferencePlaceIds = placeResources.useActiveSourceReferenceResourceIds;
 const useActiveSourceReferencePlaneIds = planeResources.useActiveSourceReferenceResourceIds;
+const useActiveSourceReferencePcIds = pcResources.useActiveSourceReferenceResourceIds;
 const useActiveSourceReferenceRelicIds = relicResources.useActiveSourceReferenceResourceIds;
 const useDeities = deityResources.useResources;
 const useFactions = factionResources.useResources;
 const useNpcs = npcResources.useResources;
 const usePlaces = placeResources.useResources;
 const usePlanes = planeResources.useResources;
+const usePcs = pcResources.useResources;
 const useRelics = relicResources.useResources;
 
 //------------------------------------------------------------------------------
@@ -53,6 +56,7 @@ function useChronicleEntrySubjectResources(): ChronicleEntrySubject[] {
   const npcIds = useActiveSourceReferenceNpcIds();
   const placeIds = useActiveSourceReferencePlaceIds();
   const planeIds = useActiveSourceReferencePlaneIds();
+  const pcIds = useActiveSourceReferencePcIds();
   const relicIds = useActiveSourceReferenceRelicIds();
 
   const deities = useDeities(deityIds);
@@ -60,11 +64,12 @@ function useChronicleEntrySubjectResources(): ChronicleEntrySubject[] {
   const npcs = useNpcs(npcIds);
   const places = usePlaces(placeIds);
   const planes = usePlanes(planeIds);
+  const pcs = usePcs(pcIds);
   const relics = useRelics(relicIds);
 
   return useMemo(
-    () => [...deities, ...factions, ...npcs, ...places, ...planes, ...relics],
-    [deities, factions, npcs, places, planes, relics],
+    () => [...deities, ...factions, ...npcs, ...pcs, ...places, ...planes, ...relics],
+    [deities, factions, npcs, pcs, places, planes, relics],
   );
 }
 

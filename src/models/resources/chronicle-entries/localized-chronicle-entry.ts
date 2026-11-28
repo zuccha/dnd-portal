@@ -7,6 +7,7 @@ import { formatChronicleDate } from "~/models/other/chronicle-date";
 import type { Deity } from "~/models/resources/deities/deity";
 import type { Faction } from "~/models/resources/factions/faction";
 import type { Npc } from "~/models/resources/npcs/npc";
+import type { Pc } from "~/models/resources/pcs/pc";
 import type { Place } from "~/models/resources/places/place";
 import type { Plane } from "~/models/resources/planes/plane";
 import type { Relic } from "~/models/resources/relics/relic";
@@ -26,7 +27,7 @@ import type { Resource } from "../resource";
 //------------------------------------------------------------------------------
 
 const localizedChronicleEntrySubjectSchema = localizedResourceLinkSchema(
-  z.enum(["plane", "place", "faction", "npc", "deity", "relic"]),
+  z.enum(["plane", "place", "faction", "npc", "deity", "relic", "pc"]),
 );
 
 //------------------------------------------------------------------------------
@@ -59,12 +60,14 @@ const factionResources = catalogue.createResourceStore("faction");
 const deityResources = catalogue.createResourceStore("deity");
 const npcResources = catalogue.createResourceStore("npc");
 const relicResources = catalogue.createResourceStore("relic");
+const pcResources = catalogue.createResourceStore("pc");
 const usePlanes = planeResources.useResources as (resourceIds: string[]) => Plane[];
 const usePlaces = placeResources.useResources as (resourceIds: string[]) => Place[];
 const useFactions = factionResources.useResources as (resourceIds: string[]) => Faction[];
 const useDeities = deityResources.useResources as (resourceIds: string[]) => Deity[];
 const useNpcs = npcResources.useResources as (resourceIds: string[]) => Npc[];
 const useRelics = relicResources.useResources as (resourceIds: string[]) => Relic[];
+const usePcs = pcResources.useResources as (resourceIds: string[]) => Pc[];
 
 //------------------------------------------------------------------------------
 // Use Chronicle Entry Localization Context
@@ -81,21 +84,22 @@ export function useChronicleEntryLocalizationContext(
   const deityIds = related.subjects.filter(({ kind }) => kind === "deity").map(({ id }) => id);
   const npcIds = related.subjects.filter(({ kind }) => kind === "npc").map(({ id }) => id);
   const relicIds = related.subjects.filter(({ kind }) => kind === "relic").map(({ id }) => id);
+  const pcIds = related.subjects.filter(({ kind }) => kind === "pc").map(({ id }) => id);
   const planes = usePlanes(planeIds);
   const places = usePlaces(placeIds);
   const factions = useFactions(factionIds);
   const deities = useDeities(deityIds);
   const npcs = useNpcs(npcIds);
   const relics = useRelics(relicIds);
+  const pcs = usePcs(pcIds);
   const resourceByKey = useMemo<Record<string, Resource>>(
     () =>
       Object.fromEntries(
-        [...planes, ...places, ...factions, ...npcs, ...deities, ...relics].map((resource) => [
-          `${resource.kind}:${resource.id}`,
-          resource,
-        ]),
+        [...planes, ...places, ...factions, ...npcs, ...deities, ...relics, ...pcs].map(
+          (resource) => [`${resource.kind}:${resource.id}`, resource],
+        ),
       ),
-    [deities, factions, npcs, places, planes, relics],
+    [deities, factions, npcs, places, planes, relics, pcs],
   );
   const subjects = useMemo(
     () =>
